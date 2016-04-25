@@ -1,0 +1,21 @@
+## Base ##
+pla.base.yes			= Yes
+pla.base.no				= No
+pla.base.continue		= Continue
+pla.base.back			= Back
+pla.base.readMore   	= Read more
+
+## Link Text ##
+pla.links.lifetimeAllowance 		= Pensions Lifetime Allowance
+pla.links.protectLifetimeAllowance  = Lifetime Allowance Protection schemes
+
+## Introduction ##
+pla.intro.title 	    = Introduction
+pla.intro.pageHeading   = Apply for Lifetime Allowance protection
+pla.intro.paraOne       = The Lifetime Allowance is the amount of pension savings you can have before you pay tax.
+pla.intro.paraTwo       = This was reduced to £1 million, but you may be able to protect your pension savings from the reduction by applying for Lifetime Allowance protection.
+pla.intro.paraThree     = Use this service to check if you're eligible for Lifetime Allowance protection and apply.
+pla.intro.start			= Start
+
+## Pension Savings ##
+pla.savings.title		= 
