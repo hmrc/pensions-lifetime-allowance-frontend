@@ -1,9 +1,11 @@
 ## Base ##
+pla.base.appName		= Protect your Lifetime Allowance
 pla.base.yes			= Yes
 pla.base.no				= No
 pla.base.continue		= Continue
 pla.base.back			= Back
 pla.base.readMore   	= Read more
+pla.base.newWindow		= opens in a new window
 
 ## Link Text ##
 pla.links.lifetimeAllowance 		= Pensions Lifetime Allowance
