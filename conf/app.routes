@@ -1,5 +1,6 @@
 # microservice specific routes
 
-GET         /hello-world             controllers.HelloWorld.helloWorld
-GET         /intro		             controllers.IntroductionController.introduction
-GET			/pension-savings		 controllers.PensionSavingsController.pensionSavings
+GET         /hello-world                  controllers.HelloWorld.helloWorld
+GET         /intro		                  controllers.IntroductionController.introduction
+GET			/adding-to-your-pension       controllers.AddingToPensionController.addingToYourPension
+GET			/pension-savings		      controllers.PensionSavingsController.pensionSavings

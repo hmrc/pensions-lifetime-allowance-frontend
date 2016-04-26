@@ -18,6 +18,11 @@
     <p>@Messages("pla.intro.paraTwo")</p>
     <p>@Messages("pla.intro.paraThree")</p>
 
+    <div class="panel-indent">
+    	@Messages("pla.intro.ip14Text") <a href="#">@Messages("pla.intro.ip14LinkText")</a>.
+    </div>
 
-    <a id="start" href=@controllers.routes.PensionSavingsController.pensionSavings class="button button-start">@Messages("pla.intro.start")</a>
+	<p>
+        <a id="start" href=@controllers.routes.AddingToPensionController.addingToYourPension class="button button-start" role="button">@Messages("pla.intro.start")</a>
+    </p>
 }
