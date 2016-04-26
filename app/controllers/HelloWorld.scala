@@ -25,6 +25,6 @@ object HelloWorld extends HelloWorld
 
 trait HelloWorld extends FrontendController {
   val helloWorld = Action.async { implicit request =>
-		Future.successful(Ok(views.html.helloworld.hello_world()))
+    Future.successful(Ok(views.html.helloworld.hello_world()))
   }
 }
