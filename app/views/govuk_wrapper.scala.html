@@ -12,6 +12,7 @@
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
+@import views.html.helpers.phaseBanner
 
 @head = {
     @uiLayouts.head(
@@ -28,7 +29,7 @@
 
 @insideHeader = {
     @uiLayouts.header_nav(
-      navTitle = Some("Pensions Lifetime Allowance"),
+      navTitle = Some(Messages("pla.base.appName")),
       navTitleLink = None,
       showBetaLink = false,
       navLinks = Some(headerNavLinks))
@@ -51,7 +52,7 @@
 
 @serviceInfo = {
     @uiLayouts.serviceInfo(
-      betaBanner = HtmlFormat.empty,
+      betaBanner = phaseBanner("ALPHA"),
       includeGridWrapper = false,
       serviceInfoContent = Some(serviceInfoContent))
 }

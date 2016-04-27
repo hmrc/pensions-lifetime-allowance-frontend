@@ -1,0 +1,28 @@
+@()(implicit request: Request[_])
+
+@sidebar = {
+	<div class="service-info">
+		<h2>@Messages("pla.base.readMore")</h2>
+		<ul>
+			<li><a id="lifetimeAllowance" href="https://www.gov.uk/tax-on-your-private-pension/lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.lifetimeAllowance")</a></li>
+			<li><a id="protectLifetimeAllowance" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.protectLifetimeAllowance")</a></li>
+		</ul>
+	</div>
+}
+
+@views.html.main_template(title = Messages("pla.intro.title"), bodyClasses = None, sidebarLinks = Some(sidebar)) {
+	
+    <h1>@Messages("pla.intro.pageHeading")</h1>
+
+    <p>@Messages("pla.intro.paraOne")</p>
+    <p>@Messages("pla.intro.paraTwo")</p>
+    <p>@Messages("pla.intro.paraThree")</p>
+
+    <div class="panel-indent">
+    	@Messages("pla.intro.ip14Text") <a href="#">@Messages("pla.intro.ip14LinkText")</a>.
+    </div>
+
+	<p>
+        <a id="start" href=@controllers.routes.HaveAddedToPensionController.haveAddedToPension class="button button-start" role="button">@Messages("pla.intro.start")</a>
+    </p>
+}
