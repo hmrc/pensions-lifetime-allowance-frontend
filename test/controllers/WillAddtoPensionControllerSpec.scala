@@ -26,19 +26,19 @@ import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 
 
-class AddingToPensionControllerSpec extends UnitSpec with WithFakeApplication{
+class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
 
   val fakeRequest = FakeRequest("GET", "/")
 
 
   "GET /" should {
     "return 200" in {
-      val result = AddingToPensionController.addingToYourPension(fakeRequest)
+      val result = WillAddToPensionController.willAddToYourPension(fakeRequest)
       status(result) shouldBe Status.OK
     }
 
     "return HTML" in {
-      val result = AddingToPensionController.addingToYourPension(fakeRequest)
+      val result = WillAddToPensionController.willAddToYourPension(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
