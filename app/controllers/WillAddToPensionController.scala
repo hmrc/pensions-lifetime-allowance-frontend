@@ -21,10 +21,10 @@ import play.api.mvc._
 import scala.concurrent.Future
 
 
-object AddingToPensionController extends AddingToPensionController
+object WillAddToPensionController extends WillAddToPensionController
 
-trait AddingToPensionController extends FrontendController {
-  val addingToYourPension = Action.async { implicit request =>
-		Future.successful(Ok(views.html.pages.addingToPension()))
+trait WillAddToPensionController extends FrontendController {
+  val willAddToYourPension = Action.async { implicit request =>
+		Future.successful(Ok(views.html.pages.willAddToPension()))
   }
 }

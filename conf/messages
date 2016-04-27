@@ -1,28 +1,31 @@
 ## Base ##
-pla.base.appName		= Protect your Lifetime Allowance
-pla.base.yes			= Yes
-pla.base.no				= No
-pla.base.continue		= Continue
-pla.base.back			= Back
-pla.base.readMore   	= Read more
-pla.base.newWindow		= opens in a new window
+pla.base.appName        = Protect your Lifetime Allowance
+pla.base.yes            = Yes
+pla.base.no             = No
+pla.base.continue       = Continue
+pla.base.back           = Back
+pla.base.readMore       = Read more
+pla.base.newWindow      = opens in a new window
 
 ## Link Text ##
-pla.links.lifetimeAllowance 		= Pensions Lifetime Allowance
+pla.links.lifetimeAllowance         = Pensions Lifetime Allowance
 pla.links.protectLifetimeAllowance  = Lifetime Allowance Protection schemes
 
 ## Introduction ##
-pla.intro.title 	    = Introduction
+pla.intro.title         = Introduction
 pla.intro.pageHeading   = Apply for Lifetime Allowance protection
 pla.intro.paraOne       = The Lifetime Allowance is the amount of pension savings you can have before you pay tax.
 pla.intro.paraTwo       = This was reduced to £1 million, but you may be able to protect your pension savings from the reduction by applying for Lifetime Allowance protection.
 pla.intro.paraThree     = Use this service to check if you''re eligible for Lifetime Allowance protection and apply.
-pla.intro.ip14Text		= If your pension savings were over £1.25 million on 5 April 2014, you can still
+pla.intro.ip14Text      = If your pension savings were over £1.25 million on 5 April 2014, you can still
 pla.intro.ip14LinkText  = apply for Individual Protection 2014
-pla.intro.start			= Start
+pla.intro.start         = Start
 
-## Ading To Your Pension ##
-pla.addToPension.title		= TODO
+## Will be Adding to Your Pension ##
+pla.willAddToPension.title      = TODO
+
+## Have You Added to Your Pension ##
+pla.haveAddedToPension.title    = TODO
 
 ## Pension Savings ##
-pla.savings.title		= TODO
+pla.savings.title       = TODO

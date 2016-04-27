@@ -1,9 +1,12 @@
 # microservice specific routes
 
-GET         /                             controllers.Default.redirect(to = "protect-your-lifetime-allowance/introduction")
-GET         /introduction                 controllers.IntroductionController.introduction
-GET         /adding-to-your-pension       controllers.AddingToPensionController.addingToYourPension
-GET         /pension-savings              controllers.PensionSavingsController.pensionSavings
+GET         /                                   controllers.Default.redirect(to = "protect-your-lifetime-allowance/introduction")
+GET         /introduction                       controllers.IntroductionController.introduction
+
+## Initial Eligibility ##
+GET         /added-to-pension                   controllers.HaveAddedToPensionController.haveAddedToPension
+GET         /adding-to-pension                  controllers.WillAddToPensionController.willAddToYourPension
+GET         /pension-pot-size                   controllers.PensionSavingsController.pensionSavings
 
 
-GET         /hello-world                  controllers.HelloWorld.helloWorld
+GET         /hello-world                        controllers.HelloWorld.helloWorld
