@@ -16,15 +16,33 @@
 
 package controllers
 
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import play.api.data._
+import play.api.data.Forms._
 import play.api.mvc._
+import uk.gov.hmrc.play.frontend.controller.FrontendController
 import scala.concurrent.Future
+import forms.HaveAddedToPensionForm.haveAddedToPensionForm
 
+import views.html._
 
-object HaveAddedToPensionController extends HaveAddedoPensionController
+object HaveAddedToPensionController extends HaveAddedToPensionController
 
-trait HaveAddedoPensionController extends FrontendController {
+trait HaveAddedToPensionController extends FrontendController {
+
   val haveAddedToPension = Action.async { implicit request =>
-		Future.successful(Ok(views.html.pages.haveAddedToPension()))
+		Future.successful(Ok(pages.haveAddedToPension(haveAddedToPensionForm)))
   }
+
+  val submitHaveAddedToPension = Action { implicit request =>
+        haveAddedToPensionForm.bindFromRequest.fold(
+            errors => BadRequest(pages.haveAddedToPension(errors)),
+            success => {
+                success.haveAddedToPension match {
+                    case true => Redirect(routes.WillAddToPensionController.willAddToYourPension)
+                    case _ => Redirect(routes.IntroductionController.introduction)
+                }
+            }
+        )
+    }
+
 }
