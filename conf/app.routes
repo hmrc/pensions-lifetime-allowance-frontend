@@ -1,6 +1,6 @@
 # microservice specific routes
 
-GET         /                                   controllers.Default.redirect(to = "protect-your-lifetime-allowance/introduction")
+GET         /                                   controllers.Default.redirect(to = "introduction")
 GET         /introduction                       controllers.IntroductionController.introduction
 
 ## Initial Eligibility ##
