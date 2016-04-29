@@ -38,8 +38,8 @@ trait WillAddToPensionController extends FrontendController {
             errors => BadRequest(pages.willAddToPension(errors)),
             success => {
                 success.willAddToPension match {
-                    case true => Redirect(routes.PensionSavingsController.pensionSavings)
-                    case _ => Redirect(routes.IntroductionController.introduction)
+                    case "yes" => Redirect(routes.PensionSavingsController.pensionSavings)
+                    case "no"  => Redirect(routes.ApplyFPController.applyFP)
                 }
             }
         )

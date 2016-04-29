@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package models
+package testHelpers
 
-import play.api.libs.json._
 
-case class WillAddToPensionModel(willAddToPension: String)
+import play.api.mvc.{AnyContent, Action}
+import play.api.test.FakeRequest
+import uk.gov.hmrc.play.test.UnitSpec
+import org.jsoup._
+
+
+class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], data: (String, String)*) extends UnitSpec {
+  val fakeRequest = FakeRequest("POST", "/protect-your-lifetime-allowance/" + url)
+    .withFormUrlEncodedBody(data:_*)
+  val result = controllerAction(fakeRequest)
+  val jsoupDoc = Jsoup.parse(bodyOf(result))
+}

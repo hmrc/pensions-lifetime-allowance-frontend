@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package models
+package controllers
 
-import play.api.libs.json._
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+import play.api.mvc._
+import scala.concurrent.Future
 
-case class WillAddToPensionModel(willAddToPension: String)
+
+object ApplyIPController extends ApplyIPController
+
+trait ApplyIPController extends FrontendController {
+  val applyIP = Action.async { implicit request =>
+		Future.successful(Ok(views.html.pages.applyIP()))
+  }
+}

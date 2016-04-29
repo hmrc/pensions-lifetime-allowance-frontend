@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-package models
+package forms
 
-import play.api.libs.json._
+import play.api.data._
+import play.api.data.Forms._
+import models._
 
-case class WillAddToPensionModel(willAddToPension: String)
+object PensionSavingsForm {
+  val pensionSavingsForm = Form(
+    mapping(
+      "eligiblePensionSavings" -> nonEmptyText
+    )(PensionSavingsModel.apply)(PensionSavingsModel.unapply)
+  )
+}

@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
-package models
+package common
 
-import play.api.libs.json._
 
-case class WillAddToPensionModel(willAddToPension: String)
+object Validation {
+
+  def isMaxTwoDecimalPlaces(amount: BigDecimal): Boolean = {
+    amount match {
+      case amount if amount.scale <= 2 => true
+      case _ => false
+    }
+  }
+
+  def isPositive(amount: BigDecimal): Boolean = {
+    amount match {
+      case amount if amount < 0 => false
+      case _ => true
+    }
+  }
+}

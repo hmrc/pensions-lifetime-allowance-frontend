@@ -16,14 +16,19 @@
 
 package controllers
 
+import play.api.i18n.Messages
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.http._
 import play.api.test.FakeRequest
+import play.api.test.FakeHeaders
 import play.api.test.Helpers._
+import play.api.mvc.{AnyContent, Action}
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import org.jsoup._
+import testHelpers._
 
 
 class PensionSavingsControllerSpec extends UnitSpec with WithFakeApplication{
@@ -43,6 +48,48 @@ class PensionSavingsControllerSpec extends UnitSpec with WithFakeApplication{
       charset(result) shouldBe Some("utf-8")
     }
 
+
+  }
+
+  "Submitting 'yes' in pensionSavingsForm" should {
+
+      object DataItem extends FakeRequestToPost(
+        "pension-savings",
+        PensionSavingsController.submitPensionSavings,
+        ("eligiblePensionSavings", "yes")
+      )
+
+    "return 303" in {status(DataItem.result) shouldBe 303}
+
+    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.ApplyIPController.applyIP()}") }
+  }
+
+  "Submitting 'no' in pensionSavingsForm" should {
+  
+      object DataItem extends FakeRequestToPost(
+        "pension-savings",
+        PensionSavingsController.submitPensionSavings,
+        ("eligiblePensionSavings", "no")
+      )
+
+    "return 303" in { status(DataItem.result) shouldBe 303 }
+
+    "redirect to will add to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.CannotApplyController.cannotApply()}") }
+  }
+
+  "submitting pensionSavingsForm with no data" should {
+
+      object DataItem extends FakeRequestToPost(
+        "pension-savings",
+        PensionSavingsController.submitPensionSavings,
+        ("eligiblePensionSavings", "")
+      )
+
+    "return 400" in { status(DataItem.result) shouldBe 400 }
+
+    "fail with the correct error message" in {
+      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("This field is required")
+    }
 
   }
 
