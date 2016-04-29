@@ -39,7 +39,7 @@ trait WillAddToPensionController extends FrontendController {
             success => {
                 success.willAddToPension match {
                     case "yes" => Redirect(routes.PensionSavingsController.pensionSavings)
-                    case "no"  => Redirect(routes.IntroductionController.introduction)
+                    case "no"  => Redirect(routes.ApplyFPController.applyFP)
                 }
             }
         )
