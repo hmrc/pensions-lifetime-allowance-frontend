@@ -23,7 +23,7 @@ import models._
 object HaveAddedToPensionForm {
   val haveAddedToPensionForm = Form(
     mapping(
-      "haveAddedToPension" -> boolean
+      "haveAddedToPension" -> nonEmptyText
     )(HaveAddedToPensionModel.apply)(HaveAddedToPensionModel.unapply)
   )
 }
