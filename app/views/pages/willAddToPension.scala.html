@@ -1,4 +1,5 @@
 @import models.WillAddToPensionModel
+@import views.html.error_template
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import play.api.data._
 
@@ -9,12 +10,12 @@
 
   @govHelpers.form(action = routes.WillAddToPensionController.submitWillAddToPension) {
 
-    <div class="form-group">
+    <div class="inline form-group">
         @govHelpers.inputRadioGroup(
             field = addToPensionForm("willAddToPension"),
             Seq(
-                "true"->Messages("pla.base.yes"),
-                "false"->Messages("pla.base.no")),
+                "yes"->Messages("pla.base.yes"),
+                "no"->Messages("pla.base.no")),
             '_labelAfter -> true,
             '_labelClass -> "block-label"
         )
