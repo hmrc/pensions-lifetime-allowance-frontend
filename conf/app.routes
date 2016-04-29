@@ -5,7 +5,11 @@ GET         /introduction                       controllers.IntroductionControll
 
 ## Initial Eligibility ##
 GET         /added-to-pension                   controllers.HaveAddedToPensionController.haveAddedToPension
+POST 		/added-to-pension					controllers.HaveAddedToPensionController.submitHaveAddedToPension
+
 GET         /adding-to-pension                  controllers.WillAddToPensionController.willAddToYourPension
+POST 		/adding-to-pension					controllers.WillAddToPensionController.submitWillAddToPension
+
 GET         /pension-pot-size                   controllers.PensionSavingsController.pensionSavings
 
 

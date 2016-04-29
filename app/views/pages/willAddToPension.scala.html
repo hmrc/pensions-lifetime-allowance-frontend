@@ -1,6 +1,25 @@
-@()(implicit request: Request[_])
+@import models.WillAddToPensionModel
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import play.api.data._
+
+@(addToPensionForm: Form[WillAddToPensionModel])(implicit request: Request[_])
 
 
 @views.html.main_template(title = Messages("pla.willAddToPension.title"), bodyClasses = None) {
 
+  @govHelpers.form(action = routes.WillAddToPensionController.submitWillAddToPension) {
+
+    <div class="form-group">
+        @govHelpers.inputRadioGroup(
+            field = addToPensionForm("willAddToPension"),
+            Seq(
+                "true"->Messages("pla.base.yes"),
+                "false"->Messages("pla.base.no")),
+            '_labelAfter -> true,
+            '_labelClass -> "block-label"
+        )
+    </div>
+
+    <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
+  }
 }
