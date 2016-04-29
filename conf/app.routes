@@ -1,6 +1,6 @@
 # microservice specific routes
 
-GET         /                                   controllers.Default.redirect(to = "introduction")
+GET         /                                   controllers.IntroductionController.introduction
 GET         /introduction                       controllers.IntroductionController.introduction
 
 ## Initial Eligibility ##
