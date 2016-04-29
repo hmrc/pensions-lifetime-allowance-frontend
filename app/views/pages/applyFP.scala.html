@@ -1,6 +1,30 @@
 @()(implicit request: Request[_])
 
+@sidebar = {
+	<div class="service-info">
+		<h2>@Messages("pla.base.readMore")</h2>
+		<ul>
+			<li><a id="fp2016" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.fixedProtection2016")</a></li>
+		</ul>
+	</div>
+}
 
-@views.html.main_template(title = Messages("pla.applyFP.title"), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.applyFP.title"), bodyClasses = None, sidebarLinks = Some(sidebar)) {
+
+	<h1 class="heading-large">@Messages("pla.applyFP.pageHeading")</h1>
+
+	<p>@Messages("pla.applyFP.paraOne")</p>
+
+	<p>@Messages("pla.applyFP.paraTwo")</p>
+
+	<p>@Messages("pla.applyFP.paraThree")</p>
+
+	<div class="panel-indent">
+    	@Messages("pla.applyFP.signIn")
+    </div>
+
+	<p>
+        <a id="start" href=@controllers.routes.IntroductionController.introduction class="button button-start" role="button">@Messages("pla.base.continue")</a>
+    </p>
 
 }
