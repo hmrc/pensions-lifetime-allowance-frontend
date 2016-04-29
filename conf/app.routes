@@ -11,6 +11,7 @@ GET         /adding-to-pension                  controllers.WillAddToPensionCont
 POST        /adding-to-pension                  controllers.WillAddToPensionController.submitWillAddToPension
 
 GET         /pension-pot-size                   controllers.PensionSavingsController.pensionSavings
+POST        /pension-pot-size                  	controllers.PensionSavingsController.submitPensionSavings
 
 GET         /apply-ip                           controllers.ApplyIPController.applyIP
 
