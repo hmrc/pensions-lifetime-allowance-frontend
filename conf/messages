@@ -26,11 +26,19 @@ pla.willAddToPension.title                  = TODO
 pla.willAddToPension.error.notPopulated     = Please complete this field
 
 ## Have You Added to Your Pension ##
-pla.haveAddedToPension.title    	= TODO
-pla.haveAddedToPension.pageHeading	= Have you added to your pension?
-pla.haveAddedToPension.paraOne		= Have you added to your pension since 6 April 2016?
-pla.haveAddedToPension.help			= This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
-
+pla.haveAddedToPension.title        = TODO
+pla.haveAddedToPension.pageHeading  = Have you added to your pension?
+pla.haveAddedToPension.paraOne      = Have you added to your pension since 6 April 2016?
+pla.haveAddedToPension.help         = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
 
 ## Pension Savings ##
 pla.savings.title       = TODO
+
+## Apply for IP 2016 ##
+pla.applyIP.title       = TODO
+
+## Apply for FP 2016 ##
+pla.applyFP.title       = TODO
+
+## Cannot Apply ##
+pla.cannotApply.title       = TODO
