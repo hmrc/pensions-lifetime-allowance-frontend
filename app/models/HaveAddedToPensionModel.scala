@@ -18,4 +18,4 @@ package models
 
 import play.api.libs.json._
 
-case class HaveAddedToPensionModel(haveAddedToPension: Boolean)
+case class HaveAddedToPensionModel(haveAddedToPension: String)
