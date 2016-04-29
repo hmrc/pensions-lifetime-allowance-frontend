@@ -22,7 +22,8 @@ pla.intro.ip14LinkText  = apply for Individual Protection 2014
 pla.intro.start         = Start
 
 ## Will be Adding to Your Pension ##
-pla.willAddToPension.title      = TODO
+pla.willAddToPension.title                  = TODO
+pla.willAddToPension.error.notPopulated     = Please complete this field
 
 ## Have You Added to Your Pension ##
 pla.haveAddedToPension.title    = TODO

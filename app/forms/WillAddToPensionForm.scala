@@ -18,12 +18,15 @@ package forms
 
 import play.api.data._
 import play.api.data.Forms._
+import validation.Constraints._
 import models._
+import common.Validation
 
 object WillAddToPensionForm {
   val willAddToPensionForm = Form(
     mapping(
-      "willAddToPension" -> boolean
+      "willAddToPension" -> nonEmptyText
     )(WillAddToPensionModel.apply)(WillAddToPensionModel.unapply)
+    
   )
 }
