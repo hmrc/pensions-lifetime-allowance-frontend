@@ -88,7 +88,7 @@ class PensionSavingsControllerSpec extends UnitSpec with WithFakeApplication{
     "return 400" in { status(DataItem.result) shouldBe 400 }
 
     "fail with the correct error message" in {
-      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("This field is required")
+      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate the value of your savings")
     }
 
   }

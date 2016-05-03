@@ -1,18 +1,19 @@
 ## Base ##
-pla.base.appName        = Protect your Lifetime Allowance
-pla.base.yes            = Yes
-pla.base.no             = No
-pla.base.continue       = Continue
-pla.base.back           = Back
-pla.base.readMore       = Read more
-pla.base.newWindow      = opens in a new window
-pla.base.startAgain     = Start Again
+pla.base.appName                = Protect your Lifetime Allowance
+pla.base.yes                    = Yes
+pla.base.no                     = No
+pla.base.continue               = Continue
+pla.base.back                   = Back
+pla.base.readMore               = Read more
+pla.base.newWindow              = opens in a new window
+pla.base.startAgain             = Start Again
+pla.base.errorSummaryLabel      = The following errors were identified on this page.
 
 ## Link Text ##
 pla.links.lifetimeAllowance         = Pensions Lifetime Allowance
 pla.links.protectLifetimeAllowance  = Lifetime Allowance Protection schemes
-pla.links.fixedProtection2016		= Fixed Protection 2016
-pla.links.individualProtection2016	= Individual Protection 2016
+pla.links.fixedProtection2016       = Fixed Protection 2016
+pla.links.individualProtection2016  = Individual Protection 2016
 
 ## Introduction ##
 pla.intro.title         = Introduction
@@ -28,40 +29,43 @@ pla.intro.start         = Start
 pla.willAddToPension.title                  = Add to pension
 pla.willAddToPension.pageHeading            = Will you be adding to your pension?
 pla.willAddToPension.paraOne                = Will you be adding to your pension in the future?
-pla.willAddToPension.help            		= This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
+pla.willAddToPension.help                   = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
+pla.willAddToPension.mandatoryErr           = Please indicate whether you will be adding to your pension
 
 ## Have You Added to Your Pension ##
-pla.haveAddedToPension.title        = Added to pension
-pla.haveAddedToPension.pageHeading  = Have you added to your pension?
-pla.haveAddedToPension.paraOne      = Have you added to your pension since 6 April 2016?
-pla.haveAddedToPension.help         = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
+pla.haveAddedToPension.title                = Added to pension
+pla.haveAddedToPension.pageHeading          = Have you added to your pension?
+pla.haveAddedToPension.paraOne              = Have you added to your pension since 6 April 2016?
+pla.haveAddedToPension.help                 = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
+pla.haveAddedToPension.mandatoryErr         = Please indicate whether you have added to your pension
 
 ## Pension Savings ##
-pla.pensionSavings.title       	= Pension savings
-pla.pensionSavings.pageHeading	= Value of your pensions
-pla.pensionSavings.paraOne		= Were your total pension savings worth £1 million or more on 5 April 2016?
-pla.pensionSavings.help			= This includes UK pensions and overseas pensions which gained UK tax relief.
-pla.pensionSavings.paraTwo		= For defined benefit schemes, such as ''final salary schemes'', the value is normally 20 times the pension you get in the first year plus your lump sum.
+pla.pensionSavings.title                    = Pension savings
+pla.pensionSavings.pageHeading              = Value of your pensions
+pla.pensionSavings.paraOne                  = Were your total pension savings worth £1 million or more on 5 April 2016?
+pla.pensionSavings.help                     = This includes UK pensions and overseas pensions which gained UK tax relief.
+pla.pensionSavings.paraTwo                  = For defined benefit schemes, such as ''final salary schemes'', the value is normally 20 times the pension you get in the first year plus your lump sum.
+pla.pensionSavings.mandatoryErr             = Please indicate the value of your savings
 
 ## Apply for IP 2016 ##
 pla.applyIP.title       = Apply for IP 2016
-pla.applyIP.pageHeading	= Apply for protection
-pla.applyIP.paraOne		= You can apply for Individual Protection 2016.
-pla.applyIP.paraTwo		= This will protect your Lifetime Allowance at the value of your pension savings on 5 April 2016, up to £1.25 million.
-pla.applyIP.paraThree	= You will still be able to add to your pension without losing this protection.
-pla.applyIP.signIn		= To apply, you''ll need to sign in to your HMRC online services account, or create one.
+pla.applyIP.pageHeading = Apply for protection
+pla.applyIP.paraOne     = You can apply for Individual Protection 2016.
+pla.applyIP.paraTwo     = This will protect your Lifetime Allowance at the value of your pension savings on 5 April 2016, up to £1.25 million.
+pla.applyIP.paraThree   = You will still be able to add to your pension without losing this protection.
+pla.applyIP.signIn      = To apply, you''ll need to sign in to your HMRC online services account, or create one.
 
 ## Apply for FP 2016 ##
 pla.applyFP.title       = Apply for FP 2016
-pla.applyFP.pageHeading	= You can apply for protection
-pla.applyFP.paraOne		= You can apply for Fixed Protection 2016.
-pla.applyFP.paraTwo		= This will protect your Lifetime Allowance at £1.25 million, but you''ll lose your protection if you add to your pension. You must let us know if this happens.
-pla.applyFP.paraThree	= If the standard Lifetime Allowance increases to over £1.25 million in the future, you''ll get the higher amount.
-pla.applyFP.signIn		= To apply, you'll need to sign in to your HMRC online services account, or create one.
+pla.applyFP.pageHeading = You can apply for protection
+pla.applyFP.paraOne     = You can apply for Fixed Protection 2016.
+pla.applyFP.paraTwo     = This will protect your Lifetime Allowance at £1.25 million, but you''ll lose your protection if you add to your pension. You must let us know if this happens.
+pla.applyFP.paraThree   = If the standard Lifetime Allowance increases to over £1.25 million in the future, you''ll get the higher amount.
+pla.applyFP.signIn      = To apply, you'll need to sign in to your HMRC online services account, or create one.
 
 ## Cannot Apply ##
 pla.cannotApply.title       = Don''t need PLA
-pla.cannotApply.pageHeading	= You don''t need Lifetime Allowance Protection
-pla.cannotApply.paraOne		= This is because your pension savings are less than £1 million, which is the current Lifetime Allowance.
-pla.cannotApply.paraTwo		= For more information, visit
+pla.cannotApply.pageHeading = You don''t need Lifetime Allowance Protection
+pla.cannotApply.paraOne     = This is because your pension savings are less than £1 million, which is the current Lifetime Allowance.
+pla.cannotApply.paraTwo     = For more information, visit
 pla.cannotApply.plaLinkText = Pension Lifetime Allowance

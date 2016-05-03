@@ -16,6 +16,7 @@
 
 package forms
 
+import play.api.i18n.Messages
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -23,7 +24,7 @@ import models._
 object HaveAddedToPensionForm {
   val haveAddedToPensionForm = Form(
     mapping(
-      "haveAddedToPension" -> nonEmptyText
+      "haveAddedToPension" -> optional(text).verifying(Messages("pla.haveAddedToPension.mandatoryErr"), {_.isDefined})
     )(HaveAddedToPensionModel.apply)(HaveAddedToPensionModel.unapply)
   )
 }

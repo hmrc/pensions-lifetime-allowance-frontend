@@ -37,7 +37,7 @@ trait PensionSavingsController extends FrontendController {
 	    pensionSavingsForm.bindFromRequest.fold(
 	        errors => BadRequest(pages.pensionSavings(errors)),
 	        success => {
-	            success.eligiblePensionSavings match {
+	            success.eligiblePensionSavings.get match {
 	                case "yes"  => Redirect(routes.ApplyIPController.applyIP)
 	                case "no"   => Redirect(routes.CannotApplyController.cannotApply)
 	            }

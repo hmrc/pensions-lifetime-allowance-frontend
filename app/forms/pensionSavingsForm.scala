@@ -16,6 +16,7 @@
 
 package forms
 
+import play.api.i18n.Messages
 import play.api.data._
 import play.api.data.Forms._
 import models._
@@ -23,7 +24,7 @@ import models._
 object PensionSavingsForm {
   val pensionSavingsForm = Form(
     mapping(
-      "eligiblePensionSavings" -> nonEmptyText
+      "eligiblePensionSavings" -> optional(text).verifying(Messages("pla.pensionSavings.mandatoryErr"), {_.isDefined})
     )(PensionSavingsModel.apply)(PensionSavingsModel.unapply)
   )
 }
