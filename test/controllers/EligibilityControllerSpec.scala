@@ -62,10 +62,8 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
         EligibilityController.submitAddingToPension,
         ("willAddToPension", "yes")
       )
-
     "return 303" in {status(DataItem.result) shouldBe 303}
-
-    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.PensionSavingsController.pensionSavings()}") }
+    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.pensionSavings()}") }
   }
 
   "Submitting 'no' in addingToPensionForm" should {
@@ -75,9 +73,7 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
         EligibilityController.submitAddingToPension,
         ("willAddToPension", "no")
       )
-
     "return 303" in { status(DataItem.result) shouldBe 303 }
-
     "redirect to apply FP 16" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.ApplyFPController.applyFP()}") }
   }
 
@@ -88,9 +84,7 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
         EligibilityController.submitAddingToPension,
         ("willAddToPension", "")
       )
-
     "return 400" in { status(DataItem.result) shouldBe 400 }
-
     "fail with the correct error message" in {
       DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate whether you will be adding to your pension")
     }
@@ -122,10 +116,8 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
         EligibilityController.submitAddedToPension,
         ("haveAddedToPension", "yes")
       )
-
     "return 303" in {status(DataItem.result) shouldBe 303}
-
-    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.PensionSavingsController.pensionSavings()}") }
+    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.pensionSavings()}") }
   }
 
   "Submitting 'no' in addedToPensionForm" should {
@@ -135,9 +127,7 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
         EligibilityController.submitAddedToPension,
         ("haveAddedToPension", "no")
       )
-
     "return 303" in { status(DataItem.result) shouldBe 303 }
-
     "redirect to adding to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.addingToPension()}") }
   }
 
@@ -148,11 +138,61 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
         EligibilityController.submitAddedToPension,
         ("haveAddedToPension", "")
       )
-
     "return 400" in { status(DataItem.result) shouldBe 400 }
-
     "fail with the correct error message" in {
       DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate whether you have added to your pension")
+    }
+
+  }
+
+///////////////////////////////////////////////
+// Pension savings
+///////////////////////////////////////////////
+  "GET for pension savings" should {
+    "return 200" in {
+      val result = EligibilityController.pensionSavings(fakeRequest)
+      status(result) shouldBe Status.OK
+    }
+
+    "return HTML" in {
+      val result = EligibilityController.pensionSavings(fakeRequest)
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
+    }
+  }
+
+  "Submitting 'yes' in pensionSavingsForm" should {
+
+      object DataItem extends FakeRequestToPost(
+        "pension-savings",
+        EligibilityController.submitPensionSavings,
+        ("eligiblePensionSavings", "yes")
+      )
+    "return 303" in {status(DataItem.result) shouldBe 303}
+    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.ApplyIPController.applyIP()}") }
+  }
+
+  "Submitting 'no' in pensionSavingsForm" should {
+  
+      object DataItem extends FakeRequestToPost(
+        "pension-savings",
+        EligibilityController.submitPensionSavings,
+        ("eligiblePensionSavings", "no")
+      )
+    "return 303" in { status(DataItem.result) shouldBe 303 }
+    "redirect to will add to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.CannotApplyController.cannotApply()}") }
+  }
+
+  "submitting pensionSavingsForm with no data" should {
+
+      object DataItem extends FakeRequestToPost(
+        "pension-savings",
+        EligibilityController.submitPensionSavings,
+        ("eligiblePensionSavings", "")
+      )
+    "return 400" in { status(DataItem.result) shouldBe 400 }
+    "fail with the correct error message" in {
+      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate the value of your savings")
     }
 
   }

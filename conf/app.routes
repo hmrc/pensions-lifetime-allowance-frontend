@@ -10,8 +10,8 @@ POST        /added-to-pension                   controllers.EligibilityControlle
 GET         /adding-to-pension                  controllers.EligibilityController.addingToPension
 POST        /adding-to-pension                  controllers.EligibilityController.submitAddingToPension
 
-GET         /pension-pot-size                   controllers.PensionSavingsController.pensionSavings
-POST        /pension-pot-size                  	controllers.PensionSavingsController.submitPensionSavings
+GET         /pension-pot-size                   controllers.EligibilityController.pensionSavings
+POST        /pension-pot-size                  	controllers.EligibilityController.submitPensionSavings
 
 GET         /apply-ip                           controllers.ApplyIPController.applyIP
 

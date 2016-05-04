@@ -21,8 +21,9 @@ import play.api.data.Forms._
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import scala.concurrent.Future
-import forms.AddingToPensionForm.addingToPensionForm
 import forms.AddedToPensionForm.addedToPensionForm
+import forms.AddingToPensionForm.addingToPensionForm
+import forms.PensionSavingsForm.pensionSavingsForm
 
 import views.html._
 
@@ -40,7 +41,7 @@ trait EligibilityController extends FrontendController {
             errors => BadRequest(pages.eligibility.addingToPension(errors)),
             success => {
                 success.willAddToPension.get match {
-                    case "yes" => Redirect(routes.PensionSavingsController.pensionSavings)
+                    case "yes" => Redirect(routes.EligibilityController.pensionSavings)
                     case "no"  => Redirect(routes.ApplyFPController.applyFP)
                 }
             }
@@ -57,8 +58,25 @@ trait EligibilityController extends FrontendController {
             errors => BadRequest(pages.eligibility.addedToPension(errors)),
             success => {
                 success.haveAddedToPension.get match {
-                    case "yes"  => Redirect(routes.PensionSavingsController.pensionSavings)
+                    case "yes"  => Redirect(routes.EligibilityController.pensionSavings)
                     case "no"   => Redirect(routes.EligibilityController.addingToPension)
+                }
+            }
+        )
+    }
+
+    // PENSION SAVINGS
+    val pensionSavings = Action.async { implicit request =>
+        Future.successful(Ok(pages.eligibility.pensionSavings(pensionSavingsForm)))
+    }
+
+    val submitPensionSavings = Action { implicit request =>
+        pensionSavingsForm.bindFromRequest.fold(
+            errors => BadRequest(pages.eligibility.pensionSavings(errors)),
+            success => {
+                success.eligiblePensionSavings.get match {
+                    case "yes"  => Redirect(routes.ApplyIPController.applyIP)
+                    case "no"   => Redirect(routes.CannotApplyController.cannotApply)
                 }
             }
         )
