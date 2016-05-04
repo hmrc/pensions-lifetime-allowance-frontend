@@ -17,6 +17,6 @@ GET         /apply-ip                           controllers.EligibilityControlle
 
 GET         /apply-fp                           controllers.EligibilityController.applyFP
 
-GET         /pension-below-threshold            controllers.CannotApplyController.cannotApply
+GET         /pension-below-threshold            controllers.EligibilityController.cannotApply
 
 GET         /hello-world                        controllers.HelloWorld.helloWorld

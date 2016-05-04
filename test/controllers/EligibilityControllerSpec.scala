@@ -54,7 +54,6 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication{
     }
   }
 
-
   "Submitting 'yes' in addingToPensionForm" should {
 
       object DataItem extends FakeRequestToPost(
@@ -177,7 +176,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication{
         ("eligiblePensionSavings", "no")
       )
     "return 303" in { status(DataItem.result) shouldBe 303 }
-    "redirect to will add to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.CannotApplyController.cannotApply()}") }
+    "redirect to will add to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.cannotApply()}") }
   }
 
   "submitting pensionSavingsForm with no data" should {
@@ -220,6 +219,22 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication{
 
     "return HTML" in {
       val result = EligibilityController.applyIP(fakeRequest)
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
+    }
+  }
+
+///////////////////////////////////////////////
+// Cannot apply
+///////////////////////////////////////////////
+  "GET for cannot apply" should {
+    "return 200" in {
+      val result = EligibilityController.cannotApply(fakeRequest)
+      status(result) shouldBe Status.OK
+    }
+
+    "return HTML" in {
+      val result = EligibilityController.cannotApply(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
