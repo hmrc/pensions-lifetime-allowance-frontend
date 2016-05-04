@@ -31,7 +31,7 @@ import org.jsoup._
 import testHelpers._
 
 
-class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
+class EligibilityControllerSpec extends UnitSpec with WithFakeApplication{
 
 
   val fakeRequest = FakeRequest("GET", "/")
@@ -166,7 +166,7 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
         ("eligiblePensionSavings", "yes")
       )
     "return 303" in {status(DataItem.result) shouldBe 303}
-    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.ApplyIPController.applyIP()}") }
+    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.applyIP()}") }
   }
 
   "Submitting 'no' in pensionSavingsForm" should {
@@ -204,6 +204,22 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
 
     "return HTML" in {
       val result = EligibilityController.applyFP(fakeRequest)
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
+    }
+  }
+
+///////////////////////////////////////////////
+// Apply IP
+///////////////////////////////////////////////
+  "GET for apply IP" should {
+    "return 200" in {
+      val result = EligibilityController.applyIP(fakeRequest)
+      status(result) shouldBe Status.OK
+    }
+
+    "return HTML" in {
+      val result = EligibilityController.applyIP(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }

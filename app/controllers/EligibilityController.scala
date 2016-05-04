@@ -75,7 +75,7 @@ trait EligibilityController extends FrontendController {
             errors => BadRequest(pages.eligibility.pensionSavings(errors)),
             success => {
                 success.eligiblePensionSavings.get match {
-                    case "yes"  => Redirect(routes.ApplyIPController.applyIP)
+                    case "yes"  => Redirect(routes.EligibilityController.applyIP)
                     case "no"   => Redirect(routes.CannotApplyController.cannotApply)
                 }
             }
@@ -85,5 +85,10 @@ trait EligibilityController extends FrontendController {
     // APPLY FP
     val applyFP = Action.async { implicit request =>
         Future.successful(Ok(views.html.pages.eligibility.applyFP()))
+    }
+
+    // APPLY IP
+    val applyIP = Action.async { implicit request =>
+        Future.successful(Ok(views.html.pages.eligibility.applyIP()))
     }
 }
