@@ -14,17 +14,8 @@
  * limitations under the License.
  */
 
-package controllers
+package models
 
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import play.api.mvc._
-import scala.concurrent.Future
+import play.api.libs.json._
 
-
-object ApplyFPController extends ApplyFPController
-
-trait ApplyFPController extends FrontendController {
-  val applyFP = Action.async { implicit request =>
-		Future.successful(Ok(views.html.pages.eligibility.applyFP()))
-  }
-}
+case class AddedToPensionModel(haveAddedToPension: Option[String])

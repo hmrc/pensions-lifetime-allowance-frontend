@@ -21,7 +21,9 @@ import play.api.data.Forms._
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import scala.concurrent.Future
+import forms.AddedToPensionForm.addedToPensionForm
 import forms.AddingToPensionForm.addingToPensionForm
+import forms.PensionSavingsForm.pensionSavingsForm
 
 import views.html._
 
@@ -29,6 +31,7 @@ object EligibilityController extends EligibilityController
 
 trait EligibilityController extends FrontendController {
 
+    // ADDING TO PENSION
     val addingToPension = Action.async { implicit request =>
         Future.successful(Ok(pages.eligibility.addingToPension(addingToPensionForm)))
     }
@@ -38,10 +41,59 @@ trait EligibilityController extends FrontendController {
             errors => BadRequest(pages.eligibility.addingToPension(errors)),
             success => {
                 success.willAddToPension.get match {
-                    case "yes" => Redirect(routes.PensionSavingsController.pensionSavings)
-                    case "no"  => Redirect(routes.ApplyFPController.applyFP)
+                    case "yes" => Redirect(routes.EligibilityController.pensionSavings)
+                    case "no"  => Redirect(routes.EligibilityController.applyFP)
                 }
             }
         )
+    }
+
+    // ADDED TO PENSION
+    val addedToPension = Action.async { implicit request =>
+        Future.successful(Ok(pages.eligibility.addedToPension(addedToPensionForm)))
+    }
+
+    val submitAddedToPension = Action { implicit request =>
+        addedToPensionForm.bindFromRequest.fold(
+            errors => BadRequest(pages.eligibility.addedToPension(errors)),
+            success => {
+                success.haveAddedToPension.get match {
+                    case "yes"  => Redirect(routes.EligibilityController.pensionSavings)
+                    case "no"   => Redirect(routes.EligibilityController.addingToPension)
+                }
+            }
+        )
+    }
+
+    // PENSION SAVINGS
+    val pensionSavings = Action.async { implicit request =>
+        Future.successful(Ok(pages.eligibility.pensionSavings(pensionSavingsForm)))
+    }
+
+    val submitPensionSavings = Action { implicit request =>
+        pensionSavingsForm.bindFromRequest.fold(
+            errors => BadRequest(pages.eligibility.pensionSavings(errors)),
+            success => {
+                success.eligiblePensionSavings.get match {
+                    case "yes"  => Redirect(routes.EligibilityController.applyIP)
+                    case "no"   => Redirect(routes.EligibilityController.cannotApply)
+                }
+            }
+        )
+    }
+
+    // APPLY FP
+    val applyFP = Action.async { implicit request =>
+        Future.successful(Ok(views.html.pages.eligibility.applyFP()))
+    }
+
+    // APPLY IP
+    val applyIP = Action.async { implicit request =>
+        Future.successful(Ok(views.html.pages.eligibility.applyIP()))
+    }
+
+    // CANNOT APPLY
+    val cannotApply = Action.async { implicit request =>
+        Future.successful(Ok(views.html.pages.eligibility.cannotApply()))
     }
 }
