@@ -4,8 +4,8 @@ GET         /                                   controllers.IntroductionControll
 GET         /introduction                       controllers.IntroductionController.introduction
 
 ## Initial Eligibility ##
-GET         /added-to-pension                   controllers.HaveAddedToPensionController.haveAddedToPension
-POST        /added-to-pension                   controllers.HaveAddedToPensionController.submitHaveAddedToPension
+GET         /added-to-pension                   controllers.EligibilityController.addedToPension
+POST        /added-to-pension                   controllers.EligibilityController.submitAddedToPension
 
 GET         /adding-to-pension                  controllers.EligibilityController.addingToPension
 POST        /adding-to-pension                  controllers.EligibilityController.submitAddingToPension

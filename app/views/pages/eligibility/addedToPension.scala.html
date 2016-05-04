@@ -1,20 +1,20 @@
-@import models.HaveAddedToPensionModel
+@import models.AddedToPensionModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import helpers.templates.plaInputRadioGroup
 @import play.api.data._
 
-@(addedToPensionForm: Form[HaveAddedToPensionModel])(implicit request: Request[_])
+@(addedToPensionForm: Form[AddedToPensionModel])(implicit request: Request[_])
 
 
-@views.html.main_template(title = Messages("pla.haveAddedToPension.title"), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.addedToPension.title"), bodyClasses = None) {
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), addedToPensionForm
     )
 
-	<h1 class="heading-large">@Messages("pla.haveAddedToPension.pageHeading")</h1>
+	<h1 class="heading-large">@Messages("pla.addedToPension.pageHeading")</h1>
 
-	@govHelpers.form(action = routes.HaveAddedToPensionController.submitHaveAddedToPension) {
+	@govHelpers.form(action = routes.EligibilityController.submitAddedToPension) {
 
 	    <div class="inline form-group">
 	        @plaInputRadioGroup(
@@ -24,8 +24,8 @@
 	                "no"->Messages("pla.base.no")),
 	            '_labelAfter -> true,
 	            '_labelClass -> "block-label",
-	            '_legend -> Messages("pla.haveAddedToPension.paraOne"),
-	            '_helpText -> Some(Messages("pla.haveAddedToPension.help"))
+	            '_legend -> Messages("pla.addedToPension.paraOne"),
+	            '_helpText -> Some(Messages("pla.addedToPension.help"))
 	        )
 	    </div>
 

@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package models
+package forms
 
-import play.api.libs.json._
+import play.api.i18n.Messages
+import play.api.data._
+import play.api.data.Forms._
+import models._
 
-case class HaveAddedToPensionModel(haveAddedToPension: Option[String])
+object AddedToPensionForm {
+  val addedToPensionForm = Form(
+    mapping(
+      "haveAddedToPension" -> optional(text).verifying(Messages("pla.addedToPension.mandatoryErr"), {_.isDefined})
+    )(AddedToPensionModel.apply)(AddedToPensionModel.unapply)
+  )
+}

@@ -33,11 +33,11 @@ pla.addingToPension.help                   = This includes pension contributions
 pla.addingToPension.mandatoryErr           = Please indicate whether you will be adding to your pension
 
 ## Have You Added to Your Pension ##
-pla.haveAddedToPension.title                = Added to pension
-pla.haveAddedToPension.pageHeading          = Have you added to your pension?
-pla.haveAddedToPension.paraOne              = Have you added to your pension since 6 April 2016?
-pla.haveAddedToPension.help                 = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
-pla.haveAddedToPension.mandatoryErr         = Please indicate whether you have added to your pension
+pla.addedToPension.title                = Added to pension
+pla.addedToPension.pageHeading          = Have you added to your pension?
+pla.addedToPension.paraOne              = Have you added to your pension since 6 April 2016?
+pla.addedToPension.help                 = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
+pla.addedToPension.mandatoryErr         = Please indicate whether you have added to your pension
 
 ## Pension Savings ##
 pla.pensionSavings.title                    = Pension savings

@@ -22,6 +22,7 @@ import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import scala.concurrent.Future
 import forms.AddingToPensionForm.addingToPensionForm
+import forms.AddedToPensionForm.addedToPensionForm
 
 import views.html._
 
@@ -29,6 +30,7 @@ object EligibilityController extends EligibilityController
 
 trait EligibilityController extends FrontendController {
 
+    // ADDING TO PENSION
     val addingToPension = Action.async { implicit request =>
         Future.successful(Ok(pages.eligibility.addingToPension(addingToPensionForm)))
     }
@@ -40,6 +42,23 @@ trait EligibilityController extends FrontendController {
                 success.willAddToPension.get match {
                     case "yes" => Redirect(routes.PensionSavingsController.pensionSavings)
                     case "no"  => Redirect(routes.ApplyFPController.applyFP)
+                }
+            }
+        )
+    }
+
+    // ADDED TO PENSION
+    val addedToPension = Action.async { implicit request =>
+        Future.successful(Ok(pages.eligibility.addedToPension(addedToPensionForm)))
+    }
+
+    val submitAddedToPension = Action { implicit request =>
+        addedToPensionForm.bindFromRequest.fold(
+            errors => BadRequest(pages.eligibility.addedToPension(errors)),
+            success => {
+                success.haveAddedToPension.get match {
+                    case "yes"  => Redirect(routes.PensionSavingsController.pensionSavings)
+                    case "no"   => Redirect(routes.EligibilityController.addingToPension)
                 }
             }
         )

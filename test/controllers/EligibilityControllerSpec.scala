@@ -37,6 +37,10 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
   val fakeRequest = FakeRequest("GET", "/")
 
 
+///////////////////////////////////////////////
+// Adding to pension
+///////////////////////////////////////////////
+
   "GET for adding to pension" should {
     "return 200" in {
       val result = EligibilityController.addingToPension(fakeRequest)
@@ -93,5 +97,63 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
 
   }
 
+///////////////////////////////////////////////
+// Added to pension
+///////////////////////////////////////////////
 
+  "GET for added to pension" should {
+    "return 200" in {
+      val result = EligibilityController.addedToPension(fakeRequest)
+      status(result) shouldBe 200
+    }
+
+    "return HTML" in {
+      val result = EligibilityController.addedToPension(fakeRequest)
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
+    }
+
+  }
+
+  "Submitting 'yes' in addedToPensionForm" should {
+
+      object DataItem extends FakeRequestToPost(
+        "added-to-pension",
+        EligibilityController.submitAddedToPension,
+        ("haveAddedToPension", "yes")
+      )
+
+    "return 303" in {status(DataItem.result) shouldBe 303}
+
+    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.PensionSavingsController.pensionSavings()}") }
+  }
+
+  "Submitting 'no' in addedToPensionForm" should {
+  
+      object DataItem extends FakeRequestToPost(
+        "added-to-pension",
+        EligibilityController.submitAddedToPension,
+        ("haveAddedToPension", "no")
+      )
+
+    "return 303" in { status(DataItem.result) shouldBe 303 }
+
+    "redirect to adding to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.addingToPension()}") }
+  }
+
+  "submitting addedToPensionForm with no data" should {
+
+      object DataItem extends FakeRequestToPost(
+        "added-to-pension",
+        EligibilityController.submitAddedToPension,
+        ("haveAddedToPension", "")
+      )
+
+    "return 400" in { status(DataItem.result) shouldBe 400 }
+
+    "fail with the correct error message" in {
+      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate whether you have added to your pension")
+    }
+
+  }
 }
