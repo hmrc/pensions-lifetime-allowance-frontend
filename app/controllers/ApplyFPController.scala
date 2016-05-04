@@ -25,6 +25,6 @@ object ApplyFPController extends ApplyFPController
 
 trait ApplyFPController extends FrontendController {
   val applyFP = Action.async { implicit request =>
-		Future.successful(Ok(views.html.pages.applyFP()))
+		Future.successful(Ok(views.html.pages.eligibility.applyFP()))
   }
 }

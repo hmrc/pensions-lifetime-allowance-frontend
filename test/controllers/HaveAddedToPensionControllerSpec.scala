@@ -73,7 +73,7 @@ class HaveAddedToPensionControllerSpec extends UnitSpec with WithFakeApplication
 
     "return 303" in { status(DataItem.result) shouldBe 303 }
 
-    "redirect to will add to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.WillAddToPensionController.willAddToYourPension()}") }
+    "redirect to adding to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.addingToPension()}") }
   }
 
   "submitting haveAddedToPensionForm with no data" should {

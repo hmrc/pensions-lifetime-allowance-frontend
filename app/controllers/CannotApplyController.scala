@@ -25,6 +25,6 @@ object CannotApplyController extends CannotApplyController
 
 trait CannotApplyController extends FrontendController {
   val cannotApply = Action.async { implicit request =>
-		Future.successful(Ok(views.html.pages.cannotApply()))
+		Future.successful(Ok(views.html.pages.eligibility.cannotApply()))
   }
 }

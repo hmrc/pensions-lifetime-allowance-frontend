@@ -25,6 +25,6 @@ object ApplyIPController extends ApplyIPController
 
 trait ApplyIPController extends FrontendController {
   val applyIP = Action.async { implicit request =>
-		Future.successful(Ok(views.html.pages.applyIP()))
+		Future.successful(Ok(views.html.pages.eligibility.applyIP()))
   }
 }
