@@ -16,27 +16,70 @@
 
 package config
 
-import play.api.Play.{configuration, current}
+import play.api.Play._
 import uk.gov.hmrc.play.config.ServicesConfig
 
 trait AppConfig {
   val assetsPrefix: String
+  val betaFeedbackUrl: String
+  val betaFeedbackUnauthenticatedUrl: String
   val analyticsToken: String
   val analyticsHost: String
+  val ssoUrl: Option[String]
+  val citizenAuthHost: Option[String]
+  val contactFormServiceIdentifier: String
+  val contactFrontendPartialBaseUrl: String
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
+  val excludeCopeTab: Boolean
+  val showGovUkDonePage: Boolean
+  val govUkFinishedPageUrl: String
+  val identityVerification: Boolean
+  val applyUrl: String
+  val notAuthorisedRedirectUrl: String
+  val verifySignIn = s"$citizenAuthHost/ida/login"
+  val ivUpliftUrl: String
+  val twoFactorUrl: String
+  val ggSignInUrl: String
+  val ptaFrontendUrl: String
+  val breadcrumbPartialUrl: String
 }
 
 object FrontendAppConfig extends AppConfig with ServicesConfig {
+  private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
-
+  private val contactFrontendService = baseUrl("contact-frontend")
   private val contactHost = configuration.getString(s"contact-frontend.host").getOrElse("")
-  private val contactFormServiceIdentifier = "MyService"
+  private val baseUrl = "protect-your-lifetime-allowance"
 
-  override lazy val assetsPrefix = loadConfig(s"assets.url") + loadConfig(s"assets.version")
-  override lazy val analyticsToken = loadConfig(s"google-analytics.token")
-  override lazy val analyticsHost = loadConfig(s"google-analytics.host")
+  override lazy val assetsPrefix: String = loadConfig(s"assets.url") + loadConfig(s"assets.version")
+  override lazy val betaFeedbackUrl = s"$baseUrl/feedback"
+  override lazy val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
+  override lazy val analyticsToken: String = configuration.getString(s"google-analytics.token").getOrElse("")
+  override lazy val analyticsHost: String = configuration.getString(s"google-analytics.host").getOrElse("auto")
+  override lazy val ssoUrl: Option[String] = configuration.getString(s"portal.ssoUrl")
+
+  override val contactFormServiceIdentifier = "PLA"
+  override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  override val excludeCopeTab: Boolean = configuration.getBoolean(s"microservice.services.exclusions.copetab").getOrElse(true)
+  override val showGovUkDonePage: Boolean = configuration.getBoolean("govuk-done-page.enabled").getOrElse(true)
+  override val govUkFinishedPageUrl: String = loadConfig("govuk-done-page.url")
+  override val identityVerification: Boolean = configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)
+
+  override lazy val citizenAuthHost = configuration.getString("citizen-auth.host")
+  override lazy val applyUrl = {
+    val value = configuration.getString("apply.url").getOrElse("")
+    System.err.println("****APPLY URL => " + value)
+    value
+  }
+  override lazy val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
+  override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
+  override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
+  override val twoFactorUrl: String = configuration.getString(s"two-factor.host").getOrElse("")
+
+  private val ptaFrontendService: String = baseUrl("pertax-frontend")
+  override lazy val ptaFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
+  override lazy val breadcrumbPartialUrl: String = s"$ptaFrontendService/personal-account/integration/main-content-header"
 }

@@ -10,3 +10,4 @@ GET         /pension-pot-size                   controllers.PensionSavingsContro
 
 
 GET         /hello-world                        controllers.HelloWorld.helloWorld
+GET         /timeout                            controllers.HelloWorld.timeout
