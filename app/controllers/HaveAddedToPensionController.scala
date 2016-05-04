@@ -30,16 +30,16 @@ object HaveAddedToPensionController extends HaveAddedToPensionController
 trait HaveAddedToPensionController extends FrontendController {
 
   val haveAddedToPension = Action.async { implicit request =>
-		Future.successful(Ok(pages.haveAddedToPension(haveAddedToPensionForm)))
+		Future.successful(Ok(pages.eligibility.haveAddedToPension(haveAddedToPensionForm)))
   }
 
   val submitHaveAddedToPension = Action { implicit request =>
         haveAddedToPensionForm.bindFromRequest.fold(
-            errors => BadRequest(pages.haveAddedToPension(errors)),
+            errors => BadRequest(pages.eligibility.haveAddedToPension(errors)),
             success => {
                 success.haveAddedToPension.get match {
                     case "yes"  => Redirect(routes.PensionSavingsController.pensionSavings)
-                    case "no"   => Redirect(routes.WillAddToPensionController.willAddToYourPension)
+                    case "no"   => Redirect(routes.EligibilityController.addingToPension)
                 }
             }
         )

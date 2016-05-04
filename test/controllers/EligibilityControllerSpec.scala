@@ -37,25 +37,25 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
   val fakeRequest = FakeRequest("GET", "/")
 
 
-  "GET /" should {
+  "GET for adding to pension" should {
     "return 200" in {
-      val result = WillAddToPensionController.willAddToYourPension(fakeRequest)
+      val result = EligibilityController.addingToPension(fakeRequest)
       status(result) shouldBe 200
     }
 
     "return HTML" in {
-      val result = WillAddToPensionController.willAddToYourPension(fakeRequest)
+      val result = EligibilityController.addingToPension(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
   }
 
 
-  "Submitting 'yes' in willAddToPensionForm" should {
+  "Submitting 'yes' in addingToPensionForm" should {
 
       object DataItem extends FakeRequestToPost(
         "adding-to-pension",
-        WillAddToPensionController.submitWillAddToPension,
+        EligibilityController.submitAddingToPension,
         ("willAddToPension", "yes")
       )
 
@@ -64,11 +64,11 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
     "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.PensionSavingsController.pensionSavings()}") }
   }
 
-  "Submitting 'no' in willAddToPensionForm" should {
+  "Submitting 'no' in addingToPensionForm" should {
   
       object DataItem extends FakeRequestToPost(
         "adding-to-pension",
-        WillAddToPensionController.submitWillAddToPension,
+        EligibilityController.submitAddingToPension,
         ("willAddToPension", "no")
       )
 
@@ -77,11 +77,11 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
     "redirect to apply FP 16" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.ApplyFPController.applyFP()}") }
   }
 
-  "submitting willAddToPensionForm with no data" should {
+  "submitting addingToPensionForm with no data" should {
 
       object DataItem extends FakeRequestToPost(
         "adding-to-pension",
-        WillAddToPensionController.submitWillAddToPension,
+        EligibilityController.submitAddingToPension,
         ("willAddToPension", "")
       )
 

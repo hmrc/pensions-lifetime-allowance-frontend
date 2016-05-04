@@ -21,21 +21,21 @@ import play.api.data.Forms._
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import scala.concurrent.Future
-import forms.WillAddToPensionForm.willAddToPensionForm
+import forms.AddingToPensionForm.addingToPensionForm
 
 import views.html._
 
-object WillAddToPensionController extends WillAddToPensionController
+object EligibilityController extends EligibilityController
 
-trait WillAddToPensionController extends FrontendController {
+trait EligibilityController extends FrontendController {
 
-    val willAddToYourPension = Action.async { implicit request =>
-        Future.successful(Ok(pages.willAddToPension(willAddToPensionForm)))
+    val addingToPension = Action.async { implicit request =>
+        Future.successful(Ok(pages.eligibility.addingToPension(addingToPensionForm)))
     }
 
-    val submitWillAddToPension = Action { implicit request =>
-        willAddToPensionForm.bindFromRequest.fold(
-            errors => BadRequest(pages.willAddToPension(errors)),
+    val submitAddingToPension = Action { implicit request =>
+        addingToPensionForm.bindFromRequest.fold(
+            errors => BadRequest(pages.eligibility.addingToPension(errors)),
             success => {
                 success.willAddToPension.get match {
                     case "yes" => Redirect(routes.PensionSavingsController.pensionSavings)
@@ -45,4 +45,3 @@ trait WillAddToPensionController extends FrontendController {
         )
     }
 }
-

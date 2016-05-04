@@ -26,11 +26,11 @@ pla.intro.ip14LinkText  = apply for Individual Protection 2014
 pla.intro.start         = Start
 
 ## Will be Adding to Your Pension ##
-pla.willAddToPension.title                  = Add to pension
-pla.willAddToPension.pageHeading            = Will you be adding to your pension?
-pla.willAddToPension.paraOne                = Will you be adding to your pension in the future?
-pla.willAddToPension.help                   = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
-pla.willAddToPension.mandatoryErr           = Please indicate whether you will be adding to your pension
+pla.addingToPension.title                  = Add to pension
+pla.addingToPension.pageHeading            = Will you be adding to your pension?
+pla.addingToPension.paraOne                = Will you be adding to your pension in the future?
+pla.addingToPension.help                   = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
+pla.addingToPension.mandatoryErr           = Please indicate whether you will be adding to your pension
 
 ## Have You Added to Your Pension ##
 pla.haveAddedToPension.title                = Added to pension

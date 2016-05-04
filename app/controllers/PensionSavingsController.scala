@@ -30,12 +30,12 @@ object PensionSavingsController extends PensionSavingsController
 trait PensionSavingsController extends FrontendController {
 
   	val pensionSavings = Action.async { implicit request =>
-		Future.successful(Ok(pages.pensionSavings(pensionSavingsForm)))
+		Future.successful(Ok(pages.eligibility.pensionSavings(pensionSavingsForm)))
   	}
 
   	val submitPensionSavings = Action { implicit request =>
 	    pensionSavingsForm.bindFromRequest.fold(
-	        errors => BadRequest(pages.pensionSavings(errors)),
+	        errors => BadRequest(pages.eligibility.pensionSavings(errors)),
 	        success => {
 	            success.eligiblePensionSavings.get match {
 	                case "yes"  => Redirect(routes.ApplyIPController.applyIP)
