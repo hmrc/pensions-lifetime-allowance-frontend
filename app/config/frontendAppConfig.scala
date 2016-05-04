@@ -69,11 +69,8 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
   override val identityVerification: Boolean = configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)
 
   override lazy val citizenAuthHost = configuration.getString("citizen-auth.host")
-  override lazy val applyUrl = {
-    val value = configuration.getString("apply.url").getOrElse("")
-    System.err.println("****APPLY URL => " + value)
-    value
-  }
+  override lazy val applyUrl = configuration.getString("apply.url").getOrElse("")
+
   override lazy val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
   override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
   override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
