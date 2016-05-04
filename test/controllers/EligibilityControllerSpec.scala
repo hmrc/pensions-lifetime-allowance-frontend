@@ -74,7 +74,7 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
         ("willAddToPension", "no")
       )
     "return 303" in { status(DataItem.result) shouldBe 303 }
-    "redirect to apply FP 16" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.ApplyFPController.applyFP()}") }
+    "redirect to apply FP 16" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.applyFP()}") }
   }
 
   "submitting addingToPensionForm with no data" should {
@@ -88,7 +88,6 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
     "fail with the correct error message" in {
       DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate whether you will be adding to your pension")
     }
-
   }
 
 ///////////////////////////////////////////////
@@ -106,7 +105,6 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
-
   }
 
   "Submitting 'yes' in addedToPensionForm" should {
@@ -142,7 +140,6 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
     "fail with the correct error message" in {
       DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate whether you have added to your pension")
     }
-
   }
 
 ///////////////////////////////////////////////
@@ -194,6 +191,22 @@ class WillAddToPensionControllerSpec extends UnitSpec with WithFakeApplication{
     "fail with the correct error message" in {
       DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate the value of your savings")
     }
-
   }
+
+///////////////////////////////////////////////
+// Apply FP
+///////////////////////////////////////////////
+  "GET for apply FP" should {
+    "return 200" in {
+      val result = EligibilityController.applyFP(fakeRequest)
+      status(result) shouldBe Status.OK
+    }
+
+    "return HTML" in {
+      val result = EligibilityController.applyFP(fakeRequest)
+      contentType(result) shouldBe Some("text/html")
+      charset(result) shouldBe Some("utf-8")
+    }
+  }
+
 }

@@ -15,7 +15,7 @@ POST        /pension-pot-size                  	controllers.EligibilityControlle
 
 GET         /apply-ip                           controllers.ApplyIPController.applyIP
 
-GET         /apply-fp                           controllers.ApplyFPController.applyFP
+GET         /apply-fp                           controllers.EligibilityController.applyFP
 
 GET         /pension-below-threshold            controllers.CannotApplyController.cannotApply
 

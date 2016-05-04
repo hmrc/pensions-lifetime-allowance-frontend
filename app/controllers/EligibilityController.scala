@@ -42,7 +42,7 @@ trait EligibilityController extends FrontendController {
             success => {
                 success.willAddToPension.get match {
                     case "yes" => Redirect(routes.EligibilityController.pensionSavings)
-                    case "no"  => Redirect(routes.ApplyFPController.applyFP)
+                    case "no"  => Redirect(routes.EligibilityController.applyFP)
                 }
             }
         )
@@ -80,5 +80,10 @@ trait EligibilityController extends FrontendController {
                 }
             }
         )
+    }
+
+    // APPLY FP
+    val applyFP = Action.async { implicit request =>
+        Future.successful(Ok(views.html.pages.eligibility.applyFP()))
     }
 }
