@@ -37,7 +37,7 @@ trait HaveAddedToPensionController extends FrontendController {
         haveAddedToPensionForm.bindFromRequest.fold(
             errors => BadRequest(pages.haveAddedToPension(errors)),
             success => {
-                success.haveAddedToPension match {
+                success.haveAddedToPension.get match {
                     case "yes"  => Redirect(routes.PensionSavingsController.pensionSavings)
                     case "no"   => Redirect(routes.WillAddToPensionController.willAddToYourPension)
                 }

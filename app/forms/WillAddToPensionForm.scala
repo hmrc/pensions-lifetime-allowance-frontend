@@ -16,16 +16,15 @@
 
 package forms
 
+import play.api.i18n.Messages
 import play.api.data._
 import play.api.data.Forms._
-import validation.Constraints._
 import models._
-import common.Validation
 
 object WillAddToPensionForm {
   val willAddToPensionForm = Form(
     mapping(
-      "willAddToPension" -> nonEmptyText
+      "willAddToPension" -> optional(text).verifying(Messages("pla.willAddToPension.mandatoryErr"), {_.isDefined})
     )(WillAddToPensionModel.apply)(WillAddToPensionModel.unapply)
     
   )

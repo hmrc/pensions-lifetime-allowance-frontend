@@ -8,6 +8,10 @@
 
 @views.html.main_template(title = Messages("pla.pensionSavings.title"), bodyClasses = None) {
 
+    @govHelpers.errorSummary(
+        Messages("pla.base.errorSummaryLabel"), pensionSavingsForm
+    )
+
 	<h1 class="heading-large">@Messages("pla.pensionSavings.pageHeading")</h1>
 
 	@govHelpers.form(action = routes.PensionSavingsController.submitPensionSavings) {
