@@ -86,7 +86,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication{
       )
     "return 400" in { status(DataItem.result) shouldBe 400 }
     "fail with the correct error message" in {
-      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate whether you will be adding to your pension")
+      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please tell us whether you'll be adding to your pension in the future")
     }
   }
 
@@ -138,7 +138,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication{
       )
     "return 400" in { status(DataItem.result) shouldBe 400 }
     "fail with the correct error message" in {
-      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate whether you have added to your pension")
+      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please tell us whether you've added to your pension since 6 April 2016")
     }
   }
 
@@ -189,7 +189,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication{
       )
     "return 400" in { status(DataItem.result) shouldBe 400 }
     "fail with the correct error message" in {
-      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please indicate the value of your savings")
+      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please tell us if your pension savings were £1 million or more on 5 April 2016")
     }
   }
 

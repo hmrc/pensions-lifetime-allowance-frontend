@@ -7,7 +7,7 @@ pla.base.back                   = Back
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
 pla.base.startAgain             = Start Again
-pla.base.errorSummaryLabel      = The following errors were identified on this page.
+pla.base.errorSummaryLabel      = There are errors on this page.
 
 ## Link Text ##
 pla.links.lifetimeAllowance         = Pensions Lifetime Allowance
@@ -30,14 +30,14 @@ pla.addingToPension.title                  = Add to pension
 pla.addingToPension.pageHeading            = Will you be adding to your pension?
 pla.addingToPension.paraOne                = Will you be adding to your pension in the future?
 pla.addingToPension.help                   = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
-pla.addingToPension.mandatoryErr           = Please indicate whether you will be adding to your pension
+pla.addingToPension.mandatoryErr           = Please tell us whether you''ll be adding to your pension in the future
 
 ## Have You Added to Your Pension ##
 pla.addedToPension.title                = Added to pension
 pla.addedToPension.pageHeading          = Have you added to your pension?
 pla.addedToPension.paraOne              = Have you added to your pension since 6 April 2016?
 pla.addedToPension.help                 = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
-pla.addedToPension.mandatoryErr         = Please indicate whether you have added to your pension
+pla.addedToPension.mandatoryErr         = Please tell us whether you''ve added to your pension since 6 April 2016
 
 ## Pension Savings ##
 pla.pensionSavings.title                    = Pension savings
@@ -45,7 +45,7 @@ pla.pensionSavings.pageHeading              = Value of your pensions
 pla.pensionSavings.paraOne                  = Were your total pension savings worth £1 million or more on 5 April 2016?
 pla.pensionSavings.help                     = This includes UK pensions and overseas pensions which gained UK tax relief.
 pla.pensionSavings.paraTwo                  = For defined benefit schemes, such as ''final salary schemes'', the value is normally 20 times the pension you get in the first year plus your lump sum.
-pla.pensionSavings.mandatoryErr             = Please indicate the value of your savings
+pla.pensionSavings.mandatoryErr             = Please tell us if your pension savings were £1 million or more on 5 April 2016
 
 ## Apply for IP 2016 ##
 pla.applyIP.title       = Apply for IP 2016
