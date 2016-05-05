@@ -19,12 +19,14 @@ package testHelpers
 
 import play.api.mvc.{AnyContent, Action}
 import play.api.test.FakeRequest
+import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
 
 
-class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], data: (String, String)*) extends UnitSpec {
+class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*) extends UnitSpec {
   val fakeRequest = FakeRequest("POST", "/protect-your-lifetime-allowance/" + url)
+    .withSession(SessionKeys.sessionId -> s"session-$sessionId")
     .withFormUrlEncodedBody(data:_*)
   val result = controllerAction(fakeRequest)
   val jsoupDoc = Jsoup.parse(bodyOf(result))

@@ -19,13 +19,13 @@ package testHelpers
 
 import play.api.mvc.{AnyContent, Action}
 import play.api.test.FakeRequest
+import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
 
 
-class FakeRequestTo(url: String, controllerAction: Action[AnyContent], data: (String, String)*) extends UnitSpec {
-    val fakeRequest = FakeRequest("POST", "/calculate-your-capital-gains/" + url)
-      .withFormUrlEncodedBody(data:_*)
+class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*) extends UnitSpec {
+    val fakeRequest = FakeRequest("GET", "/calculate-your-capital-gains/" + url).withSession(SessionKeys.sessionId -> s"session-$sessionId")
     val result = controllerAction(fakeRequest)
     val jsoupDoc = Jsoup.parse(bodyOf(result))
   }
