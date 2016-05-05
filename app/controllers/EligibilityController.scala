@@ -16,8 +16,8 @@
 
 package controllers
 
-import play.api.data._
-import play.api.data.Forms._
+import connectors.KeyStoreConnector
+import models.AddingToPensionModel
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import scala.concurrent.Future
@@ -27,22 +27,30 @@ import forms.PensionSavingsForm.pensionSavingsForm
 
 import views.html._
 
-object EligibilityController extends EligibilityController
+object EligibilityController extends EligibilityController {
+     val keyStoreConnector = KeyStoreConnector
+}
 
 trait EligibilityController extends FrontendController {
 
+    val keyStoreConnector: KeyStoreConnector
+
     // ADDING TO PENSION
     val addingToPension = Action.async { implicit request =>
-        Future.successful(Ok(pages.eligibility.addingToPension(addingToPensionForm)))
+        keyStoreConnector.fetchAndGetFormData[AddingToPensionModel]("willAddToPension").map {
+            case Some(data) => Ok(pages.eligibility.addingToPension(addingToPensionForm.fill(data)))
+            case None => Ok(pages.eligibility.addingToPension(addingToPensionForm))
+        }
     }
 
     val submitAddingToPension = Action { implicit request =>
         addingToPensionForm.bindFromRequest.fold(
             errors => BadRequest(pages.eligibility.addingToPension(errors)),
             success => {
+                keyStoreConnector.saveFormData("willAddToPension", success)
                 success.willAddToPension.get match {
-                    case "yes" => Redirect(routes.EligibilityController.pensionSavings)
-                    case "no"  => Redirect(routes.EligibilityController.applyFP)
+                    case "yes" => Redirect(routes.EligibilityController.pensionSavings())
+                    case "no"  => Redirect(routes.EligibilityController.applyFP())
                 }
             }
         )
@@ -58,8 +66,8 @@ trait EligibilityController extends FrontendController {
             errors => BadRequest(pages.eligibility.addedToPension(errors)),
             success => {
                 success.haveAddedToPension.get match {
-                    case "yes"  => Redirect(routes.EligibilityController.pensionSavings)
-                    case "no"   => Redirect(routes.EligibilityController.addingToPension)
+                    case "yes"  => Redirect(routes.EligibilityController.pensionSavings())
+                    case "no"   => Redirect(routes.EligibilityController.addingToPension())
                 }
             }
         )
@@ -75,8 +83,8 @@ trait EligibilityController extends FrontendController {
             errors => BadRequest(pages.eligibility.pensionSavings(errors)),
             success => {
                 success.eligiblePensionSavings.get match {
-                    case "yes"  => Redirect(routes.EligibilityController.applyIP)
-                    case "no"   => Redirect(routes.EligibilityController.cannotApply)
+                    case "yes"  => Redirect(routes.EligibilityController.applyIP())
+                    case "no"   => Redirect(routes.EligibilityController.cannotApply())
                 }
             }
         )

@@ -19,3 +19,7 @@ package models
 import play.api.libs.json._
 
 case class PensionSavingsModel(eligiblePensionSavings: Option[String])
+
+object PensionSavingsModel {
+  implicit val format = Json.format[PensionSavingsModel]
+}
