@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package controllers
+package forms
 
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import play.api.mvc._
-import scala.concurrent.Future
+import play.api.i18n.Messages
+import play.api.data._
+import play.api.data.Forms._
+import models._
 
-
-object PensionSavingsController extends PensionSavingsController
-
-trait PensionSavingsController extends FrontendController {
-  val pensionSavings = Action.async { implicit request =>
-		Future.successful(Ok(views.html.pages.pensionSavings()))
-  }
+object AddedToPensionForm {
+  val addedToPensionForm = Form(
+    mapping(
+      "haveAddedToPension" -> optional(text).verifying(Messages("pla.addedToPension.mandatoryErr"), {_.isDefined})
+    )(AddedToPensionModel.apply)(AddedToPensionModel.unapply)
+  )
 }

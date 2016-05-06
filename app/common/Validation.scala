@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package controllers
-
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import play.api.mvc._
-import scala.concurrent.Future
+package common
 
 
-object HaveAddedToPensionController extends HaveAddedoPensionController
+object Validation {
 
-trait HaveAddedoPensionController extends FrontendController {
-  val haveAddedToPension = Action.async { implicit request =>
-		Future.successful(Ok(views.html.pages.haveAddedToPension()))
+  def isMaxTwoDecimalPlaces(amount: BigDecimal): Boolean = {
+    amount match {
+      case amount if amount.scale <= 2 => true
+      case _ => false
+    }
+  }
+
+  def isPositive(amount: BigDecimal): Boolean = {
+    amount match {
+      case amount if amount < 0 => false
+      case _ => true
+    }
   }
 }
