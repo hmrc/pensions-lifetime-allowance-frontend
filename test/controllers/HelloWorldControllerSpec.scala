@@ -32,17 +32,17 @@ class HelloWorldControllerSpec extends UnitSpec with WithFakeApplication{
 
 
   "GET /" should {
-    "return 200" in {
+    "return 303" in {
       val result = HelloWorld.helloWorld(fakeRequest)
-      status(result) shouldBe Status.OK
+      status(result) shouldBe Status.SEE_OTHER
     }
-
+    /*
     "return HTML" in {
       val result = HelloWorld.helloWorld(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
-
+*/
 
   }
 
