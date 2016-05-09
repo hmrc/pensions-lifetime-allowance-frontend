@@ -43,12 +43,4 @@ trait KeyStoreConnector {
   def fetchAndGetFormData[T](key: String)(implicit hc: HeaderCarrier, formats: Format[T]): Future[Option[T]] = {
     sessionCache.fetchAndGetEntry(key)
   }
-
-  def fetchAndGetValue[T](key: String)(implicit hc: HeaderCarrier, formats: Format[T]): Option[T] ={
-    Await.result(fetchAndGetFormData(key).map {
-      case Some(data) => Some(data)
-      case None => None
-      case _ => None
-    }, Duration("5s"))
-  }
 }

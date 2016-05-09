@@ -30,6 +30,8 @@ import org.jsoup._
 import testHelpers._
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import scala.concurrent.Future
+import models._
 
 
 class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -38,31 +40,60 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   val sessionId = UUID.randomUUID.toString
   val fakeRequest = FakeRequest("GET", "/")
   val mockKeyStoreConnector = mock[KeyStoreConnector]
-  val FakeEligibilityController = new EligibilityController {
+  val TestEligibilityController = new EligibilityController {
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
   }
 
+
+  def keystoreFetchCondition[T](data: Option[T]): Unit = {
+    when(mockKeyStoreConnector.fetchAndGetFormData[T](Matchers.anyString())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(data))
+  }
 
 ///////////////////////////////////////////////
 // Adding to pension
 ///////////////////////////////////////////////
 
-  "GET for adding to pension" should {
 
-    object DataItem extends FakeRequestTo (
-      "introduction",
-      IntroductionController.introduction,
-      sessionId
-    )
-    "return 200" in { status(DataItem.result) shouldBe 200 }
-    "return HTML" in { charset(DataItem.result) shouldBe Some("utf-8") }
+  "In EligibilityController calling the .addingToPension action " when {
+
+    "not supplied with a pre-existing stored model" should {
+      object DataItem extends FakeRequestTo("adding-to-pension", TestEligibilityController.addingToPension, sessionId)
+      "return a 200" in {
+        keystoreFetchCondition[AddingToPensionModel](None)
+        status(DataItem.result) shouldBe 200
+      }
+    }
+
+    "supplied with a pre-existing stored model" should {
+      object DataItem extends FakeRequestTo("adding-to-pension", TestEligibilityController.addingToPension, sessionId)
+      val testModel = new AddingToPensionModel(Some("yes"))
+      "return a 200" in {
+        keystoreFetchCondition[AddingToPensionModel](Some(testModel))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          keystoreFetchCondition[AddingToPensionModel](Some(testModel))
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+
+        "have the radio option `yes` selected by default" in {
+          keystoreFetchCondition[AddingToPensionModel](Some(testModel))
+          DataItem.jsoupDoc.body.getElementById("willAddToPension-yes").parent.classNames().contains("selected") shouldBe true
+        }
+      }
+    }
   }
 
   "Submitting 'yes' in addingToPensionForm" should {
 
     object DataItem extends FakeRequestToPost(
       "adding-to-pension",
-      FakeEligibilityController.submitAddingToPension,
+      TestEligibilityController.submitAddingToPension,
       sessionId,
       ("willAddToPension", "yes")
     )
@@ -74,7 +105,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   
     object DataItem extends FakeRequestToPost(
       "adding-to-pension",
-      FakeEligibilityController.submitAddingToPension,
+      TestEligibilityController.submitAddingToPension,
       sessionId,
       ("willAddToPension", "no")
     )
@@ -86,7 +117,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 
     object DataItem extends FakeRequestToPost(
       "adding-to-pension",
-      FakeEligibilityController.submitAddingToPension,
+      TestEligibilityController.submitAddingToPension,
       sessionId,
       ("willAddToPension", "")
     )
@@ -102,12 +133,12 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 
   "GET for added to pension" should {
     "return 200" in {
-      val result = FakeEligibilityController.addedToPension(fakeRequest)
+      val result = TestEligibilityController.addedToPension(fakeRequest)
       status(result) shouldBe 200
     }
 
     "return HTML" in {
-      val result = FakeEligibilityController.addedToPension(fakeRequest)
+      val result = TestEligibilityController.addedToPension(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
@@ -117,7 +148,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 
     object DataItem extends FakeRequestToPost(
       "added-to-pension",
-      FakeEligibilityController.submitAddedToPension,
+      TestEligibilityController.submitAddedToPension,
       sessionId,
       ("haveAddedToPension", "yes")
     )
@@ -129,7 +160,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   
     object DataItem extends FakeRequestToPost(
       "added-to-pension",
-      FakeEligibilityController.submitAddedToPension,
+      TestEligibilityController.submitAddedToPension,
       sessionId,
       ("haveAddedToPension", "no")
     )
@@ -141,7 +172,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 
     object DataItem extends FakeRequestToPost(
       "added-to-pension",
-      FakeEligibilityController.submitAddedToPension,
+      TestEligibilityController.submitAddedToPension,
       sessionId,
       ("haveAddedToPension", "")
     )
@@ -156,12 +187,12 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 ///////////////////////////////////////////////
   "GET for pension savings" should {
     "return 200" in {
-      val result = FakeEligibilityController.pensionSavings(fakeRequest)
+      val result = TestEligibilityController.pensionSavings(fakeRequest)
       status(result) shouldBe Status.OK
     }
 
     "return HTML" in {
-      val result = FakeEligibilityController.pensionSavings(fakeRequest)
+      val result = TestEligibilityController.pensionSavings(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
@@ -171,7 +202,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 
     object DataItem extends FakeRequestToPost(
       "pension-savings",
-      FakeEligibilityController.submitPensionSavings,
+      TestEligibilityController.submitPensionSavings,
       sessionId,
       ("eligiblePensionSavings", "yes")
     )
@@ -183,7 +214,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   
     object DataItem extends FakeRequestToPost(
       "pension-savings",
-      FakeEligibilityController.submitPensionSavings,
+      TestEligibilityController.submitPensionSavings,
       sessionId,
       ("eligiblePensionSavings", "no")
     )
@@ -195,7 +226,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 
     object DataItem extends FakeRequestToPost(
       "pension-savings",
-      FakeEligibilityController.submitPensionSavings,
+      TestEligibilityController.submitPensionSavings,
       sessionId,
       ("eligiblePensionSavings", "")
     )
@@ -210,12 +241,12 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 ///////////////////////////////////////////////
   "GET for apply FP" should {
     "return 200" in {
-      val result = FakeEligibilityController.applyFP(fakeRequest)
+      val result = TestEligibilityController.applyFP(fakeRequest)
       status(result) shouldBe Status.OK
     }
 
     "return HTML" in {
-      val result = FakeEligibilityController.applyFP(fakeRequest)
+      val result = TestEligibilityController.applyFP(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
@@ -226,12 +257,12 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 ///////////////////////////////////////////////
   "GET for apply IP" should {
     "return 200" in {
-      val result = FakeEligibilityController.applyIP(fakeRequest)
+      val result = TestEligibilityController.applyIP(fakeRequest)
       status(result) shouldBe Status.OK
     }
 
     "return HTML" in {
-      val result = FakeEligibilityController.applyIP(fakeRequest)
+      val result = TestEligibilityController.applyIP(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
@@ -242,12 +273,12 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 ///////////////////////////////////////////////
   "GET for cannot apply" should {
     "return 200" in {
-      val result = FakeEligibilityController.cannotApply(fakeRequest)
+      val result = TestEligibilityController.cannotApply(fakeRequest)
       status(result) shouldBe Status.OK
     }
 
     "return HTML" in {
-      val result = FakeEligibilityController.cannotApply(fakeRequest)
+      val result = TestEligibilityController.cannotApply(fakeRequest)
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
