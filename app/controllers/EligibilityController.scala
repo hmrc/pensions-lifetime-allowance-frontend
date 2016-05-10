@@ -17,7 +17,6 @@
 package controllers
 
 import connectors.KeyStoreConnector
-import models.AddingToPensionModel
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.SessionKeys
@@ -25,6 +24,7 @@ import scala.concurrent.Future
 import forms.AddedToPensionForm.addedToPensionForm
 import forms.AddingToPensionForm.addingToPensionForm
 import forms.PensionSavingsForm.pensionSavingsForm
+import models._
 
 import views.html._
 
@@ -63,7 +63,14 @@ trait EligibilityController extends FrontendController {
 
     // ADDED TO PENSION
     val addedToPension = Action.async { implicit request =>
-        Future.successful(Ok(pages.eligibility.addedToPension(addedToPensionForm)))
+        if (request.session.get(SessionKeys.sessionId).isEmpty) {
+            Future.successful(Redirect(routes.IntroductionController.introduction()))
+        } else {
+            keyStoreConnector.fetchAndGetFormData[AddedToPensionModel]("haveAddedToPension").map {
+                case Some(data) => Ok(pages.eligibility.addedToPension(addedToPensionForm.fill(data)))
+                case None => Ok(pages.eligibility.addedToPension(addedToPensionForm))
+            }
+        }
     }
 
     val submitAddedToPension = Action { implicit request =>

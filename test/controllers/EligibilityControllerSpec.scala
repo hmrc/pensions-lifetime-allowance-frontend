@@ -65,7 +65,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
       }
 
       "redirect to introduction page" in {
-        redirectLocation(result) shouldBe Some(s"/introduction") 
+        redirectLocation(result) shouldBe Some(s"/introduction")
       }
     }
 
@@ -75,6 +75,11 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
         keystoreFetchCondition[AddingToPensionModel](None)
         status(DataItem.result) shouldBe 200
       }
+
+      "take user to the adding to pension page" in {
+        keystoreFetchCondition[AddingToPensionModel](None)
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.addingToPension.pageHeading")
+      }
     }
 
     "supplied with a pre-existing stored model" should {
@@ -83,6 +88,11 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
       "return a 200" in {
         keystoreFetchCondition[AddingToPensionModel](Some(testModel))
         status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the adding to pension page" in {
+        keystoreFetchCondition[AddingToPensionModel](Some(testModel))
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.addingToPension.pageHeading")
       }
 
       "return some HTML that" should {
@@ -101,96 +111,146 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
     }
   }
 
-  "Submitting 'yes' in addingToPensionForm" should {
+  "Submitting Adding To Pension data" when {
 
-    object DataItem extends FakeRequestToPost(
-      "adding-to-pension",
-      TestEligibilityController.submitAddingToPension,
-      sessionId,
-      ("willAddToPension", "yes")
-    )
-    "return 303" in {status(DataItem.result) shouldBe 303}
-    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.pensionSavings()}") }
-  }
+    "Submitting 'yes' in addingToPensionForm" should {
 
-  "Submitting 'no' in addingToPensionForm" should {
-  
-    object DataItem extends FakeRequestToPost(
-      "adding-to-pension",
-      TestEligibilityController.submitAddingToPension,
-      sessionId,
-      ("willAddToPension", "no")
-    )
-    "return 303" in { status(DataItem.result) shouldBe 303 }
-    "redirect to apply FP 16" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.applyFP()}") }
-  }
-
-  "submitting addingToPensionForm with no data" should {
-
-    object DataItem extends FakeRequestToPost(
-      "adding-to-pension",
-      TestEligibilityController.submitAddingToPension,
-      sessionId,
-      ("willAddToPension", "")
-    )
-    "return 400" in { status(DataItem.result) shouldBe 400 }
-    "fail with the correct error message" in {
-      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please tell us whether you'll be adding to your pension in the future")
+      object DataItem extends FakeRequestToPost(
+        "adding-to-pension",
+        TestEligibilityController.submitAddingToPension,
+        sessionId,
+        ("willAddToPension", "yes")
+      )
+      "return 303" in {status(DataItem.result) shouldBe 303}
+      "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.pensionSavings()}") }
     }
+
+    "Submitting 'no' in addingToPensionForm" should {
+    
+      object DataItem extends FakeRequestToPost(
+        "adding-to-pension",
+        TestEligibilityController.submitAddingToPension,
+        sessionId,
+        ("willAddToPension", "no")
+      )
+      "return 303" in { status(DataItem.result) shouldBe 303 }
+      "redirect to apply FP 16" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.applyFP()}") }
+    }
+
+    "submitting addingToPensionForm with no data" should {
+
+      object DataItem extends FakeRequestToPost(
+        "adding-to-pension",
+        TestEligibilityController.submitAddingToPension,
+        sessionId,
+        ("willAddToPension", "")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please tell us whether you'll be adding to your pension in the future")
+      }
+    }
+
   }
 
 ///////////////////////////////////////////////
 // Added to pension
 ///////////////////////////////////////////////
 
-  "GET for added to pension" should {
-    "return 200" in {
+  "Calling the .addedToPension action " when {
+
+    "visited directly with no session ID" should {
       val result = TestEligibilityController.addedToPension(fakeRequest)
-      status(result) shouldBe 200
+
+      "return 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to introduction page" in {
+        redirectLocation(result) shouldBe Some(s"/introduction") 
+      }
     }
 
-    "return HTML" in {
-      val result = TestEligibilityController.addedToPension(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+    "not supplied with a pre-existing stored model" should {
+      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.addedToPension, sessionId)
+      "return a 200" in {
+        keystoreFetchCondition[AddedToPensionModel](None)
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the added to pension page" in {
+        keystoreFetchCondition[AddedToPensionModel](None)
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.addedToPension.pageHeading")
+      }
+    }
+
+    "supplied with a pre-existing stored model" should {
+      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.addedToPension, sessionId)
+      val testModel = new AddedToPensionModel(Some("no"))
+      "return a 200" in {
+        keystoreFetchCondition[AddedToPensionModel](Some(testModel))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the added to pension page" in {
+        keystoreFetchCondition[AddedToPensionModel](Some(testModel))
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.addedToPension.pageHeading")
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          keystoreFetchCondition[AddedToPensionModel](Some(testModel))
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+
+        "have the radio option `no` selected by default" in {
+          keystoreFetchCondition[AddedToPensionModel](Some(testModel))
+          DataItem.jsoupDoc.body.getElementById("haveAddedToPension-no").parent.classNames().contains("selected") shouldBe true
+        }
+      }
     }
   }
 
-  "Submitting 'yes' in addedToPensionForm" should {
+  "Submitting Added To Pension data" when {
 
-    object DataItem extends FakeRequestToPost(
-      "added-to-pension",
-      TestEligibilityController.submitAddedToPension,
-      sessionId,
-      ("haveAddedToPension", "yes")
-    )
-    "return 303" in {status(DataItem.result) shouldBe 303}
-    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.pensionSavings()}") }
-  }
+    "Submitting 'yes' in addedToPensionForm" should {
 
-  "Submitting 'no' in addedToPensionForm" should {
-  
-    object DataItem extends FakeRequestToPost(
-      "added-to-pension",
-      TestEligibilityController.submitAddedToPension,
-      sessionId,
-      ("haveAddedToPension", "no")
-    )
-    "return 303" in { status(DataItem.result) shouldBe 303 }
-    "redirect to adding to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.addingToPension()}") }
-  }
+      object DataItem extends FakeRequestToPost(
+        "added-to-pension",
+        TestEligibilityController.submitAddedToPension,
+        sessionId,
+        ("haveAddedToPension", "yes")
+      )
+      "return 303" in {status(DataItem.result) shouldBe 303}
+      "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.pensionSavings()}") }
+    }
 
-  "submitting addedToPensionForm with no data" should {
+    "Submitting 'no' in addedToPensionForm" should {
+    
+      object DataItem extends FakeRequestToPost(
+        "added-to-pension",
+        TestEligibilityController.submitAddedToPension,
+        sessionId,
+        ("haveAddedToPension", "no")
+      )
+      "return 303" in { status(DataItem.result) shouldBe 303 }
+      "redirect to adding to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.addingToPension()}") }
+    }
 
-    object DataItem extends FakeRequestToPost(
-      "added-to-pension",
-      TestEligibilityController.submitAddedToPension,
-      sessionId,
-      ("haveAddedToPension", "")
-    )
-    "return 400" in { status(DataItem.result) shouldBe 400 }
-    "fail with the correct error message" in {
-      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please tell us whether you've added to your pension since 6 April 2016")
+    "submitting addedToPensionForm with no data" should {
+
+      object DataItem extends FakeRequestToPost(
+        "added-to-pension",
+        TestEligibilityController.submitAddedToPension,
+        sessionId,
+        ("haveAddedToPension", "")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please tell us whether you've added to your pension since 6 April 2016")
+      }
     }
   }
 
