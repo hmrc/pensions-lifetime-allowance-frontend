@@ -28,8 +28,8 @@ pla.intro.start         = Start
 ## Will be Adding to Your Pension ##
 pla.addingToPension.title                  = Add to pension
 pla.addingToPension.pageHeading            = Will you be adding to your pension?
-pla.addingToPension.paraOne                = Will you be adding to your pension in the future?
-pla.addingToPension.help                   = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
+pla.addingToPension.paraOne                = Will you, or anyone else, be adding to your pension in the future?
+pla.addingToPension.help                   = This includes pension contributions or gaining more benefits in a final salary scheme.
 pla.addingToPension.mandatoryErr           = Please tell us whether you''ll be adding to your pension in the future
 
 ## Have You Added to Your Pension ##
