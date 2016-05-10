@@ -20,23 +20,21 @@ import java.net.URLEncoder
 
 import play.api.mvc._
 import play.api.mvc.Results.Redirect
-import config.FrontendAppConfig
 import uk.gov.hmrc.play.frontend.auth.GovernmentGateway
 import controllers.routes
 
 import scala.concurrent.Future
 
-class GovernmentGatewayProvider(postSignInRedirectUrl: String) extends GovernmentGateway {
+class GovernmentGatewayProvider(postSignInRedirectUrl: String, loginUrl: String) extends GovernmentGateway {
   override def handleSessionTimeout(implicit request: Request[_]): Future[FailureResult] =
     GovernmentGatewayProvider.handleSessionTimeout(request)
   override def additionalLoginParameters = GovernmentGatewayProvider.additionalLoginParameters
   override def continueURL = URLEncoder.encode(postSignInRedirectUrl, "UTF-8")
-  override def loginURL: String = GovernmentGatewayProvider.loginURL
+  override def loginURL: String = this.loginUrl
 }
 
 object GovernmentGatewayProvider {
   def handleSessionTimeout(implicit request: Request[_]) = Future.successful(Redirect(routes.HelloWorld.timeout().url))
   val additionalLoginParameters = Map("accountType" -> Seq("individual"))
-  val loginURL: String = FrontendAppConfig.ggSignInUrl
 }
 

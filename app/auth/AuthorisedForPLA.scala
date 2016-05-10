@@ -37,7 +37,12 @@ trait AuthorisedForPLA extends Actions {
 
   implicit private def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
 
-  lazy val visibilityPredicate = new PLACompositePageVisibilityPredicate(postSignInRedirectUrl)
+  lazy val visibilityPredicate = new PLACompositePageVisibilityPredicate(
+    postSignInRedirectUrl,
+    applicationConfig.notAuthorisedRedirectUrl,
+    applicationConfig.ivUpliftUrl,
+    applicationConfig.twoFactorUrl)
+
   class AuthorisedBy(regime: TaxRegime) {
     val authedBy: AuthenticatedBy = AuthorisedFor(regime, visibilityPredicate)
 
@@ -54,8 +59,8 @@ trait AuthorisedForPLA extends Actions {
   object AuthorisedByAny extends AuthorisedBy(PLAAnyRegime)
   object AuthorisedByVerify extends AuthorisedBy(PLAVerifyRegime)
 
-  val plaAuthProvider = new PLAAuthProvider(postSignInRedirectUrl)
-  val verifyProvider = new VerifyProvider(postSignInRedirectUrl)
+  val plaAuthProvider = new PLAAuthProvider(postSignInRedirectUrl, applicationConfig.verifySignIn, applicationConfig.ggSignInUrl)
+  val verifyProvider = new VerifyProvider(postSignInRedirectUrl, applicationConfig.verifySignIn)
 
   trait PLARegime extends TaxRegime {
     override def isAuthorised(accounts: Accounts): Boolean = accounts.paye.isDefined

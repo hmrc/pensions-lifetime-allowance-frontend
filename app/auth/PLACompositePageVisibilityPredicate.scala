@@ -18,24 +18,26 @@ package auth
 
 import java.net.{URLEncoder, URI}
 
-import config.FrontendAppConfig
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L200
 import uk.gov.hmrc.play.frontend.auth.{UpliftingIdentityConfidencePredicate, PageVisibilityPredicate, CompositePageVisibilityPredicate}
 
-class PLACompositePageVisibilityPredicate(postSignInRedirectUrl: String) extends CompositePageVisibilityPredicate {
+class PLACompositePageVisibilityPredicate(postSignInRedirectUrl: String,
+                                          notAuthorisedRedirectUrl: String,
+                                          ivUpliftUrl: String,
+                                          twoFactorUrl: String) extends CompositePageVisibilityPredicate {
   override def children: Seq[PageVisibilityPredicate] = Seq (
     new PLAStrongCredentialPredicate(twoFactorURI),
     new UpliftingIdentityConfidencePredicate(L200, ivUpliftURI)
   )
 
   private val ivUpliftURI: URI =
-    new URI(s"${FrontendAppConfig.ivUpliftUrl}?origin=PLA&" +
+    new URI(s"${ivUpliftUrl}?origin=PLA&" +
       s"completionURL=${URLEncoder.encode(postSignInRedirectUrl, "UTF-8")}&" +
-      s"failureURL=${URLEncoder.encode(FrontendAppConfig.notAuthorisedRedirectUrl, "UTF-8")}" +
+      s"failureURL=${URLEncoder.encode(notAuthorisedRedirectUrl, "UTF-8")}" +
       s"&confidenceLevel=200")
 
   private val twoFactorURI: URI =
-    new URI(s"${FrontendAppConfig.twoFactorUrl}?" +
+    new URI(s"${twoFactorUrl}?" +
       s"continue=${URLEncoder.encode(postSignInRedirectUrl, "UTF-8")}&" +
-      s"failure=${URLEncoder.encode(FrontendAppConfig.notAuthorisedRedirectUrl, "UTF-8")}")
+      s"failure=${URLEncoder.encode(notAuthorisedRedirectUrl, "UTF-8")}")
 }

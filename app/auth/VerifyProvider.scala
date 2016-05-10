@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
 
-class VerifyProvider(postSignInRedirectUrl: String) extends Verify {
+class VerifyProvider(postSignInRedirectUrl: String, verifySignInUri: String) extends Verify {
   override def redirectToLogin(implicit request: Request[_]): Future[FailureResult] = {
     Future.successful(Redirect(login).withSession(
       SessionKeys.redirect -> postSignInRedirectUrl,
@@ -32,5 +32,5 @@ class VerifyProvider(postSignInRedirectUrl: String) extends Verify {
     ))
   }
 
-  override def login: String = FrontendAppConfig.verifySignIn
+  override def login: String = verifySignInUri
 }

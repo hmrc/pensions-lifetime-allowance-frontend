@@ -21,9 +21,9 @@ import uk.gov.hmrc.play.frontend.auth.{AnyAuthenticationProvider, GovernmentGate
 
 import scala.concurrent.Future
 
-class PLAAuthProvider(postSignInRedirectUrl: String) extends AnyAuthenticationProvider {
-  val ggwProvider = new GovernmentGatewayProvider(postSignInRedirectUrl)
-  val verifyProvider = new VerifyProvider(postSignInRedirectUrl)
+class PLAAuthProvider(postSignInRedirectUrl: String, verifyProviderUrl: String, ggLoginUrl: String) extends AnyAuthenticationProvider {
+  val ggwProvider = new GovernmentGatewayProvider(postSignInRedirectUrl, ggLoginUrl)
+  val verifyProvider = new VerifyProvider(postSignInRedirectUrl, verifyProviderUrl)
 
   override def ggwAuthenticationProvider: GovernmentGateway = ggwProvider
   override def verifyAuthenticationProvider: Verify = verifyProvider

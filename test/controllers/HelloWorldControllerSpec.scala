@@ -36,14 +36,15 @@ class HelloWorldControllerSpec extends UnitSpec with WithFakeApplication{
       val result = HelloWorld.helloWorld(fakeRequest)
       status(result) shouldBe Status.SEE_OTHER
     }
-    /*
+  }
+
+  "Timeout" should {
     "return HTML" in {
-      val result = HelloWorld.helloWorld(fakeRequest)
+      val result = HelloWorld.timeout(fakeRequest)
+      status(result) shouldBe Status.OK
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
-*/
-
   }
 
 
