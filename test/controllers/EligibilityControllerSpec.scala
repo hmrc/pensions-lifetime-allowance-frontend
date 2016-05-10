@@ -167,7 +167,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
       }
 
       "redirect to introduction page" in {
-        redirectLocation(result) shouldBe Some(s"/introduction") 
+        redirectLocation(result) shouldBe Some(s"/introduction")
       }
     }
 
@@ -257,16 +257,60 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 ///////////////////////////////////////////////
 // Pension savings
 ///////////////////////////////////////////////
-  "GET for pension savings" should {
-    "return 200" in {
+
+  "Calling the .pensionSavings action " when {
+
+    "visited directly with no session ID" should {
       val result = TestEligibilityController.pensionSavings(fakeRequest)
-      status(result) shouldBe Status.OK
+
+      "return 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to introduction page" in {
+        redirectLocation(result) shouldBe Some(s"/introduction")
+      }
     }
 
-    "return HTML" in {
-      val result = TestEligibilityController.pensionSavings(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+    "not supplied with a pre-existing stored model" should {
+      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.addedToPension, sessionId)
+      "return a 200" in {
+        keystoreFetchCondition[PensionSavingsModel](None)
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the pension savings page" in {
+        keystoreFetchCondition[PensionSavingsModel](None)
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionSavings.pageHeading")
+      }
+    }
+
+    "supplied with a pre-existing stored model" should {
+      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.pensionSavings, sessionId)
+      val testModel = new PensionSavingsModel(Some("no"))
+      "return a 200" in {
+        keystoreFetchCondition[PensionSavingsModel](Some(testModel))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the pension savings page" in {
+        keystoreFetchCondition[PensionSavingsModel](Some(testModel))
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionSavings.pageHeading")
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          keystoreFetchCondition[PensionSavingsModel](Some(testModel))
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+
+        "have the radio option `no` selected by default" in {
+          keystoreFetchCondition[PensionSavingsModel](Some(testModel))
+          DataItem.jsoupDoc.body.getElementById("eligiblePensionSavings-no").parent.classNames().contains("selected") shouldBe true
+        }
+      }
     }
   }
 
