@@ -38,7 +38,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 
 
   val sessionId = UUID.randomUUID.toString
-  val fakeRequest = FakeRequest("GET", "/")
+  val fakeRequest = FakeRequest("GET", "/protect-your-lifetime-allowance/")
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val TestEligibilityController = new EligibilityController {
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
@@ -56,6 +56,18 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 
 
   "In EligibilityController calling the .addingToPension action " when {
+
+    "visited directly with no session ID" should {
+      val result = TestEligibilityController.addingToPension(fakeRequest)
+
+      "return 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to introduction page" in {
+        redirectLocation(result) shouldBe Some(s"/introduction") 
+      }
+    }
 
     "not supplied with a pre-existing stored model" should {
       object DataItem extends FakeRequestTo("adding-to-pension", TestEligibilityController.addingToPension, sessionId)
