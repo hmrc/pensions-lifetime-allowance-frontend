@@ -50,6 +50,14 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
       .thenReturn(Future.successful(data))
   }
 
+
+///////////////////////////////////////////////
+// Initial Setup
+///////////////////////////////////////////////
+  "EligibilityController should be correctly initialised" in {
+    EligibilityController.keyStoreConnector shouldBe KeyStoreConnector
+  }
+
 ///////////////////////////////////////////////
 // Adding to pension
 ///////////////////////////////////////////////
@@ -358,48 +366,114 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 ///////////////////////////////////////////////
 // Apply FP
 ///////////////////////////////////////////////
-  "GET for apply FP" should {
-    "return 200" in {
+
+  "Calling the .applyFP action" when {
+
+    "visited directly with no session ID" should {
       val result = TestEligibilityController.applyFP(fakeRequest)
-      status(result) shouldBe Status.OK
+
+      "return 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to introduction page" in {
+        redirectLocation(result) shouldBe Some(s"/introduction")
+      }
     }
 
-    "return HTML" in {
-      val result = TestEligibilityController.applyFP(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+    "navigated to with a valid session ID" should {
+      object DataItem extends FakeRequestTo("apply-fp", TestEligibilityController.applyFP, sessionId)
+      "return a 200" in {
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the Apply FP page" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyFP.pageHeading")
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+      }
     }
   }
 
 ///////////////////////////////////////////////
 // Apply IP
 ///////////////////////////////////////////////
-  "GET for apply IP" should {
-    "return 200" in {
+
+  "Calling the .applyIP action" when {
+
+    "visited directly with no session ID" should {
       val result = TestEligibilityController.applyIP(fakeRequest)
-      status(result) shouldBe Status.OK
+
+      "return 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to introduction page" in {
+        redirectLocation(result) shouldBe Some(s"/introduction")
+      }
     }
 
-    "return HTML" in {
-      val result = TestEligibilityController.applyIP(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+    "navigated to with a valid session ID" should {
+      object DataItem extends FakeRequestTo("apply-ip", TestEligibilityController.applyIP, sessionId)
+      "return a 200" in {
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the Apply FP page" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyIP.pageHeading")
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+      }
     }
   }
 
 ///////////////////////////////////////////////
 // Cannot apply
 ///////////////////////////////////////////////
-  "GET for cannot apply" should {
-    "return 200" in {
+
+  "Calling the .cannotApply action" when {
+
+    "visited directly with no session ID" should {
       val result = TestEligibilityController.cannotApply(fakeRequest)
-      status(result) shouldBe Status.OK
+
+      "return 303" in {
+        status(result) shouldBe 303
+      }
+
+      "redirect to introduction page" in {
+        redirectLocation(result) shouldBe Some(s"/introduction")
+      }
     }
 
-    "return HTML" in {
-      val result = TestEligibilityController.cannotApply(fakeRequest)
-      contentType(result) shouldBe Some("text/html")
-      charset(result) shouldBe Some("utf-8")
+    "navigated to with a valid session ID" should {
+      object DataItem extends FakeRequestTo("pension-below-threshold", TestEligibilityController.cannotApply, sessionId)
+      "return a 200" in {
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the Apply FP page" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.cannotApply.pageHeading")
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+      }
     }
   }
 

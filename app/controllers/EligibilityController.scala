@@ -111,16 +111,28 @@ trait EligibilityController extends FrontendController {
 
     // APPLY FP
     val applyFP = Action.async { implicit request =>
-        Future.successful(Ok(views.html.pages.eligibility.applyFP()))
+        if (request.session.get(SessionKeys.sessionId).isEmpty) {
+            Future.successful(Redirect(routes.IntroductionController.introduction()))
+        } else {
+            Future.successful(Ok(views.html.pages.eligibility.applyFP()))
+        }
     }
 
     // APPLY IP
     val applyIP = Action.async { implicit request =>
-        Future.successful(Ok(views.html.pages.eligibility.applyIP()))
+        if (request.session.get(SessionKeys.sessionId).isEmpty) {
+            Future.successful(Redirect(routes.IntroductionController.introduction()))
+        } else {
+            Future.successful(Ok(views.html.pages.eligibility.applyIP()))
+        }
     }
 
     // CANNOT APPLY
     val cannotApply = Action.async { implicit request =>
-        Future.successful(Ok(views.html.pages.eligibility.cannotApply()))
+        if (request.session.get(SessionKeys.sessionId).isEmpty) {
+            Future.successful(Redirect(routes.IntroductionController.introduction()))
+        } else {
+            Future.successful(Ok(views.html.pages.eligibility.cannotApply()))
+        }
     }
 }
