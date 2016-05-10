@@ -16,22 +16,24 @@
 
 package controllers
 
+import java.util.UUID
+import play.api.test.FakeRequest
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.http._
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import testHelpers._
 
 
 class IntroductionControllerSpec extends UnitSpec with WithFakeApplication{
 
+  val sessionId = UUID.randomUUID.toString
   val fakeRequest = FakeRequest("GET", "/")
 
-
-  "GET /" should {
+  "navigating to introduction with no session ID" should {
     "return 200" in {
       val result = IntroductionController.introduction(fakeRequest)
       status(result) shouldBe Status.OK
@@ -42,8 +44,18 @@ class IntroductionControllerSpec extends UnitSpec with WithFakeApplication{
       contentType(result) shouldBe Some("text/html")
       charset(result) shouldBe Some("utf-8")
     }
+  }
 
+  "navigating to introduction with a session already in place" should {
+    object DataItem extends FakeRequestTo("/", IntroductionController.introduction, sessionId)
+    "return 200" in {
+      status(DataItem.result) shouldBe Status.OK
+    }
 
+    "return HTML" in {
+      contentType(DataItem.result) shouldBe Some("text/html")
+      charset(DataItem.result) shouldBe Some("utf-8")
+    }
   }
 
 

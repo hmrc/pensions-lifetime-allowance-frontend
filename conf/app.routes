@@ -1,7 +1,7 @@
 # microservice specific routes
 
-GET         /                                   controllers.IntroductionController.introduction
 GET         /introduction                       controllers.IntroductionController.introduction
+GET         /                                   controllers.IntroductionController.introduction
 
 ## Initial Eligibility ##
 GET         /added-to-pension                   controllers.EligibilityController.addedToPension
