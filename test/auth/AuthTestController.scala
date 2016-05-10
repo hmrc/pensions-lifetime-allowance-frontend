@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-package controllers
-
-import auth.AuthorisedForPLA
-import config.{FrontendAppConfig,FrontendAuthConnector}
+package auth
 
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import play.api.mvc._
+
 import scala.concurrent.Future
 
-object HelloWorld extends HelloWorld {
-  override lazy val applicationConfig = FrontendAppConfig
-  override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.applyUrl
+object AuthTestController extends AuthTestController {
+
+  override lazy val applicationConfig = mockConfig
+  override lazy val authConnector = mockAuthConnector
+  override lazy val postSignInRedirectUrl = applicationConfig.applyUrl
 }
 
-trait HelloWorld extends FrontendController with AuthorisedForPLA {
+trait AuthTestController extends FrontendController with AuthorisedForPLA {
 
-  val helloWorld = AuthorisedByAny.async {
+  val authorisedAsyncAction = AuthorisedByAny.async {
     implicit user =>  implicit request => Future.successful(Ok(views.html.helloworld.hello_user(user.nino.getOrElse(("NOBODY")))))
   }
 
-  // TODO just a placeholder at the moment
-  val timeout = Action.async { implicit request =>
-    Future.successful(Ok(views.html.helloworld.hello_world()))
+  val authorisedAction = AuthorisedByAny {
+    implicit user =>  implicit request => Ok(views.html.helloworld.hello_user(user.nino.getOrElse(("NOBODY"))))
   }
+
 }

@@ -20,3 +20,4 @@ GET         /apply-fp                           controllers.EligibilityControlle
 GET         /pension-below-threshold            controllers.EligibilityController.cannotApply
 
 GET         /hello-world                        controllers.HelloWorld.helloWorld
+GET         /timeout                            controllers.HelloWorld.timeout
