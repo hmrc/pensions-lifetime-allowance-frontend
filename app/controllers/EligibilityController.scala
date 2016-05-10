@@ -87,7 +87,14 @@ trait EligibilityController extends FrontendController {
 
     // PENSION SAVINGS
     val pensionSavings = Action.async { implicit request =>
-        Future.successful(Ok(pages.eligibility.pensionSavings(pensionSavingsForm)))
+        if (request.session.get(SessionKeys.sessionId).isEmpty) {
+            Future.successful(Redirect(routes.IntroductionController.introduction()))
+        } else {
+            keyStoreConnector.fetchAndGetFormData[PensionSavingsModel]("eligiblePensionSavings").map {
+                case Some(data) => Ok(pages.eligibility.pensionSavings(pensionSavingsForm.fill(data)))
+                case None => Ok(pages.eligibility.pensionSavings(pensionSavingsForm))
+            }
+        }
     }
 
     val submitPensionSavings = Action { implicit request =>

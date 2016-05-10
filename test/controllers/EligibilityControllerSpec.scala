@@ -55,7 +55,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 ///////////////////////////////////////////////
 
 
-  "In EligibilityController calling the .addingToPension action " when {
+  "In EligibilityController calling the .addingToPension action" when {
 
     "visited directly with no session ID" should {
       val result = TestEligibilityController.addingToPension(fakeRequest)
@@ -157,7 +157,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 // Added to pension
 ///////////////////////////////////////////////
 
-  "Calling the .addedToPension action " when {
+  "Calling the .addedToPension action" when {
 
     "visited directly with no session ID" should {
       val result = TestEligibilityController.addedToPension(fakeRequest)
@@ -258,7 +258,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
 // Pension savings
 ///////////////////////////////////////////////
 
-  "Calling the .pensionSavings action " when {
+  "Calling the .pensionSavings action" when {
 
     "visited directly with no session ID" should {
       val result = TestEligibilityController.pensionSavings(fakeRequest)
@@ -273,7 +273,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
     }
 
     "not supplied with a pre-existing stored model" should {
-      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.addedToPension, sessionId)
+      object DataItem extends FakeRequestTo("pension-pot-size", TestEligibilityController.pensionSavings, sessionId)
       "return a 200" in {
         keystoreFetchCondition[PensionSavingsModel](None)
         status(DataItem.result) shouldBe 200
@@ -286,7 +286,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
     }
 
     "supplied with a pre-existing stored model" should {
-      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.pensionSavings, sessionId)
+      object DataItem extends FakeRequestTo("pension-pot-size", TestEligibilityController.pensionSavings, sessionId)
       val testModel = new PensionSavingsModel(Some("no"))
       "return a 200" in {
         keystoreFetchCondition[PensionSavingsModel](Some(testModel))
@@ -314,41 +314,44 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
     }
   }
 
-  "Submitting 'yes' in pensionSavingsForm" should {
+  "Submitting Pension Savings data" when {
 
-    object DataItem extends FakeRequestToPost(
-      "pension-savings",
-      TestEligibilityController.submitPensionSavings,
-      sessionId,
-      ("eligiblePensionSavings", "yes")
-    )
-    "return 303" in {status(DataItem.result) shouldBe 303}
-    "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.applyIP()}") }
-  }
+    "Submitting 'yes' in pensionSavingsForm" should {
 
-  "Submitting 'no' in pensionSavingsForm" should {
-  
-    object DataItem extends FakeRequestToPost(
-      "pension-savings",
-      TestEligibilityController.submitPensionSavings,
-      sessionId,
-      ("eligiblePensionSavings", "no")
-    )
-    "return 303" in { status(DataItem.result) shouldBe 303 }
-    "redirect to will add to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.cannotApply()}") }
-  }
+      object DataItem extends FakeRequestToPost(
+        "pension-savings",
+        TestEligibilityController.submitPensionSavings,
+        sessionId,
+        ("eligiblePensionSavings", "yes")
+      )
+      "return 303" in {status(DataItem.result) shouldBe 303}
+      "redirect to pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.applyIP()}") }
+    }
 
-  "submitting pensionSavingsForm with no data" should {
+    "Submitting 'no' in pensionSavingsForm" should {
+    
+      object DataItem extends FakeRequestToPost(
+        "pension-savings",
+        TestEligibilityController.submitPensionSavings,
+        sessionId,
+        ("eligiblePensionSavings", "no")
+      )
+      "return 303" in { status(DataItem.result) shouldBe 303 }
+      "redirect to will add to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.cannotApply()}") }
+    }
 
-    object DataItem extends FakeRequestToPost(
-      "pension-savings",
-      TestEligibilityController.submitPensionSavings,
-      sessionId,
-      ("eligiblePensionSavings", "")
-    )
-    "return 400" in { status(DataItem.result) shouldBe 400 }
-    "fail with the correct error message" in {
-      DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please tell us if your pension savings were £1 million or more on 5 April 2016")
+    "submitting pensionSavingsForm with no data" should {
+
+      object DataItem extends FakeRequestToPost(
+        "pension-savings",
+        TestEligibilityController.submitPensionSavings,
+        sessionId,
+        ("eligiblePensionSavings", "")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please tell us if your pension savings were £1 million or more on 5 April 2016")
+      }
     }
   }
 
