@@ -101,6 +101,7 @@ trait EligibilityController extends FrontendController {
         pensionSavingsForm.bindFromRequest.fold(
             errors => BadRequest(pages.eligibility.pensionSavings(errors)),
             success => {
+                keyStoreConnector.saveFormData("eligiblePensionSavings", success)
                 success.eligiblePensionSavings.get match {
                     case "yes"  => Redirect(routes.EligibilityController.applyIP())
                     case "no"   => Redirect(routes.EligibilityController.cannotApply())
