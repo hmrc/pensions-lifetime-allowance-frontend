@@ -47,7 +47,7 @@ class IntroductionControllerSpec extends UnitSpec with WithFakeApplication{
   }
 
   "navigating to introduction with a session already in place" should {
-    object DataItem extends FakeRequestTo("/", IntroductionController.introduction, sessionId)
+    object DataItem extends FakeRequestTo("/", IntroductionController.introduction, Some(sessionId))
     "return 200" in {
       status(DataItem.result) shouldBe Status.OK
     }

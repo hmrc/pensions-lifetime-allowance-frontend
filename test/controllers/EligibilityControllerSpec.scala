@@ -66,19 +66,19 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   "In EligibilityController calling the .addingToPension action" when {
 
     "visited directly with no session ID" should {
-      val result = TestEligibilityController.addingToPension(fakeRequest)
+      object DataItem extends FakeRequestTo("adding-to-pension", TestEligibilityController.addingToPension, None)
 
       "return 303" in {
-        status(result) shouldBe 303
+        status(DataItem.result) shouldBe 303
       }
 
       "redirect to introduction page" in {
-        redirectLocation(result) shouldBe Some(s"/introduction")
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
       }
     }
 
     "not supplied with a pre-existing stored model" should {
-      object DataItem extends FakeRequestTo("adding-to-pension", TestEligibilityController.addingToPension, sessionId)
+      object DataItem extends FakeRequestTo("adding-to-pension", TestEligibilityController.addingToPension, Some(sessionId))
       "return a 200" in {
         keystoreFetchCondition[AddingToPensionModel](None)
         status(DataItem.result) shouldBe 200
@@ -91,7 +91,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
     }
 
     "supplied with a pre-existing stored model" should {
-      object DataItem extends FakeRequestTo("adding-to-pension", TestEligibilityController.addingToPension, sessionId)
+      object DataItem extends FakeRequestTo("adding-to-pension", TestEligibilityController.addingToPension, Some(sessionId))
       val testModel = new AddingToPensionModel(Some("yes"))
       "return a 200" in {
         keystoreFetchCondition[AddingToPensionModel](Some(testModel))
@@ -168,19 +168,19 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   "Calling the .addedToPension action" when {
 
     "visited directly with no session ID" should {
-      val result = TestEligibilityController.addedToPension(fakeRequest)
+      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.addedToPension, None)
 
       "return 303" in {
-        status(result) shouldBe 303
+        status(DataItem.result) shouldBe 303
       }
 
       "redirect to introduction page" in {
-        redirectLocation(result) shouldBe Some(s"/introduction")
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
       }
     }
 
     "not supplied with a pre-existing stored model" should {
-      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.addedToPension, sessionId)
+      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.addedToPension, Some(sessionId))
       "return a 200" in {
         keystoreFetchCondition[AddedToPensionModel](None)
         status(DataItem.result) shouldBe 200
@@ -193,7 +193,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
     }
 
     "supplied with a pre-existing stored model" should {
-      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.addedToPension, sessionId)
+      object DataItem extends FakeRequestTo("added-to-pension", TestEligibilityController.addedToPension, Some(sessionId))
       val testModel = new AddedToPensionModel(Some("no"))
       "return a 200" in {
         keystoreFetchCondition[AddedToPensionModel](Some(testModel))
@@ -269,19 +269,19 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   "Calling the .pensionSavings action" when {
 
     "visited directly with no session ID" should {
-      val result = TestEligibilityController.pensionSavings(fakeRequest)
+      object DataItem extends FakeRequestTo("pension-pot-size", TestEligibilityController.pensionSavings, None)
 
       "return 303" in {
-        status(result) shouldBe 303
+        status(DataItem.result) shouldBe 303
       }
 
       "redirect to introduction page" in {
-        redirectLocation(result) shouldBe Some(s"/introduction")
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
       }
     }
 
     "not supplied with a pre-existing stored model" should {
-      object DataItem extends FakeRequestTo("pension-pot-size", TestEligibilityController.pensionSavings, sessionId)
+      object DataItem extends FakeRequestTo("pension-pot-size", TestEligibilityController.pensionSavings, Some(sessionId))
       "return a 200" in {
         keystoreFetchCondition[PensionSavingsModel](None)
         status(DataItem.result) shouldBe 200
@@ -294,7 +294,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
     }
 
     "supplied with a pre-existing stored model" should {
-      object DataItem extends FakeRequestTo("pension-pot-size", TestEligibilityController.pensionSavings, sessionId)
+      object DataItem extends FakeRequestTo("pension-pot-size", TestEligibilityController.pensionSavings, Some(sessionId))
       val testModel = new PensionSavingsModel(Some("no"))
       "return a 200" in {
         keystoreFetchCondition[PensionSavingsModel](Some(testModel))
@@ -370,19 +370,19 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   "Calling the .applyFP action" when {
 
     "visited directly with no session ID" should {
-      val result = TestEligibilityController.applyFP(fakeRequest)
+      object DataItem extends FakeRequestTo("apply-fp", TestEligibilityController.applyFP, None)
 
       "return 303" in {
-        status(result) shouldBe 303
+        status(DataItem.result) shouldBe 303
       }
 
       "redirect to introduction page" in {
-        redirectLocation(result) shouldBe Some(s"/introduction")
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
       }
     }
 
     "navigated to with a valid session ID" should {
-      object DataItem extends FakeRequestTo("apply-fp", TestEligibilityController.applyFP, sessionId)
+      object DataItem extends FakeRequestTo("apply-fp", TestEligibilityController.applyFP, Some(sessionId))
       "return a 200" in {
         status(DataItem.result) shouldBe 200
       }
@@ -408,19 +408,19 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   "Calling the .applyIP action" when {
 
     "visited directly with no session ID" should {
-      val result = TestEligibilityController.applyIP(fakeRequest)
+      object DataItem extends FakeRequestTo("apply-ip", TestEligibilityController.applyIP, None)
 
       "return 303" in {
-        status(result) shouldBe 303
+        status(DataItem.result) shouldBe 303
       }
 
       "redirect to introduction page" in {
-        redirectLocation(result) shouldBe Some(s"/introduction")
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
       }
     }
 
     "navigated to with a valid session ID" should {
-      object DataItem extends FakeRequestTo("apply-ip", TestEligibilityController.applyIP, sessionId)
+      object DataItem extends FakeRequestTo("apply-ip", TestEligibilityController.applyIP, Some(sessionId))
       "return a 200" in {
         status(DataItem.result) shouldBe 200
       }
@@ -446,19 +446,19 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   "Calling the .cannotApply action" when {
 
     "visited directly with no session ID" should {
-      val result = TestEligibilityController.cannotApply(fakeRequest)
+      object DataItem extends FakeRequestTo("pension-below-threshold", TestEligibilityController.cannotApply, None)
 
       "return 303" in {
-        status(result) shouldBe 303
+        status(DataItem.result) shouldBe 303
       }
 
       "redirect to introduction page" in {
-        redirectLocation(result) shouldBe Some(s"/introduction")
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
       }
     }
 
     "navigated to with a valid session ID" should {
-      object DataItem extends FakeRequestTo("pension-below-threshold", TestEligibilityController.cannotApply, sessionId)
+      object DataItem extends FakeRequestTo("pension-below-threshold", TestEligibilityController.cannotApply, Some(sessionId))
       "return a 200" in {
         status(DataItem.result) shouldBe 200
       }

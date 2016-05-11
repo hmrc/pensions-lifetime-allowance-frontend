@@ -24,8 +24,17 @@ import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
 
 
-class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*) extends UnitSpec {
-    val fakeRequest = FakeRequest("GET", "/protect-your-lifetime-allowance/" + url).withSession(SessionKeys.sessionId -> s"session-$sessionId")
+class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: Option[String], data: (String, String)*) extends UnitSpec {
+    val fakeRequest = constructRequest(url, sessionId)
     val result = controllerAction(fakeRequest)
     val jsoupDoc = Jsoup.parse(bodyOf(result))
+  
+    def constructRequest(url: String, sessionId: Option[String]) = {
+    	sessionId match {
+    		case Some(sessId) => FakeRequest("GET", "/protect-your-lifetime-allowance/" + url).withSession(SessionKeys.sessionId -> s"session-$sessionId")
+    		case None => FakeRequest("GET", "/protect-your-lifetime-allowance/" + url)
+    	}
+    }
+
+
   }
