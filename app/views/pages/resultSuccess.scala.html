@@ -1,0 +1,12 @@
+@(nino: String)(implicit request: Request[_])
+
+
+@views.html.main_template(title = "Wohoo", bodyClasses = None) {
+
+	<h1 class="heading-large">Brill</h1>
+
+	<p>Your NI number is: @nino</p>
+
+	<p><a id="startAgain" href="@routes.IntroductionController.introduction">@Messages("pla.base.startAgain")</a></p>
+
+}
