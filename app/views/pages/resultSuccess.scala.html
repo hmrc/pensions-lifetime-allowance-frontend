@@ -1,17 +1,17 @@
 @()(implicit request: Request[_])
 
-@import common.Validation.numberOfPara
+@import common.resultMethods.numberOfPara
 
 @views.html.main_template(title = Messages("pla.successFP16.title"), bodyClasses = None) {
 	
 	<div class="grid-row">
 		<div class="transaction-banner--complete">
-	        <p class="heading-xlarge">@Html(Messages("resultCode.1.1"))</p>
+	        <p class="heading-xlarge">@Messages("resultCode.1.heading")</p>
 	        <p>@Messages("pla.successFP16.paraOne")</p>
 	        <p>@Messages("pla.successFP16.protectionNo")<br>@Messages("pla.successFP16.psaNo")</p>
 	    </div>
 	    <h2>@Messages("pla.successFP16.paraTwo")</h2>
+	    <p>@Messages(numberOfPara(8)(0))</p>
 	    <p>@Html(Messages("pla.successFP16.account"))</p>
-	    <p>@numberOfPara(8)</p>
 	</div>
 }

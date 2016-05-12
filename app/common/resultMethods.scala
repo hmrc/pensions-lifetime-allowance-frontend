@@ -16,19 +16,17 @@
 
 package common
 
-object Validation {
+import play.api.i18n.Messages
+import Array._
 
-  def isMaxTwoDecimalPlaces(amount: BigDecimal): Boolean = {
-    amount match {
-      case amount if amount.scale <= 2 => true
-      case _ => false
-    }
-  }
+object resultMethods{
 
-  def isPositive(amount: BigDecimal): Boolean = {
-    amount match {
-      case amount if amount < 0 => false
-      case _ => true
-    }
-  }
+	def numberOfPara(number: Int, i: Int = 1, paragraphs: Array[String] = Array[String]()): Array[String] = {
+	    val x: String = "resultCode." + number.toString() + "." + i.toString()
+	    if(Messages(x) == x){
+	    	paragraphs
+	    } else {
+	    	numberOfPara(number, i+1, paragraphs :+ Messages(x))
+	    }
+	}
 }
