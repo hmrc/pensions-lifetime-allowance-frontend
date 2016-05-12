@@ -16,6 +16,7 @@
 
 package common
 
+
 object Validation {
 
   def isMaxTwoDecimalPlaces(amount: BigDecimal): Boolean = {

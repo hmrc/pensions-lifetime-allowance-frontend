@@ -22,4 +22,4 @@ GET         /pension-below-threshold            controllers.EligibilityControlle
 GET         /hello-world                        controllers.HelloWorld.helloWorld
 GET         /timeout                            controllers.HelloWorld.timeout
 
-GET			/resultSuccess						controllers.EligibilityController.resultSuccess
+GET			/resultSuccess						controllers.ResultController.resultSuccess

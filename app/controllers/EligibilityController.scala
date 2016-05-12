@@ -97,8 +97,4 @@ trait EligibilityController extends FrontendController {
         Future.successful(Ok(views.html.pages.eligibility.cannotApply()))
     }
 
-    // RESULT
-    val resultSuccess = Action.async { implicit request =>
-        Future.successful(Ok(views.html.pages.resultSuccess()))
-    }
 }

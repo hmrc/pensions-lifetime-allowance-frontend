@@ -115,7 +115,7 @@ resultCode.7.noref		=	However, as you already hold an open Fixed Protection 2014
 resultCode.7.1			=	If Fixed Protection 2014 was lost before 6 April 2016 you must notify HMRC (Pension Schemes Services).</p>
 resultCode.7.2			=	Please retain a copy of this notification for your records.
 
-resultCode.8.heading	=	Your application for Individual Protection 2014 for your lifetime allowance of [£x,xxx,xxx] (Range – £1,250,001 - £1,500,000 – if the Relevant Amount is above £1,500,000 then this amount must default to £1,500,000) has been successful.
+resultCode.8.heading	=	Your application for Individual Protection 2014 for your lifetime allowance of £1,100,000 has been successful.
 resultCode.8.psa		=	Your Pension Scheme Administrator Reference is (format of reference TBC - xxxxxx).  If you give this reference to your Pension Scheme Administrator,  they will be able to check the status of your protection on-line.
 resultCode.8.1			=	As you already hold open Fixed Protection 2016, the status of this protection has moved to dormant.  If your Individual Protection 2014 relevant amount reduces to below £1.25m your Fixed Protection 2016 will become active and you will be issued with a reference number.
 resultCode.8.2			=	If a pension debit occurs that reduces your Individual Protection 2014  relevant amount you must notify HMRC (Pension Schemes Services) within 60 days.
