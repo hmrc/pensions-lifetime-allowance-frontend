@@ -16,6 +16,7 @@
 
 package common
 
+import play.api.i18n.Messages
 
 object Validation {
 
@@ -30,6 +31,15 @@ object Validation {
     amount match {
       case amount if amount < 0 => false
       case _ => true
+    }
+  }
+
+  def numberOfPara(number: Int, i: Int = 1): Int = {
+    val x: String = "resultCode." + number.toString() + "." + i.toString()
+    if(Messages(x) == x){
+      i-1
+    } else {
+      numberOfPara(number, i+1)
     }
   }
 }
