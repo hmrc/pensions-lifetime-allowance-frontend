@@ -1,4 +1,4 @@
-@()(implicit request: Request[_])
+@(notInGreenBox: String, protectionNo: String)(implicit request: Request[_])
 
 @import common.resultMethods.numberOfPara
 
@@ -6,12 +6,11 @@
 	
 	<div class="grid-row">
 		<div class="transaction-banner--complete">
-	        <p class="heading-xlarge">@Messages("resultCode.8.heading")</p>
-	        <p>@Messages("pla.successFP16.paraOne")</p>
-	        <p>@Messages("pla.successFP16.protectionNo")<br>@Messages("pla.successFP16.psaNo")</p>
+	        <p class="heading-xlarge">@Messages("resultCode." + "8" + ".heading")</p>
+	        <p>@Html(protectionNo)</p>
 	    </div>
+	    <p>@Html(notInGreenBox)</p>
 	    <h2>@Messages("pla.successFP16.paraTwo")</h2>
-	    <p>@Messages(numberOfPara(8)(0))</p>
 	    <p>@Html(Messages("pla.successFP16.account"))</p>
 	</div>
 }

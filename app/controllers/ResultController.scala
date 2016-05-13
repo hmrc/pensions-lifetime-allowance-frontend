@@ -24,23 +24,39 @@ import scala.concurrent.Future
 
 import views.html._
 
+import play.api.i18n.Messages
+
 object ResultController extends ResultController
 
 trait ResultController extends FrontendController {
 
+	val refNo: Int = 24
+
     val resultSuccess = Action.async { implicit request =>
-        Future.successful(Ok(views.html.pages.resultSuccess()))
+        Future.successful(Ok(views.html.pages.resultSuccess(otherParagraphs(refNo), referenceNumbers(refNo))))
     }
 
-    // def result(refNo: Int) = Action {
-    // 	val resultSuccess = Action.async { implicit request =>
-    // 		errors => BadRequest(pages.resultSuccess(errors)),
-    //         success => {
-    //             success.refNo match {
-    //                 case 8  => Redirect(routes.ResultController.resultSuccess)
-    //                 case 1   => Redirect(routes.EligibilityController.cannotApply)
-    //             }
-    //         }
-    // 	}
-    // }
+	def otherParagraphs(number: Int, i: Int = 1, paragraphs: String = ""): String = {
+	    val x: String = "resultCode." + number.toString() + "." + i.toString()
+	    if(Messages(x) == x){
+	    	paragraphs
+	    } else {
+	    	otherParagraphs(number, i+1, paragraphs + "<p>" + Messages(x) + "</p>")
+	    }
+	}
+
+	def referenceNumbers(number: Int): String = {
+		val x: String = "resultCode." + number.toString() + ".ref"
+		val y: String = "resultCode." + number.toString() + ".psa"
+		if(Messages(x) == x && Messages(y) == y){
+				""
+			} else if(Messages(x) == x){
+				"<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(y) + "</p>"
+			} else if(Messages(y) == y){
+				"<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(x) + "</p>"
+			} else {
+				"<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(x) + "</p><p>" + Messages(y) + "</p>"
+			}
+	}
+
 }
