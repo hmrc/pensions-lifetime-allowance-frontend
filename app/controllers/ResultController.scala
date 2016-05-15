@@ -16,11 +16,13 @@
 
 package controllers
 
+import play.api.i18n.Messages
 import auth.AuthorisedForPLA
 import config.{FrontendAppConfig,FrontendAuthConnector}
-
 import connectors.KeyStoreConnector
 import play.api.mvc._
+import play.api.data.Forms._
+import play.api.data._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
@@ -28,9 +30,7 @@ import forms.AddedToPensionForm.addedToPensionForm
 import forms.AddingToPensionForm.addingToPensionForm
 import forms.PensionSavingsForm.pensionSavingsForm
 import models._
-
 import scalaj.http.Http
-
 import views.html._
 
 object ResultController extends ResultController {
@@ -41,15 +41,40 @@ object ResultController extends ResultController {
 
 trait ResultController extends FrontendController with AuthorisedForPLA {
 
-  val processFPApplication = AuthorisedByAny.async {
-    implicit user =>  implicit request =>
-    // 	val postUrl = "https://localhost:9012/individuals/"+user.nino.get+"/protections"
-    // 	val result = Http(postUrl).postData("""{"Protection":{"Type":"FP2016"}}""")
-		  // .header("Content-Type", "application/json")
+    val refNo: Int = 24
 
-		  //result.asString.toString
+    val processFPApplication = AuthorisedByAny.async {
+        implicit user =>  implicit request =>
+        //  val postUrl = "https://localhost:9012/individuals/"+user.nino.get+"/protections"
+        //  val result = Http(postUrl).postData("""{"Protection":{"Type":"FP2016"}}""")
+              // .header("Content-Type", "application/json")
 
-    Future.successful(Ok(views.html.pages.resultSuccess(user.nino.get)))
-  }
+              //result.asString.toString
+
+        Future.successful(Ok(views.html.pages.resultSuccess(otherParagraphs(refNo), referenceNumbers(refNo))))
+    }
+
+    def otherParagraphs(number: Int, i: Int = 1, paragraphs: String = ""): String = {
+        val x: String = "resultCode." + number.toString() + "." + i.toString()
+        if(Messages(x) == x){
+            paragraphs
+        } else {
+            otherParagraphs(number, i+1, paragraphs + "<p>" + Messages(x) + "</p>")
+        }
+    }
+
+    def referenceNumbers(number: Int): String = {
+        val x: String = "resultCode." + number.toString() + ".ref"
+        val y: String = "resultCode." + number.toString() + ".psa"
+        if(Messages(x) == x && Messages(y) == y){
+            ""
+        } else if(Messages(x) == x){
+            "<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(y) + "</p>"
+        } else if(Messages(y) == y){
+            "<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(x) + "</p>"
+        } else {
+            "<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(x) + "</p><p>" + Messages(y) + "</p>"
+        }
+    }
 
 }

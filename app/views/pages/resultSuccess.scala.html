@@ -1,12 +1,15 @@
-@(nino: String)(implicit request: Request[_])
 
+@(notInGreenBox: String, protectionNo: String)(implicit request: Request[_])
 
-@views.html.main_template(title = "Wohoo", bodyClasses = None) {
-
-	<h1 class="heading-large">Brill</h1>
-
-	<p>Your NI number is: @nino</p>
-
-	<p><a id="startAgain" href="@routes.IntroductionController.introduction">@Messages("pla.base.startAgain")</a></p>
-
+@views.html.main_template(title = Messages("pla.successFP16.title"), bodyClasses = None) {
+	
+	<div class="grid-row">
+		<div class="transaction-banner--complete">
+	        <p class="heading-xlarge">@Messages("resultCode." + "8" + ".heading")</p>
+	        <p>@Html(protectionNo)</p>
+	    </div>
+	    <p>@Html(notInGreenBox)</p>
+	    <h2>@Messages("pla.successFP16.paraTwo")</h2>
+	    <p>@Html(Messages("pla.successFP16.account"))</p>
+	</div>
 }
