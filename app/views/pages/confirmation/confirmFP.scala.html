@@ -4,17 +4,29 @@
 @()(implicit request: Request[_])
 
 
-@views.html.main_template(title = "ConfirmFP", bodyClasses = None) {
+@sidebar = {
+	<div class="service-info">
+		<h2>@Messages("pla.base.readMore")</h2>
+		<ul>
+			<li><a id="moreInfoFP16" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.fixedProtection2016")</a></li>
+		</ul>
+	</div>
+}
 
-	<h1 class="heading-large">Confirm FP application</h1>
+@views.html.main_template(title = Messages("pla.confirmFP16.title"), bodyClasses = None, sidebarLinks = Some(sidebar)) {
+	
+    <h1>@Messages("pla.confirmFP16.pageHeading")</h1>
 
-
-	<p><a id="startAgain" href="@routes.IntroductionController.introduction">@Messages("pla.base.startAgain")</a></p>
-
+    <p class="lede">@Messages("pla.confirmFP16.paraOne")</p>
+    <p>@Messages("pla.confirmFP16.paraTwo")</p>
+    <ul class="list list-bullet">
+    	<li>@Messages("pla.confirmFP16.bulletOne")</li>
+    	<li>@Messages("pla.confirmFP16.bulletTwo")</li>
+    </ul>
 
     @govHelpers.form(action = routes.ResultController.processFPApplication) {
         
-        <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
+        <button class="button" type="submit" id="continue-button">@Messages("pla.base.apply")</button>
     }
 
 }
