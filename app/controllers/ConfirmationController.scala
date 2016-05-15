@@ -24,32 +24,20 @@ import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
-import forms.AddedToPensionForm.addedToPensionForm
-import forms.AddingToPensionForm.addingToPensionForm
-import forms.PensionSavingsForm.pensionSavingsForm
 import models._
 
-import scalaj.http.Http
+import views.html.pages._
 
-import views.html._
-
-object ResultController extends ResultController {
+object ConfirmationController extends ConfirmationController {
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.applyUrl
+  override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
 }
 
-trait ResultController extends FrontendController with AuthorisedForPLA {
+trait ConfirmationController extends FrontendController with AuthorisedForPLA {
 
-  val processFPApplication = AuthorisedByAny.async {
-    implicit user =>  implicit request =>
-    // 	val postUrl = "https://localhost:9012/individuals/"+user.nino.get+"/protections"
-    // 	val result = Http(postUrl).postData("""{"Protection":{"Type":"FP2016"}}""")
-		  // .header("Content-Type", "application/json")
-
-		  //result.asString.toString
-
-    Future.successful(Ok(views.html.pages.resultSuccess(user.nino.get)))
+  val confirmFP = AuthorisedByAny.async {
+    implicit user => implicit request => Future.successful(Ok(confirmation.confirmFP()))
   }
 
 }

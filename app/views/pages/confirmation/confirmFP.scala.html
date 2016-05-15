@@ -1,0 +1,20 @@
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import play.api.data._
+
+@()(implicit request: Request[_])
+
+
+@views.html.main_template(title = "ConfirmFP", bodyClasses = None) {
+
+	<h1 class="heading-large">Confirm FP application</h1>
+
+
+	<p><a id="startAgain" href="@routes.IntroductionController.introduction">@Messages("pla.base.startAgain")</a></p>
+
+
+    @govHelpers.form(action = routes.ResultController.processFPApplication) {
+        
+        <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
+    }
+
+}
