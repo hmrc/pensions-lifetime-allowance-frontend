@@ -30,28 +30,31 @@ import forms.AddedToPensionForm.addedToPensionForm
 import forms.AddingToPensionForm.addingToPensionForm
 import forms.PensionSavingsForm.pensionSavingsForm
 import models._
-import scalaj.http.Http
 import views.html._
+
+
+import config.WSHttp
+import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.http._
+import play.api.libs.json.{JsValue, Json}
 
 object ResultController extends ResultController {
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.applyUrl
+
+  val stubUrl: String = "https://localhost:9012/protect-your-lifetime-allowance"
+  val http = WSHttp
 }
 
 trait ResultController extends FrontendController with AuthorisedForPLA {
 
+    val http: HttpGet with HttpPost with HttpPut
+    val stubUrl: String
     val refNo: Int = 24
 
     val processFPApplication = AuthorisedByAny.async {
-        implicit user =>  implicit request =>
-        //  val postUrl = "https://localhost:9012/individuals/"+user.nino.get+"/protections"
-        //  val result = Http(postUrl).postData("""{"Protection":{"Type":"FP2016"}}""")
-              // .header("Content-Type", "application/json")
-
-              //result.asString.toString
-
-        Future.successful(Ok(views.html.pages.resultSuccess(otherParagraphs(refNo), referenceNumbers(refNo))))
+        implicit user =>  implicit request => Future.successful(Ok(views.html.pages.resultSuccess(otherParagraphs(refNo), referenceNumbers(refNo))))
     }
 
     def otherParagraphs(number: Int, i: Int = 1, paragraphs: String = ""): String = {
