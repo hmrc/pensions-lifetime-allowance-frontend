@@ -57,20 +57,23 @@ pla.applyIP.paraThree   = You will still be able to add to your pension without 
 pla.applyIP.signIn      = To apply, you''ll need to sign in to your HMRC online services account, or create one.
 
 ## Apply for FP 2016 ##
-pla.applyFP.title       = Apply for FP 2016
-pla.applyFP.pageHeading = You can apply for protection
-pla.applyFP.paraOne     = You can apply for Fixed Protection 2016.
-pla.applyFP.paraTwo     = This will protect your Lifetime Allowance at £1.25 million, but you''ll lose your protection if you add to your pension. You must let us know if this happens.
-pla.applyFP.paraThree   = If the standard Lifetime Allowance increases to over £1.25 million in the future, you''ll get the higher amount.
-pla.applyFP.signIn      = To apply, you'll need to sign in to your HMRC online services account, or create one.
+pla.applyFP.title           = Confirm
+pla.applyFP.pageHeading     = You can apply for Fixed Protection 2016
+pla.applyFP.paraOne         = This will protect your lifetime allowance at £1.25 million.
+pla.applyFP.paraTwo         = You''ll lose this protection if:
+pla.applyFP.bulletOne       = you or anyone else, such as your employer, adds to your pension savings
+pla.applyFP.bulletTwo       = you have a defined benefits pension, such as a final salary scheme, and gain a higher annual pension amount
 
-## Confirm FP 2016 ##
-pla.confirmFP16.title           = Confirm
-pla.confirmFP16.pageHeading     = You can apply for Fixed Protection 2016
-pla.confirmFP16.paraOne         = This will protect your lifetime allowance at £1.25 million.
-pla.confirmFP16.paraTwo         = You''ll lose this protection if:
-pla.confirmFP16.bulletOne       = you or anyone else, such as your employer, adds to your pension savings
-pla.confirmFP16.bulletTwo       = you have a defined benefits pension, such as a final salary scheme, and gain a higher annual pension amount
+## Confirm FP 2016##
+pla.confirmFP16.title       = Apply for FP 2016
+pla.confirmFP16.pageHeading = Confirm your application
+pla.confirmFP16.paraOne     = Please check the details below and confirm your application.
+pla.confirmFP16.bulletOne	= You have not added to your pension, or accrued benefits, since 6 April 2016
+pla.confirmFP16.warning		= By clicking Apply you declare that this information is true and complete to the best of your knowledge and belief.
+
+pla.confirmFP16.paraTwo     = This will protect your Lifetime Allowance at £1.25 million, but you''ll lose your protection if you add to your pension. You must let us know if this happens.
+pla.confirmFP16.paraThree   = If the standard Lifetime Allowance increases to over £1.25 million in the future, you''ll get the higher amount.
+pla.confirmFP16.signIn      = To apply, you''ll need to sign in to your HMRC online services account, or create one.
 
 ## Cannot Apply ##
 pla.cannotApply.title       = Don''t need PLA

@@ -1,32 +1,40 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import play.api.data._
 
 @()(implicit request: Request[_])
 
-
 @sidebar = {
-	<div class="service-info">
-		<h2>@Messages("pla.base.readMore")</h2>
-		<ul>
-			<li><a id="moreInfoFP16" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.fixedProtection2016")</a></li>
-		</ul>
-	</div>
+    <div class="service-info">
+        <h2>@Messages("pla.base.readMore")</h2>
+        <ul>
+            <li><a id="fp2016" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.fixedProtection2016")</a></li>
+        </ul>
+    </div>
 }
 
 @views.html.main_template(title = Messages("pla.confirmFP16.title"), bodyClasses = None, sidebarLinks = Some(sidebar)) {
-	
-    <h1>@Messages("pla.confirmFP16.pageHeading")</h1>
 
-    <p class="lede">@Messages("pla.confirmFP16.paraOne")</p>
-    <p>@Messages("pla.confirmFP16.paraTwo")</p>
+    <h1 class="heading-xlarge">@Messages("pla.confirmFP16.pageHeading")</h1>
+
+    <p>@Messages("pla.confirmFP16.paraOne")</p>
+
     <ul class="list list-bullet">
-    	<li>@Messages("pla.confirmFP16.bulletOne")</li>
-    	<li>@Messages("pla.confirmFP16.bulletTwo")</li>
+        <li>@Messages("pla.confirmFP16.bulletOne")</li>
     </ul>
+
+    <div class="notice">
+        <p>
+            <i class="icon exclamation">
+                <span class="visuallyhidden">Warning</span>
+            </i>
+            <strong class="bold-small">
+                @Messages("pla.confirmFP16.warning")
+            </strong>
+        </p>
+    </div>
 
     @govHelpers.form(action = routes.ResultController.processFPApplication) {
         
-        <button class="button" type="submit" id="continue-button">@Messages("pla.base.apply")</button>
+        <button class="button" type="submit" id="apply">@Messages("pla.base.apply")</button>
     }
 
 }
