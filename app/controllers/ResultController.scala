@@ -29,21 +29,22 @@ import scala.concurrent.Future
 import forms.AddedToPensionForm.addedToPensionForm
 import forms.AddingToPensionForm.addingToPensionForm
 import forms.PensionSavingsForm.pensionSavingsForm
-import models._
-import views.html._
-
-
 import config.WSHttp
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
+import models._
+import views.html._
 
-object ResultController extends ResultController {
+
+
+object ResultController extends ResultController with ServicesConfig {
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.applyUrl
 
-  val stubUrl: String = "https://localhost:9012/protect-your-lifetime-allowance"
+  //val stubUrl: String = baseUrl("protect-your-lifetime-allowance")
+  val stubUrl: String = "http://localhost:9012/protect-your-lifetime-allowance"
   val http = WSHttp
 }
 
@@ -54,7 +55,12 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     val refNo: Int = 24
 
     val processFPApplication = AuthorisedByAny.async {
-        implicit user =>  implicit request => Future.successful(Ok(views.html.pages.resultSuccess(otherParagraphs(refNo), referenceNumbers(refNo))))
+        implicit user =>  implicit request => 
+            val requestJson: JsValue = Json.toJson[ApplyFP16Model](ApplyFP16Model("FP2016"))
+            val headers: Seq[(String, String)] = List(("Content-Type", "application/json"))
+            val nino = user.nino.getOrElse("NoNINO")
+            val response = http.POST[JsValue, Option[HttpResponse]](s"$stubUrl/individuals/$nino/protections", requestJson, headers)
+            Future.successful(Ok(views.html.pages.resultSuccess(otherParagraphs(refNo), referenceNumbers(refNo))))
     }
 
     def otherParagraphs(number: Int, i: Int = 1, paragraphs: String = ""): String = {
