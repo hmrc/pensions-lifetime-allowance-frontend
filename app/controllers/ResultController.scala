@@ -62,7 +62,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
             }
     }
 
-    private def createSuccessResponseFromJson(json: JsValue):SuccessResponseModel = {
+    def createSuccessResponseFromJson(json: JsValue):SuccessResponseModel = {
         val notificationId = (json \ "notificationId").as[Int].toString
         val protectionReference = (json \ "protectionReference").asOpt[String]
         val psaReference = (json \ "psaReference").asOpt[String]
@@ -82,20 +82,6 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
         }
 
         loop(notificationId)
-    }
-
-    def referenceNumbers(number: Int): String = {
-        val x: String = "resultCode." + number.toString() + ".ref"
-        val y: String = "resultCode." + number.toString() + ".psa"
-        if(Messages(x) == x && Messages(y) == y){
-            ""
-        } else if(Messages(x) == x){
-            "<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(y) + "</p>"
-        } else if(Messages(y) == y){
-            "<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(x) + "</p>"
-        } else {
-            "<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(x) + "</p><p>" + Messages(y) + "</p>"
-        }
     }
 
 }
