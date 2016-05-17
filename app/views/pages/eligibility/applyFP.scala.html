@@ -1,30 +1,30 @@
+@import play.api.data._
+
 @()(implicit request: Request[_])
+
 
 @sidebar = {
 	<div class="service-info">
 		<h2>@Messages("pla.base.readMore")</h2>
 		<ul>
-			<li><a id="fp2016" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.fixedProtection2016")</a></li>
+			<li><a id="moreInfoFP16" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.fixedProtection2016")</a></li>
 		</ul>
 	</div>
 }
 
 @views.html.main_template(title = Messages("pla.applyFP.title"), bodyClasses = None, sidebarLinks = Some(sidebar)) {
+	
+    <h1 class="heading-xlarge">@Messages("pla.applyFP.pageHeading")</h1>
 
-	<h1>@Messages("pla.applyFP.pageHeading")</h1>
+    <p class="lede">@Messages("pla.applyFP.paraOne")</p>
+    <p>@Messages("pla.applyFP.paraTwo")</p>
+    <ul class="list list-bullet">
+    	<li>@Messages("pla.applyFP.bulletOne")</li>
+    	<li>@Messages("pla.applyFP.bulletTwo")</li>
+    </ul>
 
-	<p>@Messages("pla.applyFP.paraOne")</p>
-
-	<p>@Messages("pla.applyFP.paraTwo")</p>
-
-	<p>@Messages("pla.applyFP.paraThree")</p>
-
-	<div class="panel-indent">
-    	@Messages("pla.applyFP.signIn")
-    </div>
-
-	<p>
-        <a id="start" href="#" class="button" role="button">@Messages("pla.base.continue")</a>
+    <p>
+        <a id="continue-button" href=@controllers.routes.ConfirmationController.confirmFP class="button" role="button">@Messages("pla.base.continue")</a>
     </p>
 
 }
