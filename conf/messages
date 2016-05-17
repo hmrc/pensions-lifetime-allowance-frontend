@@ -91,6 +91,8 @@ pla.successFP16.psaNo           = PSA check reference number:
 pla.successFP16.paraTwo         = What happens next?
 pla.successFP16.account         = You can view these details in your <a href="#">HMRC Online Services account</a>.      
 
+## API ##
+pla.api.badRequest				= There was an error processing the client''s request
 
 
 

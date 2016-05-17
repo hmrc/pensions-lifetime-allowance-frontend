@@ -35,6 +35,7 @@ import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
 import models._
 import views.html._
+import connectors.APIConnector
 
 
 
@@ -43,24 +44,26 @@ object ResultController extends ResultController with ServicesConfig {
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.applyUrl
 
-  //val stubUrl: String = baseUrl("protect-your-lifetime-allowance")
-  val stubUrl: String = "http://localhost:9012/protect-your-lifetime-allowance"
-  val http = WSHttp
+  override val apiConnector = APIConnector
 }
 
 trait ResultController extends FrontendController with AuthorisedForPLA {
 
-    val http: HttpGet with HttpPost with HttpPut
-    val stubUrl: String
+    val successCodes = List(22,23,24)
+    val rejectCodes = List(17,18,19,20,21)
+    val apiConnector : APIConnector
     val refNo: Int = 24
 
     val processFPApplication = AuthorisedByAny.async {
         implicit user =>  implicit request => 
-            val requestJson: JsValue = Json.toJson[ApplyFP16Model](ApplyFP16Model("FP2016"))
-            val headers: Seq[(String, String)] = List(("Content-Type", "application/json"))
-            val nino = user.nino.getOrElse("NoNINO")
-            val response = http.POST[JsValue, Option[HttpResponse]](s"$stubUrl/individuals/$nino/protections", requestJson, headers)
-            Future.successful(Ok(views.html.pages.resultSuccess(otherParagraphs(refNo), referenceNumbers(refNo))))
+            apiConnector.applyFP16(user.nino.get).map {
+                case Some(response: HttpResponse) => Ok(views.html.pages.resultSuccess(otherParagraphs(refNo), referenceNumbers(refNo)))
+                case None => BadRequest(Messages("pla.api.badRequest"))
+            }
+    }
+
+    private def redirectFromFP16Response(response: HttpResponse) = {
+        
     }
 
     def otherParagraphs(number: Int, i: Int = 1, paragraphs: String = ""): String = {
