@@ -57,22 +57,31 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     val processFPApplication = AuthorisedByAny.async {
         implicit user =>  implicit request => 
             apiConnector.applyFP16(user.nino.get).map {
-                case Some(response: HttpResponse) => Ok(views.html.pages.resultSuccess(otherParagraphs(refNo), referenceNumbers(refNo)))
+                case Some(response: HttpResponse) => Ok(views.html.pages.resultSuccess(createSuccessResponseFromJson(response.json)))
                 case None => BadRequest(Messages("pla.api.badRequest"))
             }
     }
 
-    private def redirectFromFP16Response(response: HttpResponse) = {
-        
+    private def createSuccessResponseFromJson(json: JsValue):SuccessResponseModel = {
+        val notificationId = (json \ "notificationId").as[Int].toString
+        val protectionReference = (json \ "protectionReference").asOpt[String]
+        val psaReference = (json \ "psaReference").asOpt[String]
+        val additionalInfo = getAdditionalInfo(notificationId)
+        SuccessResponseModel(notificationId, protectionReference, psaReference, additionalInfo)
     }
 
-    def otherParagraphs(number: Int, i: Int = 1, paragraphs: String = ""): String = {
-        val x: String = "resultCode." + number.toString() + "." + i.toString()
-        if(Messages(x) == x){
-            paragraphs
-        } else {
-            otherParagraphs(number, i+1, paragraphs + "<p>" + Messages(x) + "</p>")
+    def getAdditionalInfo(notificationId: String): List[String] = {
+
+        def loop(notificationId: String, i: Int = 1, paragraphs: List[String] = List.empty): List[String] = {
+            val x: String = "resultCode." + notificationId + "." + i
+            if(Messages(x) == x){
+                paragraphs
+            } else {
+                loop(notificationId, i+1, paragraphs :+ i.toString)
+            }
         }
+
+        loop(notificationId)
     }
 
     def referenceNumbers(number: Int): String = {
