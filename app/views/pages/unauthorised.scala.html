@@ -1,10 +1,14 @@
-@()(implicit request: Request[_])
+@(showFirstParagraph: Boolean = true)(implicit request: Request[_])
 
 @views.html.main_template(title = Messages("pla.addedToPension.title"), bodyClasses = None) {
 
 <h1 class="heading-xlarge">@Messages("pla.notAuthorised.pageHeading")</h1>
 
 <p>@Html(Messages("pla.notAuthorised.paraOne"))</p>
+
+@if(showFirstParagraph) {
+    <p>@Html(Messages("nisp.iv.failure.general.text"))</p>
+}
 
 <p>@Html(Messages("pla.notAuthorised.tryAgain"))</p>
 
