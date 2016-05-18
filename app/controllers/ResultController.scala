@@ -35,6 +35,7 @@ import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
 import models._
 import views.html._
+import connectors.APIConnector
 
 
 
@@ -43,47 +44,44 @@ object ResultController extends ResultController with ServicesConfig {
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.applyUrl
 
-  //val stubUrl: String = baseUrl("protect-your-lifetime-allowance")
-  val stubUrl: String = "http://localhost:9012/protect-your-lifetime-allowance"
-  val http = WSHttp
+  override val apiConnector = APIConnector
 }
 
 trait ResultController extends FrontendController with AuthorisedForPLA {
 
-    val http: HttpGet with HttpPost with HttpPut
-    val stubUrl: String
+    val successCodes = List(22,23,24)
+    val rejectCodes = List(17,18,19,20,21)
+    val apiConnector : APIConnector
     val refNo: Int = 24
 
     val processFPApplication = AuthorisedByAny.async {
         implicit user =>  implicit request => 
-            val requestJson: JsValue = Json.toJson[ApplyFP16Model](ApplyFP16Model("FP2016"))
-            val headers: Seq[(String, String)] = List(("Content-Type", "application/json"))
-            val nino = user.nino.getOrElse("NoNINO")
-            val response = http.POST[JsValue, Option[HttpResponse]](s"$stubUrl/individuals/$nino/protections", requestJson, headers)
-            Future.successful(Ok(views.html.pages.resultSuccess(otherParagraphs(refNo), referenceNumbers(refNo))))
+            apiConnector.applyFP16(user.nino.get).map {
+                case Some(response: HttpResponse) => Ok(views.html.pages.resultSuccess(createSuccessResponseFromJson(response.json)))
+                case None => BadRequest(Messages("pla.api.badRequest"))
+            }
     }
 
-    def otherParagraphs(number: Int, i: Int = 1, paragraphs: String = ""): String = {
-        val x: String = "resultCode." + number.toString() + "." + i.toString()
-        if(Messages(x) == x){
-            paragraphs
-        } else {
-            otherParagraphs(number, i+1, paragraphs + "<p>" + Messages(x) + "</p>")
-        }
+    def createSuccessResponseFromJson(json: JsValue):SuccessResponseModel = {
+        val notificationId = (json \ "notificationId").as[Int].toString
+        val protectionReference = (json \ "protectionReference").asOpt[String]
+        val psaReference = (json \ "psaReference").asOpt[String]
+        val additionalInfo = getAdditionalInfo(notificationId)
+        SuccessResponseModel(notificationId, protectionReference, psaReference, additionalInfo)
     }
 
-    def referenceNumbers(number: Int): String = {
-        val x: String = "resultCode." + number.toString() + ".ref"
-        val y: String = "resultCode." + number.toString() + ".psa"
-        if(Messages(x) == x && Messages(y) == y){
-            ""
-        } else if(Messages(x) == x){
-            "<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(y) + "</p>"
-        } else if(Messages(y) == y){
-            "<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(x) + "</p>"
-        } else {
-            "<p>" + Messages("pla.successFP16.paraOne") + "</p><p>" + Messages(x) + "</p><p>" + Messages(y) + "</p>"
+    def getAdditionalInfo(notificationId: String): List[String] = {
+
+        def loop(notificationId: String, i: Int = 1, paragraphs: List[String] = List.empty): List[String] = {
+            val x: String = "resultCode." + notificationId + "." + i
+            if(Messages(x) == x){
+                paragraphs
+            } else {
+                loop(notificationId, i+1, paragraphs :+ i.toString)
+            }
         }
+
+        loop(notificationId)
     }
 
 }

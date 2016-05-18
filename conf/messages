@@ -15,6 +15,7 @@ pla.links.lifetimeAllowance         = Pensions Lifetime Allowance
 pla.links.protectLifetimeAllowance  = Lifetime Allowance Protection schemes
 pla.links.fixedProtection2016       = Fixed Protection 2016
 pla.links.individualProtection2016  = Individual Protection 2016
+pla.links.onlineServicesAccount		= HMRC Online Services account
 
 ## Introduction ##
 pla.intro.title         = Introduction
@@ -96,6 +97,18 @@ pla.notAuthorised.pageHeading	= We were unabled to confirm your identity
 pla.notAuthorised.paraOne		= If you can't confirm your identity and you have a query you can contact HM Revenue and Customs (opens in a new window) to get help.
 pla.notAuthorised.tryAgain		= Try to confirm your identity again
 
+## Success ##
+pla.success.title           	= Success
+pla.success.protectionDetails  	= Your protection details are:
+pla.success.protectionNo    	= Protection reference number:
+pla.success.psaNo           	= PSA check reference number:
+pla.success.whatNext         	= What happens next?
+pla.success.viewDetails        	= You can view these details in your
+
+## API ##
+pla.api.badRequest				= There was an error processing the client''s request
+
+
 
 
 
@@ -138,59 +151,59 @@ resultCode.8.1          =   As you already hold open Fixed Protection 2016, the 
 resultCode.8.2          =   If a pension debit occurs that reduces your Individual Protection 2014  relevant amount you must notify HMRC (Pension Schemes Services) within 60 days.
 resultCode.8.3          =   Please retain a copy of this notification and your reference number for your records.
 
-resultCode.9.heading    =   You already have Primary Protection, so you can't apply for Individual Protection 2016.
+resultCode.9.heading    =   You already have Primary Protection, so you can''t apply for Individual Protection 2016.
 
-resultCode.10.heading   =   You already have Individual Protection 2014, so you can't apply for Individual Protection 2016.
+resultCode.10.heading   =   You already have Individual Protection 2014, so you can''t apply for Individual Protection 2016.
 
 resultCode.11.heading   =   You already have Individual Protection 2016.
 
-resultCode.12.heading   =   You've added Individual Protection 2016.
+resultCode.12.heading   =   You''ve added Individual Protection 2016.
 resultCode.12.ref       =   Your reference number is {0}.
 resultCode.12.1         =   You must give this number to your pension scheme administrator each time you take some of your pension.
 
-resultCode.13.heading   =   You've added Individual Protection 2016.
+resultCode.13.heading   =   You''ve added Individual Protection 2016.
 resultCode.13.1         =   As you already have Enhanced Protection in place, your Individual Protection 2016 will only become active if you lose your Enchanced Protection.
 resultCode.13.2         =   If you lose your Enhanced Protection, contact HMRC (Pension Schemes Services).
-resultCode.13.3         =   Once your Enhanced Protection ends, we'll give you a reference number for Individual Protection 2016.
+resultCode.13.3         =   Once your Enhanced Protection ends, we''ll give you a reference number for Individual Protection 2016.
 
-resultCode.14.heading   =   You've added Individual Protection 2016.
+resultCode.14.heading   =   You''ve added Individual Protection 2016.
 resultCode.14.1         =   As you already have Fixed Protection in place, your Individual Protection 2016 will only become active if you lose your Fixed Protection.
 resultCode.14.2         =   If you lose your Fixed Protection, contact HMRC (Pension Schemes Services).
-resultCode.14.3         =   Once your Fixed Protection ends, we'll give you a reference number for Individual Protection 2016.
+resultCode.14.3         =   Once your Fixed Protection ends, we''ll give you a reference number for Individual Protection 2016.
 
-resultCode.15.heading   =   You've added Individual Protection 2016.
+resultCode.15.heading   =   You''ve added Individual Protection 2016.
 resultCode.15.1         =   As you already have Fixed Protection 2014 in place, your Individual Protection 2016 will only become active if you lose your Fixed Protection 2014.
 resultCode.15.2         =   If you lose your Fixed Protection 2014, contact HMRC (Pension Schemes Services).
-resultCode.15.3         =   Once your Fixed Protection 2014 ends, we'll give you a reference number for Individual Protection 2016.
+resultCode.15.3         =   Once your Fixed Protection 2014 ends, we''ll give you a reference number for Individual Protection 2016.
 
-resultCode.16.heading   =   You've added Individual Protection 2016.
+resultCode.16.heading   =   You''ve added Individual Protection 2016.
 resultCode.16.1         =   As you already have Fixed Protection 2016 in place, your Individual Protection 2016 will only become active if you lose your Fixed Protection 2014.
 resultCode.16.2         =   If you lose your Fixed Protection 2016, contact HMRC (Pension Schemes Services).
-resultCode.16.3         =   Once your Fixed Protection 2016 ends, we'll give you a reference number for Individual Protection 2016.
+resultCode.16.3         =   Once your Fixed Protection 2016 ends, we''ll give you a reference number for Individual Protection 2016.
 
-resultCode.17.heading   =   You already have Enhanced Protection, so you can't apply for Fixed Protection 2016.
+resultCode.17.heading   =   You already have Enhanced Protection, so you can''t apply for Fixed Protection 2016.
 
-resultCode.18.heading   =   You already have Primary Protection, so you can't apply for Fixed Protection 2016.
+resultCode.18.heading   =   You already have Primary Protection, so you can''t apply for Fixed Protection 2016.
 
-resultCode.19.heading   =   You already have Fixed Protection, so you can't apply for Fixed Protection 2016.
+resultCode.19.heading   =   You already have Fixed Protection, so you can''t apply for Fixed Protection 2016.
 
-resultCode.20.heading   =   You already have Fixed Protection 2014, so you can't apply for Fixed Protection 2016.
+resultCode.20.heading   =   You already have Fixed Protection 2014, so you can''t apply for Fixed Protection 2016.
 
 resultCode.21.heading   =   You already have Fixed Protection 2016.
 
-resultCode.22.heading   =   You've added Fixed Protection 2016.
+resultCode.22.heading   =   You''ve added Fixed Protection 2016.
 resultCode.22.ref       =   Your reference number is {0}.
 resultCode.22.1         =   You must give this number to your pension scheme administrator each time you take some of your pension.
 
-resultCode.23.heading   =   You've added Fixed Protection 2016.
+resultCode.23.heading   =   You''ve added Fixed Protection 2016.
 resultCode.23.ref       =   Your reference number is {0}.
 resultCode.23.1         =   You must give this number to your pension scheme administrator each time you take some of your pension.
 resultCode.23.2         =   You already held Individual Protection 2016, so this has been made inactive. If you lose Fixed Protection 2016, please notify HMRC (Pension Scheme Services) within 3 months of the change. Your Individual Protection 2016 will then be made active.
 
-resultCode.24.heading   =   You've added Fixed Protection 2016.
+resultCode.24.heading   =   You''ve added Fixed Protection 2016.
 resultCode.24.1         =   As you already have Inidvidual Protection 2014 in place, your Fixed Protection 2016 will only become active if you lose your Individual Protection 2014.
 resultCode.24.2         =   If you lose your  Individual Protection 2014, contact HMRC (Pension Schemes Services).
-resultCode.24.3         =   Once your Fixed Protection 2016 ends, we'll give you a reference number for Individual Protection 2016.
+resultCode.24.3         =   Once your Fixed Protection 2016 ends, we''ll give you a reference number for Individual Protection 2016.
 
 resultCode.25   =   <p>You have successfully amended your Individual Protection 2014 details which means you are no longer entitled to Individual Protection 2014 Lifetime Allowance Protection.</p><p>If you have already started taking benefits you must contact your Pension Scheme Administrator.</p><p>Please retain a copy of this notification for your records.</p>
 

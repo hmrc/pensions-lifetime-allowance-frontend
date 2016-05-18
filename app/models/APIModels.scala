@@ -23,3 +23,6 @@ case class ApplyFP16Model(protectionType: String)
 object ApplyFP16Model {
   implicit val format = Json.format[ApplyFP16Model]
 }
+
+
+case class SuccessResponseModel(notificationId: String, protectionReference: Option[String], psaReference: Option[String], additionalInfo: Seq[String])

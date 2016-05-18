@@ -1,15 +1,24 @@
+@import models.SuccessResponseModel
+@(res: SuccessResponseModel)(implicit request: Request[_])
 
-@(notInGreenBox: String, protectionNo: String)(implicit request: Request[_])
-
-@views.html.main_template(title = Messages("pla.successFP16.title"), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.success.title"), bodyClasses = None) {
 	
 	<div class="grid-row">
 		<div class="transaction-banner--complete">
-	        <p class="heading-xlarge">@Messages("resultCode." + "8" + ".heading")</p>
-	        <p>@Html(protectionNo)</p>
+	        <p class="heading-xlarge">@Messages("resultCode." + res.notificationId + ".heading")</p>
+	        @if(!res.protectionReference.isEmpty || !res.psaReference.isEmpty) {
+	        	<p>@Messages("pla.success.protectionDetails")</p>
+	        }
+	        @if(!res.protectionReference.isEmpty) {
+	        	<p>@{Messages("pla.success.protectionNo")+" "+res.protectionReference.get}</p>
+	        }
+	        @if(!res.psaReference.isEmpty) {
+	        	<p>@{Messages("pla.success.psaNo")+" "+res.psaReference.get}</p>
+	        }
 	    </div>
-	    <p>@Html(notInGreenBox)</p>
-	    <h2>@Messages("pla.successFP16.paraTwo")</h2>
-	    <p>@Html(Messages("pla.successFP16.account"))</p>
+	    <h2>@Messages("pla.success.whatNext")</h2>
+	    @for(infoNum <- res.additionalInfo) {
+	    	<p>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
+	    }
 	</div>
 }
