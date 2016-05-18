@@ -26,3 +26,5 @@ object ApplyFP16Model {
 
 
 case class SuccessResponseModel(notificationId: String, protectionReference: Option[String], psaReference: Option[String], additionalInfo: Seq[String])
+
+case class RejectionResponseModel(notificationId: String, additionalInfo: Seq[String])

@@ -15,7 +15,7 @@ pla.links.lifetimeAllowance         = Pensions Lifetime Allowance
 pla.links.protectLifetimeAllowance  = Lifetime Allowance Protection schemes
 pla.links.fixedProtection2016       = Fixed Protection 2016
 pla.links.individualProtection2016  = Individual Protection 2016
-pla.links.onlineServicesAccount		= HMRC Online Services account
+pla.links.onlineServicesAccount     = HMRC Online Services account
 
 ## Introduction ##
 pla.intro.title         = Introduction
@@ -69,8 +69,8 @@ pla.applyFP.bulletTwo       = you have a defined benefits pension, such as a fin
 pla.confirmFP16.title       = Apply for FP 2016
 pla.confirmFP16.pageHeading = Confirm your application
 pla.confirmFP16.paraOne     = Please check the details below and confirm your application.
-pla.confirmFP16.bulletOne	= You have not added to your pension, or accrued benefits, since 6 April 2016
-pla.confirmFP16.warning		= By clicking Apply you declare that this information is true and complete to the best of your knowledge and belief.
+pla.confirmFP16.bulletOne   = You have not added to your pension, or accrued benefits, since 6 April 2016
+pla.confirmFP16.warning     = By clicking Apply you declare that this information is true and complete to the best of your knowledge and belief.
 
 pla.confirmFP16.paraTwo     = This will protect your Lifetime Allowance at £1.25 million, but you''ll lose your protection if you add to your pension. You must let us know if this happens.
 pla.confirmFP16.paraThree   = If the standard Lifetime Allowance increases to over £1.25 million in the future, you''ll get the higher amount.
@@ -84,15 +84,19 @@ pla.cannotApply.paraTwo     = For more information, visit
 pla.cannotApply.plaLinkText = Pension Lifetime Allowance
 
 ## Success ##
-pla.success.title           	= Success
-pla.success.protectionDetails  	= Your protection details are:
-pla.success.protectionNo    	= Protection reference number:
-pla.success.psaNo           	= PSA check reference number:
-pla.success.whatNext         	= What happens next?
-pla.success.viewDetails        	= You can view these details in your     
+pla.success.title               = Success
+pla.success.protectionDetails   = Your protection details are:
+pla.success.protectionNo        = Protection reference number:
+pla.success.psaNo               = PSA check reference number:
+pla.success.whatNext            = What happens next?
+pla.success.viewDetails         = You can view these details in your
+
+## Rejection ##
+pla.rejection.title             = Unsuccessful
+pla.rejection.pageHeading       = Your application was unsuccessful
 
 ## API ##
-pla.api.badRequest				= There was an error processing the client''s request
+pla.api.badRequest              = There was an error processing the client''s request
 
 
 

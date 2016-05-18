@@ -34,7 +34,7 @@ import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
 import models._
-import views.html._
+import views.html.pages.result._
 import connectors.APIConnector
 
 
@@ -52,22 +52,34 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     val successCodes = List(22,23,24)
     val rejectCodes = List(17,18,19,20,21)
     val apiConnector : APIConnector
-    val refNo: Int = 24
 
     val processFPApplication = AuthorisedByAny.async {
         implicit user =>  implicit request => 
             apiConnector.applyFP16(user.nino.get).map {
-                case Some(response: HttpResponse) => Ok(views.html.pages.resultSuccess(createSuccessResponseFromJson(response.json)))
-                case None => BadRequest(Messages("pla.api.badRequest"))
+                response: HttpResponse => applicationOutcome(response) match {
+                    case "successful" => Ok(resultSuccess(createSuccessResponseFromJson(response.json)))
+                    case "rejected"   => Ok(resultRejected(createRejectionResponseFromJson(response.json)))
+                }
             }
     }
 
-    def createSuccessResponseFromJson(json: JsValue):SuccessResponseModel = {
+    def applicationOutcome(response: HttpResponse): String = {
+        val notificationId = (response.json \ "notificationId").as[Int]
+        if(successCodes.contains(notificationId)) "successful" else "rejected"
+    }
+
+    def createSuccessResponseFromJson(json: JsValue): SuccessResponseModel = {
         val notificationId = (json \ "notificationId").as[Int].toString
         val protectionReference = (json \ "protectionReference").asOpt[String]
         val psaReference = (json \ "psaReference").asOpt[String]
         val additionalInfo = getAdditionalInfo(notificationId)
         SuccessResponseModel(notificationId, protectionReference, psaReference, additionalInfo)
+    }
+
+    def createRejectionResponseFromJson(json: JsValue): RejectionResponseModel = {
+        val notificationId = (json \ "notificationId").as[Int].toString
+        val additionalInfo = getAdditionalInfo(notificationId)
+        RejectionResponseModel(notificationId, additionalInfo)
     }
 
     def getAdditionalInfo(notificationId: String): List[String] = {

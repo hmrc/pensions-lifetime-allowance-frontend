@@ -1,0 +1,11 @@
+@import models.RejectionResponseModel
+@(res: RejectionResponseModel)(implicit request: Request[_])
+
+@views.html.main_template(title = Messages("pla.rejection.title"), bodyClasses = None) {
+	
+	<h1 class="heading-xlarge">@Messages("pla.rejection.pageHeading")</h1>
+	<p>@Messages("resultCode."+res.notificationId+".heading")</p>
+    @for(infoNum <- res.additionalInfo) {
+    	<p>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
+    }
+}
