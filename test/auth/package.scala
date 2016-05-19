@@ -33,13 +33,13 @@ package object auth {
 
     val ivUpliftURI: URI =
       new URI(s"${mockConfig.ivUpliftUrl}?origin=PLA&" +
-        s"completionURL=${URLEncoder.encode(mockConfig.applyUrl, "UTF-8")}&" +
+        s"completionURL=${URLEncoder.encode(mockConfig.confirmFPUrl, "UTF-8")}&" +
         s"failureURL=${URLEncoder.encode(mockConfig.notAuthorisedRedirectUrl, "UTF-8")}" +
         s"&confidenceLevel=200")
 
     val twoFactorURI: URI =
       new URI(s"${mockConfig.twoFactorUrl}?" +
-        s"continue=${URLEncoder.encode(mockConfig.applyUrl, "UTF-8")}&" +
+        s"continue=${URLEncoder.encode(mockConfig.confirmFPUrl, "UTF-8")}&" +
         s"failure=${URLEncoder.encode(mockConfig.notAuthorisedRedirectUrl, "UTF-8")}")
 
     object ggSession {

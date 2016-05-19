@@ -2,6 +2,7 @@
 
 GET         /introduction                       controllers.IntroductionController.introduction
 GET         /                                   controllers.IntroductionController.introduction
+GET         /timeout                            controllers.TimeoutController.timeout
 
 ## Initial Eligibility ##
 GET         /added-to-pension                   controllers.EligibilityController.addedToPension
@@ -25,7 +26,3 @@ GET 		/confirm-fp							controllers.ConfirmationController.confirmFP
 
 ## Result ##
 POST 		/result-fp							controllers.ResultController.processFPApplication
-
-
-GET         /hello-world                        controllers.HelloWorld.helloWorld
-GET         /timeout                            controllers.HelloWorld.timeout

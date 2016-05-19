@@ -35,7 +35,6 @@ trait AppConfig {
   val showGovUkDonePage: Boolean
   val govUkFinishedPageUrl: String
   val identityVerification: Boolean
-  val applyUrl: String
   val confirmFPUrl: String
   val notAuthorisedRedirectUrl: String
   val verifySignIn = s"$citizenAuthHost/ida/login"
@@ -43,7 +42,6 @@ trait AppConfig {
   val twoFactorUrl: String
   val ggSignInUrl: String
   val ptaFrontendUrl: String
-  val breadcrumbPartialUrl: String
 }
 
 object FrontendAppConfig extends AppConfig with ServicesConfig {
@@ -70,7 +68,6 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
   override val identityVerification: Boolean = configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)
 
   override lazy val citizenAuthHost = configuration.getString("citizen-auth.host")
-  override lazy val applyUrl = configuration.getString("apply.url").getOrElse("")
   override lazy val confirmFPUrl = configuration.getString("confirmFP.url").getOrElse("")
 
   override lazy val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
@@ -80,5 +77,4 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
 
   private val ptaFrontendService: String = baseUrl("pertax-frontend")
   override lazy val ptaFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
-  override lazy val breadcrumbPartialUrl: String = s"$ptaFrontendService/personal-account/integration/main-content-header"
 }

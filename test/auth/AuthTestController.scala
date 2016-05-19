@@ -24,17 +24,17 @@ object AuthTestController extends AuthTestController {
 
   override lazy val applicationConfig = mockConfig
   override lazy val authConnector = mockAuthConnector
-  override lazy val postSignInRedirectUrl = applicationConfig.applyUrl
+  override lazy val postSignInRedirectUrl = applicationConfig.confirmFPUrl
 }
 
 trait AuthTestController extends FrontendController with AuthorisedForPLA {
 
   val authorisedAsyncAction = AuthorisedByAny.async {
-    implicit user =>  implicit request => Future.successful(Ok(views.html.helloworld.hello_user(user.nino.getOrElse(("NOBODY")))))
+    implicit user =>  implicit request => Future.successful(Ok(views.html.pages.confirmation.confirmFP()))
   }
 
   val authorisedAction = AuthorisedByAny {
-    implicit user =>  implicit request => Ok(views.html.helloworld.hello_user(user.nino.getOrElse(("NOBODY"))))
+    implicit user =>  implicit request => Ok(views.html.pages.confirmation.confirmFP())
   }
 
 }
