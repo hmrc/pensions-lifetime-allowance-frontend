@@ -19,14 +19,12 @@ package controllers
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.http._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import org.scalatest.mock.MockitoSugar
 import config.{FrontendAppConfig,FrontendAuthConnector}
-import models.SuccessResponseModel
 import play.api.libs.json.{JsValue, Json}
 import connectors.APIConnector
 
@@ -42,19 +40,23 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   }
 
-  val testSuccessResponse = SuccessResponseModel(
-                                                "24",
-                                                Some("FP16138722390C"),
-                                                None,
-                                                List("1","2","3")
-                                                )
+  val successJson = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1}""")
+  val rejectionJson = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
+
+  val testSuccessResponse = HttpResponse(200,Some(successJson))
+
+  val testRejectionResponse = HttpResponse(409,Some(rejectionJson))
 
 
 
   "ResultController" should {
-    "create the corect success model from Json" in {
-      val json:JsValue = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1}""")
-      TestResultController.createSuccessResponseFromJson(json) shouldBe testSuccessResponse
+
+    "obtain the correct outcome form a successful FP application" in {
+      TestResultController.applicationOutcome(testSuccessResponse) shouldBe("successful")
+    }
+
+    "obtain the correct outcome form an unsuccessful FP application" in {
+      TestResultController.applicationOutcome(testRejectionResponse) shouldBe("rejected")
     }
   }
 
