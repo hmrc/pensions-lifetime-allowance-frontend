@@ -29,3 +29,5 @@ POST 		/result-fp							controllers.ResultController.processFPApplication
 
 GET         /hello-world                        controllers.HelloWorld.helloWorld
 GET         /timeout                            controllers.HelloWorld.timeout
+
+GET			/not-authorised						controllers.UnauthorisedController.showNotAuthorised(journeyId: Option[String])

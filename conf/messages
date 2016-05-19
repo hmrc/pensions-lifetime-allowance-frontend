@@ -83,6 +83,20 @@ pla.cannotApply.paraOne     = This is because your pension savings are less than
 pla.cannotApply.paraTwo     = For more information, visit
 pla.cannotApply.plaLinkText = Pension Lifetime Allowance
 
+## Success Apply FP16 ##
+pla.successFP16.title           = Success FP16
+pla.successFP16.pageHeading     = You''ve added Fixed Protection 2016
+pla.successFP16.paraOne         = Your protection details are:
+pla.successFP16.protectionNo    = Protection reference number:
+pla.successFP16.psaNo           = PSA check reference number:
+pla.successFP16.paraTwo         = What happens next?
+pla.successFP16.account         = You can view these details in your <a href="#">HMRC Online Services account</a>.
+
+## Failure Messages ##
+pla.notAuthorised.pageHeading	= We were unabled to confirm your identity
+pla.notAuthorised.paraOne		= If you can't confirm your identity and you have a query you can contact HM Revenue and Customs (opens in a new window) to get help.
+pla.notAuthorised.tryAgain		= Try to confirm your identity again
+
 ## Success ##
 pla.success.title               = Success
 pla.success.protectionDetails   = Your protection details are:
@@ -97,6 +111,8 @@ pla.rejection.pageHeading       = Your application was unsuccessful
 
 ## API ##
 pla.api.badRequest              = There was an error processing the client''s request
+
+
 
 
 
