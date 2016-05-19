@@ -17,11 +17,11 @@
 package helpers
 
 import play.api.i18n.Messages
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import play.api.libs.json.{JsValue, Json}
 import models._
 
-class ModelMakersSpec extends UnitSpec {
+class ModelMakersSpec extends UnitSpec with WithFakeApplication {
     object TestModelMakers extends ModelMakers {
 
     }
@@ -30,7 +30,7 @@ class ModelMakersSpec extends UnitSpec {
                                                 "24",
                                                 Some("FP16138722390C"),
                                                 None,
-                                                List.empty
+                                                List("1","2","3")
                                                 )
 
 
