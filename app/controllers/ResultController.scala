@@ -42,7 +42,7 @@ import utils.Constants
 object ResultController extends ResultController with ServicesConfig {
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.applyUrl
+  override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
 
   override val apiConnector = APIConnector
 }

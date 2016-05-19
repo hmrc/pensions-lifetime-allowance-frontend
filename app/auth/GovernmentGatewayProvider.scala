@@ -34,7 +34,7 @@ class GovernmentGatewayProvider(postSignInRedirectUrl: String, loginUrl: String)
 }
 
 object GovernmentGatewayProvider {
-  def handleSessionTimeout(implicit request: Request[_]) = Future.successful(Redirect(routes.HelloWorld.timeout().url))
+  def handleSessionTimeout(implicit request: Request[_]) = Future.successful(Redirect(routes.TimeoutController.timeout().url))
   val additionalLoginParameters = Map("accountType" -> Seq("individual"))
 }
 
