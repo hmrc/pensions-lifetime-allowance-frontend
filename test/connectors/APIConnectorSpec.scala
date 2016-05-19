@@ -40,7 +40,7 @@ class APIConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
 
   object TestAPIConnector extends APIConnector {
     val http = mockHttp
-    val stubUrl = "http://localhost:9012/protect-your-lifetime-allowance"
+    val stubUrl = "http://localhost:9012"
   }
 
   val validApplyFP16Json = """{"protectionType":"FP2016"}"""
@@ -57,7 +57,7 @@ class APIConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
       APIConnector.http shouldBe WSHttp
     }
     "use the correct stubUrl" in {
-      APIConnector.stubUrl shouldBe "http://localhost:9012/protect-your-lifetime-allowance"
+      APIConnector.stubUrl shouldBe "http://localhost:9012"
     }
   }
 
@@ -66,10 +66,10 @@ class APIConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
       Json.toJson[ApplyFP16Model](ApplyFP16Model("FP2016")).toString shouldBe validApplyFP16Json
     }
     "should return a 200 from a valid apply FP16 request" in {
-      when(mockHttp.POST[JsValue, Option[HttpResponse]](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
-        .thenReturn(Future.successful(Some(HttpResponse(OK))))
+      when(mockHttp.POST[JsValue, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(HttpResponse(OK)))
       val response = TestAPIConnector.applyFP16(nino)
-      await(response).get.status shouldBe OK
+      await(response).status shouldBe OK
     }
   }
 }

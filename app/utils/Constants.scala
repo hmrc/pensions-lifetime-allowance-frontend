@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-package models
+package utils
 
-import play.api.libs.json._
+object Constants {
 
-case class ApplyFP16Model(protectionType: String)
-
-object ApplyFP16Model {
-  implicit val format = Json.format[ApplyFP16Model]
+    val successCodes = List(22,23,24)
+    val rejectCodes = List(17,18,19,20,21)
 }
-
-
-case class SuccessResponseModel(notificationId: String, protectionReference: Option[String], psaReference: Option[String], additionalInfo: Seq[String])
-
-case class RejectionResponseModel(notificationId: String, additionalInfo: Seq[String])

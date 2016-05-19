@@ -26,20 +26,37 @@ import models._
 
 object APIConnector extends APIConnector with ServicesConfig {
 
-  //val stubUrl: String = baseUrl("protect-your-lifetime-allowance")
-  val stubUrl: String = "http://localhost:9012/protect-your-lifetime-allowance"
+  val stubUrl: String = baseUrl("pla-dynamic-stub")
   val http = WSHttp
 }
 
 trait APIConnector {
 
     implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders("Accept" -> "application/vnd.hmrc.1.0+json", "Content-Type" -> "application/json")
+    
 
     val http: HttpGet with HttpPost with HttpPut
     val stubUrl: String
 
-    def applyFP16(nino: String)(implicit hc: HeaderCarrier): Future[Option[HttpResponse]] = {
+    implicit val readApiResponse: HttpReads[HttpResponse] = new HttpReads[HttpResponse] {
+                    def read(method: String, url: String, response: HttpResponse) = ResponseHandler.handlePLAResponse(method, url, response)
+                  }
+
+    def applyFP16(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         val requestJson: JsValue = Json.toJson[ApplyFP16Model](ApplyFP16Model("FP2016"))
-        http.POST[JsValue, Option[HttpResponse]](s"$stubUrl/individuals/$nino/protections", requestJson)
+        http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
+}
+
+object ResponseHandler extends ResponseHandler{
+
+}
+
+trait ResponseHandler extends HttpErrorFunctions {
+    def handlePLAResponse(method: String, url: String, response: HttpResponse): HttpResponse = {
+      response.status match {
+        case 409 => response
+        case _ => handleResponse(method, url)(response)
+      }
+    } 
 }

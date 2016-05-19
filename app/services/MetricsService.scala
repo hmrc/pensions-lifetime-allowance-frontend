@@ -17,33 +17,10 @@
 package services
 
 import com.kenshoo.play.metrics.MetricsRegistry
-import enums.APIType
 
 object MetricsService {
 
-  val timers = Map(
-    APIType.SP -> MetricsRegistry.defaultRegistry.timer("sp-response-timer"),
-    APIType.NI -> MetricsRegistry.defaultRegistry.timer("ni-response-timer")
-  )
-
-  val failedCounters = Map(
-    APIType.SP -> MetricsRegistry.defaultRegistry.counter("sp-failed-counter"),
-    APIType.NI -> MetricsRegistry.defaultRegistry.counter("ni-failed-counter")
-  )
-
-  val keystoreReadTimer = MetricsRegistry.defaultRegistry.timer("keystore-read-timer")
-  val keystoreWriteTimer = MetricsRegistry.defaultRegistry.timer("keystore-write-timer")
-
-  val keystoreReadFailed = MetricsRegistry.defaultRegistry.counter("keystore-read-failed-counter")
-  val keystoreWriteFailed = MetricsRegistry.defaultRegistry.counter("keystore-write-failed-counter")
-
-  val keystoreHitCounter = MetricsRegistry.defaultRegistry.counter("keystore-hit-counter")
-  val keystoreMissCounter = MetricsRegistry.defaultRegistry.counter("keystore-miss-counter")
-
   val identityVerificationTimer = MetricsRegistry.defaultRegistry.timer("identity-verification-timer")
   val identityVerificationFailedCounter = MetricsRegistry.defaultRegistry.counter("identity-verification-failed-counter")
-
-  val citizenDetailsTimer = MetricsRegistry.defaultRegistry.timer("citizen-details-timer")
-  val citizenDetailsFailedCounter = MetricsRegistry.defaultRegistry.counter("citizen-details-failed-counter")
 
 }

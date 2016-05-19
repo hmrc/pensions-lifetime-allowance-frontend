@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package enums
+package testHelpers
 
-object APIType extends Enumeration {
-  type APIType = Value
+import connectors.IdentityVerificationConnector
+import services.MetricsService
+import uk.gov.hmrc.play.http.HttpGet
 
-  val NI = Value
-  val SP = Value
+object MockIdentityVerificationConnector extends IdentityVerificationConnector {
+  override val serviceUrl: String = ""
+  override def http: HttpGet = MockIdentityVerificationHttp.mockHttp
 }
