@@ -30,29 +30,29 @@ class PLAAuthSpec extends UnitSpec with WithFakeApplication {
 
   "Government Gateway Provider" should {
     "have an account type additional parameter set to individual" in {
-      val ggw=new GovernmentGatewayProvider(MockConfig.applyUrl,MockConfig.ggSignInUrl)
+      val ggw=new GovernmentGatewayProvider(MockConfig.confirmFPUrl,MockConfig.ggSignInUrl)
       ggw.additionalLoginParameters("accountType") shouldEqual List("individual")
     }
   }
 
   "Government Gateway Provider" should {
     "have a login url set from its second constructor parameter" in {
-      val ggw=new GovernmentGatewayProvider(MockConfig.applyUrl,MockConfig.ggSignInUrl)
+      val ggw=new GovernmentGatewayProvider(MockConfig.confirmFPUrl,MockConfig.ggSignInUrl)
       ggw.loginURL shouldEqual MockConfig.ggSignInUrl
     }
   }
 
   "Government Gateway Provider" should {
     "have a continueURL constructed from its first constructor parameter, encoded" in {
-      val ggw=new GovernmentGatewayProvider(mockConfig.applyUrl,mockConfig.ggSignInUrl)
-      ggw.continueURL shouldEqual URLEncoder.encode(mockConfig.applyUrl, "UTF-8")
+      val ggw=new GovernmentGatewayProvider(mockConfig.confirmFPUrl,mockConfig.ggSignInUrl)
+      ggw.continueURL shouldEqual URLEncoder.encode(mockConfig.confirmFPUrl, "UTF-8")
     }
   }
 
   "Government Gateway Provider" should {
     "handle a session timeout with a redirect" in {
       implicit val fakeRequest = FakeRequest()
-      val ggw=new GovernmentGatewayProvider(mockConfig.applyUrl,mockConfig.ggSignInUrl)
+      val ggw=new GovernmentGatewayProvider(mockConfig.confirmFPUrl,mockConfig.ggSignInUrl)
       val timeoutHandler = ggw.handleSessionTimeout(fakeRequest)
       status(timeoutHandler) shouldBe Status.SEE_OTHER
     }
@@ -60,7 +60,7 @@ class PLAAuthSpec extends UnitSpec with WithFakeApplication {
 
   "Verify Provider" should {
     "have a login url set from its second constructor parameter" in {
-      val vp = new VerifyProvider(mockConfig.applyUrl, mockConfig.verifySignIn)
+      val vp = new VerifyProvider(mockConfig.confirmFPUrl, mockConfig.verifySignIn)
       vp.login shouldEqual mockConfig.verifySignIn
     }
   }
@@ -68,7 +68,7 @@ class PLAAuthSpec extends UnitSpec with WithFakeApplication {
   "Verify Provider" should {
     "redirect to login" in {
       implicit val fakeRequest = FakeRequest()
-      val vp = new VerifyProvider(mockConfig.applyUrl, mockConfig.verifySignIn)
+      val vp = new VerifyProvider(mockConfig.confirmFPUrl, mockConfig.verifySignIn)
       val result = vp.redirectToLogin(fakeRequest)
       status(result) shouldBe Status.SEE_OTHER
     }
@@ -137,7 +137,7 @@ class PLAAuthSpec extends UnitSpec with WithFakeApplication {
     "result in page is visible" in {
 
       val predicate = new PLACompositePageVisibilityPredicate(
-        mockConfig.applyUrl,
+        mockConfig.confirmFPUrl,
         mockConfig.notAuthorisedRedirectUrl,
         mockConfig.ivUpliftUrl,
         mockConfig.twoFactorUrl)
@@ -155,7 +155,7 @@ class PLAAuthSpec extends UnitSpec with WithFakeApplication {
     "result in page is not visible" in {
 
       val predicate = new PLACompositePageVisibilityPredicate(
-        mockConfig.applyUrl,
+        mockConfig.confirmFPUrl,
         mockConfig.notAuthorisedRedirectUrl,
         mockConfig.ivUpliftUrl,
         mockConfig.twoFactorUrl)
@@ -173,7 +173,7 @@ class PLAAuthSpec extends UnitSpec with WithFakeApplication {
     "result in page is not visible" in {
 
       val predicate = new PLACompositePageVisibilityPredicate(
-        mockConfig.applyUrl,
+        mockConfig.confirmFPUrl,
         mockConfig.notAuthorisedRedirectUrl,
         mockConfig.ivUpliftUrl,
         mockConfig.twoFactorUrl)
