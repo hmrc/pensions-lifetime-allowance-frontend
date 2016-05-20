@@ -16,27 +16,25 @@
 
 package controllers
 
-import auth.AuthorisedForPLA
-import config.{FrontendAppConfig,FrontendAuthConnector}
-
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import connectors.KeyStoreConnector
 import play.api.mvc._
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
+import forms.AddedToPensionForm.addedToPensionForm
+import forms.AddingToPensionForm.addingToPensionForm
+import forms.PensionSavingsForm.pensionSavingsForm
+import models._
 
-object HelloWorld extends HelloWorld {
-  override lazy val applicationConfig = FrontendAppConfig
-  override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.applyUrl
+import views.html._
+
+object TimeoutController extends TimeoutController {
+     val keyStoreConnector = KeyStoreConnector
 }
 
-trait HelloWorld extends FrontendController with AuthorisedForPLA {
+trait TimeoutController extends FrontendController {
 
-  val helloWorld = AuthorisedByAny.async {
-    implicit user =>  implicit request => Future.successful(Ok(views.html.helloworld.hello_user(user.nino.getOrElse(("NOBODY")))))
-  }
-
-  // TODO just a placeholder at the moment
   val timeout = Action.async { implicit request =>
-    Future.successful(Ok(views.html.helloworld.hello_world()))
+    Future.successful(Ok(views.html.pages.timeout()))
   }
 }

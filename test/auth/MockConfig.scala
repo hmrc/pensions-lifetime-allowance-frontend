@@ -34,7 +34,6 @@ object MockConfig extends AppConfig {
   override val showGovUkDonePage: Boolean = false
   override val govUkFinishedPageUrl: String = ""
   override val identityVerification: Boolean = true
-  override val applyUrl: String = "/pla/apply"
   override val confirmFPUrl: String = "/pla/confirm-fp"
   override val notAuthorisedRedirectUrl: String = "/pla/not-authorised"
   override val verifySignIn = "/verify/login"
@@ -42,5 +41,4 @@ object MockConfig extends AppConfig {
   override val twoFactorUrl: String = "/two-step-verification/register/"
   override val ggSignInUrl: String = "/gg/sign-in"
   override val ptaFrontendUrl: String = ""
-  override val breadcrumbPartialUrl: String = ""
 }

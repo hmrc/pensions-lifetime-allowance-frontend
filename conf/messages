@@ -17,6 +17,10 @@ pla.links.fixedProtection2016       = Fixed Protection 2016
 pla.links.individualProtection2016  = Individual Protection 2016
 pla.links.onlineServicesAccount     = HMRC Online Services account
 
+## Timeout ##
+pla.timeout.title       = Session closed due to inactivity
+pla.timeout.pageHeading = You have been logged out due to inactivity
+
 ## Introduction ##
 pla.intro.title         = Introduction
 pla.intro.pageHeading   = Apply for Lifetime Allowance protection
