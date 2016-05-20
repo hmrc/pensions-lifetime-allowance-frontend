@@ -97,9 +97,20 @@ pla.successFP16.paraTwo         = What happens next?
 pla.successFP16.account         = You can view these details in your <a href="#">HMRC Online Services account</a>.
 
 ## Failure Messages ##
-pla.notAuthorised.pageHeading	= We were unabled to confirm your identity
-pla.notAuthorised.paraOne		= If you can't confirm your identity and you have a query you can contact HM Revenue and Customs (opens in a new window) to get help.
-pla.notAuthorised.tryAgain		= Try to confirm your identity again
+pla.notAuthorised.title         = Not Authorised
+pla.notAuthorised.pageHeading	= We''re unabled to confirm your identity
+pla.notAuthorised.paraOne		= <p>If you can''t confirm your identity and you have a query you can <a href="#">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
+pla.notAuthorised.tryAgain		= <p><a href="#">Try to confirm your identity again</a></p>
+pla.lockedOut.title             = Locked Out
+pla.lockedOut.pageHeading       = You''ve tried to confirm your identity too many times 
+pla.lockedOut.paraOne           = You can try again in 7 days.
+pla.lockedOut.paraTwo           = <p>If you have a query you can <a href="#">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
+pla.technicalIssue.title        = Technical Issues
+pla.technicalIssue.pageHeading  = There's a technical problem
+pla.technicalIssue.paraOne      = This online service is experiencing difficulties.
+pla.technicalIssue.paraTwo      = Please try again in 5 minutes.
+pla.technicalIssue.button       = Try Again
+
 
 ## Success ##
 pla.success.title               = Success

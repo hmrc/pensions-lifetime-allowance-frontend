@@ -19,7 +19,7 @@ package controllers
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
 import scala.concurrent.Future
-import views.html.pages._
+import views.html.pages.ivFailure._
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
 
@@ -31,28 +31,20 @@ trait UnauthorisedController extends FrontendController{
 
   val identityVerificationConnector: IdentityVerificationConnector
 
-  // val unauthorised = Action.async { implicit request =>
-  // 	Future.successful(Ok(pages.unauthorised()))
-  // }
-
-
-
-
-
   def showNotAuthorised(journeyId: Option[String]) : Action[AnyContent] = UnauthorisedAction.async {implicit request =>
     val result = journeyId map { id =>
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
       identityVerificationResult map {
         case IdentityVerificationResult.FailedMatching => unauthorised()
         case IdentityVerificationResult.InsufficientEvidence => unauthorised()
-        case IdentityVerificationResult.TechnicalIssue => unauthorised()
-        case IdentityVerificationResult.LockedOut => unauthorised()
-        case IdentityVerificationResult.Timeout => unauthorised()
+        case IdentityVerificationResult.TechnicalIssue => technicalIssue()
+        case IdentityVerificationResult.LockedOut => lockedOut()
+        case IdentityVerificationResult.Timeout => views.html.pages.timeout()
         case IdentityVerificationResult.Incomplete => unauthorised()
         case IdentityVerificationResult.PreconditionFailed => unauthorised()
         case IdentityVerificationResult.UserAborted => unauthorised()
       }
-    } getOrElse Future.successful(unauthorised(showFirstParagraph = false)) // 2FA returns no journeyId
+    } getOrElse Future.successful(unauthorised()) // 2FA returns no journeyId
 
     result.map {
       Ok(_).withNewSession
