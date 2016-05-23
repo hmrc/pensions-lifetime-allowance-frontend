@@ -99,12 +99,12 @@ pla.successFP16.account         = You can view these details in your <a href="#"
 ## Failure Messages ##
 pla.notAuthorised.title         = Not Authorised
 pla.notAuthorised.pageHeading	= We were unable to confirm your identity
-pla.notAuthorised.paraOne		= <p>If you can''t confirm your identity and you have a query you can <a href="#">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
-pla.notAuthorised.tryAgain		= <p><a href="#">Try to confirm your identity again</a></p>
+pla.notAuthorised.paraOne		= <p>If you can''t confirm your identity and you have a query you can <a href="{0}" rel="external">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
+pla.notAuthorised.tryAgain		= Try to confirm your identity again
 pla.lockedOut.title             = Locked Out
 pla.lockedOut.pageHeading       = You have tried to confirm your identity too many times 
 pla.lockedOut.paraOne           = You can try again in 7 days.
-pla.lockedOut.paraTwo           = <p>If you have a query you can <a href="#">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
+pla.lockedOut.paraTwo           = <p>If you have a query you can <a href="{0}" rel="external">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
 pla.technicalIssue.title        = Technical Issues
 pla.technicalIssue.pageHeading  = There is a technical problem
 pla.technicalIssue.paraOne      = This online service is experiencing difficulties.
