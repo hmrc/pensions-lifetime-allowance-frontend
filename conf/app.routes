@@ -2,7 +2,12 @@
 
 GET         /introduction                       controllers.IntroductionController.introduction
 GET         /                                   controllers.IntroductionController.introduction
+
+
+## Auth ##
 GET         /timeout                            controllers.TimeoutController.timeout
+GET         /not-authorised                     controllers.UnauthorisedController.showNotAuthorised(journeyId: Option[String])
+
 
 ## Initial Eligibility ##
 GET         /added-to-pension                   controllers.EligibilityController.addedToPension
@@ -23,6 +28,7 @@ GET         /pension-below-threshold            controllers.EligibilityControlle
 
 ## Confirmation ##
 GET 		/confirm-fp							controllers.ConfirmationController.confirmFP
+
 
 ## Result ##
 POST 		/result-fp							controllers.ResultController.processFPApplication
