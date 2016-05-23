@@ -6,7 +6,7 @@
 
 This is the repository for the pensions lifetime allowance frontend. This service provides clients with a way to view and manage their pension protections.
 
-To run the project clone the repository and in terminal $sbt "run $PORT"
+To run the project clone the repository and in terminal $sbt "run $PORT" (pla-frontend port in service manager is 9010)
 
 ### License
 
