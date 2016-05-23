@@ -36,57 +36,56 @@ class UnauthorisedControllerSpec extends UnitSpec with OneAppPerSuite {
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
   }
 
-  // ## TESTS CURRENTLY FAILING ##
-  // "GET /not-authorised" should {
-  //   "show not authorised page" in {
-  //     val result = testUnauthorisedController().showNotAuthorised(None)(fakeRequest)
-  //     contentAsString(result) should include ("We were unable to confirm your identity")
-  //   }
+  "GET /not-authorised" should {
+    "show not authorised page" in {
+      val result = testUnauthorisedController().showNotAuthorised(None)(fakeRequest)
+      contentAsString(result) should include ("We were unable to confirm your identity")
+    }
 
-  //   "show generic not_authorised template for FailedMatching journey" in {
-  //     val result = testUnauthorisedController().showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
-  //     contentAsString(result) should include ("We were unable to confirm your identity")
-  //   }
+    "show generic not_authorised template for FailedMatching journey" in {
+      val result = testUnauthorisedController().showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
+      contentAsString(result) should include ("We were unable to confirm your identity")
+    }
 
-  //   "show generic not_authorised template for InsufficientEvidence journey" in {
-  //     val result = testUnauthorisedController().showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
-  //     contentAsString(result) should include ("We were unable to confirm your identity")
-  //   }
+    "show generic not_authorised template for InsufficientEvidence journey" in {
+      val result = testUnauthorisedController().showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
+      contentAsString(result) should include ("We were unable to confirm your identity")
+    }
 
-  //   "show generic not_authorised template for Incomplete journey" in {
-  //     val result = testUnauthorisedController().showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
-  //     contentAsString(result) should include ("We were unable to confirm your identity")
-  //   }
+    "show generic not_authorised template for Incomplete journey" in {
+      val result = testUnauthorisedController().showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
+      contentAsString(result) should include ("We were unable to confirm your identity")
+    }
 
-  //   "show generic not_authorised template for PreconditionFailed journey" in {
-  //     val result = testUnauthorisedController().showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
-  //     contentAsString(result) should include ("We were unable to confirm your identity")
-  //   }
+    "show generic not_authorised template for PreconditionFailed journey" in {
+      val result = testUnauthorisedController().showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
+      contentAsString(result) should include ("We were unable to confirm your identity")
+    }
 
-  //   "show generic not_authorised template for UserAborted journey" in {
-  //     val result = testUnauthorisedController().showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
-  //     contentAsString(result) should include ("We were unable to confirm your identity")
-  //   }
+    "show generic not_authorised template for UserAborted journey" in {
+      val result = testUnauthorisedController().showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
+      contentAsString(result) should include ("We were unable to confirm your identity")
+    }
 
-  //   "show technical_issue template for TechnicalIssue journey" in {
-  //     val result = testUnauthorisedController().showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
-  //     contentAsString(result) should include ("This online service is experiencing technical difficulties.")
-  //   }
+    "show technical_issue template for TechnicalIssue journey" in {
+      val result = testUnauthorisedController().showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
+      contentAsString(result) should include ("There is a technical problem")
+    }
 
-  //   "show locked_out template for LockedOut journey" in {
-  //     val result = testUnauthorisedController().showNotAuthorised(Some("locked-out-journey-id"))(fakeRequest)
-  //     contentAsString(result) should include ("You have reached the maximum number of attempts to confirm your identity.")
-  //   }
+    "show locked_out template for LockedOut journey" in {
+      val result = testUnauthorisedController().showNotAuthorised(Some("locked-out-journey-id"))(fakeRequest)
+      contentAsString(result) should include ("You have tried to confirm your identity too many times")
+    }
 
-  //   "show timeout template for Timeout journey" in {
-  //     val result = testUnauthorisedController().showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
-  //     contentAsString(result) should include ("Your session has ended because you have not done anything for 15 minutes.")
-  //   }
+    "show timeout template for Timeout journey" in {
+      val result = testUnauthorisedController().showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
+      contentAsString(result) should include ("You have been logged out due to inactivity")
+    }
 
-  //   "show 2FA failure page when no journey ID specified" in {
-  //     val result = testUnauthorisedController().showNotAuthorised(None)(fakeRequest)
-  //     contentAsString(result) should include ("We were unable to confirm your identity")
-  //     contentAsString(result) should not include "If you cannot confirm your identity and you have a query you can"
-  //   }
-  // }
+    "show 2FA failure page when no journey ID specified" in {
+      val result = testUnauthorisedController().showNotAuthorised(None)(fakeRequest)
+      contentAsString(result) should include ("We were unable to confirm your identity")
+      contentAsString(result) should not include "If you cannot confirm your identity and you have a query you can"
+    }
+  }
 }
