@@ -1,0 +1,11 @@
+@()(implicit request: Request[_])
+
+@views.html.main_template(title = Messages("pla.notAuthorised.title"), bodyClasses = None) {
+
+<h1 class="heading-xlarge">@Messages("pla.notAuthorised.pageHeading")</h1>
+
+@Html(Messages("pla.notAuthorised.paraOne", "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/online-services-helpdesk"))
+
+<a href="#">@Messages("pla.notAuthorised.tryAgain")</a>
+
+}

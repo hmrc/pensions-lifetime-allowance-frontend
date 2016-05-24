@@ -1,0 +1,11 @@
+@()(implicit request: Request[_])
+
+@views.html.main_template(title = Messages("pla.lockedOut.title"), bodyClasses = None) {
+
+<h1 class="heading-xlarge">@Messages("pla.lockedOut.pageHeading")</h1>
+
+<p>@Messages("pla.lockedOut.paraOne")</p>
+
+@Html(Messages("pla.lockedOut.paraTwo", "https://www.gov.uk/contact-hmrc"))
+
+}

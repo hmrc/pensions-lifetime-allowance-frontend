@@ -1,0 +1,13 @@
+@()(implicit request: Request[_])
+
+@views.html.main_template(title = Messages("pla.technicalIssue.title"), bodyClasses = None) {
+
+<h1 class="heading-xlarge">@Messages("pla.technicalIssue.pageHeading")</h1>
+
+<p>@Messages("pla.technicalIssue.paraOne")</p>
+
+<p>@Messages("pla.technicalIssue.paraTwo")</p>
+
+<a href="#" class="button">@Messages("pla.technicalIssue.button")</a>
+
+}
