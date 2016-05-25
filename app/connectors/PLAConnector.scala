@@ -43,7 +43,8 @@ trait PLAConnector {
                   }
 
     def applyFP16(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-        val requestJson: JsValue = Json.parse("""{"protectionType":1}""")
+        val strippedNino = nino.dropRight(1) // temp nino manipulation TODO: move to microservice
+        val requestJson: JsValue = Json.parse("""{"protectionType":1}""") // temp protection type to Int conversion TODO: move to microservice
         http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
 }
