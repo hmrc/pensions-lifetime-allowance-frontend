@@ -24,13 +24,13 @@ import config.WSHttp
 
 import models._
 
-object APIConnector extends APIConnector with ServicesConfig {
+object PLAConnector extends PLAConnector with ServicesConfig {
 
   val stubUrl: String = baseUrl("pla-dynamic-stub")
   val http = WSHttp
 }
 
-trait APIConnector {
+trait PLAConnector {
 
     implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders("Accept" -> "application/vnd.hmrc.1.0+json", "Content-Type" -> "application/json")
     

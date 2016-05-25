@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import org.scalatest.mock.MockitoSugar
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import play.api.libs.json.{JsValue, Json}
-import connectors.APIConnector
+import connectors.PLAConnector
 
 
 class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
@@ -36,7 +36,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/confirm-fp"
 
-  override val apiConnector = mock[APIConnector]
+  override val plaConnector = mock[PLAConnector]
 
   }
 
