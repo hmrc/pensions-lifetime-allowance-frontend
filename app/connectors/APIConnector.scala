@@ -43,7 +43,7 @@ trait APIConnector {
                   }
 
     def applyFP16(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-        val requestJson: JsValue = Json.toJson[ApplyFP16Model](ApplyFP16Model("FP2016"))
+        val requestJson: JsValue = Json.parse("""{"protectionType":1}""")
         http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
 }
