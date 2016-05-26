@@ -21,6 +21,7 @@ import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
 import scala.concurrent.Future
 import config.WSHttp
+import utils.Constants
 
 import models._
 
@@ -43,7 +44,7 @@ trait PLAConnector {
                   }
 
     def applyFP16(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-        val strippedNino = nino.dropRight(1) // temp nino manipulation TODO: move to microservice
+        val strippedNino = nino.substring(0, Constants.strippedNInoLength) // temp nino manipulation TODO: move to microservice
         val requestJson: JsValue = Json.parse("""{"protectionType":1}""") // temp protection type to Int conversion TODO: move to microservice
         http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
