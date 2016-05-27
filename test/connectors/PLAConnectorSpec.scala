@@ -34,11 +34,11 @@ import scala.collection.immutable.List
 
 import scala.concurrent.Future
 
-class APIConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with OneServerPerSuite {
+class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with OneServerPerSuite {
 
   val mockHttp : WSHttp = mock[WSHttp]
 
-  object TestAPIConnector extends APIConnector {
+  object TestPLAConnector extends PLAConnector {
     val http = mockHttp
     val stubUrl = "http://localhost:9012"
   }
@@ -52,12 +52,12 @@ class APIConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
     reset(mockHttp)
   }
 
-  "APIConnector" should {
+  "PLAConnector" should {
     "use the correct http" in {
-      APIConnector.http shouldBe WSHttp
+      PLAConnector.http shouldBe WSHttp
     }
     "use the correct stubUrl" in {
-      APIConnector.stubUrl shouldBe "http://localhost:9012"
+      PLAConnector.stubUrl shouldBe "http://localhost:9012"
     }
   }
 
@@ -68,7 +68,7 @@ class APIConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
     "should return a 200 from a valid apply FP16 request" in {
       when(mockHttp.POST[JsValue, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
-      val response = TestAPIConnector.applyFP16(nino)
+      val response = TestPLAConnector.applyFP16(nino)
       await(response).status shouldBe OK
     }
   }

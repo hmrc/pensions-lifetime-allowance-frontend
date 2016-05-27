@@ -35,7 +35,7 @@ import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
 import helpers.ModelMakers
 import views.html.pages.result._
-import connectors.APIConnector
+import connectors.PLAConnector
 import utils.Constants
 
 
@@ -44,16 +44,16 @@ object ResultController extends ResultController with ServicesConfig {
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
 
-  override val apiConnector = APIConnector
+  override val plaConnector = PLAConnector
 }
 
 trait ResultController extends FrontendController with AuthorisedForPLA {
 
-    val apiConnector : APIConnector
+    val plaConnector : PLAConnector
 
     val processFPApplication = AuthorisedByAny.async {
         implicit user =>  implicit request => 
-            apiConnector.applyFP16(user.nino.get).map {
+            plaConnector.applyFP16(user.nino.get).map {
                 response: HttpResponse => applicationOutcome(response) match {
                     case "successful" => Ok(resultSuccess(ModelMakers.createSuccessResponseFromJson(response.json)))
                     case "rejected"   => Ok(resultRejected(ModelMakers.createRejectionResponseFromJson(response.json)))
