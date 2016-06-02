@@ -29,6 +29,8 @@ GET         /pension-below-threshold            controllers.EligibilityControlle
 ## Confirmation ##
 GET 		/confirm-fp							controllers.ConfirmationController.confirmFP
 
+GET         /confirm-ip                         controllers.ConfirmationController.confirmIP
+
 
 ## Result ##
 POST 		/result-fp							controllers.ResultController.processFPApplication

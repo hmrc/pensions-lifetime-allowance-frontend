@@ -1,10 +1,13 @@
+@import play.api.data._
+
 @()(implicit request: Request[_])
+
 
 @sidebar = {
 	<div class="service-info">
 		<h2>@Messages("pla.base.readMore")</h2>
 		<ul>
-			<li><a id="ip2016" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.individualProtection2016")</a></li>
+			<li><a id="ip2016" href="https://www.gov.uk/tax-on-your-private-pension/lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.lifetimeAllowance")</a></li>
 		</ul>
 	</div>
 }
@@ -15,16 +18,15 @@
 
 	<p>@Messages("pla.applyIP.paraOne")</p>
 
+    <ul class="list list-bullet">
+        <li>@Messages("pla.applyIP.bulletOne")</li>
+        <li>@Messages("pla.applyIP.bulletTwo")</li>
+    </ul>
+
 	<p>@Messages("pla.applyIP.paraTwo")</p>
 
-	<p>@Messages("pla.applyIP.paraThree")</p>
-
-	<div class="panel-indent">
-    	@Messages("pla.applyIP.signIn")
-    </div>
-
-	<p>
-        <a id="apply" href="#" class="button" role="button">@Messages("pla.base.continue")</a>
+    <p>
+        <a id="continue-button" href=@controllers.routes.ConfirmationController.confirmIP class="button" role="button">@Messages("pla.base.apply")</a>
     </p>
 
 }

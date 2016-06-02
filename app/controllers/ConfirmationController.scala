@@ -40,4 +40,8 @@ trait ConfirmationController extends FrontendController with AuthorisedForPLA {
     implicit user => implicit request => Future.successful(Ok(confirmation.confirmFP()))
   }
 
+  val confirmIP = AuthorisedByAny.async {
+    implicit user => implicit request => Future.successful(Ok(confirmation.confirmIP()))
+  }
+
 }

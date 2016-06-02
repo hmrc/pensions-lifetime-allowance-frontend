@@ -11,7 +11,7 @@ pla.base.startAgain             = Start Again
 pla.base.errorSummaryLabel      = There are errors on this page.
 
 ## Link Text ##
-pla.links.lifetimeAllowance         = Pensions Lifetime Allowance
+pla.links.lifetimeAllowance         = Lifetime Allowance
 pla.links.protectLifetimeAllowance  = Lifetime Allowance Protection schemes
 pla.links.fixedProtection2016       = Fixed Protection 2016
 pla.links.individualProtection2016  = Individual Protection 2016
@@ -55,9 +55,11 @@ pla.pensionSavings.mandatoryErr             = Please tell us if your pension sav
 
 ## Apply for IP 2016 ##
 pla.applyIP.title       = Apply for IP 2016
-pla.applyIP.pageHeading = Apply for protection
-pla.applyIP.paraOne     = You can apply for Individual Protection 2016.
-pla.applyIP.paraTwo     = This will protect your Lifetime Allowance at the value of your pension savings on 5 April 2016, up to £1.25 million.
+pla.applyIP.pageHeading = Apply for Individual Protection 2016
+pla.applyIP.paraOne     = We''ll ask you:
+pla.applyIP.bulletOne   = about pensions you took money from before 6 April 2016
+pla.applyIP.bulletTwo   = what your current pensions were worth on 6 April 2016
+pla.applyIP.paraTwo     = Ask your pension provider to give you this information.
 pla.applyIP.paraThree   = You will still be able to add to your pension without losing this protection.
 pla.applyIP.signIn      = To apply, you''ll need to sign in to your HMRC online services account, or create one.
 
