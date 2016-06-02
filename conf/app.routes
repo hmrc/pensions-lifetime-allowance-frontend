@@ -1,5 +1,7 @@
 # microservice specific routes
 
+GET         /assets/*file                       controllers.Assets.at(path="/public", file)
+
 GET         /introduction                       controllers.IntroductionController.introduction
 GET         /                                   controllers.IntroductionController.introduction
 
@@ -24,6 +26,15 @@ GET         /apply-ip                           controllers.EligibilityControlle
 GET         /apply-fp                           controllers.EligibilityController.applyFP
 
 GET         /pension-below-threshold            controllers.EligibilityController.cannotApply
+
+GET         /pensions-taken                     controllers.EligibilityController.pensionsTaken
+POST        /pensions-taken                     controllers.EligibilityController.submitPensionsTaken
+
+GET         /pensions-taken-before              controllers.EligibilityController.pensionsTakenBefore
+POST        /pensions-taken-before              controllers.EligibilityController.submitPensionsTakenBefore
+
+GET         /pensions-taken-between             controllers.EligibilityController.pensionsTakenBetween
+POST        /pensions-taken-between             controllers.EligibilityController.submitPensionsTakenBetween
 
 
 ## Confirmation ##
