@@ -40,8 +40,6 @@ POST        /pensions-taken-between             controllers.IP2016Controller.sub
 ## Confirmation ##
 GET 		/confirm-fp							controllers.ConfirmationController.confirmFP
 
-GET         /confirm-ip                         controllers.ConfirmationController.confirmIP
-
 
 ## Result ##
 POST 		/result-fp							controllers.ResultController.processFPApplication

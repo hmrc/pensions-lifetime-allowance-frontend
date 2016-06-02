@@ -16,6 +16,9 @@
 
 package controllers
 
+import auth.AuthorisedForPLA
+import config.{FrontendAppConfig,FrontendAuthConnector}
+
 import connectors.KeyStoreConnector
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -29,15 +32,18 @@ import models._
 import views.html._
 
 object IP2016Controller extends IP2016Controller {
-     val keyStoreConnector = KeyStoreConnector
+    val keyStoreConnector = KeyStoreConnector
+    override lazy val applicationConfig = FrontendAppConfig
+    override lazy val authConnector = FrontendAuthConnector
+    override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartURL
 }
 
-trait IP2016Controller extends FrontendController {
+trait IP2016Controller extends FrontendController with AuthorisedForPLA {
 
     val keyStoreConnector: KeyStoreConnector
 
     //PENSIONS TAKEN
-    val pensionsTaken = Action.async { implicit request =>
+    val pensionsTaken = AuthorisedByAny.async { implicit user => implicit request =>
         if (request.session.get(SessionKeys.sessionId).isEmpty) {
             Future.successful(Redirect(routes.IntroductionController.introduction()))
         } else {
@@ -48,7 +54,7 @@ trait IP2016Controller extends FrontendController {
         }
     }
 
-    val submitPensionsTaken = Action { implicit request =>
+    val submitPensionsTaken = AuthorisedByAny { implicit user => implicit request =>
         pensionsTakenForm.bindFromRequest.fold(
             errors => BadRequest(pages.ip2016.pensionsTaken(errors)),
             success => {
@@ -63,7 +69,7 @@ trait IP2016Controller extends FrontendController {
 
 
     //PENSIONS TAKEN BEFORE
-    val pensionsTakenBefore = Action.async { implicit request =>
+    val pensionsTakenBefore = AuthorisedByAny.async { implicit user => implicit request =>
 
         def routeRequest(): Future[Result] = {
             keyStoreConnector.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").map {
@@ -77,7 +83,7 @@ trait IP2016Controller extends FrontendController {
         } yield finalResult
     }
 
-    val submitPensionsTakenBefore = Action.async { implicit request =>
+    val submitPensionsTakenBefore = AuthorisedByAny.async { implicit user => implicit request =>
 
         def routeRequest(): Future[Result] = {
             pensionsTakenBeforeForm.bindFromRequest.fold(
@@ -101,7 +107,7 @@ trait IP2016Controller extends FrontendController {
     }
 
     //PENSIONS TAKEN BETWEEN
-    val pensionsTakenBetween = Action.async { implicit request =>
+    val pensionsTakenBetween = AuthorisedByAny.async { implicit user => implicit request =>
 
         def routeRequest(): Future[Result] = {
             keyStoreConnector.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").map {
@@ -115,7 +121,7 @@ trait IP2016Controller extends FrontendController {
         } yield finalResult
     }
 
-    val submitPensionsTakenBetween = Action.async { implicit request =>
+    val submitPensionsTakenBetween = AuthorisedByAny.async { implicit user => implicit request =>
 
         def routeRequest(): Future[Result] = {
             pensionsTakenBetweenForm.bindFromRequest.fold(
