@@ -24,9 +24,6 @@ import scala.concurrent.Future
 import forms.AddedToPensionForm.addedToPensionForm
 import forms.AddingToPensionForm.addingToPensionForm
 import forms.PensionSavingsForm.pensionSavingsForm
-import forms.PensionsTakenForm.pensionsTakenForm
-import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
-import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import models._
 
 import views.html._
@@ -112,108 +109,6 @@ trait EligibilityController extends FrontendController {
                 }
             }
         )
-    }
-
-    //PENSIONS TAKEN
-    val pensionsTaken = Action.async { implicit request =>
-        if (request.session.get(SessionKeys.sessionId).isEmpty) {
-            Future.successful(Redirect(routes.IntroductionController.introduction()))
-        } else {
-            keyStoreConnector.fetchAndGetFormData[PensionsTakenModel]("pensionsTaken").map {
-                case Some(data) => Ok(pages.eligibility.pensionsTaken(pensionsTakenForm.fill(data)))
-                case None => Ok(pages.eligibility.pensionsTaken(pensionsTakenForm))
-            }
-        }
-    }
-
-    val submitPensionsTaken = Action { implicit request =>
-        pensionsTakenForm.bindFromRequest.fold(
-            errors => BadRequest(pages.eligibility.pensionsTaken(errors)),
-            success => {
-                keyStoreConnector.saveFormData("pensionsTaken", success)
-                success.pensionsTaken.get match {
-                    case "yes"  => Redirect(routes.EligibilityController.pensionsTakenBefore())
-                    case "no"   => Redirect(routes.IntroductionController.introduction())
-                }
-            }
-        )
-    }
-
-
-    //PENSIONS TAKEN BEFORE
-    val pensionsTakenBefore = Action.async { implicit request =>
-
-        def routeRequest(): Future[Result] = {
-            keyStoreConnector.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").map {
-                case Some(data) => Ok(pages.eligibility.pensionsTakenBefore(pensionsTakenBeforeForm.fill(data)))
-                case _ => Ok(pages.eligibility.pensionsTakenBefore(pensionsTakenBeforeForm))
-            }
-        }
-
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
-    }
-
-    val submitPensionsTakenBefore = Action.async { implicit request =>
-
-        def routeRequest(): Future[Result] = {
-            pensionsTakenBeforeForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.eligibility.pensionsTakenBefore(errors))),
-                success => {
-                    keyStoreConnector.saveFormData("pensionsTakenBefore", success)
-                    success.pensionsTakenBefore match {
-                        case "Yes" =>
-                            success.pensionsTakenBeforeAmt match {
-                                case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.EligibilityController.pensionsTakenBetween))
-                                case _ => Future.successful(Redirect(routes.EligibilityController.pensionsTakenBetween))
-                            }
-                        case "No" => Future.successful(Redirect(routes.EligibilityController.pensionsTakenBetween))
-                    }
-                }
-            )         
-        }
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
-    }
-
-    //PENSIONS TAKEN BETWEEN
-    val pensionsTakenBetween = Action.async { implicit request =>
-
-        def routeRequest(): Future[Result] = {
-            keyStoreConnector.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").map {
-                case Some(data) => Ok(pages.eligibility.pensionsTakenBetween(pensionsTakenBetweenForm.fill(data)))
-                case _ => Ok(pages.eligibility.pensionsTakenBetween(pensionsTakenBetweenForm))
-            }
-        }
-
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
-    }
-
-    val submitPensionsTakenBetween = Action.async { implicit request =>
-
-        def routeRequest(): Future[Result] = {
-            pensionsTakenBetweenForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.eligibility.pensionsTakenBetween(errors))),
-                success => {
-                    keyStoreConnector.saveFormData("pensionsTakenBetween", success)
-                    success.pensionsTakenBetween match {
-                        case "Yes" =>
-                            success.pensionsTakenBetweenAmt match {
-                                case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                                case _ => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                            }
-                        case "No" => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                    }
-                }
-            )         
-        }
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
     }
 
     // APPLY FP
