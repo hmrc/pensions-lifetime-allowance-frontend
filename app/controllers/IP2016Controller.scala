@@ -35,7 +35,7 @@ object IP2016Controller extends IP2016Controller {
     val keyStoreConnector = KeyStoreConnector
     override lazy val applicationConfig = FrontendAppConfig
     override lazy val authConnector = FrontendAuthConnector
-    override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartURL
+    override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 }
 
 trait IP2016Controller extends FrontendController with AuthorisedForPLA {

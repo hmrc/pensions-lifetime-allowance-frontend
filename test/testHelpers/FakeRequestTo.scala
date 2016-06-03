@@ -21,6 +21,8 @@ import play.api.mvc.{AnyContent, Action}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
+import uk.gov.hmrc.time.DateTimeUtils._
 import org.jsoup._
 
 
@@ -37,4 +39,26 @@ class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId
     }
 
 
-  }
+}
+
+class FakeAuthorisedRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: Option[String], data: (String, String)*) extends UnitSpec {
+
+    val mockUsername = "mockuser"
+    val mockUserId = "/auth/oid/" + mockUsername
+
+    val fakeRequest = constructRequest(url, sessionId)
+    val result = controllerAction(fakeRequest)
+    val jsoupDoc = Jsoup.parse(bodyOf(result))
+  
+    def constructRequest(url: String, sessionId: Option[String]) = {
+        sessionId match {
+            case Some(sessId) => FakeRequest("GET", "/protect-your-lifetime-allowance/" + url).withSession(
+                SessionKeys.sessionId -> s"session-$sessionId",
+                SessionKeys.lastRequestTimestamp -> now.getMillis.toString,
+                SessionKeys.userId -> mockUserId,
+                SessionKeys.authProvider -> AuthenticationProviderIds.VerifyProviderId)
+            case None => FakeRequest("GET", "/protect-your-lifetime-allowance/" + url)
+        }
+    }
+
+}
