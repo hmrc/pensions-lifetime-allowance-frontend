@@ -46,9 +46,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     val sessionId = UUID.randomUUID.toString
     val fakeRequest = FakeRequest("GET", "/protect-your-lifetime-allowance/")
     val mockKeyStoreConnector = mock[KeyStoreConnector]
-    val TestEligibilityController = new EligibilityController {
-    override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
-    }
 
     def keystoreFetchCondition[T](data: Option[T]): Unit = {
         when(mockKeyStoreConnector.fetchAndGetFormData[T](Matchers.anyString())(Matchers.any(), Matchers.any()))
