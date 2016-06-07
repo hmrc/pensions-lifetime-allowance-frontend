@@ -22,6 +22,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
+import auth._
 
 
 class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*) extends UnitSpec {
@@ -30,4 +31,10 @@ class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessi
     .withFormUrlEncodedBody(data:_*)
   val result = controllerAction(fakeRequest)
   val jsoupDoc = Jsoup.parse(bodyOf(result))
+}
+
+class AuthorisedFakeRequestToPost(controllerAction: Action[AnyContent], data: (String, String)*) extends UnitSpec {
+    val result = controllerAction(authenticatedFakeRequest().withFormUrlEncodedBody(data:_*))
+    val jsoupDoc = Jsoup.parse(bodyOf(result))
+  
 }

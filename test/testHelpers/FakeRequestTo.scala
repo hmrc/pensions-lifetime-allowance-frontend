@@ -22,6 +22,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
+import auth._
 
 
 class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: Option[String], data: (String, String)*) extends UnitSpec {
@@ -37,4 +38,11 @@ class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId
     }
 
 
-  }
+}
+
+
+class AuthorisedFakeRequestTo(controllerAction: Action[AnyContent]) extends UnitSpec {
+    val result = controllerAction(authenticatedFakeRequest())
+    val jsoupDoc = Jsoup.parse(bodyOf(result))
+  
+}

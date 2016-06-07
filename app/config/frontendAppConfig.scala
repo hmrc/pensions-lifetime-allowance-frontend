@@ -36,6 +36,7 @@ trait AppConfig {
   val govUkFinishedPageUrl: String
   val identityVerification: Boolean
   val confirmFPUrl: String
+  val ipStartUrl: String
   val notAuthorisedRedirectUrl: String
   val verifySignIn = s"$citizenAuthHost/ida/login"
   val ivUpliftUrl: String
@@ -69,6 +70,7 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
 
   override lazy val citizenAuthHost = configuration.getString("citizen-auth.host")
   override lazy val confirmFPUrl = configuration.getString("confirmFP.url").getOrElse("")
+  override lazy val ipStartUrl = configuration.getString("ipStart.url").getOrElse("")
 
   override lazy val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
   override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
