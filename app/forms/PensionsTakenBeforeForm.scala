@@ -24,36 +24,10 @@ import play.api.i18n.Messages
 
 object PensionsTakenBeforeForm {
 
-  def validate(data: PensionsTakenBeforeModel) = {
-    data.pensionsTakenBefore match {
-      case "Yes" => data.pensionsTakenBeforeAmt.isDefined
-      case "No" => true
-    }
-  }
-
-  def validateMinimum(data: PensionsTakenBeforeModel) = {
-    data.pensionsTakenBefore match {
-      case "Yes" => isPositive(data.pensionsTakenBeforeAmt.getOrElse(0))
-      case "No" => true
-    }
-  }
-
-  def validateTwoDec(data: PensionsTakenBeforeModel) = {
-    data.pensionsTakenBefore match {
-      case "Yes" => isMaxTwoDecimalPlaces(data.pensionsTakenBeforeAmt.getOrElse(0))
-      case "No" => true
-    }
-  }
-
   val pensionsTakenBeforeForm = Form (
     mapping(
       "pensionsTakenBefore" -> nonEmptyText,
       "pensionsTakenBeforeAmt" -> optional(bigDecimal)
-    )(PensionsTakenBeforeModel.apply)(PensionsTakenBeforeModel.unapply).verifying(Messages("pla.pensionsTakenBefore.errorQuestion"),
-      pensionsTakenBeforeForm => validate(pensionsTakenBeforeForm))
-      .verifying(Messages("pla.pensionsTakenBefore.errorNegative"),
-        pensionsTakenBeforeForm => validateMinimum(pensionsTakenBeforeForm))
-      .verifying(Messages("pla.pensionsTakenBefore.errorDecimalPlaces"),
-        pensionsTakenBeforeForm => validateTwoDec(pensionsTakenBeforeForm))
+    )(PensionsTakenBeforeModel.apply)(PensionsTakenBeforeModel.unapply)
   )
 }
