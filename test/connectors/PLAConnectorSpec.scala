@@ -57,7 +57,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
       PLAConnector.http shouldBe WSHttp
     }
     "use the correct stubUrl" in {
-      PLAConnector.stubUrl shouldBe "http://localhost:9012"
+      PLAConnector.stubUrl shouldBe "http://localhost:9011"
     }
   }
 
