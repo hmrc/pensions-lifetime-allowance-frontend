@@ -40,7 +40,7 @@ object PensionsTakenBetweenForm {
 
   private def validateMinimum(data: Form[PensionsTakenBetweenModel]) = {
     data("pensionsTakenBetween").value.get match {
-      case "Yes" => isPositive(data("pensionsTakenBetweenAmt").value.getOrElse("1").toDouble)
+      case "Yes" => isPositive(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
       case "No" => true
     }
   }
