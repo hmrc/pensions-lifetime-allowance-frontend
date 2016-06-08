@@ -16,10 +16,12 @@
 
 package controllers
 
+import java.util.UUID
 import connectors.KeyStoreConnector
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.http.logging.SessionId
 import scala.concurrent.Future
 import forms.AddedToPensionForm.addedToPensionForm
 import forms.AddingToPensionForm.addingToPensionForm
@@ -123,7 +125,8 @@ trait EligibilityController extends FrontendController {
     // APPLY IP
     val applyIP = Action.async { implicit request =>
         if (request.session.get(SessionKeys.sessionId).isEmpty) {
-            Future.successful(Redirect(routes.IntroductionController.introduction()))
+            val sessionId = UUID.randomUUID.toString
+            Future.successful(Ok(views.html.pages.eligibility.applyIP()).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
         } else {
             Future.successful(Ok(views.html.pages.eligibility.applyIP()))
         }
