@@ -27,6 +27,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
+import forms._
 import forms.PensionsTakenForm.pensionsTakenForm
 import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
@@ -93,7 +94,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             pensionsTakenBeforeForm.bindFromRequest.fold(
                 errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(errors))),
                 success => {
-                    val validatedForm = validatePensionsTakenBeforeForm(pensionsTakenBeforeForm.fill(success))
+                    val validatedForm = PensionsTakenBeforeForm.validatePensionsTakenBeforeForm(pensionsTakenBeforeForm.fill(success))
                     if(validatedForm.hasErrors) {
                         Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(validatedForm)))
                     } else {
@@ -115,35 +116,6 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
         } yield finalResult
     }
 
-    private def validatePensionsTakenBeforeForm(form: Form[PensionsTakenBeforeModel]) = {
-        if(!validate(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorQuestion"))
-        else if(!validateMinimum(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorNegative"))
-        else if(!validateTwoDec(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
-        else form
-    }
-
-
-
-    def validate(data: Form[PensionsTakenBeforeModel]) = {
-        data("pensionsTakenBefore").value.get match {
-            case "Yes" => data("pensionsTakenBeforeAmt").value.isDefined
-            case "No" => true
-        }
-    }
-
-    def validateMinimum(data: Form[PensionsTakenBeforeModel]) = {
-        data("pensionsTakenBefore").value.get match {
-            case "Yes" => isPositive(data("pensionsTakenBeforeAmt").value.getOrElse("1").toDouble)
-            case "No" => true
-        }
-    }
-
-    def validateTwoDec(data: Form[PensionsTakenBeforeModel]) = {
-        data("pensionsTakenBefore").value.get match {
-            case "Yes" => isMaxTwoDecimalPlaces(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
-            case "No" => true
-        }
-    }
 
     //PENSIONS TAKEN BETWEEN
     val pensionsTakenBetween = AuthorisedByAny.async { implicit user => implicit request =>
