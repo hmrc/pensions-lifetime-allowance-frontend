@@ -106,7 +106,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                         }
                     }
                 }
-            )         
+            )
         }
         for {
             finalResult <- routeRequest
@@ -142,7 +142,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                         Future.successful(Redirect(routes.IP2016Controller.overseasPensions()))
                     }
                 }
-            )         
+            )
         }
         for {
             finalResult <- routeRequest
@@ -182,7 +182,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                         }
                     }
                 }
-            )         
+            )
         }
         for {
             finalResult <- routeRequest
