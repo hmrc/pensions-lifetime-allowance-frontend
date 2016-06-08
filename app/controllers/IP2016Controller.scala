@@ -44,13 +44,9 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
 
     //PENSIONS TAKEN
     val pensionsTaken = AuthorisedByAny.async { implicit user => implicit request =>
-        if (request.session.get(SessionKeys.sessionId).isEmpty) {
-            Future.successful(Redirect(routes.IntroductionController.introduction()))
-        } else {
-            keyStoreConnector.fetchAndGetFormData[PensionsTakenModel]("pensionsTaken").map {
-                case Some(data) => Ok(pages.ip2016.pensionsTaken(pensionsTakenForm.fill(data)))
-                case None => Ok(pages.ip2016.pensionsTaken(pensionsTakenForm))
-            }
+        keyStoreConnector.fetchAndGetFormData[PensionsTakenModel]("pensionsTaken").map {
+            case Some(data) => Ok(pages.ip2016.pensionsTaken(pensionsTakenForm.fill(data)))
+            case None => Ok(pages.ip2016.pensionsTaken(pensionsTakenForm))
         }
     }
 
@@ -91,11 +87,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                 success => {
                     keyStoreConnector.saveFormData("pensionsTakenBefore", success)
                     success.pensionsTakenBefore match {
-                        case "Yes" =>
-                            success.pensionsTakenBeforeAmt match {
-                                case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
-                                case _ => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
-                            }
+                        case "Yes" => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
                         case "No" => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
                     }
                 }
@@ -115,7 +107,6 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                 case _ => Ok(pages.ip2016.pensionsTakenBetween(pensionsTakenBetweenForm))
             }
         }
-
         for {
             finalResult <- routeRequest
         } yield finalResult
@@ -129,11 +120,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                 success => {
                     keyStoreConnector.saveFormData("pensionsTakenBetween", success)
                     success.pensionsTakenBetween match {
-                        case "Yes" =>
-                            success.pensionsTakenBetweenAmt match {
-                                case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                                case _ => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                            }
+                        case "Yes" => Future.successful(Redirect(routes.IntroductionController.introduction()))
                         case "No" => Future.successful(Redirect(routes.IntroductionController.introduction()))
                     }
                 }
