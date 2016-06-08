@@ -94,7 +94,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             pensionsTakenBeforeForm.bindFromRequest.fold(
                 errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(errors))),
                 success => {
-                    val validatedForm = PensionsTakenBeforeForm.validatePensionsTakenBeforeForm(pensionsTakenBeforeForm.fill(success))
+                    val validatedForm = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.fill(success))
                     if(validatedForm.hasErrors) {
                         Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(validatedForm)))
                     } else {

@@ -25,7 +25,7 @@ import play.api.i18n.Messages
 object PensionsTakenBeforeForm {
 
 
-  def validatePensionsTakenBeforeForm(form: Form[PensionsTakenBeforeModel]) = {
+  def validateForm(form: Form[PensionsTakenBeforeModel]) = {
     if(!validate(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorQuestion"))
     else if(!validateMinimum(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorNegative"))
     else if(!validateTwoDec(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
@@ -41,7 +41,7 @@ object PensionsTakenBeforeForm {
 
   private def validateMinimum(data: Form[PensionsTakenBeforeModel]) = {
     data("pensionsTakenBefore").value.get match {
-      case "Yes" => isPositive(data("pensionsTakenBeforeAmt").value.getOrElse("1").toDouble)
+      case "Yes" => isPositive(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
       case "No" => true
     }
   }
