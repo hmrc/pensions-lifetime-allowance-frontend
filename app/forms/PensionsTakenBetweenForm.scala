@@ -33,22 +33,22 @@ object PensionsTakenBetweenForm {
 
   private def validate(data: Form[PensionsTakenBetweenModel]) = {
     data("pensionsTakenBetween").value.get match {
-      case "Yes" => data("pensionsTakenBetweenAmt").value.isDefined
-      case "No" => true
+      case "yes" => data("pensionsTakenBetweenAmt").value.isDefined
+      case "no" => true
     }
   }
 
   private def validateMinimum(data: Form[PensionsTakenBetweenModel]) = {
     data("pensionsTakenBetween").value.get match {
-      case "Yes" => isPositive(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
-      case "No" => true
+      case "yes" => isPositive(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
+      case "no" => true
     }
   }
 
   private def validateTwoDec(data: Form[PensionsTakenBetweenModel]) = {
     data("pensionsTakenBetween").value.get match {
-      case "Yes" => isMaxTwoDecimalPlaces(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
-      case "No" => true
+      case "yes" => isMaxTwoDecimalPlaces(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
+      case "no" => true
     }
   }
 

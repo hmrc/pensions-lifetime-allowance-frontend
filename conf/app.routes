@@ -38,6 +38,9 @@ POST        /pensions-taken-before              controllers.IP2016Controller.sub
 GET         /pensions-taken-between             controllers.IP2016Controller.pensionsTakenBetween
 POST        /pensions-taken-between             controllers.IP2016Controller.submitPensionsTakenBetween
 
+GET         /apply-for-ip16-overseas-pensions   controllers.IP2016Controller.overseasPensions
+POST        /apply-for-ip16-overseas-pensions   controllers.IP2016Controller.submitOverseasPensions
+
 
 ## Confirmation ##
 GET 		/confirm-fp							controllers.ConfirmationController.confirmFP

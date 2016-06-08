@@ -34,22 +34,22 @@ object PensionsTakenBeforeForm {
 
   private def validate(data: Form[PensionsTakenBeforeModel]) = {
     data("pensionsTakenBefore").value.get match {
-      case "Yes" => data("pensionsTakenBeforeAmt").value.isDefined
-      case "No" => true
+      case "yes" => data("pensionsTakenBeforeAmt").value.isDefined
+      case "no" => true
     }
   }
 
   private def validateMinimum(data: Form[PensionsTakenBeforeModel]) = {
     data("pensionsTakenBefore").value.get match {
-      case "Yes" => isPositive(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
-      case "No" => true
+      case "yes" => isPositive(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
+      case "no" => true
     }
   }
 
   private def validateTwoDec(data: Form[PensionsTakenBeforeModel]) = {
     data("pensionsTakenBefore").value.get match {
-      case "Yes" => isMaxTwoDecimalPlaces(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
-      case "No" => true
+      case "yes" => isMaxTwoDecimalPlaces(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
+      case "no" => true
     }
   }
 
