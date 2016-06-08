@@ -410,12 +410,12 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
     "visited directly with no session ID" should {
       object DataItem extends FakeRequestTo("apply-ip", TestEligibilityController.applyIP, None)
 
-      "return 303" in {
-        status(DataItem.result) shouldBe 303
+      "return 200" in {
+        status(DataItem.result) shouldBe 200
       }
 
-      "redirect to introduction page" in {
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+      "take user to the Apply FP page" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyIP.pageHeading")
       }
     }
 
