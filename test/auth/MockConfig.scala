@@ -35,6 +35,7 @@ object MockConfig extends AppConfig {
   override val govUkFinishedPageUrl: String = ""
   override val identityVerification: Boolean = true
   override val confirmFPUrl: String = "/pla/confirm-fp"
+  override val ipStartUrl: String = "/pla/apply-ip"
   override val notAuthorisedRedirectUrl: String = "/pla/not-authorised"
   override val verifySignIn = "/verify/login"
   override val ivUpliftUrl: String = "/iv/uplift"

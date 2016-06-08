@@ -11,7 +11,7 @@ pla.base.startAgain             = Start Again
 pla.base.errorSummaryLabel      = There are errors on this page.
 
 ## Link Text ##
-pla.links.lifetimeAllowance         = Pensions Lifetime Allowance
+pla.links.lifetimeAllowance         = Lifetime Allowance
 pla.links.protectLifetimeAllowance  = Lifetime Allowance Protection schemes
 pla.links.fixedProtection2016       = Fixed Protection 2016
 pla.links.individualProtection2016  = Individual Protection 2016
@@ -55,9 +55,11 @@ pla.pensionSavings.mandatoryErr             = Please tell us if your pension sav
 
 ## Apply for IP 2016 ##
 pla.applyIP.title       = Apply for IP 2016
-pla.applyIP.pageHeading = Apply for protection
-pla.applyIP.paraOne     = You can apply for Individual Protection 2016.
-pla.applyIP.paraTwo     = This will protect your Lifetime Allowance at the value of your pension savings on 5 April 2016, up to £1.25 million.
+pla.applyIP.pageHeading = Apply for Individual Protection 2016
+pla.applyIP.paraOne     = We''ll ask you:
+pla.applyIP.bulletOne   = about pensions you took money from before 6 April 2016
+pla.applyIP.bulletTwo   = what your current pensions were worth on 6 April 2016
+pla.applyIP.paraTwo     = Ask your pension provider to give you this information.
 pla.applyIP.paraThree   = You will still be able to add to your pension without losing this protection.
 pla.applyIP.signIn      = To apply, you''ll need to sign in to your HMRC online services account, or create one.
 
@@ -127,7 +129,33 @@ pla.rejection.pageHeading       = Your application was unsuccessful
 ## API ##
 pla.api.badRequest              = There was an error processing the client''s request
 
+## Pensions Taken ##
+pla.pensionsTaken.pageHeading               = Pensions you''ve taken
+pla.pensionsTaken.title                     = Pensions Taken
+pla.pensionsTaken.question                  = Have you taken any of your pensions?
+pla.pensionsTaken.mandatoryErr              = Please tell us if you have taken any of your pensions
 
+## Pensions Taken Before ##
+pla.pensionsTakenBefore.pageHeading         = Pensions taken before 6 April 2006
+pla.pensionsTakenBefore.title               = Pensions Taken Before
+pla.pensionsTakenBefore.question            = Did you start taking any of your pensions before 6 April 2006?
+pla.pensionsTakenBefore.questionTwo         = How much lifetime allowance did you use?
+pla.pensionsTakenBefore.helpText            = Ask your pension provider to give you this amount
+pla.pensionsTakenBefore.errorQuestion       = Enter a value for the amount of your pension you have taken
+pla.pensionsTakenBefore.errorNegative       = Enter a positive number for the amount of your pension you have taken
+pla.pensionsTakenBefore.errorDecimalPlaces  = The value you have entered has too many decimal places
+pla.pensionsTakenBefore.helpText            = Ask your pension provider to give you this amount
+
+## Pensions Taken Between ##
+pla.pensionsTakenBetween.pageHeading        = Pensions taken between 6 April 2006 and 5 April 2016
+pla.pensionsTakenBetween.title              = Pensions Taken Between
+pla.pensionsTakenBetween.question           = Did you take any pensions between 6 April 2006 and5 April 2016?
+pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance did you use?
+pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
+pla.pensionsTakenBetween.errorQuestion      = Enter a value for the amount of your pension you have taken
+pla.pensionsTakenBetween.errorNegative      = Enter a positive number for the amount of your pension you have taken
+pla.pensionsTakenBetween.errorDecimalPlaces = The value you have entered has too many decimal places
+pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
 
 
 
