@@ -24,23 +24,30 @@ import play.api.i18n.Messages
 
 object PensionsTakenBetweenForm {
 
-  def validate(data: PensionsTakenBetweenModel) = {
-    data.pensionsTakenBetween match {
-      case "Yes" => data.pensionsTakenBetweenAmt.isDefined
+  def validateForm(form: Form[PensionsTakenBetweenModel]) = {
+    if(!validate(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorQuestion"))
+    else if(!validateMinimum(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorNegative"))
+    else if(!validateTwoDec(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorDecimalPlaces"))
+    else form
+  }
+
+  private def validate(data: Form[PensionsTakenBetweenModel]) = {
+    data("pensionsTakenBetween").value.get match {
+      case "Yes" => data("pensionsTakenBetweenAmt").value.isDefined
       case "No" => true
     }
   }
 
-  def validateMinimum(data: PensionsTakenBetweenModel) = {
-    data.pensionsTakenBetween match {
-      case "Yes" => isPositive(data.pensionsTakenBetweenAmt.getOrElse(0))
+  private def validateMinimum(data: Form[PensionsTakenBetweenModel]) = {
+    data("pensionsTakenBetween").value.get match {
+      case "Yes" => isPositive(data("pensionsTakenBetweenAmt").value.getOrElse("1").toDouble)
       case "No" => true
     }
   }
 
-  def validateTwoDec(data: PensionsTakenBetweenModel) = {
-    data.pensionsTakenBetween match {
-      case "Yes" => isMaxTwoDecimalPlaces(data.pensionsTakenBetweenAmt.getOrElse(0))
+  private def validateTwoDec(data: Form[PensionsTakenBetweenModel]) = {
+    data("pensionsTakenBetween").value.get match {
+      case "Yes" => isMaxTwoDecimalPlaces(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
       case "No" => true
     }
   }
@@ -49,11 +56,6 @@ object PensionsTakenBetweenForm {
     mapping(
       "pensionsTakenBetween" -> nonEmptyText,
       "pensionsTakenBetweenAmt" -> optional(bigDecimal)
-    )(PensionsTakenBetweenModel.apply)(PensionsTakenBetweenModel.unapply).verifying(Messages("pla.pensionsTakenBetween.errorQuestion"),
-      pensionsTakenBetweenForm => validate(pensionsTakenBetweenForm))
-      .verifying(Messages("pla.pensionsTakenBetween.errorNegative"),
-        pensionsTakenBetweenForm => validateMinimum(pensionsTakenBetweenForm))
-      .verifying(Messages("pla.pensionsTakenBetween.errorDecimalPlaces"),
-        pensionsTakenBetweenForm => validateTwoDec(pensionsTakenBetweenForm))
+    )(PensionsTakenBetweenModel.apply)(PensionsTakenBetweenModel.unapply)
   )
 }

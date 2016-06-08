@@ -138,14 +138,19 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             pensionsTakenBetweenForm.bindFromRequest.fold(
                 errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(errors))),
                 success => {
-                    keyStoreConnector.saveFormData("pensionsTakenBetween", success)
-                    success.pensionsTakenBetween match {
-                        case "Yes" =>
-                            success.pensionsTakenBetweenAmt match {
-                                case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                                case _ => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                            }
-                        case "No" => Future.successful(Redirect(routes.IntroductionController.introduction()))
+                    val validatedForm = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.fill(success))
+                    if(validatedForm.hasErrors) {
+                        Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(validatedForm)))
+                    } else {
+                        keyStoreConnector.saveFormData("pensionsTakenBetween", success)
+                        success.pensionsTakenBetween match {
+                            case "Yes" =>
+                                success.pensionsTakenBetweenAmt match {
+                                    case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.IntroductionController.introduction()))
+                                    case _ => Future.successful(Redirect(routes.IntroductionController.introduction()))
+                                }
+                            case "No" => Future.successful(Redirect(routes.IntroductionController.introduction()))
+                        }
                     }
                 }
             )         
