@@ -49,13 +49,9 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
 
     //PENSIONS TAKEN
     val pensionsTaken = AuthorisedByAny.async { implicit user => implicit request =>
-        if (request.session.get(SessionKeys.sessionId).isEmpty) {
-            Future.successful(Redirect(routes.IntroductionController.introduction()))
-        } else {
-            keyStoreConnector.fetchAndGetFormData[PensionsTakenModel]("pensionsTaken").map {
-                case Some(data) => Ok(pages.ip2016.pensionsTaken(pensionsTakenForm.fill(data)))
-                case None => Ok(pages.ip2016.pensionsTaken(pensionsTakenForm))
-            }
+        keyStoreConnector.fetchAndGetFormData[PensionsTakenModel]("pensionsTaken").map {
+            case Some(data) => Ok(pages.ip2016.pensionsTaken(pensionsTakenForm.fill(data)))
+            case None => Ok(pages.ip2016.pensionsTaken(pensionsTakenForm))
         }
     }
 
@@ -126,7 +122,6 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                 case _ => Ok(pages.ip2016.pensionsTakenBetween(pensionsTakenBetweenForm))
             }
         }
-
         for {
             finalResult <- routeRequest
         } yield finalResult

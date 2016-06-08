@@ -145,6 +145,7 @@ pla.pensionsTakenBefore.errorQuestion       = Enter a value for the amount of yo
 pla.pensionsTakenBefore.errorNegative       = Enter a positive number for the amount of your pension you have taken
 pla.pensionsTakenBefore.errorDecimalPlaces  = The value you have entered has too many decimal places
 pla.pensionsTakenBefore.helpText            = Ask your pension provider to give you this amount
+pla.pensionsTakenBefore.mandatoryErr        = This field is required
 
 ## Pensions Taken Between ##
 pla.pensionsTakenBetween.pageHeading        = Pensions taken between 6 April 2006 and 5 April 2016
@@ -156,6 +157,7 @@ pla.pensionsTakenBetween.errorQuestion      = Enter a value for the amount of yo
 pla.pensionsTakenBetween.errorNegative      = Enter a positive number for the amount of your pension you have taken
 pla.pensionsTakenBetween.errorDecimalPlaces = The value you have entered has too many decimal places
 pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
+pla.pensionsTakenBetween.mandatoryErr       = This field is required
 
 
 
