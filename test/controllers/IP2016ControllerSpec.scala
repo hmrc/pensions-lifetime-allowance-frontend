@@ -20,21 +20,15 @@ import java.util.UUID
 import connectors.KeyStoreConnector
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
-import play.api.http._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.mvc.{AnyContent, Action}
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
-import uk.gov.hmrc.play.http.SessionKeys
-import org.jsoup._
 import testHelpers._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import scala.concurrent.Future
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import models._
-import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-import uk.gov.hmrc.time.DateTimeUtils._
 import auth._
 
 class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -64,6 +58,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     ///////////////////////////////////////////////
     "IP2016Controller should be correctly initialised" in {
         IP2016Controller.keyStoreConnector shouldBe KeyStoreConnector
+        IP2016Controller.authConnector shouldBe FrontendAuthConnector
     }
 
     ///////////////////////////////////////////////
@@ -128,8 +123,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTaken, ("pensionsTaken", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            // TODO: redirect location not yet implemented in controller
-            //"redirect to somewhere" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.someAction}") }
+            // "redirect to overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}") }
         }
 
         "Submitting pensionsTakenForm with no data" should {
@@ -141,6 +135,192 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             }
         }
     }
+
+
+    ///////////////////////////////////////////////
+    // Pensions Taken Before
+    ///////////////////////////////////////////////
+    "In IP2016Controller calling the .pensionsTakenBefore action" when {
+
+        "not supplied with a stored model" should {
+
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.pensionsTakenBefore)
+            "return 200" in {
+                keystoreFetchCondition[PensionsTakenBeforeModel](None)
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the pensions taken before page" in {
+                keystoreFetchCondition[PensionsTakenBeforeModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.pageHeading")
+            }
+        }
+
+        "supplied with a stored test model" should {
+            val testModel = new PensionsTakenBeforeModel("yes", Some(BigDecimal("1")))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.pensionsTakenBefore)
+
+            "return 200" in {
+                keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the pensions taken before page" in {
+                keystoreFetchCondition[PensionsTakenBeforeModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.pageHeading")
+            }
+        }
+    }
+
+    "Submitting Pensions Taken Before data" when {
+
+        "Submitting 'yes' in pensionsTakenBeforeForm" when {
+
+            "amount is set as '1'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "Yes"), ("pensionsTakenBeforeAmt", "1"))
+                "return 303" in {status(DataItem.result) shouldBe 303}
+                "redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween}") }
+            }
+
+            "no amount is set" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "Yes"), ("pensionsTakenBeforeAmt", ""))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorQuestion"))
+                }
+            }
+
+            "amount is set as '5.001'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "Yes"), ("pensionsTakenBeforeAmt", "5.001"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
+                }
+            }
+
+            "amount is set as '-25'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "Yes"), ("pensionsTakenBeforeAmt", "-25"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorNegative"))
+                }
+            }
+        }
+
+        "Submitting 'no' in pensionsTakenBeforeForm" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "No"))
+            "return 303" in { status(DataItem.result) shouldBe 303 }
+            // TODO: redirect location not yet implemented in controller
+            //"redirect to somewhere" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.someAction}") }
+        }
+
+        "Submitting pensionsTakenBeforeForm with no data" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", ""))
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.mandatoryErr"))
+            }
+        }
+    }
+
+    ///////////////////////////////////////////////
+    // Pensions Taken Between
+    ///////////////////////////////////////////////
+    "In IP2016Controller calling the .pensionsTakenBetween action" when {
+
+        "not supplied with a stored model" should {
+
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.pensionsTakenBetween)
+            "return 200" in {
+                keystoreFetchCondition[PensionsTakenBetweenModel](None)
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the pensions taken between page" in {
+                keystoreFetchCondition[PensionsTakenBetweenModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.pageHeading")
+            }
+        }
+
+        "supplied with a stored test model" should {
+            val testModel = new PensionsTakenBetweenModel("yes", Some(BigDecimal("1")))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.pensionsTakenBetween)
+
+            "return 200" in {
+                keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the pensions taken between page" in {
+                keystoreFetchCondition[PensionsTakenBetweenModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.pageHeading")
+            }
+        }
+    }
+
+    "Submitting Pensions Taken Between data" when {
+
+        "Submitting 'yes' in pensionsTakenBetweenForm" when {
+
+            // "amount is set as '1'" should {
+
+            //     object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "Yes"), ("pensionsTakenBetweenAmt", "1"))
+            //     "return 303" in {status(DataItem.result) shouldBe 303}
+            //     "redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}") }
+            // }
+
+            "no amount is set" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "Yes"), ("pensionsTakenBetweenAmt", ""))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorQuestion"))
+                }
+            }
+
+            "amount is set as '5.001'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "Yes"), ("pensionsTakenBetweenAmt", "5.001"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorDecimalPlaces"))
+                }
+            }
+
+            "amount is set as '-25'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "Yes"), ("pensionsTakenBetweenAmt", "-25"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorNegative"))
+                }
+            }
+        }
+
+        "Submitting 'no' in pensionsTakenBetweenForm" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "No"))
+            "return 303" in { status(DataItem.result) shouldBe 303 }
+            // TODO: redirect location not yet implemented in controller
+            //"redirect to somewhere" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.someAction}") }
+        }
+
+        "Submitting pensionsTakenBetweenForm with no data" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", ""))
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.mandatoryErr"))
+            }
+        }
+    }
+
 
 
 
