@@ -21,13 +21,18 @@ import config.{FrontendAppConfig,FrontendAuthConnector}
 
 import connectors.KeyStoreConnector
 import play.api.mvc._
+import play.api.data.Forms._
+import play.api.data._
+import play.api.i18n.Messages
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
+import forms._
 import forms.PensionsTakenForm.pensionsTakenForm
 import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import models._
+import common.Validation._
 
 import views.html._
 
@@ -85,10 +90,19 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             pensionsTakenBeforeForm.bindFromRequest.fold(
                 errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(errors))),
                 success => {
-                    keyStoreConnector.saveFormData("pensionsTakenBefore", success)
-                    success.pensionsTakenBefore match {
-                        case "Yes" => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
-                        case "No" => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
+                    val validatedForm = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.fill(success))
+                    if(validatedForm.hasErrors) {
+                        Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(validatedForm)))
+                    } else {
+                        keyStoreConnector.saveFormData("pensionsTakenBefore", success)
+                        success.pensionsTakenBefore match {
+                            case "Yes" =>
+                                success.pensionsTakenBeforeAmt match {
+                                    case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
+                                    case _ => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
+                                }
+                            case "No" => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
+                        }
                     }
                 }
             )         
@@ -97,6 +111,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             finalResult <- routeRequest
         } yield finalResult
     }
+
 
     //PENSIONS TAKEN BETWEEN
     val pensionsTakenBetween = AuthorisedByAny.async { implicit user => implicit request =>
@@ -118,10 +133,19 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             pensionsTakenBetweenForm.bindFromRequest.fold(
                 errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(errors))),
                 success => {
-                    keyStoreConnector.saveFormData("pensionsTakenBetween", success)
-                    success.pensionsTakenBetween match {
-                        case "Yes" => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                        case "No" => Future.successful(Redirect(routes.IntroductionController.introduction()))
+                    val validatedForm = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.fill(success))
+                    if(validatedForm.hasErrors) {
+                        Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(validatedForm)))
+                    } else {
+                        keyStoreConnector.saveFormData("pensionsTakenBetween", success)
+                        success.pensionsTakenBetween match {
+                            case "Yes" =>
+                                success.pensionsTakenBetweenAmt match {
+                                    case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.IntroductionController.introduction()))
+                                    case _ => Future.successful(Redirect(routes.IntroductionController.introduction()))
+                                }
+                            case "No" => Future.successful(Redirect(routes.IntroductionController.introduction()))
+                        }
                     }
                 }
             )         

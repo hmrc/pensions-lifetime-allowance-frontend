@@ -24,23 +24,31 @@ import play.api.i18n.Messages
 
 object PensionsTakenBeforeForm {
 
-  def validate(data: PensionsTakenBeforeModel) = {
-    data.pensionsTakenBefore match {
-      case "Yes" => data.pensionsTakenBeforeAmt.isDefined
+
+  def validateForm(form: Form[PensionsTakenBeforeModel]) = {
+    if(!validate(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorQuestion"))
+    else if(!validateMinimum(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorNegative"))
+    else if(!validateTwoDec(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
+    else form
+  }
+
+  private def validate(data: Form[PensionsTakenBeforeModel]) = {
+    data("pensionsTakenBefore").value.get match {
+      case "Yes" => data("pensionsTakenBeforeAmt").value.isDefined
       case "No" => true
     }
   }
 
-  def validateMinimum(data: PensionsTakenBeforeModel) = {
-    data.pensionsTakenBefore match {
-      case "Yes" => isPositive(data.pensionsTakenBeforeAmt.getOrElse(0))
+  private def validateMinimum(data: Form[PensionsTakenBeforeModel]) = {
+    data("pensionsTakenBefore").value.get match {
+      case "Yes" => isPositive(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
       case "No" => true
     }
   }
 
-  def validateTwoDec(data: PensionsTakenBeforeModel) = {
-    data.pensionsTakenBefore match {
-      case "Yes" => isMaxTwoDecimalPlaces(data.pensionsTakenBeforeAmt.getOrElse(0))
+  private def validateTwoDec(data: Form[PensionsTakenBeforeModel]) = {
+    data("pensionsTakenBefore").value.get match {
+      case "Yes" => isMaxTwoDecimalPlaces(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
       case "No" => true
     }
   }
@@ -49,11 +57,6 @@ object PensionsTakenBeforeForm {
     mapping(
       "pensionsTakenBefore" -> nonEmptyText,
       "pensionsTakenBeforeAmt" -> optional(bigDecimal)
-    )(PensionsTakenBeforeModel.apply)(PensionsTakenBeforeModel.unapply).verifying(Messages("pla.pensionsTakenBefore.errorQuestion"),
-      pensionsTakenBeforeForm => validate(pensionsTakenBeforeForm))
-      .verifying(Messages("pla.pensionsTakenBefore.errorNegative"),
-        pensionsTakenBeforeForm => validateMinimum(pensionsTakenBeforeForm))
-      .verifying(Messages("pla.pensionsTakenBefore.errorDecimalPlaces"),
-        pensionsTakenBeforeForm => validateTwoDec(pensionsTakenBeforeForm))
+    )(PensionsTakenBeforeModel.apply)(PensionsTakenBeforeModel.unapply)
   )
 }

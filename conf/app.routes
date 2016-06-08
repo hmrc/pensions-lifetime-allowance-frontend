@@ -27,6 +27,8 @@ GET         /apply-fp                           controllers.EligibilityControlle
 
 GET         /pension-below-threshold            controllers.EligibilityController.cannotApply
 
+
+## Apply IP ##
 GET         /pensions-taken                     controllers.IP2016Controller.pensionsTaken
 POST        /pensions-taken                     controllers.IP2016Controller.submitPensionsTaken
 
