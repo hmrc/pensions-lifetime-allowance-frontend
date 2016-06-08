@@ -97,12 +97,12 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                     } else {
                         keyStoreConnector.saveFormData("pensionsTakenBefore", success)
                         success.pensionsTakenBefore match {
-                            case "Yes" =>
+                            case "yes" =>
                                 success.pensionsTakenBeforeAmt match {
                                     case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
                                     case _ => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
                                 }
-                            case "No" => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
+                            case "no" => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
                         }
                     }
                 }
@@ -177,8 +177,8 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                     } else {
                         keyStoreConnector.saveFormData("overseasPensions", success)
                         success.overseasPensions match {
-                            case "Yes" => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                            case "No" => Future.successful(Redirect(routes.IntroductionController.introduction()))
+                            case "yes" => Future.successful(Redirect(routes.IntroductionController.introduction()))
+                            case "no" => Future.successful(Redirect(routes.IntroductionController.introduction()))
                         }
                     }
                 }

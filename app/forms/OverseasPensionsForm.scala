@@ -34,22 +34,22 @@ object OverseasPensionsForm {
 
   private def validate(data: Form[OverseasPensionsModel]) = {
     data("overseasPensions").value.get match {
-      case "Yes" => data("overseasPensionsAmt").value.isDefined
-      case "No" => true
+      case "yes" => data("overseasPensionsAmt").value.isDefined
+      case "no" => true
     }
   }
 
   private def validateMinimum(data: Form[OverseasPensionsModel]) = {
     data("overseasPensions").value.get match {
-      case "Yes" => isPositive(data("overseasPensionsAmt").value.getOrElse("0").toDouble)
-      case "No" => true
+      case "yes" => isPositive(data("overseasPensionsAmt").value.getOrElse("0").toDouble)
+      case "no" => true
     }
   }
 
   private def validateTwoDec(data: Form[OverseasPensionsModel]) = {
     data("overseasPensions").value.get match {
-      case "Yes" => isMaxTwoDecimalPlaces(data("overseasPensionsAmt").value.getOrElse("0").toDouble)
-      case "No" => true
+      case "yes" => isMaxTwoDecimalPlaces(data("overseasPensionsAmt").value.getOrElse("0").toDouble)
+      case "no" => true
     }
   }
 

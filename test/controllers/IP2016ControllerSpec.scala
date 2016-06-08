@@ -157,7 +157,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         }
 
         "supplied with a stored test model" should {
-            val testModel = new PensionsTakenBeforeModel("yes", Some(BigDecimal("1")))
+            val testModel = new PensionsTakenBeforeModel("yes", Some(1))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.pensionsTakenBefore)
 
             "return 200" in {
@@ -169,6 +169,25 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 keystoreFetchCondition[PensionsTakenBeforeModel](None)
                 DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.pageHeading")
             }
+
+            "return some HTML that" should {
+
+                "contain some text and use the character set utf-8" in {
+                    keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
+                    contentType(DataItem.result) shouldBe Some("text/html")
+                    charset(DataItem.result) shouldBe Some("utf-8")
+                }
+
+                "have the radio option `yes` selected by default" in {
+                    keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("pensionsTakenBefore-yes").parent.classNames().contains("selected") shouldBe true
+                }
+
+                "have the amount £1 completed by default" in {
+                    keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("pensionsTakenBeforeAmt").attr("value") shouldBe "1"
+                }
+            }
         }
     }
 
@@ -178,14 +197,14 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "amount is set as '1'" should {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "Yes"), ("pensionsTakenBeforeAmt", "1"))
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "1"))
                 "return 303" in {status(DataItem.result) shouldBe 303}
                 "redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween}") }
             }
 
             "no amount is set" should {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "Yes"), ("pensionsTakenBeforeAmt", ""))
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", ""))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
                     DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorQuestion"))
@@ -194,7 +213,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "amount is set as '5.001'" should {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "Yes"), ("pensionsTakenBeforeAmt", "5.001"))
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "5.001"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
                     DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
@@ -203,7 +222,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "amount is set as '-25'" should {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "Yes"), ("pensionsTakenBeforeAmt", "-25"))
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "-25"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
                     DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorNegative"))
@@ -213,7 +232,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "Submitting 'no' in pensionsTakenBeforeForm" should {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "No"))
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
             // TODO: redirect location not yet implemented in controller
             //"redirect to somewhere" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.someAction}") }
@@ -224,7 +243,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", ""))
             "return 400" in { status(DataItem.result) shouldBe 400 }
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.mandatoryErr"))
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("This field is required")
             }
         }
     }
@@ -249,7 +268,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         }
 
         "supplied with a stored test model" should {
-            val testModel = new PensionsTakenBetweenModel("yes", Some(BigDecimal("1")))
+            val testModel = new PensionsTakenBetweenModel("yes", Some(1))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.pensionsTakenBetween)
 
             "return 200" in {
@@ -261,6 +280,25 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 keystoreFetchCondition[PensionsTakenBetweenModel](None)
                 DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.pageHeading")
             }
+
+            "return some HTML that" should {
+
+                "contain some text and use the character set utf-8" in {
+                    keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
+                    contentType(DataItem.result) shouldBe Some("text/html")
+                    charset(DataItem.result) shouldBe Some("utf-8")
+                }
+
+                "have the radio option `yes` selected by default" in {
+                    keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("pensionsTakenBetween-yes").parent.classNames().contains("selected") shouldBe true
+                }
+
+                "have the amount £1 completed by default" in {
+                    keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("pensionsTakenBetweenAmt").attr("value") shouldBe "1"
+                }
+            }
         }
     }
 
@@ -268,16 +306,16 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "Submitting 'yes' in pensionsTakenBetweenForm" when {
 
-            // "amount is set as '1'" should {
+            "amount is set as '1'" should {
 
-            //     object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "Yes"), ("pensionsTakenBetweenAmt", "1"))
-            //     "return 303" in {status(DataItem.result) shouldBe 303}
-            //     "redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}") }
-            // }
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "1"))
+                "return 303" in {status(DataItem.result) shouldBe 303}
+                //"redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}") }
+            }
 
             "no amount is set" should {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "Yes"), ("pensionsTakenBetweenAmt", ""))
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", ""))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
                     DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorQuestion"))
@@ -286,7 +324,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "amount is set as '5.001'" should {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "Yes"), ("pensionsTakenBetweenAmt", "5.001"))
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "5.001"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
                     DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorDecimalPlaces"))
@@ -295,7 +333,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "amount is set as '-25'" should {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "Yes"), ("pensionsTakenBetweenAmt", "-25"))
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "-25"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
                     DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorNegative"))
@@ -305,7 +343,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "Submitting 'no' in pensionsTakenBetweenForm" should {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "No"))
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
             // TODO: redirect location not yet implemented in controller
             //"redirect to somewhere" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.someAction}") }
@@ -316,7 +354,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", ""))
             "return 400" in { status(DataItem.result) shouldBe 400 }
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.mandatoryErr"))
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("This field is required")
             }
         }
     }
@@ -344,7 +382,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         }
 
         "supplied with a stored test model (yes, £100000)" should {
-            val testModel = new OverseasPensionsModel("Yes", Some(100000))
+            val testModel = new OverseasPensionsModel("yes", Some(100000))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.overseasPensions)
 
             "return 200" in {
@@ -383,14 +421,14 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "Submitting 'no' in overseasPensionsForm" should {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "No"), ("overseasPensionsAmt", "") )
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "no"), ("overseasPensionsAmt", "") )
             "return 303" in { status(DataItem.result) shouldBe 303 }
             "temporarily redirect to introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
         }
 
         "Submitting 'yes', '£100,000' in overseasPensionForm" should {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "Yes"), ("overseasPensionsAmt", "100000") )
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "100000") )
             "return 303" in { status(DataItem.result) shouldBe 303 }
             "temporarily redirect to introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
         }
@@ -401,6 +439,36 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "return 400" in { status(DataItem.result) shouldBe 400 }
             "fail with the correct error message" in {
                 DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("This field is required")
+            }
+        }
+
+        "Submitting 'yes' in overseasPensionsForm" when {
+
+            "no amount is set" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", ""))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorQuestion"))
+                }
+            }
+
+            "amount is set as '5.001'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "5.001"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorDecimalPlaces"))
+                }
+            }
+
+            "amount is set as '-25'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "-25"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorNegative"))
+                }
             }
         }
     }
