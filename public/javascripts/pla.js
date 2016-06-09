@@ -6,7 +6,7 @@ $(document).ready($(function() {
         var $hidden = $('#hidden')
         var $input = $self.find('input');
 
-        if ($input.val() === 'Yes' && $input.prop('checked')) {
+        if ($input.val() === 'yes' && $input.prop('checked')) {
             $hidden.show();
         } else {
             $hidden.hide();
@@ -16,9 +16,9 @@ $(document).ready($(function() {
 
             var $this = $(this);
 
-            if ($this.val() === 'Yes') {
+            if ($this.val() === 'yes') {
                 $hidden.show();
-            } else if($this.val() === 'No') {
+            } else if($this.val() === 'no') {
                 $hidden.hide();
             }
         });
