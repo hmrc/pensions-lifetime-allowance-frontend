@@ -143,7 +143,7 @@ pla.pensionsTakenBefore.questionTwo         = How much lifetime allowance did yo
 pla.pensionsTakenBefore.helpText            = Ask your pension provider to give you this amount
 pla.pensionsTakenBefore.errorQuestion       = Enter a value for the amount of your pension you have taken
 pla.pensionsTakenBefore.errorNegative       = Enter a positive number for the amount of your pension you have taken
-pla.overseasPensions.errorMaximum           = The amount of your pension you have taken must be less than £99,999,999,999,999.98
+pla.pensionsTakenBefore.errorMaximum        = The amount of your pension you have taken must be less than £99,999,999,999,999.98
 pla.pensionsTakenBefore.errorDecimalPlaces  = The value you have entered has too many decimal places
 
 ## Pensions Taken Between ##
@@ -154,7 +154,7 @@ pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance did yo
 pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
 pla.pensionsTakenBetween.errorQuestion      = Enter a value for the amount of your pension you have taken
 pla.pensionsTakenBetween.errorNegative      = Enter a positive number for the amount of your pension you have taken
-pla.overseasPensions.errorMaximum           = The amount of your pension you have taken must be less than £99,999,999,999,999.98
+pla.pensionsTakenBefore.errorMaximum        = The amount of your pension you have taken must be less than £99,999,999,999,999.98
 pla.pensionsTakenBetween.errorDecimalPlaces = The value you have entered has too many decimal places
 
 ## Overseas Pensions ##
