@@ -32,11 +32,9 @@
     @if(!elements.args.contains('_hideErrors)) {
         @elements.errors.map { error =>
             <span class="error-notification"
-                @if(elements.args.contains('_error_id)) {
-                    id="@elements.args.get('_error_id)"
-                }
+                id=@{field.id + "-error-message"}
                 role="tooltip">
-                @Messages(error)
+                @error
             </span>
         }
     }
