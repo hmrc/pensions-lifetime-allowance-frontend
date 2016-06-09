@@ -17,41 +17,38 @@
 package forms
 
 import models._
+import common.Validation._
+import utils.Constants
 import play.api.data.Forms._
 import play.api.data._
-import common.Validation._
 import play.api.i18n.Messages
 
 object OverseasPensionsForm {
 
-
-  def validateForm(form: Form[OverseasPensionsModel]) = {
-    if(!validate(form)) form.withError("overseasPensionsAmt", Messages("pla.overseasPensions.errorQuestion"))
-    else if(!validateMinimum(form)) form.withError("overseasPensionsAmt", Messages("pla.overseasPensions.errorNegative"))
-    else if(!validateTwoDec(form)) form.withError("overseasPensionsAmt", Messages("pla.overseasPensions.errorDecimalPlaces"))
-    else form
-  }
-
-  private def validate(data: Form[OverseasPensionsModel]) = {
-    data("overseasPensions").value.get match {
-      case "yes" => data("overseasPensionsAmt").value.isDefined
-      case "no" => true
+  def validateForm(form: Form[OverseasPensionsModel]): Form[OverseasPensionsModel] = {
+    if(!validationNeeded(form)) form else {
+      if(!validateFieldCompleted(form)) form.withError("overseasPensionsAmt", Messages("pla.overseasPensions.errorQuestion"))
+      else if(!validateMinimum(form)) form.withError("overseasPensionsAmt", Messages("pla.overseasPensions.errorNegative"))
+      else if(!validateMaximum(form)) form.withError("overseasPensionsAmt", Messages("pla.overseasPensions.errorMaximum"))
+      else if(!validateTwoDec(form)) form.withError("overseasPensionsAmt", Messages("pla.overseasPensions.errorDecimalPlaces"))
+      else form
     }
   }
 
-  private def validateMinimum(data: Form[OverseasPensionsModel]) = {
+  private def validationNeeded(data: Form[OverseasPensionsModel]): Boolean = {
     data("overseasPensions").value.get match {
-      case "yes" => isPositive(data("overseasPensionsAmt").value.getOrElse("0").toDouble)
-      case "no" => true
+      case "yes" => true
+      case "no" => false
     }
   }
 
-  private def validateTwoDec(data: Form[OverseasPensionsModel]) = {
-    data("overseasPensions").value.get match {
-      case "yes" => isMaxTwoDecimalPlaces(data("overseasPensionsAmt").value.getOrElse("0").toDouble)
-      case "no" => true
-    }
-  }
+  private def validateFieldCompleted(data: Form[OverseasPensionsModel]) = data("overseasPensionsAmt").value.isDefined
+
+  private def validateMinimum(data: Form[OverseasPensionsModel]) = isPositive(data("overseasPensionsAmt").value.getOrElse("0").toDouble)
+
+  private def validateMaximum(data: Form[OverseasPensionsModel]) = isLessThanDouble(data("overseasPensionsAmt").value.getOrElse("0").toDouble, Constants.npsMaxCurrency)
+
+  private def validateTwoDec(data: Form[OverseasPensionsModel]) = isMaxTwoDecimalPlaces(data("overseasPensionsAmt").value.getOrElse("0").toDouble)
 
   val overseasPensionsForm = Form (
     mapping(

@@ -21,4 +21,5 @@ object Constants {
     val successCodes = List(22,23,24)
     val rejectCodes = List(17,18,19,20,21)
     val strippedNInoLength = 8
+    val npsMaxCurrency: Double = 99999999999999.99
 }
