@@ -1,8 +1,4 @@
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-
 @(form: Form[_], fieldName: String, questionText:String, content:Html, helpText:Option[String] = None)(implicit lang: play.api.i18n.Lang)
-
-@hiddenClasses = @{if(form.errors.filter(_.key == "").length > 0) "form-field--error" else "" }
 
 <div class="form-group" data-hidden='hidden'>
 
@@ -20,9 +16,6 @@
         )
 
     <div class="panel-indent" id='hidden'>
-        <div class="@hiddenClasses">
-            @form.errors.filter(_.key == "").map { error => <span class="error-notification">@Messages(error.message)</span>}
             @content
-        </div>
     </div>
 </div>

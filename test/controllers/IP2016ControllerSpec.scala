@@ -228,6 +228,15 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                     DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorNegative"))
                 }
             }
+
+            "amount is set as '99999999999999.99'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "99999999999999.99"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorMaximum"))
+                }
+            }
         }
 
         "Submitting 'no' in pensionsTakenBeforeForm" should {
@@ -337,6 +346,15 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
                     DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorNegative"))
+                }
+            }
+
+            "amount is set as '99999999999999.99'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "99999999999999.99"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorMaximum"))
                 }
             }
         }
@@ -468,6 +486,15 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
                     DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorNegative"))
+                }
+            }
+
+            "amount is set as '99999999999999.99'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "99999999999999.99"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorMaximum"))
                 }
             }
         }

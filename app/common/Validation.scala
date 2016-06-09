@@ -32,4 +32,8 @@ object Validation {
       case _ => true
     }
   }
+
+  def isLessThanDouble(amount: Double, target: Double): Boolean = {
+    amount < target
+  }
 }

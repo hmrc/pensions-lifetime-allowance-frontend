@@ -17,41 +17,38 @@
 package forms
 
 import models._
+import common.Validation._
+import utils.Constants
 import play.api.data.Forms._
 import play.api.data._
-import common.Validation._
 import play.api.i18n.Messages
 
 object PensionsTakenBeforeForm {
 
-
-  def validateForm(form: Form[PensionsTakenBeforeModel]) = {
-    if(!validate(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorQuestion"))
-    else if(!validateMinimum(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorNegative"))
-    else if(!validateTwoDec(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
-    else form
-  }
-
-  private def validate(data: Form[PensionsTakenBeforeModel]) = {
-    data("pensionsTakenBefore").value.get match {
-      case "yes" => data("pensionsTakenBeforeAmt").value.isDefined
-      case "no" => true
+  def validateForm(form: Form[PensionsTakenBeforeModel]): Form[PensionsTakenBeforeModel] = {
+    if(!validationNeeded(form)) form else {
+      if(!validateFieldCompleted(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorQuestion"))
+      else if(!validateMinimum(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorNegative"))
+      else if(!validateMaximum(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorMaximum"))
+      else if(!validateTwoDec(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
+      else form
     }
   }
 
-  private def validateMinimum(data: Form[PensionsTakenBeforeModel]) = {
+  private def validationNeeded(data: Form[PensionsTakenBeforeModel]): Boolean = {
     data("pensionsTakenBefore").value.get match {
-      case "yes" => isPositive(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
-      case "no" => true
+      case "yes" => true
+      case "no" => false
     }
   }
 
-  private def validateTwoDec(data: Form[PensionsTakenBeforeModel]) = {
-    data("pensionsTakenBefore").value.get match {
-      case "yes" => isMaxTwoDecimalPlaces(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
-      case "no" => true
-    }
-  }
+  private def validateFieldCompleted(data: Form[PensionsTakenBeforeModel]) = data("pensionsTakenBeforeAmt").value.isDefined
+
+  private def validateMinimum(data: Form[PensionsTakenBeforeModel]) = isPositive(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
+
+  private def validateMaximum(data: Form[PensionsTakenBeforeModel]) = isLessThanDouble(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble, Constants.npsMaxCurrency)
+
+  private def validateTwoDec(data: Form[PensionsTakenBeforeModel]) = isMaxTwoDecimalPlaces(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
 
   val pensionsTakenBeforeForm = Form (
     mapping(
