@@ -96,14 +96,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                         Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(validatedForm)))
                     } else {
                         keyStoreConnector.saveFormData("pensionsTakenBefore", success)
-                        success.pensionsTakenBefore match {
-                            case "yes" =>
-                                success.pensionsTakenBeforeAmt match {
-                                    case Some(data) if data.equals(BigDecimal(0)) => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
-                                    case _ => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
-                                }
-                            case "no" => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
-                        }
+                        Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
                     }
                 }
             )
