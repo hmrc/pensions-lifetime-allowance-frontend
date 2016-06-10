@@ -32,6 +32,7 @@ import forms.PensionsTakenForm.pensionsTakenForm
 import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.OverseasPensionsForm.overseasPensionsForm
+import forms.NumberOfPSOsForm.numberOfPSOsForm
 import models._
 import common.Validation._
 
@@ -174,6 +175,38 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                             case "no" => Future.successful(Redirect(routes.IntroductionController.introduction()))
                         }
                     }
+                }
+            )
+        }
+        for {
+            finalResult <- routeRequest
+        } yield finalResult
+    }
+
+
+    //NUMBER OF PENSION SHARING ORDERS
+    val numbeOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
+
+        def routeRequest(): Future[Result] = {
+            keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
+                case Some(data) => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm.fill(data)))
+                case _ => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm))
+            }
+        }
+        for {
+            finalResult <- routeRequest
+        } yield finalResult
+    }
+
+    val submitNumberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
+
+        def routeRequest(): Future[Result] = {
+            numberOfPSOsForm.bindFromRequest.fold(
+                errors => Future.successful(BadRequest(pages.ip2016.numberOfPSOs(errors))),
+                success => {
+                    keyStoreConnector.saveFormData("numberOfPSOs", success)
+                    // Future.successful(Redirect(routes.IP2016Controller.pensionSharingDetails()))
+                    Future.successful(Ok(pages.introduction()))
                 }
             )
         }
