@@ -543,11 +543,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                     charset(DataItem.result) shouldBe Some("utf-8")
                 }
 
-                // "have the radio option `yes` selected by default" in {
-                //     keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
-                //     DataItem.jsoupDoc.body.getElementById("currentPensionsAmt").parent.classNames().contains("selected") shouldBe true
-                // }
-
                 "have the value 100000 completed in the amount input by default" in {
                     keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
                     DataItem.jsoupDoc.body.getElementById("currentPensionsAmt").attr("value") shouldBe "100000"
