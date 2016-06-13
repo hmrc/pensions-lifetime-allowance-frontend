@@ -24,6 +24,26 @@ import play.api.data._
 import play.api.i18n.Messages
 
 object PSODetailsForm {
+
+  def validateForm(form: Form[PSODetailsModel]): Form[PSODetailsModel] = {
+    val dateValidationResult = validateDateFormat(form)
+    dateValidationResult match {
+      case "year"  => form.withError("psoYear", Messages("pla.base.errors.invalidYear"))
+      case "month" => form.withError("psoMonth", Messages("pla.base.errors.invalidMonth"))
+      case "day"   => form.withError("psoDay", Messages("pla.base.errors.invalidDay"))
+      case "valid" => form
+    }
+  }
+
+  private def validateDateFormat(form: Form[PSODetailsModel]): String = {
+    if(invalidYear(form("psoYear").value.get.toInt)) "year"
+    else if(invalidMonth(form("psoMonth").value.get.toInt)) "month"
+    else if(isValidDate(form("psoDay").value.get.toInt, form("psoMonth").value.get.toInt, form("psoYear").value.get.toInt)) "valid" else "day"
+  }
+
+  private def invalidYear(yr: Int): Boolean = yr < 1900 || yr > 2100
+  private def invalidMonth(mnth: Int): Boolean = mnth < 1 || mnth > 12
+
   val psoDetailsForm = Form(
     mapping(
         "psoNumber" -> number,

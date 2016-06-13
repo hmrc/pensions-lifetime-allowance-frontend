@@ -18,9 +18,7 @@ package models
 
 import play.api.libs.json._
 
-case class PSODetailsModel(psoNumber: Int, psoDay: Int, psoMonth: Int, psoYear: Int, psoAmt: BigDecimal) {
-    val date = common.Dates.constructDate(psoDay, psoMonth, psoYear)
-}
+case class PSODetailsModel(psoNumber: Int, psoDay: Int, psoMonth: Int, psoYear: Int, psoAmt: BigDecimal)
 
 object PSODetailsModel {
   implicit val format = Json.format[PSODetailsModel]

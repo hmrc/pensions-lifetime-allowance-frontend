@@ -295,8 +295,14 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             psoDetailsForm.bindFromRequest.fold(
                 errors => Future.successful(BadRequest(pages.ip2016.psoDetails(errors, errors("psoNumber").value.get.toInt))),
                 success => {
-                    keyStoreConnector.saveFormData(s"psoDetails${success.psoNumber}", success)
-                    Future.successful(Redirect(routes.IP2016Controller.psoDetails(success.psoNumber.+(1).toString)))
+
+                    val validatedForm = PSODetailsForm.validateForm(psoDetailsForm.fill(success))
+                    if(validatedForm.hasErrors) {
+                        Future.successful(BadRequest(pages.ip2016.psoDetails(validatedForm, success.psoNumber)))
+                    } else {
+                        keyStoreConnector.saveFormData(s"psoDetails${success.psoNumber}", success)
+                        Future.successful(Redirect(routes.IP2016Controller.psoDetails(success.psoNumber.+(1).toString)))
+                    }
                 }
             )
         }
