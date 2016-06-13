@@ -557,7 +557,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitCurrentPensions, ("currentPensionsAmt", "100000") )
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "temporarily redirect to Introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+            "redirect to Pension Debits page" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionDebits()}") }
         }
 
         "no amount is set" should {
