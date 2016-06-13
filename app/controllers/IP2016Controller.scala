@@ -229,7 +229,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             success => {
                 keyStoreConnector.saveFormData("pensionDebits", success)
                 success.pensionDebits.get match {
-                    case "yes"  => Redirect(routes.IP2016Controller.pensionsTaken())
+                    case "yes"  => Redirect(routes.IP2016Controller.numberOfPSOs())
                     case "no"   => Redirect(routes.IP2016Controller.pensionsTaken())
                 }
             }
