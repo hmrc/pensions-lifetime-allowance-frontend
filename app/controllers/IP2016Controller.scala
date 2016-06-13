@@ -34,6 +34,7 @@ import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.OverseasPensionsForm.overseasPensionsForm
 import forms.CurrentPensionsForm.currentPensionsForm
 import forms.NumberOfPSOsForm.numberOfPSOsForm
+import forms.PensionDebitsForm.pensionDebitsForm
 import models._
 import common.Validation._
 
@@ -203,13 +204,35 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                 errors => Future.successful(BadRequest(pages.ip2016.currentPensions(errors))),
                 success => {
                     keyStoreConnector.saveFormData("currentPensions", success)
-                    Future.successful(Redirect(routes.IntroductionController.introduction()))
+                    Future.successful(Redirect(routes.IP2016Controller.pensionDebits()))
                 }
             )
         }
         for {
             finalResult <- routeRequest
         } yield finalResult
+    }
+
+
+    //PENSION DEBITS
+    val pensionDebits = AuthorisedByAny.async { implicit user => implicit request =>
+        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").map {
+            case Some(data) => Ok(pages.ip2016.pensionDebits(pensionDebitsForm.fill(data)))
+            case None => Ok(pages.ip2016.pensionDebits(pensionDebitsForm))
+        }
+    }
+
+    val submitPensionDebits = AuthorisedByAny { implicit user => implicit request =>
+        pensionDebitsForm.bindFromRequest.fold(
+            errors => BadRequest(pages.ip2016.pensionDebits(errors)),
+            success => {
+                keyStoreConnector.saveFormData("pensionDebits", success)
+                success.pensionDebits.get match {
+                    case "yes"  => Redirect(routes.IP2016Controller.pensionsTaken())
+                    case "no"   => Redirect(routes.IP2016Controller.pensionsTaken())
+                }
+            }
+        )
     }
 
 
