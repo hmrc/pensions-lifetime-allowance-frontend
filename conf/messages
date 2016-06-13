@@ -173,6 +173,24 @@ pla.overseasPensions.errorMaximum           = The amount of overseas pensions yo
 pla.overseasPensions.errorDecimalPlaces     = The value you have entered has too many decimal places
 pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
 
+## CURRENT PENSIONS ##
+pla.currentPensions.pageHeading             = Current pensions
+pla.currentPensions.title                   = Current Pensions
+pla.currentPensions.question                = Enter the value of your current UK pensions on 5 April 2016
+pla.currentPensions.helpText                = This is pensions which you''ve not yet taken
+pla.currentPensions.errorQuestion           = Enter a value for the amount of current pensions you''ve not yet taken
+pla.currentPensions.errorNegative           = Enter a positive number for the amount of current pensions you''ve not yet taken
+pla.currentPensions.errorMaximum            = The amount of current pensions you''ve not yet taken must be less than £99,999,999,999,999.98
+pla.currentPensions.errorDecimalPlaces      = The value you have entered has too many decimal places
+pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
+
+## PENSION DEBITS ##
+pla.pensionDebits.pageHeading               = Pension sharing orders
+pla.pensionDebits.title                     = Pension Sharing Orders
+pla.pensionDebits.question                  = Has your pension been subject to a pension sharing order?
+pla.pensionDebits.helpText                  = This is where a court orders that part of your pension is shared with an ex-partner.
+pla.pensionDebits.mandatoryErr              = Please tell us if you have any pension sharing orders
+
 ## Number of Pension Sharing Orders ##
 pla.numberOfPSOs.title                      = Number of pension saving orders
 pla.numberOfPSOs.pageHeading                = Pension sharing orders
@@ -192,6 +210,7 @@ pla.psoDetails.psoAmountQuestion            = Amount
 pla.psoDetails.errorNegative                = Enter a positive number for the amount of your pension sharing order
 pla.psoDetails.errorMaximum                 = The amount of your pension sharing order must be less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The pension sharing order value you have entered has too many decimal places
+
 
 
 ### RESULTS MESSAGES ###
