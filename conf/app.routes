@@ -41,8 +41,11 @@ POST        /pensions-taken-between                             controllers.IP20
 GET         /apply-for-ip16-overseas-pensions                   controllers.IP2016Controller.overseasPensions
 POST        /apply-for-ip16-overseas-pensions                   controllers.IP2016Controller.submitOverseasPensions
 
-GET         /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP2016Controller.numbeOfPSOs
+GET         /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP2016Controller.numberOfPSOs
 POST        /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP2016Controller.submitNumberOfPSOs
+
+POST        /apply-for-ip16-pension-sharing-order-details           controllers.IP2016Controller.submitPSODetails
+GET         /apply-for-ip16-pension-sharing-order-details/:psoNum   controllers.IP2016Controller.psoDetails(psoNum)
 
 
 ## Confirmation ##

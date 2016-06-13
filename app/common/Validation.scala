@@ -16,6 +16,7 @@
 
 package common
 
+import java.text.SimpleDateFormat
 
 object Validation {
 
@@ -35,5 +36,16 @@ object Validation {
 
   def isLessThanDouble(amount: Double, target: Double): Boolean = {
     amount < target
+  }
+
+  def isValidDate(day:Int, month:Int, year:Int): Boolean = {
+    try {
+      val fmt = new SimpleDateFormat("dd/MM/yyyy")
+      fmt.setLenient(false)
+      fmt.parse(s"${day}/${month}/${year}")
+      true
+    } catch {
+      case e: Exception => false
+    }
   }
 }
