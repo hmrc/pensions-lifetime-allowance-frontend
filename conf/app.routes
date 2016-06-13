@@ -44,6 +44,9 @@ POST        /apply-for-ip16-overseas-pensions                   controllers.IP20
 GET         /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP2016Controller.numbeOfPSOs
 POST        /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP2016Controller.submitNumberOfPSOs
 
+GET         /apply-for-ip16-current-pensions    controllers.IP2016Controller.currentPensions
+POST        /apply-for-ip16-current-pensions    controllers.IP2016Controller.submitCurrentPensions
+
 
 ## Confirmation ##
 GET         /confirm-fp                                         controllers.ConfirmationController.confirmFP

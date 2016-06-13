@@ -32,6 +32,7 @@ import forms.PensionsTakenForm.pensionsTakenForm
 import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.OverseasPensionsForm.overseasPensionsForm
+import forms.CurrentPensionsForm.currentPensionsForm
 import forms.NumberOfPSOsForm.numberOfPSOsForm
 import models._
 import common.Validation._
@@ -170,11 +171,39 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                         Future.successful(BadRequest(pages.ip2016.overseasPensions(validatedForm)))
                     } else {
                         keyStoreConnector.saveFormData("overseasPensions", success)
-                        success.overseasPensions match {
-                            case "yes" => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                            case "no" => Future.successful(Redirect(routes.IntroductionController.introduction()))
-                        }
+                        Future.successful(Redirect(routes.IP2016Controller.currentPensions()))
                     }
+                }
+            )
+        }
+        for {
+            finalResult <- routeRequest
+        } yield finalResult
+    }
+
+
+    //CURRENT PENSIONS
+    val currentPensions = AuthorisedByAny.async { implicit user => implicit request =>
+
+        def routeRequest(): Future[Result] = {
+            keyStoreConnector.fetchAndGetFormData[CurrentPensionsModel]("currentPensions").map {
+                case Some(data) => Ok(pages.ip2016.currentPensions(currentPensionsForm.fill(data)))
+                case _ => Ok(pages.ip2016.currentPensions(currentPensionsForm))
+            }
+        }
+        for {
+            finalResult <- routeRequest
+        } yield finalResult
+    }
+
+    val submitCurrentPensions = AuthorisedByAny.async { implicit user => implicit request =>
+
+        def routeRequest(): Future[Result] = {
+            currentPensionsForm.bindFromRequest.fold(
+                errors => Future.successful(BadRequest(pages.ip2016.currentPensions(errors))),
+                success => {
+                    keyStoreConnector.saveFormData("currentPensions", success)
+                    Future.successful(Redirect(routes.IntroductionController.introduction()))
                 }
             )
         }
