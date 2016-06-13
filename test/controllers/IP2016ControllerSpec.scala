@@ -522,7 +522,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         }
 
         "supplied with a stored test model (£100000)" should {
-            val testModel = new CurrentPensionsModel(Some(10000000))
+            val testModel = new CurrentPensionsModel(Some(100000))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.currentPensions)
 
             "return 200" in {
@@ -535,7 +535,24 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.pageHeading")
             }
 
+            "return some HTML that" should {
 
+                "contain some text and use the character set utf-8" in {
+                    keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
+                    contentType(DataItem.result) shouldBe Some("text/html")
+                    charset(DataItem.result) shouldBe Some("utf-8")
+                }
+
+                // "have the radio option `yes` selected by default" in {
+                //     keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
+                //     DataItem.jsoupDoc.body.getElementById("currentPensionsAmt").parent.classNames().contains("selected") shouldBe true
+                // }
+
+                "have the value 100000 completed in the amount input by default" in {
+                    keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("currentPensionsAmt").attr("value") shouldBe "100000"
+                }
+            }
         }
     }
 
