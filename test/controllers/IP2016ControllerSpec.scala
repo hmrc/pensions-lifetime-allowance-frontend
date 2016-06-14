@@ -649,13 +649,13 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         }
     }
 
-    "Submitting Pensions Taken data" when {
+    "Submitting Pensions Debits data" when {
 
         "Submitting 'yes' in pensionDebitsForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionDebits, ("pensionDebits", "yes"))
             "return 303" in {status(DataItem.result) shouldBe 303}
-            "temporarily redirect to pensions taken" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken}") }
+            "redirect to number of pension sharing orders" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs}") }
         }
 
         "Submitting 'no' in pensionDebitsForm" should {
