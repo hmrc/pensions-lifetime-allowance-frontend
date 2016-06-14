@@ -5,17 +5,13 @@
 
 @(overseasPensionsForm: Form[OverseasPensionsModel])(implicit request: Request[_])
 
-@helpText = {
-    @Messages("pla.overseasPensions.helpText")
-}
-
 @hiddenYesNoContent = {
 
     @formInputMoney(
         overseasPensionsForm,
         "overseasPensionsAmt",
         Messages("pla.overseasPensions.questionTwo"),
-        Some(helpText.toString())
+        None
     )
 }
 
@@ -40,7 +36,7 @@
             @formHiddenYesNoRadio(
                 overseasPensionsForm,
                 "overseasPensions",
-                "",
+                Messages("pla.overseasPensions.helpText"),
                 hiddenYesNoContent
             )
 

@@ -160,9 +160,9 @@ pla.pensionsTakenBetween.errorDecimalPlaces = The value you have entered has too
 ## Overseas Pensions ##
 pla.overseasPensions.pageHeading            = Overseas Pensions
 pla.overseasPensions.title                  = Overseas Pensions
-pla.overseasPensions.question               = Do you have any overseas pensions which gained UK tax relief?
-pla.overseasPensions.questionTwo            = Overseas pensions which you''ve not yet taken
-pla.overseasPensions.helpText               = Enter the value on 5 April 2016
+pla.overseasPensions.question               = Do you have any overseas pensions which you've not yet taken?
+pla.overseasPensions.helpText               = Only include overseas pensions which gained UK tax relief
+pla.overseasPensions.questionTwo            = Enter the value on 5 April 2016
 pla.overseasPensions.errorQuestion          = Enter a value for the amount of overseas pensions you''ve not yet taken
 pla.overseasPensions.errorNegative          = Enter a positive number for the amount of overseas pensions you''ve not yet taken
 pla.overseasPensions.errorMaximum           = The amount of overseas pensions you''ve not yet taken must be less than £99,999,999,999,999.98
