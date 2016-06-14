@@ -29,15 +29,13 @@
 
     @govHelpers.form(action = routes.IP2016Controller.submitOverseasPensions) {
 
-        <legend>
-            <p>@Messages("pla.overseasPensions.question")</p>
-        </legend>
         <div class="inline form-group">
             @formHiddenYesNoRadio(
                 overseasPensionsForm,
                 "overseasPensions",
-                Messages("pla.overseasPensions.helpText"),
-                hiddenYesNoContent
+                Messages("pla.overseasPensions.question"),
+                hiddenYesNoContent,
+                Some(Messages("pla.overseasPensions.helpText"))
             )
 
         </div>
