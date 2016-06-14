@@ -156,7 +156,7 @@ pla.pensionsTakenBefore.errorDecimalPlaces  = The value you have entered has too
 ## Pensions Taken Between ##
 pla.pensionsTakenBetween.pageHeading        = Pensions taken between 6 April 2006 and 5 April 2016
 pla.pensionsTakenBetween.title              = Pensions Taken Between 6 April 2006 and 5 April 2016
-pla.pensionsTakenBetween.question           = Did you take any pensions between 6 April 2006 and5 April 2016?
+pla.pensionsTakenBetween.question           = Did you take any pensions between 6 April 2006 and 5 April 2016?
 pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance did you use?
 pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
 pla.pensionsTakenBetween.errorQuestion      = Enter a value for the amount of your pension you have taken
