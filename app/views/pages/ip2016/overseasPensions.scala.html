@@ -5,17 +5,13 @@
 
 @(overseasPensionsForm: Form[OverseasPensionsModel])(implicit request: Request[_])
 
-@helpText = {
-    @Messages("pla.overseasPensions.helpText")
-}
-
 @hiddenYesNoContent = {
 
     @formInputMoney(
         overseasPensionsForm,
         "overseasPensionsAmt",
         Messages("pla.overseasPensions.questionTwo"),
-        Some(helpText.toString())
+        None
     )
 }
 
@@ -33,15 +29,13 @@
 
     @govHelpers.form(action = routes.IP2016Controller.submitOverseasPensions) {
 
-        <legend>
-            <p>@Messages("pla.overseasPensions.question")</p>
-        </legend>
         <div class="inline form-group">
             @formHiddenYesNoRadio(
                 overseasPensionsForm,
                 "overseasPensions",
-                "",
-                hiddenYesNoContent
+                Messages("pla.overseasPensions.question"),
+                hiddenYesNoContent,
+                Some(Messages("pla.overseasPensions.helpText"))
             )
 
         </div>

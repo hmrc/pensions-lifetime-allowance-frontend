@@ -149,7 +149,7 @@ pla.pensionsTakenBefore.errorDecimalPlaces  = The value you have entered has too
 ## Pensions Taken Between ##
 pla.pensionsTakenBetween.pageHeading        = Pensions taken between 6 April 2006 and 5 April 2016
 pla.pensionsTakenBetween.title              = Pensions Taken Between 6 April 2006 and 5 April 2016
-pla.pensionsTakenBetween.question           = Did you take any pensions between 6 April 2006 and5 April 2016?
+pla.pensionsTakenBetween.question           = Did you take any pensions between 6 April 2006 and 5 April 2016?
 pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance did you use?
 pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
 pla.pensionsTakenBetween.errorQuestion      = Enter a value for the amount of your pension you have taken
@@ -160,9 +160,9 @@ pla.pensionsTakenBetween.errorDecimalPlaces = The value you have entered has too
 ## Overseas Pensions ##
 pla.overseasPensions.pageHeading            = Overseas Pensions
 pla.overseasPensions.title                  = Overseas Pensions
-pla.overseasPensions.question               = Do you have any overseas pensions which gained UK tax relief?
-pla.overseasPensions.questionTwo            = Overseas pensions which you''ve not yet taken
-pla.overseasPensions.helpText               = Enter the value on 5 April 2016
+pla.overseasPensions.question               = Do you have any overseas pensions which you''ve not yet taken?
+pla.overseasPensions.helpText               = Only include overseas pensions which gained UK tax relief
+pla.overseasPensions.questionTwo            = Enter the value on 5 April 2016
 pla.overseasPensions.errorQuestion          = Enter a value for the amount of overseas pensions you''ve not yet taken
 pla.overseasPensions.errorNegative          = Enter a positive number for the amount of overseas pensions you''ve not yet taken
 pla.overseasPensions.errorMaximum           = The amount of overseas pensions you''ve not yet taken must be less than £99,999,999,999,999.98
