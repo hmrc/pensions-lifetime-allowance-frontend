@@ -15,7 +15,7 @@
     </legend>
 
     @if(formItem.hasErrors) {
-        @formItem.errors.filter(_.key != "psoAmt").map { error => <span class="error-notification">@error.message</span>}
+        @formItem.errors.filter(_.key != "psoAmt").map { error => <span class="error-notification" id='@{s"${error.key}-error-message"}'>@error.message</span>}
     }
 
     @if(hintText.isDefined) {<span class="form-hint">@hintText</span>}
