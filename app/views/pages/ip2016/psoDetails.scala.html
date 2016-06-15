@@ -1,0 +1,37 @@
+@import models.PSODetailsModel
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import helpers.templates.{plaInputRadioGroup, formInputMoney, formInlineDateInput}
+@import play.api.data._
+
+@(psoDetailsForm: Form[PSODetailsModel], psoNum: Int)(implicit request: Request[_])
+
+
+@views.html.main_template(title = Messages("pla.psoDetails.title")+s" $psoNum", bodyClasses = None) {
+
+    @govHelpers.errorSummary(
+        Messages("pla.base.errorSummaryLabel"), psoDetailsForm
+    )
+
+    <h1 class="heading-xlarge">@Messages(s"pla.psoDetails.pageHeading$psoNum")</h1>
+
+    @govHelpers.form(action = routes.IP2016Controller.submitPSODetails) {
+
+        <div class="inline form-group">
+            <div style="display: none;">
+                <input type="number" value= @psoNum name="psoNumber" id="psoNumber">
+            </div>
+
+            @formInlineDateInput(psoDetailsForm, "pso", Messages("pla.psoDetails.dateQuestionText"), Some(Messages("pla.psoDetails.dateHintText")))
+
+            @formInputMoney(
+                psoDetailsForm,
+                "psoAmt",
+                Messages("pla.psoDetails.psoAmountQuestion")
+            )
+
+        </div>
+
+        <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
+    }
+
+}

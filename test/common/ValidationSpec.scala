@@ -40,4 +40,10 @@ class ValidationSpec extends UnitSpec {
   	"fail for -1" in { isPositive(-1) shouldBe false }
   	"fail for -0.0000001" in { isPositive(-0.0000001) shouldBe false }
   }
+
+  "Is valid date" should {
+    "pass for 29/2/2016" in { isValidDate(29, 2, 2016) shouldBe true }
+    "fail for 29/2/2015" in { isValidDate(29, 2, 2015) shouldBe false }
+    "fail for -3/2/2015" in { isValidDate(-3, 2, 2015) shouldBe false }
+  }
 }

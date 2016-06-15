@@ -9,6 +9,13 @@ pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
 pla.base.startAgain             = Start Again
 pla.base.errorSummaryLabel      = There are errors on this page.
+pla.base.errors.invalidDate     = Enter a valid date
+pla.base.errors.yearEmpty       = Enter a year
+pla.base.errors.monthEmpty      = Enter a month
+pla.base.errors.dayEmpty        = Enter a day
+pla.base.date.fields.day        = Day
+pla.base.date.fields.month      = Month
+pla.base.date.fields.year       = Year
 
 ## Link Text ##
 pla.links.lifetimeAllowance         = Lifetime Allowance
@@ -201,6 +208,20 @@ pla.numberOfPSOs.pageHeading                = Pension sharing orders
 pla.numberOfPSOs.question                   = How many pension sharing orders do you have?
 pla.numberOfPSOs.mandatoryErr               = Enter a number of Pension Saving Orders
 
+## Pension Sharing Order Details ##
+pla.psoDetails.title                        = Pension sharing order
+pla.psoDetails.pageHeading1                 = First pension sharing order
+pla.psoDetails.pageHeading2                 = Second pension sharing order
+pla.psoDetails.pageHeading3                 = Third pension sharing order
+pla.psoDetails.pageHeading4                 = Fourth pension sharing order
+pla.psoDetails.pageHeading5                 = Fifth pension sharing order
+pla.psoDetails.dateQuestionText             = Date of pension sharing order
+pla.psoDetails.dateHintText                 = For example, 14 9 2015
+pla.psoDetails.psoAmountQuestion            = Amount
+pla.psoDetails.errorNegative                = Enter a positive number for the amount of your pension sharing order
+pla.psoDetails.errorMaximum                 = The amount of your pension sharing order must be less than £99,999,999,999,999.98
+pla.psoDetails.errorDecimalPlaces           = The pension sharing order value you have entered has too many decimal places
+pla.psoDetails.errorDateOutOfRange          = Please enter a date between the year 1900 and 2100
 
 
 

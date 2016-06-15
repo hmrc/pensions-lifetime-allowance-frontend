@@ -53,6 +53,18 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         .thenReturn(Future.successful(data))
     }
 
+    def psoNumKeystoreSetup(data: Option[NumberOfPSOsModel]) = {
+        when(mockKeyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel](Matchers.eq("numberOfPSOs"))(Matchers.any(), Matchers.any()))
+          .thenReturn(Future.successful(data))
+    }
+
+    def psoDeetsKeystoreSetup(data: Option[PSODetailsModel], deetsNum: Int) = {
+        when(mockKeyStoreConnector.fetchAndGetFormData[PSODetailsModel](Matchers.eq(s"psoDetails$deetsNum"))(Matchers.any(), Matchers.any()))
+          .thenReturn(Future.successful(data))
+    }
+
+
+
     ///////////////////////////////////////////////
     // Initial Setup
     ///////////////////////////////////////////////
@@ -116,14 +128,14 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTaken, ("pensionsTaken", "yes"))
             "return 303" in {status(DataItem.result) shouldBe 303}
-            "redirect to pensions taken before" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBefore}") }
+            "redirect to pensions taken before" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBefore()}") }
         }
 
         "Submitting 'no' in pensionsTakenForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTaken, ("pensionsTaken", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect to overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}") }
+            "redirect to overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions()}") }
         }
 
         "Submitting pensionsTakenForm with no data" should {
@@ -199,7 +211,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "1"))
                 "return 303" in {status(DataItem.result) shouldBe 303}
-                "redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween}") }
+                "redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween()}") }
             }
 
             "no amount is set" should {
@@ -243,8 +255,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            // TODO: redirect location not yet implemented in controller
-            //"redirect to somewhere" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.someAction}") }
+            "redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween()}") }
         }
 
         "Submitting pensionsTakenBeforeForm with no data" should {
@@ -363,8 +374,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            // TODO: redirect location not yet implemented in controller
-            //"redirect to somewhere" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.someAction}") }
+            "redirect to overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions()}") }
         }
 
         "Submitting pensionsTakenBetweenForm with no data" should {
@@ -649,20 +659,20 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         }
     }
 
-    "Submitting Pensions Taken data" when {
+    "Submitting Pensions Debits data" when {
 
         "Submitting 'yes' in pensionDebitsForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionDebits, ("pensionDebits", "yes"))
             "return 303" in {status(DataItem.result) shouldBe 303}
-            "temporarily redirect to pensions taken" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken}") }
+            "redirect to number of pension sharing orders" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs()}") }
         }
 
         "Submitting 'no' in pensionDebitsForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionDebits, ("pensionDebits", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "temporarily redirect to pensions taken" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken}") }
+            "temporarily redirect to pensions taken" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken()}") }
         }
 
         "Submitting pensionDebitsForm with no data" should {
@@ -671,6 +681,334 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "return 400" in { status(DataItem.result) shouldBe 400 }
             "fail with the correct error message" in {
                 DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionDebits.mandatoryErr"))
+            }
+        }
+    }
+
+
+
+
+
+    ///////////////////////////////////////////////
+    // NUMBER OF PENSION SHARING ORDERS
+    ///////////////////////////////////////////////
+    "In IP2016Controller calling the .numberOfPSOs action" when {
+
+        "not supplied with a stored model" should {
+
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.numberOfPSOs)
+            "return 200" in {
+                keystoreFetchCondition[NumberOfPSOsModel](None)
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the number of PSOs page" in {
+                keystoreFetchCondition[NumberOfPSOsModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.numberOfPSOs.pageHeading")
+            }
+        }
+
+        "supplied with a pre-existing stored model" should {
+
+            val testModel = NumberOfPSOsModel(Some("3"))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.numberOfPSOs)
+            "return 200" in {
+                keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the number of PSOs page" in {
+                keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.numberOfPSOs.pageHeading")
+            }
+
+            "return some HTML that" should {
+
+                "contain some text and use the character set utf-8" in {
+                    keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
+                    contentType(DataItem.result) shouldBe Some("text/html")
+                    charset(DataItem.result) shouldBe Some("utf-8")
+                }
+
+                "have the radio option `3` selected by default" in {
+                    keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("numberOfPSOs-3").parent.classNames().contains("selected") shouldBe true
+                }
+            }
+        }
+
+    }
+
+    "Submitting number of Pension Sharing Orders data" when {
+
+        "Submitting '1' in numberOfPSOsForm" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitNumberOfPSOs, ("numberOfPSOs", "1"))
+            "return 303" in {status(DataItem.result) shouldBe 303}
+            "redirect to PSO details" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.psoDetails("1")}") }
+        }
+
+        "Submitting numberOfPSOsForm with no data" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitNumberOfPSOs, ("numberOfPSOs", ""))
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.numberOfPSOs.mandatoryErr"))
+            }
+        }
+    }
+
+
+
+    ///////////////////////////////////////////////
+    // PENSION SHARING ORDER DETAILS
+    ///////////////////////////////////////////////
+    "In IP2016Controller calling the .psoDetails action" when {
+
+        "there is no total PSOs number stored in keystore" should {
+
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("1"))
+            "return 303" in {
+                keystoreFetchCondition[NumberOfPSOsModel](None)
+                status(DataItem.result) shouldBe 303
+            }
+
+            "temporarily redirect the user to the number of PSOs page" in {
+                keystoreFetchCondition[NumberOfPSOsModel](None)
+                // TODO: update redirect to summary once implemented in frontend
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs()}")
+            }
+        }
+
+        "a PSO number higher than the total number of PSOs is passed in" should {
+
+            val testModel = new NumberOfPSOsModel(Some("2"))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("3"))
+            "return 303" in {
+                psoNumKeystoreSetup(Some(testModel))
+                status(DataItem.result) shouldBe 303
+            }
+
+            "temporarily redirect the user to the number of PSOs page" in {
+                psoNumKeystoreSetup(Some(testModel))
+                // TODO: update redirect to summary once implemented in frontend
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs()}")
+            }
+        }
+
+        "a PSO number (2) less than the total number of PSOs is passed in" should {
+
+            val testModel = new NumberOfPSOsModel(Some("3"))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("2"))
+            "return 200" in {
+                psoNumKeystoreSetup(Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the second PSO details page" in {
+                psoNumKeystoreSetup(Some(testModel))
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.pageHeading2")
+            }
+        }
+
+        "a PSO number (2) equal the total number of PSOs is passed in with a stored model" should {
+
+            val day = 13
+            val month = 5
+            val year = 2016
+            val psoAmt = 100000
+            val testModel = new NumberOfPSOsModel(Some("2"))
+            val testDetailsModel = new PSODetailsModel(2, day, month, year, psoAmt)
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("2"))
+            "return 200" in {
+                psoNumKeystoreSetup(Some(testModel))
+                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the second PSO details page" in {
+                psoNumKeystoreSetup(Some(testModel))
+                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.pageHeading2")
+            }
+
+            "have the PSO date fields completed correctly" in {
+                psoNumKeystoreSetup(Some(testModel))
+                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual "13"
+                DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual "5"
+                DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual "2016"
+            }
+
+            "have the PSO amount field completed correctly" in {
+                psoNumKeystoreSetup(Some(testModel))
+                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                DataItem.jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "100000"
+            }
+        }
+    }
+
+    "Submitting valid PSO details data" when {
+
+        "submitting a valid 4th PSO's details" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", "1"),
+                ("psoMonth", "1"),
+                ("psoYear", "2015"),
+                ("psoAmt", "100000")
+            )
+            "return 303" in {
+                status(DataItem.result) shouldBe 303
+            }
+
+            "redirect to the psoDetails controller action with a psoNum of 5" in {
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.psoDetails("5")}")
+            }
+        }
+
+        "submitting an invalid set of PSO details - missing day" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", ""),
+                ("psoMonth", "1"),
+                ("psoYear", "2015"),
+                ("psoAmt", "100000")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.dayEmpty"))
+            }
+        }
+
+        "submitting an invalid set of PSO details - missing month" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", "1"),
+                ("psoMonth", ""),
+                ("psoYear", "2015"),
+                ("psoAmt", "100000")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.monthEmpty"))
+            }
+        }
+
+        "submitting an invalid set of PSO details - missing year" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", "1"),
+                ("psoMonth", "1"),
+                ("psoYear", ""),
+                ("psoAmt", "100000")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.yearEmpty"))
+            }
+        }
+
+        "submitting an invalid set of PSO details - invalid date" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", "29"),
+                ("psoMonth", "2"),
+                ("psoYear", "2015"),
+                ("psoAmt", "100000")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.invalidDate"))
+            }
+        }
+
+        "submitting an invalid set of PSO details - date out of range" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", "1"),
+                ("psoMonth", "1"),
+                ("psoYear", "2115"),
+                ("psoAmt", "1000")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorDateOutOfRange"))
+            }
+        }
+
+        "submitting an invalid set of PSO details - missing PSO amount" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", "1"),
+                ("psoMonth", "1"),
+                ("psoYear", "2015"),
+                ("psoAmt", "")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Real number value expected")
+            }
+        }
+
+        "submitting an invalid set of PSO details - amount negative" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", "1"),
+                ("psoMonth", "1"),
+                ("psoYear", "2015"),
+                ("psoAmt", "-1")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorNegative"))
+            }
+        }
+
+        "submitting an invalid set of PSO details - amount too many decimal places" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", "1"),
+                ("psoMonth", "1"),
+                ("psoYear", "2015"),
+                ("psoAmt", "0.001")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorDecimalPlaces"))
+            }
+        }
+
+        "submitting an invalid set of PSO details - amount too large" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", "1"),
+                ("psoMonth", "1"),
+                ("psoYear", "2015"),
+                ("psoAmt", "999999999999999")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorMaximum"))
             }
         }
     }
