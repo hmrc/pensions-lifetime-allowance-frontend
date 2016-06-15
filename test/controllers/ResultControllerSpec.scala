@@ -47,7 +47,12 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   val testRejectionResponse = HttpResponse(409,Some(rejectionJson))
 
-
+  ///////////////////////////////////////////////
+  // Initial Setup
+  ///////////////////////////////////////////////
+  "IP2016Controller should be correctly initialised" in {
+    ResultController.authConnector shouldBe FrontendAuthConnector
+  }
 
   "ResultController" should {
 
