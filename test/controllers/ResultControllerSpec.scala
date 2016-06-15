@@ -50,7 +50,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   ///////////////////////////////////////////////
   // Initial Setup
   ///////////////////////////////////////////////
-  "IP2016Controller should be correctly initialised" in {
+  "ResultController should be correctly initialised" in {
     ResultController.authConnector shouldBe FrontendAuthConnector
   }
 
