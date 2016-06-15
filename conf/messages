@@ -44,7 +44,7 @@ pla.ip14PensionSavings.pageHeading              = Value of your pensions
 pla.ip14PensionSavings.paraOne                  = On 5 April 2014, were your total pension savings over £1.25 million?
 pla.ip14PensionSavings.help                     = Include UK pensions and overseas pensions which gained UK tax relief.
 pla.ip14PensionSavings.paraTwo                  = For defined benefit schemes, your pension value is usually 20 times the annual amount payable, plus any additional lump sums.
-pla.ip14PensionSavings.mandatoryErr             = Please tell us if your pension savings were £1 million or more on 5 April 2016
+pla.ip14PensionSavings.mandatoryErr             = Please tell us if your pension savings were £1.25 million or more on 5 April 2014
 
 ## Will be Adding to Your Pension ##
 pla.addingToPension.title                  = Add to pension
