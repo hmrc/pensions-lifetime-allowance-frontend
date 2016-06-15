@@ -39,7 +39,7 @@ pla.intro.ip14LinkText  = apply for Individual Protection 2014
 pla.intro.start         = Start
 
 ## IP14 Pension Savings ##
-pla.ip14PensionSavings.title                    = IP14 Pension savings
+pla.ip14PensionSavings.title                    = IP14 pension savings
 pla.ip14PensionSavings.pageHeading              = Value of your pensions
 pla.ip14PensionSavings.paraOne                  = On 5 April 2014, were your total pension savings over £1.25 million?
 pla.ip14PensionSavings.help                     = Include UK pensions and overseas pensions which gained UK tax relief.
