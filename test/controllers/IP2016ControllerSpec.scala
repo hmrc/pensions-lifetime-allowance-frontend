@@ -53,6 +53,18 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         .thenReturn(Future.successful(data))
     }
 
+    def psoNumKeystoreSetup(data: Option[NumberOfPSOsModel]) = {
+        when(mockKeyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel](Matchers.eq("numberOfPSOs"))(Matchers.any(), Matchers.any()))
+          .thenReturn(Future.successful(data))
+    }
+
+    def psoDeetsKeystoreSetup(data: Option[PSODetailsModel], deetsNum: Int) = {
+        when(mockKeyStoreConnector.fetchAndGetFormData[PSODetailsModel](Matchers.eq(s"psoDetails$deetsNum"))(Matchers.any(), Matchers.any()))
+          .thenReturn(Future.successful(data))
+    }
+
+
+
     ///////////////////////////////////////////////
     // Initial Setup
     ///////////////////////////////////////////////
@@ -671,6 +683,71 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "return 400" in { status(DataItem.result) shouldBe 400 }
             "fail with the correct error message" in {
                 DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionDebits.mandatoryErr"))
+            }
+        }
+    }
+
+
+
+    ///////////////////////////////////////////////
+    // PENSION SHARING ORDER DETAILS
+    ///////////////////////////////////////////////
+    "In IP2016Controller calling the .psoDetails action" when {
+
+        "there is no total PSOs number stored in keystore" should {
+
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("1"))
+            "return 303" in {
+                keystoreFetchCondition[NumberOfPSOsModel](None)
+                status(DataItem.result) shouldBe 303
+            }
+
+            "temporarily redirect the user to the number of PSOs page" in {
+                keystoreFetchCondition[NumberOfPSOsModel](None)
+                // TODO: update redirect to summary once implemented in frontend
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs}")
+            }
+        }
+
+        "a PSO number higher than the total number of PSOs is passed in" should {
+
+            val testModel = new NumberOfPSOsModel(Some("2"))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("1"))
+            "return 303" in {
+                psoNumKeystoreSetup(Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "temporarily redirect the user to the number of PSOs page" in {
+                psoNumKeystoreSetup(Some(testModel))
+                psoDeetsKeystoreSetup(None, 1)
+                // TODO: update redirect to summary once implemented in frontend
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs}")
+            }
+        }
+    }
+
+    "Submitting valid PSO details data" when {
+
+        "submitting the last PSO" should {
+
+            val testModelTotalPSOs = new NumberOfPSOsModel(Some("2"))
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+                ("psoNumber", "2"),
+                ("psoDay", "1"),
+                ("psoMonth", "1"),
+                ("psoYear", "2015"),
+                ("psoAmt", "100000")
+            )
+            "return 303" in {
+                psoNumKeystoreSetup(Some(testModelTotalPSOs))
+                status(DataItem.result) shouldBe 303
+            }
+
+            "temporarily redirect the user to the number of PSOs page" in {
+                psoNumKeystoreSetup(Some(testModelTotalPSOs))
+                // TODO: update redirect to summary once implemented in frontend
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs}")
             }
         }
     }
