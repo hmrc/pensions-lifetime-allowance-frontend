@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package utils
+package common
 
 import java.time.LocalDate
 
-object Constants {
+object Dates {
 
-    val successCodes = List(22,23,24)
-    val rejectCodes = List(17,18,19,20,21)
-    val strippedNInoLength = 8
-    val npsMaxCurrency: Double = 99999999999999.99
-    val minPSODate: LocalDate = LocalDate.of(1900, 1, 1)
-    val maxPSODate: LocalDate = LocalDate.of(2100, 1, 1)
+  def constructDate(day: Int, month: Int, year: Int): LocalDate = {
+    LocalDate.of(year, month, day)
+  }
+
+  def dateBefore(day: Int, month: Int, year: Int, date2: LocalDate): Boolean = {
+    LocalDate.of(year, month, day).isBefore(date2)
+  }
+
+  def dateAfter(day: Int, month: Int, year: Int, date2: LocalDate): Boolean = {
+    LocalDate.of(year, month, day).isAfter(date2)
+  }
 }

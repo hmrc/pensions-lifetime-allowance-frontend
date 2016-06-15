@@ -34,6 +34,7 @@ import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.OverseasPensionsForm.overseasPensionsForm
 import forms.CurrentPensionsForm.currentPensionsForm
 import forms.NumberOfPSOsForm.numberOfPSOsForm
+import forms.PSODetailsForm.psoDetailsForm
 import forms.PensionDebitsForm.pensionDebitsForm
 import models._
 import common.Validation._
@@ -76,141 +77,99 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     //PENSIONS TAKEN BEFORE
     val pensionsTakenBefore = AuthorisedByAny.async { implicit user => implicit request =>
 
-        def routeRequest(): Future[Result] = {
-            keyStoreConnector.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").map {
-                case Some(data) => Ok(pages.ip2016.pensionsTakenBefore(pensionsTakenBeforeForm.fill(data)))
-                case _ => Ok(pages.ip2016.pensionsTakenBefore(pensionsTakenBeforeForm))
-            }
+        keyStoreConnector.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").map {
+            case Some(data) => Ok(pages.ip2016.pensionsTakenBefore(pensionsTakenBeforeForm.fill(data)))
+            case _ => Ok(pages.ip2016.pensionsTakenBefore(pensionsTakenBeforeForm))
         }
-
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
     }
 
     val submitPensionsTakenBefore = AuthorisedByAny.async { implicit user => implicit request =>
 
-        def routeRequest(): Future[Result] = {
-            pensionsTakenBeforeForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(errors))),
-                success => {
-                    val validatedForm = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.fill(success))
-                    if(validatedForm.hasErrors) {
-                        Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(validatedForm)))
-                    } else {
-                        keyStoreConnector.saveFormData("pensionsTakenBefore", success)
-                        Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
-                    }
+        pensionsTakenBeforeForm.bindFromRequest.fold(
+            errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(errors))),
+            success => {
+                val validatedForm = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.fill(success))
+                if(validatedForm.hasErrors) {
+                    Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(validatedForm)))
+                } else {
+                    keyStoreConnector.saveFormData("pensionsTakenBefore", success)
+                    Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
                 }
-            )
-        }
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
+            }
+        )
     }
 
 
     //PENSIONS TAKEN BETWEEN
     val pensionsTakenBetween = AuthorisedByAny.async { implicit user => implicit request =>
 
-        def routeRequest(): Future[Result] = {
-            keyStoreConnector.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").map {
-                case Some(data) => Ok(pages.ip2016.pensionsTakenBetween(pensionsTakenBetweenForm.fill(data)))
-                case _ => Ok(pages.ip2016.pensionsTakenBetween(pensionsTakenBetweenForm))
-            }
+        keyStoreConnector.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").map {
+            case Some(data) => Ok(pages.ip2016.pensionsTakenBetween(pensionsTakenBetweenForm.fill(data)))
+            case _ => Ok(pages.ip2016.pensionsTakenBetween(pensionsTakenBetweenForm))
         }
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
     }
 
     val submitPensionsTakenBetween = AuthorisedByAny.async { implicit user => implicit request =>
 
-        def routeRequest(): Future[Result] = {
-            pensionsTakenBetweenForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(errors))),
-                success => {
-                    val validatedForm = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.fill(success))
-                    if(validatedForm.hasErrors) {
-                        Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(validatedForm)))
-                    } else {
-                        keyStoreConnector.saveFormData("pensionsTakenBetween", success)
-                        Future.successful(Redirect(routes.IP2016Controller.overseasPensions()))
-                    }
+        pensionsTakenBetweenForm.bindFromRequest.fold(
+            errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(errors))),
+            success => {
+                val validatedForm = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.fill(success))
+                if(validatedForm.hasErrors) {
+                    Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(validatedForm)))
+                } else {
+                    keyStoreConnector.saveFormData("pensionsTakenBetween", success)
+                    Future.successful(Redirect(routes.IP2016Controller.overseasPensions()))
                 }
-            )
-        }
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
+            }
+        )
     }
 
 
     //OVERSEAS PENSIONS
     val overseasPensions = AuthorisedByAny.async { implicit user => implicit request =>
 
-        def routeRequest(): Future[Result] = {
-            keyStoreConnector.fetchAndGetFormData[OverseasPensionsModel]("overseasPensions").map {
-                case Some(data) => Ok(pages.ip2016.overseasPensions(overseasPensionsForm.fill(data)))
-                case _ => Ok(pages.ip2016.overseasPensions(overseasPensionsForm))
-            }
+        keyStoreConnector.fetchAndGetFormData[OverseasPensionsModel]("overseasPensions").map {
+            case Some(data) => Ok(pages.ip2016.overseasPensions(overseasPensionsForm.fill(data)))
+            case _ => Ok(pages.ip2016.overseasPensions(overseasPensionsForm))
         }
-
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
     }
 
     val submitOverseasPensions = AuthorisedByAny.async { implicit user => implicit request =>
 
-        def routeRequest(): Future[Result] = {
-            overseasPensionsForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2016.overseasPensions(errors))),
-                success => {
-                    val validatedForm = OverseasPensionsForm.validateForm(overseasPensionsForm.fill(success))
-                    if(validatedForm.hasErrors) {
-                        Future.successful(BadRequest(pages.ip2016.overseasPensions(validatedForm)))
-                    } else {
-                        keyStoreConnector.saveFormData("overseasPensions", success)
-                        Future.successful(Redirect(routes.IP2016Controller.currentPensions()))
-                    }
+        overseasPensionsForm.bindFromRequest.fold(
+            errors => Future.successful(BadRequest(pages.ip2016.overseasPensions(errors))),
+            success => {
+                val validatedForm = OverseasPensionsForm.validateForm(overseasPensionsForm.fill(success))
+                if(validatedForm.hasErrors) {
+                    Future.successful(BadRequest(pages.ip2016.overseasPensions(validatedForm)))
+                } else {
+                    keyStoreConnector.saveFormData("overseasPensions", success)
+                    Future.successful(Redirect(routes.IP2016Controller.currentPensions()))
                 }
-            )
-        }
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
+            }
+        )
     }
 
 
     //CURRENT PENSIONS
     val currentPensions = AuthorisedByAny.async { implicit user => implicit request =>
 
-        def routeRequest(): Future[Result] = {
-            keyStoreConnector.fetchAndGetFormData[CurrentPensionsModel]("currentPensions").map {
-                case Some(data) => Ok(pages.ip2016.currentPensions(currentPensionsForm.fill(data)))
-                case _ => Ok(pages.ip2016.currentPensions(currentPensionsForm))
-            }
+        keyStoreConnector.fetchAndGetFormData[CurrentPensionsModel]("currentPensions").map {
+            case Some(data) => Ok(pages.ip2016.currentPensions(currentPensionsForm.fill(data)))
+            case _ => Ok(pages.ip2016.currentPensions(currentPensionsForm))
         }
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
     }
 
     val submitCurrentPensions = AuthorisedByAny.async { implicit user => implicit request =>
 
-        def routeRequest(): Future[Result] = {
-            currentPensionsForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2016.currentPensions(errors))),
-                success => {
-                    keyStoreConnector.saveFormData("currentPensions", success)
-                    Future.successful(Redirect(routes.IP2016Controller.pensionDebits()))
-                }
-            )
-        }
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
+        currentPensionsForm.bindFromRequest.fold(
+            errors => Future.successful(BadRequest(pages.ip2016.currentPensions(errors))),
+            success => {
+                keyStoreConnector.saveFormData("currentPensions", success)
+                Future.successful(Redirect(routes.IP2016Controller.pensionDebits()))
+            }
+        )
     }
 
 
@@ -228,7 +187,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             success => {
                 keyStoreConnector.saveFormData("pensionDebits", success)
                 success.pensionDebits.get match {
-                    case "yes"  => Redirect(routes.IP2016Controller.pensionsTaken())
+                    case "yes"  => Redirect(routes.IP2016Controller.numberOfPSOs())
                     case "no"   => Redirect(routes.IP2016Controller.pensionsTaken())
                 }
             }
@@ -237,33 +196,67 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
 
 
     //NUMBER OF PENSION SHARING ORDERS
-    val numbeOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
+    val numberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
 
-        def routeRequest(): Future[Result] = {
-            keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
-                case Some(data) => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm.fill(data)))
-                case _ => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm))
-            }
+        keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
+            case Some(data) => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm.fill(data)))
+            case _ => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm))
         }
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
     }
 
     val submitNumberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
 
-        def routeRequest(): Future[Result] = {
-            numberOfPSOsForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2016.numberOfPSOs(errors))),
-                success => {
-                    keyStoreConnector.saveFormData("numberOfPSOs", success)
-                    // Future.successful(Redirect(routes.IP2016Controller.pensionSharingDetails()))
-                    Future.successful(Ok(pages.introduction()))
+        numberOfPSOsForm.bindFromRequest.fold(
+            errors => Future.successful(BadRequest(pages.ip2016.numberOfPSOs(errors))),
+            success => {
+                keyStoreConnector.saveFormData("numberOfPSOs", success)
+                Future.successful(Redirect(routes.IP2016Controller.psoDetails("1")))
+            }
+        )
+    }
+
+
+    //PENSION SHARING ORDER DETAILS
+    def psoDetails(psoNumber:String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+
+        val psoNum = psoNumber.toInt
+        keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").flatMap(numberOfPSOsModel => {
+            numberOfPSOsModel.map {
+                completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
+            }.getOrElse(
+                // TODO: redirect to Summary
+                Future.successful(Redirect(routes.IP2016Controller.numberOfPSOs))
+            )
+
+        })
+    }
+
+    private def routePSODetails(totalPSOs: Int, psoNum: Int, req: Request[AnyContent]): Future[Result] = {
+        implicit val request = req
+        if (psoNum > totalPSOs) {
+            // TODO: redirect to Summary
+            Future.successful(Redirect(routes.IP2016Controller.numberOfPSOs))
+        } else {
+            keyStoreConnector.fetchAndGetFormData[PSODetailsModel](s"psoDetails$psoNum").map {
+                case Some(storedData) => Ok(pages.ip2016.psoDetails(psoDetailsForm.fill(storedData), psoNum))
+                case _ => Ok(pages.ip2016.psoDetails(psoDetailsForm, psoNum))
+            }
+        }
+    }
+
+    val submitPSODetails = AuthorisedByAny.async { implicit user => implicit request =>
+
+            psoDetailsForm.bindFromRequest.fold(
+                errors => Future.successful(BadRequest(pages.ip2016.psoDetails(errors, errors("psoNumber").value.get.toInt))),
+                form => {
+                    val validatedForm = PSODetailsForm.validateForm(psoDetailsForm.fill(form))
+                    if(validatedForm.hasErrors) {
+                        Future.successful(BadRequest(pages.ip2016.psoDetails(validatedForm, form.psoNumber)))
+                    } else {
+                        keyStoreConnector.saveFormData(s"psoDetails${form.psoNumber}", form)
+                        Future.successful(Redirect(routes.IP2016Controller.psoDetails(form.psoNumber.+(1).toString)))
+                    }
                 }
             )
-        }
-        for {
-            finalResult <- routeRequest
-        } yield finalResult
     }
 }

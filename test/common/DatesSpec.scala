@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package utils
+package common
 
+import uk.gov.hmrc.play.test.UnitSpec
+import common.Dates._
 import java.time.LocalDate
 
-object Constants {
+class DatesSpec extends UnitSpec {
 
-    val successCodes = List(22,23,24)
-    val rejectCodes = List(17,18,19,20,21)
-    val strippedNInoLength = 8
-    val npsMaxCurrency: Double = 99999999999999.99
-    val minPSODate: LocalDate = LocalDate.of(1900, 1, 1)
-    val maxPSODate: LocalDate = LocalDate.of(2100, 1, 1)
+  "constructDate" should {
+
+    "correctly create a LocalDate" in { 
+      val tstDate = LocalDate.of(2016, 6, 4)
+      constructDate(4, 6, 2016) shouldBe tstDate
+    }
+  }
 }
