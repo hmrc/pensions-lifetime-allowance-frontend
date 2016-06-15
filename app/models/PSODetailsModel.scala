@@ -31,6 +31,7 @@ class PSODetailsModel (val psoNumber: Int, val psoDay: Int, val psoMonth: Int, v
 
 object PSODetailsModel {
   implicit val format = Json.format[PSODetailsModel]
+
   def apply(psoNumber: Int, psoDay: Option[Int], psoMonth: Option[Int], psoYear: Option[Int], psoAmt: BigDecimal) =
     new PSODetailsModel(psoNumber, psoDay.getOrElse(0), psoMonth.getOrElse(0), psoYear.getOrElse(0), psoAmt
   )

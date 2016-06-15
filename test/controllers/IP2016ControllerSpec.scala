@@ -712,40 +712,87 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "a PSO number higher than the total number of PSOs is passed in" should {
 
             val testModel = new NumberOfPSOsModel(Some("2"))
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("1"))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("3"))
             "return 303" in {
                 psoNumKeystoreSetup(Some(testModel))
-                status(DataItem.result) shouldBe 200
+                status(DataItem.result) shouldBe 303
             }
 
             "temporarily redirect the user to the number of PSOs page" in {
                 psoNumKeystoreSetup(Some(testModel))
-                psoDeetsKeystoreSetup(None, 1)
                 // TODO: update redirect to summary once implemented in frontend
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs}")
+            }
+        }
+
+        "a PSO number (2) less than the total number of PSOs is passed in" should {
+
+            val testModel = new NumberOfPSOsModel(Some("3"))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("2"))
+            "return 200" in {
+                psoNumKeystoreSetup(Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the second PSO details page" in {
+                psoNumKeystoreSetup(Some(testModel))
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.pageHeading2")
+            }
+        }
+
+        "a PSO number (2) equal the total number of PSOs is passed in with a stored model" should {
+
+            val day = 13
+            val month = 5
+            val year = 2016
+            val psoAmt = 100000
+            val testModel = new NumberOfPSOsModel(Some("2"))
+            val testDetailsModel = new PSODetailsModel(2, day, month, year, psoAmt)
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("2"))
+            "return 200" in {
+                psoNumKeystoreSetup(Some(testModel))
+                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the second PSO details page" in {
+                psoNumKeystoreSetup(Some(testModel))
+                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.pageHeading2")
+            }
+
+            "have the PSO date fields completed correctly" in {
+                psoNumKeystoreSetup(Some(testModel))
+                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual "13"
+                DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual "5"
+                DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual "2016"
+            }
+
+            "have the PSO amount field completed correctly" in {
+                psoNumKeystoreSetup(Some(testModel))
+                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                DataItem.jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "100000"
             }
         }
     }
 
     "Submitting valid PSO details data" when {
 
-        "submitting the last PSO" should {
+        "submitting a valid 4th PSO's details" should {
 
-            val testModelTotalPSOs = new NumberOfPSOsModel(Some("2"))
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
-                ("psoNumber", "2"),
+                ("psoNumber", "4"),
                 ("psoDay", "1"),
                 ("psoMonth", "1"),
                 ("psoYear", "2015"),
                 ("psoAmt", "100000")
             )
             "return 303" in {
-                psoNumKeystoreSetup(Some(testModelTotalPSOs))
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the number of PSOs page" in {
-                psoNumKeystoreSetup(Some(testModelTotalPSOs))
+            "redirect to the psoDetails controller action with a psoNum of 5" in {
                 // TODO: update redirect to summary once implemented in frontend
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs}")
             }
