@@ -9,10 +9,10 @@ pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
 pla.base.startAgain             = Start Again
 pla.base.errorSummaryLabel      = There are errors on this page.
-pla.base.error.invalidDate      = Enter a valid date
-pla.base.errors.invalidYear     = Enter a valid year between 1900 and 2100
-pla.base.errors.invalidMonth    = Enter a valid month between 1 and 12
-pla.base.errors.invalidDay      = Enter a valid day of the month
+pla.base.errors.invalidDate     = Enter a valid date
+pla.base.errors.yearEmpty       = Enter a year
+pla.base.errors.monthEmpty      = Enter a month
+pla.base.errors.dayEmpty        = Enter a day
 pla.base.date.fields.day        = Day
 pla.base.date.fields.month      = Month
 pla.base.date.fields.year       = Year
@@ -213,6 +213,7 @@ pla.psoDetails.psoAmountQuestion            = Amount
 pla.psoDetails.errorNegative                = Enter a positive number for the amount of your pension sharing order
 pla.psoDetails.errorMaximum                 = The amount of your pension sharing order must be less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The pension sharing order value you have entered has too many decimal places
+pla.psoDetails.errorDateOutOfRange          = Please enter a date between the year 1900 and 2100
 
 
 
