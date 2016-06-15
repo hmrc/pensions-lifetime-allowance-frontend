@@ -23,4 +23,12 @@ object Dates {
   def constructDate(day: Int, month: Int, year: Int): LocalDate = {
     LocalDate.of(year, month, day)
   }
+
+  def dateBefore(day: Int, month: Int, year: Int, date2: LocalDate): Boolean = {
+    LocalDate.of(year, month, day).isBefore(date2)
+  }
+
+  def dateAfter(day: Int, month: Int, year: Int, date2: LocalDate): Boolean = {
+    LocalDate.of(year, month, day).isAfter(date2)
+  }
 }
