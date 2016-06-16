@@ -58,8 +58,13 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
           .thenReturn(Future.successful(data))
     }
 
-    def psoDeetsKeystoreSetup(data: Option[PSODetailsModel], deetsNum: Int) = {
+    def psoDetailsKeystoreSetup(data: Option[PSODetailsModel], deetsNum: Int) = {
         when(mockKeyStoreConnector.fetchAndGetFormData[PSODetailsModel](Matchers.eq(s"psoDetails$deetsNum"))(Matchers.any(), Matchers.any()))
+          .thenReturn(Future.successful(data))
+    }
+
+    def pensionDebitsKeystoreSetup(data: Option[PensionDebitsModel]) = {
+        when(mockKeyStoreConnector.fetchAndGetFormData[PensionDebitsModel](Matchers.eq("pensionDebits"))(Matchers.any(), Matchers.any()))
           .thenReturn(Future.successful(data))
     }
 
@@ -330,7 +335,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "1"))
                 "return 303" in {status(DataItem.result) shouldBe 303}
-                //"redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}") }
+                "redirect to overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}") }
             }
 
             "no amount is set" should {
@@ -672,7 +677,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionDebits, ("pensionDebits", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "temporarily redirect to pensions taken" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken()}") }
+            "temporarily redirect to introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
         }
 
         "Submitting pensionDebitsForm with no data" should {
@@ -696,29 +701,70 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "not supplied with a stored model" should {
 
+            val testModel = PensionDebitsModel(Some("yes"))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.numberOfPSOs)
             "return 200" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
+                pensionDebitsKeystoreSetup(Some(testModel))
                 status(DataItem.result) shouldBe 200
             }
 
             "take the user to the number of PSOs page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
+                pensionDebitsKeystoreSetup(Some(testModel))
                 DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.numberOfPSOs.pageHeading")
+            }
+        }
+
+        "the user has not declared any pension sharing orders" should {
+
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.numberOfPSOs)
+            "return 303" in {
+                keystoreFetchCondition[NumberOfPSOsModel](None)
+                pensionDebitsKeystoreSetup(None)
+                status(DataItem.result) shouldBe 303
+            }
+
+            "temporarily redirect the user to the introduction page" in {
+                keystoreFetchCondition[NumberOfPSOsModel](None)
+                pensionDebitsKeystoreSetup(None)
+                // TODO: update redirect to summary once implemented in frontend
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+            }
+        }
+
+        "the user has declared they have no pension sharing orders" should {
+
+            val testModel = PensionDebitsModel(Some("no"))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.numberOfPSOs)
+            "return 303" in {
+                keystoreFetchCondition[NumberOfPSOsModel](None)
+                pensionDebitsKeystoreSetup(Some(testModel))
+                status(DataItem.result) shouldBe 303
+            }
+
+            "temporarily redirect the user to the introduction page" in {
+                keystoreFetchCondition[NumberOfPSOsModel](None)
+                pensionDebitsKeystoreSetup(Some(testModel))
+                // TODO: update redirect to summary once implemented in frontend
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
             }
         }
 
         "supplied with a pre-existing stored model" should {
 
+            val testPensionDebitsModel = PensionDebitsModel(Some("yes"))
             val testModel = NumberOfPSOsModel(Some("3"))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.numberOfPSOs)
             "return 200" in {
                 keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
+                pensionDebitsKeystoreSetup(Some(testPensionDebitsModel))
                 status(DataItem.result) shouldBe 200
             }
 
             "take the user to the number of PSOs page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
+                pensionDebitsKeystoreSetup(Some(testPensionDebitsModel))
                 DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.numberOfPSOs.pageHeading")
             }
 
@@ -726,12 +772,14 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
                 "contain some text and use the character set utf-8" in {
                     keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
+                    pensionDebitsKeystoreSetup(Some(testPensionDebitsModel))
                     contentType(DataItem.result) shouldBe Some("text/html")
                     charset(DataItem.result) shouldBe Some("utf-8")
                 }
 
                 "have the radio option `3` selected by default" in {
                     keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
+                    pensionDebitsKeystoreSetup(Some(testPensionDebitsModel))
                     DataItem.jsoupDoc.body.getElementById("numberOfPSOs-3").parent.classNames().contains("selected") shouldBe true
                 }
             }
@@ -773,10 +821,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the number of PSOs page" in {
+            "temporarily redirect the user to the introduction page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
             }
         }
 
@@ -789,10 +837,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the number of PSOs page" in {
+            "temporarily redirect the user to the introduction page" in {
                 psoNumKeystoreSetup(Some(testModel))
                 // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.numberOfPSOs()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
             }
         }
 
@@ -822,19 +870,19 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("2"))
             "return 200" in {
                 psoNumKeystoreSetup(Some(testModel))
-                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                psoDetailsKeystoreSetup(Some(testDetailsModel), 2)
                 status(DataItem.result) shouldBe 200
             }
 
             "take the user to the second PSO details page" in {
                 psoNumKeystoreSetup(Some(testModel))
-                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                psoDetailsKeystoreSetup(Some(testDetailsModel), 2)
                 DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.pageHeading2")
             }
 
             "have the PSO date fields completed correctly" in {
                 psoNumKeystoreSetup(Some(testModel))
-                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                psoDetailsKeystoreSetup(Some(testDetailsModel), 2)
                 DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual "13"
                 DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual "5"
                 DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual "2016"
@@ -842,7 +890,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "have the PSO amount field completed correctly" in {
                 psoNumKeystoreSetup(Some(testModel))
-                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
+                psoDetailsKeystoreSetup(Some(testDetailsModel), 2)
                 DataItem.jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "100000"
             }
         }
