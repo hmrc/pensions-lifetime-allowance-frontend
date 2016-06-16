@@ -188,7 +188,8 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                 keyStoreConnector.saveFormData("pensionDebits", success)
                 success.pensionDebits.get match {
                     case "yes"  => Redirect(routes.IP2016Controller.numberOfPSOs())
-                    case "no"   => Redirect(routes.IP2016Controller.pensionsTaken())
+                                // TODO: redirect to summary
+                    case "no"   => Redirect(routes.IntroductionController.introduction())
                 }
             }
         )
@@ -198,9 +199,24 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     //NUMBER OF PENSION SHARING ORDERS
     val numberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
 
-        keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
-            case Some(data) => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm.fill(data)))
-            case _ => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm))
+        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").flatMap(pensionDebitsModel => {
+            pensionDebitsModel.map {
+                completedModel => routeNumberOfPSOs(completedModel.pensionDebits.get, request)
+            }.getOrElse(
+                // TODO: redirect to summary
+                Future.successful(Redirect(routes.IntroductionController.introduction()))
+            )
+        })
+    }
+
+    private def routeNumberOfPSOs(havePSOs: String, req: Request[AnyContent]): Future[Result] = {
+        implicit val request = req
+        havePSOs match {
+            case "no"  => Future.successful(Redirect(routes.IntroductionController.introduction())) // TODO: redirect to summary
+            case "yes" => keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
+                            case Some(data) => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm.fill(data)))
+                            case _ => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm))
+                          }
         }
     }
 
@@ -225,7 +241,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                 completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
             }.getOrElse(
                 // TODO: redirect to Summary
-                Future.successful(Redirect(routes.IP2016Controller.numberOfPSOs))
+                Future.successful(Redirect(routes.IntroductionController.introduction()))
             )
 
         })
@@ -235,7 +251,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
         implicit val request = req
         if (psoNum > totalPSOs) {
             // TODO: redirect to Summary
-            Future.successful(Redirect(routes.IP2016Controller.numberOfPSOs))
+            Future.successful(Redirect(routes.IntroductionController.introduction()))
         } else {
             keyStoreConnector.fetchAndGetFormData[PSODetailsModel](s"psoDetails$psoNum").map {
                 case Some(storedData) => Ok(pages.ip2016.psoDetails(psoDetailsForm.fill(storedData), psoNum))
