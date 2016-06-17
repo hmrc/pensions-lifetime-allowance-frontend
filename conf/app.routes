@@ -12,6 +12,9 @@ GET         /not-authorised                                     controllers.Unau
 
 
 ## Initial Eligibility ##
+GET         /ip14-pension-pot-size                              controllers.EligibilityController.ip14PensionSavings
+POST        /ip14-pension-pot-size                              controllers.EligibilityController.submitIP14PensionSavings
+
 GET         /added-to-pension                                   controllers.EligibilityController.addedToPension
 POST        /added-to-pension                                   controllers.EligibilityController.submitAddedToPension
 
