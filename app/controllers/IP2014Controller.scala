@@ -40,7 +40,7 @@ object IP2014Controller extends IP2014Controller {
     val keyStoreConnector = KeyStoreConnector
     override lazy val applicationConfig = FrontendAppConfig
     override lazy val authConnector = FrontendAuthConnector
-    override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
+    override lazy val postSignInRedirectUrl = FrontendAppConfig.ip14StartUrl
 }
 
 trait IP2014Controller extends FrontendController with AuthorisedForPLA {

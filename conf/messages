@@ -68,6 +68,15 @@ pla.pensionSavings.help                     = This includes UK pensions and over
 pla.pensionSavings.paraTwo                  = For defined benefit schemes, such as ''final salary schemes'', the value is normally 20 times the pension you get in the first year plus your lump sum.
 pla.pensionSavings.mandatoryErr             = Please tell us if your pension savings were £1 million or more on 5 April 2016
 
+## Apply for IP 2014 ##
+pla.applyIP14.title       = Apply for IP 2014
+pla.applyIP14.pageHeading = Apply for Individual Protection 2014
+pla.applyIP14.paraOne     = We''ll ask you:
+pla.applyIP14.bulletOne   = about pensions you took money from before 6 April 2014
+pla.applyIP14.bulletTwo   = what your current pensions were worth on 6 April 2014
+pla.applyIP14.paraTwo     = Ask your pension provider to give you this information.
+pla.applyIP14.paraThree   = You''ll need to apply by 5 April 2017.
+
 ## Apply for IP 2016 ##
 pla.applyIP.title       = Apply for IP 2016
 pla.applyIP.pageHeading = Apply for Individual Protection 2016

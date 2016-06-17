@@ -24,6 +24,8 @@ POST        /adding-to-pension                                  controllers.Elig
 GET         /pension-pot-size                                   controllers.EligibilityController.pensionSavings
 POST        /pension-pot-size                                   controllers.EligibilityController.submitPensionSavings
 
+GET         /apply-ip14                                         controllers.EligibilityController.applyIP14
+
 GET         /apply-ip                                           controllers.EligibilityController.applyIP
 
 GET         /apply-fp                                           controllers.EligibilityController.applyFP

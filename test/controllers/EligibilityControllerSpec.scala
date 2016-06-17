@@ -129,7 +129,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
         ("eligibleIP14PensionSavings", "yes")
       )
       "return 303" in {status(DataItem.result) shouldBe 303}
-      "redirect to ip14 pension savings" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+      "redirect to apply ip14" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.applyIP14()}") }
     }
 
     "Submitting 'no' in ip14PensionSavingsForm" should {
@@ -515,7 +515,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
         status(DataItem.result) shouldBe 200
       }
 
-      "take user to the Apply FP page" in {
+      "take user to the Apply IP page" in {
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyIP.pageHeading")
       }
     }
@@ -526,8 +526,46 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
         status(DataItem.result) shouldBe 200
       }
 
-      "take user to the Apply FP page" in {
+      "take user to the Apply IP page" in {
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyIP.pageHeading")
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+      }
+    }
+  }
+
+///////////////////////////////////////////////
+// Apply IP14
+///////////////////////////////////////////////
+
+  "Calling the .applyIP14 action" when {
+
+    "visited directly with no session ID" should {
+      object DataItem extends FakeRequestTo("apply-ip14", TestEligibilityController.applyIP14, None)
+
+      "return 200" in {
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the Apply IP14 page" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyIP14.pageHeading")
+      }
+    }
+
+    "navigated to with a valid session ID" should {
+      object DataItem extends FakeRequestTo("apply-ip14", TestEligibilityController.applyIP14, Some(sessionId))
+      "return a 200" in {
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the Apply IP14 page" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyIP14.pageHeading")
       }
 
       "return some HTML that" should {

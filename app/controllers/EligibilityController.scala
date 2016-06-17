@@ -57,7 +57,7 @@ trait EligibilityController extends FrontendController {
             success => {
                 keyStoreConnector.saveFormData("eligibleIP14PensionSavings", success)
                 success.eligibleIP14PensionSavings.get match {
-                    case "yes"  => Redirect(routes.IntroductionController.introduction())
+                    case "yes"  => Redirect(routes.EligibilityController.applyIP14())
                     case "no"   => Redirect(routes.EligibilityController.addedToPension())
                 }
             }
@@ -155,6 +155,16 @@ trait EligibilityController extends FrontendController {
             Future.successful(Ok(views.html.pages.eligibility.applyIP()).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
         } else {
             Future.successful(Ok(views.html.pages.eligibility.applyIP()))
+        }
+    }
+
+    // APPLY IP14
+    val applyIP14 = Action.async { implicit request =>
+        if (request.session.get(SessionKeys.sessionId).isEmpty) {
+            val sessionId = UUID.randomUUID.toString
+            Future.successful(Ok(views.html.pages.eligibility.applyIP14()).withSession(request.session + (SessionKeys.sessionId -> s"session-$sessionId")))
+        } else {
+            Future.successful(Ok(views.html.pages.eligibility.applyIP14()))
         }
     }
 
