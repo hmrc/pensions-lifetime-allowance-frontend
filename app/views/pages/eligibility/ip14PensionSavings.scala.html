@@ -1,0 +1,43 @@
+@import models.IP14PensionSavingsModel
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import helpers.templates.plaInputRadioGroup
+@import play.api.data._
+
+@(ip14PensionSavingsForm: Form[IP14PensionSavingsModel])(implicit request: Request[_])
+
+
+@views.html.main_template(title = Messages("pla.ip14PensionSavings.title"), bodyClasses = None) {
+
+    @govHelpers.errorSummary(
+        Messages("pla.base.errorSummaryLabel"), ip14PensionSavingsForm
+    )
+
+    <h1 class="heading-xlarge">@Messages("pla.ip14PensionSavings.pageHeading")</h1>
+
+    @govHelpers.form(action = routes.EligibilityController.submitIP14PensionSavings) {
+
+        <div class="inline form-group">
+            @plaInputRadioGroup(
+                field = ip14PensionSavingsForm("eligibleIP14PensionSavings"),
+                Seq(
+                    "yes"->Messages("pla.base.yes"),
+                    "no"->Messages("pla.base.no")),
+                '_labelAfter -> true,
+                '_labelClass -> "block-label",
+                '_legend -> Messages("pla.ip14PensionSavings.paraOne"),
+                '_helpText -> Some(Messages("pla.ip14PensionSavings.help"))
+            )
+        </div>
+
+
+
+        <div class="panel-indent">
+            @Messages("pla.ip14PensionSavings.paraTwo")</a>
+        </div>
+
+        <p>
+            <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
+        </p>
+    }
+
+}

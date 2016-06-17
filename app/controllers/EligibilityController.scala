@@ -26,6 +26,7 @@ import scala.concurrent.Future
 import forms.AddedToPensionForm.addedToPensionForm
 import forms.AddingToPensionForm.addingToPensionForm
 import forms.PensionSavingsForm.pensionSavingsForm
+import forms.IP14PensionSavingsForm.ip14PensionSavingsForm
 import models._
 
 import views.html._
@@ -37,6 +38,31 @@ object EligibilityController extends EligibilityController {
 trait EligibilityController extends FrontendController {
 
     val keyStoreConnector: KeyStoreConnector
+
+    // IP14 PENSION SAVINGS
+    val ip14PensionSavings = Action.async { implicit request =>
+        if (request.session.get(SessionKeys.sessionId).isEmpty) {
+            Future.successful(Redirect(routes.IntroductionController.introduction()))
+        } else {
+            keyStoreConnector.fetchAndGetFormData[IP14PensionSavingsModel]("eligibleIP14PensionSavings").map {
+                case Some(data) => Ok(pages.eligibility.ip14PensionSavings(ip14PensionSavingsForm.fill(data)))
+                case None => Ok(pages.eligibility.ip14PensionSavings(ip14PensionSavingsForm))
+            }
+        }
+    }
+
+    val submitIP14PensionSavings = Action { implicit request =>
+        ip14PensionSavingsForm.bindFromRequest.fold(
+            errors => BadRequest(pages.eligibility.ip14PensionSavings(errors)),
+            success => {
+                keyStoreConnector.saveFormData("eligibleIP14PensionSavings", success)
+                success.eligibleIP14PensionSavings.get match {
+                    case "yes"  => Redirect(routes.IntroductionController.introduction())
+                    case "no"   => Redirect(routes.EligibilityController.addedToPension())
+                }
+            }
+        )
+    }
 
     // ADDING TO PENSION
     val addingToPension = Action.async { implicit request =>
