@@ -135,7 +135,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PensionsTaken, ("pensionsTaken", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect to introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+            "redirect to ip14 overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14OverseasPensions()}") }
         }
 
         "Submitting pensionsTakenForm with no data" should {
@@ -330,7 +330,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "1"))
                 "return 303" in {status(DataItem.result) shouldBe 303}
-                "temporarily redirect to introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+                "redirect to ip14 overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14OverseasPensions()}") }
             }
 
             "no amount is set" should {
@@ -374,7 +374,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PensionsTakenBetween, ("pensionsTakenBetween", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect temporarily to introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+            "temporarily to ip14 overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14OverseasPensions()}") }
         }
 
         "Submitting pensionsTakenBetweenForm with no data" should {
@@ -383,6 +383,127 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "return 400" in { status(DataItem.result) shouldBe 400 }
             "fail with the correct error message" in {
                 DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("This field is required")
+            }
+        }
+    }
+
+
+    ///////////////////////////////////////////////
+    // IP14 Overseas Pensions
+    ///////////////////////////////////////////////
+    "In IP2014Controller calling the .ip14OverseasPensions action" when {
+
+        "not supplied with a stored model" should {
+
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14OverseasPensions)
+            "return 200" in {
+                keystoreFetchCondition[OverseasPensionsModel](None)
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the ip14 overseas pensions page" in {
+                keystoreFetchCondition[OverseasPensionsModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.pageHeading")
+            }
+        }
+
+        "supplied with a stored test model (yes, £100000)" should {
+            val testModel = new OverseasPensionsModel("yes", Some(100000))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14OverseasPensions)
+
+            "return 200" in {
+                keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "temporarily take the user to the introduction page" in {
+                keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.pageHeading")
+            }
+
+            "return some HTML that" should {
+
+                "contain some text and use the character set utf-8" in {
+                    keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
+                    contentType(DataItem.result) shouldBe Some("text/html")
+                    charset(DataItem.result) shouldBe Some("utf-8")
+                }
+
+                "have the radio option `yes` selected by default" in {
+                    keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("overseasPensions-yes").parent.classNames().contains("selected") shouldBe true
+                }
+
+                "have the value 100000 completed in the amount input by default" in {
+                    keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("overseasPensionsAmt").attr("value") shouldBe "100000"
+                }
+            }
+        }
+    }
+
+    "Submitting IP14 Overseas Pensions data" when {
+
+
+        "Submitting 'no' in overseasPensionsForm" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14OverseasPensions, ("overseasPensions", "no"), ("overseasPensionsAmt", "") )
+            "return 303" in { status(DataItem.result) shouldBe 303 }
+            "temporarily redirect to Introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+        }
+
+        "Submitting 'yes', '£100,000' in overseasPensionForm" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14OverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "100000") )
+            "return 303" in { status(DataItem.result) shouldBe 303 }
+            "temporarily redirect to Current Pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+        }
+
+        "Submitting overseasPensionsForm with no data" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14OverseasPensions, ("overseasPensions", ""), ("overseasPensionsAmt", "") )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("This field is required")
+            }
+        }
+
+        "Submitting 'yes' in overseasPensionsForm" when {
+
+            "no amount is set" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14OverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", ""))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorQuestion"))
+                }
+            }
+
+            "amount is set as '5.001'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14OverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "5.001"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorDecimalPlaces"))
+                }
+            }
+
+            "amount is set as '-25'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14OverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "-25"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorNegative"))
+                }
+            }
+
+            "amount is set as '99999999999999.99'" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14OverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "99999999999999.99"))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+                "fail with the correct error message" in {
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorMaximum"))
+                }
             }
         }
     }

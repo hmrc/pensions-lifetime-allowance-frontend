@@ -43,6 +43,9 @@ POST        /ip14-pensions-taken-before                         controllers.IP20
 GET         /ip14-pensions-taken-between                        controllers.IP2014Controller.ip14PensionsTakenBetween
 POST        /ip14-pensions-taken-between                        controllers.IP2014Controller.submitIP14PensionsTakenBetween
 
+GET         /apply-for-ip14-overseas-pensions                   controllers.IP2014Controller.ip14OverseasPensions
+POST        /apply-for-ip14-overseas-pensions                   controllers.IP2014Controller.submitIP14OverseasPensions
+
 
 ## Apply IP 16 ##
 GET         /pensions-taken                                     controllers.IP2016Controller.pensionsTaken

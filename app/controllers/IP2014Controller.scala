@@ -31,6 +31,7 @@ import forms._
 import forms.PensionsTakenForm.pensionsTakenForm
 import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
+import forms.OverseasPensionsForm.overseasPensionsForm
 import models._
 import common.Validation._
 
@@ -62,7 +63,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
                 keyStoreConnector.saveFormData("ip14PensionsTaken", success)
                 success.pensionsTaken.get match {
                     case "yes"  => Redirect(routes.IP2014Controller.ip14PensionsTakenBefore())
-                    case "no"   => Redirect(routes.IntroductionController.introduction())
+                    case "no"   => Redirect(routes.IP2014Controller.ip14OverseasPensions())
                 }
             }
         )
@@ -114,6 +115,32 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
                     Future.successful(BadRequest(pages.ip2014.ip14PensionsTakenBetween(validatedForm)))
                 } else {
                     keyStoreConnector.saveFormData("ip14PensionsTakenBetween", success)
+                    Future.successful(Redirect(routes.IP2014Controller.ip14OverseasPensions()))
+                }
+            }
+        )
+    }
+
+
+    //IP14 OVERSEAS PENSIONS
+    val ip14OverseasPensions = AuthorisedByAny.async { implicit user => implicit request =>
+
+        keyStoreConnector.fetchAndGetFormData[OverseasPensionsModel]("ip14OverseasPensions").map {
+            case Some(data) => Ok(pages.ip2014.ip14OverseasPensions(overseasPensionsForm.fill(data)))
+            case _ => Ok(pages.ip2014.ip14OverseasPensions(overseasPensionsForm))
+        }
+    }
+
+    val submitIP14OverseasPensions = AuthorisedByAny.async { implicit user => implicit request =>
+
+        overseasPensionsForm.bindFromRequest.fold(
+            errors => Future.successful(BadRequest(pages.ip2014.ip14OverseasPensions(errors))),
+            success => {
+                val validatedForm = OverseasPensionsForm.validateForm(overseasPensionsForm.fill(success))
+                if(validatedForm.hasErrors) {
+                    Future.successful(BadRequest(pages.ip2014.ip14OverseasPensions(validatedForm)))
+                } else {
+                    keyStoreConnector.saveFormData("ip14OverseasPensions", success)
                     Future.successful(Redirect(routes.IntroductionController.introduction()))
                 }
             }
