@@ -182,7 +182,9 @@ pla.pensionsTakenBetween.errorMaximum       = The amount of your pension you hav
 pla.pensionsTakenBetween.errorDecimalPlaces = The value you have entered has too many decimal places
 
 ## IP14 Pensions Taken Between ##
-pla.ip14PensionsTakenBetween.question       = Did you ake any pensions between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.pageHeading    = Pensions taken between 6 April 2006 and 5 April 2014
+pla.ip14PensionsTakenBetween.title          = Pensions Taken Between 6 April 2006 and 5 April 2014
+pla.ip14PensionsTakenBetween.question       = Did you take any pensions between 6 April 2006 and 5 April 2014?
 
 ## Overseas Pensions ##
 pla.overseasPensions.pageHeading            = Overseas Pensions

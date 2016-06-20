@@ -23,13 +23,13 @@
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@main_template(title=Messages("pla.pensionsTakenBetween.title"), scriptElem=Some(scriptElement)) {
+@main_template(title=Messages("pla.ip14PensionsTakenBetween.title"), scriptElem=Some(scriptElement)) {
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenBetweenForm
     )
 
-    <h1 class="heading-xlarge">@Messages("pla.pensionsTakenBetween.pageHeading")</h1>
+    <h1 class="heading-xlarge">@Messages("pla.ip14PensionsTakenBetween.pageHeading")</h1>
 
     @govHelpers.form(action = routes.IP2014Controller.submitIP14PensionsTakenBetween) {
 
