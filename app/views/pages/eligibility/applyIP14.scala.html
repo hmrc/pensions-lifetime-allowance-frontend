@@ -1,0 +1,34 @@
+@import play.api.data._
+
+@()(implicit request: Request[_])
+
+
+@sidebar = {
+    <div class="service-info">
+        <h2>@Messages("pla.base.readMore")</h2>
+        <ul>
+            <li><a id="ip2014" href="https://www.gov.uk/tax-on-your-private-pension/lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.lifetimeAllowance")</a></li>
+        </ul>
+    </div>
+}
+
+@views.html.main_template(title = Messages("pla.applyIP14.title"), bodyClasses = None, sidebarLinks = Some(sidebar)) {
+
+    <h1 class="heading-xlarge">@Messages("pla.applyIP14.pageHeading")</h1>
+
+    <p>@Messages("pla.applyIP14.paraOne")</p>
+
+    <ul class="list list-bullet">
+        <li>@Messages("pla.applyIP14.bulletOne")</li>
+        <li>@Messages("pla.applyIP14.bulletTwo")</li>
+    </ul>
+
+    <p>@Messages("pla.applyIP14.paraTwo")</p>
+
+    <p>@Messages("pla.applyIP14.paraThree")</p>
+
+    <p>
+        <a id="continue-button" href=@controllers.routes.IP2014Controller.ip14PensionsTaken class="button" role="button">@Messages("pla.base.apply")</a>
+    </p>
+
+}

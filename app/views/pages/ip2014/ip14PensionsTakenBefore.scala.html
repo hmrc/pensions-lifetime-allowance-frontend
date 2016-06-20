@@ -1,0 +1,50 @@
+@import models.PensionsTakenBeforeModel
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import helpers.templates.{formInputMoney,formHiddenYesNoRadio}
+@import play.api.data._
+
+@(pensionsTakenBeforeForm: Form[PensionsTakenBeforeModel])(implicit request: Request[_])
+
+@helpText = {
+    @Messages("pla.pensionsTakenBefore.helpText")
+}
+
+@hiddenYesNoContent = {
+
+    @formInputMoney(
+        pensionsTakenBeforeForm,
+        "pensionsTakenBeforeAmt",
+        Messages("pla.pensionsTakenBefore.questionTwo"),
+        Some(helpText.toString())
+    )
+}
+
+@scriptElement = {
+    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
+
+@main_template(title=Messages("pla.pensionsTakenBefore.title"), scriptElem=Some(scriptElement)) {
+
+    @govHelpers.errorSummary(
+        Messages("pla.base.errorSummaryLabel"), pensionsTakenBeforeForm
+    )
+
+    <h1 class="heading-xlarge">@Messages("pla.pensionsTakenBefore.pageHeading")</h1>
+
+    @govHelpers.form(action = routes.IP2014Controller.submitIP14PensionsTakenBefore) {
+
+        <legend>
+            <p>@Messages("pla.pensionsTakenBefore.question")</p>
+        </legend>
+        <div class="inline form-group">
+            @formHiddenYesNoRadio(
+                pensionsTakenBeforeForm,
+                "pensionsTakenBefore",
+                "",
+                hiddenYesNoContent
+            )
+
+        </div>
+        <button class="button" type="submit" id="continue-button" >@Messages("pla.base.continue")</button>
+    }
+}

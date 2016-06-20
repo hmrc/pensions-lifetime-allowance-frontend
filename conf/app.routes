@@ -12,6 +12,9 @@ GET         /not-authorised                                     controllers.Unau
 
 
 ## Initial Eligibility ##
+GET         /ip14-pension-pot-size                              controllers.EligibilityController.ip14PensionSavings
+POST        /ip14-pension-pot-size                              controllers.EligibilityController.submitIP14PensionSavings
+
 GET         /added-to-pension                                   controllers.EligibilityController.addedToPension
 POST        /added-to-pension                                   controllers.EligibilityController.submitAddedToPension
 
@@ -21,6 +24,8 @@ POST        /adding-to-pension                                  controllers.Elig
 GET         /pension-pot-size                                   controllers.EligibilityController.pensionSavings
 POST        /pension-pot-size                                   controllers.EligibilityController.submitPensionSavings
 
+GET         /apply-ip14                                         controllers.EligibilityController.applyIP14
+
 GET         /apply-ip                                           controllers.EligibilityController.applyIP
 
 GET         /apply-fp                                           controllers.EligibilityController.applyFP
@@ -28,7 +33,18 @@ GET         /apply-fp                                           controllers.Elig
 GET         /pension-below-threshold                            controllers.EligibilityController.cannotApply
 
 
-## Apply IP ##
+## Apply IP 14 ##
+GET         /ip14-pensions-taken                                controllers.IP2014Controller.ip14PensionsTaken
+POST        /ip14-pensions-taken                                controllers.IP2014Controller.submitIP14PensionsTaken
+
+GET         /ip14-pensions-taken-before                         controllers.IP2014Controller.ip14PensionsTakenBefore
+POST        /ip14-pensions-taken-before                         controllers.IP2014Controller.submitIP14PensionsTakenBefore
+
+GET         /ip14-pensions-taken-between                        controllers.IP2014Controller.ip14PensionsTakenBetween
+POST        /ip14-pensions-taken-between                        controllers.IP2014Controller.submitIP14PensionsTakenBetween
+
+
+## Apply IP 16 ##
 GET         /pensions-taken                                     controllers.IP2016Controller.pensionsTaken
 POST        /pensions-taken                                     controllers.IP2016Controller.submitPensionsTaken
 

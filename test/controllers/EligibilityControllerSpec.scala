@@ -59,6 +59,107 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
   }
 
 ///////////////////////////////////////////////
+// IP14 Pension savings
+///////////////////////////////////////////////
+
+  "Calling the .ip14PensionSavings action" when {
+
+    "visited directly with no session ID" should {
+      object DataItem extends FakeRequestTo("ip14-pension-pot-size", TestEligibilityController.ip14PensionSavings, None)
+
+      "return 303" in {
+        status(DataItem.result) shouldBe 303
+      }
+
+      "redirect to introduction page" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+      }
+    }
+
+    "not supplied with a pre-existing stored model" should {
+      object DataItem extends FakeRequestTo("ip14-pension-pot-size", TestEligibilityController.ip14PensionSavings, Some(sessionId))
+      "return a 200" in {
+        keystoreFetchCondition[IP14PensionSavingsModel](None)
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the IP14 pension savings page" in {
+        keystoreFetchCondition[IP14PensionSavingsModel](None)
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14PensionSavings.pageHeading")
+      }
+    }
+
+    "supplied with a pre-existing stored model" should {
+      object DataItem extends FakeRequestTo("ip14-pension-pot-size", TestEligibilityController.ip14PensionSavings, Some(sessionId))
+      val testModel = new IP14PensionSavingsModel(Some("no"))
+      "return a 200" in {
+        keystoreFetchCondition[IP14PensionSavingsModel](Some(testModel))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the pension savings page" in {
+        keystoreFetchCondition[IP14PensionSavingsModel](Some(testModel))
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14PensionSavings.pageHeading")
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          keystoreFetchCondition[IP14PensionSavingsModel](Some(testModel))
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+
+        "have the radio option `no` selected by default" in {
+          keystoreFetchCondition[IP14PensionSavingsModel](Some(testModel))
+          DataItem.jsoupDoc.body.getElementById("eligibleIP14PensionSavings-no").parent.classNames().contains("selected") shouldBe true
+        }
+      }
+    }
+  }
+
+  "Submitting IP14 Pension Savings data" when {
+
+    "Submitting 'yes' in ip14PensionSavingsForm" should {
+
+      object DataItem extends FakeRequestToPost(
+        "ip14-pension-savings",
+        TestEligibilityController.submitIP14PensionSavings,
+        sessionId,
+        ("eligibleIP14PensionSavings", "yes")
+      )
+      "return 303" in {status(DataItem.result) shouldBe 303}
+      "redirect to apply ip14" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.applyIP14()}") }
+    }
+
+    "Submitting 'no' in ip14PensionSavingsForm" should {
+    
+      object DataItem extends FakeRequestToPost(
+        "ip14-pension-savings",
+        TestEligibilityController.submitIP14PensionSavings,
+        sessionId,
+        ("eligibleIP14PensionSavings", "no")
+      )
+      "return 303" in { status(DataItem.result) shouldBe 303 }
+      "redirect to will add to pension" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.EligibilityController.addedToPension()}") }
+    }
+
+    "submitting ip14PensionSavingsForm with no data" should {
+
+      object DataItem extends FakeRequestToPost(
+        "ip14-pension-savings",
+        TestEligibilityController.submitIP14PensionSavings,
+        sessionId,
+        ("eligibleIP14PensionSavings", "")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Please tell us if your pension savings were £1.25 million or more on 5 April 2014")
+      }
+    }
+  }
+
+///////////////////////////////////////////////
 // Adding to pension
 ///////////////////////////////////////////////
 
@@ -414,7 +515,7 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
         status(DataItem.result) shouldBe 200
       }
 
-      "take user to the Apply FP page" in {
+      "take user to the Apply IP page" in {
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyIP.pageHeading")
       }
     }
@@ -425,8 +526,46 @@ class EligibilityControllerSpec extends UnitSpec with WithFakeApplication with M
         status(DataItem.result) shouldBe 200
       }
 
-      "take user to the Apply FP page" in {
+      "take user to the Apply IP page" in {
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyIP.pageHeading")
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+      }
+    }
+  }
+
+///////////////////////////////////////////////
+// Apply IP14
+///////////////////////////////////////////////
+
+  "Calling the .applyIP14 action" when {
+
+    "visited directly with no session ID" should {
+      object DataItem extends FakeRequestTo("apply-ip14", TestEligibilityController.applyIP14, None)
+
+      "return 200" in {
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the Apply IP14 page" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyIP14.pageHeading")
+      }
+    }
+
+    "navigated to with a valid session ID" should {
+      object DataItem extends FakeRequestTo("apply-ip14", TestEligibilityController.applyIP14, Some(sessionId))
+      "return a 200" in {
+        status(DataItem.result) shouldBe 200
+      }
+
+      "take user to the Apply IP14 page" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.applyIP14.pageHeading")
       }
 
       "return some HTML that" should {

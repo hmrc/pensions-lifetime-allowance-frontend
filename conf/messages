@@ -38,6 +38,14 @@ pla.intro.ip14Text      = If your pension savings were over £1.25 million on 5 
 pla.intro.ip14LinkText  = apply for Individual Protection 2014
 pla.intro.start         = Start
 
+## IP14 Pension Savings ##
+pla.ip14PensionSavings.title                    = IP14 pension savings
+pla.ip14PensionSavings.pageHeading              = Value of your pensions
+pla.ip14PensionSavings.paraOne                  = On 5 April 2014, were your total pension savings over £1.25 million?
+pla.ip14PensionSavings.help                     = Include UK pensions and overseas pensions which gained UK tax relief.
+pla.ip14PensionSavings.paraTwo                  = For defined benefit schemes, your pension value is usually 20 times the annual amount payable, plus any additional lump sums.
+pla.ip14PensionSavings.mandatoryErr             = Please tell us if your pension savings were £1.25 million or more on 5 April 2014
+
 ## Will be Adding to Your Pension ##
 pla.addingToPension.title                  = Add to pension
 pla.addingToPension.pageHeading            = Will you be adding to your pension?
@@ -59,6 +67,15 @@ pla.pensionSavings.paraOne                  = Were your total pension savings wo
 pla.pensionSavings.help                     = This includes UK pensions and overseas pensions which gained UK tax relief.
 pla.pensionSavings.paraTwo                  = For defined benefit schemes, such as ''final salary schemes'', the value is normally 20 times the pension you get in the first year plus your lump sum.
 pla.pensionSavings.mandatoryErr             = Please tell us if your pension savings were £1 million or more on 5 April 2016
+
+## Apply for IP 2014 ##
+pla.applyIP14.title       = Apply for IP 2014
+pla.applyIP14.pageHeading = Apply for Individual Protection 2014
+pla.applyIP14.paraOne     = We''ll ask you:
+pla.applyIP14.bulletOne   = about pensions you took money from before 6 April 2014
+pla.applyIP14.bulletTwo   = what your current pensions were worth on 6 April 2014
+pla.applyIP14.paraTwo     = Ask your pension provider to give you this information.
+pla.applyIP14.paraThree   = You''ll need to apply by 5 April 2017.
 
 ## Apply for IP 2016 ##
 pla.applyIP.title       = Apply for IP 2016
@@ -163,6 +180,9 @@ pla.pensionsTakenBetween.errorQuestion      = Enter a value for the amount of yo
 pla.pensionsTakenBetween.errorNegative      = Enter a positive number for the amount of your pension you have taken
 pla.pensionsTakenBetween.errorMaximum       = The amount of your pension you have taken must be less than £99,999,999,999,999.98
 pla.pensionsTakenBetween.errorDecimalPlaces = The value you have entered has too many decimal places
+
+## IP14 Pensions Taken Between ##
+pla.ip14PensionsTakenBetween.question       = Did you ake any pensions between 6 April 2006 and 5 April 2014?
 
 ## Overseas Pensions ##
 pla.overseasPensions.pageHeading            = Overseas Pensions
