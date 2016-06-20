@@ -217,10 +217,10 @@ pla.pensionDebits.helpText                  = This is where a court orders that 
 pla.pensionDebits.mandatoryErr              = Please tell us if you have any pension sharing orders
 
 ## Number of Pension Sharing Orders ##
-pla.numberOfPSOs.title                      = Number of pension saving orders
+pla.numberOfPSOs.title                      = Number of pension sharing orders
 pla.numberOfPSOs.pageHeading                = Pension sharing orders
 pla.numberOfPSOs.question                   = How many pension sharing orders do you have?
-pla.numberOfPSOs.mandatoryErr               = Enter a number of Pension Saving Orders
+pla.numberOfPSOs.mandatoryErr               = Enter a number of Pension Sharing Orders
 
 ## Pension Sharing Order Details ##
 pla.psoDetails.title                        = Pension sharing order
