@@ -32,6 +32,7 @@ import forms.PensionsTakenForm.pensionsTakenForm
 import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.OverseasPensionsForm.overseasPensionsForm
+import forms.PensionDebitsForm.pensionDebitsForm
 import models._
 import common.Validation._
 
@@ -141,7 +142,31 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
                     Future.successful(BadRequest(pages.ip2014.ip14OverseasPensions(validatedForm)))
                 } else {
                     keyStoreConnector.saveFormData("ip14OverseasPensions", success)
-                    Future.successful(Redirect(routes.IntroductionController.introduction()))
+                    Future.successful(Redirect(routes.IP2014Controller.pensionDebits()))
+                }
+            }
+        )
+    }
+
+
+    //PENSION DEBITS
+    val pensionDebits = AuthorisedByAny.async { implicit user => implicit request =>
+        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("ip14PensionDebits").map {
+            case Some(data) => Ok(pages.ip2014.ip14PensionDebits(pensionDebitsForm.fill(data)))
+            case None => Ok(pages.ip2014.ip14PensionDebits(pensionDebitsForm))
+        }
+    }
+
+    val submitPensionDebits = AuthorisedByAny { implicit user => implicit request =>
+        pensionDebitsForm.bindFromRequest.fold(
+            errors => BadRequest(pages.ip2014.ip14PensionDebits(errors)),
+            success => {
+                keyStoreConnector.saveFormData("ip14PensionDebits", success)
+                success.pensionDebits.get match {
+                                // TODO: redirect to number of PSOs
+                    case "yes"  => Redirect(routes.IntroductionController.introduction())
+                                // TODO: redirect to summary
+                    case "no"   => Redirect(routes.IntroductionController.introduction())
                 }
             }
         )
