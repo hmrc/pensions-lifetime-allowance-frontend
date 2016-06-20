@@ -283,7 +283,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the ip14 pensions taken between page" in {
                 keystoreFetchCondition[PensionsTakenBetweenModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14PensionsTakenBetween.pageHeading")
             }
         }
 
@@ -298,7 +298,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the ip14 pensions taken between page" in {
                 keystoreFetchCondition[PensionsTakenBetweenModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14PensionsTakenBetween.pageHeading")
             }
 
             "return some HTML that" should {
