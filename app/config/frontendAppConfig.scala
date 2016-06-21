@@ -35,6 +35,7 @@ trait AppConfig {
   val showGovUkDonePage: Boolean
   val govUkFinishedPageUrl: String
   val identityVerification: Boolean
+  val introductionUrl: String
   val confirmFPUrl: String
   val ipStartUrl: String
   val ip14StartUrl: String
@@ -70,6 +71,7 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
   override val identityVerification: Boolean = configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)
 
   override lazy val citizenAuthHost = configuration.getString("citizen-auth.host")
+  override lazy val introductionUrl = configuration.getString("introduction.url").getOrElse("")
   override lazy val confirmFPUrl = configuration.getString("confirmFP.url").getOrElse("")
   override lazy val ipStartUrl = configuration.getString("ipStart.url").getOrElse("")
   override lazy val ip14StartUrl = configuration.getString("ip14Start.url").getOrElse("")

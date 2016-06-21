@@ -43,4 +43,8 @@ trait KeyStoreConnector {
   def fetchAndGetFormData[T](key: String)(implicit hc: HeaderCarrier, formats: Format[T]): Future[Option[T]] = {
     sessionCache.fetchAndGetEntry(key)
   }
+
+  def fetchAllUserData(implicit hc: HeaderCarrier): Future[Option[CacheMap]] = {
+    sessionCache.fetch()
+  }
 }
