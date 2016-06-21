@@ -142,7 +142,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
                     Future.successful(BadRequest(pages.ip2014.ip14OverseasPensions(validatedForm)))
                 } else {
                     keyStoreConnector.saveFormData("ip14OverseasPensions", success)
-                    Future.successful(Redirect(routes.IP2014Controller.pensionDebits()))
+                    Future.successful(Redirect(routes.IntroductionController.introduction()))
                 }
             }
         )
