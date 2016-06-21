@@ -227,6 +227,7 @@ pla.numberOfPSOs.mandatoryErr               = Enter a number of Pension Sharing 
 
 ## Pension Sharing Order Details ##
 pla.psoDetails.title                        = Pension sharing order
+pla.psoDetails.psoNumLabel                  = PSO number. Do not change this number
 pla.psoDetails.pageHeading1                 = First pension sharing order
 pla.psoDetails.pageHeading2                 = Second pension sharing order
 pla.psoDetails.pageHeading3                 = Third pension sharing order

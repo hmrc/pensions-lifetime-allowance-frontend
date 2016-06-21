@@ -18,7 +18,10 @@
 
         <div class="inline form-group">
             <div style="display: none;">
-                <input type="number" value= @psoNum name="psoNumber" id="psoNumber">
+                <label for="psoNumber">
+                    <span>@Messages("pla.psoDetails.psoNumLabel")</span>
+                    <input type="number" value= @psoNum name="psoNumber" id="psoNumber">
+                </label>
             </div>
 
             @formInlineDateInput(psoDetailsForm, "pso", Messages("pla.psoDetails.dateQuestionText"), Some(Messages("pla.psoDetails.dateHintText")))
