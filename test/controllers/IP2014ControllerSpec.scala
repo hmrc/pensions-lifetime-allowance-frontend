@@ -416,7 +416,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 200
             }
 
-            "temporarily take the user to the introduction page" in {
+            "take the user to the ip14 current pensions page" in {
                 keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
                 DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.pageHeading")
             }
@@ -449,14 +449,14 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14OverseasPensions, ("overseasPensions", "no"), ("overseasPensionsAmt", "") )
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "temporarily redirect to Introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+            "redirect to ip14 current pensions page" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14CurrentPensions()}") }
         }
 
         "Submitting 'yes', '£100,000' in overseasPensionForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14OverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "100000") )
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "temporarily redirect to Introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+            "redirect to Current Pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14CurrentPensions()}") }
         }
 
         "Submitting overseasPensionsForm with no data" should {
@@ -511,7 +511,102 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
 
     ///////////////////////////////////////////////
-    // PENSION DEBITS
+    // IP14 CURRENT PENSIONS
+    ///////////////////////////////////////////////
+    "In IP2014Controller calling the .ip14CurrentPensions action" when {
+
+        "not supplied with a stored model" should {
+
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14CurrentPensions)
+            "return 200" in {
+                keystoreFetchCondition[CurrentPensionsModel](None)
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the ip14 current pensions page" in {
+                keystoreFetchCondition[CurrentPensionsModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.pageHeading")
+            }
+        }
+
+        "supplied with a stored test model (£100000)" should {
+            val testModel = new CurrentPensionsModel(Some(100000))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14CurrentPensions)
+
+            "return 200" in {
+                keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the ip14Current pensions page" in {
+                keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.pageHeading")
+            }
+
+            "return some HTML that" should {
+
+                "contain some text and use the character set utf-8" in {
+                    keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
+                    contentType(DataItem.result) shouldBe Some("text/html")
+                    charset(DataItem.result) shouldBe Some("utf-8")
+                }
+                "have the value 100000 completed in the amount input by default" in {
+                    keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("currentPensionsAmt").attr("value") shouldBe "100000"
+                }
+            }
+        }
+    }
+    "Submitting IP14 Current Pensions data" when {
+
+        "amount is set as '100,000'" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14CurrentPensions, ("currentPensionsAmt", "100000") )
+            "return 303" in { status(DataItem.result) shouldBe 303 }
+            "redirect to Pension Debits page" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.pensionDebits()}") }
+        }
+
+        "no amount is set" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14CurrentPensions, ("currentPensionsAmt", ""))
+            "return 400" in {status(DataItem.result) shouldBe 400}
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.currentPensions.errorQuestion"))
+            }
+        }
+
+        "amount is set as '5.001'" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14CurrentPensions, ("currentPensionsAmt", "5.001"))
+            "return 400" in {status(DataItem.result) shouldBe 400}
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.currentPensions.errorDecimalPlaces"))
+            }
+        }
+
+        "amount is set as '-25'" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14CurrentPensions, ("currentPensionsAmt", "-25"))
+            "return 400" in {status(DataItem.result) shouldBe 400}
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.currentPensions.errorNegative"))
+            }
+        }
+
+        "amount is set as '99999999999999.99'" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14CurrentPensions, ("currentPensionsAmt", "99999999999999.99"))
+            "return 400" in {status(DataItem.result) shouldBe 400}
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.currentPensions.errorMaximum"))
+            }
+        }
+        
+    }
+
+
+    ///////////////////////////////////////////////
+    // IP14 PENSION DEBITS
     ///////////////////////////////////////////////
     "In IP2014Controller calling the .pensionDebits action" when {
 
