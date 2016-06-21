@@ -509,6 +509,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     }
 
 
+
     ///////////////////////////////////////////////
     // IP14 CURRENT PENSIONS
     ///////////////////////////////////////////////
@@ -549,7 +550,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                     contentType(DataItem.result) shouldBe Some("text/html")
                     charset(DataItem.result) shouldBe Some("utf-8")
                 }
-
                 "have the value 100000 completed in the amount input by default" in {
                     keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
                     DataItem.jsoupDoc.body.getElementById("currentPensionsAmt").attr("value") shouldBe "100000"
@@ -557,14 +557,13 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             }
         }
     }
-
     "Submitting IP14 Current Pensions data" when {
 
         "amount is set as '100,000'" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14CurrentPensions, ("currentPensionsAmt", "100000") )
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "temporarily redirect to Introduction page" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+            "redirect to Pension Debits page" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.pensionDebits()}") }
         }
 
         "no amount is set" should {
@@ -603,5 +602,83 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             }
         }
         
+    }
+
+
+    ///////////////////////////////////////////////
+    // IP14 PENSION DEBITS
+    ///////////////////////////////////////////////
+    "In IP2014Controller calling the .pensionDebits action" when {
+
+        "not supplied with a stored model" should {
+
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.pensionDebits)
+            "return 200" in {
+                keystoreFetchCondition[PensionDebitsModel](None)
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the pension debits page" in {
+                keystoreFetchCondition[PensionDebitsModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14PensionDebits.pageHeading")
+            }
+        }
+
+        "supplied with a stored test model" should {
+            val testModel = new PensionDebitsModel(Some("yes"))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.pensionDebits)
+
+            "return 200" in {
+                keystoreFetchCondition[PensionDebitsModel](Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the pension debits page" in {
+                keystoreFetchCondition[PensionDebitsModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14PensionDebits.pageHeading")
+            }
+
+            "return some HTML that" should {
+
+                "contain some text and use the character set utf-8" in {
+                    keystoreFetchCondition[PensionDebitsModel](Some(testModel))
+                    contentType(DataItem.result) shouldBe Some("text/html")
+                    charset(DataItem.result) shouldBe Some("utf-8")
+                }
+
+                "have the radio option `yes` selected by default" in {
+                    keystoreFetchCondition[PensionDebitsModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("pensionDebits-yes").parent.classNames().contains("selected") shouldBe true
+                }
+            }
+        }
+    }
+
+    "Submitting IP 2014 Pensions Debits data" when {
+
+        "Submitting 'yes' in pensionDebitsForm" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitPensionDebits, ("pensionDebits", "yes"))
+            "return 303" in {status(DataItem.result) shouldBe 303}
+            // TODO: update to number of pension sharing orders once implemented
+            "temporarily redirect to introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+        }
+
+        "Submitting 'no' in pensionDebitsForm" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitPensionDebits, ("pensionDebits", "no"))
+            "return 303" in { status(DataItem.result) shouldBe 303 }
+            // TODO: update to summary once immplemented
+            "temporarily redirect to introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+        }
+
+        "Submitting pensionDebitsForm with no data" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitPensionDebits, ("pensionDebits", ""))
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionDebits.mandatoryErr"))
+            }
+        }
     }
 }
