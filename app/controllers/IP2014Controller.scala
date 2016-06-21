@@ -32,6 +32,7 @@ import forms.PensionsTakenForm.pensionsTakenForm
 import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.OverseasPensionsForm.overseasPensionsForm
+import forms.CurrentPensionsForm.currentPensionsForm
 import models._
 import common.Validation._
 
@@ -141,8 +142,29 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
                     Future.successful(BadRequest(pages.ip2014.ip14OverseasPensions(validatedForm)))
                 } else {
                     keyStoreConnector.saveFormData("ip14OverseasPensions", success)
-                    Future.successful(Redirect(routes.IntroductionController.introduction()))
+                    Future.successful(Redirect(routes.IP2014Controller.ip14CurrentPensions()))
                 }
+            }
+        )
+    }
+
+
+    //IP14 CURRENT PENSIONS
+    val ip14CurrentPensions = AuthorisedByAny.async { implicit user => implicit request =>
+
+        keyStoreConnector.fetchAndGetFormData[CurrentPensionsModel]("ip14CurrentPensions").map {
+            case Some(data) => Ok(pages.ip2014.ip14CurrentPensions(currentPensionsForm.fill(data)))
+            case _ => Ok(pages.ip2014.ip14CurrentPensions(currentPensionsForm))
+        }
+    }
+
+    val submitIP14CurrentPensions = AuthorisedByAny.async { implicit user => implicit request =>
+
+        currentPensionsForm.bindFromRequest.fold(
+            errors => Future.successful(BadRequest(pages.ip2014.ip14CurrentPensions(errors))),
+            success => {
+                keyStoreConnector.saveFormData("ip14CurrentPensions", success)
+                Future.successful(Redirect(routes.IntroductionController.introduction()))
             }
         )
     }
