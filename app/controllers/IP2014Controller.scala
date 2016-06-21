@@ -149,6 +149,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
         )
     }
 
+
     //IP14 CURRENT PENSIONS
     val ip14CurrentPensions = AuthorisedByAny.async { implicit user => implicit request =>
 
@@ -168,6 +169,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
             }
         )
     }
+    
 
     //IP14 PENSION DEBITS
     val pensionDebits = AuthorisedByAny.async { implicit user => implicit request =>
