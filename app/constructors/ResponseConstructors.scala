@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package helpers
+package constructors
 
 import play.api.i18n.Messages
 import play.api.libs.json.{JsValue, Json}
 import models._
 
-object ModelMakers extends ModelMakers {
+object ResponseConstructors extends ResponseConstructors {
     
 }
 
-trait ModelMakers {
+trait ResponseConstructors {
 
     def createSuccessResponseFromJson(json: JsValue): SuccessResponseModel = {
         val notificationId = (json \ "notificationId").as[Int].toString
