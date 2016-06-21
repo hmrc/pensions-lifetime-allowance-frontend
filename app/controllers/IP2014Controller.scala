@@ -33,6 +33,7 @@ import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.OverseasPensionsForm.overseasPensionsForm
 import forms.CurrentPensionsForm.currentPensionsForm
+import forms.PensionDebitsForm.pensionDebitsForm
 import models._
 import common.Validation._
 
@@ -148,7 +149,6 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
         )
     }
 
-
     //IP14 CURRENT PENSIONS
     val ip14CurrentPensions = AuthorisedByAny.async { implicit user => implicit request =>
 
@@ -164,7 +164,30 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
             errors => Future.successful(BadRequest(pages.ip2014.ip14CurrentPensions(errors))),
             success => {
                 keyStoreConnector.saveFormData("ip14CurrentPensions", success)
-                Future.successful(Redirect(routes.IntroductionController.introduction()))
+                Future.successful(Redirect(routes.IP2014Controller.pensionDebits()))
+            }
+        )
+    }
+
+    //IP14 PENSION DEBITS
+    val pensionDebits = AuthorisedByAny.async { implicit user => implicit request =>
+        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("ip14PensionDebits").map {
+            case Some(data) => Ok(pages.ip2014.ip14PensionDebits(pensionDebitsForm.fill(data)))
+            case None => Ok(pages.ip2014.ip14PensionDebits(pensionDebitsForm))
+        }
+    }
+
+    val submitPensionDebits = AuthorisedByAny { implicit user => implicit request =>
+        pensionDebitsForm.bindFromRequest.fold(
+            errors => BadRequest(pages.ip2014.ip14PensionDebits(errors)),
+            success => {
+                keyStoreConnector.saveFormData("ip14PensionDebits", success)
+                success.pensionDebits.get match {
+                                // TODO: redirect to number of PSOs
+                    case "yes"  => Redirect(routes.IntroductionController.introduction())
+                                // TODO: redirect to summary
+                    case "no"   => Redirect(routes.IntroductionController.introduction())
+                }
             }
         )
     }

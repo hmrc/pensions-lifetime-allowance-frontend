@@ -49,6 +49,9 @@ POST        /apply-for-ip14-overseas-pensions                   controllers.IP20
 GET         /apply-for-ip14-current-pensions                    controllers.IP2014Controller.ip14CurrentPensions
 POST        /apply-for-ip14-current-pensions                    controllers.IP2014Controller.submitIP14CurrentPensions
 
+GET         /apply-for-ip14-pension-sharing-orders              controllers.IP2014Controller.pensionDebits
+POST        /apply-for-ip14-pension-sharing-orders              controllers.IP2014Controller.submitPensionDebits
+
 
 ## Apply IP 16 ##
 GET         /pensions-taken                                     controllers.IP2016Controller.pensionsTaken
@@ -63,17 +66,17 @@ POST        /pensions-taken-between                             controllers.IP20
 GET         /apply-for-ip16-overseas-pensions                   controllers.IP2016Controller.overseasPensions
 POST        /apply-for-ip16-overseas-pensions                   controllers.IP2016Controller.submitOverseasPensions
 
-GET         /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP2016Controller.numberOfPSOs
-POST        /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP2016Controller.submitNumberOfPSOs
-
-POST        /apply-for-ip16-pension-sharing-order-details           controllers.IP2016Controller.submitPSODetails
-GET         /apply-for-ip16-pension-sharing-order-details/:psoNum   controllers.IP2016Controller.psoDetails(psoNum)
-
 GET         /apply-for-ip16-current-pensions                    controllers.IP2016Controller.currentPensions
 POST        /apply-for-ip16-current-pensions                    controllers.IP2016Controller.submitCurrentPensions
 
 GET         /apply-for-ip16-pension-sharing-orders              controllers.IP2016Controller.pensionDebits
 POST        /apply-for-ip16-pension-sharing-orders              controllers.IP2016Controller.submitPensionDebits
+
+GET         /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP2016Controller.numberOfPSOs
+POST        /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP2016Controller.submitNumberOfPSOs
+
+POST        /apply-for-ip16-pension-sharing-order-details           controllers.IP2016Controller.submitPSODetails
+GET         /apply-for-ip16-pension-sharing-order-details/:psoNum   controllers.IP2016Controller.psoDetails(psoNum)
 
 
 ## Confirmation ##
