@@ -215,15 +215,15 @@ pla.ip14CurrentPensions.question            = Enter the value of your current UK
 ## PENSION DEBITS ##
 pla.pensionDebits.pageHeading               = Pensions shared in a divorce
 pla.pensionDebits.title                     = Pension Sharing Orders
-pla.pensionDebits.question                  = Has your pension been subject to a pension sharing order?
-pla.pensionDebits.helpText                  = This is where a court orders that part of your pension is shared with an ex-partner.
+pla.pensionDebits.question                  = Have any of your pensions been subject to a pension sharing order?
+pla.pensionDebits.helpText                  = This is where a court orders that your pensions are shared with an ex-partner
 pla.pensionDebits.mandatoryErr              = Please tell us if you have any pension sharing orders
 
 ## IP14 PENSION DEBITS ##
 pla.ip14PensionDebits.pageHeading           = Pensions shared in a divorce
 pla.ip14PensionDebits.title                 = Pension Sharing Orders
-pla.ip14PensionDebits.question              = Has your pension been subject to a pension sharing order?
-pla.ip14PensionDebits.helpText              = This is where a court orders that part of your pension is shared with an ex-partner.
+pla.ip14PensionDebits.question              = Have any of your pensions been subject to a pension sharing order?
+pla.ip14PensionDebits.helpText              = This is where a court orders that your pensions are shared with an ex-partner
 
 ## Number of Pension Sharing Orders ##
 pla.numberOfPSOs.title                      = Number of pension sharing orders
