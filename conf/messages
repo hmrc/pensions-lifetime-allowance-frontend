@@ -248,6 +248,14 @@ pla.psoDetails.errorDecimalPlaces           = The pension sharing order value yo
 pla.psoDetails.errorDateOutOfRange          = Please enter a date between the year 1900 and 2100
 
 
+## SUMMARY ##
+pla.summary.change                              = Change
+pla.summary.questions.pensionsTaken             = Have you taken any of your pensions?
+pla.summary.questions.pensionsTakenBefore       = Did you start taking any of your pensions before 6 April 2006?
+pla.summary.questions.pensionsTakenBeforeAmt    = How much lifetime allowance did you use?
+pla.summary.questions.pensionsTakenBetween      = Did you take any pensions between 6 April 2006 and 5 April 2016?
+pla.summary.questions.pensionsTakenBetweenAmt   = How much lifetime allowance did you use?
+
 
 ### RESULTS MESSAGES ###
 

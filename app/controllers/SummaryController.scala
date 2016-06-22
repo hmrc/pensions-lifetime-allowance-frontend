@@ -48,12 +48,9 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
 
   private def routeSummaryFromUserData(data: CacheMap, req: Request[AnyContent]): Result = {
     implicit val request = req
-    try {
-      Ok(pages.ip2016.summary(SummaryConstructor.createSummaryData(data)))
-    } catch {
-                                                  //TODO: Redirect to Technical Error
-      case e: KeyStoreEntryValidationException => Redirect(routes.IntroductionController.introduction())
-    }
+    SummaryConstructor.createSummaryData(data).map {
+      summaryModel => Ok(pages.ip2016.summary(summaryModel))
+    }.getOrElse(Redirect(routes.IntroductionController.introduction())) //TODO: Redirect to Technical Error
   }
 
 }
