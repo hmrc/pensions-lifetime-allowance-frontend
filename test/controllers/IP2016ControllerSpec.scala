@@ -677,7 +677,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionDebits, ("pensionDebits", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "temporarily redirect to introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+            "redirect to summary" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}") }
         }
 
         "Submitting pensionDebitsForm with no data" should {
@@ -837,10 +837,9 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the introduction page" in {
+            "redirect the user to the summary page" in {
                 psoNumKeystoreSetup(Some(testModel))
-                // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}")
             }
         }
 
