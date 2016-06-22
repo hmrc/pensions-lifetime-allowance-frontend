@@ -16,6 +16,6 @@
 
 package models
 
-case class SummaryModel(summaryRows: Seq[SummaryRowModel]) {
+case class SummaryModel(pensionContributionRows: Seq[SummaryRowModel], psoDetailsRows: Seq[SummaryRowModel]) {
 
 }

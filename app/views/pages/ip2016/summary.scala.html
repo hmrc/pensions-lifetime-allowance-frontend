@@ -10,7 +10,13 @@
 
     <h1 class="heading-xlarge">Summary</h1>
 
-    @for(row <- summary.summaryRows) {
+    @for(row <- summary.pensionContributionRows) {
         <p>@row.rowText : @row.displayValue : @if(row.changeLinkCall.isDefined) {<a href=@row.changeLinkCall.get>@Messages("pla.summary.change")</a>} </p>
+    }
+
+    <h2>PSO Details</h2>
+
+    @for(row <- summary.psoDetailsRows) {
+    <p>@row.rowText : @row.displayValue : @if(row.changeLinkCall.isDefined) {<a href=@row.changeLinkCall.get>@Messages("pla.summary.change")</a>} </p>
     }
 }
