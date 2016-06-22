@@ -34,6 +34,8 @@ import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.OverseasPensionsForm.overseasPensionsForm
 import forms.CurrentPensionsForm.currentPensionsForm
 import forms.PensionDebitsForm.pensionDebitsForm
+import forms.NumberOfPSOsForm.numberOfPSOsForm
+import forms.PSODetailsForm.psoDetailsForm
 import models._
 import common.Validation._
 
@@ -186,12 +188,93 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
                 keyStoreConnector.saveFormData("ip14PensionDebits", success)
                 success.pensionDebits.get match {
                                 // TODO: redirect to number of PSOs
-                    case "yes"  => Redirect(routes.IntroductionController.introduction())
+                    case "yes"  => Redirect(routes.IP2014Controller.ip14NumberOfPSOs())
                                 // TODO: redirect to summary
                     case "no"   => Redirect(routes.IntroductionController.introduction())
                 }
             }
         )
+    }
+
+
+    //IP14 NUMBER OF PENSION SHARING ORDERS
+    val ip14NumberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
+
+        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("ip14PensionDebits").flatMap(pensionDebitsModel => {
+            pensionDebitsModel.map {
+                completedModel => routeIP14NumberOfPSOs(completedModel.pensionDebits.get, request)
+            }.getOrElse(
+                // TODO: redirect to summary
+                Future.successful(Redirect(routes.IntroductionController.introduction()))
+            )
+        })
+    }
+
+    private def routeIP14NumberOfPSOs(havePSOs: String, req: Request[AnyContent]): Future[Result] = {
+        implicit val request = req
+        havePSOs match {
+            case "no"  => Future.successful(Redirect(routes.IntroductionController.introduction())) // TODO: redirect to summary
+            case "yes" => keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("ip14NumberOfPSOs").map {
+                            case Some(data) => Ok(pages.ip2014.ip14NumberOfPSOs(numberOfPSOsForm.fill(data)))
+                            case _ => Ok(pages.ip2014.ip14NumberOfPSOs(numberOfPSOsForm))
+                          }
+        }
+    }
+
+    val submitIP14NumberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
+
+        numberOfPSOsForm.bindFromRequest.fold(
+            errors => Future.successful(BadRequest(pages.ip2014.ip14NumberOfPSOs(errors))),
+            success => {
+                keyStoreConnector.saveFormData("ip14NumberOfPSOs", success)
+                Future.successful(Redirect(routes.IP2014Controller.ip14PsoDetails("1")))
+            }
+        )
+    }
+
+
+    //PENSION SHARING ORDER DETAILS
+    def ip14PsoDetails(psoNumber:String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+
+        val psoNum = psoNumber.toInt
+        keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("ip14NumberOfPSOs").flatMap(numberOfPSOsModel => {
+            numberOfPSOsModel.map {
+                completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
+            }.getOrElse(
+                // TODO: redirect to Summary
+                Future.successful(Redirect(routes.IntroductionController.introduction()))
+            )
+
+        })
+    }
+
+    private def routePSODetails(totalPSOs: Int, psoNum: Int, req: Request[AnyContent]): Future[Result] = {
+        implicit val request = req
+        if (psoNum > totalPSOs) {
+            // TODO: redirect to Summary
+            Future.successful(Redirect(routes.IntroductionController.introduction()))
+        } else {
+            keyStoreConnector.fetchAndGetFormData[PSODetailsModel](s"ip14PsoDetails$psoNum").map {
+                case Some(storedData) => Ok(pages.ip2014.ip14PsoDetails(psoDetailsForm.fill(storedData), psoNum))
+                case _ => Ok(pages.ip2014.ip14PsoDetails(psoDetailsForm, psoNum))
+            }
+        }
+    }
+
+    val submitIP14PSODetails = AuthorisedByAny.async { implicit user => implicit request =>
+
+            psoDetailsForm.bindFromRequest.fold(
+                errors => Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(errors, errors("psoNumber").value.get.toInt))),
+                form => {
+                    val validatedForm = PSODetailsForm.validateForm(psoDetailsForm.fill(form))
+                    if(validatedForm.hasErrors) {
+                        Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(validatedForm, form.psoNumber)))
+                    } else {
+                        keyStoreConnector.saveFormData(s"ip14PsoDetails${form.psoNumber}", form)
+                        Future.successful(Redirect(routes.IP2014Controller.ip14PsoDetails(form.psoNumber.+(1).toString)))
+                    }
+                }
+            )
     }
 
 }
