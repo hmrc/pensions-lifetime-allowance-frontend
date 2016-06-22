@@ -78,6 +78,8 @@ POST        /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP20
 POST        /apply-for-ip16-pension-sharing-order-details           controllers.IP2016Controller.submitPSODetails
 GET         /apply-for-ip16-pension-sharing-order-details/:psoNum   controllers.IP2016Controller.psoDetails(psoNum)
 
+GET         /apply-for-ip16-submit-your-application             controllers.SummaryController.summaryIP16
+
 
 ## Confirmation ##
 GET         /confirm-fp                                         controllers.ConfirmationController.confirmFP

@@ -27,7 +27,7 @@ object SummaryConstructor extends SummaryConstructor {
 
 trait SummaryConstructor {
 
-  def createSummary(data: CacheMap): Int = {
+  def createSummaryData(data: CacheMap): Int = {
     21
   }
 }
