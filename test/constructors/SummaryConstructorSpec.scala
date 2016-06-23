@@ -16,7 +16,6 @@
 
 package constructors
 
-import play.api.i18n.Messages
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import play.api.libs.json.{JsValue, Json}
@@ -42,6 +41,8 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
     val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
     val negativePensionDebitsSummaryRow = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits()), "No")
+
+    def totalPensionsAmountSummaryRow(totalAmount: String) = SummaryRowModel("totalPensionsAmt", None, totalAmount)
 
     def numberOfPSOsTuple(numberOfPSOs: Int): (String, JsValue) = "numberOfPSOs" -> Json.toJson(NumberOfPSOsModel(Some(numberOfPSOs.toString)))
     val psoDetails1Tuple = "psoDetails1" -> Json.toJson(PSODetailsModel(1, Some(1), Some(2), Some(2016), BigDecimal(10000)))
@@ -128,7 +129,7 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     "handle valid summary data" when {
 
       "all answers are neagtive" in {
-        val testSummaryModel = SummaryModel(List(negativePensionsTakenSummaryRow, negativeOverseasPensionsSummaryRow, currentPensionsSummaryRow), List(negativePensionDebitsSummaryRow))
+        val testSummaryModel = SummaryModel(List(negativePensionsTakenSummaryRow, negativeOverseasPensionsSummaryRow, currentPensionsSummaryRow, totalPensionsAmountSummaryRow("£1,001.00")), List(negativePensionDebitsSummaryRow))
         val tstMap = CacheMap(tstId, Map(negativePensionsTakenTuple,
                                         negativeOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
