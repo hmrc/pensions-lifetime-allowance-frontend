@@ -1,7 +1,7 @@
 @import play.api.i18n._
 @import play.api.mvc.Call
 
-@(rowID: String, rowText: String, displayValue: String, changeLinkCall: Option[Call])
+@(rowID: String, rowText: String, displayValues: Seq[String], changeLinkCall: Option[Call])
 
 <div class="grid-wrapper">
     <div class="grid grid-2-3">
@@ -11,7 +11,9 @@
     </div>
     <div class="grid grid-1-3">
         <div class="inner-block">
-            <p id="@{rowID}DisplayValue" class="heading-small">@displayValue</p>
+            @for((displayValue, index) <- displayValues.zipWithIndex) {
+                <p id="@{rowID}DisplayValue@index" class="heading-small">@displayValue</p>
+            }
             @if(changeLinkCall.isDefined) {<p><a id="@{rowID}ChangeLink" href=@changeLinkCall.get>@Messages("pla.summary.change")</a></p>}
         </div>
     </div>
