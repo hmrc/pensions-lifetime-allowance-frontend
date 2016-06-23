@@ -1,22 +1,32 @@
 @import models.SummaryModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.plaInputRadioGroup
+@import helpers.templates.summaryRow
 @import play.api.data._
 
 @(summary: SummaryModel)(implicit request: Request[_])
 
 
-@views.html.main_template(title = "Howdy", bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.summary.title"), bodyClasses = None) {
 
-    <h1 class="heading-xlarge">Summary</h1>
+    <h1 class="heading-xlarge">@Messages("pla.summary.pageHeading")</h1>
+
+    <h2>@Messages("pla.summary.pensionsHeading")</h2>
 
     @for(row <- summary.pensionContributionRows) {
-        <p>@row.rowText : @row.displayValue : @if(row.changeLinkCall.isDefined) {<a href=@row.changeLinkCall.get>@Messages("pla.summary.change")</a>} </p>
+        @summaryRow(row.rowID, row.rowText, row.displayValues, row.changeLinkCall)
     }
 
-    <h2>PSO Details</h2>
+    <h2>@Messages("pla.summary.psosHeading")</h2>
 
     @for(row <- summary.psoDetailsRows) {
-    <p>@row.rowText : @row.displayValue : @if(row.changeLinkCall.isDefined) {<a href=@row.changeLinkCall.get>@Messages("pla.summary.change")</a>} </p>
+        @summaryRow(row.rowID, row.rowText, row.displayValues, row.changeLinkCall)
+    }
+
+    <p>@Messages("pla.summary.declarationPara1")</p>
+    <p>@Messages("pla.summary.declarationPara2")</p>
+
+    @govHelpers.form(action = routes.ResultController.processFPApplication) {
+        
+        <button class="button" type="submit" id="apply">@Messages("pla.base.submitApplication")</button>
     }
 }
