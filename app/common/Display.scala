@@ -16,11 +16,19 @@
 
 package common
 
+import java.time.format.DateTimeFormatter
+import java.time.LocalDate
+
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object Display {
 
   def currencyDisplayString(amt: BigDecimal): String = {
     "£"+MoneyPounds(amt).quantity
+  }
+
+  def dateDisplayString(date: LocalDate): String = {
+    val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyy")
+    date.format(dateFormat)
   }
 }

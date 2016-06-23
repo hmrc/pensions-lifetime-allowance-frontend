@@ -11,12 +11,12 @@
     <h1 class="heading-xlarge">Summary</h1>
 
     @for(row <- summary.pensionContributionRows) {
-        @summaryRow(row.rowText, row.displayValue, row.changeLinkCall)
+        @summaryRow(row.rowID, row.rowText, row.displayValue, row.changeLinkCall)
     }
 
     <h2>PSO Details</h2>
 
     @for(row <- summary.psoDetailsRows) {
-        @summaryRow(row.rowText, row.displayValue, row.changeLinkCall)
+        @summaryRow(row.rowID, row.rowText, row.displayValue, row.changeLinkCall)
     }
 }
