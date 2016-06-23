@@ -6,17 +6,27 @@
 @(summary: SummaryModel)(implicit request: Request[_])
 
 
-@views.html.main_template(title = "Howdy", bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.summary.title"), bodyClasses = None) {
 
-    <h1 class="heading-xlarge">Summary</h1>
+    <h1 class="heading-xlarge">@Messages("pla.summary.pageHeading")</h1>
+
+    <h2>@Messages("pla.summary.pensionsHeading")</h2>
 
     @for(row <- summary.pensionContributionRows) {
         @summaryRow(row.rowID, row.rowText, row.displayValues, row.changeLinkCall)
     }
 
-    <h2>PSO Details</h2>
+    <h2>@Messages("pla.summary.psosHeading")</h2>
 
     @for(row <- summary.psoDetailsRows) {
         @summaryRow(row.rowID, row.rowText, row.displayValues, row.changeLinkCall)
+    }
+
+    <p>@Messages("pla.summary.declarationPara1")</p>
+    <p>@Messages("pla.summary.declarationPara2")</p>
+
+    @govHelpers.form(action = routes.ResultController.processFPApplication) {
+        
+        <button class="button" type="submit" id="apply">@Messages("pla.base.submitApplication")</button>
     }
 }

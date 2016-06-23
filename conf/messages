@@ -4,6 +4,7 @@ pla.base.yes                    = Yes
 pla.base.no                     = No
 pla.base.continue               = Continue
 pla.base.apply                  = Apply
+pla.base.submitApplication      = Submit your application
 pla.base.back                   = Back
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
@@ -249,6 +250,9 @@ pla.psoDetails.errorDateOutOfRange          = Please enter a date between the ye
 
 
 ## SUMMARY ##
+pla.summary.title                               = Submit your application
+pla.summary.pageHeading                         = Check your answers before sending your application
+pla.summary.pensionsHeading                     = Pensions
 pla.summary.change                              = Change
 pla.summary.questions.pensionsTaken             = Have you taken any of your pensions?
 pla.summary.questions.pensionsTakenBefore       = Did you start taking any of your pensions before 6 April 2006?
@@ -259,6 +263,7 @@ pla.summary.questions.overseasPensions          = Do you have any overseas pensi
 pla.summary.questions.overseasPensionsAmt       = Value of overseas pensions
 pla.summary.questions.currentPensions           = Enter the value of your current UK pensions on 5 April 2014
 pla.summary.questions.totalSavings              = Your total pension savings are
+pla.summary.psosHeading                         = Pension sharing order
 pla.summary.questions.pensionDebits             = Have any of your pensions been subject to a pension sharing order?
 pla.summary.questions.numberOfPSOs              = How many pension sharing orders do you have?
 pla.summary.questions.psoDetails1               = First pension sharing order
@@ -266,7 +271,8 @@ pla.summary.questions.psoDetails2               = Second pension sharing order
 pla.summary.questions.psoDetails3               = Third pension sharing order
 pla.summary.questions.psoDetails4               = Fourth pension sharing order
 pla.summary.questions.psoDetails5               = Fifth pension sharing order
-pla.summary.onDate                              = on
+pla.summary.declarationPara1                    = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold Primary Protection or Individual Protection 2014.
+pla.summary.declarationPara2                    = The information that I have provided is true and complete to the best of my knowledge and belief.
 
 
 ### RESULTS MESSAGES ###
