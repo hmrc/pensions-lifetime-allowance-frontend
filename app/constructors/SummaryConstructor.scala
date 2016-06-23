@@ -58,9 +58,9 @@ trait SummaryConstructor {
     def createPensionsTakenSeq(): List[SummaryRowModel] = {
       val route = controllers.routes.IP2016Controller.pensionsTaken()
       pensionsTakenModel.get.pensionsTaken match {
-        case Some("no") => List(SummaryRowModel("pensionsTaken", Messages("pla.summary.questions.pensionsTaken"), Some(route), Messages("pla.base.no")))
+        case Some("no") => List(SummaryRowModel("pensionsTaken", Some(route), Messages("pla.base.no")))
         case Some("yes") => {
-          val pensionsTaken = SummaryRowModel("pensionsTaken", Messages("pla.summary.questions.pensionsTaken"), Some(route), Messages("pla.base.yes"))
+          val pensionsTaken = SummaryRowModel("pensionsTaken", Some(route), Messages("pla.base.yes"))
           List(pensionsTaken) ::: createPensionsTakenBeforeSeq() ::: createPensionsTakenBetweenSeq()
         }
         case _ => List.empty
@@ -70,11 +70,11 @@ trait SummaryConstructor {
     def createPensionsTakenBeforeSeq(): List[SummaryRowModel] = {
       val route = controllers.routes.IP2016Controller.pensionsTakenBefore()
       pensionsTakenBeforeModel.get.pensionsTakenBefore match {
-        case "no" => List(SummaryRowModel("pensionsTakenBefore", Messages("pla.summary.questions.pensionsTakenBefore"), Some(route), Messages("pla.base.no")))
+        case "no" => List(SummaryRowModel("pensionsTakenBefore", Some(route), Messages("pla.base.no")))
         case "yes" => {
-          val pensionsTakenBefore = SummaryRowModel("pensionsTakenBefore", Messages("pla.summary.questions.pensionsTakenBefore"), Some(route), Messages("pla.base.yes"))
+          val pensionsTakenBefore = SummaryRowModel("pensionsTakenBefore", Some(route), Messages("pla.base.yes"))
           val amt = currencyDisplayString(pensionsTakenBeforeModel.get.pensionsTakenBeforeAmt.getOrElse(BigDecimal(0)))
-          val pensionsTakenBeforeAmt = SummaryRowModel("pensionsTakenBeforeAmt", Messages("pla.summary.questions.pensionsTakenBeforeAmt"), Some(route), amt)
+          val pensionsTakenBeforeAmt = SummaryRowModel("pensionsTakenBeforeAmt", Some(route), amt)
           List(pensionsTakenBefore, pensionsTakenBeforeAmt)
         }
         case _ => List.empty
@@ -84,11 +84,11 @@ trait SummaryConstructor {
     def createPensionsTakenBetweenSeq(): List[SummaryRowModel] = {
       val route = controllers.routes.IP2016Controller.pensionsTakenBetween()
       pensionsTakenBetweenModel.get.pensionsTakenBetween match {
-        case "no" => List(SummaryRowModel("pensionsTakenBetween", Messages("pla.summary.questions.pensionsTakenBetween"), Some(route), Messages("pla.base.no")))
+        case "no" => List(SummaryRowModel("pensionsTakenBetween", Some(route), Messages("pla.base.no")))
         case "yes" => {
-          val pensionsTakenBetween = SummaryRowModel("pensionsTakenBetween", Messages("pla.summary.questions.pensionsTakenBetween"), Some(route), Messages("pla.base.yes"))
+          val pensionsTakenBetween = SummaryRowModel("pensionsTakenBetween", Some(route), Messages("pla.base.yes"))
           val amt = currencyDisplayString(pensionsTakenBetweenModel.get.pensionsTakenBetweenAmt.getOrElse(BigDecimal(0)))
-          val pensionsTakenBetweenAmt = SummaryRowModel("pensionsTakenBetweenAmt", Messages("pla.summary.questions.pensionsTakenBetweenAmt"), Some(route), amt)
+          val pensionsTakenBetweenAmt = SummaryRowModel("pensionsTakenBetweenAmt", Some(route), amt)
           List(pensionsTakenBetween, pensionsTakenBetweenAmt)
         }
         case _ => List.empty
@@ -98,11 +98,11 @@ trait SummaryConstructor {
     def createOverseasPensionsSeq(): List[SummaryRowModel] = {
       val route = controllers.routes.IP2016Controller.overseasPensions()
       overseasPensionsModel.get.overseasPensions match {
-        case "no" => List(SummaryRowModel("overseasPensions", Messages("pla.summary.questions.overseasPensions"), Some(route), Messages("pla.base.no")))
+        case "no" => List(SummaryRowModel("overseasPensions", Some(route), Messages("pla.base.no")))
         case "yes" => {
-          val overseasPensions = SummaryRowModel("overseasPensions", Messages("pla.summary.questions.overseasPensions"), Some(route), Messages("pla.base.yes"))
+          val overseasPensions = SummaryRowModel("overseasPensions", Some(route), Messages("pla.base.yes"))
           val amt = currencyDisplayString(overseasPensionsModel.get.overseasPensionsAmt.getOrElse(BigDecimal(0)))
-          val overseasPensionsAmt = SummaryRowModel("overseasPensionsAmt", Messages("pla.summary.questions.overseasPensionsAmt"), Some(route), amt)
+          val overseasPensionsAmt = SummaryRowModel("overseasPensionsAmt", Some(route), amt)
           List(overseasPensions, overseasPensionsAmt)
         }
         case _ => List.empty
@@ -112,7 +112,7 @@ trait SummaryConstructor {
     def createCurrentPensionsSeq(): List[SummaryRowModel] = {
       val route = controllers.routes.IP2016Controller.currentPensions()
       val amt = currencyDisplayString(currentPensionsModel.get.currentPensionsAmt.getOrElse(BigDecimal(0)))
-      List(SummaryRowModel("currentPensionsAmt", Messages("pla.summary.questions.currentPensions"), Some(route), amt))
+      List(SummaryRowModel("currentPensionsAmt", Some(route), amt))
     }
 
     def createTotalPensionsSeq(): List[SummaryRowModel] = {
@@ -121,7 +121,7 @@ trait SummaryConstructor {
                       .+(getPensionsTakenBetweenAmt())
                       .+(getOverseasPensionsAmount())
                       )
-      List(SummaryRowModel("totalPensionsAmt", Messages("pla.summary.questions.totalSavings"), None, totalAmt))
+      List(SummaryRowModel("totalPensionsAmt", None, totalAmt))
     }
 
     def getPensionsTakenBeforeAmt(): BigDecimal = {
@@ -162,16 +162,16 @@ trait SummaryConstructor {
     def createPSOsSeq(): List[SummaryRowModel] = {
       val route = controllers.routes.IP2016Controller.pensionDebits()
       pensionDebitsModel.get.pensionDebits match {
-        case Some("yes") => List(SummaryRowModel("pensionDebits", Messages("pla.summary.questions.pensionDebits"), Some(route), Messages("pla.base.yes"))) ::: createPSONumSeq()
-        case _ => List(SummaryRowModel("pensionDebits", Messages("pla.summary.questions.pensionDebits"), Some(route), Messages("pla.base.no")))
+        case Some("yes") => List(SummaryRowModel("pensionDebits", Some(route), Messages("pla.base.yes"))) ::: createPSONumSeq()
+        case _ => List(SummaryRowModel("pensionDebits", Some(route), Messages("pla.base.no")))
       }
     }
 
     def createPSONumSeq(): List[SummaryRowModel] = {
       val route = controllers.routes.IP2016Controller.numberOfPSOs()
       numberOfPSOsModel.get.numberOfPSOs match {
-        case Some(num) => List(SummaryRowModel("numberOfPSOsAmt", Messages("pla.summary.questions.numberOfPSOs"), Some(route), num)) ::: createPSODetailsSeq(num.toInt)
-        case _ => List(SummaryRowModel("numberOfPSOsAmt", Messages("pla.summary.questions.numberOfPSOs"), Some(route), "None"))
+        case Some(num) => List(SummaryRowModel("numberOfPSOsAmt", Some(route), num)) ::: createPSODetailsSeq(num.toInt)
+        case _ => List(SummaryRowModel("numberOfPSOsAmt", Some(route), "None"))
       }
     }
 
@@ -182,7 +182,7 @@ trait SummaryConstructor {
         val psoDetailsModel = data.getEntry[PSODetailsModel](s"psoDetails$psoNum").get
         val date = dateDisplayString(constructDate(psoDetailsModel.psoDay, psoDetailsModel.psoMonth, psoDetailsModel.psoYear))
         val amt = currencyDisplayString(psoDetailsModel.psoAmt)
-        val psoEntry = List(SummaryRowModel(s"psoDetails$psoNum", Messages(s"pla.summary.questions.psoDetails$psoNum"), Some(route), amt, date))
+        val psoEntry = List(SummaryRowModel(s"psoDetails$psoNum", Some(route), amt, date))
         if(psoNum == numPSOs) psoEntry
         else psoEntry ::: loop(psoNum + 1)
       }

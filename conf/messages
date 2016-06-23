@@ -250,29 +250,44 @@ pla.psoDetails.errorDateOutOfRange          = Please enter a date between the ye
 
 
 ## SUMMARY ##
-pla.summary.title                               = Submit your application
-pla.summary.pageHeading                         = Check your answers before sending your application
-pla.summary.pensionsHeading                     = Pensions
-pla.summary.change                              = Change
-pla.summary.questions.pensionsTaken             = Have you taken any of your pensions?
-pla.summary.questions.pensionsTakenBefore       = Did you start taking any of your pensions before 6 April 2006?
-pla.summary.questions.pensionsTakenBeforeAmt    = How much lifetime allowance did you use?
-pla.summary.questions.pensionsTakenBetween      = Did you take any pensions between 6 April 2006 and 5 April 2016?
-pla.summary.questions.pensionsTakenBetweenAmt   = How much lifetime allowance did you use?
-pla.summary.questions.overseasPensions          = Do you have any overseas pensions which you''ve not yet taken?
-pla.summary.questions.overseasPensionsAmt       = Value of overseas pensions
-pla.summary.questions.currentPensions           = Enter the value of your current UK pensions on 5 April 2014
-pla.summary.questions.totalSavings              = Your total pension savings are
-pla.summary.psosHeading                         = Pension sharing order
-pla.summary.questions.pensionDebits             = Have any of your pensions been subject to a pension sharing order?
-pla.summary.questions.numberOfPSOs              = How many pension sharing orders do you have?
-pla.summary.questions.psoDetails1               = First pension sharing order
-pla.summary.questions.psoDetails2               = Second pension sharing order
-pla.summary.questions.psoDetails3               = Third pension sharing order
-pla.summary.questions.psoDetails4               = Fourth pension sharing order
-pla.summary.questions.psoDetails5               = Fifth pension sharing order
-pla.summary.declarationPara1                    = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold Primary Protection or Individual Protection 2014.
-pla.summary.declarationPara2                    = The information that I have provided is true and complete to the best of my knowledge and belief.
+pla.summary.title                                   = Submit your application
+pla.summary.pageHeading                             = Check your answers before sending your application
+pla.summary.pensionsHeading                         = Pensions
+pla.summary.change                                  = Change
+pla.summary.questions.pensionsTaken                 = Have you taken any of your pensions?
+pla.summary.hiddenLinkText.pensionsTaken            = Change your response to the question ''have you taken any of your pensions''
+pla.summary.questions.pensionsTakenBefore           = Did you start taking any of your pensions before 6 April 2006?
+pla.summary.hiddenLinkText.pensionsTakenBefore      = Change your response to the question ''have you taken any of your pensions before 6 April 2006''
+pla.summary.questions.pensionsTakenBeforeAmt        = How much lifetime allowance did you use?
+pla.summary.hiddenLinkText.pensionsTakenBeforeAmt   = Change your response to the question ''how much lifetime allowance did you use''
+pla.summary.questions.pensionsTakenBetween          = Did you take any pensions between 6 April 2006 and 5 April 2016?
+pla.summary.hiddenLinkText.pensionsTakenBetween     = Change your response to the question ''did you take any pensions between 6 April 2006 and 5 April 2016''
+pla.summary.questions.pensionsTakenBetweenAmt       = How much lifetime allowance did you use?
+pla.summary.hiddenLinkText.pensionsTakenBetweenAmt  = Change your response to the question ''how much lifetime allowance did you use''
+pla.summary.questions.overseasPensions              = Do you have any overseas pensions which you''ve not yet taken?
+pla.summary.hiddenLinkText.overseasPensions         = Change your response to the question ''do you have any overseas pensions which you''ve not yet taken''
+pla.summary.questions.overseasPensionsAmt           = Value of overseas pensions
+pla.summary.hiddenLinkText.overseasPensionsAmt      = Change your response to the question ''value of overseas pensions''
+pla.summary.questions.currentPensionsAmt            = Enter the value of your current UK pensions on 5 April 2014
+pla.summary.hiddenLinkText.currentPensionsAmt       = Change your response to the question ''enter the value of your current UK pensions on 5 April 2014''
+pla.summary.questions.totalPensionsAmt              = Your total pension savings are
+pla.summary.psosHeading                             = Pension sharing order
+pla.summary.questions.pensionDebits                 = Have any of your pensions been subject to a pension sharing order?
+pla.summary.hiddenLinkText.pensionDebits            = Change your response to the question ''have any of your pensions been subject to a pension sharing order''
+pla.summary.questions.numberOfPSOsAmt               = How many pension sharing orders do you have?
+pla.summary.hiddenLinkText.numberOfPSOsAmt          = Change your response to the question ''how many pension sharing orders do you have''
+pla.summary.questions.psoDetails1                   = First pension sharing order
+pla.summary.hiddenLinkText.psoDetails1              = Change the details of your first pension sharing order
+pla.summary.questions.psoDetails2                   = Second pension sharing order
+pla.summary.hiddenLinkText.psoDetails2              = Change the details of your second pension sharing order
+pla.summary.questions.psoDetails3                   = Third pension sharing order
+pla.summary.hiddenLinkText.psoDetails3              = Change the details of your third pension sharing order
+pla.summary.questions.psoDetails4                   = Fourth pension sharing order
+pla.summary.hiddenLinkText.psoDetails4              = Change the details of your fourth pension sharing order
+pla.summary.questions.psoDetails5                   = Fifth pension sharing order
+pla.summary.hiddenLinkText.psoDetails5              = Change the details of your fifth pension sharing order
+pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold Primary Protection or Individual Protection 2014.
+pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
 
 ### RESULTS MESSAGES ###
