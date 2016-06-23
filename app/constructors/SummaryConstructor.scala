@@ -182,7 +182,7 @@ trait SummaryConstructor {
         val route = controllers.routes.IP2016Controller.psoDetails(psoNum.toString)
         val psoDetailsModel = data.getEntry[PSODetailsModel](s"psoDetails$psoNum").get
         val date = constructDate(psoDetailsModel.psoDay, psoDetailsModel.psoMonth, psoDetailsModel.psoYear)
-        val amt = psoDetailsModel.psoAmt
+        val amt = currencyDisplayString(psoDetailsModel.psoAmt)
         val on = Messages("pla.summary.onDate")
         val displayValue = s"$amt $on $date"
         val psoEntry = List(SummaryRowModel(Messages(s"pla.summary.questions.psoDetails$psoNum"), displayValue, Some(route)))

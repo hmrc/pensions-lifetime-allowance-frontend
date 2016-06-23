@@ -1,0 +1,19 @@
+@import play.api.i18n._
+@import play.api.mvc.Call
+
+@(rowText: String, displayValue: String, changeLinkCall: Option[Call])
+
+<div class="grid-wrapper">
+    <div class="grid grid-1-2">
+        <div class="inner-block">
+            <p>@rowText</p>
+        </div>
+    </div>
+    <div class="grid grid-1-2">
+        <div class="inner-block">
+            <p>@displayValue</p>
+            <p>@if(changeLinkCall.isDefined) {<a href=@changeLinkCall.get>@Messages("pla.summary.change")</a>}</p>
+        </div>
+    </div>
+</div>
+<div class="grid-divider"></div>
