@@ -1,0 +1,22 @@
+@import models.SummaryModel
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import helpers.templates.plaInputRadioGroup
+@import play.api.data._
+
+@(summary: SummaryModel)(implicit request: Request[_])
+
+
+@views.html.main_template(title = "Howdy", bodyClasses = None) {
+
+    <h1 class="heading-xlarge">Summary</h1>
+
+    @for(row <- summary.pensionContributionRows) {
+        <p>@row.rowText : @row.displayValue : @if(row.changeLinkCall.isDefined) {<a href=@row.changeLinkCall.get>@Messages("pla.summary.change")</a>} </p>
+    }
+
+    <h2>PSO Details</h2>
+
+    @for(row <- summary.psoDetailsRows) {
+    <p>@row.rowText : @row.displayValue : @if(row.changeLinkCall.isDefined) {<a href=@row.changeLinkCall.get>@Messages("pla.summary.change")</a>} </p>
+    }
+}

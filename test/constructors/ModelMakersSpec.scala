@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package helpers
+package constructors
 
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import play.api.libs.json.{JsValue, Json}
 import models._
 
-class ModelMakersSpec extends UnitSpec with WithFakeApplication {
-    object TestModelMakers extends ModelMakers {
+class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
+    object TestResponseConstructors extends ResponseConstructors {
 
     }
 
@@ -33,22 +33,21 @@ class ModelMakersSpec extends UnitSpec with WithFakeApplication {
                                                 List("1","2","3")
                                                 )
 
-
     val testRejectionResponseModel = RejectionResponseModel(
                                                 "21",
                                                 List.empty
                                                 )
 
-    "ModelMakers" should {
+    "ResponseConstructors" should {
 
         "create the correct success model from Json" in {
             val jsn:JsValue = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1}""")
-            ModelMakers.createSuccessResponseFromJson(jsn) shouldBe testSuccessResponseModel
+            TestResponseConstructors.createSuccessResponseFromJson(jsn) shouldBe testSuccessResponseModel
         }
 
         "create the correct rejection model from Json" in {
             val json:JsValue = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
-            ModelMakers.createRejectionResponseFromJson(json) shouldBe testRejectionResponseModel
+            TestResponseConstructors.createRejectionResponseFromJson(json) shouldBe testRejectionResponseModel
         }
     }
 }

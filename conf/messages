@@ -248,6 +248,26 @@ pla.psoDetails.errorDecimalPlaces           = The pension sharing order value yo
 pla.psoDetails.errorDateOutOfRange          = Please enter a date between the year 1900 and 2100
 
 
+## SUMMARY ##
+pla.summary.change                              = Change
+pla.summary.questions.pensionsTaken             = Have you taken any of your pensions?
+pla.summary.questions.pensionsTakenBefore       = Did you start taking any of your pensions before 6 April 2006?
+pla.summary.questions.pensionsTakenBeforeAmt    = How much lifetime allowance did you use?
+pla.summary.questions.pensionsTakenBetween      = Did you take any pensions between 6 April 2006 and 5 April 2016?
+pla.summary.questions.pensionsTakenBetweenAmt   = How much lifetime allowance did you use?
+pla.summary.questions.overseasPensions          = Do you have any overseas pensions which you''ve not yet taken?
+pla.summary.questions.overseasPensionsAmt       = Value of overseas pensions
+pla.summary.questions.currentPensions           = Enter the value of your current UK pensions on 5 April 2014
+pla.summary.questions.totalSavings              = Your total pension savings are
+pla.summary.questions.pensionDebits             = Have any of your pensions been subject to a pension sharing order?
+pla.summary.questions.numberOfPSOs              = How many pension sharing orders do you have?
+pla.summary.questions.psoDetails1               = First pension sharing order
+pla.summary.questions.psoDetails2               = Second pension sharing order
+pla.summary.questions.psoDetails3               = Third pension sharing order
+pla.summary.questions.psoDetails4               = Fourth pension sharing order
+pla.summary.questions.psoDetails5               = Fifth pension sharing order
+pla.summary.onDate                              = on
+
 
 ### RESULTS MESSAGES ###
 

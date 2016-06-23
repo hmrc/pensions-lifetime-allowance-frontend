@@ -33,7 +33,7 @@ import config.WSHttp
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
-import helpers.ModelMakers
+import constructors.ResponseConstructors
 import views.html.pages.result._
 import connectors.PLAConnector
 import utils.Constants
@@ -55,8 +55,8 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
         implicit user =>  implicit request => 
             plaConnector.applyFP16(user.nino.get).map {
                 response: HttpResponse => applicationOutcome(response) match {
-                    case "successful" => Ok(resultSuccess(ModelMakers.createSuccessResponseFromJson(response.json)))
-                    case "rejected"   => Ok(resultRejected(ModelMakers.createRejectionResponseFromJson(response.json)))
+                    case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+                    case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
                 }
             }
     }
