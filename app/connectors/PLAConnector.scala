@@ -47,6 +47,24 @@ trait PLAConnector {
         val requestJson: JsValue = Json.parse("""{"protectionType":"FP2016"}""") // TODO: change to use FP application model
         http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
+
+
+
+
+
+
+
+
+    def applyIP16(nino: String, relAmount: BigDecimal, preADayPIP: BigDecimal, postADayBCE: BigDecimal, nonUKRights: BigDecimal)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+        val requestJson: JsValue = Json.parse({"protectionType":"IP2016",
+                                                "relevantAmount":relAmount,
+                                                "preADayPensionInPayment":preADayPIP,
+                                                "postADayBCE":postADayBCE,
+                                                "nonUKRights":nonUKRights})
+        http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+    }
+
+
 }
 
 object ResponseHandler extends ResponseHandler{

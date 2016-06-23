@@ -66,4 +66,30 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
         if(Constants.successCodes.contains(notificationId)) "successful" else "rejected"
     }
 
+
+
+
+
+
+
+
+
+    val processIPApplication = AuthorisedByAny.async {
+        implicit user =>  implicit request =>
+            keyStoreConnector.fetchAllUserData.map {
+                case Some(data) => plaConnector.applyIP16(user.nino.get, ).map {
+                    response: HttpResponse => ip16ApplicationOutcome(response) match {
+                        case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+                        case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
+                    }
+                }
+                case None => Redirect(routes.IntroductionController.introduction()) //TODO: Redirect to Technical Error
+            }
+            
+    }
+
+    def ip16ApplicationOutcome(response: HttpResponse): String = {
+        val notificationId = (response.json \ "notificationId").as[Int]
+        if(Constants.ip16SuccessCodes.contains(notificationId)) "successful" else "rejected"
+    }
 }
