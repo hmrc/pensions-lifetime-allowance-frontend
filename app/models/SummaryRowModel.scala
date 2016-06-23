@@ -18,6 +18,6 @@ package models
 
 import play.api.mvc.Call
 
-case class SummaryRowModel(rowText: String, displayValue: String, changeLinkCall: Option[Call]) {
+case class SummaryRowModel(rowID: String, rowText: String, displayValue: String, changeLinkCall: Option[Call]) {
 
 }
