@@ -29,4 +29,35 @@ class DatesSpec extends UnitSpec {
       constructDate(4, 6, 2016) shouldBe tstDate
     }
   }
+
+  "dateBefore" should {
+
+    "return true when comparing 01/01/2016 to 02/02/2016" in {
+        dateBefore(1, 1, 2016, LocalDate.of(2016, 2, 2)) shouldBe true
+    }
+
+    "return false when comparing 02/02/2016 to 01/01/2016" in {
+        dateBefore(2, 2, 2016, LocalDate.of(2016, 1, 1)) shouldBe false
+    }
+
+    "return false when comparing the same dates" in {
+        dateBefore(2, 2, 2016, LocalDate.of(2016, 2, 2)) shouldBe false
+    }
+  }
+
+  "dateAfter" should {
+
+    "return false when comparing 01/01/2016 to 02/02/2016" in {
+        dateAfter(1, 1, 2016, LocalDate.of(2016, 2, 2)) shouldBe false
+    }
+
+    "return true when comparing 02/02/2016 to 01/01/2016" in {
+        dateAfter(2, 2, 2016, LocalDate.of(2016, 1, 1)) shouldBe true
+    }
+
+    "return false when comparing the same dates" in {
+        dateAfter(2, 2, 2016, LocalDate.of(2016, 2, 2)) shouldBe false
+    }
+  }
+
 }
