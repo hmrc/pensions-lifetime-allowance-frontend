@@ -33,21 +33,25 @@ import config.WSHttp
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
-import constructors.ResponseConstructors
+import constructors.{ResponseConstructors,SummaryConstructor}
 import views.html.pages.result._
 import connectors.PLAConnector
 import utils.Constants
+import models._
 
 
 object ResultController extends ResultController with ServicesConfig {
-  override lazy val applicationConfig = FrontendAppConfig
-  override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
+    val keyStoreConnector = KeyStoreConnector
+    override lazy val applicationConfig = FrontendAppConfig
+    override lazy val authConnector = FrontendAuthConnector
+    override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
 
-  override val plaConnector = PLAConnector
+    override val plaConnector = PLAConnector
 }
 
 trait ResultController extends FrontendController with AuthorisedForPLA {
+
+    val keyStoreConnector = KeyStoreConnector
 
     val plaConnector : PLAConnector
 
@@ -71,19 +75,30 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
 
 
 
-
+    def submitValues(a: String): Option[BigDecimal] = {
+        keyStoreConnector.fetchAllUserData.map {
+            case Some(data) => a match{
+                case cp => data.getEntry[CurrentPensionsModel]("currentPensions").get.currentPensionsAmt.getOrElse(0)
+                case bef => data.getEntry[PensionsTakenBeforeModel]("pensionsTakenBefore").get.pensionsTakenBeforeAmt.getOrElse(0)
+                case bet => data.getEntry[PensionsTakenBetweenModel]("pensionsTakenBetween").get.pensionsTakenBetweenAmt.getOrElse(0)
+                case op => data.getEntry[OverseasPensionsModel]("overseasPensions").get.overseasPensionsAmt.getOrElse(0)
+            }
+            case None => Redirect(routes.IntroductionController.introduction())
+        }
+    }
 
 
     val processIPApplication = AuthorisedByAny.async {
         implicit user =>  implicit request =>
-            keyStoreConnector.fetchAllUserData.map {
-                case Some(data) => plaConnector.applyIP16(user.nino.get, ).map {
-                    response: HttpResponse => ip16ApplicationOutcome(response) match {
-                        case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
-                        case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
-                    }
+            plaConnector.applyIP16(user.nino.get, keyStoreConnector.fetchAndGetFormData[CurrentPensionsModel]("currentPensions").get.currentPensionsAmt.getOrElse(0),
+                                    keyStoreConnector.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").get.pensionsTakenBeforeAmt.getOrElse(0),
+                                    keyStoreConnector.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").get.pensionsTakenBetweenAmt.getOrElse(0),
+                                    keyStoreConnector.fetchAndGetFormData[OverseasPensionsModel]("overseasPensions").get.overseasPensionsAmt.getOrElse(0))
+            .map {
+                response: HttpResponse => ip16ApplicationOutcome(response) match {
+                    case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+                    case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
                 }
-                case None => Redirect(routes.IntroductionController.introduction()) //TODO: Redirect to Technical Error
             }
             
     }

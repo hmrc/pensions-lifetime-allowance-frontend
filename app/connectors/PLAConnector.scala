@@ -55,7 +55,7 @@ trait PLAConnector {
 
 
 
-    def applyIP16(nino: String, relAmount: BigDecimal, preADayPIP: BigDecimal, postADayBCE: BigDecimal, nonUKRights: BigDecimal)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+    def applyIP16(nino: String, relAmount: Option[BigDecimal], preADayPIP: Option[BigDecimal], postADayBCE: Option[BigDecimal], nonUKRights: Option[BigDecimal])(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         val requestJson: JsValue = Json.parse({"protectionType":"IP2016",
                                                 "relevantAmount":relAmount,
                                                 "preADayPensionInPayment":preADayPIP,
