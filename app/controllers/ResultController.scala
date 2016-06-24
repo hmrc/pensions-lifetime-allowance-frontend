@@ -41,7 +41,7 @@ import models._
 
 
 object ResultController extends ResultController with ServicesConfig {
-    val keyStoreConnector = KeyStoreConnector
+    override val keyStoreConnector = KeyStoreConnector
     override lazy val applicationConfig = FrontendAppConfig
     override lazy val authConnector = FrontendAuthConnector
     override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
@@ -73,33 +73,17 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
 
 
 
-
-
-    def submitValues(a: String): Option[BigDecimal] = {
-        keyStoreConnector.fetchAllUserData.map {
-            case Some(data) => a match{
-                case cp => data.getEntry[CurrentPensionsModel]("currentPensions").get.currentPensionsAmt.getOrElse(0)
-                case bef => data.getEntry[PensionsTakenBeforeModel]("pensionsTakenBefore").get.pensionsTakenBeforeAmt.getOrElse(0)
-                case bet => data.getEntry[PensionsTakenBetweenModel]("pensionsTakenBetween").get.pensionsTakenBetweenAmt.getOrElse(0)
-                case op => data.getEntry[OverseasPensionsModel]("overseasPensions").get.overseasPensionsAmt.getOrElse(0)
-            }
-            case None => Redirect(routes.IntroductionController.introduction())
-        }
-    }
-
-
     val processIPApplication = AuthorisedByAny.async {
         implicit user =>  implicit request =>
-            plaConnector.applyIP16(user.nino.get, keyStoreConnector.fetchAndGetFormData[CurrentPensionsModel]("currentPensions").get.currentPensionsAmt.getOrElse(0),
-                                    keyStoreConnector.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").get.pensionsTakenBeforeAmt.getOrElse(0),
-                                    keyStoreConnector.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").get.pensionsTakenBetweenAmt.getOrElse(0),
-                                    keyStoreConnector.fetchAndGetFormData[OverseasPensionsModel]("overseasPensions").get.overseasPensionsAmt.getOrElse(0))
+            keyStoreConnector.fetchAllUserData.flatMap(userData =>
+            plaConnector.applyIP16(user.nino.get, userData.get)
             .map {
                 response: HttpResponse => ip16ApplicationOutcome(response) match {
                     case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
                     case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
                 }
             }
+        )
             
     }
 

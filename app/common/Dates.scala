@@ -17,6 +17,7 @@
 package common
 
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 object Dates {
 
@@ -30,5 +31,11 @@ object Dates {
 
   def dateAfter(day: Int, month: Int, year: Int, date2: LocalDate): Boolean = {
     LocalDate.of(year, month, day).isAfter(date2)
+  }
+
+  def apiDateFormat(day: Int, month: Int, year: Int): String = {
+
+    val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    LocalDate.of(year, month, day).format(dateFormat)
   }
 }

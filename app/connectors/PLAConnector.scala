@@ -16,12 +16,14 @@
 
 package connectors
 
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
 import scala.concurrent.Future
 import config.WSHttp
 import utils.Constants
+import constructors.IPApplicationConstructor
 
 import models._
 
@@ -48,19 +50,9 @@ trait PLAConnector {
         http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
 
-
-
-
-
-
-
-
-    def applyIP16(nino: String, relAmount: Option[BigDecimal], preADayPIP: Option[BigDecimal], postADayBCE: Option[BigDecimal], nonUKRights: Option[BigDecimal])(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-        val requestJson: JsValue = Json.parse({"protectionType":"IP2016",
-                                                "relevantAmount":relAmount,
-                                                "preADayPensionInPayment":preADayPIP,
-                                                "postADayBCE":postADayBCE,
-                                                "nonUKRights":nonUKRights})
+    def applyIP16(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+        val application = IPApplicationConstructor.createIPApplication(userData)
+        val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
         http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
 

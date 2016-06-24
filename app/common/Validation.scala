@@ -18,6 +18,9 @@ package common
 
 import java.text.SimpleDateFormat
 
+import models._
+import uk.gov.hmrc.http.cache.client.CacheMap
+
 object Validation {
 
   def isMaxTwoDecimalPlaces(amount: BigDecimal): Boolean = {
@@ -47,5 +50,48 @@ object Validation {
     } catch {
       case e: Exception => false
     }
+  }
+
+  def validIPData(data: CacheMap)(implicit protectionType: String = "IP2016"): Boolean = {
+    import Strings.nameString
+    val pensionsTakenModel: Option[PensionsTakenModel] = data.getEntry[PensionsTakenModel](nameString("pensionsTaken"))
+
+    val pensionsTakenBeforeModel = data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore"))
+    val pensionsTakenBetweenModel = data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween"))
+    val overseasPensionsModel = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
+    val currentPensionsModel = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
+
+    val pensionDebitsModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
+    val numberOfPSOsModel = data.getEntry[NumberOfPSOsModel](nameString("numberOfPSOs"))
+
+    def validPensionData(): Boolean = {
+      if (pensionsTakenModel.isEmpty || overseasPensionsModel.isEmpty || currentPensionsModel.isEmpty) false
+      else {
+        if (pensionsTakenModel.get.pensionsTaken.get == "yes") {
+          pensionsTakenBeforeModel.isDefined && pensionsTakenBetweenModel.isDefined
+        } else true
+      }
+    }
+
+    def validPSOData(): Boolean = {
+      if (pensionDebitsModel.isEmpty) false
+      else {
+        if (pensionDebitsModel.get.pensionDebits.get == "no") true
+        else {
+          if (numberOfPSOsModel.isEmpty) false
+          else {
+            !invalidPSODetails()
+          }
+        }
+      }
+    }
+
+    def invalidPSODetails(): Boolean = {
+      val numberOfPSOs = numberOfPSOsModel.get.numberOfPSOs.get.toInt
+      (1 to numberOfPSOs).exists(psoNum => data.getEntry[PSODetailsModel](nameString(s"psoDetails$psoNum")).isEmpty)
+    }
+
+
+    validPensionData() && validPSOData()
   }
 }
