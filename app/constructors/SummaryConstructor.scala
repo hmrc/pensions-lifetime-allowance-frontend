@@ -41,12 +41,27 @@ trait SummaryConstructor {
 
 
 
-    def validData(): Boolean = {
+    def validPensionData(): Boolean = {
       if(pensionsTakenModel.isEmpty || overseasPensionsModel.isEmpty || currentPensionsModel.isEmpty) false else {
         if(pensionsTakenModel.get.pensionsTaken.get == "yes") {
           pensionsTakenBeforeModel.isDefined && pensionsTakenBetweenModel.isDefined
         } else true
       }
+    }
+
+    def validPSOData(): Boolean = {
+      if(pensionDebitsModel.isEmpty) false else {
+        if(pensionDebitsModel.get.pensionDebits.get == "no") true else {
+          if(numberOfPSOsModel.isEmpty) false else {
+            !invalidPSODetails()
+          }
+        }
+      }
+    }
+
+    def invalidPSODetails(): Boolean = {
+      val numberOfPSOs = numberOfPSOsModel.get.numberOfPSOs.get.toInt
+      (1 to numberOfPSOs).exists(psoNum => data.getEntry[PSODetailsModel](s"psoDetails$psoNum").isEmpty)
     }
 
     def createSummaryModel(): SummaryModel = {
@@ -190,7 +205,7 @@ trait SummaryConstructor {
       loop(1)
     }
 
-    if(!validData()) None else Some(createSummaryModel())
+    if(!validPensionData() || !validPSOData()) None else Some(createSummaryModel())
 
   }
 

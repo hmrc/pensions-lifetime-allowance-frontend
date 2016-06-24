@@ -3,24 +3,27 @@
 
 @(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call])
 
-<div class="grid-wrapper">
-    <div class="grid grid-2-3">
-        <div class="inner-block">
-            <p id="@{rowID}QuestionText">@Messages(s"pla.summary.questions.$rowID")</p>
+<div class="grid-wrapperx">
+    <div class="grid grid-1-2">
+        <div class="inner-blockx">
+            <span class="font-medium" id="@{rowID}QuestionText">@Messages(s"pla.summary.questions.$rowID")</span>
         </div>
     </div>
-    <div class="grid grid-1-3">
+    <div class="grid grid-1-2">
         <div class="inner-block">
             @for((displayValue, index) <- displayValues.zipWithIndex) {
-                <p id="@{rowID}DisplayValue@index" class="heading-small">@displayValue</p>
+                <div>
+                    <span id="@{rowID}DisplayValue@index" class="bold-medium">@displayValue</span>
+                </div>
             }
             @if(changeLinkCall.isDefined) {
-                <p>
-                    <a id="@{rowID}ChangeLink" href=@changeLinkCall.get>@Messages("pla.summary.change")</a>
+                <div>
+                    <a class="font-xsmall" id="@{rowID}ChangeLink" href=@changeLinkCall.get>@Messages("pla.summary.change")</a>
                     <span class="visuallyhidden">@Messages(s"pla.summary.hiddenLinkText.$rowID")</span>
-                </p>
+                </div>
             }
         </div>
     </div>
 </div>
-<div class="grid-divider"></div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
