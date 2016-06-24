@@ -58,13 +58,19 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     def totalPensionsAmountSummaryRow(totalAmount: String) = SummaryRowModel("totalPensionsAmt", None, totalAmount)
 
     def numberOfPSOsTuple(numberOfPSOs: Int): (String, JsValue) = "numberOfPSOs" -> Json.toJson(NumberOfPSOsModel(Some(numberOfPSOs.toString)))
-    def numberOfPSOsSummaryRow(numberOfPSOs: Int) = SummaryRowModel("numberOfPSOs", Some(controllers.routes.IP2016Controller.numberOfPSOs()), numberOfPSOs.toString)
+    def numberOfPSOsSummaryRow(numberOfPSOs: Int) = SummaryRowModel("numberOfPSOsAmt", Some(controllers.routes.IP2016Controller.numberOfPSOs()), numberOfPSOs.toString)
 
     val psoDetails1Tuple = "psoDetails1" -> Json.toJson(PSODetailsModel(1, Some(1), Some(2), Some(2016), BigDecimal(10000)))
     val psoDetails2Tuple = "psoDetails2" -> Json.toJson(PSODetailsModel(2, Some(2), Some(3), Some(2016), BigDecimal(11000)))
     val psoDetails3Tuple = "psoDetails3" -> Json.toJson(PSODetailsModel(3, Some(3), Some(4), Some(2016), BigDecimal(10100)))
     val psoDetails4Tuple = "psoDetails4" -> Json.toJson(PSODetailsModel(4, Some(4), Some(5), Some(2016), BigDecimal(10010)))
     val psoDetails5Tuple = "psoDetails5" -> Json.toJson(PSODetailsModel(5, Some(5), Some(6), Some(2016), BigDecimal(10001)))
+
+    val psoDetails1SummaryRow = SummaryRowModel("psoDetails1", Some(controllers.routes.IP2016Controller.psoDetails("1")), "£10,000.00", "1 February 2016")
+    val psoDetails2SummaryRow = SummaryRowModel("psoDetails2", Some(controllers.routes.IP2016Controller.psoDetails("2")), "£11,000.00", "2 March 2016")
+    val psoDetails3SummaryRow = SummaryRowModel("psoDetails3", Some(controllers.routes.IP2016Controller.psoDetails("3")), "£10,100.00", "3 April 2016")
+    val psoDetails4SummaryRow = SummaryRowModel("psoDetails4", Some(controllers.routes.IP2016Controller.psoDetails("4")), "£10,010.00", "4 May 2016")
+    val psoDetails5SummaryRow = SummaryRowModel("psoDetails5", Some(controllers.routes.IP2016Controller.psoDetails("5")), "£10,001.00", "5 June 2016")
 
     "handle invalid summary data" when {
 
@@ -154,7 +160,42 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
       }
 
       "all answers are positive" in {
+        val testSummaryModel = SummaryModel(
+                                        List(
+                                            positivePensionsTakenSummaryRow,
+                                            positivePensionsTakenBeforeSummaryRow, positivePensionsTakenBeforeAmtSummaryRow,
+                                            positivePensionsTakenBetweenSummaryRow, positivePensionsTakenBetweenAmtSummaryRow,
+                                            positiveOverseasPensionsSummaryRow, positiveOverseasPensionsAmtSummaryRow,
+                                            currentPensionsSummaryRow,
+                                            totalPensionsAmountSummaryRow("£4,111.00")
+                                            ),
+                                        List(
+                                            positivePensionDebitsSummaryRow,
+                                            numberOfPSOsSummaryRow(5),
+                                            psoDetails1SummaryRow,
+                                            psoDetails2SummaryRow,
+                                            psoDetails3SummaryRow,
+                                            psoDetails4SummaryRow,
+                                            psoDetails5SummaryRow
+                                            )
+                                        )
 
+        val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
+                                        positivePensionsTakenBeforeTuple,
+                                        positivePensionsTakenBetweenTuple,
+                                        positiveOverseasPensionsTuple,
+                                        validCurrentPensionsTuple,
+                                        positivePensionDebitsTuple,
+                                        numberOfPSOsTuple(5),
+                                        psoDetails1Tuple,
+                                        psoDetails2Tuple,
+                                        psoDetails3Tuple,
+                                        psoDetails4Tuple,
+                                        psoDetails5Tuple
+                                        )
+                            )
+
+        TestSummaryConstructor.createSummaryData(tstMap) shouldBe Some(testSummaryModel)
       }
     }
   }
