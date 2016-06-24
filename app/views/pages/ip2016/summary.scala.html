@@ -6,24 +6,42 @@
 @(summary: SummaryModel)(implicit request: Request[_])
 
 
-@views.html.main_template(title = Messages("pla.summary.title"), bodyClasses = None) {
+@views.html.summary_template(title = Messages("pla.summary.title"), bodyClasses = None) {
 
-    <h1 class="heading-xlarge">@Messages("pla.summary.pageHeading")</h1>
+    
+    <div class="grid-wrapperx">
+        <div class="grid grid-2-3">
+            <h1 class="heading-xlarge">@Messages("pla.summary.pageHeading")</h1>
+        </div>
+    </div>
 
-    <h2>@Messages("pla.summary.pensionsHeading")</h2>
+    <div class="grid-wrapper"></div>
 
-    @for(row <- summary.pensionContributionRows) {
-        @summaryRow(row.rowID, row.displayValues, row.changeLinkCall)
-    }
+    <section>
+        <h2 class="heading-large">@Messages("pla.summary.pensionsHeading")</h2>
 
-    <h2>@Messages("pla.summary.psosHeading")</h2>
+        @for(row <- summary.pensionContributionRows) {
+            @summaryRow(row.rowID, row.displayValues, row.changeLinkCall)
+        }
+    </section>
 
-    @for(row <- summary.psoDetailsRows) {
-        @summaryRow(row.rowID, row.displayValues, row.changeLinkCall)
-    }
+    <div>&nbsp;</div>
 
-    <p>@Messages("pla.summary.declarationPara1")</p>
-    <p>@Messages("pla.summary.declarationPara2")</p>
+    <section>
+        <h2 class="heading-large">@Messages("pla.summary.psosHeading")</h2>
+
+        @for(row <- summary.psoDetailsRows) {
+            @summaryRow(row.rowID, row.displayValues, row.changeLinkCall)
+        }
+    </section>
+
+    <div class="grid-wrapperx">
+        <div class="grid grid-2-3">
+            <p>@Messages("pla.summary.declarationPara1")</p>
+            <p>@Messages("pla.summary.declarationPara2")</p>
+        </div>
+    </div>
+    <div class="grid-wrapper"></div>
 
     @govHelpers.form(action = routes.ResultController.processFPApplication) {
         
