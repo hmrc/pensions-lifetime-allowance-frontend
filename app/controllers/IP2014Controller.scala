@@ -167,30 +167,28 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
             errors => Future.successful(BadRequest(pages.ip2014.ip14CurrentPensions(errors))),
             success => {
                 keyStoreConnector.saveFormData("ip14CurrentPensions", success)
-                Future.successful(Redirect(routes.IP2014Controller.pensionDebits()))
+                Future.successful(Redirect(routes.IP2014Controller.ip14PensionDebits()))
             }
         )
     }
     
 
     //IP14 PENSION DEBITS
-    val pensionDebits = AuthorisedByAny.async { implicit user => implicit request =>
+    val ip14PensionDebits = AuthorisedByAny.async { implicit user => implicit request =>
         keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("ip14PensionDebits").map {
             case Some(data) => Ok(pages.ip2014.ip14PensionDebits(pensionDebitsForm.fill(data)))
             case None => Ok(pages.ip2014.ip14PensionDebits(pensionDebitsForm))
         }
     }
 
-    val submitPensionDebits = AuthorisedByAny { implicit user => implicit request =>
+    val submitIP14PensionDebits = AuthorisedByAny { implicit user => implicit request =>
         pensionDebitsForm.bindFromRequest.fold(
             errors => BadRequest(pages.ip2014.ip14PensionDebits(errors)),
             success => {
                 keyStoreConnector.saveFormData("ip14PensionDebits", success)
                 success.pensionDebits.get match {
-                                // TODO: redirect to number of PSOs
                     case "yes"  => Redirect(routes.IP2014Controller.ip14NumberOfPSOs())
-                                // TODO: redirect to summary
-                    case "no"   => Redirect(routes.IntroductionController.introduction())
+                    case "no"   => Redirect(routes.SummaryController.summaryIP14())
                 }
             }
         )
@@ -251,8 +249,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     private def routePSODetails(totalPSOs: Int, psoNum: Int, req: Request[AnyContent]): Future[Result] = {
         implicit val request = req
         if (psoNum > totalPSOs) {
-            // TODO: redirect to Summary
-            Future.successful(Redirect(routes.IntroductionController.introduction()))
+            Future.successful(Redirect(routes.SummaryController.summaryIP14()))
         } else {
             keyStoreConnector.fetchAndGetFormData[PSODetailsModel](s"ip14PsoDetails$psoNum").map {
                 case Some(storedData) => Ok(pages.ip2014.ip14PsoDetails(psoDetailsForm.fill(storedData), psoNum))

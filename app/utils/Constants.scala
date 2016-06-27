@@ -30,4 +30,7 @@ object Constants {
 
     val ip16SuccessCodes = List(12,13,14,15,16)
     val ip16RejectCodes = List(9,10,11)
+
+    val ip14SuccessCodes = List(3,4,5,6,7,8)
+    val ip14RejectCodes = List(1,2)
 }
