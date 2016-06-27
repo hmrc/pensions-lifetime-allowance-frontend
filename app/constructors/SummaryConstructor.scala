@@ -16,10 +16,12 @@
 
 package constructors
 
+import enums.ApplicationType
 import play.api.i18n.Messages
 import models._
 import common.Display._
 import common.Dates._
+import common.Validation
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 object SummaryConstructor extends SummaryConstructor {
@@ -28,7 +30,7 @@ object SummaryConstructor extends SummaryConstructor {
 
 trait SummaryConstructor {
 
-  def createSummaryData(data: CacheMap): Option[SummaryModel] = {
+  def createSummaryData(data: CacheMap)(implicit protectionType: ApplicationType.Value): Option[SummaryModel] = {
     val pensionsTakenModel: Option[PensionsTakenModel] = data.getEntry[PensionsTakenModel]("pensionsTaken")
 
     val pensionsTakenBeforeModel = data.getEntry[PensionsTakenBeforeModel]("pensionsTakenBefore")
@@ -38,31 +40,6 @@ trait SummaryConstructor {
 
     val pensionDebitsModel = data.getEntry[PensionDebitsModel]("pensionDebits")
     val numberOfPSOsModel = data.getEntry[NumberOfPSOsModel]("numberOfPSOs")
-
-
-
-    def validPensionData(): Boolean = {
-      if(pensionsTakenModel.isEmpty || overseasPensionsModel.isEmpty || currentPensionsModel.isEmpty) false else {
-        if(pensionsTakenModel.get.pensionsTaken.get == "yes") {
-          pensionsTakenBeforeModel.isDefined && pensionsTakenBetweenModel.isDefined
-        } else true
-      }
-    }
-
-    def validPSOData(): Boolean = {
-      if(pensionDebitsModel.isEmpty) false else {
-        if(pensionDebitsModel.get.pensionDebits.get == "no") true else {
-          if(numberOfPSOsModel.isEmpty) false else {
-            !invalidPSODetails()
-          }
-        }
-      }
-    }
-
-    def invalidPSODetails(): Boolean = {
-      val numberOfPSOs = numberOfPSOsModel.get.numberOfPSOs.get.toInt
-      (1 to numberOfPSOs).exists(psoNum => data.getEntry[PSODetailsModel](s"psoDetails$psoNum").isEmpty)
-    }
 
     def createSummaryModel(): SummaryModel = {
       val pensionContributionSeq = createPensionsTakenSeq() ::: createOverseasPensionsSeq() ::: createCurrentPensionsSeq() ::: createTotalPensionsSeq()
@@ -205,7 +182,7 @@ trait SummaryConstructor {
       loop(1)
     }
 
-    if(!validPensionData() || !validPSOData()) None else Some(createSummaryModel())
+    if(!Validation.validIPData(data)) None else Some(createSummaryModel())
 
   }
 

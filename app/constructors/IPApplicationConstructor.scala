@@ -20,11 +20,12 @@ import common.Validation
 import common.Strings.nameString
 import common.Dates.apiDateFormat
 import models._
+import enums.ApplicationType
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 object IPApplicationConstructor {
 
-  def createIPApplication(data: CacheMap)(implicit protectionType: String = "IP2016") : IPApplicationModel = {
+  def createIPApplication(data: CacheMap)(implicit protectionType: ApplicationType.Value) : IPApplicationModel = {
 
     assert(Validation.validIPData(data))
 
@@ -69,8 +70,13 @@ object IPApplicationConstructor {
       PensionDebit(apiDateFormat(model.psoDay, model.psoMonth, model.psoYear), model.psoAmt.toDouble)
     }
 
+    val protectionString = protectionType match {
+      case ApplicationType.IP2016 => "IP2016"
+      case ApplicationType.IP2014 => "IP2014"
+    }
+
     IPApplicationModel(
-      protectionType,
+      protectionString,
       optionBigDecToOptionDouble(relevantAmount),
       optionBigDecToOptionDouble(preADayPensionInPayment),
       optionBigDecToOptionDouble(postADayBenefitCrystallisationEvents),

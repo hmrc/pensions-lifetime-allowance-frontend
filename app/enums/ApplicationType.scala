@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-package common
+package enums
 
-import enums.ApplicationType
-
-object Strings {
-
-  def nameString(name: String)(implicit protectionType: ApplicationType.Value): String = {
-    protectionType match {
-      case ApplicationType.IP2014 => "ip14"+name.capitalize
-      case _ => name
-    }
-  }
+object ApplicationType extends Enumeration {
+  val IP2014 = Value
+  val IP2016 = Value
 }

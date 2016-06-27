@@ -19,6 +19,7 @@ package common
 import java.text.SimpleDateFormat
 
 import models._
+import enums.ApplicationType
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 object Validation {
@@ -52,7 +53,7 @@ object Validation {
     }
   }
 
-  def validIPData(data: CacheMap)(implicit protectionType: String = "IP2016"): Boolean = {
+  def validIPData(data: CacheMap)(implicit protectionType: ApplicationType.Value): Boolean = {
     import Strings.nameString
     val pensionsTakenModel: Option[PensionsTakenModel] = data.getEntry[PensionsTakenModel](nameString("pensionsTaken"))
 
