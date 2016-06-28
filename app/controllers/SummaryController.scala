@@ -25,6 +25,7 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 import connectors.KeyStoreConnector
 import views.html._
 import constructors.SummaryConstructor
+import constructors.IP14SummaryConstructor
 import models._
 
 
@@ -52,6 +53,21 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     implicit val request = req
     SummaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2016.summary(summaryModel))
+    }.getOrElse(Redirect(routes.IntroductionController.introduction())) //TODO: Redirect to Technical Error
+  }
+
+  val summaryIP14 = AuthorisedByAny.async { implicit user => implicit request =>
+    implicit val protectionType = ApplicationType.IP2014
+    keyStoreConnector.fetchAllUserData.map {
+      case Some(data) => routeIP2014SummaryFromUserData(data, request)
+      case None => Redirect(routes.IntroductionController.introduction()) //TODO: Redirect to Technical Error
+    }
+  }
+
+  private def routeIP2014SummaryFromUserData(data: CacheMap, req: Request[AnyContent])(implicit protectionType: ApplicationType.Value) : Result = {
+    implicit val request = req
+    IP14SummaryConstructor.createSummaryData(data).map {
+      summaryModel => Ok(pages.ip2014.ip14Summary(summaryModel))
     }.getOrElse(Redirect(routes.IntroductionController.introduction())) //TODO: Redirect to Technical Error
   }
 

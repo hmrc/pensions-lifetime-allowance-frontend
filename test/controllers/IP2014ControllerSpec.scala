@@ -568,7 +568,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14CurrentPensions, ("currentPensionsAmt", "100000") )
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect to Pension Debits page" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.pensionDebits()}") }
+            "redirect to Pension Debits page" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14PensionDebits()}") }
         }
 
         "no amount is set" should {
@@ -617,7 +617,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "not supplied with a stored model" should {
 
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.pensionDebits)
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PensionDebits)
             "return 200" in {
                 keystoreFetchCondition[PensionDebitsModel](None)
                 status(DataItem.result) shouldBe 200
@@ -631,7 +631,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "supplied with a stored test model" should {
             val testModel = new PensionDebitsModel(Some("yes"))
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.pensionDebits)
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PensionDebits)
 
             "return 200" in {
                 keystoreFetchCondition[PensionDebitsModel](Some(testModel))
@@ -663,7 +663,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "Submitting 'yes' in pensionDebitsForm" should {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitPensionDebits, ("pensionDebits", "yes"))
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PensionDebits, ("pensionDebits", "yes"))
             "return 303" in {status(DataItem.result) shouldBe 303}
             // TODO: update to number of pension sharing orders once implemented
             "redirect to ip14 number of pension sharing orders" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14NumberOfPSOs()}") }
@@ -671,15 +671,14 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "Submitting 'no' in pensionDebitsForm" should {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitPensionDebits, ("pensionDebits", "no"))
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PensionDebits, ("pensionDebits", "no"))
             "return 303" in { status(DataItem.result) shouldBe 303 }
-            // TODO: update to summary once immplemented
-            "temporarily redirect to introduction" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}") }
+            "redirect to ip14 summary page" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}") }
         }
 
         "Submitting pensionDebitsForm with no data" should {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitPensionDebits, ("pensionDebits", ""))
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PensionDebits, ("pensionDebits", ""))
             "return 400" in { status(DataItem.result) shouldBe 400 }
             "fail with the correct error message" in {
                 DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionDebits.mandatoryErr"))
@@ -723,7 +722,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(None)
                 // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
             }
         }
 
@@ -741,7 +740,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(Some(testModel))
                 // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
             }
         }
 
@@ -818,7 +817,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "temporarily redirect the user to the introduction page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
             }
         }
 
@@ -831,10 +830,9 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the introduction page" in {
+            "redirect the user to the ip14 summary page" in {
                 psoNumKeystoreSetup(Some(testModel))
-                // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
             }
         }
 
