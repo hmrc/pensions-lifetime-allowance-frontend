@@ -202,8 +202,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
             pensionDebitsModel.map {
                 completedModel => routeIP14NumberOfPSOs(completedModel.pensionDebits.get, request)
             }.getOrElse(
-                // TODO: redirect to summary
-                Future.successful(Redirect(routes.IntroductionController.introduction()))
+                Future.successful(Redirect(routes.SummaryController.summaryIP14()))
             )
         })
     }
@@ -211,7 +210,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     private def routeIP14NumberOfPSOs(havePSOs: String, req: Request[AnyContent]): Future[Result] = {
         implicit val request = req
         havePSOs match {
-            case "no"  => Future.successful(Redirect(routes.IntroductionController.introduction())) // TODO: redirect to summary
+            case "no"  => Future.successful(Redirect(routes.SummaryController.summaryIP14()))
             case "yes" => keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("ip14NumberOfPSOs").map {
                             case Some(data) => Ok(pages.ip2014.ip14NumberOfPSOs(numberOfPSOsForm.fill(data)))
                             case _ => Ok(pages.ip2014.ip14NumberOfPSOs(numberOfPSOsForm))
@@ -239,8 +238,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
             numberOfPSOsModel.map {
                 completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
             }.getOrElse(
-                // TODO: redirect to Summary
-                Future.successful(Redirect(routes.IntroductionController.introduction()))
+                Future.successful(Redirect(routes.SummaryController.summaryIP14()))
             )
 
         })
