@@ -94,3 +94,4 @@ GET         /confirm-fp                                         controllers.Conf
 ## Result ##
 POST        /result-fp                                          controllers.ResultController.processFPApplication
 POST        /result-ip                                          controllers.ResultController.processIPApplication
+GET         /existing-protections                               controllers.ReadProtectionsController.currentProtections

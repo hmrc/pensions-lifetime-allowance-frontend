@@ -55,8 +55,11 @@ trait PLAConnector {
         implicit val protectionType = ApplicationType.IP2016
         val application = IPApplicationConstructor.createIPApplication(userData)
         val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
-        println(requestJson)
         http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+    }
+
+    def readProtections(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+        http.GET[HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections")
     }
 
 
