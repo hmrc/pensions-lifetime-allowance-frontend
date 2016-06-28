@@ -33,21 +33,25 @@ import config.WSHttp
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
-import constructors.ResponseConstructors
+import constructors.{ResponseConstructors,SummaryConstructor}
 import views.html.pages.result._
 import connectors.PLAConnector
 import utils.Constants
+import models._
 
 
 object ResultController extends ResultController with ServicesConfig {
-  override lazy val applicationConfig = FrontendAppConfig
-  override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
+    override val keyStoreConnector = KeyStoreConnector
+    override lazy val applicationConfig = FrontendAppConfig
+    override lazy val authConnector = FrontendAuthConnector
+    override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
 
-  override val plaConnector = PLAConnector
+    override val plaConnector = PLAConnector
 }
 
 trait ResultController extends FrontendController with AuthorisedForPLA {
+
+    val keyStoreConnector = KeyStoreConnector
 
     val plaConnector : PLAConnector
 
@@ -66,4 +70,25 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
         if(Constants.successCodes.contains(notificationId)) "successful" else "rejected"
     }
 
+
+
+
+    val processIPApplication = AuthorisedByAny.async {
+        implicit user =>  implicit request =>
+            keyStoreConnector.fetchAllUserData.flatMap(userData =>
+            plaConnector.applyIP16(user.nino.get, userData.get)
+            .map {
+                response: HttpResponse => ip16ApplicationOutcome(response) match {
+                    case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+                    case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
+                }
+            }
+        )
+            
+    }
+
+    def ip16ApplicationOutcome(response: HttpResponse): String = {
+        val notificationId = (response.json \ "notificationId").as[Int]
+        if(Constants.ip16SuccessCodes.contains(notificationId)) "successful" else "rejected"
+    }
 }

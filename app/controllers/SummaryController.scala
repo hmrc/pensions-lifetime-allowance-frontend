@@ -18,6 +18,7 @@ package controllers
 
 import auth.AuthorisedForPLA
 import config.{FrontendAppConfig,FrontendAuthConnector}
+import enums.ApplicationType
 import play.api.mvc.{Result, AnyContent, Request}
 import uk.gov.hmrc.http.cache.client.{KeyStoreEntryValidationException, CacheMap}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -40,13 +41,14 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
   val keyStoreConnector : KeyStoreConnector
 
   val summaryIP16 = AuthorisedByAny.async { implicit user => implicit request =>
+    implicit val protectionType = ApplicationType.IP2016
     keyStoreConnector.fetchAllUserData.map {
-      case Some(data) => routeSummaryFromUserData(data, request)
+      case Some(data) => routeIP2016SummaryFromUserData(data, request)
       case None => Redirect(routes.IntroductionController.introduction()) //TODO: Redirect to Technical Error
     }
   }
 
-  private def routeSummaryFromUserData(data: CacheMap, req: Request[AnyContent]): Result = {
+  private def routeIP2016SummaryFromUserData(data: CacheMap, req: Request[AnyContent])(implicit protectionType: ApplicationType.Value) : Result = {
     implicit val request = req
     SummaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2016.summary(summaryModel))

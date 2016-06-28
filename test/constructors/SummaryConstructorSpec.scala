@@ -20,6 +20,7 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import play.api.libs.json.{JsValue, Json}
 import models._
+import enums.ApplicationType
 
 class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
   object TestSummaryConstructor extends SummaryConstructor
@@ -73,6 +74,7 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     val psoDetails5SummaryRow = SummaryRowModel("psoDetails5", Some(controllers.routes.IP2016Controller.psoDetails("5")), "£10,001.00", "5 June 2016")
 
     "handle invalid summary data" when {
+        implicit val protectionType = ApplicationType.IP2016
 
       "there is no data" in {
         val tstMap = CacheMap(tstId, Map.empty)
@@ -148,6 +150,7 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     }
 
     "handle valid summary data" when {
+        implicit val protectionType = ApplicationType.IP2016
 
       "all answers are neagtive" in {
         val testSummaryModel = SummaryModel(List(negativePensionsTakenSummaryRow, negativeOverseasPensionsSummaryRow, currentPensionsSummaryRow, totalPensionsAmountSummaryRow("£1,001.00")), List(negativePensionDebitsSummaryRow))

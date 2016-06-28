@@ -16,12 +16,15 @@
 
 package connectors
 
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
 import scala.concurrent.Future
 import config.WSHttp
 import utils.Constants
+import enums.ApplicationType
+import constructors.IPApplicationConstructor
 
 import models._
 
@@ -47,6 +50,16 @@ trait PLAConnector {
         val requestJson: JsValue = Json.parse("""{"protectionType":"FP2016"}""") // TODO: change to use FP application model
         http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
+
+    def applyIP16(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+        implicit val protectionType = ApplicationType.IP2016
+        val application = IPApplicationConstructor.createIPApplication(userData)
+        val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
+        println(requestJson)
+        http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+    }
+
+
 }
 
 object ResponseHandler extends ResponseHandler{

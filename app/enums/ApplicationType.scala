@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-package utils
+package enums
 
-import java.time.LocalDate
-
-object Constants {
-
-    val successCodes = List(22,23,24)
-    val rejectCodes = List(17,18,19,20,21)
-    val strippedNInoLength = 8
-    val npsMaxCurrency: Double = 99999999999999.99
-    val minPSODate: LocalDate = LocalDate.of(1900, 1, 1)
-    val maxPSODate: LocalDate = LocalDate.of(2100, 1, 1)
-
-
-    val ip16SuccessCodes = List(12,13,14,15,16)
-    val ip16RejectCodes = List(9,10,11)
+object ApplicationType extends Enumeration {
+  val IP2014 = Value
+  val IP2016 = Value
 }
