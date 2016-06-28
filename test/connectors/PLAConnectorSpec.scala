@@ -40,7 +40,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
 
   object TestPLAConnector extends PLAConnector {
     val http = mockHttp
-    val stubUrl = "http://localhost:9012"
+    val serviceUrl = "http://localhost:9012"
   }
 
   val validApplyFP16Json = """{"protectionType":"FP2016"}"""
@@ -56,8 +56,8 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
     "use the correct http" in {
       PLAConnector.http shouldBe WSHttp
     }
-    "use the correct stubUrl" in {
-      PLAConnector.stubUrl shouldBe "http://localhost:9011"
+    "use the correct serviceUrl" in {
+      PLAConnector.serviceUrl shouldBe "http://localhost:9011"
     }
   }
 
