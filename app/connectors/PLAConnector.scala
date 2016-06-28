@@ -62,7 +62,6 @@ trait PLAConnector {
         implicit val protectionType = ApplicationType.IP2014
         val application = IPApplicationConstructor.createIPApplication(userData)
         val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
-        println(requestJson)
         http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
 
