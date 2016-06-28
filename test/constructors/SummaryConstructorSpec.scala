@@ -36,11 +36,13 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     val negativePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("no", None))
     val positivePensionsTakenBeforeSummaryRow = SummaryRowModel("pensionsTakenBefore", Some(controllers.routes.IP2016Controller.pensionsTakenBefore()), "Yes")
     val positivePensionsTakenBeforeAmtSummaryRow = SummaryRowModel("pensionsTakenBeforeAmt", Some(controllers.routes.IP2016Controller.pensionsTakenBefore()), "£1,000.00")
+    val negativePensionsTakenBeforeSummaryRow = SummaryRowModel("pensionsTakenBefore", Some(controllers.routes.IP2016Controller.pensionsTakenBefore()), "No")
 
     val positivePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes", Some(BigDecimal(1100))))
     val negativePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("no", None))
     val positivePensionsTakenBetweenSummaryRow = SummaryRowModel("pensionsTakenBetween", Some(controllers.routes.IP2016Controller.pensionsTakenBetween()), "Yes")
     val positivePensionsTakenBetweenAmtSummaryRow = SummaryRowModel("pensionsTakenBetweenAmt", Some(controllers.routes.IP2016Controller.pensionsTakenBetween()), "£1,100.00")
+    val negativePensionsTakenBetweenSummaryRow = SummaryRowModel("pensionsTakenBetween", Some(controllers.routes.IP2016Controller.pensionsTakenBetween()), "No")
 
     val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010))))
     val negativeOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
@@ -195,6 +197,31 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
                                         psoDetails3Tuple,
                                         psoDetails4Tuple,
                                         psoDetails5Tuple
+                                        )
+                            )
+
+        TestSummaryConstructor.createSummaryData(tstMap) shouldBe Some(testSummaryModel)
+      }
+
+      "pensions taken 'yes', pensions taken before 'no', pensions taken between 'no'" in {
+        val testSummaryModel = SummaryModel(
+                                        List(
+                                            positivePensionsTakenSummaryRow,
+                                            negativePensionsTakenBeforeSummaryRow,
+                                            negativePensionsTakenBetweenSummaryRow,
+                                            positiveOverseasPensionsSummaryRow, positiveOverseasPensionsAmtSummaryRow,
+                                            currentPensionsSummaryRow,
+                                            totalPensionsAmountSummaryRow("£2,011.00")
+                                            ),
+                                        List(negativePensionDebitsSummaryRow)
+                                        )
+
+        val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
+                                        negativePensionsTakenBeforeTuple,
+                                        negativePensionsTakenBetweenTuple,
+                                        positiveOverseasPensionsTuple,
+                                        validCurrentPensionsTuple,
+                                        negativePensionDebitsTuple
                                         )
                             )
 
