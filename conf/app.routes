@@ -96,3 +96,4 @@ GET         /confirm-fp                                         controllers.Conf
 ## Result ##
 POST        /result-fp                                          controllers.ResultController.processFPApplication
 POST        /result-ip                                          controllers.ResultController.processIPApplication
+POST        /result-ip14                                        controllers.ResultController.processIP14Application
