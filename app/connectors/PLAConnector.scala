@@ -30,7 +30,7 @@ import models._
 
 object PLAConnector extends PLAConnector with ServicesConfig {
 
-  val stubUrl: String = baseUrl("pensions-lifetime-allowance")
+  val serviceUrl: String = baseUrl("pensions-lifetime-allowance")
   val http = WSHttp
 }
 
@@ -40,29 +40,29 @@ trait PLAConnector {
     
 
     val http: HttpGet with HttpPost with HttpPut
-    val stubUrl: String
+    val serviceUrl: String
 
     implicit val readApiResponse: HttpReads[HttpResponse] = new HttpReads[HttpResponse] {
                     def read(method: String, url: String, response: HttpResponse) = ResponseHandler.handlePLAResponse(method, url, response)
                   }
 
     def applyFP16(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-        val requestJson: JsValue = Json.parse("""{"protectionType":"FP2016"}""") // TODO: change to use FP application model
-        http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+        val requestJson: JsValue = Json.parse("""{"protectionType":"FP2016"}""")
+        http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
 
     def applyIP16(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         implicit val protectionType = ApplicationType.IP2016
         val application = IPApplicationConstructor.createIPApplication(userData)
         val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
-        http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+        http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
 
     def applyIP14(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
         implicit val protectionType = ApplicationType.IP2014
         val application = IPApplicationConstructor.createIPApplication(userData)
         val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
-        http.POST[JsValue, HttpResponse](s"$stubUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+        http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
 
 
