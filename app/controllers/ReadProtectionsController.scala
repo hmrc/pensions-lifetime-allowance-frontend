@@ -32,7 +32,7 @@ import views.html._
 object ReadProtectionsController extends ReadProtectionsController with ServicesConfig {
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
+  override lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
   override val plaConnector = PLAConnector
 }
@@ -55,7 +55,8 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
   def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent]): Result = {
     ResponseConstructors.createExistingProtectionsModelFromJson(Json.parse(response.body)) match {
       case Some(model) => displayExistingProtections(model)
-      case _ => Redirect(routes.EligibilityController.applyIP())
+                  // TODO: Redirect to technical error
+      case _ => Redirect(routes.IntroductionController.introduction())
     }
 
   }
