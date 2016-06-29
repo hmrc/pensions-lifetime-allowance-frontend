@@ -65,6 +65,10 @@ trait PLAConnector {
         http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
     }
 
+    def readProtections(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+        http.GET[HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections")
+    }
+
 
 }
 

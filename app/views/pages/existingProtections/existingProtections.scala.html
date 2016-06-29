@@ -1,0 +1,46 @@
+@import models.ExistingProtectionsDisplayModel
+@import helpers.templates.existingProtection
+@(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_])
+
+@views.html.full_width_template(title = Messages("pla.existingProtections.title"), bodyClasses = None) {
+    
+    <div class="grid grid-2-3">
+        <h1 class="heading-xlarge">@Messages("pla.existingProtections.pageHeading")</h1>
+    </div>
+
+    <div class="grid-wrapper"></div>
+    <section>
+        <h2 class="bold-small">@{Messages("pla.existingProtections.open")} (@{protections.activeProtections.size})</h2>
+    </section>
+    <div>&nbsp;</div>
+
+    @if(protections.activeProtections.size == 0) {
+        <p>@Messages("pla.existingProtections.noActiveProtections")</p>
+    } else {
+        @for((protection, index) <- protections.activeProtections.zipWithIndex) {
+            <section>
+                @existingProtection(protection, "active", index + 1)
+            </section>
+        }
+
+    }
+
+    <div class="grid-wrapper"></div>
+    <div>&nbsp;</div>
+    <section>
+        <h2 class="bold-small">@{Messages("pla.existingProtections.other")} (@{protections.otherProtections.size})</h2>
+    </section>
+    <div>&nbsp;</div>
+
+    @if(protections.otherProtections.size == 0) {
+        <p>@Messages("pla.existingProtections.noOtherProtections")</p>
+    } else {
+        @for((protection, index) <- protections.otherProtections.zipWithIndex) {
+            <section>
+                @existingProtection(protection, "other", index + 1)
+            </section>
+        }
+
+    }
+
+}

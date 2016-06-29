@@ -17,7 +17,7 @@
 package constructors
 
 import play.api.i18n.Messages
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsSuccess, JsValue, Json}
 import models._
 
 object ResponseConstructors extends ResponseConstructors {
@@ -52,5 +52,9 @@ trait ResponseConstructors {
         }
 
         loop(notificationId)
+    }
+
+    def createExistingProtectionsModelFromJson(json: JsValue): Option[ExistingProtectionsModel] = {
+        json.validate[ExistingProtectionsModel].asOpt
     }
 }

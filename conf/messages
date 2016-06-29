@@ -324,6 +324,35 @@ pla.summary.hiddenLinkText.ip14PsoDetails5              = Change the details of 
 pla.summary.ip14DeclarationPara1                        = I confirm that at 5 April 2014 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2014 I did not hold Primary Protection.
 pla.summary.ip14DeclarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
+## EXISITING PROTECTIONS ##
+pla.existingProtections.title                           = View your existing protections
+pla.existingProtections.pageHeading                     = Existing Protections
+pla.existingProtections.open                            = Open
+pla.existingProtections.other                           = Other
+pla.existingProtections.noActiveProtections             = You currently have no open protections.
+pla.existingProtections.noOtherProtections              = You have no other protections.
+pla.existingProtections.protectionRef                   = Protection reference
+pla.existingProtections.psaRef                          = Scheme administrator reference
+
+
+## PROTECTION INFORMATION ##
+pla.protection.statuses.open                            = Open
+pla.protection.statuses.dormant                         = Dormant
+pla.protection.statuses.withdrawn                       = Withdrawn
+pla.protection.statuses.expired                         = Expired
+pla.protection.statuses.unsuccessful                    = Unsuccessful
+pla.protection.statuses.rejected                        = Rejected
+pla.protection.statuses.notRecorded                     = No status recorded
+pla.protection.types.FP2016                             = Fixed Protection 2016
+pla.protection.types.FP2014                             = Fixed Protection 2014
+pla.protection.types.IP2016                             = Individual Protection 2016
+pla.protection.types.IP2014                             = Individual Protection 2014
+pla.protection.types.primary                            = Primary Protection
+pla.protection.types.enhanced                           = Enhanced Protection
+pla.protection.types.fixed                              = Fixed Protection
+pla.protection.types.notRecorded                        = No protection type recorded
+pla.protection.protectionReference                      = No protection reference recorded
+
 ### RESULTS MESSAGES ###
 
 resultCode.1.heading    =   Your application for Individual Protection 2014 has been unsuccessful as you already hold an open or dormant Primary Protection existing rights certificate.

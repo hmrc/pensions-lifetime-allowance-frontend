@@ -25,6 +25,11 @@ object Dates {
     LocalDate.of(year, month, day)
   }
 
+  def constructDateFromAPIString(date: String): LocalDate = {
+    val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    LocalDate.parse(date, dateFormat)
+  }
+
   def dateBefore(day: Int, month: Int, year: Int, date2: LocalDate): Boolean = {
     LocalDate.of(year, month, day).isBefore(date2)
   }

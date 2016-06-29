@@ -14,10 +14,15 @@
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
 @import views.html.helpers.phaseBanner
 
+
+@linksElement = {
+    <link rel="stylesheet" type="text/css" href='@routes.Assets.at("stylesheets/pla.css")'>
+}
+
 @head = {
     @uiLayouts.head(
       assetsPrefix = appConfig.assetsPrefix,
-      linkElem = None,
+      linkElem = Some(linksElement),
       headScripts = None)
     <meta name="format-detection" content="telephone=no" />
 }
