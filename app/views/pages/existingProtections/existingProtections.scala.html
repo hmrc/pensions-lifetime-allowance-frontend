@@ -1,0 +1,18 @@
+@import models.ExistingProtectionsModel
+@(protections: ExistingProtectionsModel)(implicit request: Request[_])
+
+@activeProtections = protections.activeProtections()
+@otherProtections = protections.otherProtections()
+
+@views.html.main_template(title = "hola", bodyClasses = None) {
+    
+    <h1 class="heading-xlarge">Existing Protections</h1>
+
+    <h2 class="heading-large">Active(@activeProtections.size)</h2>
+    @if(activeProtections.size == 0) {
+        <p>@Messages("pla.existingProtections.noActiveProtections")</p>
+    } else {
+        
+    }
+
+}

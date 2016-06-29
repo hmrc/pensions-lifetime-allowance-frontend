@@ -16,6 +16,7 @@
 
 package controllers
 
+import models.ExistingProtectionsModel
 import play.api.i18n.Messages
 import auth.AuthorisedForPLA
 import config.{FrontendAppConfig,FrontendAuthConnector}
@@ -45,17 +46,23 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     plaConnector.readProtections(user.nino.get).map { response =>
       response.status match {
         case 200 => redirectFromSuccess(response)
-        case _ => Redirect(routes.EligibilityController.addedToPension())
+                  // TODO: Redirect to technical error
+        case _ => Redirect(routes.IntroductionController.introduction())
       }
     }
   }
 
   def redirectFromSuccess(response: HttpResponse): Result = {
     ResponseConstructors.createExistingProtectionsModelFromJson(Json.parse(response.body)) match {
-      case Some(model) => Redirect(routes.EligibilityController.applyFP())
+      case Some(model) => displayExistingProtections(model)
       case _ => Redirect(routes.EligibilityController.applyIP())
     }
 
+  }
+
+  def displayExistingProtections(model: ExistingProtectionsModel): Result = {
+
+    Ok(routes.EligibilityController.applyFP())
   }
 
 }

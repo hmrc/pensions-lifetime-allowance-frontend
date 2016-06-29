@@ -43,8 +43,24 @@ object ProtectionModel {
 }
 
 
-case class ExistingProtectionsModel(psaCheckReference: String, lifetimeAllowanceProtections: Seq[ProtectionModel])
+case class ExistingProtectionsModel(psaCheckReference: String, lifetimeAllowanceProtections: Seq[ProtectionModel]) {
+
+    def activeProtections(): Seq[ProtectionModel] = lifetimeAllowanceProtections.filter(_.status.contains("1"))
+    def otherProtections(): Seq[ProtectionModel] = lifetimeAllowanceProtections.filterNot(_.status.contains("1"))
+}
 
 object ExistingProtectionsModel {
   implicit val format = Json.format[ExistingProtectionsModel]
 }
+
+case class ProtectionDisplayModel(
+                                 protectionType: String,
+                                 status: String,
+                                 psaCheckReference: String,
+                                 protectionReference: String,
+                                 relevantAmount: Option[String],
+                                 certificateDate: Option[String]
+                                 )
+
+
+case class ExistingProtectionsDisplayModel(activeProtections: Seq[ProtectionDisplayModel], otherProtections: Seq[ProtectionDisplayModel])
