@@ -55,6 +55,6 @@ trait ResponseConstructors {
     }
 
     def createExistingProtectionsModelFromJson(json: JsValue): Option[ExistingProtectionsModel] = {
-        Some(json.as[ExistingProtectionsModel])
+        json.validate[ExistingProtectionsModel].asOpt
     }
 }
