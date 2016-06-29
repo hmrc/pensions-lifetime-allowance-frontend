@@ -325,7 +325,14 @@ pla.summary.ip14DeclarationPara1                        = I confirm that at 5 Ap
 pla.summary.ip14DeclarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
 ## EXISITING PROTECTIONS ##
-pla.existingProtections.noActiveProtections             = You currently have no active protections.
+pla.existingProtections.title                           = View your existing protections
+pla.existingProtections.pageHeading                     = Existing Protections
+pla.existingProtections.open                            = Open
+pla.existingProtections.other                           = Other
+pla.existingProtections.noActiveProtections             = You currently have no open protections.
+pla.existingProtections.noOtherProtections              = You have no other protections.
+pla.existingProtections.protectionRef                   = Protection reference
+pla.existingProtections.psaRef                          = Scheme administrator reference
 
 
 ## PROTECTION INFORMATION ##

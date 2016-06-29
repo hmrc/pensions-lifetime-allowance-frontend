@@ -17,16 +17,16 @@
 package controllers
 
 import models.ExistingProtectionsModel
-import play.api.i18n.Messages
 import auth.AuthorisedForPLA
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
-import play.api.libs.json.{JsValue, Json}
-import constructors.ResponseConstructors
+import play.api.libs.json.Json
+import constructors.{ResponseConstructors, ExistingProtectionsConstructor}
 import connectors.PLAConnector
+import views.html._
 
 
 object ReadProtectionsController extends ReadProtectionsController with ServicesConfig {
@@ -52,7 +52,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     }
   }
 
-  def redirectFromSuccess(response: HttpResponse): Result = {
+  def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent]): Result = {
     ResponseConstructors.createExistingProtectionsModelFromJson(Json.parse(response.body)) match {
       case Some(model) => displayExistingProtections(model)
       case _ => Redirect(routes.EligibilityController.applyIP())
@@ -60,9 +60,9 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
 
   }
 
-  def displayExistingProtections(model: ExistingProtectionsModel): Result = {
-
-    Ok(routes.EligibilityController.applyFP())
+  def displayExistingProtections(model: ExistingProtectionsModel)(implicit request: Request[AnyContent]): Result = {
+    val displayModel = ExistingProtectionsConstructor.createExistingProtectionsDisplayModel(model)
+    Ok(pages.existingProtections.existingProtections(displayModel))
   }
 
 }
