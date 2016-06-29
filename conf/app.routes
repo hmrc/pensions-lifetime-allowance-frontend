@@ -98,3 +98,8 @@ POST        /result-fp                                          controllers.Resu
 POST        /result-ip                                          controllers.ResultController.processIPApplication
 POST        /result-ip14                                        controllers.ResultController.processIP14Application
 GET         /existing-protections                               controllers.ReadProtectionsController.currentProtections
+
+#Feedback routes
+GET         /feedback                                           controllers.FeedbackController.show
+POST        /feedback                                           controllers.FeedbackController.submit
+GET         /thankyou                                           controllers.FeedbackController.thankyou
