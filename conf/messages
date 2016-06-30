@@ -246,7 +246,9 @@ pla.psoDetails.psoAmountQuestion            = Amount
 pla.psoDetails.errorNegative                = Enter a positive number for the amount of your pension sharing order
 pla.psoDetails.errorMaximum                 = The amount of your pension sharing order must be less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The pension sharing order value you have entered has too many decimal places
-pla.psoDetails.errorDateOutOfRange          = Please enter a date between the year 1900 and 2100
+
+pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date after 6 April 2014
+pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date after 6 April 2016
 
 
 ## SUMMARY ##
