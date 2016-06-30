@@ -23,6 +23,9 @@ import play.api.i18n.Messages
 import models._
 
 class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplication {
+
+  val tstPSACheckRef = "PSA33456789"
+
   "Existing Protections Constructor" should {
 
     "Populate the protection status string" when {
@@ -46,6 +49,43 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
       "the protection type is not recorded" in {ExistingProtectionsConstructor.protectionTypeString(None) shouldBe Messages("pla.protection.types.notRecorded")}
     }
 
+    "Create an ExistingProtectionsDisplayModel" in {
+      val tstProtectionModelOpen = ProtectionModel (
+                           id = Some(12345),
+                           `type` = Some(2),
+                           status = Some(1),
+                           certificateDate = Some("2016-04-17"),
+                           relevantAmount = Some(1250000),
+                           protectionReference = Some("PSA123456")
+                         )
+      val tstProtectionDisplayModelOpen = ProtectionDisplayModel(
+                            protectionType = Messages("pla.protection.types.IP2014"),
+                            status = Messages("pla.protection.statuses.open"),
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = "PSA123456",
+                            relevantAmount = Some("£1,250,000.00"),
+                            certificateDate = Some("17 April 2016"))
+    
+      val tstProtectionModelDormant = ProtectionModel (
+                           id = Some(12345),
+                           `type` = Some(2),
+                           status = Some(2),
+                           certificateDate = None,
+                           relevantAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant = ProtectionDisplayModel(
+                            protectionType = Messages("pla.protection.types.IP2014"),
+                            status = Messages("pla.protection.statuses.dormant"),
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            relevantAmount = None,
+                            certificateDate = None)
+      val tstExistingProtectionModel = ExistingProtectionsModel(tstPSACheckRef, List(tstProtectionModelOpen, tstProtectionModelDormant))
+      val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(List(tstProtectionDisplayModelOpen), List(tstProtectionDisplayModelDormant))
+
+      ExistingProtectionsConstructor.createExistingProtectionsDisplayModel(tstExistingProtectionModel) shouldBe tstExistingProtectionsDisplayModel
+    }
   }
 
 }
