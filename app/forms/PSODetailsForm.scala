@@ -34,10 +34,11 @@ object PSODetailsForm {
   }
 
   private def getFormDateValues(form: Form[PSODetailsModel]): (Int, Int, Int) = {
+    import common.Strings._
     (
-      form("psoDay").value.getOrElse("0").toInt,
-      form("psoMonth").value.getOrElse("0").toInt,
-      form("psoYear").value.getOrElse("0").toInt
+      form("psoDay").value.getOrElse("0").toIntOpt.getOrElse(0),
+      form("psoMonth").value.getOrElse("0").toIntOpt.getOrElse(0),
+      form("psoYear").value.getOrElse("0").toIntOpt.getOrElse(0)
       )
   }
 

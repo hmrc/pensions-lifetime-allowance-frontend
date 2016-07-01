@@ -259,7 +259,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     val submitIP14PSODetails = AuthorisedByAny.async { implicit user => implicit request =>
 
             IP14PsoDetailsForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(errors, errors("psoNumber").value.get.toInt))),
+                errors => Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(IP14PSODetailsForm.validateForm(errors), errors("psoNumber").value.get.toInt))),
                 form => {
                     val validatedForm = IP14PSODetailsForm.validateForm(IP14PsoDetailsForm.fill(form))
                     if(validatedForm.hasErrors) {
