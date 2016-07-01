@@ -27,7 +27,7 @@ object Dates {
 
   def constructDateFromAPIString(date: String): LocalDate = {
     val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    LocalDate.parse(date, dateFormat)
+    LocalDate.parse(date.split("T")(0), dateFormat)
   }
 
   def dateBefore(day: Int, month: Int, year: Int, date2: LocalDate): Boolean = {
