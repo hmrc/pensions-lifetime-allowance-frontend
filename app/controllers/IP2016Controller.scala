@@ -261,7 +261,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     val submitPSODetails = AuthorisedByAny.async { implicit user => implicit request =>
 
             psoDetailsForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2016.psoDetails(errors, errors("psoNumber").value.get.toInt))),
+                errors => Future.successful(BadRequest(pages.ip2016.psoDetails(PSODetailsForm.validateForm(errors), errors("psoNumber").value.get.toInt))),
                 form => {
                     val validatedForm = PSODetailsForm.validateForm(psoDetailsForm.fill(form))
                     if(validatedForm.hasErrors) {

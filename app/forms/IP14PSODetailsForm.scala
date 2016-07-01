@@ -24,12 +24,12 @@ import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
 
-object PSODetailsForm {
+object IP14PSODetailsForm {
 
   def validateForm(form: Form[PSODetailsModel]): Form[PSODetailsModel] = {
     val (day, month, year) = getFormDateValues(form)
     if(!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
-    else if(dateBefore(day, month, year, Constants.minIP16PSODate)) form.withError("psoDay", Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
+    else if(dateBefore(day, month, year, Constants.minIP14PSODate)) form.withError("psoDay", Messages("pla.IP14PsoDetails.errorDateOutOfRange"))
     else form
   }
 
@@ -42,7 +42,7 @@ object PSODetailsForm {
       )
   }
 
-  val psoDetailsForm = Form(
+  val IP14PsoDetailsForm = Form(
     mapping(
         "psoNumber" -> number,
         "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),

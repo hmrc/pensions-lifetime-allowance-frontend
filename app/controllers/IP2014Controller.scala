@@ -35,7 +35,7 @@ import forms.OverseasPensionsForm.overseasPensionsForm
 import forms.CurrentPensionsForm.currentPensionsForm
 import forms.PensionDebitsForm.pensionDebitsForm
 import forms.NumberOfPSOsForm.numberOfPSOsForm
-import forms.PSODetailsForm.psoDetailsForm
+import forms.IP14PSODetailsForm.IP14PsoDetailsForm
 import models._
 import common.Validation._
 
@@ -250,18 +250,18 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
             Future.successful(Redirect(routes.SummaryController.summaryIP14()))
         } else {
             keyStoreConnector.fetchAndGetFormData[PSODetailsModel](s"ip14PsoDetails$psoNum").map {
-                case Some(storedData) => Ok(pages.ip2014.ip14PsoDetails(psoDetailsForm.fill(storedData), psoNum))
-                case _ => Ok(pages.ip2014.ip14PsoDetails(psoDetailsForm, psoNum))
+                case Some(storedData) => Ok(pages.ip2014.ip14PsoDetails(IP14PsoDetailsForm.fill(storedData), psoNum))
+                case _ => Ok(pages.ip2014.ip14PsoDetails(IP14PsoDetailsForm, psoNum))
             }
         }
     }
 
     val submitIP14PSODetails = AuthorisedByAny.async { implicit user => implicit request =>
 
-            psoDetailsForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(errors, errors("psoNumber").value.get.toInt))),
+            IP14PsoDetailsForm.bindFromRequest.fold(
+                errors => Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(IP14PSODetailsForm.validateForm(errors), errors("psoNumber").value.get.toInt))),
                 form => {
-                    val validatedForm = PSODetailsForm.validateForm(psoDetailsForm.fill(form))
+                    val validatedForm = IP14PSODetailsForm.validateForm(IP14PsoDetailsForm.fill(form))
                     if(validatedForm.hasErrors) {
                         Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(validatedForm, form.psoNumber)))
                     } else {
