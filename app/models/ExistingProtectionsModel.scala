@@ -19,11 +19,11 @@ package models
 import play.api.libs.json.Json
 
 case class ProtectionModel (
-                             id: Option[Int],
+                             protectionID: Option[Int],
                              certificateDate: Option[String] = None,
                              version: Option[Int] = None,
-                             `type`: Option[Int] = None,
-                             status: Option[Int] = None,
+                             protectionType: Option[String] = None,
+                             status: Option[String] = None,
                              protectedAmount: Option[Double] = None,
                              relevantAmount: Option[Double] = None,
                              postADayBenefitCrystallisationEvents: Option[Double] = None,
@@ -45,8 +45,8 @@ object ProtectionModel {
 
 case class ExistingProtectionsModel(psaCheckReference: String, lifetimeAllowanceProtections: Seq[ProtectionModel]) {
 
-    def activeProtections(): Seq[ProtectionModel] = lifetimeAllowanceProtections.filter(_.status.contains(1))
-    def otherProtections(): Seq[ProtectionModel] = lifetimeAllowanceProtections.filterNot(_.status.contains(1))
+    def activeProtections(): Seq[ProtectionModel] = lifetimeAllowanceProtections.filter(_.status.contains("Open"))
+    def otherProtections(): Seq[ProtectionModel] = lifetimeAllowanceProtections.filterNot(_.status.contains("Open"))
 }
 
 object ExistingProtectionsModel {
