@@ -25,7 +25,7 @@ import enums.ApplicationType
 class IP14SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
   object TestIP14SummaryConstructor extends IP14SummaryConstructor
   val tstId = "testUserID"
-  "Summary Constructor" should {
+  "IP14 Summary Constructor" should {
 
     val positivePensionsTakenTuple = "ip14PensionsTaken" -> Json.toJson(PensionsTakenModel(Some("yes")))
     val negativePensionsTakenTuple = "ip14PensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
