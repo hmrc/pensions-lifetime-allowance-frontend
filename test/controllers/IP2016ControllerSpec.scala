@@ -983,7 +983,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
                 ("psoNumber", "4"),
-                ("psoDay", "6"),
+                ("psoDay", "5"),
                 ("psoMonth", "4"),
                 ("psoYear", "2016"),
                 ("psoAmt", "1000")
