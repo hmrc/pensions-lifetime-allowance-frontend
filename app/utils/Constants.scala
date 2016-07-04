@@ -24,8 +24,8 @@ object Constants {
     val rejectCodes = List(17,18,19,20,21)
     val strippedNInoLength = 8
     val npsMaxCurrency: Double = 99999999999999.99
-    val minIP14PSODate: LocalDate = LocalDate.of(2014, 4, 7)
-    val minIP16PSODate: LocalDate = LocalDate.of(2016, 4, 7)
+    val minIP14PSODate: LocalDate = LocalDate.of(2014, 4, 6)
+    val minIP16PSODate: LocalDate = LocalDate.of(2016, 4, 6)
 
 
     val ip16SuccessCodes = List(12,13,14,15,16)
