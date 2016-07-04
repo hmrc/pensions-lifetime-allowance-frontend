@@ -29,31 +29,31 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
   "Existing Protections Constructor" should {
 
     "Populate the protection status string" when {
-      "the protection is open" in         {ExistingProtectionsConstructor.statusString(Some(1)) shouldBe Messages("pla.protection.statuses.open")}
-      "the protection is dormant" in      {ExistingProtectionsConstructor.statusString(Some(2)) shouldBe Messages("pla.protection.statuses.dormant")}
-      "the protection is withdrawn" in    {ExistingProtectionsConstructor.statusString(Some(3)) shouldBe Messages("pla.protection.statuses.withdrawn")}
-      "the protection is expired" in      {ExistingProtectionsConstructor.statusString(Some(4)) shouldBe Messages("pla.protection.statuses.expired")}
-      "the protection is unsuccessful" in {ExistingProtectionsConstructor.statusString(Some(5)) shouldBe Messages("pla.protection.statuses.unsuccessful")}
-      "the protection is rejected" in     {ExistingProtectionsConstructor.statusString(Some(6)) shouldBe Messages("pla.protection.statuses.rejected")}
+      "the protection is open" in         {ExistingProtectionsConstructor.statusString(Some("Open")) shouldBe Messages("pla.protection.statuses.open")}
+      "the protection is dormant" in      {ExistingProtectionsConstructor.statusString(Some("Dormant")) shouldBe Messages("pla.protection.statuses.dormant")}
+      "the protection is withdrawn" in    {ExistingProtectionsConstructor.statusString(Some("Withdrawn")) shouldBe Messages("pla.protection.statuses.withdrawn")}
+      "the protection is expired" in      {ExistingProtectionsConstructor.statusString(Some("Expired")) shouldBe Messages("pla.protection.statuses.expired")}
+      "the protection is unsuccessful" in {ExistingProtectionsConstructor.statusString(Some("Unsuccessful")) shouldBe Messages("pla.protection.statuses.unsuccessful")}
+      "the protection is rejected" in     {ExistingProtectionsConstructor.statusString(Some("Rejected")) shouldBe Messages("pla.protection.statuses.rejected")}
       "there is no status recorded" in    {ExistingProtectionsConstructor.statusString(None) shouldBe Messages("pla.protection.statuses.notRecorded")}
     }
 
     "Populate the protection type string" when {
-      "the protection is FP2016" in            {ExistingProtectionsConstructor.protectionTypeString(Some(1)) shouldBe Messages("pla.protection.types.FP2016")}
-      "the protection is IP2014" in            {ExistingProtectionsConstructor.protectionTypeString(Some(2)) shouldBe Messages("pla.protection.types.IP2014")}
-      "the protection is IP2016" in            {ExistingProtectionsConstructor.protectionTypeString(Some(3)) shouldBe Messages("pla.protection.types.IP2016")}
-      "the protection is primary" in           {ExistingProtectionsConstructor.protectionTypeString(Some(4)) shouldBe Messages("pla.protection.types.primary")}
-      "the protection is enhanced" in          {ExistingProtectionsConstructor.protectionTypeString(Some(5)) shouldBe Messages("pla.protection.types.enhanced")}
-      "the protection is fixed" in             {ExistingProtectionsConstructor.protectionTypeString(Some(6)) shouldBe Messages("pla.protection.types.fixed")}
-      "the protection is FP2014" in            {ExistingProtectionsConstructor.protectionTypeString(Some(7)) shouldBe Messages("pla.protection.types.FP2014")}
+      "the protection is FP2016" in            {ExistingProtectionsConstructor.protectionTypeString(Some("FP2016")) shouldBe Messages("pla.protection.types.FP2016")}
+      "the protection is IP2014" in            {ExistingProtectionsConstructor.protectionTypeString(Some("IP2014")) shouldBe Messages("pla.protection.types.IP2014")}
+      "the protection is IP2016" in            {ExistingProtectionsConstructor.protectionTypeString(Some("IP2016")) shouldBe Messages("pla.protection.types.IP2016")}
+      "the protection is primary" in           {ExistingProtectionsConstructor.protectionTypeString(Some("Primary")) shouldBe Messages("pla.protection.types.primary")}
+      "the protection is enhanced" in          {ExistingProtectionsConstructor.protectionTypeString(Some("Enhanced")) shouldBe Messages("pla.protection.types.enhanced")}
+      "the protection is fixed" in             {ExistingProtectionsConstructor.protectionTypeString(Some("Fixed")) shouldBe Messages("pla.protection.types.fixed")}
+      "the protection is FP2014" in            {ExistingProtectionsConstructor.protectionTypeString(Some("FP2014")) shouldBe Messages("pla.protection.types.FP2014")}
       "the protection type is not recorded" in {ExistingProtectionsConstructor.protectionTypeString(None) shouldBe Messages("pla.protection.types.notRecorded")}
     }
 
     "Create an ExistingProtectionsDisplayModel" in {
       val tstProtectionModelOpen = ProtectionModel (
-                           id = Some(12345),
-                           `type` = Some(2),
-                           status = Some(1),
+                           protectionID = Some(12345),
+                           protectionType = Some("IP2014"),
+                           status = Some("Open"),
                            certificateDate = Some("2016-04-17"),
                            relevantAmount = Some(1250000),
                            protectionReference = Some("PSA123456")
@@ -67,9 +67,9 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
                             certificateDate = Some("17 April 2016"))
     
       val tstProtectionModelDormant = ProtectionModel (
-                           id = Some(12345),
-                           `type` = Some(2),
-                           status = Some(2),
+                           protectionID = Some(12345),
+                           protectionType = Some("IP2014"),
+                           status = Some("Dormant"),
                            certificateDate = None,
                            relevantAmount = None,
                            protectionReference = None

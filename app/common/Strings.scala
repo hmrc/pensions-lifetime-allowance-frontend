@@ -20,6 +20,11 @@ import enums.ApplicationType
 
 object Strings {
 
+  implicit class StringImprovements(val s: String) {
+    import scala.util.control.Exception._
+    def toIntOpt = catching(classOf[NumberFormatException]) opt s.toInt
+  }
+
   def nameString(name: String)(implicit protectionType: ApplicationType.Value): String = {
     protectionType match {
       case ApplicationType.IP2014 => "ip14"+name.capitalize

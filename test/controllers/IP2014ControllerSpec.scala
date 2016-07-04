@@ -976,15 +976,15 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
                 ("psoNumber", "4"),
-                ("psoDay", "1"),
-                ("psoMonth", "1"),
-                ("psoYear", "2115"),
+                ("psoDay", "6"),
+                ("psoMonth", "4"),
+                ("psoYear", "2014"),
                 ("psoAmt", "1000")
             )
             "return 400" in { status(DataItem.result) shouldBe 400 }
 
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorDateOutOfRange"))
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP14PsoDetails.errorDateOutOfRange"))
             }
         }
 
