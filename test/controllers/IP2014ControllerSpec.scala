@@ -976,7 +976,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
                 ("psoNumber", "4"),
-                ("psoDay", "6"),
+                ("psoDay", "5"),
                 ("psoMonth", "4"),
                 ("psoYear", "2014"),
                 ("psoAmt", "1000")
