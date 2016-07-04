@@ -16,36 +16,72 @@
 
 package controllers
 
-import play.api.http.Status
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import auth.MockAuthConnector
+import org.mockito.Matchers
+import play.api.i18n.Messages
+import testHelpers.AuthorisedFakeRequestToPost
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import org.scalatest.mock.MockitoSugar
+import org.mockito.Mockito._
+import org.mockito.Matchers.anyString
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import play.api.libs.json.{JsValue, Json}
-import connectors.PLAConnector
+import connectors.{KeyStoreConnector, PLAConnector}
+
+import scala.concurrent.Future
 
 
 class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
-  object TestResultController extends ResultController {
-  override lazy val applicationConfig = FrontendAppConfig
-  override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/confirm-fp"
+  val successFP16Json = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1}""")
+  val rejectionFP16Json = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
 
-  override val plaConnector = mock[PLAConnector]
+  val successIP16Json = Json.parse("""{"notificationId":12}""")
+  val rejectionIP16Json = Json.parse("""{"notificationId":9}""")
 
+  val successIP14Json = Json.parse("""{"notificationId":3}""")
+  val rejectionIP14Json = Json.parse("""{"notificationId":1}""")
+
+  val testFP16SuccessResponse = HttpResponse(200,Some(successFP16Json))
+  val testFP16RejectionResponse = HttpResponse(409,Some(rejectionFP16Json))
+  val testIP16SuccessResponse = HttpResponse(200,Some(successIP16Json))
+  val testIP16RejectionResponse = HttpResponse(409,Some(rejectionIP16Json))
+  val testIP14SuccessResponse = HttpResponse(200,Some(successIP14Json))
+  val testIP14RejectionResponse = HttpResponse(409,Some(rejectionIP14Json))
+
+  object TestSuccessResultController extends ResultController {
+    override lazy val applicationConfig = FrontendAppConfig
+    override lazy val authConnector = MockAuthConnector
+    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/confirm-fp"
+
+    implicit val hc: HeaderCarrier = HeaderCarrier()
+
+    override val plaConnector = mock[PLAConnector]
+    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testFP16SuccessResponse))
+    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP16SuccessResponse))
+    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP14SuccessResponse))
+
+
+    override val keyStoreConnector = mock[KeyStoreConnector]
+    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
   }
 
-  val successJson = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1}""")
-  val rejectionJson = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
+  object TestRejectResultController extends ResultController {
+    override lazy val applicationConfig = FrontendAppConfig
+    override lazy val authConnector = MockAuthConnector
+    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/confirm-fp"
 
-  val testSuccessResponse = HttpResponse(200,Some(successJson))
+    implicit val hc: HeaderCarrier = HeaderCarrier()
+    override val plaConnector = mock[PLAConnector]
+    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testFP16RejectionResponse))
+    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP16RejectionResponse))
+    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP14RejectionResponse))
 
-  val testRejectionResponse = HttpResponse(409,Some(rejectionJson))
+    override val keyStoreConnector = mock[KeyStoreConnector]
+    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+  }
 
   ///////////////////////////////////////////////
   // Initial Setup
@@ -54,15 +90,46 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     ResultController.authConnector shouldBe FrontendAuthConnector
   }
 
-  "ResultController" should {
+  "Successfully applying for FP" should {
 
-    "obtain the correct outcome form a successful FP application" in {
-      TestResultController.applicationOutcome(testSuccessResponse) shouldBe("successful")
-    }
+    object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processFPApplication)
+    "return 200" in { status(DataItem.result) shouldBe 200 }
+    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.success.title")}
+  }
 
-    "obtain the correct outcome form an unsuccessful FP application" in {
-      TestResultController.applicationOutcome(testRejectionResponse) shouldBe("rejected")
-    }
+  "Unsuccessfully applying for FP" should {
+
+    object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processFPApplication)
+    "return 200" in { status(DataItem.result) shouldBe 200 }
+    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.rejection.title")}
+  }
+
+  "Successfully applying for IP 2016" should {
+
+    object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processIPApplication)
+    "return 200" in { status(DataItem.result) shouldBe 200 }
+    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.success.title")}
+  }
+
+  "Unsuccessfully applying for IP 2016" should {
+
+    object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processIPApplication)
+    "return 200" in { status(DataItem.result) shouldBe 200 }
+    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.rejection.title")}
+  }
+
+  "Successfully applying for IP 2014" should {
+
+    object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processIP14Application)
+    "return 200" in { status(DataItem.result) shouldBe 200 }
+    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.success.title")}
+  }
+
+  "Unsuccessfully applying for IP 2014" should {
+
+    object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processIP14Application)
+    "return 200" in { status(DataItem.result) shouldBe 200 }
+    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.rejection.title")}
   }
 
 
