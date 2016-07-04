@@ -199,6 +199,9 @@ pla.overseasPensions.errorMaximum           = The amount of overseas pensions yo
 pla.overseasPensions.errorDecimalPlaces     = The value you have entered has too many decimal places
 pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
 
+## IP14 Overseas Pensions ##
+pla.ip14OverseasPensions.questionTwo        = Enter the value on 5 April 2014
+
 ## CURRENT PENSIONS ##
 pla.currentPensions.pageHeading             = Current pensions
 pla.currentPensions.title                   = Current Pensions
