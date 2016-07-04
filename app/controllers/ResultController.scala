@@ -51,8 +51,7 @@ object ResultController extends ResultController with ServicesConfig {
 
 trait ResultController extends FrontendController with AuthorisedForPLA {
 
-    val keyStoreConnector = KeyStoreConnector
-
+    val keyStoreConnector: KeyStoreConnector
     val plaConnector : PLAConnector
 
     val processFPApplication = AuthorisedByAny.async {
