@@ -19,7 +19,7 @@ package connectors
 import java.util.UUID
 
 import config.WSHttp
-import models.ApplyFP16Model
+import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -30,6 +30,7 @@ import play.api.test.Helpers._
 import uk.gov.hmrc.play.http.{HttpResponse, HeaderCarrier}
 import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.http.cache.client.CacheMap
 import scala.collection.immutable.List
 
 import scala.concurrent.Future
@@ -45,6 +46,18 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
 
   val validApplyFP16Json = """{"protectionType":"FP2016"}"""
   val nino = "AB999999C"
+  val tstId = "testUserID"
+
+
+  val negativePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
+  val negativeOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
+  val validCurrentPensionsTuple = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
+  val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
+
+  val negativeIP14PensionsTakenTuple = "ip14PensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
+  val negativeIP14OverseasPensionsTuple = "ip14OverseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
+  val validIP14CurrentPensionsTuple = "ip14CurrentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
+  val negativeIP14PensionDebitsTuple =  "ip14PensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -69,6 +82,46 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
       when(mockHttp.POST[JsValue, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
       val response = TestPLAConnector.applyFP16(nino)
+      await(response).status shouldBe OK
+    }
+  }
+
+
+
+  "Calling applyIP16" should {
+    "should return a 200 from a valid apply IP16 request" in {
+      when(mockHttp.POST[JsValue, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(HttpResponse(OK)))
+      val tstMap = CacheMap(tstId, Map(negativePensionsTakenTuple,
+                                      negativeOverseasPensionsTuple,
+                                      validCurrentPensionsTuple,
+                                      negativePensionDebitsTuple))
+
+      val response = TestPLAConnector.applyIP16(nino, tstMap)
+      await(response).status shouldBe OK
+    }
+  }
+
+  "Calling applyIP14" should {
+    "should return a 200 from a valid apply IP14 request" in {
+      when(mockHttp.POST[JsValue, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(HttpResponse(OK)))
+      val tstMap = CacheMap(tstId, Map(negativeIP14PensionsTakenTuple,
+                                      negativeIP14OverseasPensionsTuple,
+                                      validIP14CurrentPensionsTuple,
+                                      negativeIP14PensionDebitsTuple))
+
+      val response = TestPLAConnector.applyIP14(nino, tstMap)
+      await(response).status shouldBe OK
+    }
+  }
+
+  "Calling readProtections" should {
+    "should return a 200 from a valid apply readProtectiond request" in {
+      when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(HttpResponse(OK)))
+
+      val response = TestPLAConnector.readProtections(nino)
       await(response).status shouldBe OK
     }
   }
