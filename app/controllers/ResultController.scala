@@ -19,6 +19,7 @@ package controllers
 import auth.AuthorisedForPLA
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import connectors.KeyStoreConnector
+import play.api.Logger
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
@@ -53,8 +54,9 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
   }
 
   def applicationOutcome(response: HttpResponse): String = {
-    val notificationId = (response.json \ "notificationId").as[Int]
-    if(Constants.successCodes.contains(notificationId)) "successful" else "rejected"
+    val notificationId = (response.json \ "notificationId").asOpt[Int]
+    assert(notificationId.isDefined, Logger.error(s"no notification ID returned in FP application response. Response: $response"))
+    if(Constants.successCodes.contains(notificationId.get)) "successful" else "rejected"
   }
 
 
@@ -75,8 +77,9 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
   }
 
   def ip16ApplicationOutcome(response: HttpResponse): String = {
-    val notificationId = (response.json \ "notificationId").as[Int]
-    if(Constants.ip16SuccessCodes.contains(notificationId)) "successful" else "rejected"
+    val notificationId = (response.json \ "notificationId").asOpt[Int]
+    assert(notificationId.isDefined, Logger.error(s"no notification ID returned in IP2016 application response. Response: $response"))
+    if(Constants.ip16SuccessCodes.contains(notificationId.get)) "successful" else "rejected"
   }
 
 
@@ -97,7 +100,8 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
   }
 
   def ip14ApplicationOutcome(response: HttpResponse): String = {
-    val notificationId = (response.json \ "notificationId").as[Int]
-    if(Constants.ip14SuccessCodes.contains(notificationId)) "successful" else "rejected"
+    val notificationId = (response.json \ "notificationId").asOpt[Int]
+    assert(notificationId.isDefined, Logger.error(s"no notification ID returned in IP2014 application response. Response: $response"))
+    if(Constants.ip14SuccessCodes.contains(notificationId.get)) "successful" else "rejected"
   }
 }
