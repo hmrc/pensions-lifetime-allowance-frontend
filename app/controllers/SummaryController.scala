@@ -32,7 +32,7 @@ import models._
 object SummaryController extends SummaryController {
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.introductionUrl
+  override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 
   val keyStoreConnector = KeyStoreConnector
 }

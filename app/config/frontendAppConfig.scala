@@ -35,7 +35,6 @@ trait AppConfig {
   val showGovUkDonePage: Boolean
   val govUkFinishedPageUrl: String
   val identityVerification: Boolean
-  val introductionUrl: String
   val confirmFPUrl: String
   val ipStartUrl: String
   val ip14StartUrl: String
