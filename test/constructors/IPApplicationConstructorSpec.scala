@@ -95,6 +95,19 @@ class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
         IPApplicationConstructor.createIPApplication(tstMap) shouldBe tstModel
       }
     }
-  
+
+    "Throw an assertion error" when {
+
+      "passed incomplete data" in {
+        implicit val protectionType = ApplicationType.IP2016
+        val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
+          positivePensionsTakenBeforeTuple))
+        val thrown = intercept[Error] {
+          IPApplicationConstructor.createIPApplication(tstMap)
+        }
+
+        thrown.getMessage shouldBe "assertion failed: ()"
+      }
+    }
   }
 }

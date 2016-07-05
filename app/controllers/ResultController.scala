@@ -16,100 +16,88 @@
 
 package controllers
 
-import play.api.i18n.Messages
 import auth.AuthorisedForPLA
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import connectors.KeyStoreConnector
-import play.api.mvc._
-import play.api.data.Forms._
-import play.api.data._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
-import scala.concurrent.Future
-import forms.AddedToPensionForm.addedToPensionForm
-import forms.AddingToPensionForm.addingToPensionForm
-import forms.PensionSavingsForm.pensionSavingsForm
-import config.WSHttp
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
-import play.api.libs.json.{JsValue, Json}
-import constructors.{ResponseConstructors,SummaryConstructor}
+import constructors.ResponseConstructors
 import views.html.pages.result._
 import connectors.PLAConnector
 import utils.Constants
-import models._
 
 
 object ResultController extends ResultController with ServicesConfig {
-    override val keyStoreConnector = KeyStoreConnector
-    override lazy val applicationConfig = FrontendAppConfig
-    override lazy val authConnector = FrontendAuthConnector
-    override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
+  override val keyStoreConnector = KeyStoreConnector
+  override lazy val applicationConfig = FrontendAppConfig
+  override lazy val authConnector = FrontendAuthConnector
+  override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
 
-    override val plaConnector = PLAConnector
+  override val plaConnector = PLAConnector
 }
 
 trait ResultController extends FrontendController with AuthorisedForPLA {
 
-    val keyStoreConnector: KeyStoreConnector
-    val plaConnector : PLAConnector
+  val keyStoreConnector: KeyStoreConnector
+  val plaConnector : PLAConnector
 
-    val processFPApplication = AuthorisedByAny.async {
-        implicit user =>  implicit request => 
-            plaConnector.applyFP16(user.nino.get).map {
-                response: HttpResponse => applicationOutcome(response) match {
-                    case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
-                    case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
-                }
-            }
-    }
+  val processFPApplication = AuthorisedByAny.async {
+    implicit user =>  implicit request =>
+      plaConnector.applyFP16(user.nino.get).map {
+        response: HttpResponse => applicationOutcome(response) match {
+          case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+          case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
+        }
+      }
+  }
 
-    def applicationOutcome(response: HttpResponse): String = {
-        val notificationId = (response.json \ "notificationId").as[Int]
-        if(Constants.successCodes.contains(notificationId)) "successful" else "rejected"
-    }
-
-
-
-
-    val processIPApplication = AuthorisedByAny.async {
-        implicit user =>  implicit request =>
-            keyStoreConnector.fetchAllUserData.flatMap(userData =>
-            plaConnector.applyIP16(user.nino.get, userData.get)
-            .map {
-                response: HttpResponse => ip16ApplicationOutcome(response) match {
-                    case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
-                    case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
-                }
-            }
-        )
-            
-    }
-
-    def ip16ApplicationOutcome(response: HttpResponse): String = {
-        val notificationId = (response.json \ "notificationId").as[Int]
-        if(Constants.ip16SuccessCodes.contains(notificationId)) "successful" else "rejected"
-    }
+  def applicationOutcome(response: HttpResponse): String = {
+    val notificationId = (response.json \ "notificationId").as[Int]
+    if(Constants.successCodes.contains(notificationId)) "successful" else "rejected"
+  }
 
 
 
 
-    val processIP14Application = AuthorisedByAny.async {
-        implicit user =>  implicit request =>
-            keyStoreConnector.fetchAllUserData.flatMap(userData =>
-            plaConnector.applyIP14(user.nino.get, userData.get)
-            .map {
-                response: HttpResponse => ip14ApplicationOutcome(response) match {
-                    case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
-                    case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
-                }
-            }
-        )
-            
-    }
+  val processIPApplication = AuthorisedByAny.async {
+    implicit user =>  implicit request =>
+      keyStoreConnector.fetchAllUserData.flatMap(userData =>
+      plaConnector.applyIP16(user.nino.get, userData.get)
+      .map {
+        response: HttpResponse => ip16ApplicationOutcome(response) match {
+          case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+          case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
+        }
+      }
+    )
 
-    def ip14ApplicationOutcome(response: HttpResponse): String = {
-        val notificationId = (response.json \ "notificationId").as[Int]
-        if(Constants.ip14SuccessCodes.contains(notificationId)) "successful" else "rejected"
-    }
+  }
+
+  def ip16ApplicationOutcome(response: HttpResponse): String = {
+    val notificationId = (response.json \ "notificationId").as[Int]
+    if(Constants.ip16SuccessCodes.contains(notificationId)) "successful" else "rejected"
+  }
+
+
+
+
+  val processIP14Application = AuthorisedByAny.async {
+    implicit user =>  implicit request =>
+      keyStoreConnector.fetchAllUserData.flatMap(userData =>
+      plaConnector.applyIP14(user.nino.get, userData.get)
+      .map {
+        response: HttpResponse => ip14ApplicationOutcome(response) match {
+          case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+          case "rejected"   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
+        }
+      }
+    )
+
+  }
+
+  def ip14ApplicationOutcome(response: HttpResponse): String = {
+    val notificationId = (response.json \ "notificationId").as[Int]
+    if(Constants.ip14SuccessCodes.contains(notificationId)) "successful" else "rejected"
+  }
 }
