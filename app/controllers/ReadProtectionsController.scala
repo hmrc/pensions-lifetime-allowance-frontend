@@ -58,7 +58,6 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
   def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent]): Result = {
     ResponseConstructors.createExistingProtectionsModelFromJson(Json.parse(response.body)) match {
       case Some(model) => displayExistingProtections(model)
-
       case _ => { // TODO: Redirect to technical error
         Logger.error(s"unable to create existing protections model from microservice response. Response: $response")
         Redirect(routes.IntroductionController.introduction())

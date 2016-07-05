@@ -80,7 +80,7 @@ object ResponseHandler extends ResponseHandler{
 trait ResponseHandler extends HttpErrorFunctions {
     def handlePLAResponse(method: String, url: String, response: HttpResponse): HttpResponse = {
       response.status match {
-        case 409 => response
+        case 409 => response  // this is an expected response for this API, so don't throw an exception
         case _ => {
           Logger.error(s"error response returned from microservice. Status: ${response.status}. Response: $response")
           handleResponse(method, url)(response)
