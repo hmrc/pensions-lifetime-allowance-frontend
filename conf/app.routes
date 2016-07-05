@@ -10,6 +10,7 @@ GET         /                                                   controllers.Intr
 GET         /timeout                                            controllers.TimeoutController.timeout
 GET         /not-authorised                                     controllers.UnauthorisedController.showNotAuthorised(journeyId: Option[String])
 
+GET         /technical-error                                    controllers.FallbackController.technicalError
 
 ## Initial Eligibility ##
 GET         /ip14-pension-pot-size                              controllers.EligibilityController.ip14PensionSavings

@@ -138,7 +138,6 @@ pla.technicalIssue.paraOne      = This online service is experiencing difficulti
 pla.technicalIssue.paraTwo      = Please try again in 5 minutes.
 pla.technicalIssue.button       = Try Again
 
-
 ## Success ##
 pla.success.title               = Success
 pla.success.protectionDetails   = Your protection details are:
@@ -150,6 +149,16 @@ pla.success.viewDetails         = You can view these details in your
 ## Rejection ##
 pla.rejection.title             = Unsuccessful
 pla.rejection.pageHeading       = Your application was unsuccessful
+
+## Technical Error ##
+pla.techError.title                         = Technical Error
+pla.techError.pageHeading                   = There was an error processing your request
+pla.techError.paraOne                       = Please try again later, or use one of the links below to restart your journey
+pla.techError.FP16LinkText                  = Fixed Protection 2016
+pla.techError.IP16LinkText                  = Individual Protection 2016
+pla.techError.IP14LinkText                  = Individual Protection 2014
+pla.techError.ExistingProtectionsLinkText   = View your existing protections
+pla.techError.returnToPTA                   = Alternatively, you can <a href="https://www.gov.uk/personal-tax-account">return to your Personal Tax Account</a>.
 
 ## API ##
 pla.api.badRequest              = There was an error processing the client''s request
