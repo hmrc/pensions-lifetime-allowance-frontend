@@ -729,7 +729,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(None)
                 // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken()}")
             }
         }
 
@@ -747,7 +747,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(Some(testModel))
                 // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken()}")
             }
         }
 
@@ -824,7 +824,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "temporarily redirect the user to the introduction page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IntroductionController.introduction()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken()}")
             }
         }
 

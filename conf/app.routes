@@ -2,46 +2,21 @@
 
 GET         /assets/*file                                       controllers.Assets.at(path="/public", file)
 
-GET         /introduction                                       controllers.IntroductionController.introduction
-GET         /                                                   controllers.IntroductionController.introduction
-
 
 ## Auth ##
 GET         /timeout                                            controllers.TimeoutController.timeout
 GET         /not-authorised                                     controllers.UnauthorisedController.showNotAuthorised(journeyId: Option[String])
 
 
-## Initial Eligibility ##
-GET         /ip14-pension-pot-size                              controllers.EligibilityController.ip14PensionSavings
-POST        /ip14-pension-pot-size                              controllers.EligibilityController.submitIP14PensionSavings
-
-GET         /added-to-pension                                   controllers.EligibilityController.addedToPension
-POST        /added-to-pension                                   controllers.EligibilityController.submitAddedToPension
-
-GET         /adding-to-pension                                  controllers.EligibilityController.addingToPension
-POST        /adding-to-pension                                  controllers.EligibilityController.submitAddingToPension
-
-GET         /pension-pot-size                                   controllers.EligibilityController.pensionSavings
-POST        /pension-pot-size                                   controllers.EligibilityController.submitPensionSavings
-
-GET         /apply-ip14                                         controllers.EligibilityController.applyIP14
-
-GET         /apply-ip                                           controllers.EligibilityController.applyIP
-
-GET         /apply-fp                                           controllers.EligibilityController.applyFP
-
-GET         /pension-below-threshold                            controllers.EligibilityController.cannotApply
-
-
 ## Apply IP 14 ##
-GET         /ip14-pensions-taken                                controllers.IP2014Controller.ip14PensionsTaken
-POST        /ip14-pensions-taken                                controllers.IP2014Controller.submitIP14PensionsTaken
+GET         /apply-for-ip14-pensions-taken                      controllers.IP2014Controller.ip14PensionsTaken
+POST        /apply-for-ip14-pensions-taken                      controllers.IP2014Controller.submitIP14PensionsTaken
 
-GET         /ip14-pensions-taken-before                         controllers.IP2014Controller.ip14PensionsTakenBefore
-POST        /ip14-pensions-taken-before                         controllers.IP2014Controller.submitIP14PensionsTakenBefore
+GET         /apply-for-ip14-pensions-taken-before               controllers.IP2014Controller.ip14PensionsTakenBefore
+POST        /apply-for-ip14-pensions-taken-before               controllers.IP2014Controller.submitIP14PensionsTakenBefore
 
-GET         /ip14-pensions-taken-between                        controllers.IP2014Controller.ip14PensionsTakenBetween
-POST        /ip14-pensions-taken-between                        controllers.IP2014Controller.submitIP14PensionsTakenBetween
+GET         /apply-for-ip14-pensions-taken-between              controllers.IP2014Controller.ip14PensionsTakenBetween
+POST        /apply-for-ip14-pensions-taken-between              controllers.IP2014Controller.submitIP14PensionsTakenBetween
 
 GET         /apply-for-ip14-overseas-pensions                   controllers.IP2014Controller.ip14OverseasPensions
 POST        /apply-for-ip14-overseas-pensions                   controllers.IP2014Controller.submitIP14OverseasPensions
@@ -62,14 +37,14 @@ GET         /apply-for-ip14-submit-your-application             controllers.Summ
 
 
 ## Apply IP 16 ##
-GET         /pensions-taken                                     controllers.IP2016Controller.pensionsTaken
-POST        /pensions-taken                                     controllers.IP2016Controller.submitPensionsTaken
+GET         /apply-for-ip16-pensions-taken                      controllers.IP2016Controller.pensionsTaken
+POST        /apply-for-ip16-pensions-taken                      controllers.IP2016Controller.submitPensionsTaken
 
-GET         /pensions-taken-before                              controllers.IP2016Controller.pensionsTakenBefore
-POST        /pensions-taken-before                              controllers.IP2016Controller.submitPensionsTakenBefore
+GET         /apply-for-ip16-pensions-taken-before               controllers.IP2016Controller.pensionsTakenBefore
+POST        /apply-for-ip16-pensions-taken-before               controllers.IP2016Controller.submitPensionsTakenBefore
 
-GET         /pensions-taken-between                             controllers.IP2016Controller.pensionsTakenBetween
-POST        /pensions-taken-between                             controllers.IP2016Controller.submitPensionsTakenBetween
+GET         /apply-for-ip16-pensions-taken-between              controllers.IP2016Controller.pensionsTakenBetween
+POST        /apply-for-ip16-pensions-taken-between              controllers.IP2016Controller.submitPensionsTakenBetween
 
 GET         /apply-for-ip16-overseas-pensions                   controllers.IP2016Controller.overseasPensions
 POST        /apply-for-ip16-overseas-pensions                   controllers.IP2016Controller.submitOverseasPensions
