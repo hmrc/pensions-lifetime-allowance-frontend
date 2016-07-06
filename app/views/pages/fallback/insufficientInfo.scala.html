@@ -1,0 +1,16 @@
+@()(implicit request: Request[_])
+
+@views.html.main_template(title = Messages("pla.insuffInfo.title"), bodyClasses = None) {
+
+<h1 class="heading-xlarge">@Messages("pla.insuffInfo.pageHeading")</h1>
+
+<p>@Messages("pla.insuffInfo.paraOne")</p>
+<ul>
+    <li><a href="@controllers.routes.ConfirmationController.confirmFP">@Messages("pla.links.FP16LinkText")</a></li>
+    <li><a href="@controllers.routes.IP2016Controller.pensionsTaken">@Messages("pla.links.IP16LinkText")</a></li>
+    <li><a href="@controllers.routes.IP2014Controller.ip14PensionsTaken">@Messages("pla.links.IP14LinkText")</a></li>
+    <li><a href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.links.ExistingProtectionsLinkText")</a></li>
+</ul>
+<p>@Html(Messages("pla.insuffInfo.returnToPTA"))</p>
+
+}

@@ -30,7 +30,11 @@ object FallbackController extends FallbackController
 trait FallbackController extends FrontendController {
 
   def technicalError:Action[AnyContent] = Action.async { implicit request =>
-      Future.successful(Ok(views.html.pages.technicalError()))
+    Future.successful(Ok(views.html.pages.fallback.technicalError()))
+  }
+
+  def insufficientInformation:Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(views.html.pages.fallback.insufficientInfo()))
   }
 
 }

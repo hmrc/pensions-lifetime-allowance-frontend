@@ -202,8 +202,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             pensionDebitsModel.map {
                 completedModel => routeNumberOfPSOs(completedModel.pensionDebits.get, request)
             }.getOrElse(
-                // TODO: redirect to Technical Error
-                Future.successful(Redirect(routes.IntroductionController.introduction()))
+                Future.successful(Redirect(routes.fallbackController.technicalError()))
             )
         })
     }
@@ -211,7 +210,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     private def routeNumberOfPSOs(havePSOs: String, req: Request[AnyContent]): Future[Result] = {
         implicit val request = req
         havePSOs match {
-            case "no"  => Future.successful(Redirect(routes.IntroductionController.introduction())) // TODO: redirect to Technical Error
+            case "no"  => Future.successful(Redirect(routes.FallbackController.insufficientInformation())) // TODO: redirect to Technical Error
             case "yes" => keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
                             case Some(data) => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm.fill(data)))
                             case _ => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm))
@@ -239,8 +238,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             numberOfPSOsModel.map {
                 completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
             }.getOrElse(
-                // TODO: redirect to Technical Error
-                Future.successful(Redirect(routes.IntroductionController.introduction()))
+                Future.successful(Redirect(routes.FallbackController.technicalError()))
             )
 
         })
