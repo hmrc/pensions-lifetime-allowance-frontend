@@ -16,6 +16,8 @@
 
 package constructors
 
+import java.io.Serializable
+
 import common.Validation
 import common.Strings.nameString
 import common.Dates.apiDateFormat
@@ -32,23 +34,51 @@ object IPApplicationConstructor {
 
     val relevantAmount = data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt
 
+
+    def getPensionsTakenBeforeAmt() = {
+      data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore")) match {
+        case Some(model) => model.pensionsTakenBefore match {
+          case "yes" => data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore")).get.pensionsTakenBeforeAmt
+          case _ => Some(BigDecimal(0))
+        }
+      }
+    }
+
+    def getPensionsTakenBetweenAmt() = {
+      data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")) match {
+        case Some(model) => model.pensionsTakenBetween match {
+          case "yes" => data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")).get.pensionsTakenBetweenAmt
+          case _ => Some(BigDecimal(0))
+        }
+      }
+    }
+    
     val preADayPensionInPayment = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
       case Some(model) => model.pensionsTaken match {
-        case Some("yes") => data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore")).get.pensionsTakenBeforeAmt
-        case _ => None
+        case Some("yes") => getPensionsTakenBeforeAmt()
+        case _ => Some(BigDecimal(0))
       }
-      case _ => None
+      case _ => Some(BigDecimal(0))
     }
+
 
     val postADayBenefitCrystallisationEvents = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
       case Some(model) => model.pensionsTaken match {
-        case Some("yes") => data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")).get.pensionsTakenBetweenAmt
-        case _ => None
+        case Some("yes") => getPensionsTakenBetweenAmt()
+        case _ => Some(BigDecimal(0))
       }
-      case _ => None
+      case _ => Some(BigDecimal(0))
     }
 
-    val nonUKRights = data.getEntry[OverseasPensionsModel](nameString("overseasPensions")).get.overseasPensionsAmt
+    val nonUKRights = data.getEntry[OverseasPensionsModel](nameString("overseasPensions")) match {
+      case Some(model) => model.overseasPensions match {
+        case "yes" => data.getEntry[OverseasPensionsModel](nameString("overseasPensions")).get.overseasPensionsAmt
+        case _ => Some(BigDecimal(0))
+      }
+      case _ => Some(BigDecimal(0))
+    }
+
+
 
 
     val numPSOs = data.getEntry[PensionDebitsModel](nameString("pensionDebits")) match {
