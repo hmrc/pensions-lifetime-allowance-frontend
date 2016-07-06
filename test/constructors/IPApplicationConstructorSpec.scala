@@ -61,7 +61,11 @@ class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
                                         validCurrentPensionsTuple,
                                         negativePensionDebitsTuple))
 
-        val tstModel = IPApplicationModel(protectionType = "IP2016", relevantAmount = Some(1001))
+        val tstModel = IPApplicationModel(protectionType = "IP2016",
+                                        relevantAmount = Some(1001),
+                                        preADayPensionInPayment = Some(0),
+                                        postADayBenefitCrystallisationEvents = Some(0),
+                                        nonUKRights = Some(0))
         IPApplicationConstructor.createIPApplication(tstMap) shouldBe tstModel
       }
 
