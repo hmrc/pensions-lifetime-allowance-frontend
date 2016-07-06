@@ -19,4 +19,5 @@ package enums
 object ApplicationType extends Enumeration {
   val IP2014 = Value
   val IP2016 = Value
+  val FP2016 = Value
 }

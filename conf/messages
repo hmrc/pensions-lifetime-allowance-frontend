@@ -114,14 +114,6 @@ pla.cannotApply.paraOne     = This is because your pension savings are less than
 pla.cannotApply.paraTwo     = For more information, visit
 pla.cannotApply.plaLinkText = Pension Lifetime Allowance
 
-## Success Apply FP16 ##
-pla.successFP16.title           = Success FP16
-pla.successFP16.pageHeading     = You''ve added Fixed Protection 2016
-pla.successFP16.paraOne         = Your protection details are:
-pla.successFP16.protectionNo    = Protection reference number:
-pla.successFP16.psaNo           = PSA check reference number:
-pla.successFP16.paraTwo         = What happens next?
-pla.successFP16.account         = You can view these details in your <a href="#">HMRC Online Services account</a>.
 
 ## Failure Messages ##
 pla.notAuthorised.title         = Not Authorised
@@ -137,15 +129,6 @@ pla.technicalIssue.pageHeading  = There is a technical problem
 pla.technicalIssue.paraOne      = This online service is experiencing difficulties.
 pla.technicalIssue.paraTwo      = Please try again in 5 minutes.
 pla.technicalIssue.button       = Try Again
-
-
-## Success ##
-pla.success.title               = Success
-pla.success.protectionDetails   = Your protection details are:
-pla.success.protectionNo        = Protection reference number:
-pla.success.psaNo               = PSA check reference number:
-pla.success.whatNext            = What happens next?
-pla.success.viewDetails         = You can view these details in your
 
 ## Rejection ##
 pla.rejection.title             = Unsuccessful
@@ -358,15 +341,28 @@ pla.protection.types.fixed                              = Fixed Protection
 pla.protection.types.notRecorded                        = No protection type recorded
 pla.protection.protectionReference                      = No protection reference recorded
 
+## Result Success ##
+pla.resultSuccess.title                 = Success
+pla.resultSuccess.allowanceSubHeading   = Your protected lifetime allowance is
+pla.resultSuccess.whatNextHeading       = What happens next?
+pla.resultSuccess.whatNextContent       = Give these details to your pension provider when you decide to take money from your pension.
+pla.resultSuccess.protectionRef         = Protection reference
+pla.resultSuccess.psaRef                = Scheme administrator reference
+pla.resultSuccess.applicationDate       = Application date
+pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>
+pla.resultSuccess.viewDetails           = You can view these details at any time in your <a href="http://tax.service.gov.uk/personal-account">personal tax account</a>.
+
+
 ### RESULTS MESSAGES ###
 
-resultCode.1.heading    =   Your application for Individual Protection 2014 has been unsuccessful as you already hold an open or dormant Primary Protection existing rights certificate.
-resultCode.1.1  =   Please retain a copy of this notification for your records.
+resultCode.1.heading    =   Your application for individual protection 2014 was unsuccessful as you already have primary protection.
+resultCode.1.1  =   If you''ve lost primary protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.1.2  =   You can view details of your protection in your <a href="http://tax.service.gov.uk/personal-account">personal tax account</a>.
 
-resultCode.2.heading    =   Your application for Individual Protection 2014 has been rejected as you already hold open Individual Protection 2014.
-resultCode.2.1  =   Please retain a copy of this notification for your records.
+resultCode.2.heading    =   Your application for individual protection 2014 was unsuccessful as you already have this.
+resultCode.2.1  =   You can view details of your protection in your <a href="http://tax.service.gov.uk/personal-account">personal tax account</a>.
 
-resultCode.3.heading    =   Your application for Individual Protection 2014 for your lifetime allowance of [£x,xxx,xxx] (Range – £1,250,001 - £1,500,000 – if the Relevant Amount is above £1,500,000 then this amount must default to £1,500,000) has been successful.
+resultCode.3.heading    =   Your application for individual protection 2014 for your lifetime allowance of [£x,xxx,xxx] (Range – £1,250,001 - £1,500,000 – if the Relevant Amount is above £1,500,000 then this amount must default to £1,500,000) has been successful.
 resultCode.3.ref        =   Your reference number is (format of IP14 reference TBC - xxxxxx). You will need to provide this reference number to your Pension Scheme Administrator when you start to take your benefits.
 resultCode.3.psa        =   Your Pension Scheme Administrator Reference is (format of reference TBC - xxxxxx).  If you give this reference to your Pension Scheme Administrator,  they will be able to check the status of your protection on-line.
 resultCode.3.1          =   Please retain a copy of this notification and your reference number for your records.

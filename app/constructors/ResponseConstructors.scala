@@ -19,6 +19,7 @@ package constructors
 import play.api.i18n.Messages
 import play.api.libs.json.{JsSuccess, JsValue, Json}
 import models._
+import enums.ApplicationType
 
 object ResponseConstructors extends ResponseConstructors {
     
@@ -26,12 +27,20 @@ object ResponseConstructors extends ResponseConstructors {
 
 trait ResponseConstructors {
 
-    def createSuccessResponseFromJson(json: JsValue): SuccessResponseModel = {
+    def createSuccessResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value) : SuccessResponseModel = {
+        // println("*****************************")
+        // println(json)
+        // println("*****************************")
         val notificationId = (json \ "notificationId").as[Int].toString
         val protectionReference = (json \ "protectionReference").asOpt[String]
         val psaReference = (json \ "psaReference").asOpt[String]
+        val applicationDate = (json \ "certificateDate").asOpt[String]
+        val details = if(protectionReference.isEmpty && psaReference.isEmpty && applicationDate.isEmpty) None else {
+            Some(ProtectionDetailsModel(protectionReference, psaReference, applicationDate))
+        }
+        val protectedAmount = (json \ "protectedAmount").as[Double].toString
         val additionalInfo = getAdditionalInfo(notificationId)
-        SuccessResponseModel(notificationId, protectionReference, psaReference, additionalInfo)
+        SuccessResponseModel(protectionType, notificationId, protectedAmount, details, additionalInfo)
     }
 
     def createRejectionResponseFromJson(json: JsValue): RejectionResponseModel = {
