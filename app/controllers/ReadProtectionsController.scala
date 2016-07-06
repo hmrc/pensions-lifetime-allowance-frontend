@@ -47,9 +47,9 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     plaConnector.readProtections(user.nino.get).map { response =>
       response.status match {
         case 200 => redirectFromSuccess(response)
-        case _ => { // TODO: Redirect to technical error
+        case _ => {
           Logger.error(s"non-200 response received from microservice in existing protections request. Status: ${response.status}, Response: $response")
-          Redirect(routes.IntroductionController.introduction())
+          Redirect(routes.FallbackController.technicalError())
         }
       }
     }
@@ -58,9 +58,9 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
   def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent]): Result = {
     ResponseConstructors.createExistingProtectionsModelFromJson(Json.parse(response.body)) match {
       case Some(model) => displayExistingProtections(model)
-      case _ => { // TODO: Redirect to technical error
+      case _ => {
         Logger.error(s"unable to create existing protections model from microservice response. Response: $response")
-        Redirect(routes.IntroductionController.introduction())
+        Redirect(routes.FallbackController.technicalError())
       }
     }
 
