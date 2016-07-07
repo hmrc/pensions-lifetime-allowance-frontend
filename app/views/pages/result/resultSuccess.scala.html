@@ -14,7 +14,6 @@
 	        <p class="medium" id="resultAllowanceText">@Messages("pla.resultSuccess.allowanceSubHeading")</p>
 	        <p class="bold-medium" id="protectedAmount">@res.protectedAmount</p>
 	    </div>
-
 	    
 	    @for(infoNum <- res.additionalInfo) {
 	    	<p id=@{s"additionalInfo$infoNum"}>@Html(Messages(s"resultCode.${res.notificationId}.$infoNum"))</p>
