@@ -32,7 +32,7 @@ trait ResponseConstructors {
     def createSuccessResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value) : SuccessResponseModel = {
         val notificationId = (json \ "notificationId").as[Int].toString
         val protectionReference = (json \ "protectionReference").asOpt[String]
-        val psaReference = (json \ "psaReference").asOpt[String]
+        val psaReference = (json \ "psaCheckReference").asOpt[String]
         val applicationDate = (json \ "certificateDate").asOpt[String]
         val details = if(protectionReference.isEmpty && psaReference.isEmpty && applicationDate.isEmpty) None else {
             Some(ProtectionDetailsModel(protectionReference, psaReference, applicationDate))
