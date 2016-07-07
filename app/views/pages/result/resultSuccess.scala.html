@@ -30,6 +30,6 @@
 			<p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
 		}
 
-		<p>@Html(Messages("pla.resultSuccess.viewDetails")) <a href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultSuccess.viewDetailsLinkText")</a>.</p>
+		<p>@Html(Messages("pla.resultSuccess.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultSuccess.viewDetailsLinkText")</a>.</p>
 	</div>
 }
