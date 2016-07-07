@@ -130,10 +130,6 @@ pla.technicalIssue.paraOne      = This online service is experiencing difficulti
 pla.technicalIssue.paraTwo      = Please try again in 5 minutes.
 pla.technicalIssue.button       = Try Again
 
-## Rejection ##
-pla.rejection.title             = Unsuccessful
-pla.rejection.pageHeading       = Your application was unsuccessful
-
 ## API ##
 pla.api.badRequest              = There was an error processing the client''s request
 
@@ -350,15 +346,20 @@ pla.resultSuccess.protectionRef         = Protection reference
 pla.resultSuccess.psaRef                = Scheme administrator reference
 pla.resultSuccess.applicationDate       = Application date
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>
-pla.resultSuccess.viewDetails           = You can view these details at any time on the
+pla.resultSuccess.viewDetails           = You can view details of your protections at any time on the
 pla.resultSuccess.viewDetailsLinkText   = existing protections page
+
+## Result Rejection ##
+pla.resultRejection.title                 = Unsuccessful
+pla.resultRejection.pageHeading           = Your application was unsuccessful
+pla.resultRejection.viewDetails           = You can view details of your protections at any time on the
+pla.resultRejection.viewDetailsLinkText   = existing protections page
 
 
 ### RESULTS MESSAGES ###
 
 resultCode.1.heading    =   Your application for individual protection 2014 was unsuccessful as you already have primary protection.
 resultCode.1.1  =   If you''ve lost primary protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
-resultCode.1.2  =   You can view details of your protection in your <a href="http://tax.service.gov.uk/personal-account">personal tax account</a>.
 
 resultCode.2.heading    =   Your application for individual protection 2014 was unsuccessful as you already have this.
 resultCode.2.1  =   You can view details of your protection in your <a href="http://tax.service.gov.uk/personal-account">personal tax account</a>.
