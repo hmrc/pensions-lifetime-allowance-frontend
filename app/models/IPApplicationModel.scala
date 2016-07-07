@@ -26,7 +26,8 @@ object PensionDebit {
 
 case class IPApplicationModel(
              protectionType: String,
-             relevantAmount: Option[Double] = None,
+             relevantAmount: Double = 0.0,
+             uncrystallisedRights: Option[Double] = None,
              preADayPensionInPayment: Option[Double] = None,
              postADayBenefitCrystallisationEvents: Option[Double] = None,
              nonUKRights: Option[Double] = None,

@@ -57,12 +57,14 @@ class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
 
       "all answers are negative" in {
         val tstMap = CacheMap(tstId, Map(negativePensionsTakenTuple,
+                                        positivePensionsTakenBetweenTuple,
                                         negativeOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
                                         negativePensionDebitsTuple))
 
         val tstModel = IPApplicationModel(protectionType = "IP2016",
-                                        relevantAmount = Some(1001),
+                                        relevantAmount = 1001,
+                                        uncrystallisedRights = Some(1001),
                                         preADayPensionInPayment = Some(0),
                                         postADayBenefitCrystallisationEvents = Some(0),
                                         nonUKRights = Some(0))
@@ -84,7 +86,8 @@ class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
                                         psoDetails5Tuple))
 
         val tstModel = IPApplicationModel(protectionType = "IP2016",
-                                        relevantAmount = Some(1001),
+                                        relevantAmount = 4111,
+                                        uncrystallisedRights = Some(1001),
                                         preADayPensionInPayment = Some(1000),
                                         postADayBenefitCrystallisationEvents = Some(1100),
                                         nonUKRights = Some(1010),
