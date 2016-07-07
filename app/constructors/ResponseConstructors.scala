@@ -21,7 +21,7 @@ import play.api.libs.json.{JsSuccess, JsValue, Json}
 import models._
 import enums.ApplicationType
 import utils.Constants
-import common.Display
+import common.{Dates,Display}
 
 object ResponseConstructors extends ResponseConstructors {
     
@@ -31,18 +31,24 @@ trait ResponseConstructors {
 
     def createSuccessResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value) : SuccessResponseModel = {
         val notificationId = (json \ "notificationId").as[Int].toString
-        val protectionReference = (json \ "protectionReference").asOpt[String]
-        val psaReference = (json \ "psaCheckReference").asOpt[String]
-        val applicationDate = (json \ "certificateDate").asOpt[String]
-        val details = if(protectionReference.isEmpty && psaReference.isEmpty && applicationDate.isEmpty) None else {
-            Some(ProtectionDetailsModel(protectionReference, psaReference, applicationDate))
-        }
+
+        val details = if(Constants.successCodesRequiringProtectionInfo.contains(notificationId.toInt)) {
+            Some(createResponseDetailsFromJson(json))
+        } else None
+
         val protectedAmount = protectionType match {
             case ApplicationType.FP2016 => Constants.fpProtectedAmountString
             case _ => Display.currencyDisplayString(BigDecimal((json \ "protectedAmount").as[Double]))
         }
         val additionalInfo = getAdditionalInfo(notificationId)
         SuccessResponseModel(protectionType, notificationId, protectedAmount, details, additionalInfo)
+    }
+
+    private def createResponseDetailsFromJson(json: JsValue): ProtectionDetailsModel = {
+        val protectionReference = (json \ "protectionReference").asOpt[String]
+        val psaReference = (json \ "psaCheckReference").asOpt[String]
+        val applicationDate = (json \ "certificateDate").asOpt[String].map{ dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt))}
+        ProtectionDetailsModel(protectionReference, psaReference, applicationDate)
     }
 
     def createRejectionResponseFromJson(json: JsValue): RejectionResponseModel = {

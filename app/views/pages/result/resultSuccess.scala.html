@@ -2,6 +2,7 @@
 @import models.ProtectionDetailsModel
 @import helpers.templates.resultDetails
 @import play.api.i18n._
+@import enums.ApplicationType
 
 @(res: SuccessResponseModel)(implicit request: Request[_])
 
@@ -26,7 +27,7 @@
 			@resultDetails(details)
 		}
 
-		@if(res.protectionType == "IP") {
+		@if(res.protectionType == ApplicationType.IP2016 || res.protectionType == ApplicationType.IP2014) {
 			<p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
 		}
 

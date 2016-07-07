@@ -6,7 +6,7 @@
 	<h1 class="heading-xlarge" id="resultPageHeading">@Messages("pla.resultRejection.pageHeading")</h1>
 
 	<p id="resultOutcome">@Messages("resultCode."+res.notificationId+".heading")</p>
-    
+
     @for(infoNum <- res.additionalInfo) {
     	<p id=@{s"additionalInfo$infoNum"}>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
     }

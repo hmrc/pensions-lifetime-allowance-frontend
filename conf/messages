@@ -362,22 +362,17 @@ resultCode.1.heading    =   Your application for individual protection 2014 was 
 resultCode.1.1  =   If you''ve lost primary protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
 resultCode.2.heading    =   Your application for individual protection 2014 was unsuccessful as you already have this.
-resultCode.2.1  =   You can view details of your protection in your <a href="http://tax.service.gov.uk/personal-account">personal tax account</a>.
 
 resultCode.3.heading    =   Your application for individual protection 2014 for your lifetime allowance of [£x,xxx,xxx] (Range – £1,250,001 - £1,500,000 – if the Relevant Amount is above £1,500,000 then this amount must default to £1,500,000) has been successful.
 resultCode.3.ref        =   Your reference number is (format of IP14 reference TBC - xxxxxx). You will need to provide this reference number to your Pension Scheme Administrator when you start to take your benefits.
 resultCode.3.psa        =   Your Pension Scheme Administrator Reference is (format of reference TBC - xxxxxx).  If you give this reference to your Pension Scheme Administrator,  they will be able to check the status of your protection on-line.
 resultCode.3.1          =   Please retain a copy of this notification and your reference number for your records.
 
-resultCode.4.heading    =   Your application for Individual Protection 2014 for your lifetime allowance of [£x,xxx,xxx] (Range – £1,250,001 - £1,500,000 – if the Relevant Amount is above £1,500,000 then this amount must default to £1,500,000) has been successful.
-resultCode.4.ref        =   Your reference number is (format of IP14 reference TBC - xxxxxx). You will need to provide this reference number to your Pension Scheme Administrator when you start to take your benefits.
-resultCode.4.psa        =   Your Pension Scheme Administrator Reference is (format of reference TBC - xxxxxx). If you give this reference to your Pension Scheme Administrator,  they will be able to check the status of your protection on-line.
-resultCode.4.1          =   Please retain a copy of this notification and reference for your records.
+resultCode.4.heading    =   You''ve added individual protection 2014
 
-resultCode.5.heading    =   Your application for Individual Protection 2014 for your lifetime allowance of [£x,xxx,xxx] (Range – £1,250,001 - £1,500,000 – if the Relevant Amount is above £1,500,000 then this amount must default to £1,500,000) has been successful.
-resultCode.5.noref  =   However, as you already hold an open Enhanced Protection certificate, no reference number has been generated. If Enhanced Protection is given up your Individual Protection 2014 will become active and you will be issued with a reference number.
-resultCode.5.1  =   To give up Enhanced Protection you must contact HMRC (Pension Schemes Services).
-resultCode.5.2  =   Please retain a copy of this notification for your records.
+resultCode.5.heading    =   You''ve added individual protection 2014
+resultCode.5.1  =   As you already have enhanced protection in place, individual protection 2014 will only become active if you lose enhanced protection.
+resultCode.5.2  =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
 resultCode.6.heading    =   Your application for Individual Protection 2014 for your lifetime allowance of [£x,xxx,xxx] (Range – £1,250,001 - £1,500,000 – if the Relevant Amount is above £1,500,000 then this amount must default to £1,500,000) has been successful.
 resultCode.6.noref      =   However, as you already hold an open Fixed Protection certificate, no reference number has been generated. If Fixed Protection is lost your Individual Protection 2014 will become active and you will be issued with a reference number.
