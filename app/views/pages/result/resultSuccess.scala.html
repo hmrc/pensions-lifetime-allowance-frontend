@@ -10,7 +10,7 @@
 	<div class="grid-row">
 		<div class="transaction-banner--complete">
 	        <p class="heading-xlarge" id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</p>
-	        <p class="medium">@Messages("pla.resultSuccess.allowanceSubHeading")</p>
+	        <p class="medium" id="resultAllowanceText">@Messages("pla.resultSuccess.allowanceSubHeading")</p>
 	        <p class="bold-medium" id="protectedAmount">@res.protectedAmount</p>
 	    </div>
 
@@ -27,9 +27,9 @@
 		}
 
 		@if(res.protectionType == "IP") {
-			<p>@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
+			<p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
 		}
 
-		<p>@Html(Messages("pla.resultSuccess.viewDetails"))</p>
+		<p>@Html(Messages("pla.resultSuccess.viewDetails")) <a href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultSuccess.viewDetailsLinkText")</a>.</p>
 	</div>
 }

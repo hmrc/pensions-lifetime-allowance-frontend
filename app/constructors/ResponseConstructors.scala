@@ -20,6 +20,8 @@ import play.api.i18n.Messages
 import play.api.libs.json.{JsSuccess, JsValue, Json}
 import models._
 import enums.ApplicationType
+import utils.Constants
+import common.Display
 
 object ResponseConstructors extends ResponseConstructors {
     
@@ -28,9 +30,6 @@ object ResponseConstructors extends ResponseConstructors {
 trait ResponseConstructors {
 
     def createSuccessResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value) : SuccessResponseModel = {
-        // println("*****************************")
-        // println(json)
-        // println("*****************************")
         val notificationId = (json \ "notificationId").as[Int].toString
         val protectionReference = (json \ "protectionReference").asOpt[String]
         val psaReference = (json \ "psaReference").asOpt[String]
@@ -38,7 +37,10 @@ trait ResponseConstructors {
         val details = if(protectionReference.isEmpty && psaReference.isEmpty && applicationDate.isEmpty) None else {
             Some(ProtectionDetailsModel(protectionReference, psaReference, applicationDate))
         }
-        val protectedAmount = (json \ "protectedAmount").as[Double].toString
+        val protectedAmount = protectionType match {
+            case ApplicationType.FP2016 => Constants.fpProtectedAmountString
+            case _ => Display.currencyDisplayString(BigDecimal((json \ "protectedAmount").as[Double]))
+        }
         val additionalInfo = getAdditionalInfo(notificationId)
         SuccessResponseModel(protectionType, notificationId, protectedAmount, details, additionalInfo)
     }
@@ -52,7 +54,7 @@ trait ResponseConstructors {
     def getAdditionalInfo(notificationId: String): List[String] = {
 
         def loop(notificationId: String, i: Int = 1, paragraphs: List[String] = List.empty): List[String] = {
-            val x: String = "resultCode." + notificationId + "." + i
+            val x: String = s"resultCode.$notificationId.$i"
             if(Messages(x) == x){
                 paragraphs
             } else {
