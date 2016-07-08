@@ -5,14 +5,14 @@
 
 <div class="grid-wrapperx">
     <div class="grid grid-1-3">
-        <div class="title bold-medium" id="@{statusGroup}QuestionText@{protectionNum}">@protection.protectionType</div>
+        <div class="title bold-medium" id="@{statusGroup}QuestionText@{protectionNum}">@Messages("pla.protection.types." + protection.protectionType)</div>
     </div>
     <div class="grid grid-2-3">
         <div class="inner-block">
             @if(statusGroup == "active") {
                 <div class="font-medium" id="@{statusGroup}Detail@{protectionNum}">@protection.relevantAmount.getOrElse("")</div>
             } else {
-                <span class="status-notification font-xsmall" id="@{statusGroup}Detail@{protectionNum}">@protection.status</span>
+                <span class="status-notification font-xsmall" id="@{statusGroup}Detail@{protectionNum}">@Messages("pla.protection.statuses." + protection.status)</span>
             }
         </div>
     </div>
