@@ -31,7 +31,8 @@ object IPApplicationConstructor {
 
     assert(Validation.validIPData(data))
 
-    val relevantAmount = data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt
+    // uncrystallised Rights- current pensions
+    val uncrystallisedRightsAmount = data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt
 
 
     def getPensionsTakenBeforeAmt() = {
@@ -51,8 +52,9 @@ object IPApplicationConstructor {
         }
       }
     }
-    
-    val preADayPensionInPayment = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
+
+    // preADay - Pensions taken before
+    val preADayPensionInPayment: Option[BigDecimal] = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
       case Some(model) => model.pensionsTaken match {
         case Some("yes") => getPensionsTakenBeforeAmt()
         case _ => Some(BigDecimal(0))
@@ -60,7 +62,7 @@ object IPApplicationConstructor {
       case _ => Some(BigDecimal(0))
     }
 
-
+    // postADay - Pensions taken between
     val postADayBenefitCrystallisationEvents = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
       case Some(model) => model.pensionsTaken match {
         case Some("yes") => getPensionsTakenBetweenAmt()
@@ -69,6 +71,7 @@ object IPApplicationConstructor {
       case _ => Some(BigDecimal(0))
     }
 
+    // nonUKRights - Overseas pensions
     val nonUKRights = data.getEntry[OverseasPensionsModel](nameString("overseasPensions")) match {
       case Some(model) => model.overseasPensions match {
         case "yes" => data.getEntry[OverseasPensionsModel](nameString("overseasPensions")).get.overseasPensionsAmt
@@ -77,9 +80,10 @@ object IPApplicationConstructor {
       case _ => Some(BigDecimal(0))
     }
 
+    val amounts: List[Option[BigDecimal]] = List(uncrystallisedRightsAmount,preADayPensionInPayment, postADayBenefitCrystallisationEvents, nonUKRights)
+    val relevantAmount = amounts.flatten.sum
 
-
-
+    
     val numPSOs = data.getEntry[PensionDebitsModel](nameString("pensionDebits")) match {
       case Some(pdModel) => pdModel.pensionDebits match {
         case Some("yes") =>  data.getEntry[NumberOfPSOsModel](nameString("numberOfPSOs")) match {
@@ -107,7 +111,8 @@ object IPApplicationConstructor {
 
     IPApplicationModel(
       protectionString,
-      optionBigDecToOptionDouble(relevantAmount),
+      relevantAmount.toDouble,
+      optionBigDecToOptionDouble(uncrystallisedRightsAmount),
       optionBigDecToOptionDouble(preADayPensionInPayment),
       optionBigDecToOptionDouble(postADayBenefitCrystallisationEvents),
       optionBigDecToOptionDouble(nonUKRights),
