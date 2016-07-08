@@ -45,8 +45,8 @@ trait IP14SummaryConstructor {
     def createSummaryModel(): SummaryModel = {
       val pensionContributionSeq = createPensionsTakenSeq() ::: createOverseasPensionsSeq() ::: createCurrentPensionsSeq() ::: createTotalPensionsSeq()
       val psoSeq = createPSOsSeq()
-      val validRelevantAmount = relevantAmount() > Constants.ipRelevantAmountThreshold
-      SummaryModel(validRelevantAmount, pensionContributionSeq, psoSeq)
+      val invalidRelevantAmount = relevantAmount() <= Constants.ipRelevantAmountThreshold
+      SummaryModel(invalidRelevantAmount, pensionContributionSeq, psoSeq)
     }
 
     def createPensionsTakenSeq(): List[SummaryRowModel] = {

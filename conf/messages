@@ -236,6 +236,8 @@ pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date after 6 April 2016
 ## SUMMARY ##
 pla.summary.title                                   = Submit your application
 pla.summary.pageHeading                             = Check your answers before sending your application
+pla.summary.errorSummaryLabel                       = There are problems with your application
+pla.summary.underThresholdError                     = Your total pensions savings are less than one million pounds. Please review your application as individual protection can only be added to pension savings of over one million pounds
 pla.summary.pensionsHeading                         = Pensions
 pla.summary.change                                  = Change
 pla.summary.questions.pensionsTaken                 = Have you taken any of your pensions?
