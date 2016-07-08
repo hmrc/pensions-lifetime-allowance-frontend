@@ -409,25 +409,25 @@ resultCode.16.heading   =   You''ve added individual protection 2016
 resultCode.16.1         =   As you already have fixed protection 2016 in place, your individual protection 2016 will only become active if you lose fixed protection 2016.
 resultCode.16.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
-resultCode.17.heading   =   Your application for fixed protection 2016 was unsuccesful as you already have enhanced protection.
+resultCode.17.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have enhanced protection.
 resultCode.17.1         =   If enhanced protection is given up you can re-apply for fixed protection 2016.
 resultCode.17.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
-resultCode.18.heading   =   Your application for fixed protection 2016 was unsuccesful as you held primary protection on 5 April 2016.
+resultCode.18.heading   =   Your application for fixed protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
 resultCode.18.1         =   If you lost primary protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
-resultCode.19.heading   =   Your application for fixed protection 2016 was unsuccesful as you aready have fixed protection.
+resultCode.19.heading   =   Your application for fixed protection 2016 was unsuccessful as you aready have fixed protection.
 resultCode.19.1         =   If you lost fixed protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>. You can then re-apply for fixed protection 2016.
 
 resultCode.20.heading   =   Your application for fixed protection 2016 was rejected as you aready have this.
 
-resultCode.21.heading   =   Your application for fixed protection 2016 was unsuccesful as you aready have fixed protection 2014.
+resultCode.21.heading   =   Your application for fixed protection 2016 was unsuccessful as you aready have fixed protection 2014.
 resultCode.21.1         =   If you lost fixed protection 2014 before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>. You can then re-apply for fixed protection 2016.
 
 resultCode.22.heading   =   You''ve added fixed protection 2016.
 
 resultCode.23.heading   =   You''ve added fixed protection 2016.
-resultCode.23.1         =   As you already had inidvidual protection 2016 in place, this has been made inactive. It will become active again if you lose fixed protection 2016.
+resultCode.23.1         =   As you already had individual protection 2016 in place, this has been made inactive. It will become active again if you lose fixed protection 2016.
 resultCode.23.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
 resultCode.24.heading   =   You''ve added fixed protection 2016.
