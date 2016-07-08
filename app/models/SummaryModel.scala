@@ -16,6 +16,6 @@
 
 package models
 
-case class SummaryModel(pensionContributionRows: Seq[SummaryRowModel], psoDetailsRows: Seq[SummaryRowModel]) {
+case class SummaryModel(validRelevantAmount: Boolean, pensionContributionRows: Seq[SummaryRowModel], psoDetailsRows: Seq[SummaryRowModel]) {
 
 }
