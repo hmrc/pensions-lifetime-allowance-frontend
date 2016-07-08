@@ -252,6 +252,8 @@ pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date after 6 April 2016
 ## SUMMARY ##
 pla.summary.title                                   = Submit your application
 pla.summary.pageHeading                             = Check your answers before sending your application
+pla.summary.errorSummaryLabel                       = There are problems with your application
+pla.summary.underThresholdError                     = Your total pensions savings are less than one million pounds. Please review your application as individual protection can only be added to pension savings of over one million pounds
 pla.summary.pensionsHeading                         = Pensions
 pla.summary.change                                  = Change
 pla.summary.questions.pensionsTaken                 = Have you taken any of your pensions?
@@ -325,14 +327,14 @@ pla.summary.ip14DeclarationPara1                        = I confirm that at 5 Ap
 pla.summary.ip14DeclarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
 ## EXISITING PROTECTIONS ##
-pla.existingprotections.title                           = View your existing protections
-pla.existingprotections.pageHeading                     = Existing protections
-pla.existingprotections.open                            = Open
-pla.existingprotections.other                           = Other
-pla.existingprotections.noActiveprotections             = You currently have no open protections.
-pla.existingprotections.noOtherprotections              = You have no other protections.
-pla.existingprotections.protectionRef                   = protection reference
-pla.existingprotections.psaRef                          = Scheme administrator reference
+pla.existingProtections.title                           = View your existing protections
+pla.existingProtections.pageHeading                     = Existing protections
+pla.existingProtections.open                            = Open
+pla.existingProtections.other                           = Other
+pla.existingProtections.noActiveprotections             = You currently have no open protections.
+pla.existingProtections.noOtherprotections              = You have no other protections.
+pla.existingProtections.protectionRef                   = protection reference
+pla.existingProtections.psaRef                          = Scheme administrator reference
 
 
 ## PROTECTION INFORMATION ##

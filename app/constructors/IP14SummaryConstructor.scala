@@ -22,6 +22,7 @@ import models._
 import common.Display._
 import common.Dates._
 import common.Validation
+import utils.Constants
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 object IP14SummaryConstructor extends IP14SummaryConstructor {
@@ -44,7 +45,8 @@ trait IP14SummaryConstructor {
     def createSummaryModel(): SummaryModel = {
       val pensionContributionSeq = createPensionsTakenSeq() ::: createOverseasPensionsSeq() ::: createCurrentPensionsSeq() ::: createTotalPensionsSeq()
       val psoSeq = createPSOsSeq()
-      SummaryModel(pensionContributionSeq, psoSeq)
+      val invalidRelevantAmount = relevantAmount() <= Constants.ipRelevantAmountThreshold
+      SummaryModel(invalidRelevantAmount, pensionContributionSeq, psoSeq)
     }
 
     def createPensionsTakenSeq(): List[SummaryRowModel] = {
@@ -108,12 +110,15 @@ trait IP14SummaryConstructor {
     }
 
     def createTotalPensionsSeq(): List[SummaryRowModel] = {
-      val totalAmt = currencyDisplayString(getCurrentPensionsAmount()
-                      .+(getPensionsTakenBeforeAmt())
-                      .+(getPensionsTakenBetweenAmt())
-                      .+(getOverseasPensionsAmount())
-                      )
+      val totalAmt = currencyDisplayString(relevantAmount)
       List(SummaryRowModel("ip14TotalPensionsAmt", None, totalAmt))
+    }
+
+    def relevantAmount(): BigDecimal = {
+      getCurrentPensionsAmount()
+      .+(getPensionsTakenBeforeAmt())
+      .+(getPensionsTakenBetweenAmt())
+      .+(getOverseasPensionsAmount())
     }
 
     def getPensionsTakenBeforeAmt(): BigDecimal = {
