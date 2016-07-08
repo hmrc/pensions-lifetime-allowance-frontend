@@ -38,6 +38,7 @@ import views.html.pages.result._
 import connectors.PLAConnector
 import utils.Constants
 import models._
+import enums.ApplicationType
 
 
 object ResultController extends ResultController with ServicesConfig {
@@ -56,6 +57,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
 
     val processFPApplication = AuthorisedByAny.async {
         implicit user =>  implicit request => 
+            implicit val protectionType = ApplicationType.FP2016
             plaConnector.applyFP16(user.nino.get).map {
                 response: HttpResponse => applicationOutcome(response) match {
                     case "successful" => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
@@ -74,6 +76,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
 
     val processIPApplication = AuthorisedByAny.async {
         implicit user =>  implicit request =>
+            implicit val protectionType = ApplicationType.IP2016
             keyStoreConnector.fetchAllUserData.flatMap(userData =>
             plaConnector.applyIP16(user.nino.get, userData.get)
             .map {
@@ -96,6 +99,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
 
     val processIP14Application = AuthorisedByAny.async {
         implicit user =>  implicit request =>
+            implicit val protectionType = ApplicationType.IP2014
             keyStoreConnector.fetchAllUserData.flatMap(userData =>
             plaConnector.applyIP14(user.nino.get, userData.get)
             .map {

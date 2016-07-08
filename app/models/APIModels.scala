@@ -17,6 +17,7 @@
 package models
 
 import play.api.libs.json._
+import enums.ApplicationType
 
 case class ApplyFP16Model(protectionType: String)
 
@@ -25,6 +26,8 @@ object ApplyFP16Model {
 }
 
 
-case class SuccessResponseModel(notificationId: String, protectionReference: Option[String], psaReference: Option[String], additionalInfo: Seq[String])
+case class SuccessResponseModel(protectionType: ApplicationType.Value, notificationId: String, protectedAmount: String, details: Option[ProtectionDetailsModel], additionalInfo: Seq[String])
 
 case class RejectionResponseModel(notificationId: String, additionalInfo: Seq[String])
+
+case class ProtectionDetailsModel(protectionReference: Option[String], psaReference: Option[String], applicationDate: Option[String])
