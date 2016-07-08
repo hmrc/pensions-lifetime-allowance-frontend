@@ -1,24 +1,36 @@
 @import models.SuccessResponseModel
+@import models.ProtectionDetailsModel
+@import helpers.templates.resultDetails
+@import play.api.i18n._
+@import enums.ApplicationType
+@import utils.Constants
+
 @(res: SuccessResponseModel)(implicit request: Request[_])
 
-@views.html.main_template(title = Messages("pla.success.title"), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None) {
 	
 	<div class="grid-row">
 		<div class="transaction-banner--complete">
-	        <p class="heading-xlarge">@Messages("resultCode." + res.notificationId + ".heading")</p>
-	        @if(!res.protectionReference.isEmpty || !res.psaReference.isEmpty) {
-	        	<p>@Messages("pla.success.protectionDetails")</p>
-	        }
-	        @if(!res.protectionReference.isEmpty) {
-	        	<p>@{Messages("pla.success.protectionNo")+" "+res.protectionReference.get}</p>
-	        }
-	        @if(!res.psaReference.isEmpty) {
-	        	<p>@{Messages("pla.success.psaNo")+" "+res.psaReference.get}</p>
-	        }
+	        <p class="heading-xlarge" id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</p>
+	        <p class="medium" id="resultAllowanceText">@Messages("pla.resultSuccess.allowanceSubHeading")</p>
+	        <p class="bold-medium" id="protectedAmount">@res.protectedAmount</p>
 	    </div>
-	    <h2>@Messages("pla.success.whatNext")</h2>
+	    
 	    @for(infoNum <- res.additionalInfo) {
-	    	<p>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
+	    	<p id=@{s"additionalInfo$infoNum"}>@Html(Messages(s"resultCode.${res.notificationId}.$infoNum"))</p>
 	    }
+
+		<h2>@Messages("pla.resultSuccess.whatNextHeading")</h2>
+		<p>@Messages("pla.resultSuccess.whatNextContent")</p>
+
+		@res.details.map{ details =>
+			@resultDetails(details)
+		}
+
+		@if(res.protectionType == ApplicationType.IP2016 || res.protectionType == ApplicationType.IP2014 || Constants.fpShowPensionSharing.contains(res.notificationId.toString)) {
+			<p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
+		}
+
+		<p>@Html(Messages("pla.resultSuccess.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultSuccess.viewDetailsLinkText")</a>.</p>
 	</div>
 }

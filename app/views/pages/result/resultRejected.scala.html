@@ -1,11 +1,15 @@
 @import models.RejectionResponseModel
 @(res: RejectionResponseModel)(implicit request: Request[_])
 
-@views.html.main_template(title = Messages("pla.rejection.title"), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.resultRejection.title"), bodyClasses = None) {
 	
-	<h1 class="heading-xlarge">@Messages("pla.rejection.pageHeading")</h1>
-	<p>@Messages("resultCode."+res.notificationId+".heading")</p>
+	<h1 class="heading-xlarge" id="resultPageHeading">@Messages("pla.resultRejection.pageHeading")</h1>
+
+	<p id="resultOutcome">@Messages("resultCode."+res.notificationId+".heading")</p>
+
     @for(infoNum <- res.additionalInfo) {
-    	<p>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
+    	<p id=@{s"additionalInfo$infoNum"}>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
     }
+
+    <p>@Html(Messages("pla.resultRejection.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultRejection.viewDetailsLinkText")</a>.</p>
 }

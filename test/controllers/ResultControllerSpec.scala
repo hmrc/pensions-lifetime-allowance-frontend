@@ -38,10 +38,10 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   val successFP16Json = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1}""")
   val rejectionFP16Json = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
 
-  val successIP16Json = Json.parse("""{"notificationId":12}""")
+  val successIP16Json = Json.parse("""{"notificationId":12,"protectedAmount":1230000.0}""")
   val rejectionIP16Json = Json.parse("""{"notificationId":9}""")
 
-  val successIP14Json = Json.parse("""{"notificationId":3}""")
+  val successIP14Json = Json.parse("""{"notificationId":3,"protectedAmount":1230000.0}""")
   val rejectionIP14Json = Json.parse("""{"notificationId":1}""")
 
   val testFP16SuccessResponse = HttpResponse(200,Some(successFP16Json))
@@ -94,42 +94,42 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
     object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processFPApplication)
     "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.success.title")}
+    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
   }
 
   "Unsuccessfully applying for FP" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processFPApplication)
     "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.rejection.title")}
+    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
   }
 
   "Successfully applying for IP 2016" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processIPApplication)
     "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.success.title")}
+    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
   }
 
   "Unsuccessfully applying for IP 2016" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processIPApplication)
     "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.rejection.title")}
+    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
   }
 
   "Successfully applying for IP 2014" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processIP14Application)
     "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.success.title")}
+    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
   }
 
   "Unsuccessfully applying for IP 2014" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processIP14Application)
     "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.rejection.title")}
+    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
   }
 
 
