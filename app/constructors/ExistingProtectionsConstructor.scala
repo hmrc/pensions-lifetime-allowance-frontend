@@ -23,10 +23,21 @@ import play.api.i18n.Messages
 object ExistingProtectionsConstructor {
   def createExistingProtectionsDisplayModel(model: ExistingProtectionsModel): ExistingProtectionsDisplayModel = {
     val activeProtectionsList = model.activeProtections().map(createProtectionDisplayModel(_, model.psaCheckReference))
-    val otherProtectionsList = model.otherProtections().map(createProtectionDisplayModel(_, model.psaCheckReference))
+    val otherProtectionsList = model.otherProtections().map(createProtectionDisplayModel(_, model.psaCheckReference)).sortWith(sortByStatus)
 
     ExistingProtectionsDisplayModel(activeProtectionsList, otherProtectionsList)
 
+  }
+
+  def sortByStatus(s1: models.ProtectionDisplayModel, s2: models.ProtectionDisplayModel): Boolean = {
+    if(s1.status == s2.status){
+      val typeMap: Map[String, Int] = Map("IP2014" -> 1,"FP2016" -> 2, "IP2016" -> 3,"primary" -> 4,"enhanced" -> 5,"fixed" -> 6,"FP2014" -> 7)
+      if(typeMap(s1.protectionType) < typeMap(s2.protectionType)) true else false
+    }
+    else {
+      val statusMap: Map[String, Int] = Map("dormant" -> 1,"withdrawn" -> 2,"unsuccessful" -> 3,"rejected" -> 4,"expired" -> 5)
+      if(statusMap(s1.status) < statusMap(s2.status)) true else false
+    }
   }
 
   private def createProtectionDisplayModel(model: ProtectionModel, psaCheckReference: String): ProtectionDisplayModel = {
@@ -58,26 +69,26 @@ object ExistingProtectionsConstructor {
 
   def statusString(modelStatus: Option[String]): String = {
     modelStatus match {
-      case Some("Open") => Messages("pla.protection.statuses.open")
-      case Some("Dormant") => Messages("pla.protection.statuses.dormant")
-      case Some("Withdrawn") => Messages("pla.protection.statuses.withdrawn")
-      case Some("Expired") => Messages("pla.protection.statuses.expired")
-      case Some("Unsuccessful") => Messages("pla.protection.statuses.unsuccessful")
-      case Some("Rejected") => Messages("pla.protection.statuses.rejected")
-      case _ => Messages("pla.protection.statuses.notRecorded")
+      case Some("Open") => "open"
+      case Some("Dormant") => "dormant"
+      case Some("Withdrawn") => "withdrawn"
+      case Some("Expired") => "expired"
+      case Some("Unsuccessful") => "unsuccessful"
+      case Some("Rejected") => "rejected"
+      case _ => "notRecorded"
     }
   }
 
   def protectionTypeString(modelProtectionType: Option[String]) = {
     modelProtectionType match {
-      case Some("FP2016") => Messages("pla.protection.types.FP2016")
-      case Some("IP2014") => Messages("pla.protection.types.IP2014")
-      case Some("IP2016") => Messages("pla.protection.types.IP2016")
-      case Some("Primary") => Messages("pla.protection.types.primary")
-      case Some("Enhanced") => Messages("pla.protection.types.enhanced")
-      case Some("Fixed") => Messages("pla.protection.types.fixed")
-      case Some("FP2014") => Messages("pla.protection.types.FP2014")
-      case _ => Messages("pla.protection.types.notRecorded")
+      case Some("FP2016") => "FP2016"
+      case Some("IP2014") => "IP2014"
+      case Some("IP2016") => "IP2016"
+      case Some("Primary") => "primary"
+      case Some("Enhanced") => "enhanced"
+      case Some("Fixed") => "fixed"
+      case Some("FP2014") => "FP2014"
+      case _ => "notRecorded"
     }
   }
 
