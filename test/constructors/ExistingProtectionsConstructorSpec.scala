@@ -35,7 +35,7 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
       "the protection is expired" in      {ExistingProtectionsConstructor.statusString(Some("Expired")) shouldBe "expired"}
       "the protection is unsuccessful" in {ExistingProtectionsConstructor.statusString(Some("Unsuccessful")) shouldBe "unsuccessful"}
       "the protection is rejected" in     {ExistingProtectionsConstructor.statusString(Some("Rejected")) shouldBe "rejected"}
-      "there is no status recorded" in    {ExistingProtectionsConstructor.statusString(None) shouldBe Messages("pla.protection.statuses.notRecorded")}
+      "there is no status recorded" in    {ExistingProtectionsConstructor.statusString(None) shouldBe "notRecorded"}
     }
 
     "Populate the protection type string" when {
@@ -46,7 +46,7 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
       "the protection is enhanced" in          {ExistingProtectionsConstructor.protectionTypeString(Some("Enhanced")) shouldBe "enhanced"}
       "the protection is fixed" in             {ExistingProtectionsConstructor.protectionTypeString(Some("Fixed")) shouldBe "fixed"}
       "the protection is FP2014" in            {ExistingProtectionsConstructor.protectionTypeString(Some("FP2014")) shouldBe "FP2014"}
-      "the protection type is not recorded" in {ExistingProtectionsConstructor.protectionTypeString(None) shouldBe Messages("pla.protection.types.notRecorded")}
+      "the protection type is not recorded" in {ExistingProtectionsConstructor.protectionTypeString(None) shouldBe "notRecorded"}
     }
 
     "Create an ExistingProtectionsDisplayModel" in {

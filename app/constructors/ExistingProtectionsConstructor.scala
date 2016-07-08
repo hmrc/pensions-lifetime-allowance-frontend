@@ -31,8 +31,8 @@ object ExistingProtectionsConstructor {
 
   def sortByStatus(s1: models.ProtectionDisplayModel, s2: models.ProtectionDisplayModel): Boolean = {
     if(s1.status == s2.status){
-      val thingy: Map[String, Int] = Map("IP14" -> 1,"FP16" -> 2, "IP16" -> 3,"primary" -> 4,"enhanced" -> 5,"fixed" -> 6,"FP14" -> 7)
-      if(thingy(s1.protectionType) < thingy(s2.protectionType)) true else false
+      val orderMap: Map[String, Int] = Map("IP2014" -> 1,"FP2016" -> 2, "IP2016" -> 3,"primary" -> 4,"enhanced" -> 5,"fixed" -> 6,"FP2014" -> 7)
+      if(orderMap(s1.protectionType) < orderMap(s2.protectionType)) true else false
     }
     else if(s1.status == "dormant") s1.status > s2.status
     else s1.status < s2.status
@@ -73,7 +73,7 @@ object ExistingProtectionsConstructor {
       case Some("Expired") => "expired"
       case Some("Unsuccessful") => "unsuccessful"
       case Some("Rejected") => "rejected"
-      case _ => Messages("pla.protection.statuses.notRecorded")
+      case _ => "notRecorded"
     }
   }
 
@@ -86,7 +86,7 @@ object ExistingProtectionsConstructor {
       case Some("Enhanced") => "enhanced"
       case Some("Fixed") => "fixed"
       case Some("FP2014") => "FP2014"
-      case _ => Messages("pla.protection.types.notRecorded")
+      case _ => "notRecorded"
     }
   }
 
