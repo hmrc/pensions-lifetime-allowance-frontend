@@ -31,11 +31,13 @@ object ExistingProtectionsConstructor {
 
   def sortByStatus(s1: models.ProtectionDisplayModel, s2: models.ProtectionDisplayModel): Boolean = {
     if(s1.status == s2.status){
-      val orderMap: Map[String, Int] = Map("IP2014" -> 1,"FP2016" -> 2, "IP2016" -> 3,"primary" -> 4,"enhanced" -> 5,"fixed" -> 6,"FP2014" -> 7)
-      if(orderMap(s1.protectionType) < orderMap(s2.protectionType)) true else false
+      val typeMap: Map[String, Int] = Map("IP2014" -> 1,"FP2016" -> 2, "IP2016" -> 3,"primary" -> 4,"enhanced" -> 5,"fixed" -> 6,"FP2014" -> 7)
+      if(typeMap(s1.protectionType) < typeMap(s2.protectionType)) true else false
     }
-    else if(s1.status == "dormant") s1.status > s2.status
-    else s1.status < s2.status
+    else {
+      val statusMap: Map[String, Int] = Map("dormant" -> 1,"withdrawn" -> 2,"unsuccessful" -> 3,"rejected" -> 4,"expired" -> 5)
+      if(statusMap(s1.status) < statusMap(s2.status)) true else false
+    }
   }
 
   private def createProtectionDisplayModel(model: ProtectionModel, psaCheckReference: String): ProtectionDisplayModel = {
