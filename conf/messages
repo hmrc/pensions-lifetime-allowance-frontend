@@ -19,11 +19,15 @@ pla.base.date.fields.month      = Month
 pla.base.date.fields.year       = Year
 
 ## Link Text ##
-pla.links.lifetimeAllowance         = Lifetime Allowance
-pla.links.protectLifetimeAllowance  = Lifetime Allowance protection schemes
-pla.links.fixedProtection2016       = Fixed protection 2016
-pla.links.individualProtection2016  = individual protection 2016
-pla.links.onlineServicesAccount     = HMRC Online Services account
+pla.links.lifetimeAllowance             = Lifetime Allowance
+pla.links.protectLifetimeAllowance      = Lifetime Allowance protection schemes
+pla.links.fixedProtection2016           = Fixed protection 2016
+pla.links.individualProtection2016      = Individual protection 2016
+pla.links.onlineServicesAccount         = HMRC Online Services account
+pla.links.FP16LinkText                  = Fixed protection 2016
+pla.links.IP16LinkText                  = Individual protection 2016
+pla.links.IP14LinkText                  = Individual protection 2014
+pla.links.ExistingProtectionsLinkText   = View your existing protections
 
 ## Timeout ##
 pla.timeout.title       = Session closed due to inactivity
@@ -129,6 +133,18 @@ pla.technicalIssue.pageHeading  = There is a technical problem
 pla.technicalIssue.paraOne      = This online service is experiencing difficulties.
 pla.technicalIssue.paraTwo      = Please try again in 5 minutes.
 pla.technicalIssue.button       = Try Again
+
+## Technical Error ##
+pla.techError.title                         = Technical Error
+pla.techError.pageHeading                   = There was an error processing your request
+pla.techError.paraOne                       = Please try again later, or use one of the links below to restart your journey
+pla.techError.returnToPTA                   = Alternatively, you can <a href="https://www.gov.uk/personal-tax-account">return to your Personal Tax Account</a>.
+
+## Insufficient Information ##
+pla.insuffInfo.title                        = Insufficient Information
+pla.insuffInfo.pageHeading                  = Some of the required information for your application is missing
+pla.insuffInfo.paraOne                      = Use one of the links below to restart your journey. Any information you''ve already entered will be pre-populated
+pla.insuffInfo.returnToPTA                  = Alternatively, you can <a href="https://www.gov.uk/personal-tax-account">return to your Personal Tax Account</a>.
 
 ## API ##
 pla.api.badRequest              = There was an error processing the client''s request

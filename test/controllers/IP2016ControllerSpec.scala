@@ -725,11 +725,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the introduction page" in {
+            "redirect the user to the technical error page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(None)
-                // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.technicalError()}")
             }
         }
 
@@ -743,11 +742,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the introduction page" in {
+            "redirect the user to the insufficient information page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(Some(testModel))
-                // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.insufficientInformation()}")
             }
         }
 
@@ -821,10 +819,9 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the introduction page" in {
+            "redirect the user to the technical error page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
-                // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTaken()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.technicalError()}")
             }
         }
 

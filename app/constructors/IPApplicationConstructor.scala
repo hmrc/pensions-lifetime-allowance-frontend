@@ -23,13 +23,14 @@ import common.Strings.nameString
 import common.Dates.apiDateFormat
 import models._
 import enums.ApplicationType
+import play.api.Logger
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 object IPApplicationConstructor {
 
   def createIPApplication(data: CacheMap)(implicit protectionType: ApplicationType.Value) : IPApplicationModel = {
 
-    assert(Validation.validIPData(data))
+    assert(Validation.validIPData(data), Logger.error(s"Invalid application data provided to createIPApplication for $protectionType. Data: $data"))
 
     // uncrystallised Rights- current pensions
     val uncrystallisedRightsAmount = data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt
