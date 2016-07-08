@@ -36,4 +36,5 @@ object Constants {
     val ip14RejectCodes = List(1,2)
 
     val successCodesRequiringProtectionInfo = List(3,4,8,12,22,23)
+    val fpShowPensionSharing = List(23,24)
 }

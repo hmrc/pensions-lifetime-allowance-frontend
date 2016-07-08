@@ -3,6 +3,7 @@
 @import helpers.templates.resultDetails
 @import play.api.i18n._
 @import enums.ApplicationType
+@import utils.Constants
 
 @(res: SuccessResponseModel)(implicit request: Request[_])
 
@@ -26,7 +27,7 @@
 			@resultDetails(details)
 		}
 
-		@if(res.protectionType == ApplicationType.IP2016 || res.protectionType == ApplicationType.IP2014) {
+		@if(res.protectionType == ApplicationType.IP2016 || res.protectionType == ApplicationType.IP2014 || Constants.fpShowPensionSharing.contains(res.notificationId.toString)) {
 			<p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
 		}
 
