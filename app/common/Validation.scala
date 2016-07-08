@@ -21,19 +21,20 @@ import java.text.SimpleDateFormat
 import models._
 import enums.ApplicationType
 import uk.gov.hmrc.http.cache.client.CacheMap
+import play.api.Logger
 
 object Validation {
 
   def isMaxTwoDecimalPlaces(amount: BigDecimal): Boolean = {
     amount match {
-      case amount if amount.scale <= 2 => true
+      case checkAmount if checkAmount.scale <= 2 => true
       case _ => false
     }
   }
 
   def isPositive(amount: BigDecimal): Boolean = {
     amount match {
-      case amount if amount < 0 => false
+      case checkAmount if checkAmount < 0 => false
       case _ => true
     }
   }
@@ -46,7 +47,7 @@ object Validation {
     try {
       val fmt = new SimpleDateFormat("dd/MM/yyyy")
       fmt.setLenient(false)
-      fmt.parse(s"${day}/${month}/${year}")
+      fmt.parse(s"$day/$month/$year")
       true
     } catch {
       case e: Exception => false
@@ -91,7 +92,6 @@ object Validation {
       val numberOfPSOs = numberOfPSOsModel.get.numberOfPSOs.get.toInt
       (1 to numberOfPSOs).exists(psoNum => data.getEntry[PSODetailsModel](nameString(s"psoDetails$psoNum")).isEmpty)
     }
-
 
     validPensionData() && validPSOData()
   }

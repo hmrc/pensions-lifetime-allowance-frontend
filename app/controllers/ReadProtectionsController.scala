@@ -19,6 +19,7 @@ package controllers
 import models.ExistingProtectionsModel
 import auth.AuthorisedForPLA
 import config.{FrontendAppConfig,FrontendAuthConnector}
+import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -46,8 +47,10 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     plaConnector.readProtections(user.nino.get).map { response =>
       response.status match {
         case 200 => redirectFromSuccess(response)
-                  // TODO: Redirect to technical error
-        case _ => Redirect(routes.IP2016Controller.pensionsTaken())
+        case _ => {
+          Logger.error(s"non-200 response received from microservice in existing protections request. Status: ${response.status}, Response: $response")
+          Redirect(routes.FallbackController.technicalError())
+        }
       }
     }
   }
@@ -55,8 +58,10 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
   def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent]): Result = {
     ResponseConstructors.createExistingProtectionsModelFromJson(Json.parse(response.body)) match {
       case Some(model) => displayExistingProtections(model)
-                  // TODO: Redirect to technical error
-      case _ => Redirect(routes.IP2016Controller.pensionsTaken())
+      case _ => {
+        Logger.error(s"unable to create existing protections model from microservice response. Response: $response")
+        Redirect(routes.FallbackController.technicalError())
+      }
     }
 
   }

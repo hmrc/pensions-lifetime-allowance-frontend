@@ -117,7 +117,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
   }
 
   "Calling readProtections" should {
-    "should return a 200 from a valid apply readProtectiond request" in {
+    "should return a 200 from a valid apply readProtections request" in {
       when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
 

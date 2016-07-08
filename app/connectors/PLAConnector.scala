@@ -16,6 +16,7 @@
 
 package connectors
 
+import play.api.Logger
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
@@ -79,8 +80,11 @@ object ResponseHandler extends ResponseHandler{
 trait ResponseHandler extends HttpErrorFunctions {
     def handlePLAResponse(method: String, url: String, response: HttpResponse): HttpResponse = {
       response.status match {
-        case 409 => response
-        case _ => handleResponse(method, url)(response)
+        case 409 => response  // this is an expected response for this API, so don't throw an exception
+        case _ => {
+          Logger.error(s"error response returned from microservice. Status: ${response.status}. Response: $response")
+          handleResponse(method, url)(response)
+        }
       }
     } 
 }
