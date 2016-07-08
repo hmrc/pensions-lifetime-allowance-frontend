@@ -47,7 +47,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
       response.status match {
         case 200 => redirectFromSuccess(response)
                   // TODO: Redirect to technical error
-        case _ => Redirect(routes.IntroductionController.introduction())
+        case _ => Redirect(routes.IP2016Controller.pensionsTaken())
       }
     }
   }
@@ -56,7 +56,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     ResponseConstructors.createExistingProtectionsModelFromJson(Json.parse(response.body)) match {
       case Some(model) => displayExistingProtections(model)
                   // TODO: Redirect to technical error
-      case _ => Redirect(routes.IntroductionController.introduction())
+      case _ => Redirect(routes.IP2016Controller.pensionsTaken())
     }
 
   }
