@@ -42,6 +42,7 @@ object IPApplicationConstructor {
           case "yes" => data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore")).get.pensionsTakenBeforeAmt
           case _ => Some(BigDecimal(0))
         }
+        case _ => Some(BigDecimal(0))
       }
     }
 
@@ -51,6 +52,7 @@ object IPApplicationConstructor {
           case "yes" => data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")).get.pensionsTakenBetweenAmt
           case _ => Some(BigDecimal(0))
         }
+        case _ => Some(BigDecimal(0))
       }
     }
 

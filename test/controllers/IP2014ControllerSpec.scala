@@ -665,7 +665,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PensionDebits, ("pensionDebits", "yes"))
             "return 303" in {status(DataItem.result) shouldBe 303}
-            // TODO: update to number of pension sharing orders once implemented
             "redirect to ip14 number of pension sharing orders" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14NumberOfPSOs()}") }
         }
 
@@ -718,11 +717,10 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the introduction page" in {
+            "redirect the user to the technical error page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(None)
-                // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.technicalError()}")
             }
         }
 
@@ -736,11 +734,10 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the introduction page" in {
+            "redirect the user to the insufficient information page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(Some(testModel))
-                // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.insufficientInformation()}")
             }
         }
 
@@ -814,10 +811,9 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "temporarily redirect the user to the introduction page" in {
+            "redirect the user to the technical error page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
-                // TODO: update redirect to summary once implemented in frontend
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.technicalError()}")
             }
         }
 
