@@ -229,6 +229,11 @@ pla.numberOfPSOs.title                      = Number of pension sharing orders
 pla.numberOfPSOs.pageHeading                = Pension sharing orders
 pla.numberOfPSOs.question                   = How many pension sharing orders do you have?
 pla.numberOfPSOs.mandatoryErr               = Enter a number of Pension Sharing Orders
+pla.numberOfPSOs.one                        = One
+pla.numberOfPSOs.two                        = Two
+pla.numberOfPSOs.three                      = Three
+pla.numberOfPSOs.four                       = Four
+pla.numberOfPSOs.five                       = Five
 
 ## Pension Sharing Order Details ##
 pla.psoDetails.title                        = Pension sharing order
