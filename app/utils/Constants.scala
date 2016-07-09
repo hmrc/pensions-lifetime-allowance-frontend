@@ -37,4 +37,6 @@ object Constants {
 
     val successCodesRequiringProtectionInfo = List(3,4,8,12,22,23)
     val fpShowPensionSharing = List(23,24)
+
+    val ipRelevantAmountThreshold = 1000000.0
 }
