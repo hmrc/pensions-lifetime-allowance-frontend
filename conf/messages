@@ -331,9 +331,9 @@ pla.existingProtections.title                           = View your existing pro
 pla.existingProtections.pageHeading                     = Existing protections
 pla.existingProtections.open                            = Open
 pla.existingProtections.other                           = Other
-pla.existingProtections.noActiveprotections             = You currently have no open protections.
-pla.existingProtections.noOtherprotections              = You have no other protections.
-pla.existingProtections.protectionRef                   = protection reference
+pla.existingProtections.noActiveProtections             = You currently have no open protections.
+pla.existingProtections.noOtherProtections              = You have no other protections.
+pla.existingProtections.protectionRef                   = Protection reference
 pla.existingProtections.psaRef                          = Scheme administrator reference
 
 
