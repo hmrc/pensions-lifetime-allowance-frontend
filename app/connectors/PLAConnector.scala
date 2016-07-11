@@ -16,7 +16,6 @@
 
 package connectors
 
-import play.api.Logger
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
@@ -37,40 +36,37 @@ object PLAConnector extends PLAConnector with ServicesConfig {
 
 trait PLAConnector {
 
-    implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders("Accept" -> "application/vnd.hmrc.1.0+json", "Content-Type" -> "application/json")
-    
+  implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders("Accept" -> "application/vnd.hmrc.1.0+json", "Content-Type" -> "application/json")
 
-    val http: HttpGet with HttpPost with HttpPut
-    val serviceUrl: String
+  val http: HttpGet with HttpPost with HttpPut
+  val serviceUrl: String
 
-    implicit val readApiResponse: HttpReads[HttpResponse] = new HttpReads[HttpResponse] {
-                    def read(method: String, url: String, response: HttpResponse) = ResponseHandler.handlePLAResponse(method, url, response)
-                  }
+  implicit val readApiResponse: HttpReads[HttpResponse] = new HttpReads[HttpResponse] {
+    def read(method: String, url: String, response: HttpResponse) = ResponseHandler.handlePLAResponse(method, url, response)
+  }
 
-    def applyFP16(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-        val requestJson: JsValue = Json.parse("""{"protectionType":"FP2016"}""")
-        http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
-    }
+  def applyFP16(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+    val requestJson: JsValue = Json.parse("""{"protectionType":"FP2016"}""")
+    http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+  }
 
-    def applyIP16(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-        implicit val protectionType = ApplicationType.IP2016
-        val application = IPApplicationConstructor.createIPApplication(userData)
-        val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
-        http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
-    }
+  def applyIP16(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+    implicit val protectionType = ApplicationType.IP2016
+    val application = IPApplicationConstructor.createIPApplication(userData)
+    val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
+    http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+  }
 
-    def applyIP14(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-        implicit val protectionType = ApplicationType.IP2014
-        val application = IPApplicationConstructor.createIPApplication(userData)
-        val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
-        http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
-    }
+  def applyIP14(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+    implicit val protectionType = ApplicationType.IP2014
+    val application = IPApplicationConstructor.createIPApplication(userData)
+    val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
+    http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+  }
 
-    def readProtections(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-        http.GET[HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections")
-    }
-
-
+  def readProtections(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+    http.GET[HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections")
+  }
 }
 
 object ResponseHandler extends ResponseHandler{
@@ -78,13 +74,10 @@ object ResponseHandler extends ResponseHandler{
 }
 
 trait ResponseHandler extends HttpErrorFunctions {
-    def handlePLAResponse(method: String, url: String, response: HttpResponse): HttpResponse = {
-      response.status match {
-        case 409 => response  // this is an expected response for this API, so don't throw an exception
-        case _ => {
-          Logger.error(s"error response returned from microservice. Status: ${response.status}. Response: $response")
-          handleResponse(method, url)(response)
-        }
-      }
-    } 
+  def handlePLAResponse(method: String, url: String, response: HttpResponse): HttpResponse = {
+    response.status match {
+      case 409 => response  // this is an expected response for this API, so don't throw an exception
+      case _ => handleResponse(method, url)(response)
+    }
+  }
 }
