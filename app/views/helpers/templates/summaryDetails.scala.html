@@ -1,0 +1,45 @@
+@import models.SummaryModel
+@import helpers.templates.{summaryRow,summaryError}
+@import play.api.data._
+
+@(summary: SummaryModel)
+
+<div>
+    <div class="grid grid-2-3">
+        @summaryError(Messages("pla.summary.errorSummaryLabel"), summary.invalidRelevantAmount, summary.protectionType.toString)
+    </div>
+</div>
+
+<div>
+    <div class="grid grid-2-3">
+        <h1 class="heading-xlarge">@Messages("pla.summary.pageHeading")</h1>
+    </div>
+</div>
+
+<div class="grid-wrapper"></div>
+
+<section>
+    <h2 class="heading-large">@Messages("pla.summary.pensionsHeading")</h2>
+
+    @for(row <- summary.pensionContributionRows) {
+    @summaryRow(row.rowID, row.displayValues, row.changeLinkCall)
+    }
+</section>
+
+<div>&nbsp;</div>
+
+<section>
+    <h2 class="heading-large">@Messages("pla.summary.psosHeading")</h2>
+
+    @for(row <- summary.psoDetailsRows) {
+    @summaryRow(row.rowID, row.displayValues, row.changeLinkCall)
+    }
+</section>
+
+<div>
+    <div class="grid grid-2-3">
+        <p>@Messages("pla.summary.declarationPara1")</p>
+        <p>@Messages("pla.summary.declarationPara2")</p>
+    </div>
+</div>
+<div class="grid-wrapper"></div>

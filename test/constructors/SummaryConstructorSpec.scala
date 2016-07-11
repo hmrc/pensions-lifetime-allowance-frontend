@@ -155,7 +155,7 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
         implicit val protectionType = ApplicationType.IP2016
 
       "all answers are neagtive" in {
-        val testSummaryModel = SummaryModel(true, List(negativePensionsTakenSummaryRow, negativeOverseasPensionsSummaryRow, currentPensionsSummaryRow, totalPensionsAmountSummaryRow("£1,001.00")), List(negativePensionDebitsSummaryRow))
+        val testSummaryModel = SummaryModel(protectionType, true, List(negativePensionsTakenSummaryRow, negativeOverseasPensionsSummaryRow, currentPensionsSummaryRow, totalPensionsAmountSummaryRow("£1,001.00")), List(negativePensionDebitsSummaryRow))
         val tstMap = CacheMap(tstId, Map(negativePensionsTakenTuple,
                                         negativeOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
@@ -165,7 +165,7 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
       }
 
       "all answers are positive" in {
-        val testSummaryModel = SummaryModel(false,
+        val testSummaryModel = SummaryModel(protectionType, false,
                                         List(
                                             positivePensionsTakenSummaryRow,
                                             positivePensionsTakenBeforeSummaryRow, positivePensionsTakenBeforeAmtSummaryRow,
@@ -204,7 +204,7 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
       }
 
       "pensions taken 'yes', pensions taken before 'no', pensions taken between 'no'" in {
-        val testSummaryModel = SummaryModel(true,
+        val testSummaryModel = SummaryModel(protectionType, true,
                                         List(
                                             positivePensionsTakenSummaryRow,
                                             negativePensionsTakenBeforeSummaryRow,

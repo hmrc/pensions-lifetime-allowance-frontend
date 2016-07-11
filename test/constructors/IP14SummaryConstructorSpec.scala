@@ -32,10 +32,10 @@ class IP14SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     val negativePensionsTakenSummaryRow = SummaryRowModel("ip14PensionsTaken", Some(controllers.routes.IP2014Controller.ip14PensionsTaken()), "No")
     val positivePensionsTakenSummaryRow = SummaryRowModel("ip14PensionsTaken", Some(controllers.routes.IP2014Controller.ip14PensionsTaken()), "Yes")
 
-    val positivePensionsTakenBeforeTuple = "ip14PensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes", Some(BigDecimal(1001000))))
+    val positivePensionsTakenBeforeTuple = "ip14PensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes", Some(BigDecimal(1247000))))
     val negativePensionsTakenBeforeTuple = "ip14PensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("no", None))
     val positivePensionsTakenBeforeSummaryRow = SummaryRowModel("ip14PensionsTakenBefore", Some(controllers.routes.IP2014Controller.ip14PensionsTakenBefore()), "Yes")
-    val positivePensionsTakenBeforeAmtSummaryRow = SummaryRowModel("ip14PensionsTakenBeforeAmt", Some(controllers.routes.IP2014Controller.ip14PensionsTakenBefore()), "£1,001,000.00")
+    val positivePensionsTakenBeforeAmtSummaryRow = SummaryRowModel("ip14PensionsTakenBeforeAmt", Some(controllers.routes.IP2014Controller.ip14PensionsTakenBefore()), "£1,247,000.00")
     val negativePensionsTakenBeforeSummaryRow = SummaryRowModel("ip14PensionsTakenBefore", Some(controllers.routes.IP2014Controller.ip14PensionsTakenBefore()), "No")
 
     val positivePensionsTakenBetweenTuple = "ip14PensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes", Some(BigDecimal(1100))))
@@ -155,7 +155,7 @@ class IP14SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
         implicit val protectionType = ApplicationType.IP2014
 
       "all answers are negative" in {
-        val testSummaryModel = SummaryModel(true, List(negativePensionsTakenSummaryRow, negativeOverseasPensionsSummaryRow, currentPensionsSummaryRow, totalPensionsAmountSummaryRow("£1,001.00")), List(negativePensionDebitsSummaryRow))
+        val testSummaryModel = SummaryModel(protectionType, true, List(negativePensionsTakenSummaryRow, negativeOverseasPensionsSummaryRow, currentPensionsSummaryRow, totalPensionsAmountSummaryRow("£1,001.00")), List(negativePensionDebitsSummaryRow))
         val tstMap = CacheMap(tstId, Map(negativePensionsTakenTuple,
                                         negativeOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
@@ -165,14 +165,14 @@ class IP14SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
       }
 
       "all answers are positive" in {
-        val testSummaryModel = SummaryModel(false,
+        val testSummaryModel = SummaryModel(protectionType, false,
                                         List(
                                             positivePensionsTakenSummaryRow,
                                             positivePensionsTakenBeforeSummaryRow, positivePensionsTakenBeforeAmtSummaryRow,
                                             positivePensionsTakenBetweenSummaryRow, positivePensionsTakenBetweenAmtSummaryRow,
                                             positiveOverseasPensionsSummaryRow, positiveOverseasPensionsAmtSummaryRow,
                                             currentPensionsSummaryRow,
-                                            totalPensionsAmountSummaryRow("£1,004,111.00")
+                                            totalPensionsAmountSummaryRow("£1,250,111.00")
                                             ),
                                         List(
                                             positivePensionDebitsSummaryRow,
@@ -204,7 +204,7 @@ class IP14SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
       }
 
       "pensions taken 'yes', pensions taken before 'no', pensions taken between 'no'" in {
-        val testSummaryModel = SummaryModel(true,
+        val testSummaryModel = SummaryModel(protectionType, true,
                                         List(
                                             positivePensionsTakenSummaryRow,
                                             negativePensionsTakenBeforeSummaryRow,
