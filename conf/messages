@@ -258,7 +258,7 @@ pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date after 6 April 2016
 pla.summary.title                                   = Submit your application
 pla.summary.pageHeading                             = Check your answers before sending your application
 pla.summary.errorSummaryLabel                       = There are problems with your application
-pla.summary.underThresholdError                     = Your total pensions savings are less than one million pounds. Please review your application as individual protection can only be added to pension savings of over one million pounds
+pla.summary.underThresholdError.IP2016              = Your total pensions savings are less than one million pounds. Please review your application as individual protection can only be added to pension savings of over one million pounds
 pla.summary.pensionsHeading                         = Pensions
 pla.summary.change                                  = Change
 pla.summary.questions.pensionsTaken                 = Have you taken any of your pensions?
@@ -296,6 +296,7 @@ pla.summary.hiddenLinkText.psoDetails5              = Change the details of your
 pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold primary protection or individual protection 2014.
 pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
+pla.summary.underThresholdError.IP2014                  = Your total pensions savings are less than 1.25 million pounds. Please review your application as individual protection 2014 can only be added to pension savings of over 1.25 million pounds
 pla.summary.questions.ip14PensionsTaken                 = Have you taken any of your pensions?
 pla.summary.hiddenLinkText.ip14PensionsTaken            = Change your response to the question ''have you taken any of your pensions''
 pla.summary.questions.ip14PensionsTakenBefore           = Did you start taking any of your pensions before 6 April 2006?
@@ -331,14 +332,14 @@ pla.summary.hiddenLinkText.ip14PsoDetails5              = Change the details of 
 pla.summary.ip14DeclarationPara1                        = I confirm that at 5 April 2014 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2014 I did not hold primary protection.
 pla.summary.ip14DeclarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
-## EXISITING PROTECTIONS ##
+## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = View your existing protections
 pla.existingProtections.pageHeading                     = Existing protections
 pla.existingProtections.open                            = Open
 pla.existingProtections.other                           = Other
-pla.existingProtections.noActiveprotections             = You currently have no open protections.
-pla.existingProtections.noOtherprotections              = You have no other protections.
-pla.existingProtections.protectionRef                   = protection reference
+pla.existingProtections.noActiveProtections             = You currently have no open protections.
+pla.existingProtections.noOtherProtections              = You have no other protections.
+pla.existingProtections.protectionRef                   = Protection reference
 pla.existingProtections.psaRef                          = Scheme administrator reference
 
 
