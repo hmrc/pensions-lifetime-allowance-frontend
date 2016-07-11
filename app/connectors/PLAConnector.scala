@@ -81,8 +81,15 @@ trait ResponseHandler extends HttpErrorFunctions {
     def handlePLAResponse(method: String, url: String, response: HttpResponse): HttpResponse = {
       response.status match {
         case 409 => response  // this is an expected response for this API, so don't throw an exception
+        case x if(400 <= x && x < 500) => {
+          Logger.error(s"4xx response returned from microservice. Status: ${response.status}. Response: ${response.body}")
+          handleResponse(method, url)(response)
+        }
+        case x if(500 <= x && x < 600) => {
+          Logger.warn(s"5xx response returned from microservice. Status: ${response.status}. Response: ${response.body}")
+          handleResponse(method, url)(response)
+        }
         case _ => {
-          Logger.error(s"error response returned from microservice. Status: ${response.status}. Response: $response")
           handleResponse(method, url)(response)
         }
       }
