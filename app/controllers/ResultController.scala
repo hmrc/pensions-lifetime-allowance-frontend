@@ -16,10 +16,9 @@
 
 package controllers
 
-import auth.AuthorisedForPLA
+import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import connectors.KeyStoreConnector
-import play.api.Logger
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
@@ -27,7 +26,6 @@ import constructors.ResponseConstructors
 import views.html.pages.result._
 import connectors.PLAConnector
 import utils.Constants
-import models._
 import enums.ApplicationType
 
 
@@ -57,9 +55,9 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       }
   }
 
-  def applicationOutcome(response: HttpResponse): String = {
+  def applicationOutcome(response: HttpResponse)(implicit user: PLAUser): String = {
     val notificationId = (response.json \ "notificationId").asOpt[Int]
-    assert(notificationId.isDefined, LogError(s"no notification ID returned in FP application response. Response: ${response.body}"))
+    assert(notificationId.isDefined, s"no notification ID returned in FP application response for user nino ${user.nino}")
     if(Constants.successCodes.contains(notificationId.get)) "successful" else "rejected"
   }
 
@@ -78,9 +76,9 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     )
   }
 
-  def ip16ApplicationOutcome(response: HttpResponse): String = {
+  def ip16ApplicationOutcome(response: HttpResponse)(implicit user: PLAUser): String = {
     val notificationId = (response.json \ "notificationId").asOpt[Int]
-    assert(notificationId.isDefined, LogError(s"no notification ID returned in IP2016 application response. Response: ${response.body}"))
+    assert(notificationId.isDefined, s"no notification ID returned in IP2016 application response for user nino ${user.nino}")
     if(Constants.ip16SuccessCodes.contains(notificationId.get)) "successful" else "rejected"
   }
 
@@ -99,14 +97,9 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     )
   }
 
-  def ip14ApplicationOutcome(response: HttpResponse): String = {
+  def ip14ApplicationOutcome(response: HttpResponse)(implicit user: PLAUser): String = {
     val notificationId = (response.json \ "notificationId").asOpt[Int]
-    assert(notificationId.isDefined, LogError(s"no notification ID returned in IP2014 application response. Response: ${response.body}"))
+    assert(notificationId.isDefined, s"no notification ID returned in IP2014 application response for user nino ${user.nino}")
     if(Constants.ip14SuccessCodes.contains(notificationId.get)) "successful" else "rejected"
-  }
-
-  private def logError(msg: String): String = {
-    Logger.error(msg)
-    msg
   }
 }

@@ -17,6 +17,7 @@
 package constructors
 
 import enums.ApplicationType
+import play.api.Logger
 import play.api.i18n.Messages
 import models._
 import common.Display._
@@ -187,7 +188,10 @@ trait SummaryConstructor {
       loop(1)
     }
 
-    if(!Validation.validIPData(data)) None else Some(createSummaryModel())
+    if(!Validation.validIPData(data)) {
+      Logger.warn(s"Unable to create summary model from user data. Data: ${data.data}")
+      None
+    } else Some(createSummaryModel())
 
   }
 
