@@ -16,6 +16,8 @@
 
 package models
 
-case class SummaryModel(invalidRelevantAmount: Boolean, pensionContributionRows: Seq[SummaryRowModel], psoDetailsRows: Seq[SummaryRowModel]) {
+import enums.ApplicationType
+
+case class SummaryModel(protectionType: ApplicationType.Value, invalidRelevantAmount: Boolean, pensionContributionRows: Seq[SummaryRowModel], psoDetailsRows: Seq[SummaryRowModel]) {
 
 }

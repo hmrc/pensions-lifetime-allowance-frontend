@@ -17,7 +17,7 @@
 package controllers
 
 import models.ExistingProtectionsModel
-import auth.AuthorisedForPLA
+import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import play.api.Logger
 import play.api.mvc._
@@ -47,19 +47,16 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     plaConnector.readProtections(user.nino.get).map { response =>
       response.status match {
         case 200 => redirectFromSuccess(response)
-        case _ => {
-          Logger.error(s"non-200 response received from microservice in existing protections request. Status: ${response.status}, Response: $response")
-          Redirect(routes.FallbackController.technicalError())
-        }
+        case _ => Redirect(routes.FallbackController.technicalError())
       }
     }
   }
 
-  def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent]): Result = {
+  def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Result = {
     ResponseConstructors.createExistingProtectionsModelFromJson(Json.parse(response.body)) match {
       case Some(model) => displayExistingProtections(model)
       case _ => {
-        Logger.error(s"unable to create existing protections model from microservice response. Response: $response")
+        Logger.error(s"unable to create existing protections model from microservice response for nino: ${user.nino}")
         Redirect(routes.FallbackController.technicalError())
       }
     }

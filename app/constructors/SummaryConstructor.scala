@@ -17,6 +17,7 @@
 package constructors
 
 import enums.ApplicationType
+import play.api.Logger
 import play.api.i18n.Messages
 import models._
 import common.Display._
@@ -45,8 +46,8 @@ trait SummaryConstructor {
     def createSummaryModel(): SummaryModel = {
       val pensionContributionSeq = createPensionsTakenSeq() ::: createOverseasPensionsSeq() ::: createCurrentPensionsSeq() ::: createTotalPensionsSeq()
       val psoSeq = createPSOsSeq()
-      val invalidRelevantAmount = relevantAmount() <= Constants.ipRelevantAmountThreshold
-      SummaryModel(invalidRelevantAmount, pensionContributionSeq, psoSeq)
+      val invalidRelevantAmount = relevantAmount() <= Constants.ip16RelevantAmountThreshold
+      SummaryModel(protectionType, invalidRelevantAmount, pensionContributionSeq, psoSeq)
     }
 
     def createPensionsTakenSeq(): List[SummaryRowModel] = {
@@ -187,7 +188,10 @@ trait SummaryConstructor {
       loop(1)
     }
 
-    if(!Validation.validIPData(data)) None else Some(createSummaryModel())
+    if(!Validation.validIPData(data)) {
+      Logger.warn(s"Unable to create summary model from user data for ${protectionType.toString}. Data: ${data.data}")
+      None
+    } else Some(createSummaryModel())
 
   }
 

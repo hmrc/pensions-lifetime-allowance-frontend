@@ -16,6 +16,7 @@
 
 package controllers
 
+import play.api.Logger
 import auth.AuthorisedForPLA
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import enums.ApplicationType
@@ -26,7 +27,6 @@ import connectors.KeyStoreConnector
 import views.html._
 import constructors.SummaryConstructor
 import constructors.IP14SummaryConstructor
-import models._
 
 
 object SummaryController extends SummaryController {

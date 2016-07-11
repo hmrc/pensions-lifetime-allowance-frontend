@@ -1,4 +1,4 @@
-@(heading: String, showError: Boolean)
+@(heading: String, showError: Boolean, protectionType: String)
 
 <div class="flash error-summary@if(showError) { error-summary--show}"
      id="error-summary-display"
@@ -6,11 +6,11 @@
      aria-labelledby="error-summary-heading"
      tabindex="-1">
     <h2 id="error-summary-heading" class="h3-heading">@heading</h2>
-    <ul class="js-error-summary-messages">
+    <ul class="error-summary-messages">
     @if(showError) {
             <li role="tooltip">
                 <span id="error-summary-message">
-                    @Messages("pla.summary.underThresholdError")
+                    @Html(Messages(s"pla.summary.underThresholdError.$protectionType"))
                 </span>
             </li>
     }
