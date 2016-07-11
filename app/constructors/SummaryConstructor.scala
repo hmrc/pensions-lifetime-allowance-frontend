@@ -189,7 +189,7 @@ trait SummaryConstructor {
     }
 
     if(!Validation.validIPData(data)) {
-      Logger.warn(s"Unable to create summary model from user data. Data: ${data.data}")
+      Logger.warn(s"Unable to create summary model from user data for ${protectionType.toString}. Data: ${data.data}")
       None
     } else Some(createSummaryModel())
 
