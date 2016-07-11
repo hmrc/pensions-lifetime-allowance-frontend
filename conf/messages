@@ -443,10 +443,10 @@ resultCode.18.1         =   If you lost primary protection before 6 April 2016, 
 resultCode.19.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection.
 resultCode.19.1         =   If you lost fixed protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>. You can then re-apply for fixed protection 2016.
 
-resultCode.20.heading   =   Your application for fixed protection 2016 was rejected as you already have this.
+resultCode.20.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection 2014.
+resultCode.20.1         =   If you lost fixed protection 2014 before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>. You can then re-apply for fixed protection 2016.
 
-resultCode.21.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection 2014.
-resultCode.21.1         =   If you lost fixed protection 2014 before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>. You can then re-apply for fixed protection 2016.
+resultCode.21.heading   =   Your application for fixed protection 2016 was rejected as you already have this.
 
 resultCode.22.heading   =   You''ve added fixed protection 2016.
 
