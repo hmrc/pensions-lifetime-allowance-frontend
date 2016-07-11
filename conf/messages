@@ -229,6 +229,11 @@ pla.numberOfPSOs.title                      = Number of pension sharing orders
 pla.numberOfPSOs.pageHeading                = Pension sharing orders
 pla.numberOfPSOs.question                   = How many pension sharing orders do you have?
 pla.numberOfPSOs.mandatoryErr               = Enter a number of Pension Sharing Orders
+pla.numberOfPSOs.one                        = One
+pla.numberOfPSOs.two                        = Two
+pla.numberOfPSOs.three                      = Three
+pla.numberOfPSOs.four                       = Four
+pla.numberOfPSOs.five                       = Five
 
 ## Pension Sharing Order Details ##
 pla.psoDetails.title                        = Pension sharing order
@@ -435,12 +440,12 @@ resultCode.17.2         =   To give up enhanced protection, contact <a href="htt
 resultCode.18.heading   =   Your application for fixed protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
 resultCode.18.1         =   If you lost primary protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
-resultCode.19.heading   =   Your application for fixed protection 2016 was unsuccessful as you aready have fixed protection.
+resultCode.19.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection.
 resultCode.19.1         =   If you lost fixed protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>. You can then re-apply for fixed protection 2016.
 
-resultCode.20.heading   =   Your application for fixed protection 2016 was rejected as you aready have this.
+resultCode.20.heading   =   Your application for fixed protection 2016 was rejected as you already have this.
 
-resultCode.21.heading   =   Your application for fixed protection 2016 was unsuccessful as you aready have fixed protection 2014.
+resultCode.21.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection 2014.
 resultCode.21.1         =   If you lost fixed protection 2014 before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>. You can then re-apply for fixed protection 2016.
 
 resultCode.22.heading   =   You''ve added fixed protection 2016.
