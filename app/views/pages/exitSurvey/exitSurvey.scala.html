@@ -1,0 +1,90 @@
+@import models.ExitSurveyModel
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import helpers.templates.{formHiddenYesNoRadio,plaInputRadioGroup,checkbox}
+@import play.api.data._
+
+@(exitSurveyForm: Form[ExitSurveyModel])(implicit request: Request[_])
+
+@hiddenYesNoContent = {
+
+    @plaInputRadioGroup(
+        field = exitSurveyForm("phoneOrWriteNow"),
+        Seq(
+            "Yes"->"Yes",
+            "No"->"No",
+            "Don't know"->"Don't know"),
+        '_labelAfter -> true,
+        '_labelClass -> "block-label",
+        '_legend -> Messages("pla.exitSurvey.hiddenQ1")
+    )
+}
+
+@scriptElement = {
+    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/exitSurvey.js")'></script>
+}
+
+@main_template(Messages("pla.exitSurvey.title"), scriptElem=Some(scriptElement)) {
+
+    @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), exitSurveyForm)
+
+    <h1 class="heading-xlarge">@Messages("pla.exitSurvey.pageHeading")</h1>
+
+    <h2 class="heading-large">@Messages("pla.exitSurvey.surveyHeading")</h2>
+
+    @govHelpers.form(action = routes.IP2014Controller.submitIP14CurrentPensions) {
+
+        @formHiddenYesNoRadio(
+            exitSurveyForm,
+            "phoneOrWriteNow",
+            Messages("pla.exitSurvey.question1"),
+            hiddenYesNoContent,
+            Some("")
+        )
+
+        @Messages("pla.exitSurvey.question2")
+        @checkbox(
+            field = exitSurveyForm("anythingElse"),
+            Seq(
+                "Don't need to do anything else" -> "Nothing else",
+                "Find out more online" -> "Online help",
+                "Speak to your employer" -> "Employer help",
+                "Ask a friend or family member for advice" -> "Family help",
+                "Ask an agent or accountant for advice" -> "Agent help",
+                "Don't know" -> "May need help",
+                "Other" -> "Something else")
+
+        )
+
+        @plaInputRadioGroup(
+            field = exitSurveyForm("recommend"),
+            Seq(
+                "Very likely" -> "Very likely",
+                "Likely" -> "Likely",
+                "Not likely or unlikely" -> "Not likely or unlikely",
+                "Unlikely" -> "Unlikely",
+                "Very unlikely" -> "Very unlikely"
+            ),
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_legend -> Messages("pla.exitSurvey.question3")
+        )
+
+        @plaInputRadioGroup(
+            field = exitSurveyForm("satisfaction"),
+            Seq(
+                "Very satisfied" -> "Very satisfied",
+                "Satisfied" -> "Satisfied",
+                "Not satisfied or dissatisfied" -> "Not satisfied or dissatisfied",
+                "Dissatisfied" -> "Dissatisfied",
+                "Very dissatisfied" -> "Very dissatisfied"
+            ),
+            '_labelAfter -> true,
+            '_labelClass -> "block-label",
+            '_legend -> Messages("pla.exitSurvey.question4")
+        )
+
+        <button class="button" type="submit" id="continue-button">@Messages("pla.exitSurvey.sendFeedback")</button>
+
+    }
+
+}
