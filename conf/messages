@@ -257,8 +257,8 @@ pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date after 6 April 2016
 ## SUMMARY ##
 pla.summary.title                                   = Submit your application
 pla.summary.pageHeading                             = Check your answers before sending your application
-pla.summary.errorSummaryLabel                       = There are problems with your application
-pla.summary.underThresholdError.IP2016              = Your total pensions savings are less than one million pounds. Please review your application as individual protection can only be added to pension savings of over one million pounds
+pla.summary.errorSummaryLabel                       = There''s a problem with your application
+pla.summary.underThresholdError.IP2016              = Your total pension savings were less than £1,000,001 on 5 April 2016. You can only apply for individual protection 2016 if your pension savings were £1,000,001 or more.
 pla.summary.pensionsHeading                         = Pensions
 pla.summary.change                                  = Change
 pla.summary.questions.pensionsTaken                 = Have you taken any of your pensions?
@@ -296,7 +296,7 @@ pla.summary.hiddenLinkText.psoDetails5              = Change the details of your
 pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold primary protection or individual protection 2014.
 pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
-pla.summary.underThresholdError.IP2014                  = Your total pensions savings are less than 1.25 million pounds. Please review your application as individual protection 2014 can only be added to pension savings of over 1.25 million pounds
+pla.summary.underThresholdError.IP2014                  = Your total pension savings were less than £1,250,001 on 5 April 2014. You can only apply for individual protection 2014 if your pension savings were £1,250,001 or more.
 pla.summary.questions.ip14PensionsTaken                 = Have you taken any of your pensions?
 pla.summary.hiddenLinkText.ip14PensionsTaken            = Change your response to the question ''have you taken any of your pensions''
 pla.summary.questions.ip14PensionsTakenBefore           = Did you start taking any of your pensions before 6 April 2006?
@@ -369,7 +369,7 @@ pla.resultSuccess.whatNextContent       = Give these details to your pension pro
 pla.resultSuccess.protectionRef         = Protection notification number
 pla.resultSuccess.psaRef                = Scheme administrator reference
 pla.resultSuccess.applicationDate       = Application date
-pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
+pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 60 days.
 pla.resultSuccess.viewDetails           = You can view details of your protections at any time on the
 pla.resultSuccess.viewDetailsLinkText   = existing protections page
 
