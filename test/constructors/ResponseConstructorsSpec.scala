@@ -39,7 +39,7 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
     )
 
     val testRejectionResponseModel = RejectionResponseModel(
-      "21",
+      "20",
       List("1")
     )
 
@@ -53,7 +53,7 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
 
         "create the correct rejection model from Json" in {
             implicit val applicationType = ApplicationType.FP2016
-            val json:JsValue = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
+            val json:JsValue = Json.parse("""{"nino":"AA123456A","notificationId":20,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
             TestResponseConstructors.createRejectionResponseFromJson(json) shouldBe testRejectionResponseModel
         }
     }
