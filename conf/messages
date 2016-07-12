@@ -339,7 +339,7 @@ pla.existingProtections.open                            = Open
 pla.existingProtections.other                           = Other
 pla.existingProtections.noActiveProtections             = You currently have no open protections.
 pla.existingProtections.noOtherProtections              = You have no other protections.
-pla.existingProtections.protectionRef                   = Protection reference
+pla.existingProtections.protectionRef                   = Protection notification number
 pla.existingProtections.psaRef                          = Scheme administrator reference
 
 
@@ -359,7 +359,7 @@ pla.protection.types.primary                            = Primary protection
 pla.protection.types.enhanced                           = Enhanced protection
 pla.protection.types.fixed                              = Fixed protection
 pla.protection.types.notRecorded                        = No protection type recorded
-pla.protection.protectionReference                      = No protection recorded
+pla.protection.protectionReference                      = No protection notification number recorded
 
 ## Result Success ##
 pla.resultSuccess.title                 = Success
