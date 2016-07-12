@@ -16,6 +16,7 @@
             }
         </div>
     </div>
+    
     <div class="grid-wrapper"></div>
     <div class="grid grid-1-3">
         <div class="font-xsmall protection-details">@Messages("pla.existingProtections.protectionRef")</div>
@@ -25,6 +26,7 @@
             <div class="font-xsmall protection-details" id="@{statusGroup}ProtectionRef@{protectionNum}">@protection.protectionReference</div>
         </div>
     </div>
+
     <div class="grid-wrapper"></div>
     <div class="grid grid-1-3">
         <div class="font-xsmall protection-details">@Messages("pla.existingProtections.psaRef")</div>
@@ -34,6 +36,20 @@
             <div class="font-xsmall protection-details" id="@{statusGroup}PsaRef@{protectionNum}">@protection.psaCheckReference</div>
         </div>
     </div>
+
+    @protection.certificateDate.map{ cDate =>
+        <div class="grid-wrapper"></div>
+        <div class="grid grid-1-3">
+            <div class="font-xsmall protection-details">@Messages("pla.resultSuccess.applicationDate")</div>
+        </div>
+        <div class="grid grid-2-3">
+            <div class="inner-block">
+                <div class="font-xsmall protection-details" id="@{statusGroup}ApplicationDate@{protectionNum}">@cDate</div>
+            </div>
+        </div>
+    }
+
+
 </div>
 <div>&nbsp;</div>
 
