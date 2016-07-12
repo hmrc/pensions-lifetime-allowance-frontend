@@ -728,7 +728,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "redirect the user to the technical error page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(None)
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.technicalError()}")
+                redirectLocation(DataItem.result) shouldBe Some(""+routes.FallbackController.technicalError("IP2016"))
             }
         }
 
@@ -742,10 +742,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "redirect the user to the insufficient information page" in {
+            "redirect the user to the technical error page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(Some(testModel))
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.insufficientInformation()}")
+                redirectLocation(DataItem.result) shouldBe Some(""+routes.FallbackController.technicalError("IP2016"))
             }
         }
 
@@ -821,7 +821,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "redirect the user to the technical error page" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.technicalError()}")
+                redirectLocation(DataItem.result) shouldBe Some(""+routes.FallbackController.technicalError("IP2016"))
             }
         }
 

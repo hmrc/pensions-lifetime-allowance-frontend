@@ -33,6 +33,11 @@ pla.links.ExistingProtectionsLinkText   = View your existing protections
 pla.timeout.title       = Session closed due to inactivity
 pla.timeout.pageHeading = You have been logged out due to inactivity
 
+## Not Found ##
+pla.notFound.title          = Page not found - 404
+pla.notFound.pageHeading    = This page can''t be found
+pla.notFound.paraOne        = Please check that you have entered the correct web address.
+
 ## Introduction ##
 pla.intro.title         = Introduction
 pla.intro.pageHeading   = Apply for Lifetime Allowance protection
@@ -136,9 +141,11 @@ pla.technicalIssue.button       = Try Again
 
 ## Technical Error ##
 pla.techError.title                         = Technical Error
-pla.techError.pageHeading                   = There was an error processing your request
-pla.techError.paraOne                       = Please try again later, or use one of the links below to restart your journey
-pla.techError.returnToPTA                   = Alternatively, you can <a href="https://www.gov.uk/personal-tax-account">return to your Personal Tax Account</a>.
+pla.techError.pageHeading                   = Sorry, there''s been a problem
+pla.techError.paraOne                       = You'll need to start your application again, but we''ve saved the details you''ve given us so far.
+pla.techError.startAgain                    = Start again
+pla.techError.retry                         = Retry
+
 
 ## Insufficient Information ##
 pla.insuffInfo.title                        = Insufficient Information
