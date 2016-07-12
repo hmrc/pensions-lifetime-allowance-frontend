@@ -382,6 +382,7 @@ pla.resultRejection.viewDetailsLinkText   = existing protections page
 ## Exit Survey ##
 pla.exitSurvey.title                                    = Exit survey
 pla.exitSurvey.pageHeading                              = You have signed out
+pla.exitSurvey.signInAgain                              = <p>You can <a href="#">sign in to your account again</a> if you need to.</p>
 pla.exitSurvey.surveyHeading                            = Before you go, please answer some questions to help us improve your experience
 pla.exitSurvey.question1                                = Before using your tax account, were you going to phone or write to HMRC about your query?
 pla.exitSurvey.hiddenQ1                                 = After using your tax account, do you still need to phone or write to HMRC?
@@ -389,8 +390,9 @@ pla.exitSurvey.hiddenQ2                                 = After using your tax a
 pla.exitSurvey.question2                                = Based on what you have done today, do you need to do anything else? You can tick more than one box.
 pla.exitSurvey.question3                                = How likely are you to recommend your tax account to your friends or family?
 pla.exitSurvey.question4                                = Overall, how do you feel about your experience using your tax account today?
-pla.exitSurvey.question5                                = Tell us how we can improve your experience
+pla.exitSurvey.improvements                             = Tell us how we can improve your experience
 pla.exitSurvey.q5Text                                   = Please do not include any personal or financial information, for example your National Insurance Number or credit card numbers.
+pla.exitSurvey.maxCharacters                            = 1200 remaining characters
 pla.exitSurvey.sendFeedback                             = Send feedback
 
 
