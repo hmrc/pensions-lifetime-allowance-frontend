@@ -45,7 +45,7 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     implicit val protectionType = ApplicationType.IP2016
     keyStoreConnector.fetchAllUserData.map {
       case Some(data) => routeIP2016SummaryFromUserData(data, request)
-      case None => Redirect(routes.FallbackController.technicalError())
+      case None => Redirect(routes.FallbackController.technicalError(protectionType.toString))
     }
   }
 
@@ -53,14 +53,14 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     implicit val request = req
     SummaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2016.summary(summaryModel))
-    }.getOrElse(Redirect(routes.FallbackController.insufficientInformation()))
+    }.getOrElse(Redirect(routes.FallbackController.technicalError(protectionType.toString)))
   }
 
   val summaryIP14 = AuthorisedByAny.async { implicit user => implicit request =>
     implicit val protectionType = ApplicationType.IP2014
     keyStoreConnector.fetchAllUserData.map {
       case Some(data) => routeIP2014SummaryFromUserData(data, request)
-      case None => Redirect(routes.FallbackController.technicalError())
+      case None => Redirect(routes.FallbackController.technicalError(protectionType.toString))
     }
   }
 
@@ -68,7 +68,7 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     implicit val request = req
     IP14SummaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2014.ip14Summary(summaryModel))
-    }.getOrElse(Redirect(routes.FallbackController.insufficientInformation()))
+    }.getOrElse(Redirect(routes.FallbackController.technicalError(protectionType.toString)))
   }
 
 }

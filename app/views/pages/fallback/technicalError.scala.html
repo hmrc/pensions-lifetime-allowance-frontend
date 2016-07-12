@@ -1,16 +1,29 @@
-@()(implicit request: Request[_])
+@(pType: String)(implicit request: Request[_])
+
+@restartTarget = @{
+    pType match {
+        case "IP2014" => controllers.routes.IP2014Controller.ip14PensionsTaken
+        case "IP2016" => controllers.routes.IP2016Controller.pensionsTaken
+        case "FP2016" => controllers.routes.ConfirmationController.confirmFP
+        case "existingProtections" => controllers.routes.ReadProtectionsController.currentProtections
+    }
+}
+
+@linkText = @{
+    if(pType != "existingProtections") Messages("pla.techError.startAgain")
+    else Messages("pla.techError.retry")
+}
 
 @views.html.main_template(title = Messages("pla.techError.title"), bodyClasses = None) {
 
-<h1 class="heading-xlarge">@Messages("pla.techError.pageHeading")</h1>
+<h1 class="heading-xlarge" id="pageHeading">@Messages("pla.techError.pageHeading")</h1>
 
-<p>@Messages("pla.techError.paraOne")</p>
+@if(pType != "existingProtections") {
+    <p id="startAgainText">@Messages("pla.techError.paraOne")</p>
+}
+
 <ul>
-    <li><a href="@controllers.routes.ConfirmationController.confirmFP">@Messages("pla.links.FP16LinkText")</a></li>
-    <li><a href="@controllers.routes.IP2016Controller.pensionsTaken">@Messages("pla.links.IP16LinkText")</a></li>
-    <li><a href="@controllers.routes.IP2014Controller.ip14PensionsTaken">@Messages("pla.links.IP14LinkText")</a></li>
-    <li><a href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.links.ExistingProtectionsLinkText")</a></li>
+    <li><a href=@restartTarget id="tryAgainLink">@linkText</a></li>
 </ul>
-<p>@Html(Messages("pla.techError.returnToPTA"))</p>
 
 }

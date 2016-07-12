@@ -20,12 +20,9 @@ import auth.AuthorisedForPLA
 import config.{FrontendAppConfig,FrontendAuthConnector}
 
 import connectors.KeyStoreConnector
+import enums.ApplicationType
 import play.api.mvc._
-import play.api.data.Forms._
-import play.api.data._
-import play.api.i18n.Messages
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
 import forms._
 import forms.PensionsTakenForm.pensionsTakenForm
@@ -37,7 +34,6 @@ import forms.NumberOfPSOsForm.numberOfPSOsForm
 import forms.PSODetailsForm.psoDetailsForm
 import forms.PensionDebitsForm.pensionDebitsForm
 import models._
-import common.Validation._
 
 import views.html._
 
@@ -202,7 +198,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             pensionDebitsModel.map {
                 completedModel => routeNumberOfPSOs(completedModel.pensionDebits.get, request)
             }.getOrElse(
-                Future.successful(Redirect(routes.FallbackController.technicalError()))
+                Future.successful(Redirect(routes.FallbackController.technicalError(ApplicationType.IP2016.toString)))
             )
         })
     }
@@ -210,7 +206,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     private def routeNumberOfPSOs(havePSOs: String, req: Request[AnyContent]): Future[Result] = {
         implicit val request = req
         havePSOs match {
-            case "no"  => Future.successful(Redirect(routes.FallbackController.insufficientInformation()))
+            case "no"  => Future.successful(Redirect(routes.FallbackController.technicalError(ApplicationType.IP2016.toString)))
             case "yes" => keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
                             case Some(data) => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm.fill(data)))
                             case _ => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm))
@@ -238,7 +234,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             numberOfPSOsModel.map {
                 completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
             }.getOrElse(
-                Future.successful(Redirect(routes.FallbackController.technicalError()))
+                Future.successful(Redirect(routes.FallbackController.technicalError(ApplicationType.IP2016.toString)))
             )
 
         })

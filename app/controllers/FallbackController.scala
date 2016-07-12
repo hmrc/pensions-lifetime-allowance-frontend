@@ -16,11 +16,9 @@
 
 package controllers
 
-import java.util.UUID
-
 import play.api.mvc.{AnyContent, Action}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
+import enums.ApplicationType
 
 import scala.concurrent.Future
 
@@ -29,12 +27,12 @@ object FallbackController extends FallbackController
 
 trait FallbackController extends FrontendController {
 
-  def technicalError:Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(views.html.pages.fallback.technicalError()))
-  }
-
-  def insufficientInformation:Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(views.html.pages.fallback.insufficientInfo()))
+  def technicalError(pType: String):Action[AnyContent] = Action.async { implicit request =>
+    ApplicationType.fromString(pType).map {
+      protectionType => Future.successful(Ok(views.html.pages.fallback.technicalError(protectionType.toString)))
+    }.getOrElse {
+      Future.successful(NotFound(views.html.pages.fallback.notFound()))
+    }
   }
 
 }
