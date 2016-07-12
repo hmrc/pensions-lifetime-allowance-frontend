@@ -7,8 +7,7 @@ GET         /assets/*file                                       controllers.Asse
 GET         /timeout                                            controllers.TimeoutController.timeout
 GET         /not-authorised                                     controllers.UnauthorisedController.showNotAuthorised(journeyId: Option[String])
 
-GET         /technical-error                                    controllers.FallbackController.technicalError
-GET         /insufficient-information                           controllers.FallbackController.insufficientInformation
+GET         /technical-error/:pType                             controllers.FallbackController.technicalError(pType: String)
 
 ## Apply IP 14 ##
 GET         /ip14-pensions-taken                                controllers.IP2014Controller.ip14PensionsTaken

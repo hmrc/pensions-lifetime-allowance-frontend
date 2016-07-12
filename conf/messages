@@ -33,6 +33,11 @@ pla.links.ExistingProtectionsLinkText   = View your existing protections
 pla.timeout.title       = Session closed due to inactivity
 pla.timeout.pageHeading = You have been logged out due to inactivity
 
+## Not Found ##
+pla.notFound.title          = Page not found - 404
+pla.notFound.pageHeading    = This page can''t be found
+pla.notFound.paraOne        = Please check that you have entered the correct web address.
+
 ## Introduction ##
 pla.intro.title         = Introduction
 pla.intro.pageHeading   = Apply for Lifetime Allowance protection
@@ -136,9 +141,11 @@ pla.technicalIssue.button       = Try Again
 
 ## Technical Error ##
 pla.techError.title                         = Technical Error
-pla.techError.pageHeading                   = There was an error processing your request
-pla.techError.paraOne                       = Please try again later, or use one of the links below to restart your journey
-pla.techError.returnToPTA                   = Alternatively, you can <a href="https://www.gov.uk/personal-tax-account">return to your Personal Tax Account</a>.
+pla.techError.pageHeading                   = Sorry, there''s been a problem
+pla.techError.paraOne                       = You'll need to start your application again, but we''ve saved the details you''ve given us so far.
+pla.techError.startAgain                    = Start again
+pla.techError.retry                         = Retry
+
 
 ## Insufficient Information ##
 pla.insuffInfo.title                        = Insufficient Information
@@ -339,7 +346,7 @@ pla.existingProtections.open                            = Open
 pla.existingProtections.other                           = Other
 pla.existingProtections.noActiveProtections             = You currently have no open protections.
 pla.existingProtections.noOtherProtections              = You have no other protections.
-pla.existingProtections.protectionRef                   = Protection reference
+pla.existingProtections.protectionRef                   = Protection notification number
 pla.existingProtections.psaRef                          = Scheme administrator reference
 
 
@@ -359,7 +366,7 @@ pla.protection.types.primary                            = Primary protection
 pla.protection.types.enhanced                           = Enhanced protection
 pla.protection.types.fixed                              = Fixed protection
 pla.protection.types.notRecorded                        = No protection type recorded
-pla.protection.protectionReference                      = No protection reference recorded
+pla.protection.protectionReference                      = No protection notification number recorded
 
 ## Result Success ##
 pla.resultSuccess.title                 = Success
@@ -372,6 +379,7 @@ pla.resultSuccess.applicationDate       = Application date
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 60 days.
 pla.resultSuccess.viewDetails           = You can view details of your protections at any time on the
 pla.resultSuccess.viewDetailsLinkText   = existing protections page
+pla.resultSuccess.print                 = Print this page
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
