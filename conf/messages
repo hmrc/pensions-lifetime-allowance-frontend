@@ -359,7 +359,7 @@ pla.protection.types.primary                            = Primary protection
 pla.protection.types.enhanced                           = Enhanced protection
 pla.protection.types.fixed                              = Fixed protection
 pla.protection.types.notRecorded                        = No protection type recorded
-pla.protection.protectionReference                      = No protection reference recorded
+pla.protection.protectionReference                      = No protection recorded
 
 ## Result Success ##
 pla.resultSuccess.title                 = Success
@@ -372,6 +372,7 @@ pla.resultSuccess.applicationDate       = Application date
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 60 days.
 pla.resultSuccess.viewDetails           = You can view details of your protections at any time on the
 pla.resultSuccess.viewDetailsLinkText   = existing protections page
+pla.resultSuccess.print                 = Print this page
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
