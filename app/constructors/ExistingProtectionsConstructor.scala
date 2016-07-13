@@ -48,7 +48,7 @@ object ExistingProtectionsConstructor {
 
     val protectionReference = model.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
 
-    val relevantAmount = model.relevantAmount match {
+    val protectedAmount = model.protectedAmount match {
       case Some(amount) => Some(Display.currencyDisplayString(BigDecimal(amount)))
       case _ => None
     }
@@ -63,7 +63,7 @@ object ExistingProtectionsConstructor {
               status,
               psaCheckReference,
               protectionReference,
-              relevantAmount,
+              protectedAmount,
               certificateDate)
   }
 
