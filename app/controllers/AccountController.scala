@@ -16,11 +16,7 @@
 
 package controllers
 
-import java.util.UUID
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
-import uk.gov.hmrc.play.http.logging.SessionId
-import uk.gov.hmrc.http.cache.client.SessionCache
 import play.api.mvc._
 import scala.concurrent.Future
 import views.html._
