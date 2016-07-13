@@ -6,6 +6,7 @@ GET         /assets/*file                                       controllers.Asse
 ## Auth ##
 GET         /timeout                                            controllers.TimeoutController.timeout
 GET         /not-authorised                                     controllers.UnauthorisedController.showNotAuthorised(journeyId: Option[String])
+GET         /sign-out                                           controllers.AccountController.signOut
 
 GET         /technical-error/:pType                             controllers.FallbackController.technicalError(pType: String)
 

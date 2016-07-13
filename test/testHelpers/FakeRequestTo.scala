@@ -26,23 +26,19 @@ import auth._
 
 
 class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: Option[String], data: (String, String)*) extends UnitSpec {
-    val fakeRequest = constructRequest(url, sessionId)
-    val result = controllerAction(fakeRequest)
-    val jsoupDoc = Jsoup.parse(bodyOf(result))
-  
-    def constructRequest(url: String, sessionId: Option[String]) = {
-    	sessionId match {
-    		case Some(sessId) => FakeRequest("GET", "/protect-your-lifetime-allowance/" + url).withSession(SessionKeys.sessionId -> s"session-$sessionId")
-    		case None => FakeRequest("GET", "/protect-your-lifetime-allowance/" + url)
-    	}
+  val fakeRequest = constructRequest(url, sessionId)
+  val result = controllerAction(fakeRequest)
+  val jsoupDoc = Jsoup.parse(bodyOf(result))
+
+  def constructRequest(url: String, sessionId: Option[String]) = {
+    sessionId match {
+      case Some(sessId) => FakeRequest("GET", "/protect-your-lifetime-allowance/" + url).withSession(SessionKeys.sessionId -> s"session-$sessionId")
+      case None => FakeRequest("GET", "/protect-your-lifetime-allowance/" + url)
     }
-
-
+  }
 }
 
-
 class AuthorisedFakeRequestTo(controllerAction: Action[AnyContent]) extends UnitSpec {
-    val result = controllerAction(authenticatedFakeRequest())
-    val jsoupDoc = Jsoup.parse(bodyOf(result))
-  
+  val result = controllerAction(authenticatedFakeRequest())
+  val jsoupDoc = Jsoup.parse(bodyOf(result))
 }
