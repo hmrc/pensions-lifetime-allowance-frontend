@@ -10,7 +10,7 @@
     <div class="grid grid-2-3">
         <div class="inner-block">
             @if(statusGroup == "active") {
-                <div class="font-medium" id="@{statusGroup}Detail@{protectionNum}">@protection.relevantAmount.getOrElse("")</div>
+                <div class="font-medium" id="@{statusGroup}Detail@{protectionNum}">@protection.protectedAmount.getOrElse("")</div>
             } else {
                 <span class="status-notification font-xsmall" id="@{statusGroup}Detail@{protectionNum}">@Messages("pla.protection.statuses." + protection.status)</span>
             }

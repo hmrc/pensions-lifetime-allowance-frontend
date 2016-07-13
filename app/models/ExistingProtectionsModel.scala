@@ -58,7 +58,7 @@ case class ProtectionDisplayModel(
                                  status: String,
                                  psaCheckReference: String,
                                  protectionReference: String,
-                                 relevantAmount: Option[String],
+                                 protectedAmount: Option[String],
                                  certificateDate: Option[String]
                                  )
 

@@ -55,7 +55,7 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
                            protectionType = Some("IP2014"),
                            status = Some("Open"),
                            certificateDate = Some("2016-04-17"),
-                           relevantAmount = Some(1250000),
+                           protectedAmount = Some(1250000),
                            protectionReference = Some("PSA123456")
                          )
       val tstProtectionDisplayModelOpen = ProtectionDisplayModel(
@@ -63,7 +63,7 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
                             status = "open",
                             psaCheckReference = tstPSACheckRef,
                             protectionReference = "PSA123456",
-                            relevantAmount = Some("£1,250,000.00"),
+                            protectedAmount = Some("£1,250,000.00"),
                             certificateDate = Some("17 April 2016"))
     
       val tstProtectionModelDormant = ProtectionModel (
@@ -71,7 +71,7 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
                            protectionType = Some("IP2014"),
                            status = Some("Dormant"),
                            certificateDate = None,
-                           relevantAmount = None,
+                           protectedAmount = None,
                            protectionReference = None
                          )
       val tstProtectionDisplayModelDormant = ProtectionDisplayModel(
@@ -79,7 +79,7 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
                             status = "dormant",
                             psaCheckReference = tstPSACheckRef,
                             protectionReference = Messages("pla.protection.protectionReference"),
-                            relevantAmount = None,
+                            protectedAmount = None,
                             certificateDate = None)
       val tstExistingProtectionModel = ExistingProtectionsModel(tstPSACheckRef, List(tstProtectionModelOpen, tstProtectionModelDormant))
       val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(List(tstProtectionDisplayModelOpen), List(tstProtectionDisplayModelDormant))
