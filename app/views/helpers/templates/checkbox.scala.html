@@ -23,7 +23,7 @@
 @fieldsetClass = {@elements.args.get('_groupClass)@if(elements.hasErrors){ form-field--error}}
 
 @labelAfter = @{ elements.args.get('_labelAfter).getOrElse(false).asInstanceOf[Boolean] }
-<fieldset class="@fieldsetClass"
+<fieldset class="@fieldsetClass" id="@field.id"
     @if(elements.args.get('_fieldsetAttributes).isDefined) {@elements.args.get('_fieldsetAttributes)}>
     @elements.errors.map{error => <span class="error-notification" id="@{elements.field.id}--error">@Messages(error)</span>}
     @if(elements.args.get('_legend).isDefined) {
@@ -35,7 +35,7 @@
     }
     <ul>
     @checkboxOptions.zipWithIndex.map { case ((value, label), count) =>
-        @defining(s"${elements.field.id}[${count}]")  { inputId =>
+        @defining(s"${elements.field.id}-${value.toLowerCase.replace(" ","_")}")  { inputId =>
         <li>
             <label class="block-label" for="@inputId"
                 @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>

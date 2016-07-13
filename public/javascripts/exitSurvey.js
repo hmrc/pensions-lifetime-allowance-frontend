@@ -51,3 +51,40 @@ $(document).ready($(function() {
     });
 
 }));
+
+
+var submitExitSurvey = function() {
+    var eSRadioArray = ["phoneOrWrite-yes",
+                        "phoneOrWrite-no",
+                        "phoneOrWriteNow-yes",
+                        "phoneOrWriteNow-no",
+                        "phoneOrWriteNow-don't_know",
+                        "recommend-very_likely",
+                        "recommend-likely",
+                        "recommend-not_likely_or_unlikely",
+                        "recommend-unlikely",
+                        "recommend-very_unlikely",
+                        "satisfaction-very_satisfied",
+                        "satisfaction-satisfied",
+                        "satisfaction-not_satisfied_or_dissatisfied",
+                        "satisfaction-dissatisfied",
+                        "satisfaction-very_dissatisfied"];
+    for(i = 0; i < eSRadioArray.length; i++){
+        if(document.getElementById(eSRadioArray[i]).checked){
+            ga('send', 'event', 'radio', 'selected', eSRadioArray[i]);
+        }
+    }
+
+    var eSCheckArray = ["anythingElse-nothing_else",
+                        "anythingElse-online_help",
+                        "anythingElse-employer_help",
+                        "anythingElse-family_help",
+                        "anythingElse-agent_help",
+                        "anythingElse-may_need_help",
+                        "anythingElse-something_else",]
+    for(i = 0; i < eSCheckArray.length; i++){
+        if(document.getElementById(eSCheckArray[i]).checked){
+            ga('send', 'event', 'checkbox', 'selected', eSCheckArray[i]);
+        }
+    }
+};

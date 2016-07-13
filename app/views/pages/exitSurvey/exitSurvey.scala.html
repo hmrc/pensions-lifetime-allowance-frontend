@@ -33,7 +33,7 @@
 
     <h2 class="heading-large">@Messages("pla.exitSurvey.surveyHeading")</h2>
 
-    @govHelpers.form(action = routes.IP2014Controller.submitIP14CurrentPensions) {
+    @govHelpers.form(action = routes.ExitSurveyController.exitSurvey) {
 
         @formHiddenYesNoRadio(
             exitSurveyForm,
@@ -55,7 +55,7 @@
                 "Something else" ->"Other"),
                 '_groupClass -> "form-group",
                 '_legend -> Messages("pla.exitSurvey.question2"),
-                '_fieldsetAttributes -> "id=anythingElse"
+                '_fieldsetId -> "isThisWorking???"
         )
 
         @plaInputRadioGroup(
@@ -97,7 +97,7 @@
                 '_maxlength -> 1200
         )
 
-        <button class="button" type="submit" id="continue-button">@Messages("pla.exitSurvey.sendFeedback")</button>
+        <a id="submit-survey-button" href="#" class="button button-start" role="button" onclick="submitExitSurvey()">@Messages("pla.exitSurvey.sendFeedback")</a>
 
     }
 
