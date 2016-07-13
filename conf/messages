@@ -380,6 +380,8 @@ pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divor
 pla.resultSuccess.viewDetails           = You can view details of your protections at any time on the
 pla.resultSuccess.viewDetailsLinkText   = existing protections page
 pla.resultSuccess.print                 = Print this page
+pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
+pla.resultSuccess.exitSurvey            = Your feedback helps us improve.</p><p>(takes 30 seconds to complete)
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful

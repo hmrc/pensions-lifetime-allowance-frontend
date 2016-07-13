@@ -12,4 +12,6 @@
     }
 
     <p>@Html(Messages("pla.resultRejection.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultRejection.viewDetailsLinkText")</a>.</p>
+
+    <p><a href=controllers.routes.ExitSurveyController.exitSurvey>@Messages("pla.resultSuccess.exitSurveyLinkText")</a>@Html(Messages("pla.resultSuccess.exitSurvey"))</p>
 }

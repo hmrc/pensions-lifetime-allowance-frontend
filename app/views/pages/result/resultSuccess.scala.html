@@ -33,6 +33,8 @@
 
 		<p>@Html(Messages("pla.resultSuccess.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultSuccess.viewDetailsLinkText")</a>.</p>
 
+		<p><a href=controllers.routes.ExitSurveyController.exitSurvey>@Messages("pla.resultSuccess.exitSurveyLinkText")</a>@Html(Messages("pla.resultSuccess.exitSurvey"))</p>
+
 		<p><a id="printPage" href="#" onclick="window.print();return false;">@Messages("pla.resultSuccess.print")</a></p>
 	</div>
 }

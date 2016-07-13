@@ -16,6 +16,9 @@
 
 package controllers
 
+import auth.AuthorisedForPLA
+import config.{FrontendAppConfig,FrontendAuthConnector}
+
 import java.util.UUID
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -28,12 +31,14 @@ import models._
 import views.html._
 
 object ExitSurveyController extends ExitSurveyController {
-     
+    override lazy val applicationConfig = FrontendAppConfig
+    override lazy val authConnector = FrontendAuthConnector
+    override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 }
 
-trait ExitSurveyController extends FrontendController {
+trait ExitSurveyController extends FrontendController with AuthorisedForPLA{
 
-    val exitSurvey = Action.async { implicit request =>
+    val exitSurvey = AuthorisedByAny.async { implicit user => implicit request =>
         if (request.session.get(SessionKeys.sessionId).isEmpty) {
             Future.successful(Ok(pages.exitSurvey.exitSurvey(exitSurveyForm)))
         } else {
