@@ -28,10 +28,15 @@ pla.links.FP16LinkText                  = Fixed protection 2016
 pla.links.IP16LinkText                  = Individual protection 2016
 pla.links.IP14LinkText                  = Individual protection 2014
 pla.links.ExistingProtectionsLinkText   = View your existing protections
+pla.links.signout                       = Sign out
 
 ## Timeout ##
 pla.timeout.title       = Session closed due to inactivity
 pla.timeout.pageHeading = You have been logged out due to inactivity
+
+## Signout ##
+pla.signOut.title       = Signed out
+pla.signOut.pageHeading = You have successfully signed out of the service.
 
 ## Not Found ##
 pla.notFound.title          = Page not found - 404

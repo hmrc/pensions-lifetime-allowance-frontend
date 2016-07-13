@@ -13,6 +13,7 @@
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
 @import views.html.helpers.phaseBanner
+@import play.api.i18n._
 
 
 @linksElement = {
@@ -28,8 +29,8 @@
 }
 
 @headerNavLinks = {
-  <li><a id="homeNavHref" href="@routes.TimeoutController.timeout"
-         data-journey-click="primary-navigation:Click:Home">Home</a></li>
+  <li><a id="homeNavHref" href="@routes.AccountController.signOut"
+         data-journey-click="primary-navigation:Click:Signout">@Messages("pla.links.signout")</a></li>
 }
 
 @insideHeader = {
