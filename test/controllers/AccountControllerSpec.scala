@@ -34,13 +34,13 @@ class AccountControllerSpec extends UnitSpec with WithFakeApplication{
   val fakeRequest = FakeRequest("GET", "/")
 
   "navigating to signout with an existing session" should {
-    "return 200" in {
     object DataItem extends FakeRequestTo("/", AccountController.signOut, Some(sessionId))
+    "return 200" in {
       status(DataItem.result) shouldBe Status.OK
     }
 
     "return HTML" in {
-      contentType(result) shouldBe Some("text/html")
+      contentType(DataItem.result) shouldBe Some("text/html")
       charset(DataItem.result) shouldBe Some("utf-8")
     }
   }

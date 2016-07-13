@@ -1,5 +1,5 @@
 ## Base ##
-pla.base.appName                = Protect your Lifetime Allowance
+pla.base.appName                = Protect your lifetime allowance
 pla.base.yes                    = Yes
 pla.base.no                     = No
 pla.base.continue               = Continue
@@ -36,7 +36,7 @@ pla.timeout.pageHeading = You have been logged out due to inactivity
 
 ## Signout ##
 pla.signOut.title       = Signed out
-pla.signOut.pageHeading = You have successfully signed out of the service.
+pla.signOut.pageHeading = You have signed out.
 
 ## Not Found ##
 pla.notFound.title          = Page not found - 404
