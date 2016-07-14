@@ -11,14 +11,14 @@ GET         /sign-out                                           controllers.Acco
 GET         /technical-error/:pType                             controllers.FallbackController.technicalError(pType: String)
 
 ## Apply IP 14 ##
-GET         /ip14-pensions-taken                                controllers.IP2014Controller.ip14PensionsTaken
-POST        /ip14-pensions-taken                                controllers.IP2014Controller.submitIP14PensionsTaken
+GET         /apply-for-ip14-pensions-taken                      controllers.IP2014Controller.ip14PensionsTaken
+POST        /apply-for-ip14-pensions-taken                      controllers.IP2014Controller.submitIP14PensionsTaken
 
-GET         /ip14-pensions-taken-before                         controllers.IP2014Controller.ip14PensionsTakenBefore
-POST        /ip14-pensions-taken-before                         controllers.IP2014Controller.submitIP14PensionsTakenBefore
+GET         /apply-for-ip14-pensions-taken-before               controllers.IP2014Controller.ip14PensionsTakenBefore
+POST        /apply-for-ip14-pensions-taken-before               controllers.IP2014Controller.submitIP14PensionsTakenBefore
 
-GET         /ip14-pensions-taken-between                        controllers.IP2014Controller.ip14PensionsTakenBetween
-POST        /ip14-pensions-taken-between                        controllers.IP2014Controller.submitIP14PensionsTakenBetween
+GET         /apply-for-ip14-pensions-taken-between              controllers.IP2014Controller.ip14PensionsTakenBetween
+POST        /apply-for-ip14-pensions-taken-between              controllers.IP2014Controller.submitIP14PensionsTakenBetween
 
 GET         /apply-for-ip14-overseas-pensions                   controllers.IP2014Controller.ip14OverseasPensions
 POST        /apply-for-ip14-overseas-pensions                   controllers.IP2014Controller.submitIP14OverseasPensions
@@ -39,14 +39,14 @@ GET         /apply-for-ip14-submit-your-application             controllers.Summ
 
 
 ## Apply IP 16 ##
-GET         /pensions-taken                                     controllers.IP2016Controller.pensionsTaken
-POST        /pensions-taken                                     controllers.IP2016Controller.submitPensionsTaken
+GET         /apply-for-ip16-pensions-taken                      controllers.IP2016Controller.pensionsTaken
+POST        /apply-for-ip16-pensions-taken                      controllers.IP2016Controller.submitPensionsTaken
 
-GET         /pensions-taken-before                              controllers.IP2016Controller.pensionsTakenBefore
-POST        /pensions-taken-before                              controllers.IP2016Controller.submitPensionsTakenBefore
+GET         /apply-for-ip16-pensions-taken-before               controllers.IP2016Controller.pensionsTakenBefore
+POST        /apply-for-ip16-pensions-taken-before               controllers.IP2016Controller.submitPensionsTakenBefore
 
-GET         /pensions-taken-between                             controllers.IP2016Controller.pensionsTakenBetween
-POST        /pensions-taken-between                             controllers.IP2016Controller.submitPensionsTakenBetween
+GET         /apply-for-ip16-pensions-taken-between              controllers.IP2016Controller.pensionsTakenBetween
+POST        /apply-for-ip16-pensions-taken-between              controllers.IP2016Controller.submitPensionsTakenBetween
 
 GET         /apply-for-ip16-overseas-pensions                   controllers.IP2016Controller.overseasPensions
 POST        /apply-for-ip16-overseas-pensions                   controllers.IP2016Controller.submitOverseasPensions
@@ -67,12 +67,12 @@ GET         /apply-for-ip16-submit-your-application             controllers.Summ
 
 
 ## Confirmation ##
-GET         /confirm-fp                                         controllers.ConfirmationController.confirmFP
+GET         /apply-for-fp16                                     controllers.ConfirmationController.confirmFP
 
 
 ## Result ##
-POST        /result-fp                                          controllers.ResultController.processFPApplication
-POST        /result-ip                                          controllers.ResultController.processIPApplication
+POST        /result-fp16                                        controllers.ResultController.processFPApplication
+POST        /result-ip16                                        controllers.ResultController.processIPApplication
 POST        /result-ip14                                        controllers.ResultController.processIP14Application
 GET         /existing-protections                               controllers.ReadProtectionsController.currentProtections
 
