@@ -7,3 +7,7 @@
 .protection-details {
     color: #6F777B;
 }
+
+.noBottomMargin {
+    margin-bottom: 0px;
+}

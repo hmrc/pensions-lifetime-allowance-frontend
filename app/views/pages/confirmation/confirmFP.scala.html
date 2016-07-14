@@ -6,6 +6,7 @@
     <div class="service-info">
         <h2>@Messages("pla.base.readMore")</h2>
         <ul>
+            <li><a id="lifetimeAllowance" href="https://www.gov.uk/tax-on-your-private-pension/lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.lifetimeAllowance")</a></li>
             <li><a id="fp2016" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.fixedProtection2016")</a></li>
         </ul>
     </div>
@@ -19,22 +20,19 @@
 
     <ul class="list list-bullet">
         <li>@Messages("pla.confirmFP16.bulletOne")</li>
+        <li>@Messages("pla.confirmFP16.bulletTwo")</li>
+        <li>@Messages("pla.confirmFP16.bulletThree")</li>
+        <li>@Messages("pla.confirmFP16.bulletFour")</li>
     </ul>
 
-    <div class="notice">
-        <p>
-            <i class="icon exclamation">
-                <span class="visuallyhidden">Warning</span>
-            </i>
-            <strong class="bold-small">
-                @Messages("pla.confirmFP16.warning")
-            </strong>
-        </p>
-    </div>
+    <p>@Messages("pla.confirmFP16.paraTwo")</p>
+
+    <p>@Messages("pla.confirmFP16.paraThree")</p>
+
 
     @govHelpers.form(action = routes.ResultController.processFPApplication) {
         
-        <button class="button" type="submit" id="apply">@Messages("pla.base.apply")</button>
+        <button class="button" type="submit" id="apply">@Messages("pla.base.submitApplication")</button>
     }
 
 }
