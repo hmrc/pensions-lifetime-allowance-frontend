@@ -1,0 +1,47 @@
+@*
+* Copyright 2015 HM Revenue & Customs
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*   http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*@
+
+@(field: Field, args: (Symbol,Any)*)(implicit lang: play.api.i18n.Lang)
+
+@import play.api.i18n._
+@import views.html.helper._
+
+@elements = @{ new FieldElements(field.id, field, null, args.toMap, lang) }
+@parentField = @{args.toMap.get('parentField).asInstanceOf[Option[Field]]}
+
+@parentElements = @{parentField.map(pf => new FieldElements(pf.id, pf, null, Map(), lang) )}
+
+@labelAfter = @{ elements.args.get('_labelAfter).getOrElse(false).asInstanceOf[Boolean] }
+
+<label for="@elements.field.id" class="@elements.args.get('_divClass) @if( elements.args.get('_labelClass) ){ @elements.args.get('_labelClass) } @if(elements.hasErrors || (parentElements.isDefined && parentElements.get.hasErrors)) {form-group error}">
+    @if(!labelAfter && elements.args.contains('_label)) { <span @if(elements.args.contains('_id)) {
+        id="@elements.args.get('_id)"
+    } class="form-label text">@elements.label</span> }
+    @elements.errors.map { error => <span id="@{elements.field.id}--error" class="error-notification">@Messages(error)</span>}
+    @if(parentElements.isDefined) {
+    @parentElements.get.errors.map { error => <span id="@{elements.field.id}--error" class="error-notification">@Messages(error)</span>}
+    }
+    @if( elements.args.get('_info) ) { <p>@elements.args.get('_info)</p> }
+    <textarea
+    @if( elements.args.get('_inputClass) ){ class="@elements.args.get('_inputClass)" } else { class="form-control input--medium"}
+    name="@elements.field.name"
+    @if( elements.args.get('_maxlength) ){ maxlength="@elements.args.get('_maxlength)" }
+    @if( elements.args.get('_cols) ){ cols="@elements.args.get('_cols)" }
+    @if( elements.args.get('_rows) ){ rows="@elements.args.get('_rows)" }
+    id="@elements.field.id">@field.value</textarea>
+    @if(labelAfter && elements.args.contains('_label)) { @elements.label }
+    @if(elements.args.contains('_help)) { <small>@elements.infos</small> }
+</label>
