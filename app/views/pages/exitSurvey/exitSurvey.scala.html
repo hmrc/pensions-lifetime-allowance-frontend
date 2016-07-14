@@ -1,6 +1,6 @@
 @import models.ExitSurveyModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.{formHiddenYesNoRadio,plaInputRadioGroup,checkbox,textArea}
+@import helpers.templates.{formHiddenYesNoRadioExitSurvey,plaInputRadioGroup,checkbox}
 @import play.api.data._
 
 @(exitSurveyForm: Form[ExitSurveyModel])(implicit request: Request[_])
@@ -15,7 +15,7 @@
             "Don't know"->"Don't know"),
         '_labelAfter -> true,
         '_labelClass -> "block-label",
-        '_legend -> Messages("pla.exitSurvey.hiddenQ1")
+        '_legend -> Html(Messages("pla.exitSurvey.hiddenQ1"))
     )
 }
 
@@ -23,22 +23,18 @@
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/exitSurvey.js")'></script>
 }
 
-@main_template(Messages("pla.exitSurvey.title"), scriptElem=Some(scriptElement)) {
+@views.html.full_width_template(Messages("pla.exitSurvey.title"), scriptElem=Some(scriptElement)) {
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), exitSurveyForm)
 
-    <h1 class="heading-xlarge">@Messages("pla.exitSurvey.pageHeading")</h1>
-
-    @Html(Messages("pla.exitSurvey.signInAgain"))
-
-    <h2 class="heading-large">@Messages("pla.exitSurvey.surveyHeading")</h2>
+    <h1 class="heading-large">@Messages("pla.exitSurvey.pageHeading")</h1>
 
     @govHelpers.form(action = routes.ExitSurveyController.exitSurvey) {
 
-        @formHiddenYesNoRadio(
+        @formHiddenYesNoRadioExitSurvey(
             exitSurveyForm,
             "phoneOrWrite",
-            Messages("pla.exitSurvey.question1"),
+            Html(Messages("pla.exitSurvey.question1")),
             hiddenYesNoContent,
             Some("")
         )
@@ -54,7 +50,7 @@
                 "May need help" ->"Don't know",
                 "Something else" ->"Other"),
                 '_groupClass -> "form-group",
-                '_legend -> Messages("pla.exitSurvey.question2"),
+                '_legend -> Html(Messages("pla.exitSurvey.question2")),
                 '_fieldsetAttributes -> "id=anythingElse"
         )
 
@@ -69,7 +65,7 @@
             ),
             '_labelAfter -> true,
             '_labelClass -> "block-label",
-            '_legend -> Messages("pla.exitSurvey.question3"),
+            '_legend -> Html(Messages("pla.exitSurvey.question3")),
             '_groupClass -> "form-group"
         )
 
@@ -84,20 +80,13 @@
             ),
             '_labelAfter -> true,
             '_labelClass -> "block-label",
-            '_legend -> Messages("pla.exitSurvey.question4"),
+            '_legend -> Html(Messages("pla.exitSurvey.question4")),
             '_groupClass -> "form-group"
         )
 
-        @textArea(
-            exitSurveyForm("improvements"),
-            args =
-                '_rows -> 3,
-                '_label -> Messages("pla.exitSurvey.improvements"),
-                '_help -> Messages("pla.exitSurvey.maxCharacters"),
-                '_maxlength -> 1200
-        )
+        <p class="bold-small">@Messages("pla.exitSurvey.writeFeedback")</p>
 
-        <a id="submit-survey-button" href="#" class="button button-start" role="button" onclick="submitExitSurvey()">@Messages("pla.exitSurvey.sendFeedback")</a>
+        <a id="submit-survey-button" href=@controllers.routes.AccountController.signOut class="button button-start" role="button" onclick="submitExitSurvey()">@Messages("pla.exitSurvey.sendFeedback")</a>
 
     }
 
