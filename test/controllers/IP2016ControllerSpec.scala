@@ -1004,7 +1004,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "return 400" in { status(DataItem.result) shouldBe 400 }
 
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include ("Real number value expected")
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("error.real"))
             }
         }
 
