@@ -386,12 +386,27 @@ pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divor
 pla.resultSuccess.viewDetails           = You can view details of your protections at any time on the
 pla.resultSuccess.viewDetailsLinkText   = existing protections page
 pla.resultSuccess.print                 = Print this page
+pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
+pla.resultSuccess.exitSurvey            = Your feedback helps us improve.</p><p>(takes 30 seconds to complete)
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
 pla.resultRejection.pageHeading           = Your application was unsuccessful
 pla.resultRejection.viewDetails           = You can view details of your protections at any time on the
 pla.resultRejection.viewDetailsLinkText   = existing protections page
+
+## Exit Survey ##
+pla.exitSurvey.title                                    = Exit survey
+pla.exitSurvey.pageHeading                              = Before you go, please answer some questions to help us improve your experience
+pla.exitSurvey.question1                                = <p class="bold-small">Before using your tax account, were you going to phone or write to HMRC about your query?</p>
+pla.exitSurvey.hiddenQ1                                 = <p class="bold-small">After using your tax account, do you need to phone or write to HMRC?</p>
+pla.exitSurvey.hiddenQ2                                 = <p class="bold-small">After using your tax account, do you now need to phone or write to HMRC?</p>
+pla.exitSurvey.question2                                = <p class="bold-small">Based on what you have done today, do you need to do anything else? You can tick more than one box.</p>
+pla.exitSurvey.question3                                = <p class="bold-small">How likely are you to recommend your tax account to your friends or family?</p>
+pla.exitSurvey.question4                                = <p class="bold-small">Overall, how do you feel about your experience using your tax account today?</p>
+pla.exitSurvey.writeFeedback                            = If you have any additional comments please use the feedback link at the top of the page.
+pla.exitSurvey.sendFeedback                             = Send feedback
+
 
 
 ### RESULTS MESSAGES ###
