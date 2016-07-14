@@ -93,7 +93,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the ip14 pensions taken page" in {
                 keystoreFetchCondition[PensionsTakenModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTaken.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14PensionsTaken.pageHeading")
             }
         }
 
@@ -108,7 +108,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the pensions taken page" in {
                 keystoreFetchCondition[PensionsTakenModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTaken.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14PensionsTaken.pageHeading")
             }
 
             "return some HTML that" should {
@@ -530,7 +530,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the ip14 current pensions page" in {
                 keystoreFetchCondition[CurrentPensionsModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14CurrentPensions.pageHeading")
             }
         }
 
@@ -545,7 +545,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the ip14Current pensions page" in {
                 keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14CurrentPensions.pageHeading")
             }
 
             "return some HTML that" should {
