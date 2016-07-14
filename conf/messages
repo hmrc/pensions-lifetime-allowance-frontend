@@ -10,13 +10,17 @@ pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
 pla.base.startAgain             = Start Again
 pla.base.errorSummaryLabel      = There are errors on this page.
-pla.base.errors.invalidDate     = Enter a valid date
+pla.base.errors.invalidDate     = Enter a date in the correct format eg 14 6 2016
 pla.base.errors.yearEmpty       = Enter a year
 pla.base.errors.monthEmpty      = Enter a month
 pla.base.errors.dayEmpty        = Enter a day
 pla.base.date.fields.day        = Day
 pla.base.date.fields.month      = Month
 pla.base.date.fields.year       = Year
+
+## PLAY! Error Overrides ##
+error.number                            = Enter a number without commas, for example 10000.00
+error.real                              = Enter a number without commas, for example 10000.00
 
 ## Link Text ##
 pla.links.lifetimeAllowance             = Lifetime Allowance
@@ -60,21 +64,21 @@ pla.ip14PensionSavings.pageHeading              = Value of your pensions
 pla.ip14PensionSavings.paraOne                  = On 5 April 2014, were your total pension savings over £1.25 million?
 pla.ip14PensionSavings.help                     = Include UK pensions and overseas pensions which gained UK tax relief.
 pla.ip14PensionSavings.paraTwo                  = For defined benefit schemes, your pension value is usually 20 times the annual amount payable, plus any additional lump sums.
-pla.ip14PensionSavings.mandatoryErr             = Please tell us if your pension savings were £1.25 million or more on 5 April 2014
+pla.ip14PensionSavings.mandatoryErr             = Please answer this question
 
 ## Will be Adding to Your Pension ##
 pla.addingToPension.title                  = Add to pension
 pla.addingToPension.pageHeading            = Will you be adding to your pension?
 pla.addingToPension.paraOne                = Will you, or anyone else, be adding to your pension in the future?
 pla.addingToPension.help                   = This includes pension contributions or gaining more benefits in a final salary scheme.
-pla.addingToPension.mandatoryErr           = Please tell us whether you''ll be adding to your pension in the future
+pla.addingToPension.mandatoryErr           = Please answer this question
 
 ## Have You Added to Your Pension ##
 pla.addedToPension.title                = Added to pension
 pla.addedToPension.pageHeading          = Have you added to your pension?
 pla.addedToPension.paraOne              = Have you added to your pension since 6 April 2016?
 pla.addedToPension.help                 = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
-pla.addedToPension.mandatoryErr         = Please tell us whether you''ve added to your pension since 6 April 2016
+pla.addedToPension.mandatoryErr         = Please answer this question
 
 ## Pension Savings ##
 pla.pensionSavings.title                    = Pension savings
@@ -82,7 +86,7 @@ pla.pensionSavings.pageHeading              = Value of your pensions
 pla.pensionSavings.paraOne                  = Were your total pension savings worth £1 million or more on 5 April 2016?
 pla.pensionSavings.help                     = This includes UK pensions and overseas pensions which gained UK tax relief.
 pla.pensionSavings.paraTwo                  = For defined benefit schemes, such as ''final salary schemes'', the value is normally 20 times the pension you get in the first year plus your lump sum.
-pla.pensionSavings.mandatoryErr             = Please tell us if your pension savings were £1 million or more on 5 April 2016
+pla.pensionSavings.mandatoryErr             = Please answer this question
 
 ## Apply for IP 2014 ##
 pla.applyIP14.title       = Apply for IP 2014
@@ -166,7 +170,7 @@ pla.api.badRequest              = There was an error processing the client''s re
 pla.pensionsTaken.pageHeading               = Pensions you''ve taken
 pla.pensionsTaken.title                     = Pensions Taken
 pla.pensionsTaken.question                  = Have you taken any of your pensions?
-pla.pensionsTaken.mandatoryErr              = Please tell us if you have taken any of your pensions
+pla.pensionsTaken.mandatoryErr              = Please answer this question
 
 ## Pensions Taken Before ##
 pla.pensionsTakenBefore.pageHeading         = Pensions taken before 6 April 2006
@@ -174,10 +178,10 @@ pla.pensionsTakenBefore.title               = Pensions Taken Before 6 April 2006
 pla.pensionsTakenBefore.question            = Did you start taking any of your pensions before 6 April 2006?
 pla.pensionsTakenBefore.questionTwo         = How much lifetime allowance did you use?
 pla.pensionsTakenBefore.helpText            = Ask your pension provider to give you this amount
-pla.pensionsTakenBefore.errorQuestion       = Enter a value for the amount of your pension you have taken
-pla.pensionsTakenBefore.errorNegative       = Enter a positive number for the amount of your pension you have taken
-pla.pensionsTakenBefore.errorMaximum        = The amount of your pension you have taken must be less than £99,999,999,999,999.98
-pla.pensionsTakenBefore.errorDecimalPlaces  = The value you have entered has too many decimal places
+pla.pensionsTakenBefore.errorQuestion       = Enter an amount in the correct format eg £500000
+pla.pensionsTakenBefore.errorNegative       = Enter an amount that''s £0 or more
+pla.pensionsTakenBefore.errorMaximum        = Enter an amount less than £99,999,999,999,999,98
+pla.pensionsTakenBefore.errorDecimalPlaces  = The amount you''ve entered has too many decimal places
 
 ## Pensions Taken Between ##
 pla.pensionsTakenBetween.pageHeading        = Pensions taken between 6 April 2006 and 5 April 2016
@@ -185,10 +189,10 @@ pla.pensionsTakenBetween.title              = Pensions Taken Between 6 April 200
 pla.pensionsTakenBetween.question           = Did you take any pensions between 6 April 2006 and 5 April 2016?
 pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance did you use?
 pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
-pla.pensionsTakenBetween.errorQuestion      = Enter a value for the amount of your pension you have taken
-pla.pensionsTakenBetween.errorNegative      = Enter a positive number for the amount of your pension you have taken
-pla.pensionsTakenBetween.errorMaximum       = The amount of your pension you have taken must be less than £99,999,999,999,999.98
-pla.pensionsTakenBetween.errorDecimalPlaces = The value you have entered has too many decimal places
+pla.pensionsTakenBetween.errorQuestion      = Enter an amount in the correct format eg £500000
+pla.pensionsTakenBetween.errorNegative      = Enter an amount that''s £0 or more
+pla.pensionsTakenBetween.errorMaximum       = Enter an amount less than £99,999,999,999,999,98
+pla.pensionsTakenBetween.errorDecimalPlaces = The amount you''ve entered has too many decimal places
 
 ## IP14 Pensions Taken Between ##
 pla.ip14PensionsTakenBetween.pageHeading    = Pensions taken between 6 April 2006 and 5 April 2014
@@ -201,10 +205,10 @@ pla.overseasPensions.title                  = Overseas Pensions
 pla.overseasPensions.question               = Do you have any overseas pensions which you''ve not yet taken?
 pla.overseasPensions.helpText               = Only include overseas pensions which gained UK tax relief
 pla.overseasPensions.questionTwo            = Enter the value on 5 April 2016
-pla.overseasPensions.errorQuestion          = Enter a value for the amount of overseas pensions you''ve not yet taken
-pla.overseasPensions.errorNegative          = Enter a positive number for the amount of overseas pensions you''ve not yet taken
-pla.overseasPensions.errorMaximum           = The amount of overseas pensions you''ve not yet taken must be less than £99,999,999,999,999.98
-pla.overseasPensions.errorDecimalPlaces     = The value you have entered has too many decimal places
+pla.overseasPensions.errorQuestion          = Enter an amount in the correct format eg £500000
+pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
+pla.overseasPensions.errorMaximum           = Enter an amount less than £99,999,999,999,999,98
+pla.overseasPensions.errorDecimalPlaces     = The amount you''ve entered has too many decimal places
 pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
 
 ## IP14 Overseas Pensions ##
@@ -215,10 +219,10 @@ pla.currentPensions.pageHeading             = Current pensions
 pla.currentPensions.title                   = Current Pensions
 pla.currentPensions.question                = Enter the value of your current UK pensions on 5 April 2016
 pla.currentPensions.helpText                = This is pensions which you''ve not yet taken
-pla.currentPensions.errorQuestion           = Enter a value for the amount of current pensions you''ve not yet taken
-pla.currentPensions.errorNegative           = Enter a positive number for the amount of current pensions you''ve not yet taken
-pla.currentPensions.errorMaximum            = The amount of current pensions you''ve not yet taken must be less than £99,999,999,999,999.98
-pla.currentPensions.errorDecimalPlaces      = The value you have entered has too many decimal places
+pla.currentPensions.errorQuestion           = Enter an amount in the correct format eg £500000
+pla.currentPensions.errorNegative           = Enter an amount that''s £0 or more
+pla.currentPensions.errorMaximum            = Enter an amount less than £99,999,999,999,999,98
+pla.currentPensions.errorDecimalPlaces      = The amount you''ve entered has too many decimal places
 pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
 
 ## IP14 CURRENT PENSIONS ##
@@ -229,7 +233,7 @@ pla.pensionDebits.pageHeading               = Pensions shared in a divorce
 pla.pensionDebits.title                     = Pension Sharing Orders
 pla.pensionDebits.question                  = Have any of your pensions been subject to a pension sharing order?
 pla.pensionDebits.helpText                  = This is where a court orders that your pensions are shared with an ex-partner
-pla.pensionDebits.mandatoryErr              = Please tell us if you have any pension sharing orders
+pla.pensionDebits.mandatoryErr              = Please answer this question
 
 ## IP14 PENSION DEBITS ##
 pla.ip14PensionDebits.pageHeading           = Pensions shared in a divorce
@@ -257,14 +261,14 @@ pla.psoDetails.pageHeading3                 = Third pension sharing order
 pla.psoDetails.pageHeading4                 = Fourth pension sharing order
 pla.psoDetails.pageHeading5                 = Fifth pension sharing order
 pla.psoDetails.dateQuestionText             = Date of pension sharing order
-pla.psoDetails.dateHintText                 = For example, 14 9 2015
+pla.psoDetails.dateHintText                 = For example, 18 4 2016
 pla.psoDetails.psoAmountQuestion            = Amount
-pla.psoDetails.errorNegative                = Enter a positive number for the amount of your pension sharing order
-pla.psoDetails.errorMaximum                 = The amount of your pension sharing order must be less than £99,999,999,999,999.98
-pla.psoDetails.errorDecimalPlaces           = The pension sharing order value you have entered has too many decimal places
+pla.psoDetails.errorNegative                = Enter an amount that''s £0 or more
+pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999,98
+pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
 
-pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date after 6 April 2014
-pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date after 6 April 2016
+pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date after 5 April 2014
+pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date after 5 April 2016
 
 
 ## SUMMARY ##
