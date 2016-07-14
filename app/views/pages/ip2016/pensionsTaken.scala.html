@@ -5,14 +5,30 @@
 
 @(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_])
 
+@sidebar = {
+    <div class="service-info">
+        <h2>@Messages("pla.base.readMore")</h2>
+        <ul>
+            <li><a id="lifetimeAllowanceLink" href="https://www.gov.uk/tax-on-your-private-pension/lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.lifetimeAllowance")</a></li>
+            <li><a id="ip16Link" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.individualProtection2016")</a></li>
+        </ul>
+    </div>
+}
 
-@views.html.main_template(title = Messages("pla.pensionsTaken.title"), bodyClasses = None) {
+
+@views.html.main_template(title = Messages("pla.pensionsTaken.title"), bodyClasses = None, sidebarLinks = Some(sidebar)) {
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenForm
     )
 
-    <h1 class="heading-xlarge">@Messages("pla.pensionsTaken.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("pla.pensionsTaken.pageHeading")</h1>
+
+    <ul class="list list-bullet">
+        <li>@Messages("pla.pensionsTaken.bulletOne")</li>
+        <li>@Messages("pla.pensionsTaken.bulletTwo")</li>
+        <li>@Messages("pla.pensionsTaken.bulletThree")</li>
+    </ul>
 
     @govHelpers.form(action = routes.IP2016Controller.submitPensionsTaken) {
 
@@ -23,8 +39,7 @@
                     "yes"->Messages("pla.base.yes"),
                     "no"->Messages("pla.base.no")),
                 '_labelAfter -> true,
-                '_labelClass -> "block-label",
-                '_legend -> Messages("pla.pensionsTaken.question")
+                '_labelClass -> "block-label"
             )
         </div>
 

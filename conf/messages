@@ -163,17 +163,18 @@ pla.insuffInfo.returnToPTA                  = Alternatively, you can <a href="ht
 pla.api.badRequest              = There was an error processing the client''s request
 
 ## Pensions Taken ##
-pla.pensionsTaken.pageHeading               = Pensions you''ve taken
-pla.pensionsTaken.title                     = Pensions Taken
-pla.pensionsTaken.question                  = Have you taken any of your pensions?
-pla.pensionsTaken.mandatoryErr              = Please tell us if you have taken any of your pensions
+pla.pensionsTaken.pageHeading               = Did any of the following happen before 5 April 2016?
+pla.pensionsTaken.title                     = Did any of the following happen before 5 April 2016?
+pla.pensionsTaken.bulletOne                 = You got money from your pensions
+pla.pensionsTaken.bulletTwo                 = You transferred a pension to a scheme held overseas
+pla.pensionsTaken.bulletThree               = You turned 75 with pension savings which you hadn''t yet taken
+pla.pensionsTaken.mandatoryErr              = This field is required
 
 ## Pensions Taken Before ##
-pla.pensionsTakenBefore.pageHeading         = Pensions taken before 6 April 2006
-pla.pensionsTakenBefore.title               = Pensions Taken Before 6 April 2006
-pla.pensionsTakenBefore.question            = Did you start taking any of your pensions before 6 April 2006?
-pla.pensionsTakenBefore.questionTwo         = How much lifetime allowance did you use?
-pla.pensionsTakenBefore.helpText            = Ask your pension provider to give you this amount
+pla.pensionsTakenBefore.pageHeading         = Did you get an income from any of your pensions before 6 April 2006?
+pla.pensionsTakenBefore.title               = Did you get an income from any of your pensions before 6 April 2006?
+pla.pensionsTakenBefore.questionTwo         = What''s the value of the pensions you took before 6 April 2006?
+pla.pensionsTakenBefore.helpText            = Ask your pension providers for a valuation for individual protection 2016
 pla.pensionsTakenBefore.errorQuestion       = Enter a value for the amount of your pension you have taken
 pla.pensionsTakenBefore.errorNegative       = Enter a positive number for the amount of your pension you have taken
 pla.pensionsTakenBefore.errorMaximum        = The amount of your pension you have taken must be less than £99,999,999,999,999.98
