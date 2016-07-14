@@ -43,10 +43,9 @@ object PSODetailsForm {
       )
   }
 
+  // returns true if the passed form already contains an error with the key from any of the date fields
   private def dateFieldsAlreadyInvalid(form: Form[PSODetailsModel]): Boolean = {
-    List("psoDay","psoMonth","psoYear").map{ keyValue =>
-      if(form.errors.map(_.key).contains(keyValue)) true
-    }.contains(true)
+    form.errors.map(_.key).exists(List("psoDay","psoMonth","psoYear").contains(_))
   }
 
   val psoDetailsForm = Form(
