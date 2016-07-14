@@ -73,7 +73,7 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
 
         "supplied with a pre-existing stored model" should {
             object DataItem extends AuthorisedFakeRequestTo(TestExitSurveyController.exitSurvey)
-            val testModel = new ExitSurveyModel(Some("no"), Some("no"),Some("no"),Some("no"),Some("no"),Some("no"))
+            val testModel = new ExitSurveyModel(Some("no"), Some("no"),Some("no"),Some("no"),Some("no"))
             "return a 200" in {
                 status(DataItem.result) shouldBe 200
             }

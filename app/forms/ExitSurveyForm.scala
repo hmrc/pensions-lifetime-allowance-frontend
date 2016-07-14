@@ -30,8 +30,7 @@ object ExitSurveyForm {
       "phoneOrWriteNow" -> optional(text),
       "anythingElse" -> optional(text),
       "recommend" -> optional(text),
-      "satisfaction" -> optional(text),
-      "improvements" -> optional(text)
+      "satisfaction" -> optional(text)
     )(ExitSurveyModel.apply)(ExitSurveyModel.unapply)
   )
 }

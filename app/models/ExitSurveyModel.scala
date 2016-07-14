@@ -16,6 +16,6 @@
 
 package models
 
-case class ExitSurveyModel(phoneOrWrite: Option[String], phoneOrWriteNow: Option[String], anythingElse: Option[String], recommend: Option[String], satisfaction: Option[String], improvements: Option[String]) {
+case class ExitSurveyModel(phoneOrWrite: Option[String], phoneOrWriteNow: Option[String], anythingElse: Option[String], recommend: Option[String], satisfaction: Option[String]) {
 
 }
