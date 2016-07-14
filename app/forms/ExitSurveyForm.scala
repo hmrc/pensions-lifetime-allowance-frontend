@@ -26,12 +26,12 @@ import common.Validation._
 object ExitSurveyForm {
   val exitSurveyForm = Form(
     mapping(
-      "phoneOrWrite" -> optional(text).verifying(Messages("pla.addedToPension.mandatoryErr"), {_.isDefined}),
-      "phoneOrWriteNow" -> optional(text).verifying(Messages("pla.addedToPension.mandatoryErr"), {_.isDefined}),
-      "anythingElse" -> optional(text).verifying(Messages("pla.addedToPension.mandatoryErr"), {_.isDefined}),
-      "recommend" -> optional(text).verifying(Messages("pla.addedToPension.mandatoryErr"), {_.isDefined}),
-      "satisfaction" -> optional(text).verifying(Messages("pla.addedToPension.mandatoryErr"), {_.isDefined}),
-      "improvements" -> optional(text).verifying(Messages("pla.addedToPension.mandatoryErr"), {_.isDefined})
+      "phoneOrWrite" -> optional(text),
+      "phoneOrWriteNow" -> optional(text),
+      "anythingElse" -> optional(text),
+      "recommend" -> optional(text),
+      "satisfaction" -> optional(text),
+      "improvements" -> optional(text)
     )(ExitSurveyModel.apply)(ExitSurveyModel.unapply)
   )
 }

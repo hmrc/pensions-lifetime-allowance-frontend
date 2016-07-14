@@ -30,7 +30,9 @@ import testHelpers._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import scala.concurrent.Future
+import config.{FrontendAppConfig,FrontendAuthConnector}
 import models._
+import auth._
 
 
 class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -39,7 +41,13 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
     val sessionId = UUID.randomUUID.toString
     val fakeRequest = FakeRequest("GET", "/protect-your-lifetime-allowance/")
     val TestExitSurveyController = new ExitSurveyController {
+        override lazy val applicationConfig = FrontendAppConfig
+        override lazy val authConnector = MockAuthConnector
+        override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
+    }
 
+    "ExitSurveyController should be correctly initialised" in {
+        ExitSurveyController.authConnector shouldBe FrontendAuthConnector
     }
 
     "Calling the .exitSurvey action" when {
@@ -47,17 +55,13 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
         "visited directly with no session ID" should {
             object DataItem extends FakeRequestTo("exit", TestExitSurveyController.exitSurvey, None)
 
-            "return 200" in {
-                status(DataItem.result) shouldBe 200
-            }
-
-            "redirect to exit survey page" in {
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.ExitSurveyController.exitSurvey()}")
+            "return 303" in {
+                status(DataItem.result) shouldBe 303
             }
         }
 
         "not supplied with a pre-existing stored model" should {
-            object DataItem extends FakeRequestTo("exit", TestExitSurveyController.exitSurvey, Some(sessionId))
+            object DataItem extends AuthorisedFakeRequestTo(TestExitSurveyController.exitSurvey)
             "return a 200" in {
                 status(DataItem.result) shouldBe 200
             }
@@ -68,7 +72,7 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
         }
 
         "supplied with a pre-existing stored model" should {
-            object DataItem extends FakeRequestTo("exit", TestExitSurveyController.exitSurvey, Some(sessionId))
+            object DataItem extends AuthorisedFakeRequestTo(TestExitSurveyController.exitSurvey)
             val testModel = new ExitSurveyModel(Some("no"), Some("no"),Some("no"),Some("no"),Some("no"),Some("no"))
             "return a 200" in {
                 status(DataItem.result) shouldBe 200
@@ -83,10 +87,6 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
                 "contain some text and use the character set utf-8" in {
                     contentType(DataItem.result) shouldBe Some("text/html")
                     charset(DataItem.result) shouldBe Some("utf-8")
-                }
-
-                "have the radio option `no` selected by default" in {
-                    DataItem.jsoupDoc.body.getElementById("phoneOrWrite-no").parent.classNames().contains("selected") shouldBe true
                 }
             }
         }

@@ -39,10 +39,6 @@ object ExitSurveyController extends ExitSurveyController {
 trait ExitSurveyController extends FrontendController with AuthorisedForPLA{
 
     val exitSurvey = AuthorisedByAny.async { implicit user => implicit request =>
-        if (request.session.get(SessionKeys.sessionId).isEmpty) {
-            Future.successful(Ok(pages.exitSurvey.exitSurvey(exitSurveyForm)))
-        } else {
-            Future.successful(Ok(pages.exitSurvey.exitSurvey(exitSurveyForm)))
-        }
+        Future.successful(Ok(pages.exitSurvey.exitSurvey(exitSurveyForm)))
     }
 }
