@@ -30,7 +30,7 @@ object IPApplicationConstructor {
 
   def createIPApplication(data: CacheMap)(implicit protectionType: ApplicationType.Value) : IPApplicationModel = {
 
-    assert(Validation.validIPData(data), Logger.error(s"Invalid application data provided to createIPApplication for $protectionType. Data: $data"))
+    assert(Validation.validIPData(data), s"Invalid application data provided to createIPApplication for $protectionType. Data: $data")
 
     // uncrystallised Rights- current pensions
     val uncrystallisedRightsAmount = data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt

@@ -28,7 +28,8 @@ object PSODetailsForm {
 
   def validateForm(form: Form[PSODetailsModel]): Form[PSODetailsModel] = {
     val (day, month, year) = getFormDateValues(form)
-    if(!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
+    if(dateFieldsAlreadyInvalid(form)) form
+    else if(!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
     else if(dateBefore(day, month, year, Constants.minIP16PSODate)) form.withError("psoDay", Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
     else form
   }
@@ -40,6 +41,11 @@ object PSODetailsForm {
       form("psoMonth").value.getOrElse("0").toIntOpt.getOrElse(0),
       form("psoYear").value.getOrElse("0").toIntOpt.getOrElse(0)
       )
+  }
+
+  // returns true if the passed form already contains an error with the key from any of the date fields
+  private def dateFieldsAlreadyInvalid(form: Form[PSODetailsModel]): Boolean = {
+    form.errors.map(_.key).exists(List("psoDay","psoMonth","psoYear").contains(_))
   }
 
   val psoDetailsForm = Form(
