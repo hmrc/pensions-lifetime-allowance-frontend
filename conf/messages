@@ -23,8 +23,8 @@ error.number                            = Enter a number without commas, for exa
 error.real                              = Enter a number without commas, for example 10000.00
 
 ## Link Text ##
-pla.links.lifetimeAllowance             = Lifetime Allowance
-pla.links.protectLifetimeAllowance      = Lifetime Allowance protection schemes
+pla.links.lifetimeAllowance             = Lifetime allowance
+pla.links.protectLifetimeAllowance      = Lifetime allowance protection schemes
 pla.links.fixedProtection2016           = Fixed protection 2016
 pla.links.individualProtection2016      = Individual protection 2016
 pla.links.individualProtection2014      = Individual protection 2014
@@ -269,7 +269,7 @@ pla.numberOfPSOs.four                       = Four
 pla.numberOfPSOs.five                       = Five
 
 ## Pension Sharing Order Details ##
-pla.psoDetails.title                        = Pension sharing order
+pla.psoDetails.title                        = Pension sharing order 
 pla.psoDetails.psoNumLabel                  = PSO number. Do not change this number
 pla.psoDetails.pageHeading1                 = First pension sharing order
 pla.psoDetails.pageHeading2                 = Second pension sharing order
@@ -383,7 +383,7 @@ pla.protection.statuses.withdrawn                       = Withdrawn
 pla.protection.statuses.expired                         = Expired
 pla.protection.statuses.unsuccessful                    = Unsuccessful
 pla.protection.statuses.rejected                        = Rejected
-pla.protection.statuses.notRecorded                     = No status recorded
+pla.protection.statuses.notRecorded                     = None
 pla.protection.types.FP2016                             = Fixed protection 2016
 pla.protection.types.FP2014                             = Fixed protection 2014
 pla.protection.types.IP2016                             = Individual protection 2016
@@ -391,8 +391,8 @@ pla.protection.types.IP2014                             = Individual protection 
 pla.protection.types.primary                            = Primary protection
 pla.protection.types.enhanced                           = Enhanced protection
 pla.protection.types.fixed                              = Fixed protection
-pla.protection.types.notRecorded                        = No protection type recorded
-pla.protection.protectionReference                      = No protection notification number recorded
+pla.protection.types.notRecorded                        = None
+pla.protection.protectionReference                      = None
 
 ## Result Success ##
 pla.resultSuccess.title                 = Success
