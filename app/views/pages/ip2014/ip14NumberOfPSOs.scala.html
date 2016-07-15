@@ -12,7 +12,7 @@
         Messages("pla.base.errorSummaryLabel"), numberOfPSOsForm
     )
 
-    <h1 class="heading-xlarge">@Messages("pla.numberOfPSOs.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("pla.numberOfPSOs.pageHeading")</h1>
 
     @govHelpers.form(action = routes.IP2014Controller.submitIP14NumberOfPSOs) {
 
@@ -26,8 +26,7 @@
                     "4"-> Messages("pla.numberOfPSOs.four"),
                     "5"-> Messages("pla.numberOfPSOs.five")),
                 '_labelAfter -> true,
-                '_labelClass -> "block-label",
-                '_legend -> Messages("pla.numberOfPSOs.question")
+                '_labelClass -> "block-label"
             )
         </div>
 
