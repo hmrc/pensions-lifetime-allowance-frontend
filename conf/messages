@@ -188,7 +188,7 @@ pla.pensionsTakenBefore.question            = What''s the value of the pensions 
 pla.pensionsTakenBefore.helpText            = Ask your pension providers for a valuation for individual protection 2016
 pla.pensionsTakenBefore.errorQuestion       = Enter an amount in the correct format eg £500000
 pla.pensionsTakenBefore.errorNegative       = Enter an amount that''s £0 or more
-pla.pensionsTakenBefore.errorMaximum        = Enter an amount less than £99,999,999,999,999,98
+pla.pensionsTakenBefore.errorMaximum        = Enter an amount less than £99,999,999,999,999.98
 pla.pensionsTakenBefore.errorDecimalPlaces  = The amount you''ve entered has too many decimal places
 
 ## IP14 Pensions Taken Before ##
@@ -206,7 +206,7 @@ pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance have y
 pla.pensionsTakenBetween.helpText           = Ask your pension providers to tell you the amount of lifetime allowance you''ve used for individual protection 2016
 pla.pensionsTakenBetween.errorQuestion      = Enter an amount in the correct format eg £500000
 pla.pensionsTakenBetween.errorNegative      = Enter an amount that''s £0 or more
-pla.pensionsTakenBetween.errorMaximum       = Enter an amount less than £99,999,999,999,999,98
+pla.pensionsTakenBetween.errorMaximum       = Enter an amount less than £99,999,999,999,999.98
 pla.pensionsTakenBetween.errorDecimalPlaces = The amount you''ve entered has too many decimal places
 
 ## IP14 Pensions Taken Between ##
@@ -222,7 +222,7 @@ pla.overseasPensions.question               = Only include money you put in betw
 pla.overseasPensions.questionTwo            = How much have you put in?
 pla.overseasPensions.errorQuestion          = Enter an amount in the correct format eg £500000
 pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
-pla.overseasPensions.errorMaximum           = Enter an amount less than £99,999,999,999,999,98
+pla.overseasPensions.errorMaximum           = Enter an amount less than £99,999,999,999,999.98
 pla.overseasPensions.errorDecimalPlaces     = The amount you''ve entered has too many decimal places
 
 ## IP14 Overseas Pensions ##
@@ -239,7 +239,7 @@ pla.currentPensions.hiddenText              = Multiply the amount you''ll get ea
 pla.currentPensions.question                = Don''t include any pensions you''ve already taken or the State Pension.
 pla.currentPensions.errorQuestion           = Enter an amount in the correct format eg £500000
 pla.currentPensions.errorNegative           = Enter an amount that''s £0 or more
-pla.currentPensions.errorMaximum            = Enter an amount less than £99,999,999,999,999,98
+pla.currentPensions.errorMaximum            = Enter an amount less than £99,999,999,999,999.98
 pla.currentPensions.errorDecimalPlaces      = The amount you''ve entered has too many decimal places
 pla.currentPensions.helpText                = Ask your pension provider to give you this amount
 
@@ -281,7 +281,7 @@ pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2016
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
 pla.psoDetails.errorNegative                = Enter an amount that''s £0 or more
-pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999,98
+pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
 
 pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date after 5 April 2014
