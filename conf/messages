@@ -252,6 +252,7 @@ pla.ip14CurrentPensions.title               = What were your UK pensions worth o
 pla.pensionDebits.pageHeading               = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.pensionDebits.title                     = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.pensionDebits.paraOne                   = This is called a pension sharing order and is issued by a court.
+pla.pensionDebits.mandatoryErr              = Please answer this question
 
 ## IP14 PENSION DEBITS ##
 pla.ip14PensionDebits.pageHeading           = Have any of your pensions been shared in a divorce since 5 April 2014?
