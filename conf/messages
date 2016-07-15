@@ -27,6 +27,7 @@ pla.links.lifetimeAllowance             = Lifetime Allowance
 pla.links.protectLifetimeAllowance      = Lifetime Allowance protection schemes
 pla.links.fixedProtection2016           = Fixed protection 2016
 pla.links.individualProtection2016      = Individual protection 2016
+pla.links.individualProtection2014      = Individual protection 2014
 pla.links.onlineServicesAccount         = HMRC Online Services account
 pla.links.FP16LinkText                  = Fixed protection 2016
 pla.links.IP16LinkText                  = Individual protection 2016
@@ -117,14 +118,14 @@ pla.applyFP.bulletTwo       = you have a defined benefits pension, such as a fin
 
 ## Confirm FP 2016##
 pla.confirmFP16.title       = Apply for FP 2016
-pla.confirmFP16.pageHeading = Confirm your application
-pla.confirmFP16.paraOne     = Please check the details below and confirm your application.
-pla.confirmFP16.bulletOne   = You have not added to your pension, or accrued benefits, since 6 April 2016
-pla.confirmFP16.warning     = By clicking Apply you declare that this information is true and complete to the best of your knowledge and belief.
-
-pla.confirmFP16.paraTwo     = This will protect your Lifetime Allowance at £1.25 million, but you''ll lose your protection if you add to your pension. You must let us know if this happens.
-pla.confirmFP16.paraThree   = If the standard Lifetime Allowance increases to over £1.25 million in the future, you''ll get the higher amount.
-pla.confirmFP16.signIn      = To apply, you''ll need to sign in to your HMRC online services account, or create one.
+pla.confirmFP16.pageHeading = You''re about to apply for fixed protection 2016
+pla.confirmFP16.paraOne     = I confirm that as at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member, and that at 6 April 2016 I did not hold any of the following protections:
+pla.confirmFP16.bulletOne   = Primary Protection
+pla.confirmFP16.bulletTwo   = Enhanced Protection
+pla.confirmFP16.bulletThree = Fixed Protection
+pla.confirmFP16.bulletFour  = Fixed Protection 2014
+pla.confirmFP16.paraTwo     = I confirm that I have not had a protection cessation event since 6 April 2016 that would mean I am not entitled to apply for Fixed Protection 2016.
+pla.confirmFP16.paraThree   = The information that I have provided is true and complete to the best of my knowledge and belief.
 
 ## Cannot Apply ##
 pla.cannotApply.title       = Don''t need PLA
@@ -166,85 +167,100 @@ pla.insuffInfo.returnToPTA                  = Alternatively, you can <a href="ht
 ## API ##
 pla.api.badRequest              = There was an error processing the client''s request
 
+
 ## Pensions Taken ##
-pla.pensionsTaken.pageHeading               = Pensions you''ve taken
-pla.pensionsTaken.title                     = Pensions Taken
-pla.pensionsTaken.question                  = Have you taken any of your pensions?
+pla.pensionsTaken.pageHeading               = Did any of the following happen before 5 April 2016?
+pla.pensionsTaken.title                     = Did any of the following happen before 5 April 2016?
+pla.pensionsTaken.bulletOne                 = You got money from your pensions
+pla.pensionsTaken.bulletTwo                 = You transferred a pension to a scheme held overseas
+pla.pensionsTaken.bulletThree               = You turned 75 with pension savings which you hadn''t yet taken
 pla.pensionsTaken.mandatoryErr              = Please answer this question
 
+## IP14 Pensions Taken ##
+pla.ip14PensionsTaken.pageHeading               = Did any of the following happen before 5 April 2014?
+pla.ip14PensionsTaken.title                     = Did any of the following happen before 5 April 2014?
+
+
 ## Pensions Taken Before ##
-pla.pensionsTakenBefore.pageHeading         = Pensions taken before 6 April 2006
-pla.pensionsTakenBefore.title               = Pensions Taken Before 6 April 2006
-pla.pensionsTakenBefore.question            = Did you start taking any of your pensions before 6 April 2006?
-pla.pensionsTakenBefore.questionTwo         = How much lifetime allowance did you use?
-pla.pensionsTakenBefore.helpText            = Ask your pension provider to give you this amount
+pla.pensionsTakenBefore.pageHeading         = Did you get an income from any of your pensions before 6 April 2006?
+pla.pensionsTakenBefore.title               = Did you get an income from any of your pensions before 6 April 2006?
+pla.pensionsTakenBefore.question            = What''s the value of the pensions you took before 6 April 2006?
+pla.pensionsTakenBefore.helpText            = Ask your pension providers for a valuation for individual protection 2016
 pla.pensionsTakenBefore.errorQuestion       = Enter an amount in the correct format eg £500000
 pla.pensionsTakenBefore.errorNegative       = Enter an amount that''s £0 or more
 pla.pensionsTakenBefore.errorMaximum        = Enter an amount less than £99,999,999,999,999,98
 pla.pensionsTakenBefore.errorDecimalPlaces  = The amount you''ve entered has too many decimal places
 
+## IP14 Pensions Taken Before ##
+pla.ip14PensionsTakenBefore.helpText        = Ask your pension providers for a valuation for individual protection 2014
+
+
 ## Pensions Taken Between ##
-pla.pensionsTakenBetween.pageHeading        = Pensions taken between 6 April 2006 and 5 April 2016
-pla.pensionsTakenBetween.title              = Pensions Taken Between 6 April 2006 and 5 April 2016
-pla.pensionsTakenBetween.question           = Did you take any pensions between 6 April 2006 and 5 April 2016?
-pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance did you use?
-pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
+pla.pensionsTakenBetween.pageHeading        = Did any of the following happen between 6 April 2006 and 5 April 2016?
+pla.pensionsTakenBetween.title              = Did any of the following happen between 6 April 2006 and 5 April 2016?
+pla.pensionsTakenBetween.bulletOne          = You got money from your pensions
+pla.pensionsTakenBetween.bulletTwo          = You transferred a pension to a scheme held overseas
+pla.pensionsTakenBetween.bulletThree        = You turned 75 with pension savings which you hadn''t yet taken
+pla.pensionsTakenBetween.paraOne            = You''ll have used some of your lifetime allowance if any of these happened.
+pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance have you used?
+pla.pensionsTakenBetween.helpText           = Ask your pension providers to tell you the amount of lifetime allowance you''ve used for individual protection 2016
 pla.pensionsTakenBetween.errorQuestion      = Enter an amount in the correct format eg £500000
 pla.pensionsTakenBetween.errorNegative      = Enter an amount that''s £0 or more
 pla.pensionsTakenBetween.errorMaximum       = Enter an amount less than £99,999,999,999,999,98
 pla.pensionsTakenBetween.errorDecimalPlaces = The amount you''ve entered has too many decimal places
 
 ## IP14 Pensions Taken Between ##
-pla.ip14PensionsTakenBetween.pageHeading    = Pensions taken between 6 April 2006 and 5 April 2014
-pla.ip14PensionsTakenBetween.title          = Pensions Taken Between 6 April 2006 and 5 April 2014
-pla.ip14PensionsTakenBetween.question       = Did you take any pensions between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.pageHeading    = Did any of the following happen between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.title          = Did any of the following happen between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.helpText       = Ask your pension providers to tell you the amount of lifetime allowance you''ve used for individual protection 2014
+
 
 ## Overseas Pensions ##
-pla.overseasPensions.pageHeading            = Overseas Pensions
-pla.overseasPensions.title                  = Overseas Pensions
-pla.overseasPensions.question               = Do you have any overseas pensions which you''ve not yet taken?
-pla.overseasPensions.helpText               = Only include overseas pensions which gained UK tax relief
-pla.overseasPensions.questionTwo            = Enter the value on 5 April 2016
+pla.overseasPensions.pageHeading            = Have you put money into a pension scheme held overseas?
+pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
+pla.overseasPensions.question               = Only include money you put in between 6 April 2006 and 5 April 2016, which you got UK tax relief on.
+pla.overseasPensions.questionTwo            = How much have you put in?
 pla.overseasPensions.errorQuestion          = Enter an amount in the correct format eg £500000
 pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
 pla.overseasPensions.errorMaximum           = Enter an amount less than £99,999,999,999,999,98
 pla.overseasPensions.errorDecimalPlaces     = The amount you''ve entered has too many decimal places
-pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
 
 ## IP14 Overseas Pensions ##
-pla.ip14OverseasPensions.questionTwo        = Enter the value on 5 April 2014
+pla.ip14OverseasPensions.question           = Only include money you put in between 6 April 2006 and 5 April 2014, which you got UK tax relief on.
+
 
 ## CURRENT PENSIONS ##
-pla.currentPensions.pageHeading             = Current pensions
-pla.currentPensions.title                   = Current Pensions
-pla.currentPensions.question                = Enter the value of your current UK pensions on 5 April 2016
-pla.currentPensions.helpText                = This is pensions which you''ve not yet taken
+pla.currentPensions.pageHeading             = What were your UK pensions worth on 5 April 2016?
+pla.currentPensions.title                   = What were your UK pensions worth on 5 April 2016?
+pla.currentPensions.paraOne                 = Include any money you have in pension pots.
+pla.currentPensions.paraTwo                 = If you have any pensions where your employer will pay you a set income once you take them, include the value of them.
+pla.currentPensions.hiddenLink              = How do I work out the value?
+pla.currentPensions.hiddenText              = Multiply the amount you''ll get each year by 20. Add any lump sum you''ll get if it''s on top of what you''ll get each year. 
+pla.currentPensions.question                = Don''t include any pensions you''ve already taken or the State Pension.
 pla.currentPensions.errorQuestion           = Enter an amount in the correct format eg £500000
 pla.currentPensions.errorNegative           = Enter an amount that''s £0 or more
 pla.currentPensions.errorMaximum            = Enter an amount less than £99,999,999,999,999,98
 pla.currentPensions.errorDecimalPlaces      = The amount you''ve entered has too many decimal places
-pla.pensionsTakenBetween.helpText           = Ask your pension provider to give you this amount
+pla.currentPensions.helpText                = Ask your pension provider to give you this amount
 
 ## IP14 CURRENT PENSIONS ##
-pla.ip14CurrentPensions.question            = Enter the value of your current UK pensions on 5 April 2014
+pla.ip14CurrentPensions.pageHeading         = What were your UK pensions worth on 5 April 2014?
+pla.ip14CurrentPensions.title               = What were your UK pensions worth on 5 April 2014?
+
 
 ## PENSION DEBITS ##
-pla.pensionDebits.pageHeading               = Pensions shared in a divorce
-pla.pensionDebits.title                     = Pension Sharing Orders
-pla.pensionDebits.question                  = Have any of your pensions been subject to a pension sharing order?
-pla.pensionDebits.helpText                  = This is where a court orders that your pensions are shared with an ex-partner
-pla.pensionDebits.mandatoryErr              = Please answer this question
+pla.pensionDebits.pageHeading               = Have any of your pensions been shared in a divorce since 5 April 2016?
+pla.pensionDebits.title                     = Have any of your pensions been shared in a divorce since 5 April 2016?
+pla.pensionDebits.paraOne                   = This is called a pension sharing order and is issued by a court.
 
 ## IP14 PENSION DEBITS ##
-pla.ip14PensionDebits.pageHeading           = Pensions shared in a divorce
-pla.ip14PensionDebits.title                 = Pension Sharing Orders
-pla.ip14PensionDebits.question              = Have any of your pensions been subject to a pension sharing order?
-pla.ip14PensionDebits.helpText              = This is where a court orders that your pensions are shared with an ex-partner
+pla.ip14PensionDebits.pageHeading           = Have any of your pensions been shared in a divorce since 5 April 2014?
+pla.ip14PensionDebits.title                 = Have any of your pensions been shared in a divorce since 5 April 2014?
+
 
 ## Number of Pension Sharing Orders ##
-pla.numberOfPSOs.title                      = Number of pension sharing orders
-pla.numberOfPSOs.pageHeading                = Pension sharing orders
-pla.numberOfPSOs.question                   = How many pension sharing orders do you have?
+pla.numberOfPSOs.title                      = How many pension sharing orders do you have?
+pla.numberOfPSOs.pageHeading                = How many pension sharing orders do you have?
 pla.numberOfPSOs.mandatoryErr               = Enter a number of Pension Sharing Orders
 pla.numberOfPSOs.one                        = One
 pla.numberOfPSOs.two                        = Two
@@ -262,7 +278,7 @@ pla.psoDetails.pageHeading4                 = Fourth pension sharing order
 pla.psoDetails.pageHeading5                 = Fifth pension sharing order
 pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2016
-pla.psoDetails.psoAmountQuestion            = Amount
+pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
 pla.psoDetails.errorNegative                = Enter an amount that''s £0 or more
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999,98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
