@@ -63,7 +63,7 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
                             status = "open",
                             psaCheckReference = tstPSACheckRef,
                             protectionReference = "PSA123456",
-                            protectedAmount = Some("£1,250,000.00"),
+                            protectedAmount = Some("£1,250,000"),
                             certificateDate = Some("17 April 2016"))
     
       val tstProtectionModelDormant = ProtectionModel (

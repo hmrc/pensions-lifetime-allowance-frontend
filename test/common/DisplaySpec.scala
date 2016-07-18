@@ -31,7 +31,7 @@ class DisplaySpec extends UnitSpec {
 
     "create a currency string for 7" in { 
       val tstAmt = BigDecimal(7)
-      currencyDisplayString(tstAmt) shouldBe "£7.00"
+      currencyDisplayString(tstAmt) shouldBe "£7"
     }
 
     "create a currency string for 3.9" in { 
