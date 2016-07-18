@@ -40,7 +40,7 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
 
     val sessionId = UUID.randomUUID.toString
     val fakeRequest = FakeRequest("GET", "/protect-your-lifetime-allowance/")
-    val TestExitSurveyController = new ExitSurveyController {
+    object TestExitSurveyController extends ExitSurveyController {
         override lazy val applicationConfig = FrontendAppConfig
         override lazy val authConnector = MockAuthConnector
         override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
