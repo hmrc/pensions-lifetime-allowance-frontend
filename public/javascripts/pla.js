@@ -51,3 +51,35 @@ $(document).ready($(function() {
     });
 
 }));
+
+var ip16SubmitToGA = function() {
+    var idArray = ["pensionsTakenDisplayValue0",
+                "pensionsTakenBeforeDisplayValue0",
+                "pensionsTakenBetweenDisplayValue0",
+                "overseasPensionsDisplayValue0"];
+    for(i = 0; i < idArray.length; i++){
+        if(document.getElementById(idArray[i]) == null){
+
+        } else if(document.getElementById(idArray[i]).innerHTML == "Yes"){
+            ga('send', 'event', 'submitSummary', idArray[i].replace("DisplayValue0",""), 'yes');
+        } else if(document.getElementById(idArray[i]).innerHTML == "No"){
+            ga('send', 'event', 'submitSummary', idArray[i].replace("DisplayValue0",""), 'no');
+        }
+    }
+};
+
+var ip14SubmitToGA = function() {
+    var idArray = ["ip14PensionsTakenDisplayValue0",
+                "ip14PensionsTakenBeforeDisplayValue0",
+                "ip14PensionsTakenBetweenDisplayValue0",
+                "ip14OverseasPensionsDisplayValue0"];
+    for(i = 0; i < idArray.length; i++){
+        if(document.getElementById(idArray[i]) == null){
+
+        } else if(document.getElementById(idArray[i]).innerHTML == "Yes"){
+            ga('send', 'event', 'ip14SubmitSummary', idArray[i].replace("DisplayValue0",""), 'yes');
+        } else if(document.getElementById(idArray[i]).innerHTML == "No"){
+            ga('send', 'event', 'ip14SubmitSummary', idArray[i].replace("DisplayValue0",""), 'no');
+        }
+    }
+};
