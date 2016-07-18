@@ -75,7 +75,7 @@ trait SummaryConstructor {
 
     val totalPensionsSection = Some(
       SummarySectionModel(List(
-        SummaryRowModel("totalPensionsAmt", None, boldText = true, currencyDisplayString(relevantAmount))
+        SummaryRowModel(nameString("totalPensionsAmt"), None, boldText = true, currencyDisplayString(relevantAmount))
       ))
     )
 
@@ -220,7 +220,11 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
     def createSummaryModel(relevantAmount: BigDecimal,
                            pensionContributions: List[SummarySectionModel],
                            pensionDebits: List[SummarySectionModel])(implicit protectionType: ApplicationType.Value): SummaryModel = {
-      val invalidRelevantAmount = relevantAmount < Constants.ip16RelevantAmountThreshold
+      val threshold = protectionType match {
+        case ApplicationType.IP2016 => Constants.ip16RelevantAmountThreshold
+        case ApplicationType.IP2014 => Constants.ip14RelevantAmountThreshold
+      }
+      val invalidRelevantAmount = relevantAmount < threshold
       SummaryModel(protectionType, invalidRelevantAmount, pensionContributions, pensionDebits)
     }
   
