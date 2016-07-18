@@ -5,13 +5,16 @@
 
 @(summary: SummaryModel)(implicit request: Request[_])
 
+@scriptElement = {
+    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
 
-@views.html.full_width_template(title = Messages("pla.summary.title"), bodyClasses = None) {
+@views.html.full_width_template(title = Messages("pla.summary.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
     @summaryDetails(summary)
 
     @govHelpers.form(action = routes.ResultController.processIP14Application) {
         
-        <button class="button" type="submit" id="apply" @if(summary.invalidRelevantAmount) { disabled} >@Messages("pla.base.submitApplication")</button>
+        <button class="button" type="submit" id="apply" onclick="ip14SubmitToGA()" @if(summary.invalidRelevantAmount) { disabled} >@Messages("pla.base.submitApplication")</button>
     }
 }
