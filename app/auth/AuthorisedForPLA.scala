@@ -63,7 +63,7 @@ trait AuthorisedForPLA extends Actions {
   val verifyProvider = new VerifyProvider(postSignInRedirectUrl, applicationConfig.verifySignIn)
 
   trait PLARegime extends TaxRegime {
-    override def isAuthorised(accounts: Accounts): Boolean = accounts.paye.isDefined
+    override def isAuthorised(accounts: Accounts): Boolean = true
     override def authenticationType: AuthenticationProvider = plaAuthProvider
   }
 

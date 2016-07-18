@@ -27,11 +27,11 @@ object UnauthorisedController extends UnauthorisedController {
 	override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
 }
 
-trait UnauthorisedController extends FrontendController{
+trait UnauthorisedController extends FrontendController {
 
   val identityVerificationConnector: IdentityVerificationConnector
 
-  def showNotAuthorised(journeyId: Option[String]) : Action[AnyContent] = UnauthorisedAction.async {implicit request =>
+  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = UnauthorisedAction.async { implicit request =>
     val result = journeyId map { id =>
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
       identityVerificationResult map {
