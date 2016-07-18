@@ -27,7 +27,8 @@ class PLACompositePageVisibilityPredicate(postSignInRedirectUrl: String,
                                           twoFactorUrl: String) extends CompositePageVisibilityPredicate {
   override def children: Seq[PageVisibilityPredicate] = Seq (
     new PLAStrongCredentialPredicate(twoFactorURI),
-    new UpliftingIdentityConfidencePredicate(L200, ivUpliftURI)
+    new UpliftingIdentityConfidencePredicate(L200, ivUpliftURI),
+    new PLAUserHasNinoPredicate(ivUpliftURI)
   )
 
   private val ivUpliftURI: URI =

@@ -87,8 +87,8 @@ class PLAAuthSpec extends UnitSpec with WithFakeApplication {
   }
 
   "PLAAnyRegime" should {
-    "ensure user is not authorised if PAYE account does not exist in session" in {
-      AuthTestController.PLAAnyRegime.isAuthorised(nonAuthorisedUserAccounts) shouldBe false
+    "ensure user is authorised even if PAYE account does not exist in session" in {
+      AuthTestController.PLAAnyRegime.isAuthorised(nonAuthorisedUserAccounts) shouldBe true
     }
   }
 
