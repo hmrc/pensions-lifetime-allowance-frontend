@@ -1,6 +1,7 @@
 @import models.OverseasPensionsModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import helpers.templates.{formInputMoney,formHiddenYesNoRadio}
+@import helpers.ip16.ip16Sidebar
 @import play.api.data._
 
 @(overseasPensionsForm: Form[OverseasPensionsModel])(implicit request: Request[_])
@@ -19,13 +20,15 @@
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@main_template(title=Messages("pla.overseasPensions.title"), scriptElem=Some(scriptElement)) {
+@sidebar = {@ip16Sidebar()}
+
+@main_template(title=Messages("pla.overseasPensions.title"), scriptElem=Some(scriptElement), sidebarLinks = Some(sidebar)) {
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), overseasPensionsForm
     )
 
-    <h1 class="heading-xlarge">@Messages("pla.overseasPensions.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("pla.overseasPensions.pageHeading")</h1>
 
     @govHelpers.form(action = routes.IP2016Controller.submitOverseasPensions) {
 
@@ -34,8 +37,7 @@
                 overseasPensionsForm,
                 "overseasPensions",
                 Messages("pla.overseasPensions.question"),
-                hiddenYesNoContent,
-                Some(Messages("pla.overseasPensions.helpText"))
+                hiddenYesNoContent
             )
 
         </div>

@@ -1,19 +1,27 @@
 @import models.CurrentPensionsModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.formInputMoney
+@import helpers.templates.{formInputMoney,hiddenText}
+@import helpers.ip16.ip16Sidebar
 @import play.api.data._
 
 @(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_])
 
-@main_template(Messages("pla.currentPensions.question")) {
+@sidebar = {@ip16Sidebar()}
+
+@main_template(title = Messages("pla.currentPensions.pageHeading"), sidebarLinks = Some(sidebar)) {
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), currentPensionsForm)
 
-    <h1 class="heading-xlarge">@Messages("pla.currentPensions.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("pla.currentPensions.pageHeading")</h1>
+
+    <p>@Messages("pla.currentPensions.paraOne")</p>
+    <p class="noBottomMargin">@Messages("pla.currentPensions.paraTwo")</p>
+
+    @hiddenText("value", Messages("pla.currentPensions.hiddenLink"), Messages("pla.currentPensions.hiddenText"))
 
     @govHelpers.form(action = routes.IP2016Controller.submitCurrentPensions) {
 
-        @formInputMoney(currentPensionsForm, "currentPensionsAmt", Messages("pla.currentPensions.question"),Some(Messages("pla.currentPensions.helpText")))
+        @formInputMoney(currentPensionsForm, "currentPensionsAmt", Messages("pla.currentPensions.question"), None)
 
         <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
 

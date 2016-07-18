@@ -2,10 +2,10 @@
 
 @views.html.main_template(title = Messages("pla.notAuthorised.title"), bodyClasses = None) {
 
-<h1 class="heading-xlarge">@Messages("pla.notAuthorised.pageHeading")</h1>
+<h1 class="heading-large">@Messages("pla.notAuthorised.pageHeading")</h1>
 
 @Html(Messages("pla.notAuthorised.paraOne", "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/online-services-helpdesk"))
 
-<a href="#">@Messages("pla.notAuthorised.tryAgain")</a>
+@Html(Messages("pla.notAuthorised.tryAgain", "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"))
 
 }

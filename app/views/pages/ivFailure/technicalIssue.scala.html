@@ -2,12 +2,12 @@
 
 @views.html.main_template(title = Messages("pla.technicalIssue.title"), bodyClasses = None) {
 
-<h1 class="heading-xlarge">@Messages("pla.technicalIssue.pageHeading")</h1>
+<h1 class="heading-large">@Messages("pla.technicalIssue.pageHeading")</h1>
 
 <p>@Messages("pla.technicalIssue.paraOne")</p>
 
 <p>@Messages("pla.technicalIssue.paraTwo")</p>
 
-<a href="#" class="button">@Messages("pla.technicalIssue.button")</a>
+@Html(Messages("pla.technicalIssue.tryAgain", "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"))
 
 }

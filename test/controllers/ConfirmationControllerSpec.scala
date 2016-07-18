@@ -31,7 +31,7 @@ class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with 
     object TestConfirmationController extends ConfirmationController {
         override lazy val applicationConfig = FrontendAppConfig
         override lazy val authConnector = MockAuthConnector
-        override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/confirm-fp"
+        override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
     }
 
     val sessionId = UUID.randomUUID.toString

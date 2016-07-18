@@ -113,7 +113,7 @@ class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
           IPApplicationConstructor.createIPApplication(tstMap)
         }
 
-        thrown.getMessage shouldBe "assertion failed: ()"
+        thrown.getMessage shouldBe """assertion failed: Invalid application data provided to createIPApplication for IP2016. Data: CacheMap(testUserID,Map(pensionsTaken -> {"pensionsTaken":"yes"}, pensionsTakenBefore -> {"pensionsTakenBefore":"yes","pensionsTakenBeforeAmt":1000}))"""
       }
     }
   }

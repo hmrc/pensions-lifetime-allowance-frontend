@@ -54,7 +54,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   object TestSuccessResultController extends ResultController {
     override lazy val applicationConfig = FrontendAppConfig
     override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/confirm-fp"
+    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -71,7 +71,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   object TestRejectResultController extends ResultController {
     override lazy val applicationConfig = FrontendAppConfig
     override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/confirm-fp"
+    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
