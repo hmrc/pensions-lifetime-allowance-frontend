@@ -3,9 +3,7 @@
 @(summary: SummaryModel)
 
 <div>
-    <div class="grid grid-2-3">
-        @summaryError(Messages("pla.summary.errorSummaryLabel"), summary.invalidRelevantAmount, summary.protectionType.toString)
-    </div>
+    @summaryError(Messages("pla.summary.errorSummaryLabel"), summary.invalidRelevantAmount, summary.protectionType.toString)
 </div>
 
 <div>
@@ -19,8 +17,8 @@
 <section>
     <h2 class="heading-large">@Messages("pla.summary.pensionsHeading")</h2>
 
-    @for(row <- summary.pensionContributionRows) {
-    @summaryRow(row.rowID, row.displayValues, row.changeLinkCall)
+    @for(section <- summary.pensionContributionSections) {
+        @summarySection(section)
     }
 </section>
 
@@ -29,15 +27,13 @@
 <section>
     <h2 class="heading-large">@Messages("pla.summary.psosHeading")</h2>
 
-    @for(row <- summary.psoDetailsRows) {
-    @summaryRow(row.rowID, row.displayValues, row.changeLinkCall)
+    @for(section <- summary.psoDetailsSections) {
+        @summarySection(section)
     }
 </section>
 
-<div>
-    <div class="grid grid-2-3">
-        <p>@Messages("pla.summary.declarationPara1")</p>
-        <p>@Messages("pla.summary.declarationPara2")</p>
-    </div>
+<div class="declaration">
+    <p>@Messages("pla.summary.declarationPara1")</p>
+    <p>@Messages("pla.summary.declarationPara2")</p>
 </div>
 <div class="grid-wrapper"></div>

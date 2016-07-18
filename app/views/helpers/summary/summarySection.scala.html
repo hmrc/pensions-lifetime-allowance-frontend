@@ -1,0 +1,9 @@
+@(section: SummarySectionModel)
+
+    @for((row, index) <- section.rows.zipWithIndex) {
+        @summaryRow(row.rowID, row.displayValues, row.changeLinkCall, row.boldText)
+        @if(index < section.rows.length.-(1)) {
+            <div class="grid-divider divider-margin"></div>
+        }
+    }
+<div class="grid-divider divider-margin divider-thick"></div>

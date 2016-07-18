@@ -18,6 +18,6 @@ package models
 
 import enums.ApplicationType
 
-case class SummaryModel(protectionType: ApplicationType.Value, invalidRelevantAmount: Boolean, pensionContributionRows: Seq[SummarySectionModel], psoDetailsRows: Seq[SummarySectionModel]) {
+case class SummaryModel(protectionType: ApplicationType.Value, invalidRelevantAmount: Boolean, pensionContributionSections: Seq[SummarySectionModel], psoDetailsSections: Seq[SummarySectionModel]) {
 
 }

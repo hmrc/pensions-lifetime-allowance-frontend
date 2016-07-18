@@ -36,10 +36,10 @@ object CallMap {
     "currentPensions"     -> controllers.routes.IP2016Controller.currentPensions(),
     "ip14CurrentPensions" -> controllers.routes.IP2014Controller.ip14CurrentPensions(),
 
-    "pensionDebits()"     -> controllers.routes.IP2016Controller.pensionDebits(),
+    "pensionDebits"       -> controllers.routes.IP2016Controller.pensionDebits(),
     "ip14PensionDebits"   -> controllers.routes.IP2014Controller.ip14PensionDebits(),
 
-    "numberOfPSOs()"     -> controllers.routes.IP2016Controller.numberOfPSOs(),
+    "numberOfPSOs"       -> controllers.routes.IP2016Controller.numberOfPSOs(),
     "ip14NumberOfPSOs"   -> controllers.routes.IP2014Controller.ip14NumberOfPSOs(),
 
     "psoDetails1"     -> controllers.routes.IP2016Controller.psoDetails("1"),
