@@ -18,7 +18,11 @@ package models
 
 import play.api.libs.json._
 
-case class PensionsTakenBetweenModel(pensionsTakenBetween: String, pensionsTakenBetweenAmt: Option[BigDecimal])
+case class PensionsTakenBetweenModel(pensionsTakenBetween: String, pensionsTakenBetweenAmt: Option[BigDecimal]) extends YesNoAmountModel {
+  override def getYesNoValue = pensionsTakenBetween
+
+  override def getAmount = pensionsTakenBetweenAmt
+}
 
 object PensionsTakenBetweenModel {
   implicit val format = Json.format[PensionsTakenBetweenModel]

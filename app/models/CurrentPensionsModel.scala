@@ -18,7 +18,9 @@ package models
 
 import play.api.libs.json._
 
-case class CurrentPensionsModel (currentPensionsAmt: Option[BigDecimal])
+case class CurrentPensionsModel (currentPensionsAmt: Option[BigDecimal]) extends AmountModel {
+  override def getAmount = currentPensionsAmt
+}
 
 object CurrentPensionsModel {
   implicit val format = Json.format[CurrentPensionsModel]

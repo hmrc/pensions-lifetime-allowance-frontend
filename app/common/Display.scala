@@ -24,7 +24,9 @@ import uk.gov.hmrc.play.views.helpers.MoneyPounds
 object Display {
 
   def currencyDisplayString(amt: BigDecimal): String = {
-    "£"+MoneyPounds(amt).quantity
+    val str = "£"+MoneyPounds(amt).quantity
+    if (str.endsWith(".00")) {str.takeWhile(_ != '.')}
+    else str
   }
 
   def dateDisplayString(date: LocalDate): String = {
