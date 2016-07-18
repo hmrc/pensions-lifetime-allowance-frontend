@@ -16,12 +16,8 @@
 
 package models
 
-import play.api.libs.json._
+import enums.ApplicationType
 
-case class PensionsTakenModel(pensionsTaken: Option[String]) extends YesNoModel {
-  override def getYesNoValue = pensionsTaken.getOrElse("no")
-}
+case class SummarySectionModel(rows: Seq[SummaryRowModel]) {
 
-object PensionsTakenModel {
-  implicit val format = Json.format[PensionsTakenModel]
 }

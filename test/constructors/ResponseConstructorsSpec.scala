@@ -33,7 +33,7 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
     val testSuccessResponseModel = SuccessResponseModel(
       protectionType = ApplicationType.FP2016,
       notificationId = "23",
-      protectedAmount = "£1,250,000.00",
+      protectedAmount = "£1,250,000",
       details = Some(testProtectionDetailsModel),
       additionalInfo = List("1","2")
     )

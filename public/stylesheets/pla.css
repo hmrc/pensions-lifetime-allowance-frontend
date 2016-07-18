@@ -8,6 +8,14 @@
     color: #6F777B;
 }
 
-.noBottomMargin {
-    margin-bottom: 0px;
+.divider-margin {
+    margin-top: 15px;
+}
+
+.divider-thick {
+    border-bottom: 3px solid;
+}
+
+.declaration {
+    padding-top: 30px;
 }

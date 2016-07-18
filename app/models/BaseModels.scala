@@ -16,12 +16,12 @@
 
 package models
 
-import play.api.libs.json._
-
-case class PensionsTakenModel(pensionsTaken: Option[String]) extends YesNoModel {
-  override def getYesNoValue = pensionsTaken.getOrElse("no")
+trait YesNoModel{
+  def getYesNoValue: String
 }
 
-object PensionsTakenModel {
-  implicit val format = Json.format[PensionsTakenModel]
+trait AmountModel{
+  def getAmount: Option[BigDecimal]
 }
+
+trait YesNoAmountModel extends YesNoModel with AmountModel

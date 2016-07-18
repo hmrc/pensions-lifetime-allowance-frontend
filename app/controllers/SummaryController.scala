@@ -16,17 +16,15 @@
 
 package controllers
 
-import play.api.Logger
 import auth.AuthorisedForPLA
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import enums.ApplicationType
 import play.api.mvc.{Result, AnyContent, Request}
-import uk.gov.hmrc.http.cache.client.{KeyStoreEntryValidationException, CacheMap}
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import connectors.KeyStoreConnector
 import views.html._
 import constructors.SummaryConstructor
-import constructors.IP14SummaryConstructor
 
 
 object SummaryController extends SummaryController {
@@ -66,7 +64,7 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
 
   private def routeIP2014SummaryFromUserData(data: CacheMap, req: Request[AnyContent])(implicit protectionType: ApplicationType.Value) : Result = {
     implicit val request = req
-    IP14SummaryConstructor.createSummaryData(data).map {
+    SummaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2014.ip14Summary(summaryModel))
     }.getOrElse(Redirect(routes.FallbackController.technicalError(protectionType.toString)))
   }

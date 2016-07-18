@@ -18,7 +18,9 @@ package models
 
 import play.api.libs.json._
 
-case class PensionDebitsModel(pensionDebits: Option[String])
+case class PensionDebitsModel(pensionDebits: Option[String]) extends YesNoModel {
+  def getYesNoValue = pensionDebits.getOrElse("no")
+}
 
 object PensionDebitsModel {
   implicit val format = Json.format[PensionDebitsModel]

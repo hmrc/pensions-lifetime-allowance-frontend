@@ -1,21 +1,27 @@
-@import play.api.i18n._
 @import play.api.mvc.Call
 
-@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call])
+@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], boldText: Boolean)
 
-<div class="grid-wrapperx">
+@boldString = {"-bold"}
+
+<div class="grid-wrapper">
     <div class="grid grid-1-2">
-        <div class="inner-blockx">
-            <span class="font-medium" id="@{rowID}QuestionText">@Messages(s"pla.summary.questions.$rowID")</span>
+        <div class="inner-block">
+            <span class='@if(boldText){bold-}small' id="@{rowID}QuestionText">@Messages(s"pla.summary.questions.$rowID")</span>
         </div>
     </div>
-    <div class="grid grid-1-2">
+    <div class="grid grid-1-4">
         <div class="inner-block">
             @for((displayValue, index) <- displayValues.zipWithIndex) {
                 <div>
-                    <span id="@{rowID}DisplayValue@index" class="bold-medium">@displayValue</span>
+                    <span id="@{rowID}DisplayValue@index" class='@if(boldText){bold-}medium'>@displayValue</span>
                 </div>
             }
+        </div>
+    </div>
+
+    <div class="grid grid-1-4">
+        <div class="inner-block">
             @if(changeLinkCall.isDefined) {
                 <div>
                     <a class="font-xsmall" id="@{rowID}ChangeLink" href=@changeLinkCall.get>@Messages("pla.summary.change")</a>
@@ -25,5 +31,3 @@
         </div>
     </div>
 </div>
-<div>&nbsp;</div>
-<div>&nbsp;</div>
