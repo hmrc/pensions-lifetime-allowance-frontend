@@ -11,7 +11,6 @@
 
 @views.html.full_width_template(title = Messages("pla.summary.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
-
     @summaryDetails(summary)
 
     @govHelpers.form(action = routes.ResultController.processIPApplication) {

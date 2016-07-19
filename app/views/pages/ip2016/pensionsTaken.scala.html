@@ -8,7 +8,11 @@
 
 @sidebar = {@ip16Sidebar()}
 
-@views.html.main_template(title = Messages("pla.pensionsTaken.title"), bodyClasses = None, sidebarLinks = Some(sidebar)) {
+@scriptElement = {
+    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
+
+@views.html.main_template(title = Messages("pla.pensionsTaken.title"), scriptElem=Some(scriptElement), bodyClasses = None, sidebarLinks = Some(sidebar)) {
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenForm
