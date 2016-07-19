@@ -42,14 +42,6 @@ $(document).ready($(function() {
             o.show();
         }
     });
-
-    $('[data-metrics]').each(function() {
-        var metrics = $(this).attr('data-metrics');
-        var parts = metrics.split(':');
-        ga('send', 'event', parts[0], parts[1], parts[2]);
-        console.log("sending: " + parts[0] + " - " + parts[1] + " - " + parts[2])
-    });
-
 }));
 
 var ip16SubmitToGA = function() {
@@ -80,6 +72,22 @@ var ip14SubmitToGA = function() {
             ga('send', 'event', 'ip14SubmitSummary', idArray[i].replace("DisplayValue0",""), 'yes');
         } else if(document.getElementById(idArray[i]).innerHTML == "No"){
             ga('send', 'event', 'ip14SubmitSummary', idArray[i].replace("DisplayValue0",""), 'no');
+        }
+    }
+};
+
+window.onload = function() {
+
+    var errorToGA = function(item, index) {
+        console.log("item");
+    };
+
+    console.log("START");
+    var errors = document.getElementsByClassName("js-error-summary-messages");
+    if(errors.length > 0){
+        var stuff = errors[0].getElementsByTagName("a");
+        for(i = 0; i < stuff.length; i++){
+            errorToGA(stuff[i],i);
         }
     }
 };

@@ -5,8 +5,11 @@
 
 @(pensionDebitsForm: Form[PensionDebitsModel])(implicit request: Request[_])
 
+@scriptElement = {
+    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
 
-@full_width_template(Messages("pla.ip14PensionDebits.title")) {
+@full_width_template(Messages("pla.ip14PensionDebits.title"), scriptElem=Some(scriptElement)) {
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), pensionDebitsForm)
 

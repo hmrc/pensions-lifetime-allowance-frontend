@@ -5,8 +5,11 @@
 
 @(psoDetailsForm: Form[PSODetailsModel], psoNum: Int)(implicit request: Request[_])
 
+@scriptElement = {
+    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
 
-@views.html.main_template(title = Messages("pla.psoDetails.title")+s" $psoNum", bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.psoDetails.title")+s" $psoNum", scriptElem=Some(scriptElement), bodyClasses = None) {
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), psoDetailsForm
