@@ -31,12 +31,10 @@ object MockConfig extends AppConfig {
   override val reportAProblemPartialUrl: String = ""
   override val reportAProblemNonJSUrl: String = ""
   override val excludeCopeTab: Boolean = false
-  override val showGovUkDonePage: Boolean = false
-  override val govUkFinishedPageUrl: String = ""
   override val identityVerification: Boolean = true
-  override val confirmFPUrl: String = "/pla/confirm-fp"
-  override val ipStartUrl: String = "/pla/apply-ip"
-  override val ip14StartUrl: String = "/pla/apply-ip14"
+  override val confirmFPUrl: String = "/pla/apply-for-fp16"
+  override val ipStartUrl: String = "/pla/apply-for-ip16-pensions-taken"
+  override val ip14StartUrl: String = "/pla/apply-for-ip14-pensions-taken"
   override val existingProtectionsUrl: String = "/pla/existing-protections"
   override val notAuthorisedRedirectUrl: String = "/pla/not-authorised"
   override val verifySignIn = "/verify/login"

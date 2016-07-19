@@ -32,8 +32,6 @@ trait AppConfig {
   val reportAProblemPartialUrl: String
   val reportAProblemNonJSUrl: String
   val excludeCopeTab: Boolean
-  val showGovUkDonePage: Boolean
-  val govUkFinishedPageUrl: String
   val identityVerification: Boolean
   val confirmFPUrl: String
   val ipStartUrl: String
@@ -66,8 +64,6 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
   override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
   override val excludeCopeTab: Boolean = configuration.getBoolean(s"microservice.services.exclusions.copetab").getOrElse(true)
-  override val showGovUkDonePage: Boolean = configuration.getBoolean("govuk-done-page.enabled").getOrElse(true)
-  override val govUkFinishedPageUrl: String = loadConfig("govuk-done-page.url")
   override val identityVerification: Boolean = configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)
 
   override lazy val citizenAuthHost = configuration.getString("citizen-auth.host")
