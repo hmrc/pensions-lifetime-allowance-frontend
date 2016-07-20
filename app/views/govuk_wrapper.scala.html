@@ -7,7 +7,8 @@
   contentHeader: Option[Html] = None,
   mainContent: Html = HtmlFormat.empty,
   serviceInfoContent: Html = HtmlFormat.empty,
-  scriptElem: Option[Html] = None)(implicit request: Request[_])
+  scriptElem: Option[Html] = None,
+  showLogout: Boolean = true)(implicit request: Request[_])
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
@@ -29,8 +30,8 @@
 }
 
 @headerNavLinks = {
-  <li><a id="homeNavHref" href="@routes.AccountController.signOut"
-         data-journey-click="primary-navigation:Click:Signout">@Messages("pla.links.signout")</a></li>
+  @if(showLogout) {<li><a id="sign-out" href="@routes.AccountController.signOut"
+         data-journey-click="primary-navigation:Click:Signout">@Messages("pla.links.signout")</a></li>}
 }
 
 @insideHeader = {

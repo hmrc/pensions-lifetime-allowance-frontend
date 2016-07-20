@@ -1,7 +1,7 @@
 @()(implicit request: Request[_])
 
 
-@views.html.main_template(title = Messages("pla.timeout.title"), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.timeout.title"), bodyClasses = None, showLogout = false) {
     
     <h1 class="heading-large">@Messages("pla.timeout.pageHeading")</h1>
 
