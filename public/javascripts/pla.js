@@ -50,6 +50,7 @@ $(document).ready($(function() {
     });
 }));
 
+
 window.onload = function() {
 
     var errors = document.getElementsByClassName("js-error-summary-messages");
