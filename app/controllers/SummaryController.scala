@@ -69,4 +69,10 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     }.getOrElse(Redirect(routes.FallbackController.technicalError(protectionType.toString)))
   }
 
+  // returns true if the passed ID corresponds to a data field which requires GA monitoring
+  def recordDataMetrics(rowId: String): Boolean = {
+    val dataMetricsIds = List("pensionsTaken", "pensionsTakenBefore", "pensionsTakenBetween", "overseasPensions", "pensionDebits", "numberOfPSOsAmt")
+    dataMetricsIds.map{_.toLowerCase}.contains(rowId.stripPrefix("ip14").toLowerCase)
+  }
+
 }
