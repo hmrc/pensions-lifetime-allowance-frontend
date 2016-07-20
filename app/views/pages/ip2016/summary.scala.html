@@ -15,6 +15,6 @@
 
     @govHelpers.form(action = routes.ResultController.processIPApplication) {
         
-        <button class="button" type="submit" id="apply" onclick="ip16SubmitToGA()" @if(summary.invalidRelevantAmount) { disabled}>@Messages("pla.base.submitApplication")</button>
+        <button class="button" type="submit" id="apply" @if(summary.invalidRelevantAmount) { disabled}>@Messages("pla.base.submitApplication")</button>
     }
 }

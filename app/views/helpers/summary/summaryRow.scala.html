@@ -1,4 +1,5 @@
 @import play.api.mvc.Call
+@import controllers.SummaryController
 
 @(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], boldText: Boolean)
 
@@ -7,6 +8,7 @@
 <div class="grid-wrapper">
     <div class="grid grid-1-2">
         <div class="inner-block">
+            <span @if(SummaryController.recordDataMetrics(rowID)){data-metrics = "summary:@rowID:@{displayValues(0)}"}></span>
             <span class='@if(boldText){bold-}small' id="@{rowID}QuestionText">@Messages(s"pla.summary.questions.$rowID")</span>
         </div>
     </div>
