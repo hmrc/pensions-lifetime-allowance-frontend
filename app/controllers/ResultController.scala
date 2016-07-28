@@ -46,10 +46,6 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
   val keyStoreConnector: KeyStoreConnector
   val plaConnector : PLAConnector
 
-  def mcNeeded:Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(manualCorrespondenceNeeded()))
-  }
-
   val processFPApplication = AuthorisedByAny.async {
     implicit user =>  implicit request =>
       implicit val protectionType = ApplicationType.FP2016
