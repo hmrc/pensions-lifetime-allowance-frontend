@@ -74,6 +74,7 @@ GET         /apply-for-fp16                                     controllers.Conf
 POST        /result-fp16                                        controllers.ResultController.processFPApplication
 POST        /result-ip16                                        controllers.ResultController.processIPApplication
 POST        /result-ip14                                        controllers.ResultController.processIP14Application
+GET         /mc                                                 controllers.ResultController.mcNeeded
 GET         /existing-protections                               controllers.ReadProtectionsController.currentProtections
 
 #Feedback routes
