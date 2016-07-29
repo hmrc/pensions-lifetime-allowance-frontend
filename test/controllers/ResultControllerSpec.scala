@@ -50,6 +50,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   val testIP16RejectionResponse = HttpResponse(409,Some(rejectionIP16Json))
   val testIP14SuccessResponse = HttpResponse(200,Some(successIP14Json))
   val testIP14RejectionResponse = HttpResponse(409,Some(rejectionIP14Json))
+  val testMCNeededResponse = HttpResponse(423)
 
   object TestSuccessResultController extends ResultController {
     override lazy val applicationConfig = FrontendAppConfig
@@ -78,6 +79,21 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testFP16RejectionResponse))
     when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP16RejectionResponse))
     when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP14RejectionResponse))
+
+    override val keyStoreConnector = mock[KeyStoreConnector]
+    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+  }
+
+  object TestMCNeededResultController extends ResultController {
+    override lazy val applicationConfig = FrontendAppConfig
+    override lazy val authConnector = MockAuthConnector
+    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+
+    implicit val hc: HeaderCarrier = HeaderCarrier()
+    override val plaConnector = mock[PLAConnector]
+    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testMCNeededResponse))
+    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testMCNeededResponse))
+    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testMCNeededResponse))
 
     override val keyStoreConnector = mock[KeyStoreConnector]
     when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
@@ -130,6 +146,24 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processIP14Application)
     "return 200" in { status(DataItem.result) shouldBe 200 }
     "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
+  }
+
+  "Applying for IP14 when Manual Correspondence is needed" should {
+    object DataItem extends AuthorisedFakeRequestToPost(TestMCNeededResultController.processIP14Application)
+    "return 422 (Unprocessable Entity)" in { status(DataItem.result) shouldBe 422 }
+    "take the user to the MC needed page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.mcNeeded.title")}
+  }
+
+  "Applying for IP16 when Manual Correspondence is needed" should {
+    object DataItem extends AuthorisedFakeRequestToPost(TestMCNeededResultController.processIPApplication)
+    "return 422 (Unprocessable Entity)" in { status(DataItem.result) shouldBe 422 }
+    "take the user to the MC needed page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.mcNeeded.title")}
+  }
+
+  "Applying for FP16 when Manual Correspondence is needed" should {
+    object DataItem extends AuthorisedFakeRequestToPost(TestMCNeededResultController.processFPApplication)
+    "return 422 (Unprocessable Entity)" in { status(DataItem.result) shouldBe 422 }
+    "take the user to the MC needed page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.mcNeeded.title")}
   }
 
 
