@@ -150,19 +150,19 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   "Applying for IP14 when Manual Correspondence is needed" should {
     object DataItem extends AuthorisedFakeRequestToPost(TestMCNeededResultController.processIP14Application)
-    "return 422 (Unprocessable Entity)" in { status(DataItem.result) shouldBe 422 }
+    "return 423 (Locked)" in { status(DataItem.result) shouldBe 423 }
     "take the user to the MC needed page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.mcNeeded.title")}
   }
 
   "Applying for IP16 when Manual Correspondence is needed" should {
     object DataItem extends AuthorisedFakeRequestToPost(TestMCNeededResultController.processIPApplication)
-    "return 422 (Unprocessable Entity)" in { status(DataItem.result) shouldBe 422 }
+    "return 423 (Locked)" in { status(DataItem.result) shouldBe 423 }
     "take the user to the MC needed page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.mcNeeded.title")}
   }
 
   "Applying for FP16 when Manual Correspondence is needed" should {
     object DataItem extends AuthorisedFakeRequestToPost(TestMCNeededResultController.processFPApplication)
-    "return 422 (Unprocessable Entity)" in { status(DataItem.result) shouldBe 422 }
+    "return 423 (Locked)" in { status(DataItem.result) shouldBe 423 }
     "take the user to the MC needed page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.mcNeeded.title")}
   }
 
