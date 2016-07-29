@@ -51,7 +51,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       implicit val protectionType = ApplicationType.FP2016
       plaConnector.applyFP16(user.nino.get).map {
         response: HttpResponse => applicationOutcome(response) match {
-          case ApplicationOutcome.MCNeeded   => BadRequest(manualCorrespondenceNeeded())
+          case ApplicationOutcome.MCNeeded   => UnprocessableEntity(manualCorrespondenceNeeded())
           case ApplicationOutcome.Successful => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
           case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
         }
@@ -79,7 +79,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       plaConnector.applyIP16(user.nino.get, userData.get)
       .map {
         response: HttpResponse => applicationOutcome(response) match {
-          case ApplicationOutcome.MCNeeded   => BadRequest(manualCorrespondenceNeeded())
+          case ApplicationOutcome.MCNeeded   => UnprocessableEntity(manualCorrespondenceNeeded())
           case ApplicationOutcome.Successful => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
           case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
         }
@@ -95,7 +95,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       plaConnector.applyIP14(user.nino.get, userData.get)
       .map {
         response: HttpResponse => applicationOutcome(response) match {
-          case ApplicationOutcome.MCNeeded   => BadRequest(manualCorrespondenceNeeded())
+          case ApplicationOutcome.MCNeeded   => UnprocessableEntity(manualCorrespondenceNeeded())
           case ApplicationOutcome.Successful => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
           case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
         }
