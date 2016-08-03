@@ -16,7 +16,6 @@
 
 package controllers
 
-import connectors.KeyStoreConnector
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.SessionKeys
@@ -29,7 +28,6 @@ import models._
 import views.html._
 
 object TimeoutController extends TimeoutController {
-     val keyStoreConnector = KeyStoreConnector
 }
 
 trait TimeoutController extends FrontendController {

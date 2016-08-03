@@ -21,6 +21,9 @@ import play.api.data._
 import play.api.data.Forms._
 import models._
 
+// disable coverage as form no longer in use
+// $COVERAGE-OFF$
+
 object AddedToPensionForm {
   val addedToPensionForm = Form(
     mapping(
@@ -28,3 +31,4 @@ object AddedToPensionForm {
     )(AddedToPensionModel.apply)(AddedToPensionModel.unapply)
   )
 }
+// $COVERAGE-ON$

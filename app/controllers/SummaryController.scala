@@ -28,28 +28,31 @@ import constructors.SummaryConstructor
 
 
 object SummaryController extends SummaryController {
+  // $COVERAGE-OFF$
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 
   val keyStoreConnector = KeyStoreConnector
+  val summaryConstructor = SummaryConstructor
+  // $COVERAGE-ON$
 }
 
 trait SummaryController extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector : KeyStoreConnector
+  val summaryConstructor: SummaryConstructor
 
   val summaryIP16 = AuthorisedByAny.async { implicit user => implicit request =>
     implicit val protectionType = ApplicationType.IP2016
     keyStoreConnector.fetchAllUserData.map {
-      case Some(data) => routeIP2016SummaryFromUserData(data, request)
+      case Some(data) => routeIP2016SummaryFromUserData(data)
       case None => Redirect(routes.FallbackController.technicalError(protectionType.toString))
     }
   }
 
-  private def routeIP2016SummaryFromUserData(data: CacheMap, req: Request[AnyContent])(implicit protectionType: ApplicationType.Value) : Result = {
-    implicit val request = req
-    SummaryConstructor.createSummaryData(data).map {
+  private def routeIP2016SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
+    summaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2016.summary(summaryModel))
     }.getOrElse(Redirect(routes.FallbackController.technicalError(protectionType.toString)))
   }
@@ -57,14 +60,13 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
   val summaryIP14 = AuthorisedByAny.async { implicit user => implicit request =>
     implicit val protectionType = ApplicationType.IP2014
     keyStoreConnector.fetchAllUserData.map {
-      case Some(data) => routeIP2014SummaryFromUserData(data, request)
+      case Some(data) => routeIP2014SummaryFromUserData(data)
       case None => Redirect(routes.FallbackController.technicalError(protectionType.toString))
     }
   }
 
-  private def routeIP2014SummaryFromUserData(data: CacheMap, req: Request[AnyContent])(implicit protectionType: ApplicationType.Value) : Result = {
-    implicit val request = req
-    SummaryConstructor.createSummaryData(data).map {
+  private def routeIP2014SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
+    summaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2014.ip14Summary(summaryModel))
     }.getOrElse(Redirect(routes.FallbackController.technicalError(protectionType.toString)))
   }
