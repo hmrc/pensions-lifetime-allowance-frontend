@@ -48,7 +48,11 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     plaConnector.readProtections(user.nino.get).map { response =>
       response.status match {
         case 200 => redirectFromSuccess(response)
-        case _ => Redirect(routes.FallbackController.technicalError(ApplicationType.existingProtections.toString))
+        case 423 => Locked(pages.result.manualCorrespondenceNeeded())
+        case num => {
+          Logger.error(s"unexpected status $num passed to currentProtections for nino: ${user.nino}")
+          Redirect(routes.FallbackController.technicalError(ApplicationType.existingProtections.toString))
+        }
       }
     }
   }

@@ -86,6 +86,326 @@ class ExistingProtectionsConstructorSpec extends UnitSpec with WithFakeApplicati
 
       ExistingProtectionsConstructor.createExistingProtectionsDisplayModel(tstExistingProtectionModel) shouldBe tstExistingProtectionsDisplayModel
     }
+
+    "Correctly order existing protections with the same status" in {
+      val tstProtectionModelOpen = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("IP2014"),
+                           status = Some("Open"),
+                           certificateDate = Some("2016-04-17"),
+                           protectedAmount = Some(1250000),
+                           protectionReference = Some("PSA123456")
+                         )
+      val tstProtectionDisplayModelOpen = ProtectionDisplayModel(
+                            protectionType = "IP2014",
+                            status = "open",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = "PSA123456",
+                            protectedAmount = Some("£1,250,000"),
+                            certificateDate = Some("17 April 2016"))
+    
+      val tstProtectionModelDormant7 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("FP2014"),
+                           status = Some("Dormant"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant7 = ProtectionDisplayModel(
+                            protectionType = "FP2014",
+                            status = "dormant",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant6 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("Fixed"),
+                           status = Some("Dormant"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant6 = ProtectionDisplayModel(
+                            protectionType = "fixed",
+                            status = "dormant",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant5 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("Enhanced"),
+                           status = Some("Dormant"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant5 = ProtectionDisplayModel(
+                            protectionType = "enhanced",
+                            status = "dormant",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant4 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("Primary"),
+                           status = Some("Dormant"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant4 = ProtectionDisplayModel(
+                            protectionType = "primary",
+                            status = "dormant",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant3 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("IP2016"),
+                           status = Some("Dormant"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant3 = ProtectionDisplayModel(
+                            protectionType = "IP2016",
+                            status = "dormant",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant2 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("FP2016"),
+                           status = Some("Dormant"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant2 = ProtectionDisplayModel(
+                            protectionType = "FP2016",
+                            status = "dormant",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant1 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("IP2014"),
+                           status = Some("Dormant"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant1 = ProtectionDisplayModel(
+                            protectionType = "IP2014",
+                            status = "dormant",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+
+      val tstExistingProtectionModel = ExistingProtectionsModel(tstPSACheckRef, List(
+                                                                                  tstProtectionModelDormant3,
+                                                                                  tstProtectionModelDormant7,
+                                                                                  tstProtectionModelDormant2,
+                                                                                  tstProtectionModelDormant6,
+                                                                                  tstProtectionModelDormant1,
+                                                                                  tstProtectionModelDormant5,
+                                                                                  tstProtectionModelOpen,
+                                                                                  tstProtectionModelDormant4))
+
+      val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(List(tstProtectionDisplayModelOpen), List(
+                                                                                                                    tstProtectionDisplayModelDormant1,
+                                                                                                                    tstProtectionDisplayModelDormant2,
+                                                                                                                    tstProtectionDisplayModelDormant3,
+                                                                                                                    tstProtectionDisplayModelDormant4,
+                                                                                                                    tstProtectionDisplayModelDormant5,
+                                                                                                                    tstProtectionDisplayModelDormant6,
+                                                                                                                    tstProtectionDisplayModelDormant7))
+
+      ExistingProtectionsConstructor.createExistingProtectionsDisplayModel(tstExistingProtectionModel) shouldBe tstExistingProtectionsDisplayModel
+    }
+
+    "Correctly order existing protections with a variety of statuses" in {
+      val tstProtectionModelOpen = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("IP2014"),
+                           status = Some("Open"),
+                           certificateDate = Some("2016-04-17"),
+                           protectedAmount = Some(1250000),
+                           protectionReference = Some("PSA123456")
+                         )
+      val tstProtectionDisplayModelOpen = ProtectionDisplayModel(
+                            protectionType = "IP2014",
+                            status = "open",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = "PSA123456",
+                            protectedAmount = Some("£1,250,000"),
+                            certificateDate = Some("17 April 2016"))
+    
+      val tstProtectionModelDormant8 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("FP2014"),
+                           status = Some("Expired"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant8 = ProtectionDisplayModel(
+                            protectionType = "FP2014",
+                            status = "expired",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant7 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("FP2016"),
+                           status = Some("Expired"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant7 = ProtectionDisplayModel(
+                            protectionType = "FP2016",
+                            status = "expired",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant6 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("IP2014"),
+                           status = Some("Rejected"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant6 = ProtectionDisplayModel(
+                            protectionType = "IP2014",
+                            status = "rejected",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant5 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("IP2014"),
+                           status = Some("Unsuccessful"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant5 = ProtectionDisplayModel(
+                            protectionType = "IP2014",
+                            status = "unsuccessful",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant4 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("Primary"),
+                           status = Some("Withdrawn"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant4 = ProtectionDisplayModel(
+                            protectionType = "primary",
+                            status = "withdrawn",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant3 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("IP2016"),
+                           status = Some("Withdrawn"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant3 = ProtectionDisplayModel(
+                            protectionType = "IP2016",
+                            status = "withdrawn",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant2 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("Fixed"),
+                           status = Some("Dormant"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant2 = ProtectionDisplayModel(
+                            protectionType = "fixed",
+                            status = "dormant",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+    
+      val tstProtectionModelDormant1 = ProtectionModel (
+                           protectionID = Some(12345),
+                           protectionType = Some("Enhanced"),
+                           status = Some("Dormant"),
+                           certificateDate = None,
+                           protectedAmount = None,
+                           protectionReference = None
+                         )
+      val tstProtectionDisplayModelDormant1 = ProtectionDisplayModel(
+                            protectionType = "enhanced",
+                            status = "dormant",
+                            psaCheckReference = tstPSACheckRef,
+                            protectionReference = Messages("pla.protection.protectionReference"),
+                            protectedAmount = None,
+                            certificateDate = None)
+
+      val tstExistingProtectionModel = ExistingProtectionsModel(tstPSACheckRef, List(
+                                                                                  tstProtectionModelDormant3,
+                                                                                  tstProtectionModelDormant7,
+                                                                                  tstProtectionModelDormant2,
+                                                                                  tstProtectionModelDormant6,
+                                                                                  tstProtectionModelDormant1,
+                                                                                  tstProtectionModelDormant8,
+                                                                                  tstProtectionModelDormant5,
+                                                                                  tstProtectionModelOpen,
+                                                                                  tstProtectionModelDormant4))
+
+      val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(List(tstProtectionDisplayModelOpen), List(
+                                                                                                                    tstProtectionDisplayModelDormant1,
+                                                                                                                    tstProtectionDisplayModelDormant2,
+                                                                                                                    tstProtectionDisplayModelDormant3,
+                                                                                                                    tstProtectionDisplayModelDormant4,
+                                                                                                                    tstProtectionDisplayModelDormant5,
+                                                                                                                    tstProtectionDisplayModelDormant6,
+                                                                                                                    tstProtectionDisplayModelDormant7,
+                                                                                                                    tstProtectionDisplayModelDormant8))
+
+      ExistingProtectionsConstructor.createExistingProtectionsDisplayModel(tstExistingProtectionModel) shouldBe tstExistingProtectionsDisplayModel
+    }
   }
 
 }

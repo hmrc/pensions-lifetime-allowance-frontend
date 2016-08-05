@@ -14,25 +14,11 @@
  * limitations under the License.
  */
 
-package controllers
+package enums
 
-import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
-import scala.concurrent.Future
-import forms.AddedToPensionForm.addedToPensionForm
-import forms.AddingToPensionForm.addingToPensionForm
-import forms.PensionSavingsForm.pensionSavingsForm
-import models._
-
-import views.html._
-
-object TimeoutController extends TimeoutController {
+object ApplicationOutcome extends Enumeration {
+  val Successful = Value
+  val Rejected = Value
+  val MCNeeded = Value
 }
 
-trait TimeoutController extends FrontendController {
-
-  val timeout = Action.async { implicit request =>
-    Future.successful(Ok(views.html.pages.timeout()))
-  }
-}

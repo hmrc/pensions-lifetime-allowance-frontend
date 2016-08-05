@@ -1,0 +1,31 @@
+@()(implicit request: Request[_])
+
+
+@scriptElement = {
+    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
+
+@views.html.main_template(title = Messages("pla.mcNeeded.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+
+    <div class="grid-row pertax-error">
+        <div class="column-two-thirds">
+            <header class="heading-large">
+                <h1 id="pageHeading" data-metrics="result:manual-correspondence:mc-needed">@Messages("pla.mcNeeded.pageHeading")</h1>
+            </header>
+            <p>@Html(Messages("pla.mcNeeded.needToSpeakToYou"))</p>
+            <div class="section-border">
+                <h2 class="heading-large">@Messages("pla.mcNeeded.howToContact")</h2>
+            </div>
+            <ul class="list list-bullet">
+                <li>@Messages("pla.mcNeeded.telephone")</li>
+                <li>@Messages("pla.mcNeeded.textphone")</li>
+                <li>@Messages("pla.mcNeeded.nonUKPhone")</li>
+            </ul>
+            <p>@Messages("pla.mcNeeded.linesOpen")</p>
+            <p>@Messages("pla.mcNeeded.linesClosed")</p>
+            <p>@Messages("pla.mcNeeded.linesBusy")</p>
+            <p><a href="https://www.gov.uk/call-charges" target="_blank">@Messages("pla.mcNeeded.callCharges") (@Messages("pla.base.newWindow"))</a></p>
+        </div>
+    </div>
+
+}
