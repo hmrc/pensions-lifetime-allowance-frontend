@@ -425,7 +425,7 @@ pla.mcNeeded.telephone                    = Phone 0300 200 3300
 pla.mcNeeded.sayCantLogIn                 = Say ''I can''t log in''
 pla.mcNeeded.sayYes                  	  	= Say ''Yes'' when asked if you are having problems logging in
 pla.mcNeeded.advisorHelp                  = You will hear a recorded message advising you to call another number - do not hang up and redial. Stay on the line and an advisor will hep you.
-pla.mcNeeded.tellAdvisor									= Tell the advisor this is an ''MCI error''
+pla.mcNeeded.tellAdvisor									= Tell the advisor this is an ''MCI issue''
 
 pla.mcNeeded.otherContact									= Other ways to contact us
 pla.mcNeeded.textphone										= Textphone: 0300 200 3319
