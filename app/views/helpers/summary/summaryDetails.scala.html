@@ -1,4 +1,5 @@
 @import play.api.data._
+@import enums.ApplicationType
 
 @(summary: SummaryModel)
 
@@ -33,7 +34,12 @@
 </section>
 
 <div class="declaration">
-    <p>@Messages("pla.summary.declarationPara1")</p>
-    <p>@Messages("pla.summary.declarationPara2")</p>
+    @if(summary.protectionType == ApplicationType.IP2016) {
+        <p>@Messages("pla.summary.declarationPara1")</p>
+        <p>@Messages("pla.summary.declarationPara2")</p>
+    } else {
+        <p>@Messages("pla.summary.ip14DeclarationPara1")</p>
+        <p>@Messages("pla.summary.ip14DeclarationPara2")</p>
+    }
 </div>
 <div class="grid-wrapper"></div>
