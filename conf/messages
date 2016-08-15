@@ -418,12 +418,18 @@ pla.resultRejection.viewDetailsLinkText   = existing protections page
 
 ## Manual Correspondence Needed ##
 pla.mcNeeded.title                        = There is a problem accessing your account
-pla.mcNeeded.pageHeading                  = There is a problem accessing your account
-pla.mcNeeded.needToSpeakToYou             = We need to speak to you before you can access your personal tax account.
-pla.mcNeeded.howToContact                 = How to contact us
-pla.mcNeeded.telephone                    = Telephone: 0300 200 3300
-pla.mcNeeded.textphone                    = Textphone: 0300 200 3319
-pla.mcNeeded.nonUKPhone                   = Outside UK: +44 135 535 9022
+pla.mcNeeded.pageHeading                  = There''s a problem logging you in
+pla.mcNeeded.needToSpeakToYou             = We need to speak to you before you can log in to your account.
+pla.mcNeeded.howToFix                 		= How to fix this
+pla.mcNeeded.telephone                    = Phone 0300 200 3300
+pla.mcNeeded.sayCantLogIn                 = Say ''I can''t log in''
+pla.mcNeeded.sayYes                  	  	= Say ''Yes'' when asked if you are having problems logging in
+pla.mcNeeded.advisorHelp                  = You will hear a recorded message advising you to call another number - do not hang up and redial. Stay on the line and an advisor will hep you.
+pla.mcNeeded.tellAdvisor									= Tell the advisor this is an ''MCI issue''
+
+pla.mcNeeded.otherContact									= Other ways to contact us
+pla.mcNeeded.textphone										= Textphone: 0300 200 3319
+pla.mcNeeded.nonUKPhone										= Outside UK: +44 135 535 9022
 pla.mcNeeded.linesOpen                    = Phone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday.
 pla.mcNeeded.linesClosed                  = Closed Sundays and bank holidays.
 pla.mcNeeded.linesBusy                    = Phone lines are less busy before 10am Monday to Friday.

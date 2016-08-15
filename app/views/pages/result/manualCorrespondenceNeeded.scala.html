@@ -10,14 +10,23 @@
     <div class="grid-row pertax-error">
         <div class="column-two-thirds">
             <header class="heading-large">
-                <h1 id="pageHeading" data-metrics="result:manual-correspondence:mc-needed">@Messages("pla.mcNeeded.pageHeading")</h1>
+                <h1 class="heading-xlarge" id="pageHeading" data-metrics="result:manual-correspondence:mc-needed">@Messages("pla.mcNeeded.pageHeading")</h1>
             </header>
-            <p>@Html(Messages("pla.mcNeeded.needToSpeakToYou"))</p>
+            <p class="lede">@Html(Messages("pla.mcNeeded.needToSpeakToYou"))</p>
             <div class="section-border">
-                <h2 class="heading-large">@Messages("pla.mcNeeded.howToContact")</h2>
+                <h2 class="heading-large">@Messages("pla.mcNeeded.howToFix")</h2>
+            </div>
+            <ol>
+                <li>@Messages("pla.mcNeeded.telephone")</li>
+                <li>@Messages("pla.mcNeeded.sayCantLogIn")</li>
+                <li>@Messages("pla.mcNeeded.sayYes")</li>
+                <li>@Messages("pla.mcNeeded.advisorHelp")</li>
+                <li>@Messages("pla.mcNeeded.tellAdvisor")</li>
+            </ol>
+            <div class="section-border">
+                <h2 class="heading-large">@Messages("pla.mcNeeded.otherContact")</h2>
             </div>
             <ul class="list list-bullet">
-                <li>@Messages("pla.mcNeeded.telephone")</li>
                 <li>@Messages("pla.mcNeeded.textphone")</li>
                 <li>@Messages("pla.mcNeeded.nonUKPhone")</li>
             </ul>
