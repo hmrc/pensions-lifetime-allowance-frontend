@@ -1,13 +1,14 @@
 @import models.ExistingProtectionsDisplayModel
 @import helpers.templates.existingProtection
 @(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_])
+@import config.FrontendAppConfig
 
 @views.html.full_width_template(title = Messages("pla.existingProtections.title"), bodyClasses = None) {
 
     <nav class="breadcrumb-nav breadcrumb-nav--slim">
         <ul class="breadcrumb-nav__list" role="breadcrumbs">
             <li class="breadcrumb-nav__item">
-              <a href="https://www.tax.service.gov.uk/personal-account" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
+              <a href="@{FrontendAppConfig.ptaFrontendService}/personal-account" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
             </li>
             <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
             <li class="breadcrumb-nav__item">@Messages("pla.existingProtections.BreadcrumbPLA")</li>
@@ -54,7 +55,7 @@
     }
 
     <section>
-        <a href="https://www.tax.service.gov.uk/personal-account" id="account-home-text-link">@Messages("pla.existingProtections.backToHome")</a>
+        <a href="@{FrontendAppConfig.ptaFrontendService}/personal-account" id="account-home-text-link">@Messages("pla.existingProtections.backToHome")</a>
     </section>
 
 }

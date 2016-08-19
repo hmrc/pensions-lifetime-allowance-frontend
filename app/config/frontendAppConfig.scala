@@ -42,7 +42,7 @@ trait AppConfig {
   val ivUpliftUrl: String
   val twoFactorUrl: String
   val ggSignInUrl: String
-  val ptaFrontendUrl: String
+  val ptaFrontendService: String
 }
 
 object FrontendAppConfig extends AppConfig with ServicesConfig {
@@ -77,6 +77,5 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
   override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
   override val twoFactorUrl: String = configuration.getString(s"two-factor.host").getOrElse("")
 
-  private val ptaFrontendService: String = baseUrl("pertax-frontend")
-  override lazy val ptaFrontendUrl: String = configuration.getString(s"breadcrumb-service.url").getOrElse("")
+  override lazy val ptaFrontendService: String = baseUrl("pertax-frontend")
 }
