@@ -198,7 +198,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             pensionDebitsModel.map {
                 completedModel => routeNumberOfPSOs(completedModel.pensionDebits.get, request)
             }.getOrElse(
-                Future.successful(Redirect(routes.FallbackController.technicalError(ApplicationType.IP2016.toString)))
+                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             )
         })
     }
@@ -206,7 +206,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     private def routeNumberOfPSOs(havePSOs: String, req: Request[AnyContent]): Future[Result] = {
         implicit val request = req
         havePSOs match {
-            case "no"  => Future.successful(Redirect(routes.FallbackController.technicalError(ApplicationType.IP2016.toString)))
+            case "no"  => Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             case "yes" => keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
                             case Some(data) => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm.fill(data)))
                             case _ => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm))
@@ -234,7 +234,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             numberOfPSOsModel.map {
                 completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
             }.getOrElse(
-                Future.successful(Redirect(routes.FallbackController.technicalError(ApplicationType.IP2016.toString)))
+                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             )
 
         })
