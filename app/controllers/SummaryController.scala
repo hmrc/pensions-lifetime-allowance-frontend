@@ -47,28 +47,28 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     implicit val protectionType = ApplicationType.IP2016
     keyStoreConnector.fetchAllUserData.map {
       case Some(data) => routeIP2016SummaryFromUserData(data)
-      case None => Redirect(routes.FallbackController.technicalError(protectionType.toString))
+      case None => InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
 
   private def routeIP2016SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
     summaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2016.summary(summaryModel))
-    }.getOrElse(Redirect(routes.FallbackController.technicalError(protectionType.toString)))
+    }.getOrElse(InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
   }
 
   val summaryIP14 = AuthorisedByAny.async { implicit user => implicit request =>
     implicit val protectionType = ApplicationType.IP2014
     keyStoreConnector.fetchAllUserData.map {
       case Some(data) => routeIP2014SummaryFromUserData(data)
-      case None => Redirect(routes.FallbackController.technicalError(protectionType.toString))
+      case None => InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
 
   private def routeIP2014SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
     summaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2014.ip14Summary(summaryModel))
-    }.getOrElse(Redirect(routes.FallbackController.technicalError(protectionType.toString)))
+    }.getOrElse(InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
   }
 
   // returns true if the passed ID corresponds to a data field which requires GA monitoring

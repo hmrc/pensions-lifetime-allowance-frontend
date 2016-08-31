@@ -24,6 +24,7 @@ import enums.ApplicationType
 import models.SummaryModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import play.api.i18n.Messages
 import play.api.libs.json.JsValue
 import play.api.test.Helpers.redirectLocation
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -87,23 +88,25 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
 
     "user is applying for IP16" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerNoData.summaryIP16)
-      "return 303" in {
-        status(DataItem.result) shouldBe 303
+      "return 500" in {
+        status(DataItem.result) shouldBe 500
       }
-      "redirect to technical error" in {
+      "show technical error for IP16" in {
         implicit val timeout: Timeout = 5000
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.technicalError("IP2016")}")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
       }
     }
 
     "user is applying for IP14" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerNoData.summaryIP14)
-      "return 303" in {
-        status(DataItem.result) shouldBe 303
+      "return 500" in {
+        status(DataItem.result) shouldBe 500
       }
-      "redirect to technical error" in {
+      "show technical error for IP14" in {
         implicit val timeout: Timeout = 5000
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.technicalError("IP2014")}")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
       }
     }
   }
@@ -112,23 +115,25 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
 
     "user is applying for IP16" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerInvalidData.summaryIP16)
-      "return 303" in {
-        status(DataItem.result) shouldBe 303
+      "return 500" in {
+        status(DataItem.result) shouldBe 500
       }
-      "redirect to technical error" in {
+      "show technical error for IP16" in {
         implicit val timeout: Timeout = 5000
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.technicalError("IP2016")}")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
       }
     }
 
     "user is applying for IP14" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerInvalidData.summaryIP14)
-      "return 303" in {
-        status(DataItem.result) shouldBe 303
+      "return 500" in {
+        status(DataItem.result) shouldBe 500
       }
-      "redirect to technical error" in {
+      "show technical error for IP14" in {
         implicit val timeout: Timeout = 5000
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.FallbackController.technicalError("IP2014")}")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
       }
     }
   }
