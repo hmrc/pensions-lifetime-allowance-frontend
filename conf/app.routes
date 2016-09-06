@@ -1,3 +1,6 @@
+GET         /blobby/:nino                                       controllers.IP2016Controller.citizenDeets(nino: String)
+
+
 # microservice specific routes
 
 GET         /assets/*file                                       controllers.Assets.at(path="/public", file)
