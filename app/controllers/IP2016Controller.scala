@@ -19,7 +19,7 @@ package controllers
 import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
 
-import connectors.KeyStoreConnector
+import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import enums.ApplicationType
 import play.api.Logger
 import play.api.mvc._
@@ -39,6 +39,9 @@ import models._
 import views.html._
 
 object IP2016Controller extends IP2016Controller {
+
+    val citizenDetailsConnector = CitizenDetailsConnector
+
     val keyStoreConnector = KeyStoreConnector
     override lazy val applicationConfig = FrontendAppConfig
     override lazy val authConnector = FrontendAuthConnector
@@ -46,6 +49,14 @@ object IP2016Controller extends IP2016Controller {
 }
 
 trait IP2016Controller extends FrontendController with AuthorisedForPLA {
+
+    val citizenDetailsConnector: CitizenDetailsConnector
+
+    def citizenDeets(nino: String) = AuthorisedByAny.async { implicit user => implicit request =>
+        citizenDetailsConnector.getPersonDetails(nino) map{
+            x => Ok(citizen(x.getOrElse(PersonalDetailsModel(Person("Tom", "Stacey")))))
+        }
+    }
 
     val keyStoreConnector: KeyStoreConnector
 
