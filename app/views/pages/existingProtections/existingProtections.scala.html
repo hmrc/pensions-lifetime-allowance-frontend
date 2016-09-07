@@ -1,5 +1,5 @@
 @import models.ExistingProtectionsDisplayModel
-@import helpers.templates.existingProtection
+@import helpers.templates.existingProtections.{activeExistingProtection, inactiveExistingProtection}
 @(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_])
 @import config.FrontendAppConfig
 
@@ -15,44 +15,37 @@
         </ul>
     </nav>
 
+
+
     <div class="grid grid-2-3">
-        <h1 class="heading-large">@Messages("pla.existingProtections.pageHeading")</h1>
+        <h1 class="heading-xlarge">@Messages("pla.existingProtections.pageHeading")</h1>
     </div>
 
     <div class="grid-wrapper"></div>
-    <section>
-        <h2 class="bold-small">@{Messages("pla.existingProtections.open")} (@{protections.activeProtections.size})</h2>
-    </section>
-    <div>&nbsp;</div>
 
-    @if(protections.activeProtections.size == 0) {
-        <p>@Messages("pla.existingProtections.noActiveProtections")</p>
-    } else {
-        @for((protection, index) <- protections.activeProtections.zipWithIndex) {
-            <section>
-                @existingProtection(protection, "active", index + 1)
-            </section>
+    <div id="listProtections">
+        @if(protections.activeProtections.size == 0) {
+            <p>@Messages("pla.existingProtections.noActiveProtections")</p>
+        } else {
+            @for((protection, index) <- protections.activeProtections.zipWithIndex) {
+                <div class="protection-detail">
+                    @activeExistingProtection(protection, "active", index + 1)
+                </div>
+            }
+
         }
 
-    }
+        @if(protections.otherProtections.size == 0) {
+            <p>@Messages("pla.existingProtections.noOtherProtections")</p>
+        } else {
+            @for((protection, index) <- protections.otherProtections.zipWithIndex) {
+                <section>
+                    @inactiveExistingProtection(protection, "other", index + 1)
+                </section>
+            }
 
-    <div class="grid-wrapper"></div>
-    <div>&nbsp;</div>
-    <section>
-        <h2 class="bold-small">@{Messages("pla.existingProtections.other")} (@{protections.otherProtections.size})</h2>
-    </section>
-    <div>&nbsp;</div>
-
-    @if(protections.otherProtections.size == 0) {
-        <p>@Messages("pla.existingProtections.noOtherProtections")</p>
-    } else {
-        @for((protection, index) <- protections.otherProtections.zipWithIndex) {
-            <section>
-                @existingProtection(protection, "other", index + 1)
-            </section>
         }
-
-    }
+    </div>
 
     <section>
         <a href="@{FrontendAppConfig.ptaFrontendUrl}" id="account-home-text-link">@Messages("pla.existingProtections.backToHome")</a>

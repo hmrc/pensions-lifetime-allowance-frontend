@@ -1,0 +1,32 @@
+@import play.api.i18n._
+@import models.ProtectionDisplayModel
+
+@(protection: ProtectionDisplayModel, statusGroup: String, protectionNum: Int)
+
+<div class="item">
+    <div class="grid-wrapperx">
+        <div class="grid grid-1-3">
+            <div class="title bold-medium" id="activeProtection">@Messages("pla.protection.types." + protection.protectionType)</div>
+        </div>
+        <div class="grid grid-2-3">
+            <div class="inner-block">
+                <span>PDF Link</span>
+            </div>
+        </div>
+        
+        <div class="panel-indent">
+            @protection.protectedAmount.map { amt =>
+                @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount")
+            }
+            @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, "activeProtectionReference")
+            @protectionDetails(Messages("pla.existingProtections.psaRef"), protection.psaCheckReference, "activePSACheckRef")
+            @protection.certificateDate.map{ cDate =>
+                @protectionDetails(Messages("pla.resultSuccess.applicationDate"), cDate, "activeCertificateDate")
+            }
+        </div>
+
+
+    </div>
+</div>
+<div>&nbsp;</div>
+

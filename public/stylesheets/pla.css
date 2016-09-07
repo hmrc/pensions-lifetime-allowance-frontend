@@ -19,3 +19,15 @@
 .declaration {
     padding-top: 30px;
 }
+
+
+#listProtections span.block { display: block;}
+#listProtections .item { margin-bottom: 20px; }
+#listProtections .item-details { color: #6f777b; padding-top: 5px; }
+#listProtections .item-details p { margin-bottom: 10px }
+#listProtections .protection-detail { margin-bottom: 20px; }
+#listProtections .protection-detail:last-child { margin-bottom: 0; }
+
+.grid-wrapper {
+	margin-left: 0px;
+}

@@ -368,13 +368,14 @@ pla.summary.ip14DeclarationPara2                        = The information that I
 
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = View your existing protections
-pla.existingProtections.pageHeading                     = Existing protections
+pla.existingProtections.pageHeading                     = Lifetime allowance protection
 pla.existingProtections.BreadcrumbPTAHome               = Account home
 pla.existingProtections.BreadcrumbPLA                   = Lifetime allowance protection
-pla.existingProtections.open                            = Open
+pla.existingProtections.details                         = Details
 pla.existingProtections.other                           = Other
 pla.existingProtections.noActiveProtections             = You currently have no open protections.
 pla.existingProtections.noOtherProtections              = You have no other protections.
+pla.existingProtections.protectedAmount                 = Protected lifetime allowance
 pla.existingProtections.protectionRef                   = Protection notification number
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
