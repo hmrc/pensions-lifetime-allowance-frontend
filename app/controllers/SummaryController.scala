@@ -16,9 +16,10 @@
 
 package controllers
 
-import auth.AuthorisedForPLA
+import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import enums.ApplicationType
+import play.api.Logger
 import play.api.mvc.{Result, AnyContent, Request}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -47,28 +48,40 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     implicit val protectionType = ApplicationType.IP2016
     keyStoreConnector.fetchAllUserData.map {
       case Some(data) => routeIP2016SummaryFromUserData(data)
-      case None => Redirect(routes.FallbackController.technicalError(protectionType.toString))
+      case None => {
+        Logger.error(s"unable to fetch summary IP16 data from keystore for user nino ${user.nino}")
+        InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+      }
     }
   }
 
-  private def routeIP2016SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
+  private def routeIP2016SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent], user: PLAUser) : Result = {
     summaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2016.summary(summaryModel))
-    }.getOrElse(Redirect(routes.FallbackController.technicalError(protectionType.toString)))
+    }.getOrElse {
+      Logger.warn(s"Unable to create IP16 summary model from summary data for user nino ${user.nino}")
+      InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
   }
 
   val summaryIP14 = AuthorisedByAny.async { implicit user => implicit request =>
     implicit val protectionType = ApplicationType.IP2014
     keyStoreConnector.fetchAllUserData.map {
       case Some(data) => routeIP2014SummaryFromUserData(data)
-      case None => Redirect(routes.FallbackController.technicalError(protectionType.toString))
+      case None => {
+        Logger.error(s"unable to fetch summary IP14 data from keystore for user nino ${user.nino}")
+        InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+      }
     }
   }
 
-  private def routeIP2014SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
+  private def routeIP2014SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent], user: PLAUser) : Result = {
     summaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2014.ip14Summary(summaryModel))
-    }.getOrElse(Redirect(routes.FallbackController.technicalError(protectionType.toString)))
+    }.getOrElse{
+      Logger.warn(s"Unable to create IP16 summary model from summary data for user nino ${user.nino}")
+      InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
   }
 
   // returns true if the passed ID corresponds to a data field which requires GA monitoring

@@ -719,16 +719,17 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "the user has not declared any pension sharing orders" should {
 
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.numberOfPSOs)
-            "return 303" in {
+            "return 500" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(None)
-                status(DataItem.result) shouldBe 303
+                status(DataItem.result) shouldBe 500
             }
 
-            "redirect the user to the technical error page" in {
+            "show the technical error page for IP16" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(None)
-                redirectLocation(DataItem.result) shouldBe Some(""+routes.FallbackController.technicalError("IP2016"))
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+                DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
             }
         }
 
@@ -736,16 +737,17 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             val testModel = PensionDebitsModel(Some("no"))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.numberOfPSOs)
-            "return 303" in {
+            "return 500" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(Some(testModel))
-                status(DataItem.result) shouldBe 303
+                status(DataItem.result) shouldBe 500
             }
 
-            "redirect the user to the technical error page" in {
+            "show the technical error page for IP16" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
                 pensionDebitsKeystoreSetup(Some(testModel))
-                redirectLocation(DataItem.result) shouldBe Some(""+routes.FallbackController.technicalError("IP2016"))
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+                DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
             }
         }
 
@@ -814,14 +816,15 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "there is no total PSOs number stored in keystore" should {
 
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails("1"))
-            "return 303" in {
+            "return 500" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
-                status(DataItem.result) shouldBe 303
+                status(DataItem.result) shouldBe 500
             }
 
-            "redirect the user to the technical error page" in {
+            "show the technical error page for IP16" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
-                redirectLocation(DataItem.result) shouldBe Some(""+routes.FallbackController.technicalError("IP2016"))
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+                DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
             }
         }
 

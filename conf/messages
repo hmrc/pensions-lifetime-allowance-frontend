@@ -153,7 +153,7 @@ pla.technicalIssue.tryAgain     = Return to the <a href="{0}" rel="external">pro
 ## Technical Error ##
 pla.techError.title                         = Technical Error
 pla.techError.pageHeading                   = Sorry, there''s been a problem
-pla.techError.paraOne                       = You'll need to start your application again, but we''ve saved the details you''ve given us so far.
+pla.techError.paraOne                       = You''ll need to start your application again, but we''ve saved the details you''ve given us so far.
 pla.techError.startAgain                    = Start again
 pla.techError.retry                         = Retry
 
