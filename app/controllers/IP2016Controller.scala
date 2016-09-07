@@ -16,11 +16,12 @@
 
 package controllers
 
-import auth.AuthorisedForPLA
+import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
 
 import connectors.KeyStoreConnector
 import enums.ApplicationType
+import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import scala.concurrent.Future
@@ -196,17 +197,20 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
 
         keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").flatMap(pensionDebitsModel => {
             pensionDebitsModel.map {
-                completedModel => routeNumberOfPSOs(completedModel.pensionDebits.get, request)
-            }.getOrElse(
-                Future.successful(Redirect(routes.FallbackController.technicalError(ApplicationType.IP2016.toString)))
-            )
+                completedModel => routeNumberOfPSOs(completedModel.pensionDebits.get)
+            }.getOrElse {
+                Logger.warn(s"User with nino ${user.nino} navigated to IP16 number of PSOs when ip16PensionDebits was not recorded")
+                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+            }
         })
     }
 
-    private def routeNumberOfPSOs(havePSOs: String, req: Request[AnyContent]): Future[Result] = {
-        implicit val request = req
+    private def routeNumberOfPSOs(havePSOs: String)(implicit user: PLAUser, req: Request[AnyContent]): Future[Result] = {
         havePSOs match {
-            case "no"  => Future.successful(Redirect(routes.FallbackController.technicalError(ApplicationType.IP2016.toString)))
+            case "no"  => {
+                Logger.warn(s"User with nino ${user.nino} navigated to IP16 number of PSOs when ip16PensionDebits was recorded as 'No'")
+                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+            }
             case "yes" => keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
                             case Some(data) => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm.fill(data)))
                             case _ => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm))
@@ -233,9 +237,10 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
         keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").flatMap(numberOfPSOsModel => {
             numberOfPSOsModel.map {
                 completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
-            }.getOrElse(
-                Future.successful(Redirect(routes.FallbackController.technicalError(ApplicationType.IP2016.toString)))
-            )
+            }.getOrElse {
+                Logger.warn(s"User with nino ${user.nino} navigated to IP16 PSO details when ip16NumberOfPSOs was not recorded")
+                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+            }
 
         })
     }
