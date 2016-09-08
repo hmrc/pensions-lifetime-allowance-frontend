@@ -1,4 +1,5 @@
 @import models.{PersonalDetailsModel, ProtectionDisplayModel}
+@import play.api.i18n._
 
 @(personalDetailsModel: PersonalDetailsModel, protectionDisplayModel: ProtectionDisplayModel, nino: String)(implicit request: Request[_])
 
@@ -62,7 +63,7 @@
             </tr>
             <tr>
                 <td>Protection type</td>
-                <td id="protectionType">@{protectionDisplayModel.protectionType}</td>
+                <td id="protectionType">@Messages(s"pla.protection.types.${protectionDisplayModel.protectionType}")</td>
             </tr>
             <tr>
                 <td>Protected lifetime allowance</td>
