@@ -62,5 +62,9 @@ case class ProtectionDisplayModel(
                                  certificateDate: Option[String]
                                  )
 
+object ProtectionDisplayModel {
+  implicit val format = Json.format[ProtectionDisplayModel]
+}
+
 
 case class ExistingProtectionsDisplayModel(activeProtections: Seq[ProtectionDisplayModel], otherProtections: Seq[ProtectionDisplayModel])

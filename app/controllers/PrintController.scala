@@ -17,9 +17,11 @@
 package controllers
 
 import java.util.UUID
-import auth.AuthorisedForPLA
+import auth.{PLAUser, AuthorisedForPLA}
+import enums.ApplicationType
 import config.{FrontendAuthConnector, FrontendAppConfig}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
+import models.{PersonalDetailsModel, ProtectionDisplayModel}
 import play.api.Logger
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
@@ -41,20 +43,32 @@ trait PrintController extends FrontendController with AuthorisedForPLA {
 
   implicit val hc = new HeaderCarrier()
 
-  def printView = AuthorisedByAny.async { implicit user => implicit request =>
+  val printView = AuthorisedByAny.async { implicit user => implicit request =>
 
-    user.nino.map { x =>
-      CitizenDetailsConnector.getPersonDetails(x).map {
-        case Some(personalDetailsModel) => InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache")
-        case _ => {
-          Logger.error("")
-          InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache")
+      user.nino.map { nino =>
+        CitizenDetailsConnector.getPersonDetails(nino).map {
+          case Some(personalDetailsModel) => routePrintView(personalDetailsModel, nino)
+          case _ => {
+            Logger.error(s"Couldn't retrieve personal details for user nino: ${nino} in printView")
+            InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache")
+          }
         }
+      }.getOrElse {
+        Logger.error("No associated nino for user in printView action")
+        Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
-    }.getOrElse {
-      Logger.error("No associated nino for user in printView action")
-      Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
+
+
+  private def routePrintView(personalDetailsModel: PersonalDetailsModel, nino: String)(implicit request: Request[AnyContent]): Result = {
+    keyStoreConnector.fetchAndGetFormData[ProtectionDisplayModel]("openProtection").map {
+      case Some(model) => Ok(views.html.pages.result.resultPrint(personalDetailsModel, model, nino))
+      case _ => {
+        Logger.error(s"Unable to retrieve protection details from KeyStore for user nino: ${nino}")
+        Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
+      }
+    }
+    Ok
   }
 
 

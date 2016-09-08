@@ -52,12 +52,6 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
 
     val citizenDetailsConnector: CitizenDetailsConnector
 
-    def citizenDeets(nino: String) = AuthorisedByAny.async { implicit user => implicit request =>
-        citizenDetailsConnector.getPersonDetails(nino) map{
-            x => Ok(citizen(x.getOrElse(PersonalDetailsModel(Person("Tom", "Stacey")))))
-        }
-    }
-
     val keyStoreConnector: KeyStoreConnector
 
     //PENSIONS TAKEN
