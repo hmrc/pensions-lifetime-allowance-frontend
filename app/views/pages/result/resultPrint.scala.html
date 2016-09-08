@@ -1,0 +1,87 @@
+@import models.{PersonalDetailsModel, ProtectionDisplayModel}
+
+@(personalDetailsModel: PersonalDetailsModel, protectionDisplayModel: ProtectionDisplayModel, nino: String)(implicit request: Request[_])
+
+<head>
+    <style>
+        body {
+        font-family: Arial;
+        padding:1cm 10%;
+        font-size: 18px;
+        }
+        hr {
+        size: 2;
+        color: rgb(150,150,150);
+        }
+        tr > td {
+        padding-bottom: 1em;
+        padding-right: 1em;
+        font-size: 18px;
+        }
+        .faint {
+        color: rgb(130,130,130);
+        }
+        .header {
+        color: rgb(180,180,180);
+        font-size: 22px;
+        }
+        .personalInfo{
+        padding-bottom: 1cm;
+        }
+    </style>
+</head>
+<header>
+    <p class="header">
+        HM Revenue & Customs
+    </p>
+</header>
+<body>
+<div>
+    <div class="personalInfo">
+        <h1>
+            @{personalDetailsModel.person.firstName.toLowerCase.capitalize}
+            @{personalDetailsModel.person.lastName.toLowerCase.capitalize}
+        </h1>
+        <p>
+            National Insurance number @{nino}
+        </p>
+    </div>
+
+    <div>
+        <h2>
+            Protection details
+            <hr noshade/>
+        </h2>
+
+
+        <table class="table">
+            <tbody >
+            <tr>
+                <td>Application date</td>
+                <td>@{protectionDisplayModel.certificateDate}</td>
+            </tr>
+            <tr>
+                <td>Protection type</td>
+                <td>@{protectionDisplayModel.protectionType}</td>
+            </tr>
+            <tr>
+                <td>Protected lifetime amount</td>
+                <td>@{protectionDisplayModel.protectedAmount}</td>
+            </tr>
+            <tr>
+                <td>Protection notification number</td>
+                <td>@{protectionDisplayModel.protectionReference}</td>
+            </tr>
+            <tr>
+                <td>Scheme administrator reference</td>
+                <td>@{protectionDisplayModel.psaCheckReference}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <p class="faint">Give these details to your pension provider when you decide to take money from your pension</p>
+    </div>
+</div>
+</body>
