@@ -8,8 +8,6 @@ GET         /timeout                                            controllers.Time
 GET         /not-authorised                                     controllers.UnauthorisedController.showNotAuthorised(journeyId: Option[String])
 GET         /sign-out                                           controllers.AccountController.signOut
 
-GET         /technical-error/:pType                             controllers.FallbackController.technicalError(pType: String)
-
 ## Apply IP 14 ##
 GET         /apply-for-ip14-pensions-taken                      controllers.IP2014Controller.ip14PensionsTaken
 POST        /apply-for-ip14-pensions-taken                      controllers.IP2014Controller.submitIP14PensionsTaken

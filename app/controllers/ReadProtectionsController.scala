@@ -51,7 +51,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
         case 423 => Locked(pages.result.manualCorrespondenceNeeded())
         case num => {
           Logger.error(s"unexpected status $num passed to currentProtections for nino: ${user.nino}")
-          Redirect(routes.FallbackController.technicalError(ApplicationType.existingProtections.toString))
+          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
     }
@@ -62,7 +62,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
       case Some(model) => displayExistingProtections(model)
       case _ => {
         Logger.error(s"unable to create existing protections model from microservice response for nino: ${user.nino}")
-        Redirect(routes.FallbackController.technicalError(ApplicationType.existingProtections.toString))
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
 
