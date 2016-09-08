@@ -38,11 +38,11 @@
 <body>
 <div>
     <div class="personalInfo">
-        <h1>
+        <h1 id="userName">
             @{personalDetailsModel.person.firstName.toLowerCase.capitalize}
             @{personalDetailsModel.person.lastName.toLowerCase.capitalize}
         </h1>
-        <p>
+        <p id="userNino">
             National Insurance number @{nino}
         </p>
     </div>
@@ -58,23 +58,23 @@
             <tbody >
             <tr>
                 <td>Application date</td>
-                <td>@{protectionDisplayModel.certificateDate}</td>
+                <td id="applicationDate">@{protectionDisplayModel.certificateDate}</td>
             </tr>
             <tr>
                 <td>Protection type</td>
-                <td>@{protectionDisplayModel.protectionType}</td>
+                <td id="protectionType">@{protectionDisplayModel.protectionType}</td>
             </tr>
             <tr>
-                <td>Protected lifetime amount</td>
-                <td>@{protectionDisplayModel.protectedAmount}</td>
+                <td>Protected lifetime allowance</td>
+                <td id="protectedAmount">@{protectionDisplayModel.protectedAmount}</td>
             </tr>
             <tr>
                 <td>Protection notification number</td>
-                <td>@{protectionDisplayModel.protectionReference}</td>
+                <td id="protectionRef">@{protectionDisplayModel.protectionReference}</td>
             </tr>
             <tr>
                 <td>Scheme administrator reference</td>
-                <td>@{protectionDisplayModel.psaCheckReference}</td>
+                <td id="psaRef">@{protectionDisplayModel.psaCheckReference}</td>
             </tr>
             </tbody>
         </table>
