@@ -41,18 +41,18 @@ trait PrintController extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
 
-  implicit val hc = new HeaderCarrier()
-
   val printView = AuthorisedByAny.async { implicit user => implicit request =>
 
       user.nino.map { nino =>
-        CitizenDetailsConnector.getPersonDetails(nino).map {
-          case Some(personalDetailsModel) => routePrintView(personalDetailsModel, nino)
-          case _ => {
+        CitizenDetailsConnector.getPersonDetails(nino).flatMap( model => {
+          model.map {
+            personalDetailsModel => routePrintView(personalDetailsModel, nino)
+          }.getOrElse {
             Logger.error(s"Couldn't retrieve personal details for user nino: ${nino} in printView")
-            InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache")
+            Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
           }
         }
+        )
       }.getOrElse {
         Logger.error("No associated nino for user in printView action")
         Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
@@ -60,15 +60,14 @@ trait PrintController extends FrontendController with AuthorisedForPLA {
     }
 
 
-  private def routePrintView(personalDetailsModel: PersonalDetailsModel, nino: String)(implicit request: Request[AnyContent]): Result = {
+  private def routePrintView(personalDetailsModel: PersonalDetailsModel, nino: String)(implicit request: Request[AnyContent]): Future[Result] = {
     keyStoreConnector.fetchAndGetFormData[ProtectionDisplayModel]("openProtection").map {
       case Some(model) => Ok(views.html.pages.result.resultPrint(personalDetailsModel, model, nino))
       case _ => {
         Logger.error(s"Unable to retrieve protection details from KeyStore for user nino: ${nino}")
-        Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
+        InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
-    Ok
   }
 
 
