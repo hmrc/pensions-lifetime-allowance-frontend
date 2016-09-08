@@ -69,7 +69,10 @@ package object auth {
         loggedInAt = loggedInAt,
         previouslyLoggedInAt = previouslyLoggedInAt,
         credentialStrength = CredentialStrength.Strong,
-        confidenceLevel = ConfidenceLevel.L200
+        confidenceLevel = ConfidenceLevel.L200,
+        userDetailsLink = None,
+        enrolments = None,
+        ids = None
       )
 
       val allowedAuthContext = AuthContext(
@@ -84,7 +87,10 @@ package object auth {
         loggedInAt = loggedInAt,
         previouslyLoggedInAt = previouslyLoggedInAt,
         credentialStrength = CredentialStrength.Weak,
-        confidenceLevel = ConfidenceLevel.L200
+        confidenceLevel = ConfidenceLevel.L200,
+        userDetailsLink = None,
+        enrolments = None,
+        ids = None
       )
 
       val tooWeakCredentialsAuthContext = AuthContext(
@@ -99,7 +105,10 @@ package object auth {
         loggedInAt = loggedInAt,
         previouslyLoggedInAt = previouslyLoggedInAt,
         credentialStrength = CredentialStrength.Weak,
-        confidenceLevel = ConfidenceLevel.L50
+        confidenceLevel = ConfidenceLevel.L50,
+        userDetailsLink = None,
+        enrolments = None,
+        ids = None
       )
 
       val needsUpliftAuthContext = AuthContext(
