@@ -19,7 +19,7 @@ package controllers
 import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
 
-import connectors.{CitizenDetailsConnector, KeyStoreConnector}
+import connectors.KeyStoreConnector
 import enums.ApplicationType
 import play.api.Logger
 import play.api.mvc._
@@ -40,8 +40,6 @@ import views.html._
 
 object IP2016Controller extends IP2016Controller {
 
-    val citizenDetailsConnector = CitizenDetailsConnector
-
     val keyStoreConnector = KeyStoreConnector
     override lazy val applicationConfig = FrontendAppConfig
     override lazy val authConnector = FrontendAuthConnector
@@ -49,8 +47,6 @@ object IP2016Controller extends IP2016Controller {
 }
 
 trait IP2016Controller extends FrontendController with AuthorisedForPLA {
-
-    val citizenDetailsConnector: CitizenDetailsConnector
 
     val keyStoreConnector: KeyStoreConnector
 
@@ -95,7 +91,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                     Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(validatedForm)))
                 } else {
                     keyStoreConnector.saveFormData("pensionsTakenBefore", success)
-                    Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
+                    Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween()))
                 }
             }
         )
