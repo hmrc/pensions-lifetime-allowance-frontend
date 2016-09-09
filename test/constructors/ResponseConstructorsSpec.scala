@@ -16,7 +16,6 @@
 
 package constructors
 
-import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import play.api.libs.json.{JsValue, Json}
 import models._
@@ -24,7 +23,6 @@ import enums.ApplicationType
 
 class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
     object TestResponseConstructors extends ResponseConstructors {
-
     }
     // SuccessResponseModel(protectionType: ApplicationType.Value, notificationId: String, protectedAmount: String, details: Option[ProtectionDetailsModel], additionalInfo: Seq[String])
 

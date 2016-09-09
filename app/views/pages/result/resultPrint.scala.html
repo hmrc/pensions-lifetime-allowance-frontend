@@ -1,4 +1,5 @@
 @import models.{PersonalDetailsModel, ProtectionDisplayModel}
+@import play.api.i18n._
 
 @(personalDetailsModel: PersonalDetailsModel, protectionDisplayModel: ProtectionDisplayModel, nino: String)(implicit request: Request[_])
 
@@ -53,16 +54,15 @@
                 <hr noshade/>
             </h2>
 
-
             <table class="table">
-                <tbody >
+                <tbody>
                 <tr>
                     <td>Application date</td>
                     <td id="applicationDate">@{protectionDisplayModel.certificateDate}</td>
                 </tr>
                 <tr>
                     <td>Protection type</td>
-                    <td id="protectionType">@{protectionDisplayModel.protectionType}</td>
+                    <td id="protectionType">@Messages(s"pla.protection.types.${protectionDisplayModel.protectionType}")</td>
                 </tr>
                 <tr>
                     <td>Protected lifetime allowance</td>

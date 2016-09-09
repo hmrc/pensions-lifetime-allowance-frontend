@@ -19,7 +19,8 @@ package controllers
 import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import connectors.KeyStoreConnector
-import play.api.mvc.{AnyContent, Action}
+import models.{ProtectionDisplayModel, SuccessResponseModel}
+import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
@@ -52,7 +53,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       plaConnector.applyFP16(user.nino.get).map {
         response: HttpResponse => applicationOutcome(response) match {
           case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-          case ApplicationOutcome.Successful => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+          case ApplicationOutcome.Successful => saveAndDisplaySuccess(response)
           case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
         }
       }
@@ -69,6 +70,13 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       }
       if(successCodes.contains(notificationId.get)) ApplicationOutcome.Successful else ApplicationOutcome.Rejected
     }
+  }
+
+  private def saveAndDisplaySuccess(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value) = {
+    val successResponse: SuccessResponseModel = ResponseConstructors.createSuccessResponseFromJson(response.json)
+    // TODO: implement createDisplayModelFromSuccessResponse
+    //keyStoreConnector.saveData[ProtectionDisplayModel]("openProtection", ResponseConstructors.createDisplayModelFromSuccessResponse(successResponse))
+    Ok(resultSuccess(successResponse))
   }
 
 

@@ -25,12 +25,9 @@ import utils.Constants
 import common.{Dates,Display}
 
 object ResponseConstructors extends ResponseConstructors {
-    val keyStoreConnector = KeyStoreConnector
 }
 
 trait ResponseConstructors {
-
-    val keyStoreConnector: KeyStoreConnector
 
     def createSuccessResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value) : SuccessResponseModel = {
         val notificationId = (json \ "notificationId").as[Int].toString
@@ -78,4 +75,34 @@ trait ResponseConstructors {
     def createExistingProtectionsModelFromJson(json: JsValue): Option[ExistingProtectionsModel] = {
         json.validate[ExistingProtectionsModel].asOpt
     }
+
+
+    // TODO: Get it working
+    /*
+    def createDisplayModelFromSuccessResponse(resp: SuccessResponseModel): ProtectionDisplayModel ={
+        val protectionType =
+    }
+
+
+
+    case class ProtectionDisplayModel(
+                                       protectionType: String,
+                                       status: String,
+                                       psaCheckReference: String,
+                                       protectionReference: String,
+                                       protectedAmount: Option[String],
+                                       certificateDate: Option[String]
+                                       )
+
+
+    case class SuccessResponseModel(protectionType: ApplicationType.Value,
+                                    notificationId: String,
+                                    protectedAmount: String,
+                                    details: Option[ProtectionDetailsModel],
+                                    additionalInfo: Seq[String])
+
+    case class ProtectionDetailsModel(protectionReference: Option[String],
+                                      psaReference: Option[String],
+                                      applicationDate: Option[String])
+    */
 }
