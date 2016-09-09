@@ -19,12 +19,12 @@ package controllers
 import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import connectors.KeyStoreConnector
-import models.{ProtectionDisplayModel, SuccessResponseModel}
+import models.{ProtectionModel, ProtectionDisplayModel, SuccessResponseModel}
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
-import constructors.ResponseConstructors
+import constructors.{ExistingProtectionsConstructor, ResponseConstructors}
 import views.html.pages.result._
 import connectors.PLAConnector
 import utils.Constants
@@ -74,8 +74,14 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
 
   private def saveAndDisplaySuccess(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value) = {
     val successResponse: SuccessResponseModel = ResponseConstructors.createSuccessResponseFromJson(response.json)
-    // TODO: implement createDisplayModelFromSuccessResponse
-    //keyStoreConnector.saveData[ProtectionDisplayModel]("openProtection", ResponseConstructors.createDisplayModelFromSuccessResponse(successResponse))
+    val protModel = response.json.validate[ProtectionModel]
+    protModel.fold(
+      errors  => throw new Error("Couldn't get protection model from app"),
+      success => {
+        val protDisp = ExistingProtectionsConstructor.createProtectionDisplayModel(success, (response.json \ "psaCheckReference").toString())
+        keyStoreConnector.saveData[ProtectionDisplayModel]("openProtection", protDisp)
+      }
+    )
     Ok(resultSuccess(successResponse))
   }
 
@@ -88,7 +94,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       .map {
         response: HttpResponse => applicationOutcome(response) match {
           case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-          case ApplicationOutcome.Successful => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+          case ApplicationOutcome.Successful => saveAndDisplaySuccess(response)
           case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
         }
       }
@@ -104,7 +110,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       .map {
         response: HttpResponse => applicationOutcome(response) match {
           case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-          case ApplicationOutcome.Successful => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+          case ApplicationOutcome.Successful => saveAndDisplaySuccess(response)
           case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
         }
       }

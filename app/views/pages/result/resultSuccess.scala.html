@@ -35,6 +35,6 @@
 
 		<p><a href=@controllers.routes.ExitSurveyController.exitSurvey>@Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Html(Messages("pla.resultSuccess.exitSurvey"))</p>
 
-		<p><a id="printPage" href="#" onclick="window.print();return false;">@Messages("pla.resultSuccess.print")</a></p>
+		<p><a id="printPage" href="@controllers.routes.PrintController.printView" target="_blank">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newWindow"))</a></p>
 	</div>
 }
