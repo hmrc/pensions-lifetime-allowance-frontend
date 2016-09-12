@@ -37,6 +37,8 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
       additionalInfo = List("1","2")
     )
 
+    val testNoPrintSuccessResponseModel = testSuccessResponseModel.copy(notificationId = "24", printable = false, details = None)
+
     val testRejectionResponseModel = RejectionResponseModel(
       "20",
       List("1")
@@ -44,16 +46,22 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
 
     "ResponseConstructors" should {
 
-        "create the correct success model from Json" in {
-            implicit val applicationType = ApplicationType.FP2016
-            val jsn:JsValue = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":23,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1,"psaCheckReference":"testPSARef"}""")
-            TestResponseConstructors.createSuccessResponseFromJson(jsn) shouldBe testSuccessResponseModel
-        }
+      "create the correct printable success model from Json" in {
+          implicit val applicationType = ApplicationType.FP2016
+          val jsn:JsValue = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":23,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1,"psaCheckReference":"testPSARef"}""")
+          TestResponseConstructors.createSuccessResponseFromJson(jsn) shouldBe testSuccessResponseModel
+      }
 
-        "create the correct rejection model from Json" in {
-            implicit val applicationType = ApplicationType.FP2016
-            val json:JsValue = Json.parse("""{"nino":"AA123456A","notificationId":20,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
-            TestResponseConstructors.createRejectionResponseFromJson(json) shouldBe testRejectionResponseModel
-        }
+      "create the correct non-printable success model from Json" in {
+        implicit val applicationType = ApplicationType.FP2016
+        val jsn:JsValue = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1,"psaCheckReference":"testPSARef"}""")
+        TestResponseConstructors.createSuccessResponseFromJson(jsn) shouldBe testNoPrintSuccessResponseModel
+      }
+
+      "create the correct rejection model from Json" in {
+          implicit val applicationType = ApplicationType.FP2016
+          val json:JsValue = Json.parse("""{"nino":"AA123456A","notificationId":20,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
+          TestResponseConstructors.createRejectionResponseFromJson(json) shouldBe testRejectionResponseModel
+      }
     }
 }

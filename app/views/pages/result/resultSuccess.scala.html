@@ -8,7 +8,7 @@
 @(res: SuccessResponseModel)(implicit request: Request[_])
 
 @views.html.main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None) {
-	
+
 	<div class="grid-row">
 		<div class="transaction-banner--complete">
 	        <p class="heading-large" id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</p>
@@ -36,7 +36,10 @@
 		<p><a href=@controllers.routes.ExitSurveyController.exitSurvey>@Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Html(Messages("pla.resultSuccess.exitSurvey"))</p>
 
 		@if(res.printable) {
-			<p><a id="printPage" href="@controllers.routes.PrintController.printView" target="_blank">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newWindow"))</a></p>
+			<p><a id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" onclick="ga('send', 'event', 'print-active-protection', 'print-@{res.protectionType.toString}', 'result');">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newWindow"))</a></p>
 		}
 	</div>
 }
+
+
+
