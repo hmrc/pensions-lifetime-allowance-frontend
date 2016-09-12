@@ -31,6 +31,7 @@ trait ResponseConstructors {
 
     def createSuccessResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value) : SuccessResponseModel = {
         val notificationId = (json \ "notificationId").as[Int].toString
+        val printable = Constants.activeProtectionCodes.contains(notificationId.toInt)
 
         val details = if(Constants.successCodesRequiringProtectionInfo.contains(notificationId.toInt)) {
             Some(createResponseDetailsFromJson(json))
@@ -42,7 +43,7 @@ trait ResponseConstructors {
         }
         val additionalInfo = getAdditionalInfo(notificationId)
 
-        SuccessResponseModel(protectionType, notificationId, protectedAmount, details, additionalInfo)
+        SuccessResponseModel(protectionType, notificationId, protectedAmount, printable, details, additionalInfo)
     }
 
     private def createResponseDetailsFromJson(json: JsValue): ProtectionDetailsModel = {
@@ -75,34 +76,4 @@ trait ResponseConstructors {
     def createExistingProtectionsModelFromJson(json: JsValue): Option[ExistingProtectionsModel] = {
         json.validate[ExistingProtectionsModel].asOpt
     }
-
-
-    // TODO: Get it working
-    /*
-    def createDisplayModelFromSuccessResponse(resp: SuccessResponseModel): ProtectionDisplayModel ={
-        val protectionType =
-    }
-
-
-
-    case class ProtectionDisplayModel(
-                                       protectionType: String,
-                                       status: String,
-                                       psaCheckReference: String,
-                                       protectionReference: String,
-                                       protectedAmount: Option[String],
-                                       certificateDate: Option[String]
-                                       )
-
-
-    case class SuccessResponseModel(protectionType: ApplicationType.Value,
-                                    notificationId: String,
-                                    protectedAmount: String,
-                                    details: Option[ProtectionDetailsModel],
-                                    additionalInfo: Seq[String])
-
-    case class ProtectionDetailsModel(protectionReference: Option[String],
-                                      psaReference: Option[String],
-                                      applicationDate: Option[String])
-    */
 }

@@ -26,7 +26,7 @@ object ApplyFP16Model {
 }
 
 
-case class SuccessResponseModel(protectionType: ApplicationType.Value, notificationId: String, protectedAmount: String, details: Option[ProtectionDetailsModel], additionalInfo: Seq[String])
+case class SuccessResponseModel(protectionType: ApplicationType.Value, notificationId: String, protectedAmount: String, printable: Boolean, details: Option[ProtectionDetailsModel], additionalInfo: Seq[String])
 
 case class RejectionResponseModel(notificationId: String, additionalInfo: Seq[String])
 

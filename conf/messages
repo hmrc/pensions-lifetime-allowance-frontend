@@ -408,9 +408,9 @@ pla.resultSuccess.protectionRef         = Protection notification number
 pla.resultSuccess.psaRef                = Scheme administrator reference
 pla.resultSuccess.applicationDate       = Application date
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 60 days.
-pla.resultSuccess.viewDetails           = You can view details of your protections at any time on the
-pla.resultSuccess.viewDetailsLinkText   = existing protections page
-pla.resultSuccess.print                 = Print this page
+pla.resultSuccess.viewDetails           = You can view these details in your
+pla.resultSuccess.viewDetailsLinkText   = personal tax account
+pla.resultSuccess.print                 = Print these details
 pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
 pla.resultSuccess.exitSurvey            = Your feedback helps us improve.</p><p>(takes 30 seconds to complete)
 

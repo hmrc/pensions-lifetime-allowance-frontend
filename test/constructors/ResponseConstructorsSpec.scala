@@ -32,6 +32,7 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
       protectionType = ApplicationType.FP2016,
       notificationId = "23",
       protectedAmount = "£1,250,000",
+      printable = true,
       details = Some(testProtectionDetailsModel),
       additionalInfo = List("1","2")
     )

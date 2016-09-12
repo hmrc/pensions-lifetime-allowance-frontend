@@ -40,4 +40,6 @@ object Constants {
 
     val ip16RelevantAmountThreshold = 1000001.0
     val ip14RelevantAmountThreshold = 1250001.0
+
+    val activeProtectionCodes = List(22,23,12,3,4,8)
 }
