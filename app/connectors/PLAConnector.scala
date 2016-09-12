@@ -77,7 +77,7 @@ trait ResponseHandler extends HttpErrorFunctions {
   def handlePLAResponse(method: String, url: String, response: HttpResponse): HttpResponse = {
     response.status match {
       case 409 => response  // this is an expected response for this API, so don't throw an exception
-      case 423 => throw new NotFoundException(notFoundMessage("GET", url, response.body))
+      case 423 => response
       case _ => handleResponse(method, url)(response)
     }
   }
