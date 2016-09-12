@@ -69,9 +69,6 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
     "use the correct http" in {
       PLAConnector.http shouldBe WSHttp
     }
-    "use the correct serviceUrl" in {
-      PLAConnector.serviceUrl shouldBe "http://localhost:9011"
-    }
   }
 
   "Calling applyFP16" should {

@@ -32,6 +32,7 @@ import scala.concurrent.Future
 
 object PrintController extends PrintController {
   val keyStoreConnector = KeyStoreConnector
+  val citizenDetailsConnector = CitizenDetailsConnector
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ip14StartUrl
@@ -40,11 +41,12 @@ object PrintController extends PrintController {
 trait PrintController extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
+  val citizenDetailsConnector: CitizenDetailsConnector
 
   val printView = AuthorisedByAny.async { implicit user => implicit request =>
 
       user.nino.map { nino =>
-        CitizenDetailsConnector.getPersonDetails(nino).flatMap( model => {
+        citizenDetailsConnector.getPersonDetails(nino).flatMap( model => {
           model.map {
             personalDetailsModel => routePrintView(personalDetailsModel, nino)
           }.getOrElse {
