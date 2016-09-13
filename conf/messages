@@ -451,6 +451,8 @@ pla.exitSurvey.question4                                = <p class="bold-small">
 pla.exitSurvey.writeFeedback                            = If you have any additional comments please use the feedback link at the top of the page.
 pla.exitSurvey.sendFeedback                             = Send feedback
 
+## Printing ##
+pla.print.title                           = Print your active protection
 
 
 ### RESULTS MESSAGES ###

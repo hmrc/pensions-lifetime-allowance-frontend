@@ -2,7 +2,8 @@
 @import play.api.i18n._
 
 @(personalDetailsModel: PersonalDetailsModel, protectionDisplayModel: ProtectionDisplayModel, nino: String)(implicit request: Request[_])
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <style>
         body {
@@ -30,6 +31,7 @@
         padding-bottom: 1cm;
         }
     </style>
+    <title>@Messages("pla.print.title")</title>
 </head>
 <header>
     <p class="header">
@@ -88,3 +90,4 @@
         </div>
     </div>
 </body>
+</html>
