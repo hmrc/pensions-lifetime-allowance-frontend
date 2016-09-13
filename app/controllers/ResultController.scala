@@ -29,6 +29,7 @@ import views.html.pages.result._
 import connectors.PLAConnector
 import utils.Constants
 import enums.{ApplicationOutcome, ApplicationType}
+import play.api.Logger
 
 import scala.concurrent.Future
 
@@ -76,13 +77,16 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     val successResponse: SuccessResponseModel = ResponseConstructors.createSuccessResponseFromJson(response.json)
     val protModel = response.json.validate[ProtectionModel]
     protModel.fold(
-      errors  => throw new Error("Couldn't get protection model from app"),
+      errors  => {
+        Logger.error(s"Unable to create printable model from success response for ${successResponse.protectionType.toString()}")
+        Ok(resultSuccess(successResponse.copy(printable = false)))
+      },
       success => {
         val protDisp = ExistingProtectionsConstructor.createProtectionDisplayModel(success, (response.json \ "psaCheckReference").toString())
         keyStoreConnector.saveData[ProtectionDisplayModel]("openProtection", protDisp)
+        Ok(resultSuccess(successResponse))
       }
     )
-    Ok(resultSuccess(successResponse))
   }
 
 
