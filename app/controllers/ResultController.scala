@@ -19,15 +19,17 @@ package controllers
 import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
 import connectors.KeyStoreConnector
-import play.api.mvc.{AnyContent, Action}
+import models.{ProtectionModel, ProtectionDisplayModel, SuccessResponseModel}
+import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
-import constructors.ResponseConstructors
+import constructors.{ExistingProtectionsConstructor, ResponseConstructors}
 import views.html.pages.result._
 import connectors.PLAConnector
 import utils.Constants
 import enums.{ApplicationOutcome, ApplicationType}
+import play.api.Logger
 
 import scala.concurrent.Future
 
@@ -52,7 +54,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       plaConnector.applyFP16(user.nino.get).map {
         response: HttpResponse => applicationOutcome(response) match {
           case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-          case ApplicationOutcome.Successful => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+          case ApplicationOutcome.Successful => saveAndDisplaySuccess(response)
           case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
         }
       }
@@ -71,6 +73,22 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     }
   }
 
+  private def saveAndDisplaySuccess(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value) = {
+    val successResponse: SuccessResponseModel = ResponseConstructors.createSuccessResponseFromJson(response.json)
+    val protModel = response.json.validate[ProtectionModel]
+    protModel.fold(
+      errors  => {
+        Logger.error(s"Unable to create printable model from success response for ${successResponse.protectionType.toString()}")
+        Ok(resultSuccess(successResponse.copy(printable = false)))
+      },
+      success => {
+        val protDisp = ExistingProtectionsConstructor.createProtectionDisplayModel(success, (response.json \ "psaCheckReference").toString())
+        keyStoreConnector.saveData[ProtectionDisplayModel]("openProtection", protDisp)
+        Ok(resultSuccess(successResponse))
+      }
+    )
+  }
+
 
   val processIPApplication = AuthorisedByAny.async {
     implicit user =>  implicit request =>
@@ -80,7 +98,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       .map {
         response: HttpResponse => applicationOutcome(response) match {
           case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-          case ApplicationOutcome.Successful => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+          case ApplicationOutcome.Successful => saveAndDisplaySuccess(response)
           case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
         }
       }
@@ -96,7 +114,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       .map {
         response: HttpResponse => applicationOutcome(response) match {
           case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-          case ApplicationOutcome.Successful => Ok(resultSuccess(ResponseConstructors.createSuccessResponseFromJson(response.json)))
+          case ApplicationOutcome.Successful => saveAndDisplaySuccess(response)
           case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
         }
       }

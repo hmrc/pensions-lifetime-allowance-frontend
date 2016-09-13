@@ -16,7 +16,7 @@
 
 package controllers
 
-import models.ExistingProtectionsModel
+import models.{ProtectionDisplayModel, ExistingProtectionsModel}
 import enums.ApplicationType
 import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.Json
 import constructors.{ResponseConstructors, ExistingProtectionsConstructor}
-import connectors.PLAConnector
+import connectors.{KeyStoreConnector, PLAConnector}
 import views.html._
 
 
@@ -36,11 +36,13 @@ object ReadProtectionsController extends ReadProtectionsController with Services
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
+  override val keyStoreConnector = KeyStoreConnector
   override val plaConnector = PLAConnector
 }
 
 trait ReadProtectionsController extends FrontendController with AuthorisedForPLA {
 
+  val keyStoreConnector: KeyStoreConnector
   val plaConnector : PLAConnector
 
   val currentProtections = AuthorisedByAny.async {
@@ -59,7 +61,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
 
   def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Result = {
     ResponseConstructors.createExistingProtectionsModelFromJson(Json.parse(response.body)) match {
-      case Some(model) => displayExistingProtections(model)
+      case Some(model) => saveAndDisplayExistingProtections(model)
       case _ => {
         Logger.error(s"unable to create existing protections model from microservice response for nino: ${user.nino}")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
@@ -68,8 +70,11 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
 
   }
 
-  def displayExistingProtections(model: ExistingProtectionsModel)(implicit request: Request[AnyContent]): Result = {
+  def saveAndDisplayExistingProtections(model: ExistingProtectionsModel)(implicit request: Request[AnyContent]): Result = {
     val displayModel = ExistingProtectionsConstructor.createExistingProtectionsDisplayModel(model)
+    displayModel.activeProtections.headOption.map { activeModel =>
+      keyStoreConnector.saveData[ProtectionDisplayModel]("openProtection", activeModel)
+    }
     Ok(pages.existingProtections.existingProtections(displayModel))
   }
 

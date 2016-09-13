@@ -40,7 +40,7 @@ object ExistingProtectionsConstructor {
     }
   }
 
-  private def createProtectionDisplayModel(model: ProtectionModel, psaCheckReference: String): ProtectionDisplayModel = {
+  def createProtectionDisplayModel(model: ProtectionModel, psaCheckReference: String): ProtectionDisplayModel = {
     
     val status = statusString(model.status)
 
@@ -58,10 +58,12 @@ object ExistingProtectionsConstructor {
       case _ => None
     }
 
+    val strippedPsaRef = psaCheckReference.stripPrefix(""""""").stripSuffix(""""""")
+
     ProtectionDisplayModel(
               protectionType,
               status,
-              psaCheckReference,
+              strippedPsaRef,
               protectionReference,
               protectedAmount,
               certificateDate)

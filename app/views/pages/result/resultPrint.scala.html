@@ -1,0 +1,93 @@
+@import models.{PersonalDetailsModel, ProtectionDisplayModel}
+@import play.api.i18n._
+
+@(personalDetailsModel: PersonalDetailsModel, protectionDisplayModel: ProtectionDisplayModel, nino: String)(implicit request: Request[_])
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+        font-family: Arial;
+        padding:1cm 10%;
+        font-size: 18px;
+        }
+        hr {
+        size: 2;
+        color: rgb(150,150,150);
+        }
+        tr > td {
+        padding-bottom: 1em;
+        padding-right: 1em;
+        font-size: 18px;
+        }
+        .faint {
+        color: rgb(130,130,130);
+        }
+        .header {
+        color: rgb(180,180,180);
+        font-size: 22px;
+        }
+        .personalInfo{
+        padding-bottom: 1cm;
+        }
+    </style>
+    <title>@Messages("pla.print.title")</title>
+</head>
+<header>
+    <p class="header">
+        HM Revenue & Customs
+    </p>
+</header>
+<body onload="window.print()">
+    <div>
+        <div class="personalInfo">
+            <h1 id="userName">
+                @{personalDetailsModel.person.firstName.toLowerCase.capitalize} @{personalDetailsModel.person.lastName.toLowerCase.capitalize}
+            </h1>
+            <p id="userNino">
+                National Insurance number @{nino}
+            </p>
+        </div>
+
+        <div>
+            <h2>
+                Protection details
+                <hr noshade/>
+            </h2>
+
+            <table class="table">
+                <tbody>
+                @protectionDisplayModel.certificateDate.map{ cDate =>
+                    <tr>
+                        <td>Application date</td>
+                        <td id="applicationDate">@{cDate}</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Protection type</td>
+                    <td id="protectionType">@Messages(s"pla.protection.types.${protectionDisplayModel.protectionType}")</td>
+                </tr>
+                @protectionDisplayModel.protectedAmount.map { amt =>
+                    <tr>
+                        <td>Protected lifetime allowance</td>
+                        <td id="protectedAmount">@{amt}</td>
+                    </tr>
+                }
+                <tr>
+                    <td>Protection notification number</td>
+                    <td id="protectionRef">@{protectionDisplayModel.protectionReference}</td>
+                </tr>
+                <tr>
+                    <td>Scheme administrator reference</td>
+                    <td id="psaRef">@{protectionDisplayModel.psaCheckReference}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <p class="faint">Give these details to your pension provider when you decide to take money from your pension</p>
+        </div>
+    </div>
+</body>
+</html>

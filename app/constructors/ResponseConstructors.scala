@@ -16,6 +16,7 @@
 
 package constructors
 
+import connectors.KeyStoreConnector
 import play.api.i18n.Messages
 import play.api.libs.json.{JsSuccess, JsValue, Json}
 import models._
@@ -24,13 +25,13 @@ import utils.Constants
 import common.{Dates,Display}
 
 object ResponseConstructors extends ResponseConstructors {
-    
 }
 
 trait ResponseConstructors {
 
     def createSuccessResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value) : SuccessResponseModel = {
         val notificationId = (json \ "notificationId").as[Int].toString
+        val printable = Constants.activeProtectionCodes.contains(notificationId.toInt)
 
         val details = if(Constants.successCodesRequiringProtectionInfo.contains(notificationId.toInt)) {
             Some(createResponseDetailsFromJson(json))
@@ -41,7 +42,8 @@ trait ResponseConstructors {
             case _ => Display.currencyDisplayString(BigDecimal((json \ "protectedAmount").as[Double]))
         }
         val additionalInfo = getAdditionalInfo(notificationId)
-        SuccessResponseModel(protectionType, notificationId, protectedAmount, details, additionalInfo)
+
+        SuccessResponseModel(protectionType, notificationId, protectedAmount, printable, details, additionalInfo)
     }
 
     private def createResponseDetailsFromJson(json: JsValue): ProtectionDetailsModel = {

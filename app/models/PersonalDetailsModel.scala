@@ -16,18 +16,20 @@
 
 package models
 
-import play.api.libs.json._
-import enums.ApplicationType
+import play.api.libs.json.Json
 
-case class ApplyFP16Model(protectionType: String)
-
-object ApplyFP16Model {
-  implicit val format = Json.format[ApplyFP16Model]
+case class Person(lastName: String, firstName: String) {
 }
 
+object Person{
+  implicit val format = Json.format[Person]
+}
 
-case class SuccessResponseModel(protectionType: ApplicationType.Value, notificationId: String, protectedAmount: String, printable: Boolean, details: Option[ProtectionDetailsModel], additionalInfo: Seq[String])
+case class PersonalDetailsModel(person: Person) {
 
-case class RejectionResponseModel(notificationId: String, additionalInfo: Seq[String])
+}
 
-case class ProtectionDetailsModel(protectionReference: Option[String], psaReference: Option[String], applicationDate: Option[String])
+object PersonalDetailsModel{
+  implicit val format = Json.format[PersonalDetailsModel]
+}
+

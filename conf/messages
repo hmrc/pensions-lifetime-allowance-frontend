@@ -368,13 +368,14 @@ pla.summary.ip14DeclarationPara2                        = The information that I
 
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = View your existing protections
-pla.existingProtections.pageHeading                     = Existing protections
+pla.existingProtections.pageHeading                     = Lifetime allowance protection
 pla.existingProtections.BreadcrumbPTAHome               = Account home
 pla.existingProtections.BreadcrumbPLA                   = Lifetime allowance protection
-pla.existingProtections.open                            = Open
+pla.existingProtections.details                         = Details
 pla.existingProtections.other                           = Other
 pla.existingProtections.noActiveProtections             = You currently have no open protections.
 pla.existingProtections.noOtherProtections              = You have no other protections.
+pla.existingProtections.protectedAmount                 = Protected lifetime allowance
 pla.existingProtections.protectionRef                   = Protection notification number
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
@@ -407,9 +408,9 @@ pla.resultSuccess.protectionRef         = Protection notification number
 pla.resultSuccess.psaRef                = Scheme administrator reference
 pla.resultSuccess.applicationDate       = Application date
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 60 days.
-pla.resultSuccess.viewDetails           = You can view details of your protections at any time on the
-pla.resultSuccess.viewDetailsLinkText   = existing protections page
-pla.resultSuccess.print                 = Print this page
+pla.resultSuccess.viewDetails           = You can view these details in your
+pla.resultSuccess.viewDetailsLinkText   = personal tax account
+pla.resultSuccess.print                 = Print these details
 pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
 pla.resultSuccess.exitSurvey            = Your feedback helps us improve.</p><p>(takes 30 seconds to complete)
 
@@ -450,6 +451,8 @@ pla.exitSurvey.question4                                = <p class="bold-small">
 pla.exitSurvey.writeFeedback                            = If you have any additional comments please use the feedback link at the top of the page.
 pla.exitSurvey.sendFeedback                             = Send feedback
 
+## Printing ##
+pla.print.title                           = Print your active protection
 
 
 ### RESULTS MESSAGES ###

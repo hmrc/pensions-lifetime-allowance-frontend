@@ -73,6 +73,7 @@ POST        /result-fp16                                        controllers.Resu
 POST        /result-ip16                                        controllers.ResultController.processIPApplication
 POST        /result-ip14                                        controllers.ResultController.processIP14Application
 GET         /existing-protections                               controllers.ReadProtectionsController.currentProtections
+GET         /print-protection                                   controllers.PrintController.printView
 
 #Feedback routes
 GET         /feedback                                           controllers.FeedbackController.show

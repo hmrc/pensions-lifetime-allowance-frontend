@@ -39,6 +39,7 @@ import models._
 import views.html._
 
 object IP2016Controller extends IP2016Controller {
+
     val keyStoreConnector = KeyStoreConnector
     override lazy val applicationConfig = FrontendAppConfig
     override lazy val authConnector = FrontendAuthConnector
@@ -90,7 +91,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                     Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(validatedForm)))
                 } else {
                     keyStoreConnector.saveFormData("pensionsTakenBefore", success)
-                    Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
+                    Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween()))
                 }
             }
         )
