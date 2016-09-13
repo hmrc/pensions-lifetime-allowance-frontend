@@ -55,18 +55,22 @@
 
             <table class="table">
                 <tbody>
-                <tr>
-                    <td>Application date</td>
-                    <td id="applicationDate">@{protectionDisplayModel.certificateDate}</td>
-                </tr>
+                @protectionDisplayModel.certificateDate.map{ cDate =>
+                    <tr>
+                        <td>Application date</td>
+                        <td id="applicationDate">@{cDate}</td>
+                    </tr>
+                }
                 <tr>
                     <td>Protection type</td>
                     <td id="protectionType">@Messages(s"pla.protection.types.${protectionDisplayModel.protectionType}")</td>
                 </tr>
-                <tr>
-                    <td>Protected lifetime allowance</td>
-                    <td id="protectedAmount">@{protectionDisplayModel.protectedAmount}</td>
-                </tr>
+                @protectionDisplayModel.protectedAmount.map { amt =>
+                    <tr>
+                        <td>Protected lifetime allowance</td>
+                        <td id="protectedAmount">@{amt}</td>
+                    </tr>
+                }
                 <tr>
                     <td>Protection notification number</td>
                     <td id="protectionRef">@{protectionDisplayModel.protectionReference}</td>
