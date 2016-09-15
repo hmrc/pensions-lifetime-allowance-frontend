@@ -18,6 +18,7 @@ package models
 
 import play.api.libs.json._
 import enums.ApplicationType
+import enums.ApplicationType.ApplicationType
 
 case class ApplyFP16Model(protectionType: String)
 
@@ -25,9 +26,24 @@ object ApplyFP16Model {
   implicit val format = Json.format[ApplyFP16Model]
 }
 
-
-case class SuccessResponseModel(protectionType: ApplicationType.Value, notificationId: String, protectedAmount: String, printable: Boolean, details: Option[ProtectionDetailsModel], additionalInfo: Seq[String])
-
 case class RejectionResponseModel(notificationId: String, additionalInfo: Seq[String])
 
 case class ProtectionDetailsModel(protectionReference: Option[String], psaReference: Option[String], applicationDate: Option[String])
+
+object ProtectionDetailsModel {
+  implicit val format = Json.format[ProtectionDetailsModel]
+}
+
+case class SuccessResponseModel(
+                                 protectionType: ApplicationType.Value,
+                                 notificationId: String, protectedAmount: String,
+                                 printable: Boolean, details: Option[ProtectionDetailsModel],
+                                 additionalInfo: Seq[String])
+object SuccessResponseModel {
+  implicit val applicationTypeFormat = new Format[ApplicationType.Value] {
+    def reads(json: JsValue) = JsSuccess(ApplicationType.withName(json.as[String]))
+    def writes(appEnum: ApplicationType.Value) = JsString(appEnum.toString)
+  }
+  implicit val format = Json.format[SuccessResponseModel]
+
+}

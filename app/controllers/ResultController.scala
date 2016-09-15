@@ -16,20 +16,22 @@
 
 package controllers
 
-import auth.{PLAUser, AuthorisedForPLA}
-import config.{FrontendAppConfig,FrontendAuthConnector}
-import connectors.KeyStoreConnector
-import models.{ProtectionModel, ProtectionDisplayModel, SuccessResponseModel}
-import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http._
+import auth.{AuthorisedForPLA, PLAUser}
+import config.{FrontendAppConfig, FrontendAuthConnector}
+import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{ExistingProtectionsConstructor, ResponseConstructors}
-import views.html.pages.result._
-import connectors.PLAConnector
-import utils.Constants
+import enums.ApplicationType.ApplicationType
 import enums.{ApplicationOutcome, ApplicationType}
+import models.{ProtectionDisplayModel, ProtectionModel, SuccessResponseModel}
 import play.api.Logger
+import play.api.libs.json.Json
+import play.api.mvc._
+import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http._
+import utils.Constants
+import views.html.pages.result._
 
 import scala.concurrent.Future
 
@@ -54,7 +56,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       plaConnector.applyFP16(user.nino.get).map {
         response: HttpResponse => applicationOutcome(response) match {
           case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-          case ApplicationOutcome.Successful => saveAndDisplaySuccess(response)
+          case ApplicationOutcome.Successful => saveAndRedirectToDisplaySuccess(response)
           case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
         }
       }
@@ -73,36 +75,62 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     }
   }
 
-  private def saveAndDisplaySuccess(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value) = {
+  private def saveAndRedirectToDisplaySuccess(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value) = {
+
     val successResponse: SuccessResponseModel = ResponseConstructors.createSuccessResponseFromJson(response.json)
     val protModel = response.json.validate[ProtectionModel]
+
+    def redirectHelper(responseModel: SuccessResponseModel) = {
+      import ApplicationType._
+      responseModel.protectionType match {
+        case IP2016 => Redirect(routes.ResultController.displayIP16())
+        case IP2014 => Redirect(routes.ResultController.displayIP14())
+        case FP2016 => Redirect(routes.ResultController.displayFP16())
+      }
+    }
+
     protModel.fold(
       errors  => {
         Logger.error(s"Unable to create printable model from success response for ${successResponse.protectionType.toString()}")
-        Ok(resultSuccess(successResponse.copy(printable = false)))
+        val errorModel = successResponse.copy(printable = false)
+        keyStoreConnector.saveData[SuccessResponseModel]("successModel", errorModel)
+        redirectHelper(errorModel)
       },
       success => {
-        val protDisp = ExistingProtectionsConstructor.createProtectionDisplayModel(success, (response.json \ "psaCheckReference").toString())
+        val protDisp: ProtectionDisplayModel = ExistingProtectionsConstructor.createProtectionDisplayModel(success, (response.json \ "psaCheckReference").toString())
         keyStoreConnector.saveData[ProtectionDisplayModel]("openProtection", protDisp)
-        Ok(resultSuccess(successResponse))
+
+        val successDisp =
+        keyStoreConnector.saveData[SuccessResponseModel]("successModel", successResponse)
+        redirectHelper(successResponse)
       }
     )
   }
+  val displayIP16 = displaySuccess()
+  val displayIP14 = displaySuccess()
+  val displayFP16 = displaySuccess()
 
+  def displaySuccess(): Action[AnyContent] = AuthorisedByAny.async {
+    implicit user => implicit request =>
+      keyStoreConnector.fetchAndGetFormData[SuccessResponseModel]("successModel").map {
+        case Some(model)  => Ok(resultSuccess(model))
+        case _            => InternalServerError
+    }
+  }
 
   val processIPApplication = AuthorisedByAny.async {
     implicit user =>  implicit request =>
       implicit val protectionType = ApplicationType.IP2016
       keyStoreConnector.fetchAllUserData.flatMap(userData =>
-      plaConnector.applyIP16(user.nino.get, userData.get)
-      .map {
-        response: HttpResponse => applicationOutcome(response) match {
-          case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-          case ApplicationOutcome.Successful => saveAndDisplaySuccess(response)
-          case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
-        }
-      }
-    )
+        plaConnector.applyIP16(user.nino.get, userData.get)
+          .map {
+            response: HttpResponse => applicationOutcome(response) match {
+              case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
+              case ApplicationOutcome.Successful => saveAndRedirectToDisplaySuccess(response)
+              case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
+            }
+          }
+      )
   }
 
 
@@ -110,14 +138,16 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     implicit user =>  implicit request =>
       implicit val protectionType = ApplicationType.IP2014
       keyStoreConnector.fetchAllUserData.flatMap(userData =>
-      plaConnector.applyIP14(user.nino.get, userData.get)
-      .map {
-        response: HttpResponse => applicationOutcome(response) match {
-          case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-          case ApplicationOutcome.Successful => saveAndDisplaySuccess(response)
-          case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
-        }
-      }
-    )
+        plaConnector.applyIP14(user.nino.get, userData.get)
+          .map {
+            response: HttpResponse => applicationOutcome(response) match {
+              case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
+              case ApplicationOutcome.Successful => saveAndRedirectToDisplaySuccess(response)
+              case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
+            }
+          }
+      )
   }
+
+
 }
