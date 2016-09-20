@@ -19,16 +19,19 @@ package controllers
 import auth.MockAuthConnector
 import org.mockito.Matchers
 import play.api.i18n.Messages
-import testHelpers.AuthorisedFakeRequestToPost
+import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost, FakeRequestTo}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http._
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mock.MockitoSugar
 import org.mockito.Mockito._
 import org.mockito.Matchers.anyString
-import config.{FrontendAppConfig,FrontendAuthConnector}
+import config.{FrontendAppConfig, FrontendAuthConnector}
 import play.api.libs.json.{JsValue, Json}
 import connectors.{KeyStoreConnector, PLAConnector}
+import models.SuccessResponseModel
+import play.api.mvc.{Action, AnyContent, Result}
+import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
@@ -109,43 +112,49 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   "Successfully applying for FP" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processFPApplication)
-    "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
+
+    "return 303" in {status(DataItem.result) shouldBe 303}
+    "redirect to the result success page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayFP16()}")}
   }
 
   "Unsuccessfully applying for FP" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processFPApplication)
-    "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
+    "return 303" in { status(DataItem.result) shouldBe 303 }
+    "redirect the user to the result rejection page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayFP16()}")}
+      //{DataItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
   }
 
   "Successfully applying for IP 2016" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processIPApplication)
-    "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
+    "return 303" in { status(DataItem.result) shouldBe 303 }
+    "redirect the user to the result success page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayIP16()}")}
+      //{DataItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
   }
 
   "Unsuccessfully applying for IP 2016" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processIPApplication)
-    "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
+    "return 303" in { status(DataItem.result) shouldBe 303 }
+    "redirect the user to the result rejection page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayIP16()}")}
+      //{DataItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
   }
 
   "Successfully applying for IP 2014" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processIP14Application)
-    "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result success page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
+    "return 303" in { status(DataItem.result) shouldBe 303 }
+    "take the user to the result success page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayIP14()}")}
+      //{DataItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
   }
 
   "Unsuccessfully applying for IP 2014" should {
 
     object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processIP14Application)
-    "return 200" in { status(DataItem.result) shouldBe 200 }
-    "take the user to the result rejection page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
+    "return 303" in { status(DataItem.result) shouldBe 303 }
+    "take the user to the result rejection page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayIP14()}")}
+      //{DataItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
   }
 
   "Applying for IP14 when Manual Correspondence is needed" should {

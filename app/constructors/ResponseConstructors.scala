@@ -53,10 +53,10 @@ trait ResponseConstructors {
         ProtectionDetailsModel(protectionReference, psaReference, applicationDate)
     }
 
-    def createRejectionResponseFromJson(json: JsValue): RejectionResponseModel = {
+    def createRejectionResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value): RejectionResponseModel = {
         val notificationId = (json \ "notificationId").as[Int].toString
         val additionalInfo = getAdditionalInfo(notificationId)
-        RejectionResponseModel(notificationId, additionalInfo)
+        RejectionResponseModel(notificationId, additionalInfo, protectionType)
     }
 
     def getAdditionalInfo(notificationId: String): List[String] = {

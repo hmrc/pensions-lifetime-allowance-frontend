@@ -22,7 +22,7 @@ import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{ExistingProtectionsConstructor, ResponseConstructors}
 import enums.ApplicationType.ApplicationType
 import enums.{ApplicationOutcome, ApplicationType}
-import models.{ProtectionDisplayModel, ProtectionModel, SuccessResponseModel}
+import models.{ProtectionDisplayModel, ProtectionModel, RejectionResponseModel, SuccessResponseModel}
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -48,22 +48,58 @@ object ResultController extends ResultController with ServicesConfig {
 trait ResultController extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
-  val plaConnector : PLAConnector
+  val plaConnector: PLAConnector
 
   val processFPApplication = AuthorisedByAny.async {
-    implicit user =>  implicit request =>
+    implicit user => implicit request =>
       implicit val protectionType = ApplicationType.FP2016
+
       plaConnector.applyFP16(user.nino.get).map {
-        response: HttpResponse => applicationOutcome(response) match {
-          case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-          case ApplicationOutcome.Successful => saveAndRedirectToDisplaySuccess(response)
-          case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
-        }
+        response: HttpResponse => implicit val ap = applicationOutcome(response);
+          ap match {
+            case ApplicationOutcome.MCNeeded => Locked(manualCorrespondenceNeeded())
+            case ApplicationOutcome.Successful => saveAndRedirectToDisplaySuccess(response)
+            case ApplicationOutcome.Rejected => saveAndRedirectToDisplaySuccess(response)
+          }
       }
   }
 
+  val processIPApplication = AuthorisedByAny.async {
+    implicit user => implicit request =>
+      implicit val protectionType = ApplicationType.IP2016
+      keyStoreConnector.fetchAllUserData.flatMap(userData =>
+        plaConnector.applyIP16(user.nino.get, userData.get)
+          .map {
+            response: HttpResponse => implicit val appOutcome: ApplicationOutcome.Value = applicationOutcome(response);
+              appOutcome match {
+                case ApplicationOutcome.MCNeeded => Locked(manualCorrespondenceNeeded())
+                case ApplicationOutcome.Successful => saveAndRedirectToDisplaySuccess(response)
+                case ApplicationOutcome.Rejected => saveAndRedirectToDisplaySuccess(response)
+              }
+          }
+      )
+  }
+
+  val processIP14Application = AuthorisedByAny.async {
+    implicit user => implicit request =>
+      implicit val protectionType = ApplicationType.IP2014
+      keyStoreConnector.fetchAllUserData.flatMap(userData =>
+        plaConnector.applyIP14(user.nino.get, userData.get)
+          .map {
+            response: HttpResponse =>
+              implicit val appOutcome = applicationOutcome(response)
+              appOutcome match {
+                case ApplicationOutcome.MCNeeded => Locked(manualCorrespondenceNeeded())
+                case ApplicationOutcome.Successful => saveAndRedirectToDisplaySuccess(response)
+                case ApplicationOutcome.Rejected => saveAndRedirectToDisplaySuccess(response)
+              }
+          }
+      )
+  }
+
   def applicationOutcome(response: HttpResponse)(implicit user: PLAUser, protectionType: ApplicationType.Value): ApplicationOutcome.Value = {
-    if(response.status == 423) ApplicationOutcome.MCNeeded else {
+    if (response.status == 423) ApplicationOutcome.MCNeeded
+    else {
       val notificationId = (response.json \ "notificationId").asOpt[Int]
       assert(notificationId.isDefined, s"no notification ID returned in $protectionType application response for user nino ${user.nino}")
       val successCodes = protectionType match {
@@ -71,83 +107,88 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
         case ApplicationType.IP2016 => Constants.ip16SuccessCodes
         case ApplicationType.IP2014 => Constants.ip14SuccessCodes
       }
-      if(successCodes.contains(notificationId.get)) ApplicationOutcome.Successful else ApplicationOutcome.Rejected
+      if (successCodes.contains(notificationId.get)) ApplicationOutcome.Successful else ApplicationOutcome.Rejected
     }
   }
 
-  private def saveAndRedirectToDisplaySuccess(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value) = {
+  private def saveAndRedirectToDisplaySuccess(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value, appOutcome: ApplicationOutcome.Value) = {
 
-    val successResponse: SuccessResponseModel = ResponseConstructors.createSuccessResponseFromJson(response.json)
-    val protModel = response.json.validate[ProtectionModel]
+    appOutcome match {
+      case ApplicationOutcome.Successful =>
 
-    def redirectHelper(responseModel: SuccessResponseModel) = {
-      import ApplicationType._
-      responseModel.protectionType match {
-        case IP2016 => Redirect(routes.ResultController.displayIP16())
-        case IP2014 => Redirect(routes.ResultController.displayIP14())
-        case FP2016 => Redirect(routes.ResultController.displayFP16())
-      }
-    }
+        val successResponse: SuccessResponseModel = ResponseConstructors.createSuccessResponseFromJson(response.json)
+        val protModel = response.json.validate[ProtectionModel]
 
-    protModel.fold(
-      errors  => {
-        Logger.error(s"Unable to create printable model from success response for ${successResponse.protectionType.toString()}")
-        val errorModel = successResponse.copy(printable = false)
-        keyStoreConnector.saveData[SuccessResponseModel]("successModel", errorModel)
-        redirectHelper(errorModel)
-      },
-      success => {
-        val protDisp: ProtectionDisplayModel = ExistingProtectionsConstructor.createProtectionDisplayModel(success, (response.json \ "psaCheckReference").toString())
-        keyStoreConnector.saveData[ProtectionDisplayModel]("openProtection", protDisp)
-
-        val successDisp =
-        keyStoreConnector.saveData[SuccessResponseModel]("successModel", successResponse)
-        redirectHelper(successResponse)
-      }
-    )
-  }
-  val displayIP16 = displaySuccess()
-  val displayIP14 = displaySuccess()
-  val displayFP16 = displaySuccess()
-
-  def displaySuccess(): Action[AnyContent] = AuthorisedByAny.async {
-    implicit user => implicit request =>
-      keyStoreConnector.fetchAndGetFormData[SuccessResponseModel]("successModel").map {
-        case Some(model)  => Ok(resultSuccess(model))
-        case _            => InternalServerError
-    }
-  }
-
-  val processIPApplication = AuthorisedByAny.async {
-    implicit user =>  implicit request =>
-      implicit val protectionType = ApplicationType.IP2016
-      keyStoreConnector.fetchAllUserData.flatMap(userData =>
-        plaConnector.applyIP16(user.nino.get, userData.get)
-          .map {
-            response: HttpResponse => applicationOutcome(response) match {
-              case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-              case ApplicationOutcome.Successful => saveAndRedirectToDisplaySuccess(response)
-              case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
-            }
+        def redirectHelper(responseModel: SuccessResponseModel) = {
+          import ApplicationType._
+          responseModel.protectionType match {
+            case IP2016 => Redirect(routes.ResultController.displayIP16())
+            case IP2014 => Redirect(routes.ResultController.displayIP14())
+            case FP2016 => Redirect(routes.ResultController.displayFP16())
           }
-      )
-  }
+        }
 
+        protModel.fold(
+          errors => {
+            Logger.error(s"Unable to create printable model from success response for ${
+              successResponse.protectionType.toString()
+            }")
+            val errorModel = successResponse.copy(printable = false)
+            keyStoreConnector.saveData[SuccessResponseModel]("successModel", errorModel)
+            redirectHelper(errorModel)
+          },
+          success => {
+            val protDisp: ProtectionDisplayModel = ExistingProtectionsConstructor.createProtectionDisplayModel(success, (response.json \ "psaCheckReference").toString())
+            keyStoreConnector.saveData[ProtectionDisplayModel]("openProtection", protDisp)
 
-  val processIP14Application = AuthorisedByAny.async {
-    implicit user =>  implicit request =>
-      implicit val protectionType = ApplicationType.IP2014
-      keyStoreConnector.fetchAllUserData.flatMap(userData =>
-        plaConnector.applyIP14(user.nino.get, userData.get)
-          .map {
-            response: HttpResponse => applicationOutcome(response) match {
-              case ApplicationOutcome.MCNeeded   => Locked(manualCorrespondenceNeeded())
-              case ApplicationOutcome.Successful => saveAndRedirectToDisplaySuccess(response)
-              case ApplicationOutcome.Rejected   => Ok(resultRejected(ResponseConstructors.createRejectionResponseFromJson(response.json)))
-            }
+            keyStoreConnector.saveData[SuccessResponseModel]("successModel", successResponse)
+            redirectHelper(successResponse)
           }
-      )
-  }
+        )
+      case ApplicationOutcome.Rejected =>
 
+        val rejectResponse: RejectionResponseModel = ResponseConstructors.createRejectionResponseFromJson(response.json)
+        def redirectHelper(responseModel: RejectionResponseModel) = {
+          import ApplicationType._
+          responseModel.protectionType match {
+            case IP2016 => Redirect(routes.ResultController.displayIP16())
+            case IP2014 => Redirect(routes.ResultController.displayIP14())
+            case FP2016 => Redirect(routes.ResultController.displayFP16())
+          }
+        }
+        keyStoreConnector.saveData[RejectionResponseModel]("rejectModel", rejectResponse)
+        redirectHelper(rejectResponse)
+    } //end match
+
+  } //end
+
+  val displayIP16, displayIP14, displayFP16 = displayResult()
+
+  def displayResult(): Action[AnyContent] = AuthorisedByAny.async{
+
+//      keyStoreConnector.fetchAndGetFormData[String]("result").map {
+//        case Some("success") => AuthorisedByAny.async {
+//          implicit user => implicit request =>
+//            keyStoreConnector.fetchAndGetFormData[SuccessResponseModel]("successModel").map {
+//              case Some(model) => Ok(resultSuccess(model))
+//              case _ => InternalServerError
+//            }
+//        } //end case
+//        case Some("rejection") => AuthorisedByAny.async {
+//          implicit user => implicit request =>
+//            keyStoreConnector.fetchAndGetFormData[RejectionResponseModel]("rejectModel").map {
+//              case Some(model) => Ok(resultRejected(model))
+//              case _ => InternalServerError
+//            }
+//        } //end case
+//      }
+
+    implicit user => implicit request=>
+    keyStoreConnector.fetchAndGetFormData[SuccessResponseModel]("successModel").map {
+        case Some(model) => Ok(resultSuccess(model))
+        case _ => InternalServerError
+    }
+
+  }//end method
 
 }
