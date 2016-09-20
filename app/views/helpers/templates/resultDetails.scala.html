@@ -5,7 +5,7 @@
 
 <ul>
     @if(details.protectionReference.isDefined) {<li id="protectionRef">@Messages("pla.resultSuccess.protectionRef"): @details.protectionReference.get</li>}
-    @if(details.psaReference.isDefined) {<li id="psaRef">@Messages("pla.resultSuccess.psaRef"): @details.psaReference.get</li>}
+    <li id="psaRef">@Messages("pla.resultSuccess.psaRef"): @details.psaReference</li>
     @if(details.applicationDate.isDefined) {<li id="applicationDate">@Messages("pla.resultSuccess.applicationDate"): @details.applicationDate.get</li>}
 </ul>
 

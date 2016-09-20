@@ -18,30 +18,6 @@ package models
 
 import play.api.libs.json.Json
 
-case class ProtectionModel (
-                             protectionID: Option[Int],
-                             certificateDate: Option[String] = None,
-                             version: Option[Int] = None,
-                             protectionType: Option[String] = None,
-                             status: Option[String] = None,
-                             protectedAmount: Option[Double] = None,
-                             relevantAmount: Option[Double] = None,
-                             postADayBenefitCrystallisationEvents: Option[Double] = None,
-                             preADayPensionInPayment: Option[Double] = None,
-                             uncrystallisedRights: Option[Double] = None,
-                             nonUKRights: Option[Double] = None,
-                             pensionDebitAmount: Option[Double] = None,
-                             pensionDebitEnteredAmount: Option[Double] = None,
-                             pensionDebitStartDate: Option[String] = None,
-                             pensionDebitTotalAmount: Option[Double] = None,
-                             notificationId: Option[Int] = None,
-                             protectionReference: Option[String] = None
-                           )
-
-object ProtectionModel {
-  implicit val format = Json.format[ProtectionModel]
-}
-
 
 case class ExistingProtectionsModel(psaCheckReference: String, lifetimeAllowanceProtections: Seq[ProtectionModel]) {
 
