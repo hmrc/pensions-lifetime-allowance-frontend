@@ -56,6 +56,10 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
+    }.recover{
+      case e: NotFoundException => Logger.error(s"Error 404 passed to currentProtections for nino: ${user.nino}")
+        throw new Upstream4xxResponse(e.message, 404, 500)
+      case otherException: Exception => throw otherException
     }
   }
 
