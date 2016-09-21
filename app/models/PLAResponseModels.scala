@@ -19,7 +19,7 @@ package models
 import play.api.libs.json.Json
 
 case class ApplyResponseModel (
-                                psaCheckReference: String,
+                                psaCheckReference: Option[String],
                                 protection: ProtectionModel
                                 )
 

@@ -34,15 +34,12 @@ trait ResponseConstructors {
     )
 
     def createApplyResponseModelFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value): Option[ApplyResponseModel] = {
-        val protection = json.validate[ProtectionModel]
         val psaReference = (json \ "psaCheckReference").asOpt[String]
 
-        psaReference.map {
-            psaCheckReference => protection.fold(
-                errors => None,
-                success => Some(ApplyResponseModel(psaCheckReference, success))
-                )
-        }.getOrElse(None)
+        json.validate[ProtectionModel].fold(
+            errors => None,
+            success => Some(ApplyResponseModel(psaReference, success))
+            )
     }
 
     def createSuccessDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): SuccessDisplayModel = {
@@ -67,42 +64,12 @@ trait ResponseConstructors {
         RejectionDisplayModel(notificationId.toString, additionalInfo, protectionType)
     }
 
-    private def createProtectionDetailsFromModel(model: ApplyResponseModel): ProtectionDetailsModel = {
+    private def createProtectionDetailsFromModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): ProtectionDetailsModel = {
         val protectionReference = model.protection.protectionReference
-        val psaReference = model.psaCheckReference
+        val psaReference = model.psaCheckReference.getOrElse(throw new OptionNotDefinedException("createProtectionDetailsFromModel", "psaCheckReference", protectionType.toString))
         val applicationDate = model.protection.certificateDate.map{ dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt))}
         ProtectionDetailsModel(protectionReference, psaReference, applicationDate)
     }
-
-//    def createSuccessResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value) : SuccessResponseModel = {
-//        val notificationId = (json \ "notificationId").as[Int].toString
-//        val printable = Constants.activeProtectionCodes.contains(notificationId.toInt)
-//
-//        val details = if(Constants.successCodesRequiringProtectionInfo.contains(notificationId.toInt)) {
-//            Some(createResponseDetailsFromJson(json))
-//        } else None
-//
-//        val protectedAmount = protectionType match {
-//            case ApplicationType.FP2016 => Constants.fpProtectedAmountString
-//            case _ => Display.currencyDisplayString(BigDecimal((json \ "protectedAmount").as[Double]))
-//        }
-//        val additionalInfo = getAdditionalInfo(notificationId)
-//
-//        SuccessResponseModel(protectionType, notificationId, protectedAmount, printable, details, additionalInfo)
-//    }
-
-//    private def createResponseDetailsFromJson(json: JsValue): ProtectionDetailsModel = {
-//        val protectionReference = (json \ "protectionReference").asOpt[String]
-//        val psaReference = (json \ "psaCheckReference").asOpt[String]
-//        val applicationDate = (json \ "certificateDate").asOpt[String].map{ dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt))}
-//        ProtectionDetailsModel(protectionReference, psaReference, applicationDate)
-//    }
-
-//    def createRejectionResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value): RejectionResponseModel = {
-//        val notificationId = (json \ "notificationId").as[Int].toString
-//        val additionalInfo = getAdditionalInfo(notificationId)
-//        RejectionResponseModel(notificationId, additionalInfo, protectionType)
-//    }
 
     def getAdditionalInfo(notificationId: Int): List[String] = {
 
