@@ -119,10 +119,17 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
 
     implicit user => implicit request=>
     val errorResponse = InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+
+
+
     keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
         case Some(model) => applicationOutcome(model) match {
 
           case ApplicationOutcome.Successful =>
+            if(utils.Constants.activeProtectionCodes.contains(model.protection.notificationId.get)) {
+              keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
+              // TODO: Log failure to store data
+            }
             val displayModel = ResponseConstructors.createSuccessDisplayModel(model)
             Ok(resultSuccess(displayModel))
 

@@ -1,8 +1,8 @@
 @import play.api.i18n._
-@import models.ProtectionDisplayModel
+@import models.ExistingProtectionDisplayModel
 @import helpers.templates.hiddenText
 
-@(protection: ProtectionDisplayModel, statusGroup: String, protectionNum: Int)
+@(protection: ExistingProtectionDisplayModel, statusGroup: String, protectionNum: Int)
 
 <div class="item">
 
@@ -29,7 +29,11 @@
                         @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, s"inactiveProtectedAmount$protectionNum")
                     }
                     @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, s"inactiveProtectionReference$protectionNum")
-                    @protectionDetails(Messages("pla.existingProtections.psaRef"), protection.psaCheckReference, s"inactivePSACheckRef$protectionNum")
+
+                    @protection.psaCheckReference.map { checkRef =>
+                        @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, s"inactivePSACheckRef$protectionNum")
+                    }
+
                     @protection.certificateDate.map{ cDate =>
                         @protectionDetails(Messages("pla.resultSuccess.applicationDate"), cDate, s"inactiveCertificateDate$protectionNum")
                     }

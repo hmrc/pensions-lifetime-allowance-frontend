@@ -31,3 +31,32 @@ case class RejectionDisplayModel(
                                   additionalInfo: Seq[String],
                                   protectionType: ApplicationType.Value
                                   )
+
+
+
+case class ExistingProtectionDisplayModel(
+                                   protectionType: String,
+                                   status: String,
+                                   psaCheckReference: Option[String],
+                                   protectionReference: String,
+                                   protectedAmount: Option[String],
+                                   certificateDate: Option[String]
+                                   )
+
+
+case class ExistingProtectionsDisplayModel(
+                                            activeProtection: Option[ExistingProtectionDisplayModel],
+                                            otherProtections: Seq[ExistingProtectionDisplayModel]
+                                            )
+
+
+case class PrintDisplayModel (
+                                firstName: String, surname: String,
+                                nino: String,
+                                protectionType: String,
+                                status: String,
+                                psaCheckReference: String,
+                                protectionReference: String,
+                                protectedAmount: Option[String],
+                                certificateDate: Option[String]
+                               )

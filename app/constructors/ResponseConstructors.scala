@@ -16,9 +16,8 @@
 
 package constructors
 
-import connectors.KeyStoreConnector
 import play.api.i18n.Messages
-import play.api.libs.json.{JsSuccess, JsValue, Json}
+import play.api.libs.json.JsValue
 import models._
 import enums.ApplicationType
 import utils.Constants
@@ -38,8 +37,8 @@ trait ResponseConstructors {
 
         json.validate[ProtectionModel].fold(
             errors => None,
-            success => Some(ApplyResponseModel(psaReference, success))
-            )
+            success => Some(ApplyResponseModel(success.copy(psaCheckReference = psaReference)))
+        )
     }
 
     def createSuccessDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): SuccessDisplayModel = {
@@ -66,7 +65,7 @@ trait ResponseConstructors {
 
     private def createProtectionDetailsFromModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): ProtectionDetailsModel = {
         val protectionReference = model.protection.protectionReference
-        val psaReference = model.psaCheckReference.getOrElse(throw new OptionNotDefinedException("createProtectionDetailsFromModel", "psaCheckReference", protectionType.toString))
+        val psaReference = model.protection.psaCheckReference.getOrElse(throw new OptionNotDefinedException("createProtectionDetailsFromModel", "psaCheckReference", protectionType.toString))
         val applicationDate = model.protection.certificateDate.map{ dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt))}
         ProtectionDetailsModel(protectionReference, psaReference, applicationDate)
     }
@@ -85,7 +84,17 @@ trait ResponseConstructors {
         loop(notificationId)
     }
 
-    def createExistingProtectionsModelFromJson(json: JsValue): Option[ExistingProtectionsModel] = {
-        json.validate[ExistingProtectionsModel].asOpt
+    def createTransformedReadResponseModelFromJson(json: JsValue): Option[TransformedReadResponseModel] = {
+        val responseModel = json.validate[ReadResponseModel]
+        responseModel.fold (
+            errors => None,
+            success => Some(transformReadResponseModel(success))
+        )
+    }
+
+    def transformReadResponseModel(respModel: ReadResponseModel): TransformedReadResponseModel = {
+        val activeProtectionOpt = respModel.lifetimeAllowanceProtections.find(_.status.contains("Open")).map{_.copy(psaCheckReference = Some(respModel.psaCheckReference))}
+        val otherProtections = respModel.lifetimeAllowanceProtections.filterNot(_.status.contains("Open")).map{_.copy(psaCheckReference = Some(respModel.psaCheckReference))}
+        TransformedReadResponseModel(activeProtectionOpt, otherProtections)
     }
 }

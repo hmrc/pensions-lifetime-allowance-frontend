@@ -24,12 +24,12 @@
     <div class="grid-wrapper"></div>
 
     <div id="listProtections">
-        @if(protections.activeProtections.size == 0) {
+        @if(protections.activeProtection.isEmpty) {
             <p>@Messages("pla.existingProtections.noActiveProtections")</p>
         } else {
-            @for((protection, index) <- protections.activeProtections.zipWithIndex) {
+            @protections.activeProtection.map { protection =>
                 <div class="protection-detail">
-                    @activeExistingProtection(protection, "active", index + 1)
+                    @activeExistingProtection(protection, "active", 1)
                 </div>
             }
 

@@ -16,20 +16,20 @@
 
 package constructors
 
-import models.{ExistingProtectionsModel, ProtectionModel, ExistingProtectionsDisplayModel, ProtectionDisplayModel}
+import models._
 import common.{Display, Dates}
 import play.api.i18n.Messages
 
 object ExistingProtectionsConstructor {
-  def createExistingProtectionsDisplayModel(model: ExistingProtectionsModel): ExistingProtectionsDisplayModel = {
-    val activeProtectionsList = model.activeProtections().map(createProtectionDisplayModel(_, model.psaCheckReference))
-    val otherProtectionsList = model.otherProtections().map(createProtectionDisplayModel(_, model.psaCheckReference)).sortWith(sortByStatus)
+  def createExistingProtectionsDisplayModel(model: TransformedReadResponseModel): ExistingProtectionsDisplayModel = {
+    val activeProtection = model.activeProtection.map(createExistingProtectionDisplayModel)
+    val otherProtectionsList = model.inactiveProtections.map(createExistingProtectionDisplayModel).sortWith(sortByStatus)
 
-    ExistingProtectionsDisplayModel(activeProtectionsList, otherProtectionsList)
+    ExistingProtectionsDisplayModel(activeProtection, otherProtectionsList)
 
   }
 
-  def sortByStatus(s1: models.ProtectionDisplayModel, s2: models.ProtectionDisplayModel): Boolean = {
+  def sortByStatus(s1: models.ExistingProtectionDisplayModel, s2: models.ExistingProtectionDisplayModel): Boolean = {
     if(s1.status == s2.status){
       val typeMap: Map[String, Int] = Map("IP2014" -> 1,"FP2016" -> 2, "IP2016" -> 3,"primary" -> 4,"enhanced" -> 5,"fixed" -> 6,"FP2014" -> 7)
       if(typeMap(s1.protectionType) < typeMap(s2.protectionType)) true else false
@@ -40,7 +40,7 @@ object ExistingProtectionsConstructor {
     }
   }
 
-  def createProtectionDisplayModel(model: ProtectionModel, psaCheckReference: String): ProtectionDisplayModel = {
+  def createExistingProtectionDisplayModel(model: ProtectionModel): ExistingProtectionDisplayModel = {
     
     val status = statusString(model.status)
 
@@ -58,9 +58,9 @@ object ExistingProtectionsConstructor {
       case _ => None
     }
 
-    val strippedPsaRef = psaCheckReference.stripPrefix(""""""").stripSuffix(""""""")
+    val strippedPsaRef = model.psaCheckReference.map{_.stripPrefix(""""""").stripSuffix(""""""")}
 
-    ProtectionDisplayModel(
+    ExistingProtectionDisplayModel(
               protectionType,
               status,
               strippedPsaRef,

@@ -1,7 +1,7 @@
 @import play.api.i18n._
-@import models.ProtectionDisplayModel
+@import models.ExistingProtectionDisplayModel
 
-@(protection: ProtectionDisplayModel, statusGroup: String, protectionNum: Int)
+@(protection: ExistingProtectionDisplayModel, statusGroup: String, protectionNum: Int)
 
 <div class="item">
     <div class="grid-wrapperx">
@@ -18,8 +18,13 @@
             @protection.protectedAmount.map { amt =>
                 @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount")
             }
+
             @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, "activeProtectionReference")
-            @protectionDetails(Messages("pla.existingProtections.psaRef"), protection.psaCheckReference, "activePSACheckRef")
+
+            @protection.psaCheckReference.map { checkRef =>
+                @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, "activePSACheckRef")
+            }
+
             @protection.certificateDate.map{ cDate =>
                 @protectionDetails(Messages("pla.resultSuccess.applicationDate"), cDate, "activeCertificateDate")
             }
