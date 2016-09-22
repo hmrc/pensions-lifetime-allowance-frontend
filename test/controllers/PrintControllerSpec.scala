@@ -51,17 +51,6 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
     implicit val hc: HeaderCarrier = HeaderCarrier()
   }
 
-  object TestPrintControllerNoPersonalDetails extends BaseTestPrintController {
-
-    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(None))
-  }
-
-  object TestPrintControllerNoProtectionModel extends BaseTestPrintController {
-
-    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(Some(testPersonalDetails)))
-    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(None))
-  }
-
   object TestPrintControllerValidDetails extends BaseTestPrintController {
 
     when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(Some(testPersonalDetails)))
@@ -71,27 +60,6 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
 
   "Navigating to print protection" when {
 
-    "There is no name recovered from citizen details" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestPrintControllerNoPersonalDetails.printView)
-      "return 500" in {
-        status(DataItem.result) shouldBe 500
-      }
-      "show technical error" in {
-        implicit val timeout: Timeout = 5000
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-      }
-    }
-
-    "There is no active protection display model stored in keystore" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestPrintControllerNoProtectionModel.printView)
-      "return 500" in {
-        status(DataItem.result) shouldBe 500
-      }
-      "show technical error" in {
-        implicit val timeout: Timeout = 5000
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-      }
-    }
 
     "Valid data is provided" should {
       object DataItem extends AuthorisedFakeRequestTo(TestPrintControllerValidDetails.printView)
