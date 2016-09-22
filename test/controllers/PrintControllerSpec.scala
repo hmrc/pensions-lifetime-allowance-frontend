@@ -53,20 +53,20 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
 
   object TestPrintControllerNoPersonalDetails extends BaseTestPrintController {
 
-    when(citizenDetailsConnector.getPersonDetails(Matchers.any)(Matchers.any)).thenReturn(Future(None))
+    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(None))
   }
 
   object TestPrintControllerNoProtectionModel extends BaseTestPrintController {
 
-    when(citizenDetailsConnector.getPersonDetails(Matchers.any)(Matchers.any)).thenReturn(Future(Some(testPersonalDetails)))
-    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any)(Matchers.any, Matchers.any)).thenReturn(Future(None))
+    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(Some(testPersonalDetails)))
+    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(None))
   }
 
   object TestPrintControllerValidDetails extends BaseTestPrintController {
 
-    when(citizenDetailsConnector.getPersonDetails(Matchers.any)(Matchers.any)).thenReturn(Future(Some(testPersonalDetails)))
-    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any)(Matchers.any, Matchers.any)).thenReturn(Future(Some(testProtectionModel)))
-    when(displayConstructors.createPrintDisplayModel(Matchers.any, Matchers.any, Matchers.any)).thenReturn(testPrintDisplayModel)
+    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(Some(testPersonalDetails)))
+    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(Some(testProtectionModel)))
+    when(displayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(testPrintDisplayModel)
   }
 
   "Navigating to print protection" when {
