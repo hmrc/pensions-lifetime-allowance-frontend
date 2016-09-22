@@ -38,7 +38,7 @@ trait ResponseConstructors {
         val responseModel = json.validate[ReadResponseModel]
         responseModel.fold (
             errors => None,
-            success => Some(transformReadResponseModel(success))
+            valid = success => Some(transformReadResponseModel(success))
         )
     }
 
