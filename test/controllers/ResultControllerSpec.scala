@@ -31,7 +31,7 @@ import play.api.libs.json.{JsValue, Json}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.ResponseConstructors
 import enums.ApplicationType
-import models.{ApplyResponseModel, ProtectionDetailsModel, ProtectionModel, SuccessResponseModel}
+import models.{ApplyResponseModel, ProtectionModel}
 import org.scalatest.BeforeAndAfter
 import play.api.mvc.{Action, AnyContent, Result}
 import play.api.test.Helpers._
@@ -58,6 +58,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   val testMCNeededResponse = HttpResponse(423)
 
   val testFPSuccessProtectionModel = ProtectionModel (
+    Some("testPSARef"),
     notificationId = Some(24),
     protectionID = Some(12345),
     protectionType = Some("FP2016"),
@@ -66,6 +67,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     protectionReference = Some("PSA123456"))
 
   val testFPRejectionProtectionModel = ProtectionModel(
+    None,
     notificationId = Some(21),
     protectionID = Some(12345),
     protectionType = Some("FP2016"),
@@ -74,6 +76,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     protectionReference = Some("PSA123456"))
 
   val testIP16SuccessProtectionModel = ProtectionModel (
+    Some("testPSARef"),
     notificationId = Some(12),
     protectionID = Some(12345),
     protectionType = Some("IP2016"),
@@ -82,6 +85,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     protectionReference = Some("PSA123456"))
 
   val testIP16RejectionProtectionModel = ProtectionModel (
+    None,
     notificationId = Some(9),
     protectionID = Some(12345),
     protectionType = Some("IP2016"),
@@ -90,6 +94,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     protectionReference = Some("PSA123456"))
 
   val testIP14SuccessProtectionModel = ProtectionModel (
+    Some("testPSARef"),
     notificationId = Some(3),
     protectionID = Some(12345),
     protectionType = Some("IP2014"),
@@ -98,6 +103,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     protectionReference = Some("PSA123456"))
 
   val testIP14RejectionProtectionModel = ProtectionModel (
+    None,
     notificationId = Some(1),
     protectionID = Some(12345),
     protectionType = Some("IP2014"),
@@ -105,12 +111,12 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456"))
 
-  val testFPSuccessApplyResponseModel     = ApplyResponseModel(Some("testPSARef"), testFPSuccessProtectionModel)
-  val testFPRejectionApplyResponseModel   = ApplyResponseModel(None, testFPRejectionProtectionModel)
-  val testIP16SuccessApplyResponseModel   = ApplyResponseModel(Some("testPSARef"), testIP16SuccessProtectionModel)
-  val testIP16RejectionApplyResponseModel = ApplyResponseModel(None, testIP16RejectionProtectionModel)
-  val testIP14SuccessApplyResponseModel   = ApplyResponseModel(Some("testPSARef"), testIP14SuccessProtectionModel)
-  val testIP14RejectionApplyResponseModel = ApplyResponseModel(None, testIP14RejectionProtectionModel)
+  val testFPSuccessApplyResponseModel     = ApplyResponseModel(testFPSuccessProtectionModel)
+  val testFPRejectionApplyResponseModel   = ApplyResponseModel(testFPRejectionProtectionModel)
+  val testIP16SuccessApplyResponseModel   = ApplyResponseModel(testIP16SuccessProtectionModel)
+  val testIP16RejectionApplyResponseModel = ApplyResponseModel(testIP16RejectionProtectionModel)
+  val testIP14SuccessApplyResponseModel   = ApplyResponseModel(testIP14SuccessProtectionModel)
+  val testIP14RejectionApplyResponseModel = ApplyResponseModel(testIP14RejectionProtectionModel)
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockResponseConstructors = mock[ResponseConstructors]
