@@ -16,8 +16,6 @@
 
 package constructors
 
-import java.io.Serializable
-
 import enums.ApplicationType
 import play.api.Logger
 import play.api.i18n.Messages

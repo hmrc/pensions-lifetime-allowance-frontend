@@ -19,22 +19,17 @@ package controllers
 import auth.{AuthorisedForPLA, PLAUser}
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.{KeyStoreConnector, PLAConnector}
-import constructors.{ExistingProtectionsConstructor, ResponseConstructors}
-import enums.ApplicationType.ApplicationType
+import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.{ApplicationOutcome, ApplicationType}
 import models._
 import play.api.Logger
-import play.api.libs.json.Json
 import play.api.mvc._
-import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http._
 import utils.Constants
 import views.html.pages.result._
-
 import scala.concurrent.Future
-import scala.util.{Failure, Success}
 
 
 object ResultController extends ResultController with ServicesConfig {
@@ -130,11 +125,11 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
               keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
               // TODO: Log failure to store data
             }
-            val displayModel = ResponseConstructors.createSuccessDisplayModel(model)
+            val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
             Ok(resultSuccess(displayModel))
 
           case ApplicationOutcome.Rejected =>
-            val displayModel = ResponseConstructors.createRejectionDisplayModel(model)
+            val displayModel = DisplayConstructors.createRejectionDisplayModel(model)
             Ok(resultRejected(displayModel))
         }
         case _ => errorResponse

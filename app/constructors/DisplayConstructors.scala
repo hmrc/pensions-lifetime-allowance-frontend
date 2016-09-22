@@ -17,14 +17,22 @@
 package constructors
 
 import common.{Dates, Display}
-import models.{PrintDisplayModel, ProtectionModel, PersonalDetailsModel}
+import enums.ApplicationType
+import models._
+import play.api.i18n.Messages
+import utils.Constants
 
 object DisplayConstructors {
+
+  class OptionNotDefinedException(val functionName: String, optionName: String, applicationType: String) extends Exception(
+    s"Option not found for $optionName in $functionName for application type $applicationType"
+  )
 
   class RequiredValueNotDefinedException(val functionName: String, optionName: String) extends Exception(
     s"Value not found for $optionName in $functionName"
   )
 
+  // PRINT PAGE
   def createPrintDisplayModel(personalDetailsModelOpt: Option[PersonalDetailsModel], protectionModelOpt: Option[ProtectionModel], nino: String): PrintDisplayModel = {
 
     val personalDetailsModel = personalDetailsModelOpt.getOrElse{throw new RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")}
@@ -57,9 +65,97 @@ object DisplayConstructors {
     )
   }
 
+  // EXISTING PROTECTIONS
+  def createExistingProtectionsDisplayModel(model: TransformedReadResponseModel): ExistingProtectionsDisplayModel = {
+    val activeProtection = model.activeProtection.map(createExistingProtectionDisplayModel)
+    val otherProtectionsList = model.inactiveProtections.map(createExistingProtectionDisplayModel).sortWith(sortByStatus)
+
+    ExistingProtectionsDisplayModel(activeProtection, otherProtectionsList)
+
+  }
+
+  def sortByStatus(s1: models.ExistingProtectionDisplayModel, s2: models.ExistingProtectionDisplayModel): Boolean = {
+    if(s1.status == s2.status){
+      val typeMap: Map[String, Int] = Map("IP2014" -> 1,"FP2016" -> 2, "IP2016" -> 3,"primary" -> 4,"enhanced" -> 5,"fixed" -> 6,"FP2014" -> 7)
+      if(typeMap(s1.protectionType) < typeMap(s2.protectionType)) true else false
+    }
+    else {
+      val statusMap: Map[String, Int] = Map("dormant" -> 1,"withdrawn" -> 2,"unsuccessful" -> 3,"rejected" -> 4,"expired" -> 5)
+      if(statusMap(s1.status) < statusMap(s2.status)) true else false
+    }
+  }
+
+  def createExistingProtectionDisplayModel(model: ProtectionModel): ExistingProtectionDisplayModel = {
+
+    val status = statusString(model.status)
+    val protectionType = protectionTypeString(model.protectionType)
+    val protectionReference = model.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
+
+    val protectedAmount = model.protectedAmount.map { amt =>
+      Display.currencyDisplayString(BigDecimal(amt))
+    }
+
+    val certificateDate = model.certificateDate.map { cDate =>
+      Display.dateDisplayString(Dates.constructDateFromAPIString(cDate))
+    }
+
+    val strippedPsaRef = model.psaCheckReference.map{_.stripPrefix(""""""").stripSuffix(""""""")}
+
+    ExistingProtectionDisplayModel(
+      protectionType,
+      status,
+      strippedPsaRef,
+      protectionReference,
+      protectedAmount,
+      certificateDate)
+  }
+
+  // SUCCESSFUL APPLICATION RESPONSE
+  def createSuccessDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): SuccessDisplayModel = {
+    val notificationId = model.protection.notificationId.getOrElse(throw new OptionNotDefinedException("CreateSuccessDisplayModel", "notification ID", protectionType.toString))
+    val protectedAmount = model.protection.protectedAmount.getOrElse(throw new OptionNotDefinedException("ApplyResponseModel", "protected amount", protectionType.toString))
+    val printable = Constants.activeProtectionCodes.contains(notificationId)
+
+    val details = if(Constants.successCodesRequiringProtectionInfo.contains(notificationId)) {
+      Some(createProtectionDetailsFromModel(model))
+    } else None
+
+    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
+
+    val additionalInfo = getAdditionalInfo(notificationId)
+
+    SuccessDisplayModel(protectionType, notificationId.toString, protectedAmountString, printable, details, additionalInfo)
+  }
+
+  // REJECTED APPLICATION RESPONSE
+  def createRejectionDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): RejectionDisplayModel = {
+    val notificationId = model.protection.notificationId.getOrElse(throw new OptionNotDefinedException("CreateRejectionDisplayModel", "notification ID", protectionType.toString))
+    val additionalInfo = getAdditionalInfo(notificationId)
+    RejectionDisplayModel(notificationId.toString, additionalInfo, protectionType)
+  }
+
+  private def createProtectionDetailsFromModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): ProtectionDetailsDisplayModel = {
+    val protectionReference = model.protection.protectionReference
+    val psaReference = model.protection.psaCheckReference.getOrElse(throw new OptionNotDefinedException("createProtectionDetailsFromModel", "psaCheckReference", protectionType.toString))
+    val applicationDate = model.protection.certificateDate.map{ dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt))}
+    ProtectionDetailsDisplayModel(protectionReference, psaReference, applicationDate)
+  }
 
 
+  // HELPER FUNCTIONS
+  def getAdditionalInfo(notificationId: Int): List[String] = {
 
+    def loop(notificationId: Int, i: Int = 1, paragraphs: List[String] = List.empty): List[String] = {
+      val x: String = s"resultCode.$notificationId.$i"
+      if(Messages(x) == x){
+        paragraphs
+      } else {
+        loop(notificationId, i+1, paragraphs :+ i.toString)
+      }
+    }
+
+    loop(notificationId)
+  }
 
   def protectionTypeString(modelProtectionType: Option[String]) = {
     modelProtectionType match {
@@ -73,8 +169,6 @@ object DisplayConstructors {
       case _ => "notRecorded"
     }
   }
-
-
 
   def statusString(modelStatus: Option[String]): String = {
     modelStatus match {

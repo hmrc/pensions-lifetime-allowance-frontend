@@ -16,21 +16,14 @@
 
 package constructors
 
-import play.api.i18n.Messages
 import play.api.libs.json.JsValue
 import models._
 import enums.ApplicationType
-import utils.Constants
-import common.{Dates,Display}
 
 object ResponseConstructors extends ResponseConstructors {
 }
 
 trait ResponseConstructors {
-
-    class OptionNotDefinedException(val functionName: String, optionName: String, applicationType: String) extends Exception(
-        s"Option not found for $optionName in $functionName for application type $applicationType"
-    )
 
     def createApplyResponseModelFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value): Option[ApplyResponseModel] = {
         val psaReference = (json \ "psaCheckReference").asOpt[String]
@@ -39,49 +32,6 @@ trait ResponseConstructors {
             errors => None,
             success => Some(ApplyResponseModel(success.copy(psaCheckReference = psaReference)))
         )
-    }
-
-    def createSuccessDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): SuccessDisplayModel = {
-        val notificationId = model.protection.notificationId.getOrElse(throw new OptionNotDefinedException("CreateSuccessDisplayModel", "notification ID", protectionType.toString))
-        val protectedAmount = model.protection.protectedAmount.getOrElse(throw new OptionNotDefinedException("ApplyResponseModel", "protected amount", protectionType.toString))
-        val printable = Constants.activeProtectionCodes.contains(notificationId)
-
-        val details = if(Constants.successCodesRequiringProtectionInfo.contains(notificationId)) {
-            Some(createProtectionDetailsFromModel(model))
-        } else None
-
-        val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
-
-        val additionalInfo = getAdditionalInfo(notificationId)
-
-        SuccessDisplayModel(protectionType, notificationId.toString, protectedAmountString, printable, details, additionalInfo)
-    }
-
-    def createRejectionDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): RejectionDisplayModel = {
-        val notificationId = model.protection.notificationId.getOrElse(throw new OptionNotDefinedException("CreateRejectionDisplayModel", "notification ID", protectionType.toString))
-        val additionalInfo = getAdditionalInfo(notificationId)
-        RejectionDisplayModel(notificationId.toString, additionalInfo, protectionType)
-    }
-
-    private def createProtectionDetailsFromModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): ProtectionDetailsModel = {
-        val protectionReference = model.protection.protectionReference
-        val psaReference = model.protection.psaCheckReference.getOrElse(throw new OptionNotDefinedException("createProtectionDetailsFromModel", "psaCheckReference", protectionType.toString))
-        val applicationDate = model.protection.certificateDate.map{ dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt))}
-        ProtectionDetailsModel(protectionReference, psaReference, applicationDate)
-    }
-
-    def getAdditionalInfo(notificationId: Int): List[String] = {
-
-        def loop(notificationId: Int, i: Int = 1, paragraphs: List[String] = List.empty): List[String] = {
-            val x: String = s"resultCode.$notificationId.$i"
-            if(Messages(x) == x){
-                paragraphs
-            } else {
-                loop(notificationId, i+1, paragraphs :+ i.toString)
-            }
-        }
-
-        loop(notificationId)
     }
 
     def createTransformedReadResponseModelFromJson(json: JsValue): Option[TransformedReadResponseModel] = {

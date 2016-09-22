@@ -16,17 +16,13 @@
 
 package controllers
 
-import java.util.UUID
-import auth.{PLAUser, AuthorisedForPLA}
+import auth.AuthorisedForPLA
 import constructors.DisplayConstructors
-import enums.ApplicationType
 import config.{FrontendAuthConnector, FrontendAppConfig}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
-import models.{PrintDisplayModel, ProtectionModel, PersonalDetailsModel}
+import models.{ProtectionModel, PersonalDetailsModel}
 import play.api.Logger
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
-import uk.gov.hmrc.play.http.logging.SessionId
 import play.api.mvc._
 import scala.concurrent.Future
 

@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.Json
-import constructors.{ResponseConstructors, ExistingProtectionsConstructor}
+import constructors.{DisplayConstructors, ResponseConstructors}
 import connectors.{KeyStoreConnector, PLAConnector}
 import views.html._
 
@@ -74,7 +74,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     model.activeProtection.map { activeModel =>
       keyStoreConnector.saveData[ProtectionModel]("openProtection", activeModel)
     }
-    val displayModel: ExistingProtectionsDisplayModel = ExistingProtectionsConstructor.createExistingProtectionsDisplayModel(model)
+    val displayModel: ExistingProtectionsDisplayModel = DisplayConstructors.createExistingProtectionsDisplayModel(model)
     Ok(pages.existingProtections.existingProtections(displayModel))
   }
 

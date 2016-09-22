@@ -22,7 +22,7 @@ case class SuccessDisplayModel(
                                 protectionType: ApplicationType.Value,
                                 notificationId: String, protectedAmount: String,
                                 printable: Boolean,
-                                details: Option[ProtectionDetailsModel],
+                                details: Option[ProtectionDetailsDisplayModel],
                                 additionalInfo: Seq[String]
                                 )
 
@@ -32,6 +32,11 @@ case class RejectionDisplayModel(
                                   protectionType: ApplicationType.Value
                                   )
 
+case class ProtectionDetailsDisplayModel(
+                                          protectionReference: Option[String],
+                                          psaReference: String,
+                                          applicationDate: Option[String]
+                                          )
 
 
 case class ExistingProtectionDisplayModel(
