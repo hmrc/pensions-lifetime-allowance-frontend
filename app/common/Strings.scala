@@ -29,7 +29,7 @@ object Strings {
     protectionType match {
       case ApplicationType.FP2016 => "fp16"+name.capitalize
       case ApplicationType.IP2014 => "ip14"+name.capitalize
-      case _ => name
+    case _ => name
     }
   }
 }
