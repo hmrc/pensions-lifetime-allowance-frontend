@@ -36,7 +36,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     val mockKeyStoreConnector = mock[KeyStoreConnector]
 
     object TestIP2016Controller extends IP2016Controller {
-        override lazy val applicationConfig = FrontendAppConfig
+        override lazy val applicationConfig = MockConfig
         override lazy val authConnector = MockAuthConnector
         override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
         override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector

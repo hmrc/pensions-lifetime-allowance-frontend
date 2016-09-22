@@ -38,12 +38,16 @@ object ReadProtectionsController extends ReadProtectionsController with Services
 
   override val keyStoreConnector = KeyStoreConnector
   override val plaConnector = PLAConnector
+  override val displayConstructors = DisplayConstructors
+  override val responseConstructors = ResponseConstructors
 }
 
 trait ReadProtectionsController extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
   val plaConnector : PLAConnector
+  val displayConstructors : DisplayConstructors
+  val responseConstructors : ResponseConstructors
 
   val currentProtections = AuthorisedByAny.async {
     implicit user =>  implicit request =>
@@ -60,7 +64,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
   }
 
   def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Result = {
-    ResponseConstructors.createTransformedReadResponseModelFromJson(Json.parse(response.body)) match {
+    responseConstructors.createTransformedReadResponseModelFromJson(Json.parse(response.body)) match {
       case Some(model) => saveAndDisplayExistingProtections(model)
       case _ => {
         Logger.error(s"unable to create existing protections model from microservice response for nino: ${user.nino}")
@@ -74,7 +78,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     model.activeProtection.map { activeModel =>
       keyStoreConnector.saveData[ProtectionModel]("openProtection", activeModel)
     }
-    val displayModel: ExistingProtectionsDisplayModel = DisplayConstructors.createExistingProtectionsDisplayModel(model)
+    val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
     Ok(pages.existingProtections.existingProtections(displayModel))
   }
 
