@@ -52,7 +52,7 @@ object MockAuthConnector extends AuthConnector {
                    None,
                    None,
                    testCredentialStrength(nino),
-                   testConfidenceLevel((nino)),
+                   testConfidenceLevel(nino),
                    None,
                    None,
                    None

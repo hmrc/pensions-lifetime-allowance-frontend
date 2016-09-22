@@ -19,7 +19,8 @@ package controllers
 import akka.util.Timeout
 import auth.{MockAuthConnector, MockConfig}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
-import models.{ProtectionDisplayModel, Person, PersonalDetailsModel}
+import constructors.DisplayConstructors
+import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -34,46 +35,38 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockCitizenDetailsConnector = mock[CitizenDetailsConnector]
+  val mockDisplayConstructors = mock[DisplayConstructors]
+
   val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
-  val testProtectionDisplayModel = ProtectionDisplayModel("IP2016", "active", "PSATestNum", "ProtRefTestNum", Some("£1,246,500"), Some("3 April 2016"))
+  val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111))
+  val testPrintDisplayModel = PrintDisplayModel("Testy", "Mctestface", "AA11TESTA", "IP2016", "active", "PSATestNum", "ProtRefTestNum", Some("£1,246,500"), Some("3 April 2016"))
 
-  object TestPrintControllerNoPersonalDetails extends PrintController {
+  trait BaseTestPrintController extends PrintController {
     val keyStoreConnector = mockKeyStoreConnector
     val citizenDetailsConnector = mockCitizenDetailsConnector
+    val displayConstructors = mockDisplayConstructors
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "postSignInUrl"
     implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(None))
-
   }
 
-  object TestPrintControllerNoProtectionModel extends PrintController {
-    val keyStoreConnector = mockKeyStoreConnector
-    val citizenDetailsConnector = mockCitizenDetailsConnector
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "postSignInUrl"
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+  object TestPrintControllerNoPersonalDetails extends BaseTestPrintController {
 
-    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(Some(testPersonalDetails)))
-    when(keyStoreConnector.fetchAndGetFormData[ProtectionDisplayModel](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(None))
-
+    when(citizenDetailsConnector.getPersonDetails(Matchers.any)(Matchers.any)).thenReturn(Future(None))
   }
 
-  object TestPrintControllerValidDetails extends PrintController {
-    val keyStoreConnector = mockKeyStoreConnector
-    val citizenDetailsConnector = mockCitizenDetailsConnector
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "postSignInUrl"
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+  object TestPrintControllerNoProtectionModel extends BaseTestPrintController {
 
+    when(citizenDetailsConnector.getPersonDetails(Matchers.any)(Matchers.any)).thenReturn(Future(Some(testPersonalDetails)))
+    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any)(Matchers.any, Matchers.any)).thenReturn(Future(None))
+  }
 
-    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(Some(testPersonalDetails)))
-    when(keyStoreConnector.fetchAndGetFormData[ProtectionDisplayModel](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(Some(testProtectionDisplayModel)))
+  object TestPrintControllerValidDetails extends BaseTestPrintController {
 
+    when(citizenDetailsConnector.getPersonDetails(Matchers.any)(Matchers.any)).thenReturn(Future(Some(testPersonalDetails)))
+    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any)(Matchers.any, Matchers.any)).thenReturn(Future(Some(testProtectionModel)))
+    when(displayConstructors.createPrintDisplayModel(Matchers.any, Matchers.any, Matchers.any)).thenReturn(testPrintDisplayModel)
   }
 
   "Navigating to print protection" when {
@@ -83,10 +76,9 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
       "return 500" in {
         status(DataItem.result) shouldBe 500
       }
-      "show technical error with existing protections restart link" in {
+      "show technical error" in {
         implicit val timeout: Timeout = 5000
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
     }
 
@@ -95,14 +87,13 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
       "return 500" in {
         status(DataItem.result) shouldBe 500
       }
-      "show technical error with existing protections restart link" in {
+      "show technical error" in {
         implicit val timeout: Timeout = 5000
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
     }
 
-    "Valid data is proided" should {
+    "Valid data is provided" should {
       object DataItem extends AuthorisedFakeRequestTo(TestPrintControllerValidDetails.printView)
       "return 200" in {
         status(DataItem.result) shouldBe 200

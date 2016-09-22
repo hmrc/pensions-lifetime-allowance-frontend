@@ -22,7 +22,9 @@ import models._
 import play.api.i18n.Messages
 import utils.Constants
 
-object DisplayConstructors {
+object DisplayConstructors extends DisplayConstructors
+
+trait DisplayConstructors {
 
   class OptionNotDefinedException(val functionName: String, optionName: String, applicationType: String) extends Exception(
     s"Option not found for $optionName in $functionName for application type $applicationType"

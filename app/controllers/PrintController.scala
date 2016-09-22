@@ -30,6 +30,7 @@ import scala.concurrent.Future
 object PrintController extends PrintController {
   val keyStoreConnector = KeyStoreConnector
   val citizenDetailsConnector = CitizenDetailsConnector
+  val displayConstructors = DisplayConstructors
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ip14StartUrl
@@ -39,6 +40,7 @@ trait PrintController extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
   val citizenDetailsConnector: CitizenDetailsConnector
+  val displayConstructors: DisplayConstructors
 
   val printView = AuthorisedByAny.async { implicit user => implicit request =>
 
@@ -55,7 +57,7 @@ trait PrintController extends FrontendController with AuthorisedForPLA {
 
 
   private def routePrintView(personalDetailsModel: Option[PersonalDetailsModel], protectionModel: Option[ProtectionModel], nino: String)(implicit request: Request[AnyContent]): Result = {
-      val displayModel = DisplayConstructors.createPrintDisplayModel(personalDetailsModel, protectionModel, nino)
+      val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, protectionModel, nino)
       Ok(views.html.pages.result.resultPrint(displayModel))
   }
 
