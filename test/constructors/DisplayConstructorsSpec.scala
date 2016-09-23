@@ -16,7 +16,7 @@
 
 package constructors
 
-import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel, ProtectionModel, TransformedReadResponseModel}
+import models._
 import play.api.i18n.Messages
 import play.test.FakeApplication
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -27,7 +27,6 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
   val tstPSACheckRef = "PSA33456789"
-  //Todo - printdisplaymodel -successdisplay
 
   "Existing Protections Constructor" should {
 
@@ -426,6 +425,38 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         tstProtectionDisplayModelDormant8))
 
       DisplayConstructors.createExistingProtectionsDisplayModel(tstExistingProtectionModel) shouldBe tstExistingProtectionsDisplayModel
+    }
+
+    "Create a Print Display model" in {
+
+      //Fake Input Values
+      val tstPerson = Person("McTestface", "Testy")
+      val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
+      val tstProtectionModel = ProtectionModel (
+        psaCheckReference = Some(tstPSACheckRef),
+        protectionID = Some(12345),
+        protectionType = Some("IP2014"),
+        status = Some("Open"),
+        certificateDate = Some("2016-04-17"),
+        protectedAmount = Some(1250000),
+        protectionReference = Some("PSA123456")
+      )
+      val tstNino = "testNino"
+
+      //Expected Result
+      val tstResultPrintDisplayModel = PrintDisplayModel(
+        firstName = "Testy",
+        surname = "Mctestface",
+        nino = "testNino",
+        protectionType = "IP2014",
+        status = "open",
+        psaCheckReference = tstPSACheckRef,
+        protectionReference = "PSA123456",
+        protectedAmount = Some("£1,250,000"),
+        certificateDate = Some("17 April 2016")
+      )
+      DisplayConstructors.createPrintDisplayModel(Some(tstPersonalDetailsModel),Some(tstProtectionModel),tstNino) shouldBe tstResultPrintDisplayModel
+
     }
   }
 

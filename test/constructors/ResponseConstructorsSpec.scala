@@ -50,7 +50,6 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
           |"psaCheckReference":"testPSARef"}""".stripMargin)
       val testApplyResponseModel = TestResponseConstructors.createApplyResponseModelFromJson(jsn).get
       testApplyResponseModel shouldBe testFPSuccessApplyResponseModel
-
     }
 
     "return None if an ApplyResponse model can't be created" in {

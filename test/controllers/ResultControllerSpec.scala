@@ -189,6 +189,25 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   }
 
+  object TestIncorrectResponseModelResultController extends ResultController {
+    override lazy val applicationConfig = MockConfig
+    override lazy val authConnector = MockAuthConnector
+    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+
+    implicit val hc: HeaderCarrier = HeaderCarrier()
+    override val plaConnector = mock[PLAConnector]
+    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testFP16RejectionResponse))
+    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP16RejectionResponse))
+    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP14RejectionResponse))
+
+    override val keyStoreConnector = mock[KeyStoreConnector]
+    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+
+    override val responseConstructors = mock[ResponseConstructors]
+    when(responseConstructors.createApplyResponseModelFromJson(Matchers.any())(Matchers.any())).thenReturn(None)
+
+  }
+
   ///////////////////////////////////////////////
   // Initial Setup
   ///////////////////////////////////////////////
@@ -291,5 +310,14 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     "take the user to the MC needed page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.mcNeeded.title")}
   }
 
+ "Failure to create an ApplyResponse model from an application response" should {
+   object DataItem extends AuthorisedFakeRequestToPost(TestIncorrectResponseModelResultController.processFPApplication)
+   "return 500" in {
+     status(DataItem.result) shouldBe 500
+   }
+   "return \"no-cache\" in the response header" in {
+     DataItem.result.header.headers.head._2 shouldBe "no-cache"
+   }
+ }
 
 }
