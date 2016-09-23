@@ -200,7 +200,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             pensionDebitsModel.map {
                 completedModel => routeNumberOfPSOs(completedModel.pensionDebits.get)
             }.getOrElse {
-                Logger.warn(s"User with nino ${user.nino} navigated to IP16 number of PSOs when ip16PensionDebits was not recorded")
+                Logger.error(s"User with nino ${user.nino} navigated to IP16 number of PSOs when ip16PensionDebits was not recorded")
                 Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
         })
@@ -209,7 +209,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     private def routeNumberOfPSOs(havePSOs: String)(implicit user: PLAUser, req: Request[AnyContent]): Future[Result] = {
         havePSOs match {
             case "no"  => {
-                Logger.warn(s"User with nino ${user.nino} navigated to IP16 number of PSOs when ip16PensionDebits was recorded as 'No'")
+                Logger.error(s"User with nino ${user.nino} navigated to IP16 number of PSOs when ip16PensionDebits was recorded as 'No'")
                 Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
             case "yes" => keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
@@ -239,7 +239,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             numberOfPSOsModel.map {
                 completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
             }.getOrElse {
-                Logger.warn(s"User with nino ${user.nino} navigated to IP16 PSO details when ip16NumberOfPSOs was not recorded")
+                Logger.error(s"User with nino ${user.nino} navigated to IP16 PSO details when ip16NumberOfPSOs was not recorded")
                 Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
 

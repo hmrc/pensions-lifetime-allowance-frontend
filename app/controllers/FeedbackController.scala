@@ -91,11 +91,11 @@ trait FeedbackController extends FrontendController with Actions {
             resp.status match {
               case HttpStatus.OK => Redirect(routes.FeedbackController.thankyou()).withSession(request.session + (TICKET_ID -> resp.body))
               case HttpStatus.BAD_REQUEST => BadRequest(views.html.feedback.feedback(feedbackFormPartialUrl, Some(Html(resp.body))))
-              case status => Logger.warn(s"Unexpected status code from feedback form: $status"); InternalServerError
+              case status => Logger.error(s"Unexpected status code from feedback form: $status"); InternalServerError
             }
         }
       }.getOrElse {
-        Logger.warn("Trying to submit an empty feedback form")
+        Logger.error("Trying to submit an empty feedback form")
         Future.successful(InternalServerError)
       }
   }

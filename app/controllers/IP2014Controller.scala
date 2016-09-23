@@ -199,7 +199,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
             pensionDebitsModel.map {
                 completedModel => routeIP14NumberOfPSOs(completedModel.pensionDebits.get)
             }.getOrElse {
-                Logger.warn(s"User with nino ${user.nino} navigated to IP14 number of PSOs when ip14PensionDebits was not recorded")
+                Logger.error(s"User with nino ${user.nino} navigated to IP14 number of PSOs when ip14PensionDebits was not recorded")
                 Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2014.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
         })
@@ -208,7 +208,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     private def routeIP14NumberOfPSOs(havePSOs: String)(implicit user: PLAUser, req: Request[AnyContent]): Future[Result] = {
         havePSOs match {
             case "no"  => {
-                Logger.warn(s"User with nino ${user.nino} navigated to IP14 number of PSOs when ip14PensionDebits was recorded as 'No'")
+                Logger.error(s"User with nino ${user.nino} navigated to IP14 number of PSOs when ip14PensionDebits was recorded as 'No'")
                 Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2014.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
             case "yes" => keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("ip14NumberOfPSOs").map {
@@ -238,7 +238,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
             numberOfPSOsModel.map {
                 completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
             }.getOrElse {
-                Logger.warn(s"User with nino ${user.nino} navigated to IP14 PSO details when ip14NumberOfPSOs was not recorded")
+                Logger.error(s"User with nino ${user.nino} navigated to IP14 PSO details when ip14NumberOfPSOs was not recorded")
                 Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2014.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
 

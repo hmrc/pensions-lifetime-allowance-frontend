@@ -59,7 +59,7 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     summaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2016.summary(summaryModel))
     }.getOrElse {
-      Logger.warn(s"Unable to create IP16 summary model from summary data for user nino ${user.nino}")
+      Logger.error(s"Unable to create IP16 summary model from summary data for user nino ${user.nino}")
       InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
@@ -79,7 +79,7 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     summaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2014.ip14Summary(summaryModel))
     }.getOrElse{
-      Logger.warn(s"Unable to create IP16 summary model from summary data for user nino ${user.nino}")
+      Logger.error(s"Unable to create IP14 summary model from summary data for user nino ${user.nino}")
       InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
