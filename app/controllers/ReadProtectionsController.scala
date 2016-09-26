@@ -16,7 +16,7 @@
 
 package controllers
 
-import models.{ProtectionDisplayModel, ExistingProtectionsModel}
+import models._
 import enums.ApplicationType
 import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
@@ -26,7 +26,7 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.Json
-import constructors.{ResponseConstructors, ExistingProtectionsConstructor}
+import constructors.{DisplayConstructors, ResponseConstructors}
 import connectors.{KeyStoreConnector, PLAConnector}
 import views.html._
 
@@ -38,12 +38,16 @@ object ReadProtectionsController extends ReadProtectionsController with Services
 
   override val keyStoreConnector = KeyStoreConnector
   override val plaConnector = PLAConnector
+  override val displayConstructors = DisplayConstructors
+  override val responseConstructors = ResponseConstructors
 }
 
 trait ReadProtectionsController extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
   val plaConnector : PLAConnector
+  val displayConstructors : DisplayConstructors
+  val responseConstructors : ResponseConstructors
 
   val currentProtections = AuthorisedByAny.async {
     implicit user =>  implicit request =>
@@ -64,7 +68,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
   }
 
   def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Result = {
-    ResponseConstructors.createExistingProtectionsModelFromJson(Json.parse(response.body)) match {
+    responseConstructors.createTransformedReadResponseModelFromJson(Json.parse(response.body)) match {
       case Some(model) => saveAndDisplayExistingProtections(model)
       case _ => {
         Logger.error(s"unable to create existing protections model from microservice response for nino: ${user.nino}")
@@ -74,11 +78,11 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
 
   }
 
-  def saveAndDisplayExistingProtections(model: ExistingProtectionsModel)(implicit request: Request[AnyContent]): Result = {
-    val displayModel = ExistingProtectionsConstructor.createExistingProtectionsDisplayModel(model)
-    displayModel.activeProtections.headOption.map { activeModel =>
-      keyStoreConnector.saveData[ProtectionDisplayModel]("openProtection", activeModel)
+  def saveAndDisplayExistingProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Result = {
+    model.activeProtection.map { activeModel =>
+      keyStoreConnector.saveData[ProtectionModel]("openProtection", activeModel)
     }
+    val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
     Ok(pages.existingProtections.existingProtections(displayModel))
   }
 

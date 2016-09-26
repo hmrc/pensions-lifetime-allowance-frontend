@@ -70,8 +70,14 @@ GET         /apply-for-fp16                                     controllers.Conf
 
 ## Result ##
 POST        /result-fp16                                        controllers.ResultController.processFPApplication
+GET         /result-fp16                                        controllers.ResultController.displayFP16
+
 POST        /result-ip16                                        controllers.ResultController.processIPApplication
+GET         /result-ip16                                        controllers.ResultController.displayIP16
+
 POST        /result-ip14                                        controllers.ResultController.processIP14Application
+GET         /result-ip14                                        controllers.ResultController.displayIP14
+
 GET         /existing-protections                               controllers.ReadProtectionsController.currentProtections
 GET         /print-protection                                   controllers.PrintController.printView
 

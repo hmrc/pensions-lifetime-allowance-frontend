@@ -72,9 +72,6 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
   }
 
   "Calling applyFP16" should {
-    "use valid Json for FP 16 request" in {
-      Json.toJson[ApplyFP16Model](ApplyFP16Model("FP2016")).toString shouldBe validApplyFP16Json
-    }
     "should return a 200 from a valid apply FP16 request" in {
       when(mockHttp.POST[JsValue, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))

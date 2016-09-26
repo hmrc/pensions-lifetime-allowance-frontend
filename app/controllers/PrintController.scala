@@ -16,16 +16,13 @@
 
 package controllers
 
-import java.util.UUID
-import auth.{PLAUser, AuthorisedForPLA}
-import enums.ApplicationType
+import auth.AuthorisedForPLA
+import constructors.DisplayConstructors
 import config.{FrontendAuthConnector, FrontendAppConfig}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
-import models.{PersonalDetailsModel, ProtectionDisplayModel}
+import models.{ProtectionModel, PersonalDetailsModel}
 import play.api.Logger
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
-import uk.gov.hmrc.play.http.logging.SessionId
 import play.api.mvc._
 import scala.concurrent.Future
 
@@ -33,6 +30,7 @@ import scala.concurrent.Future
 object PrintController extends PrintController {
   val keyStoreConnector = KeyStoreConnector
   val citizenDetailsConnector = CitizenDetailsConnector
+  val displayConstructors = DisplayConstructors
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ip14StartUrl
@@ -42,19 +40,15 @@ trait PrintController extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
   val citizenDetailsConnector: CitizenDetailsConnector
+  val displayConstructors: DisplayConstructors
 
   val printView = AuthorisedByAny.async { implicit user => implicit request =>
 
       user.nino.map { nino =>
-        citizenDetailsConnector.getPersonDetails(nino).flatMap( model => {
-          model.map {
-            personalDetailsModel => routePrintView(personalDetailsModel, nino)
-          }.getOrElse {
-            Logger.error(s"Couldn't retrieve personal details for user nino: ${nino} in printView")
-            Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
-          }
-        }
-        )
+        for {
+          personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
+          protectionModel <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
+        } yield routePrintView(personalDetailsModel, protectionModel, nino)
       }.getOrElse {
         Logger.error("No associated nino for user in printView action")
         Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
@@ -62,14 +56,9 @@ trait PrintController extends FrontendController with AuthorisedForPLA {
     }
 
 
-  private def routePrintView(personalDetailsModel: PersonalDetailsModel, nino: String)(implicit request: Request[AnyContent]): Future[Result] = {
-    keyStoreConnector.fetchAndGetFormData[ProtectionDisplayModel]("openProtection").map {
-      case Some(model) => Ok(views.html.pages.result.resultPrint(personalDetailsModel, model, nino))
-      case _ => {
-        Logger.error(s"Unable to retrieve protection details from KeyStore for user nino: ${nino}")
-        InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache")
-      }
-    }
+  private def routePrintView(personalDetailsModel: Option[PersonalDetailsModel], protectionModel: Option[ProtectionModel], nino: String)(implicit request: Request[AnyContent]): Result = {
+      val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, protectionModel, nino)
+      Ok(views.html.pages.result.resultPrint(displayModel))
   }
 
 

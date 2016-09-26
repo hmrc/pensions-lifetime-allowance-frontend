@@ -22,46 +22,91 @@ import models._
 import enums.ApplicationType
 
 class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
-    object TestResponseConstructors extends ResponseConstructors {
+
+  object TestResponseConstructors extends ResponseConstructors {
+  }
+
+  val testFPSuccessProtectionModel = ProtectionModel (
+    Some("testPSARef"),
+    notificationId = Some(24),
+    protectionID = Some(12345),
+    protectionType = Some("FP2016"),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("PSA123456"))
+  val testFPSuccessApplyResponseModel     = ApplyResponseModel(testFPSuccessProtectionModel)
+
+  "ResponseConstructors" should {
+
+    "create the correct ApplyResponse model from Json" in {
+      implicit val applicationType = ApplicationType.FP2016
+      val jsn: JsValue = Json.parse(
+        """{"certificateDate":"2016-04-17",
+          |"notificationId":24,
+          |"protectedAmount":1250000,
+          |"protectionID":12345,
+          |"protectionReference":"PSA123456",
+          |"protectionType":"FP2016",
+          |"psaCheckReference":"testPSARef"}""".stripMargin)
+      val testApplyResponseModel = TestResponseConstructors.createApplyResponseModelFromJson(jsn).get
+      testApplyResponseModel shouldBe testFPSuccessApplyResponseModel
     }
-    // SuccessResponseModel(protectionType: ApplicationType.Value, notificationId: String, protectedAmount: String, details: Option[ProtectionDetailsModel], additionalInfo: Seq[String])
 
-
-  val testProtectionDetailsModel = ProtectionDetailsModel(protectionReference = Some("FP16138722390C"), psaReference = Some("testPSARef"), applicationDate = Some("10 May 2016"))
-    val testSuccessResponseModel = SuccessResponseModel(
-      protectionType = ApplicationType.FP2016,
-      notificationId = "23",
-      protectedAmount = "£1,250,000",
-      printable = true,
-      details = Some(testProtectionDetailsModel),
-      additionalInfo = List("1","2")
-    )
-
-    val testNoPrintSuccessResponseModel = testSuccessResponseModel.copy(notificationId = "24", printable = false, details = None)
-
-    val testRejectionResponseModel = RejectionResponseModel(
-      "20",
-      List("1")
-    )
-
-    "ResponseConstructors" should {
-
-      "create the correct printable success model from Json" in {
-          implicit val applicationType = ApplicationType.FP2016
-          val jsn:JsValue = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":23,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1,"psaCheckReference":"testPSARef"}""")
-          TestResponseConstructors.createSuccessResponseFromJson(jsn) shouldBe testSuccessResponseModel
-      }
-
-      "create the correct non-printable success model from Json" in {
-        implicit val applicationType = ApplicationType.FP2016
-        val jsn:JsValue = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1,"psaCheckReference":"testPSARef"}""")
-        TestResponseConstructors.createSuccessResponseFromJson(jsn) shouldBe testNoPrintSuccessResponseModel
-      }
-
-      "create the correct rejection model from Json" in {
-          implicit val applicationType = ApplicationType.FP2016
-          val json:JsValue = Json.parse("""{"nino":"AA123456A","notificationId":20,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
-          TestResponseConstructors.createRejectionResponseFromJson(json) shouldBe testRejectionResponseModel
-      }
+    "return None if an ApplyResponse model can't be created" in {
+      implicit val applicationType = ApplicationType.FP2016
+      val jsn: JsValue = Json.parse(
+        """{"protectionID":"wrong"
+          |}""".stripMargin)
+      val testApplyResponseModel = TestResponseConstructors.createApplyResponseModelFromJson(jsn)
+      testApplyResponseModel shouldBe None
     }
+
+    "create the correct TransformedReadResponse model from Json" in {
+      val tstPSACheckRef = "testPsaRef"
+
+      val tstProtectionModelOpen = ProtectionModel (
+        psaCheckReference = Some(tstPSACheckRef),
+        protectionID = Some(2),
+        status = Some("Open"),
+        version = Some(2)
+      )
+      val tstProtectionModelDormant = ProtectionModel (
+        psaCheckReference = Some(tstPSACheckRef),
+        protectionID = Some(1),
+        status = Some("Withdrawn"),
+        version = Some(1)
+      )
+
+      val jsn: JsValue = Json.parse(
+        """{
+          |"psaCheckReference":"testPsaRef",
+          |"lifetimeAllowanceProtections":
+            |[
+              |{
+                | "protectionID":1,
+                | "status":"Withdrawn",
+                | "version":1
+              |},
+              |{
+                |"protectionID":2,
+                |"status":"Open",
+                |"version":2
+              |}
+            |]
+          |}
+        """.stripMargin)
+      val tstTransformedReadResponseModel = TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
+      ResponseConstructors.createTransformedReadResponseModelFromJson(jsn) shouldBe Some(tstTransformedReadResponseModel)
+
+    }
+
+    "return None if a TransformedReadResponse model can't be created" in {
+
+      val jsn: JsValue = Json.parse(
+        """{"psaCheckReference":"wrong"
+          |}""".stripMargin)
+
+      ResponseConstructors.createTransformedReadResponseModelFromJson(jsn) shouldBe None
+    }
+  }
 }

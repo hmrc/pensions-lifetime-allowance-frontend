@@ -16,7 +16,11 @@
 
 package enums
 
+import play.api.libs.json._
+
 object ApplicationType extends Enumeration {
+
+  type ApplicationType = Value
   val IP2014 = Value
   val IP2016 = Value
   val FP2016 = Value

@@ -1,11 +1,10 @@
-@import models.SuccessResponseModel
-@import models.ProtectionDetailsModel
+@import models.SuccessDisplayModel
 @import helpers.templates.resultDetails
 @import play.api.i18n._
 @import enums.ApplicationType
 @import utils.Constants
 
-@(res: SuccessResponseModel)(implicit request: Request[_])
+@(res: SuccessDisplayModel)(implicit request: Request[_])
 
 @views.html.main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None) {
 

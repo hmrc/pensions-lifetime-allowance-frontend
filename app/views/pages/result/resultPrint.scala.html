@@ -1,7 +1,7 @@
-@import models.{PersonalDetailsModel, ProtectionDisplayModel}
+@import models.PrintDisplayModel
 @import play.api.i18n._
 
-@(personalDetailsModel: PersonalDetailsModel, protectionDisplayModel: ProtectionDisplayModel, nino: String)(implicit request: Request[_])
+@(model: PrintDisplayModel)(implicit request: Request[_])
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,10 +42,10 @@
     <div>
         <div class="personalInfo">
             <h1 id="userName">
-                @{personalDetailsModel.person.firstName.toLowerCase.capitalize} @{personalDetailsModel.person.lastName.toLowerCase.capitalize}
+                @{model.firstName} @{model.surname}
             </h1>
             <p id="userNino">
-                National Insurance number @{nino}
+                National Insurance number @{model.nino}
             </p>
         </div>
 
@@ -57,7 +57,7 @@
 
             <table class="table">
                 <tbody>
-                @protectionDisplayModel.certificateDate.map{ cDate =>
+                @model.certificateDate.map { cDate =>
                     <tr>
                         <td>Application date</td>
                         <td id="applicationDate">@{cDate}</td>
@@ -65,9 +65,9 @@
                 }
                 <tr>
                     <td>Protection type</td>
-                    <td id="protectionType">@Messages(s"pla.protection.types.${protectionDisplayModel.protectionType}")</td>
+                    <td id="protectionType">@Messages(s"pla.protection.types.${model.protectionType}")</td>
                 </tr>
-                @protectionDisplayModel.protectedAmount.map { amt =>
+                @model.protectedAmount.map { amt =>
                     <tr>
                         <td>Protected lifetime allowance</td>
                         <td id="protectedAmount">@{amt}</td>
@@ -75,11 +75,11 @@
                 }
                 <tr>
                     <td>Protection notification number</td>
-                    <td id="protectionRef">@{protectionDisplayModel.protectionReference}</td>
+                    <td id="protectionRef">@{model.protectionReference}</td>
                 </tr>
                 <tr>
                     <td>Scheme administrator reference</td>
-                    <td id="psaRef">@{protectionDisplayModel.psaCheckReference}</td>
+                    <td id="psaRef">@{model.psaCheckReference}</td>
                 </tr>
                 </tbody>
             </table>

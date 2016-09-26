@@ -19,6 +19,7 @@ package models
 import play.api.libs.json.Json
 
 case class ProtectionModel (
+                             psaCheckReference: Option[String],
                              protectionID: Option[Int],
                              certificateDate: Option[String] = None,
                              version: Option[Int] = None,
@@ -36,35 +37,8 @@ case class ProtectionModel (
                              pensionDebitTotalAmount: Option[Double] = None,
                              notificationId: Option[Int] = None,
                              protectionReference: Option[String] = None
-                           )
+                             )
 
 object ProtectionModel {
   implicit val format = Json.format[ProtectionModel]
 }
-
-
-case class ExistingProtectionsModel(psaCheckReference: String, lifetimeAllowanceProtections: Seq[ProtectionModel]) {
-
-    def activeProtections(): Seq[ProtectionModel] = lifetimeAllowanceProtections.filter(_.status.contains("Open"))
-    def otherProtections(): Seq[ProtectionModel] = lifetimeAllowanceProtections.filterNot(_.status.contains("Open"))
-}
-
-object ExistingProtectionsModel {
-  implicit val format = Json.format[ExistingProtectionsModel]
-}
-
-case class ProtectionDisplayModel(
-                                 protectionType: String,
-                                 status: String,
-                                 psaCheckReference: String,
-                                 protectionReference: String,
-                                 protectedAmount: Option[String],
-                                 certificateDate: Option[String]
-                                 )
-
-object ProtectionDisplayModel {
-  implicit val format = Json.format[ProtectionDisplayModel]
-}
-
-
-case class ExistingProtectionsDisplayModel(activeProtections: Seq[ProtectionDisplayModel], otherProtections: Seq[ProtectionDisplayModel])

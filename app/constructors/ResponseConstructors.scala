@@ -16,64 +16,35 @@
 
 package constructors
 
-import connectors.KeyStoreConnector
-import play.api.i18n.Messages
-import play.api.libs.json.{JsSuccess, JsValue, Json}
+import play.api.libs.json.JsValue
 import models._
 import enums.ApplicationType
-import utils.Constants
-import common.{Dates,Display}
 
 object ResponseConstructors extends ResponseConstructors {
 }
 
 trait ResponseConstructors {
 
-    def createSuccessResponseFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value) : SuccessResponseModel = {
-        val notificationId = (json \ "notificationId").as[Int].toString
-        val printable = Constants.activeProtectionCodes.contains(notificationId.toInt)
-
-        val details = if(Constants.successCodesRequiringProtectionInfo.contains(notificationId.toInt)) {
-            Some(createResponseDetailsFromJson(json))
-        } else None
-
-        val protectedAmount = protectionType match {
-            case ApplicationType.FP2016 => Constants.fpProtectedAmountString
-            case _ => Display.currencyDisplayString(BigDecimal((json \ "protectedAmount").as[Double]))
-        }
-        val additionalInfo = getAdditionalInfo(notificationId)
-
-        SuccessResponseModel(protectionType, notificationId, protectedAmount, printable, details, additionalInfo)
-    }
-
-    private def createResponseDetailsFromJson(json: JsValue): ProtectionDetailsModel = {
-        val protectionReference = (json \ "protectionReference").asOpt[String]
+    def createApplyResponseModelFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value): Option[ApplyResponseModel] = {
         val psaReference = (json \ "psaCheckReference").asOpt[String]
-        val applicationDate = (json \ "certificateDate").asOpt[String].map{ dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt))}
-        ProtectionDetailsModel(protectionReference, psaReference, applicationDate)
+
+        json.validate[ProtectionModel].fold(
+            errors => None,
+            success => Some(ApplyResponseModel(success.copy(psaCheckReference = psaReference)))
+        )
     }
 
-    def createRejectionResponseFromJson(json: JsValue): RejectionResponseModel = {
-        val notificationId = (json \ "notificationId").as[Int].toString
-        val additionalInfo = getAdditionalInfo(notificationId)
-        RejectionResponseModel(notificationId, additionalInfo)
+    def createTransformedReadResponseModelFromJson(json: JsValue): Option[TransformedReadResponseModel] = {
+        val responseModel = json.validate[ReadResponseModel]
+        responseModel.fold (
+            errors => None,
+            valid = success => Some(transformReadResponseModel(success))
+        )
     }
 
-    def getAdditionalInfo(notificationId: String): List[String] = {
-
-        def loop(notificationId: String, i: Int = 1, paragraphs: List[String] = List.empty): List[String] = {
-            val x: String = s"resultCode.$notificationId.$i"
-            if(Messages(x) == x){
-                paragraphs
-            } else {
-                loop(notificationId, i+1, paragraphs :+ i.toString)
-            }
-        }
-
-        loop(notificationId)
-    }
-
-    def createExistingProtectionsModelFromJson(json: JsValue): Option[ExistingProtectionsModel] = {
-        json.validate[ExistingProtectionsModel].asOpt
+    def transformReadResponseModel(respModel: ReadResponseModel): TransformedReadResponseModel = {
+        val activeProtectionOpt = respModel.lifetimeAllowanceProtections.find(_.status.contains("Open")).map{_.copy(psaCheckReference = Some(respModel.psaCheckReference))}
+        val otherProtections = respModel.lifetimeAllowanceProtections.filterNot(_.status.contains("Open")).map{_.copy(psaCheckReference = Some(respModel.psaCheckReference))}
+        TransformedReadResponseModel(activeProtectionOpt, otherProtections)
     }
 }
