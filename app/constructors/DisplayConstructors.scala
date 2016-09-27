@@ -115,6 +115,46 @@ trait DisplayConstructors {
       certificateDate)
   }
 
+  // AMENDS
+
+  def createAmendDisplayModel(model: AmendProtectionModel): AmendDisplayModel = {
+    val amended = modelsDiffer(model.originalProtection, model.updatedProtection)
+    val totalAmount = Display.currencyDisplayString(BigDecimal(model.updatedProtection.relevantAmount.getOrElse(0.0)))
+    val rows = createAmendRowsFromProtection(model.updatedProtection)
+
+    AmendDisplayModel (
+      amended = amended,
+      rows =  Seq.empty,
+      totalAmount = totalAmount
+    )
+  }
+
+  def createAmendRowsFromProtection(protection: ProtectionModel): Seq[AmendDisplayRowModel] = {
+
+    Seq.empty
+  }
+
+  def currencyOrNo(moneyOption: Option[BigDecimal]): String = {
+
+    moneyOption.map {
+      amt => {
+        if (amt == BigDecimal(0.0)) {
+          "No"
+        } else
+        {
+          Display.currencyDisplayString(amt)
+        }
+      }
+    }.getOrElse("No")
+  }
+
+  def modelsDiffer(modelA: ProtectionModel, modelB: ProtectionModel): Boolean = {
+    modelA match {
+      case `modelB` => false
+      case _ => true
+    }
+  }
+
   // SUCCESSFUL APPLICATION RESPONSE
   def createSuccessDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): SuccessDisplayModel = {
     val notificationId = model.protection.notificationId.getOrElse(throw new OptionNotDefinedException("CreateSuccessDisplayModel", "notification ID", protectionType.toString))

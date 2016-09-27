@@ -42,6 +42,10 @@ object Strings {
     keyStoreProtectionName(amendment.originalProtection)
   }
 
+  def keyStoreAmendFetchString(protectionType: String, status: String): String = {
+    status.toLowerCase + protectionType.toUpperCase + "Amendment"
+  }
+
   def protectionTypeString(modelProtectionType: Option[String]) = {
     modelProtectionType match {
       case Some("FP2016") => "FP2016"

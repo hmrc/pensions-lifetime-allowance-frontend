@@ -67,3 +67,13 @@ case class PrintDisplayModel (
                                 protectedAmount: Option[String],
                                 certificateDate: Option[String]
                                )
+
+case class AmendDisplayModel (
+                             amended: Boolean,
+                             rows: Seq[AmendDisplayRowModel],
+                             totalAmount: String
+                               )
+
+case class AmendDisplayRowModel(rowID: String, changeLinkCall: Option[Call], displayValue: String) {
+
+}

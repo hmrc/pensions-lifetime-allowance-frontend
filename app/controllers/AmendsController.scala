@@ -17,17 +17,20 @@
 package controllers
 
 import auth.AuthorisedForPLA
+import common.Strings
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.KeyStoreConnector
+import constructors.DisplayConstructors
+import enums.ApplicationType
 import forms.AmendUKPensionForm._
 import models.{AmendProtectionModel, AmendedUKPensionModel}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import views.html.pages
 
 import scala.concurrent.Future
 
 object AmendsController extends AmendsController{
   val keyStoreConnector = KeyStoreConnector
+  val displayConstructors = DisplayConstructors
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
@@ -36,11 +39,15 @@ object AmendsController extends AmendsController{
 trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
+  val displayConstructors: DisplayConstructors
 
   def amendsSummary(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
 
-
-    Future.successful(Ok)
+    val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
+    keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
+      case Some(amendModel) => Ok(views.html.pages.amends.amendSummary(displayConstructors.createAmendDisplayModel(amendModel)))
+      case _ => InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
   }
 
   val amendCurrentUKPension = AuthorisedByAny.async { implicit user => implicit request =>
