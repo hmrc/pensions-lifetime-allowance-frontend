@@ -16,6 +16,7 @@
 
 package controllers
 
+import common.Strings
 import models._
 import enums.ApplicationType
 import auth.{PLAUser, AuthorisedForPLA}
@@ -75,15 +76,33 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
-
   }
 
   def saveAndDisplayExistingProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Result = {
     model.activeProtection.map { activeModel =>
       keyStoreConnector.saveData[ProtectionModel]("openProtection", activeModel)
     }
+    saveAmendableProtections(model)
     val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
     Ok(pages.existingProtections.existingProtections(displayModel))
+  }
+
+  def saveAmendableProtections(model: TransformedReadResponseModel) = {
+    getAmendableProtections(model).map(saveProtection)
+  }
+
+  def getAmendableProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] = {
+    model.inactiveProtections.filter(protectionIsAmendable) ++ model.activeProtection.filter(protectionIsAmendable)
+  }
+
+  def protectionIsAmendable(protection: ProtectionModel): Boolean = {
+    protection.status.exists {
+      status => status.toLowerCase == "open" || status.toLowerCase == "dormant"
+    }
+  }
+
+  def saveProtection(protection: ProtectionModel) = {
+    keyStoreConnector.saveData[AmendProtectionModel](Strings.keyStoreProtectionName(protection), AmendProtectionModel(protection, protection))
   }
 
 }
