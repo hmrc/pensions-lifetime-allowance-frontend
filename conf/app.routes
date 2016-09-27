@@ -81,6 +81,10 @@ GET         /result-ip14                                        controllers.Resu
 GET         /existing-protections                               controllers.ReadProtectionsController.currentProtections
 GET         /print-protection                                   controllers.PrintController.printView
 
+## Amends ##
+POST        /amend-ip16                                         controllers.AmendsController.amendCurrentUKPension
+GET         /amend-ip16
+
 #Feedback routes
 GET         /feedback                                           controllers.FeedbackController.show
 POST        /feedback                                           controllers.FeedbackController.submit
