@@ -16,7 +16,7 @@
 
 package constructors
 
-import common.{Dates, Display, Strings}
+import common.{Helpers, Dates, Display, Strings}
 import enums.ApplicationType
 import models._
 import play.api.i18n.Messages
@@ -103,9 +103,12 @@ trait DisplayConstructors {
 
     val strippedPsaRef = model.psaCheckReference.map{_.stripPrefix(""""""").stripSuffix(""""""")}
 
+    val amendCall = Helpers.createAmendCallIfRequired(model)
+
     ExistingProtectionDisplayModel(
       protectionType,
       status,
+      amendCall,
       strippedPsaRef,
       protectionReference,
       protectedAmount,

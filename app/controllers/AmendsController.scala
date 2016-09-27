@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package controllers
 
 import auth.AuthorisedForPLA
@@ -36,25 +37,36 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
 
+  def amendsSummary(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
+
+
+    Future.successful(Ok)
+  }
+
   val amendCurrentUKPension = AuthorisedByAny.async { implicit user => implicit request =>
 
-    keyStoreConnector.fetchAndGetFormData[AmendProtectionModel]("amendCurrentUKPension").map {
-      case Some(data) =>
-        //Ok(pages.amends.amendIP16CurrentUKPension(amendUKPensionForm.fill(data.updatedProtection)))
-      //case _ => Ok(pages.ip2016.currentPensions(currentPensionsForm))
-    }
+//    keyStoreConnector.fetchAndGetFormData[AmendProtectionModel]("amendCurrentUKPension").map {
+//      case Some(data) =>
+//        //Ok(pages.amends.amendIP16CurrentUKPension(amendUKPensionForm.fill(data.updatedProtection)))
+//      //case _ => Ok(pages.ip2016.currentPensions(currentPensionsForm))
+//    }
+
+    Future.successful(Ok)
   }
 
   val submitAmendCurrentUKPension = AuthorisedByAny.async { implicit user => implicit request =>
 
 
-      amendUKPensionForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(pages.amends.amendIP16CurrentUKPension(errors))),
-      success => {
-        keyStoreConnector.saveFormData("amendCurrentUKPension", success)
-        Future.successful(Redirect(/* TODO amends summary page**/ ))
-      }
-    )
+//      amendUKPensionForm.bindFromRequest.fold(
+//      errors => Future.successful(BadRequest(pages.amends.amendIP16CurrentUKPension(errors))),
+//      success => {
+//        keyStoreConnector.saveFormData("amendCurrentUKPension", success)
+//        Future.successful(Redirect(/* TODO amends summary page**/ ))
+//      }
+//    )
+
+
+    Future.successful(Ok)
   }
 
 }

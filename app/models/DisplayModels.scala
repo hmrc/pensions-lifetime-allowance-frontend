@@ -17,6 +17,7 @@
 package models
 
 import enums.ApplicationType
+import play.api.mvc.Call
 
 case class SuccessDisplayModel(
                                 protectionType: ApplicationType.Value,
@@ -42,6 +43,7 @@ case class ProtectionDetailsDisplayModel(
 case class ExistingProtectionDisplayModel(
                                    protectionType: String,
                                    status: String,
+                                   amendCall: Option[Call],
                                    psaCheckReference: Option[String],
                                    protectionReference: String,
                                    protectedAmount: Option[String],
