@@ -43,11 +43,3 @@ object ProtectionModel {
   implicit val format = Json.format[ProtectionModel]
 }
 
-case class AmendProtectionModel(
-                               originalProtection: ProtectionModel,
-                               updatedProtection:  ProtectionModel
-                               )
-
-object AmendProtectionModel {
-  implicit val format = Json.format[AmendProtectionModel]
-}

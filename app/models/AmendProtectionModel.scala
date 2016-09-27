@@ -27,3 +27,9 @@ object AmendProtectionModel {
   implicit val format = Json.format[AmendProtectionModel]
 }
 
+case class AmendedUKPensionModel(amendedUKPensionAmt: Option[BigDecimal])
+
+object AmendedUKPensionModel{
+  implicit val format = Json.format[AmendedUKPensionModel]
+}
+
