@@ -30,27 +30,6 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
   "Existing Protections Constructor" should {
 
-    "Populate the protection status string" when {
-      "the protection is open" in         {DisplayConstructors.statusString(Some("Open")) shouldBe "open"}
-      "the protection is dormant" in      {DisplayConstructors.statusString(Some("Dormant")) shouldBe "dormant"}
-      "the protection is withdrawn" in    {DisplayConstructors.statusString(Some("Withdrawn")) shouldBe "withdrawn"}
-      "the protection is expired" in      {DisplayConstructors.statusString(Some("Expired")) shouldBe "expired"}
-      "the protection is unsuccessful" in {DisplayConstructors.statusString(Some("Unsuccessful")) shouldBe "unsuccessful"}
-      "the protection is rejected" in     {DisplayConstructors.statusString(Some("Rejected")) shouldBe "rejected"}
-      "there is no status recorded" in    {DisplayConstructors.statusString(None) shouldBe "notRecorded"}
-    }
-
-    "Populate the protection type string" when {
-      "the protection is FP2016" in            {DisplayConstructors.protectionTypeString(Some("FP2016")) shouldBe "FP2016"}
-      "the protection is IP2014" in            {DisplayConstructors.protectionTypeString(Some("IP2014")) shouldBe "IP2014"}
-      "the protection is IP2016" in            {DisplayConstructors.protectionTypeString(Some("IP2016")) shouldBe "IP2016"}
-      "the protection is primary" in           {DisplayConstructors.protectionTypeString(Some("Primary")) shouldBe "primary"}
-      "the protection is enhanced" in          {DisplayConstructors.protectionTypeString(Some("Enhanced")) shouldBe "enhanced"}
-      "the protection is fixed" in             {DisplayConstructors.protectionTypeString(Some("Fixed")) shouldBe "fixed"}
-      "the protection is FP2014" in            {DisplayConstructors.protectionTypeString(Some("FP2014")) shouldBe "FP2014"}
-      "the protection type is not recorded" in {DisplayConstructors.protectionTypeString(None) shouldBe "notRecorded"}
-    }
-
     "Create an ExistingProtectionsDisplayModel" in {
       val tstProtectionModelOpen = ProtectionModel (
         psaCheckReference = Some(tstPSACheckRef),
