@@ -87,7 +87,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     Ok(pages.existingProtections.existingProtections(displayModel))
   }
 
-  def saveAmendableProtections(model: TransformedReadResponseModel) = {
+  def saveAmendableProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]) = {
     getAmendableProtections(model).map(saveProtection)
   }
 
@@ -101,7 +101,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     }
   }
 
-  def saveProtection(protection: ProtectionModel) = {
+  def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]) = {
     keyStoreConnector.saveData[AmendProtectionModel](Strings.keyStoreProtectionName(protection), AmendProtectionModel(protection, protection))
   }
 
