@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthorisedForPLA
-import common.Strings
+import common.{Helpers, Strings}
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.KeyStoreConnector
 import constructors.DisplayConstructors
@@ -89,7 +89,8 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
         keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map{
           case Some(model) =>
             val updated = model.updatedProtection.copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
-            val amendModel = AmendProtectionModel(model.originalProtection, updated)
+            val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+            val amendModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
             keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendModel)
 
