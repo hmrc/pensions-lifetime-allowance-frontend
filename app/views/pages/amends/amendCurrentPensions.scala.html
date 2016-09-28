@@ -1,11 +1,11 @@
-@import models.amendModels.AmendedUKPensionModel
+@import models.amendModels.AmendCurrentPensionModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import helpers.templates.{formInputMoney,hiddenText}
 @import helpers.ip16.ip16Sidebar
 @import play.api.data._
 @import views.html.helper
 
-@(amendUKPensionsForm: Form[AmendedUKPensionModel])(implicit request: Request[_])
+@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_])
 
 @sidebar = {@ip16Sidebar()}
 
@@ -15,20 +15,20 @@
 
 @main_template(title = Messages("pla.currentPensions.pageHeading"), scriptElem=Some(scriptElement), sidebarLinks = Some(sidebar)) {
 
-@govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), amendUKPensionsForm)
+@govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), amendCurrentPensionForm)
 
 <h1 class="heading-large">@Messages("pla.currentPensions.pageHeading")</h1>
 
 @govHelpers.form(action = routes.AmendsController.submitAmendCurrentPension) {
 
-@formInputMoney(amendUKPensionsForm, "amendedUKPensionAmt", Messages("pla.currentPensions.question"), None)
+@formInputMoney(amendCurrentPensionForm, "amendedUKPensionAmt", Messages("pla.currentPensions.question"), None)
 
 <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
 
 <div style="display:none; visibility:hidden;">
 
-    @helper.inputText(amendUKPensionsForm("protectionType"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
-    @helper.inputText(amendUKPensionsForm("status"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
+    @helper.inputText(amendCurrentPensionForm("protectionType"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
+    @helper.inputText(amendCurrentPensionForm("status"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
 
 </div>
 

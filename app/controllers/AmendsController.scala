@@ -22,11 +22,9 @@ import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.KeyStoreConnector
 import constructors.DisplayConstructors
 import enums.ApplicationType
-import forms.AmendUKPensionForm._
-import models.amendModels.{AmendProtectionModel, AmendedUKPensionModel}
-import models.ProtectionModel
+import forms.AmendCurrentPensionForm._
+import models.amendModels.{AmendCurrentPensionModel, AmendProtectionModel}
 import play.api.Logger
-import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.pages
 
@@ -72,8 +70,8 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   def amendCurrentPensions(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(data) =>
-        val currentUKPensionModel = AmendedUKPensionModel(Some(data.updatedProtection.uncrystallisedRights.get), protectionType, status)
-        Ok(pages.amends.amendIP16CurrentUKPension(amendUKPensionForm.fill(currentUKPensionModel)))
+        val currentPensionModel = AmendCurrentPensionModel(Some(data.updatedProtection.uncrystallisedRights.get), protectionType, status)
+        Ok(pages.amends.amendCurrentPensions(amendCurrentPensionForm.fill(currentPensionModel)))
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend current UK pension page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
@@ -83,8 +81,8 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
   val submitAmendCurrentPension = AuthorisedByAny.async { implicit user => implicit request =>
 
-      amendUKPensionForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(pages.amends.amendIP16CurrentUKPension(errors))),
+      amendCurrentPensionForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(pages.amends.amendCurrentPensions(errors))),
       success => {
         keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map{
           case Some(model) =>
@@ -93,7 +91,6 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
             val amendModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
             keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendModel)
-
             //TODO handle gets
             Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get, updated.status.get))
 
