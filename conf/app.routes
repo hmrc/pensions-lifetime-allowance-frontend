@@ -85,7 +85,7 @@ GET         /print-protection                                   controllers.Prin
 GET         /amend-protection/:protectionType/:status           controllers.AmendsController.amendsSummary(protectionType, status)
 
 POST        /amend-ip16                                         controllers.AmendsController.submitAmendCurrentUKPension
-GET         /amend-ip16                                         controllers.AmendsController.amendCurrentUKPension
+GET         /amend-ip16/:protectionType/:status                 controllers.AmendsController.amendCurrentUKPension(protectionType, status)
 
 
 #Feedback routes

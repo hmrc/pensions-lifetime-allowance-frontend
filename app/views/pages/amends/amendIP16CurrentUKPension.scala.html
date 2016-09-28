@@ -4,7 +4,7 @@
 @import helpers.ip16.ip16Sidebar
 @import play.api.data._
 
-@(amendUKPensionsForm: Form[AmendedUKPensionModel])(implicit request: Request[_])
+@(amendUKPensionsForm: Form[AmendedUKPensionModel], status: String)(implicit request: Request[_])
 
 @sidebar = {@ip16Sidebar()}
 
@@ -24,6 +24,10 @@
 
 <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
 
+
+
+<input type="hidden" name="protectionType" value="IP2016" style="display:none;visibility:hidden;">
+<input type="hidden" name="status" value="dormant" style="display:none;visibility:hidden;">
 }
 
 }
