@@ -19,6 +19,7 @@ package constructors
 import common.{Helpers, Dates, Display, Strings}
 import enums.ApplicationType
 import models._
+import models.amendModels.AmendProtectionModel
 import play.api.i18n.Messages
 import utils.Constants
 

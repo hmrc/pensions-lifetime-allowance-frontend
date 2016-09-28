@@ -21,6 +21,7 @@ import models._
 import enums.ApplicationType
 import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
+import models.amendModels.AmendProtectionModel
 import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController

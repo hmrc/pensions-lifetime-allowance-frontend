@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package models
+package models.amendModels
 
+import models.ProtectionModel
 import play.api.libs.json.Json
 
 case class AmendProtectionModel (
@@ -26,4 +27,3 @@ case class AmendProtectionModel (
 object AmendProtectionModel {
   implicit val format = Json.format[AmendProtectionModel]
 }
-

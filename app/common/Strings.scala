@@ -17,7 +17,8 @@
 package common
 
 import enums.ApplicationType
-import models.{AmendProtectionModel, ProtectionModel}
+import models.ProtectionModel
+import models.amendModels.AmendProtectionModel
 
 object Strings {
 
