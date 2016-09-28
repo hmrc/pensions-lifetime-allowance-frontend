@@ -49,4 +49,13 @@ object Helpers {
     }
 
   }
+
+  def totalValue(protection: ProtectionModel): Double = {
+    List(
+      protection.preADayPensionInPayment,
+      protection.postADayBenefitCrystallisationEvents,
+      protection.nonUKRights,
+      protection.uncrystallisedRights
+    ).flatten.sum
+  }
 }
