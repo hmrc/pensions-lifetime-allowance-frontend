@@ -14,13 +14,13 @@
 
 @main_template(title = Messages("pla.currentPensions.pageHeading"), scriptElem=Some(scriptElement), sidebarLinks = Some(sidebar)) {
 
-@govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), amendUKPensionForm)
+@govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), amendUKPensionsForm)
 
 <h1 class="heading-large">@Messages("pla.currentPensions.pageHeading")</h1>
 
 @govHelpers.form(action = routes.AmendsController.submitAmendCurrentUKPension) {
 
-@formInputMoney(amendUKPensionForm, "amendedUKPensionAmt", Messages("pla.currentPensions.question"), None)
+@formInputMoney(amendUKPensionsForm, "amendedUKPensionAmt", Messages("pla.currentPensions.question"), None)
 
 <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
 
