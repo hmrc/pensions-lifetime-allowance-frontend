@@ -47,9 +47,8 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
   def amendsSummary(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
     val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
-    println("\n\nhello!!\n\n"+protectionKey)
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
-      case Some(amendModel) => println("\n\nhellooooo!!\n\n");Ok(views.html.pages.amends.amendSummary(displayConstructors.createAmendDisplayModel(amendModel)))
+      case Some(amendModel) => Ok(views.html.pages.amends.amendSummary(displayConstructors.createAmendDisplayModel(amendModel)))
       case _ => InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
@@ -89,7 +88,6 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
       success => {
         keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map{
           case Some(model) =>
-            println("\n\nworking!!\n\n"+model)
             val updated = model.updatedProtection.copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
             val amendModel = AmendProtectionModel(model.originalProtection, updated)
             keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendModel)
