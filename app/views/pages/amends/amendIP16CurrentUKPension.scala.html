@@ -3,6 +3,7 @@
 @import helpers.templates.{formInputMoney,hiddenText}
 @import helpers.ip16.ip16Sidebar
 @import play.api.data._
+@import views.html.helper
 
 @(amendUKPensionsForm: Form[AmendedUKPensionModel])(implicit request: Request[_])
 
@@ -18,11 +19,18 @@
 
 <h1 class="heading-large">@Messages("pla.currentPensions.pageHeading")</h1>
 
-@govHelpers.form(action = routes.AmendsController.submitAmendCurrentUKPension) {
+@govHelpers.form(action = routes.AmendsController.submitAmendCurrentPension) {
 
 @formInputMoney(amendUKPensionsForm, "amendedUKPensionAmt", Messages("pla.currentPensions.question"), None)
 
 <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
+
+<div style="display:none; visibility:hidden;">
+
+    @helper.inputText(amendUKPensionsForm("protectionType"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
+    @helper.inputText(amendUKPensionsForm("status"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
+
+</div>
 
 }
 

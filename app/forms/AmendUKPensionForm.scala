@@ -25,7 +25,9 @@ object AmendUKPensionForm {
   val amendUKPensionForm = Form(
     mapping(
       //TODO change error message if necessary
-      "amendedUKPensionAmt" -> optional(bigDecimal).verifying(Messages("pla.pensionsTaken.mandatoryErr"), {_.isDefined})
+      "amendedUKPensionAmt" -> optional(bigDecimal).verifying(Messages("pla.pensionsTaken.mandatoryErr"), {_.isDefined}),
+      "protectionType" -> text,
+      "status" -> text
     )(AmendedUKPensionModel.apply)(AmendedUKPensionModel.unapply)
   )
 }
