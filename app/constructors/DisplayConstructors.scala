@@ -21,6 +21,7 @@ import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import play.api.i18n.Messages
+import play.api.mvc.Call
 import utils.Constants
 
 object DisplayConstructors extends DisplayConstructors
@@ -112,34 +113,50 @@ trait DisplayConstructors {
   def createAmendDisplayModel(model: AmendProtectionModel): AmendDisplayModel = {
     val amended = modelsDiffer(model.originalProtection, model.updatedProtection)
     val totalAmount = Display.currencyDisplayString(BigDecimal(model.updatedProtection.relevantAmount.getOrElse(0.0)))
-    val rows = createAmendRowsFromProtection(model.updatedProtection)
+    val sections = createAmendSectionsFromProtection(model.updatedProtection)
+    val protectionType  = Strings.protectionTypeString(model.updatedProtection.protectionType)
 
     AmendDisplayModel (
+      protectionType = protectionType,
       amended = amended,
-      rows =  rows,
+      sections = sections,
       totalAmount = totalAmount
     )
   }
 
-  def createAmendRowsFromProtection(protection: ProtectionModel): Seq[AmendDisplayRowModel] = {
-    val pensionsTakenBeforeRow = AmendDisplayRowModel(
-                                            ApplicationStage.PensionsTakenBefore.toString,
-                                            Helpers.createAmendCall(protection, ApplicationStage.PensionsTakenBefore),
-                                            currencyOrNo(protection.preADayPensionInPayment))
-    val pensionsTakenBetweenRow = AmendDisplayRowModel(
-                                            ApplicationStage.PensionsTakenBetween.toString,
-                                            Helpers.createAmendCall(protection, ApplicationStage.PensionsTakenBetween),
-                                            currencyOrNo(protection.postADayBenefitCrystallisationEvents))
-    val overseasPensionsRow = AmendDisplayRowModel(
-                                            ApplicationStage.OverseasPensions.toString,
-                                            Helpers.createAmendCall(protection, ApplicationStage.OverseasPensions),
-                                            currencyOrNo(protection.nonUKRights))
-    val currentPensionsRow = AmendDisplayRowModel(
-                                            ApplicationStage.CurrentPensions.toString,
-                                            Helpers.createAmendCall(protection, ApplicationStage.CurrentPensions),
-                                            currencyOrNo(protection.uncrystallisedRights))
+  def createAmendSectionsFromProtection(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
+    val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)
+    val pensionsTakenBeforeSection = createSection(protection, ApplicationStage.PensionsTakenBefore, protection.preADayPensionInPayment)
+    val pensionsTakenBetweenSection = createSection(protection, ApplicationStage.PensionsTakenBetween, protection.postADayBenefitCrystallisationEvents)
+    val overseasPensionsSection = createSection(protection, ApplicationStage.OverseasPensions, protection.nonUKRights)
 
-    Seq(pensionsTakenBeforeRow, pensionsTakenBetweenRow, overseasPensionsRow, currentPensionsRow)
+    Seq(currentPensionsSection, pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection)
+  }
+
+  def createSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double]): AmendDisplaySectionModel = {
+    val amendCall = Helpers.createAmendCall(protection, applicationStage)
+    createYesNoSection(applicationStage.toString, amendCall, amountOption)
+  }
+
+  def createCurrentPensionsSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value): AmendDisplaySectionModel = {
+    val amendCall = Helpers.createAmendCall(protection, applicationStage)
+    val currentPensions = protection.uncrystallisedRights.getOrElse(throw new Exceptions.OptionNotDefinedException("createCurrentPensionsSection","currentPensions",protection.protectionType.getOrElse("No protection type")))
+    AmendDisplaySectionModel(applicationStage.toString, Seq(AmendDisplayRowModel("Amt", amendCall, Display.currencyDisplayString(BigDecimal(currentPensions)))))
+  }
+
+  def createYesNoSection(stage: String, amendCall: Call, amountOption: Option[Double]) = {
+    amountOption.fold(
+      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, Messages("pla.base.no"))))
+    )(amt =>
+      if(amt < 0.01) {
+        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, Messages("pla.base.no"))))
+      } else {
+        AmendDisplaySectionModel(stage, Seq(
+          AmendDisplayRowModel("YesNo", amendCall, Messages("pla.base.yes")),
+          AmendDisplayRowModel("Amt", amendCall, Display.currencyDisplayString(amt))
+        ))
+      }
+    )
   }
 
   def currencyOrNo(moneyOption: Option[Double]): String = {

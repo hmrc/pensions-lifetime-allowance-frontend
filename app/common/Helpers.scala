@@ -37,8 +37,8 @@ object Helpers {
   }
 
   def createAmendCall(protection: ProtectionModel, applicationSection: ApplicationStage.Value): Call = {
-    val protectionType = protection.protectionType.getOrElse(throw new Exceptions.RequiredValueNotDefinedException("createAmendCall", "protectionType"))
-    val status = protection.protectionType.getOrElse(throw new Exceptions.RequiredValueNotDefinedException("createAmendCall", "protectionStatus"))
+    val protectionType = protection.protectionType.getOrElse(throw new Exceptions.RequiredValueNotDefinedException("createAmendCall", "protectionType")).toLowerCase
+    val status = protection.status.getOrElse(throw new Exceptions.RequiredValueNotDefinedException("createAmendCall", "protectionStatus")).toLowerCase
 
     import ApplicationStage._
     applicationSection match {

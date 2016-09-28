@@ -6,6 +6,7 @@ pla.base.continue               = Continue
 pla.base.apply                  = Apply
 pla.base.submitApplication      = Submit your application
 pla.base.back                   = Back
+pla.base.change                 = change
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
 pla.base.startAgain             = Start Again
@@ -454,6 +455,20 @@ pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##
 pla.print.title                           = Print your active protection
+
+## Amends ##
+pla.amends.title                                = Protection summary
+pla.amends.heading.IP2016.noChanges             = Your individual protection 2016 details
+pla.amends.heading.IP2016.changed               = Check your answers and submit the changes
+pla.amends.cancelPara                           = Alternatively, you can <a href="">cancel the changes</a> and go back.
+pla.amends.CurrentPensions.IP2016.Amt           = What were your UK pensions worth on 5 April 2016?
+pla.amends.PensionsTakenBefore.IP2016.YesNo     = Did you get an income from any of your pensions before 6 April 2006?
+pla.amends.PensionsTakenBefore.IP2016.Amt       = — What''s the value of the pensions you took before 6 April 2006?
+pla.amends.PensionsTakenBetween.IP2016.YesNo    = Before 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
+pla.amends.PensionsTakenBetween.IP2016.Amt      = — How much lifetime allowance have you used?
+pla.amends.OverseasPensions.IP2016.YesNo        = Have you put money into a pension scheme held overseas?
+pla.amends.OverseasPensions.IP2016.Amt          = — How much did you contribute?
+pla.amends.totalValueOfPensions                 = Total value of pensions
 
 
 ### RESULTS MESSAGES ###
