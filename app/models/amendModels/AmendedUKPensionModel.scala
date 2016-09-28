@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-package models
+package models.amendModels
 
 import play.api.libs.json.Json
-
-case class AmendProtectionModel (
-                                  originalProtection: ProtectionModel,
-                                  updatedProtection: ProtectionModel
-                                  )
-
-object AmendProtectionModel {
-  implicit val format = Json.format[AmendProtectionModel]
-}
 
 case class AmendedUKPensionModel(amendedUKPensionAmt: Option[BigDecimal])
 
 object AmendedUKPensionModel{
   implicit val format = Json.format[AmendedUKPensionModel]
 }
-

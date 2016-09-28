@@ -17,21 +17,24 @@
 package controllers
 
 import auth.AuthorisedForPLA
+import common.Strings
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.KeyStoreConnector
+import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.AmendUKPensionForm._
-import models.{AmendProtectionModel, AmendedUKPensionModel, ProtectionModel}
+import models.amendModels.{AmendProtectionModel, AmendedUKPensionModel}
+import models.ProtectionModel
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import views._
 import views.html.pages
 
 import scala.concurrent.Future
 
 object AmendsController extends AmendsController{
   val keyStoreConnector = KeyStoreConnector
+  val displayConstructors = DisplayConstructors
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
@@ -40,57 +43,46 @@ object AmendsController extends AmendsController{
 trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
+  val displayConstructors: DisplayConstructors
+
+  def amendsSummary(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
+    val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
+    keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
+      case Some(amendModel) => Ok(views.html.pages.amends.amendSummary(displayConstructors.createAmendDisplayModel(amendModel)))
+      case _ => InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
+  }
 
   val amendCurrentUKPension = AuthorisedByAny.async { implicit user => implicit request =>
-
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel]("amendedProtection").map {
       case Some(data) =>
         val currentUKPensionAmt = AmendedUKPensionModel(Some(data.updatedProtection.uncrystallisedRights.get))
         Ok(pages.amends.amendIP16CurrentUKPension(amendUKPensionForm.fill(currentUKPensionAmt)))
       case _ =>
-        Logger.error(s"Could not retrieve amend proteciton model for user with nino ${user.nino} when loading the amend current UK pension page")
-
-        //TODO replace get request with intenral server error when summary page completed
-        /////////
-
-        val dummyProtModel = ProtectionModel(
-          Some("testPSARef"),
-          notificationId = Some(24),
-          protectionID = Some(12345),
-          protectionType = Some("FP2016"),
-          certificateDate = Some("2016-04-17"),
-          protectedAmount = Some(1250000),
-          protectionReference = Some("PSA123456"))
-        val dummyModel = AmendProtectionModel(dummyProtModel, dummyProtModel.copy())
-        keyStoreConnector.saveFormData[AmendProtectionModel]("amendedProtection", dummyModel)
-        /////////
-        Ok(pages.amends.amendIP16CurrentUKPension(amendUKPensionForm.fill(AmendedUKPensionModel(Some(BigDecimal(9999999.99))))))
+        Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend current UK pension page")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
 
-  def showDummy: Action[AnyContent] = Action {
-    implicit request =>
-      Ok("DUMMY SUMMARY PAGE:\n\t" + request)
-  }
 
   val submitAmendCurrentUKPension = AuthorisedByAny.async { implicit user => implicit request =>
 
       amendUKPensionForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(pages.amends.amendIP16CurrentUKPension(errors))),
       success => {
-
         keyStoreConnector.fetchAndGetFormData[AmendProtectionModel]("amendedProtection").map{
           case Some(model) =>
             val updated = model.updatedProtection.copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
-            keyStoreConnector.saveFormData[AmendProtectionModel]("amendedProtection", AmendProtectionModel(model.originalProtection, updated))
-            //TODO redirect back to summary page
-            Redirect(routes.AmendsController.showDummy)
+            val amendModel = AmendProtectionModel(model.originalProtection, updated)
+            keyStoreConnector.saveFormData[AmendProtectionModel]("amendedProtection", amendModel)
+            Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get, updated.status.get))
           case _ =>
             Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when amending current UK pension")
             InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
     )
+    Future.successful(Ok)
   }
 
 }

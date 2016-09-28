@@ -82,9 +82,11 @@ GET         /existing-protections                               controllers.Read
 GET         /print-protection                                   controllers.PrintController.printView
 
 ## Amends ##
+GET         /amend-protection/:protectionType/:status           controllers.AmendsController.amendsSummary(protectionType, status)
+
 POST        /amend-ip16                                         controllers.AmendsController.submitAmendCurrentUKPension
-GET         /dummy-page                                         controllers.AmendsController.amendCurrentUKPension
-GET         /tiddly                                             controllers.AmendsController.showDummy
+GET         /amend-ip16                                         controllers.AmendsController.amendCurrentUKPension
+
 
 #Feedback routes
 GET         /feedback                                           controllers.FeedbackController.show

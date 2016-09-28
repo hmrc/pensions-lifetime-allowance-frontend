@@ -379,6 +379,7 @@ pla.existingProtections.protectedAmount                 = Protected lifetime all
 pla.existingProtections.protectionRef                   = Protection notification number
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
+pla.existingProtections.amendLinkText                   = View or change details
 
 
 ## PROTECTION INFORMATION ##

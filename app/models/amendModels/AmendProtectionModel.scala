@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package forms
+package models.amendModels
 
-import models.amendModels.AmendedUKPensionModel
-import play.api.data.Form
-import play.api.data.Forms._
-import play.api.i18n.Messages
+import models.ProtectionModel
+import play.api.libs.json.Json
 
-object AmendUKPensionForm {
-  val amendUKPensionForm = Form(
-    mapping(
-      //TODO change error message if necessary
-      "amendedUKPensionAmt" -> optional(bigDecimal).verifying(Messages("pla.pensionsTaken.mandatoryErr"), {_.isDefined})
-    )(AmendedUKPensionModel.apply)(AmendedUKPensionModel.unapply)
-  )
+case class AmendProtectionModel (
+                                  originalProtection: ProtectionModel,
+                                  updatedProtection: ProtectionModel
+                                  )
+
+object AmendProtectionModel {
+  implicit val format = Json.format[AmendProtectionModel]
 }

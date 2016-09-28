@@ -17,7 +17,8 @@
 package common
 
 import enums.ApplicationType
-import models.{AmendProtectionModel, ProtectionModel}
+import models.ProtectionModel
+import models.amendModels.AmendProtectionModel
 
 object Strings {
 
@@ -40,6 +41,10 @@ object Strings {
 
   def keyStoreProtectionName(amendment: AmendProtectionModel): String = {
     keyStoreProtectionName(amendment.originalProtection)
+  }
+
+  def keyStoreAmendFetchString(protectionType: String, status: String): String = {
+    status.toLowerCase + protectionType.toUpperCase + "Amendment"
   }
 
   def protectionTypeString(modelProtectionType: Option[String]) = {

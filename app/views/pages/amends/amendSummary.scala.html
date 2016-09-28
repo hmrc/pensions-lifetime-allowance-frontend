@@ -1,0 +1,11 @@
+@import models.AmendDisplayModel
+
+@(model: AmendDisplayModel)
+
+<p>Amended: @model.amended</p>
+<ul>
+    @model.rows.map {rw =>
+        <li>ID: @{rw.rowID}, amt: @{rw.displayValue}</li>
+    }
+</ul>
+<p>Total: @model.totalAmount</p>

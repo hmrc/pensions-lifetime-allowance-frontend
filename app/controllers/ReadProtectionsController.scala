@@ -16,11 +16,12 @@
 
 package controllers
 
-import common.Strings
+import common.{Helpers, Strings}
 import models._
 import enums.ApplicationType
 import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
+import models.amendModels.AmendProtectionModel
 import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -92,13 +93,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
   }
 
   def getAmendableProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] = {
-    model.inactiveProtections.filter(protectionIsAmendable) ++ model.activeProtection.filter(protectionIsAmendable)
-  }
-
-  def protectionIsAmendable(protection: ProtectionModel): Boolean = {
-    protection.status.exists {
-      status => status.toLowerCase == "open" || status.toLowerCase == "dormant"
-    }
+    model.inactiveProtections.filter(Helpers.protectionIsAmendable) ++ model.activeProtection.filter(Helpers.protectionIsAmendable)
   }
 
   def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]) = {

@@ -16,9 +16,10 @@
 
 package constructors
 
-import common.{Dates, Display, Strings}
+import common.{Helpers, Dates, Display, Strings}
 import enums.ApplicationType
 import models._
+import models.amendModels.AmendProtectionModel
 import play.api.i18n.Messages
 import utils.Constants
 
@@ -103,13 +104,56 @@ trait DisplayConstructors {
 
     val strippedPsaRef = model.psaCheckReference.map{_.stripPrefix(""""""").stripSuffix(""""""")}
 
+    val amendCall = Helpers.createAmendCallIfRequired(model)
+
     ExistingProtectionDisplayModel(
       protectionType,
       status,
+      amendCall,
       strippedPsaRef,
       protectionReference,
       protectedAmount,
       certificateDate)
+  }
+
+  // AMENDS
+
+  def createAmendDisplayModel(model: AmendProtectionModel): AmendDisplayModel = {
+    val amended = modelsDiffer(model.originalProtection, model.updatedProtection)
+    val totalAmount = Display.currencyDisplayString(BigDecimal(model.updatedProtection.relevantAmount.getOrElse(0.0)))
+    val rows = createAmendRowsFromProtection(model.updatedProtection)
+
+    AmendDisplayModel (
+      amended = amended,
+      rows =  Seq.empty,
+      totalAmount = totalAmount
+    )
+  }
+
+  def createAmendRowsFromProtection(protection: ProtectionModel): Seq[AmendDisplayRowModel] = {
+
+    Seq.empty
+  }
+
+  def currencyOrNo(moneyOption: Option[BigDecimal]): String = {
+
+    moneyOption.map {
+      amt => {
+        if (amt == BigDecimal(0.0)) {
+          "No"
+        } else
+        {
+          Display.currencyDisplayString(amt)
+        }
+      }
+    }.getOrElse("No")
+  }
+
+  def modelsDiffer(modelA: ProtectionModel, modelB: ProtectionModel): Boolean = {
+    modelA match {
+      case `modelB` => false
+      case _ => true
+    }
   }
 
   // SUCCESSFUL APPLICATION RESPONSE

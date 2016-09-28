@@ -39,7 +39,7 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
 
   val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
   val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111))
-  val testPrintDisplayModel = PrintDisplayModel("Testy", "Mctestface", "AA11TESTA", "IP2016", "active", "PSATestNum", "ProtRefTestNum", Some("£1,246,500"), Some("3 April 2016"))
+  val testPrintDisplayModel = PrintDisplayModel("Testy", "Mctestface", "AA11TESTA", "IP2016", "open", "PSATestNum", "ProtRefTestNum", Some("£1,246,500"), Some("3 April 2016"))
 
   trait BaseTestPrintController extends PrintController {
     val keyStoreConnector = mockKeyStoreConnector

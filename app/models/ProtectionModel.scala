@@ -42,4 +42,3 @@ case class ProtectionModel (
 object ProtectionModel {
   implicit val format = Json.format[ProtectionModel]
 }
-

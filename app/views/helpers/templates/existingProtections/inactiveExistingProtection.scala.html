@@ -37,6 +37,10 @@
                     @protection.certificateDate.map{ cDate =>
                         @protectionDetails(Messages("pla.resultSuccess.applicationDate"), cDate, s"inactiveCertificateDate$protectionNum")
                     }
+
+                    @protection.amendCall.map{ call =>
+                        <a href="@call">@Messages("pla.existingProtections.amendLinkText")</a>
+                    }
                 </div>
             </details>
         </div>
