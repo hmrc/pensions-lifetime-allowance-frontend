@@ -74,6 +74,6 @@ case class AmendDisplayModel (
                              totalAmount: String
                                )
 
-case class AmendDisplayRowModel(rowID: String, changeLinkCall: Option[Call], displayValue: String) {
+case class AmendDisplayRowModel(rowID: String, changeLinkCall: Call, displayValue: String) {
 
 }

@@ -16,6 +16,7 @@
 
 package common
 
+import enums.ApplicationStage
 import models.ProtectionModel
 import play.api.mvc.Call
 
@@ -33,5 +34,19 @@ object Helpers {
       val protectionType = protection.protectionType.map(_.toLowerCase).getOrElse("none")
       Some(controllers.routes.AmendsController.amendsSummary(protectionType, status))
     } else None
+  }
+
+  def createAmendCall(protection: ProtectionModel, applicationSection: ApplicationStage.Value): Call = {
+    val protectionType = protection.protectionType.getOrElse(throw new Exceptions.RequiredValueNotDefinedException("createAmendCall", "protectionType"))
+    val status = protection.protectionType.getOrElse(throw new Exceptions.RequiredValueNotDefinedException("createAmendCall", "protectionStatus"))
+
+    import ApplicationStage._
+    applicationSection match {
+      case PensionsTakenBefore  => controllers.routes.AmendsController.amendPensionsTakenBefore(protectionType, status)
+      case PensionsTakenBetween => controllers.routes.AmendsController.amendPensionsTakenBetween(protectionType, status)
+      case OverseasPensions     => controllers.routes.AmendsController.amendOverseasPensions(protectionType, status)
+      case CurrentPensions      => controllers.routes.AmendsController.amendCurrentPensions(protectionType, status)
+    }
+
   }
 }
