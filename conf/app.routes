@@ -82,10 +82,17 @@ GET         /existing-protections                               controllers.Read
 GET         /print-protection                                   controllers.PrintController.printView
 
 ## Amends ##
-GET         /amend-protection/:protectionType/:status           controllers.AmendsController.amendsSummary(protectionType, status)
 
 POST        /amend-ip16                                         controllers.AmendsController.submitAmendCurrentUKPension
 GET         /amend-ip16/:protectionType/:status                 controllers.AmendsController.amendCurrentUKPension(protectionType, status)
+
+
+GET         /amend-protection/pensions-taken-before/:protectionType/:status             controllers.AmendsController.amendPensionsTakenBefore(protectionType, status)
+GET         /amend-protection/pensions-taken-between/:protectionType/:status            controllers.AmendsController.amendPensionsTakenBetween(protectionType, status)
+GET         /amend-protection/overseas-pensions/:protectionType/:status                 controllers.AmendsController.amendOverseasPensions(protectionType, status)
+GET         /amend-protection/current-pensions/:protectionType/:status                  controllers.AmendsController.amendCurrentPensions(protectionType, status)
+
+GET         /amend-protection/:protectionType/:status           controllers.AmendsController.amendsSummary(protectionType, status)
 
 
 #Feedback routes

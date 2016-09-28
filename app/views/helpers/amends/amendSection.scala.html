@@ -1,0 +1,10 @@
+@import models.AmendDisplaySectionModel
+
+@(model: AmendDisplaySectionModel, protectionType: String)
+
+@model.rows.headOption.map { firstRow =>
+    @amendRow(firstRow, protectionType, model.sectionId, model.rows.tail.nonEmpty)
+}
+@model.rows.tail.map { otherRow =>
+    @amendRow(otherRow, protectionType, model.sectionId, false)
+}

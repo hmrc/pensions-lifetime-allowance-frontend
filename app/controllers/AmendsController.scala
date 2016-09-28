@@ -65,6 +65,22 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
     }
   }
 
+  def amendPensionsTakenBefore(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
+    Future.successful(Ok)
+  }
+
+  def amendPensionsTakenBetween(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
+    Future.successful(Ok)
+  }
+
+  def amendOverseasPensions(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
+    Future.successful(Ok)
+  }
+
+  def amendCurrentPensions(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
+    Future.successful(Ok)
+  }
+
 
   val submitAmendCurrentUKPension = AuthorisedByAny.async { implicit user => implicit request =>
 

@@ -16,38 +16,31 @@
 
 package constructors
 
-import common.{Helpers, Dates, Display, Strings}
-import enums.ApplicationType
+import common._
+import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import play.api.i18n.Messages
+import play.api.mvc.Call
 import utils.Constants
 
 object DisplayConstructors extends DisplayConstructors
 
 trait DisplayConstructors {
 
-  class OptionNotDefinedException(val functionName: String, optionName: String, applicationType: String) extends Exception(
-    s"Option not found for $optionName in $functionName for application type $applicationType"
-  )
-
-  class RequiredValueNotDefinedException(val functionName: String, optionName: String) extends Exception(
-    s"Value not found for $optionName in $functionName"
-  )
-
   // PRINT PAGE
   def createPrintDisplayModel(personalDetailsModelOpt: Option[PersonalDetailsModel], protectionModelOpt: Option[ProtectionModel], nino: String): PrintDisplayModel = {
 
-    val personalDetailsModel = personalDetailsModelOpt.getOrElse{throw new RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")}
-    val protectionModel = protectionModelOpt.getOrElse{throw new RequiredValueNotDefinedException("createPrintDisplayModel", "protectionModel")}
+    val personalDetailsModel = personalDetailsModelOpt.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")}
+    val protectionModel = protectionModelOpt.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "protectionModel")}
 
     val firstName = personalDetailsModel.person.firstName.toLowerCase.capitalize
     val surname = personalDetailsModel.person.lastName.toLowerCase.capitalize
 
     val protectionType = Strings.protectionTypeString(protectionModel.protectionType)
     val status = Strings.statusString(protectionModel.status)
-    val psaCheckReference = protectionModel.psaCheckReference.getOrElse{throw new RequiredValueNotDefinedException("createPrintDisplayModel", "psaCheckReference")}
-    val protectionReference = protectionModel.protectionReference.getOrElse{throw new RequiredValueNotDefinedException("createPrintDisplayModel", "protectionReference")}
+    val psaCheckReference = protectionModel.psaCheckReference.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "psaCheckReference")}
+    val protectionReference = protectionModel.protectionReference.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "protectionReference")}
 
     val protectedAmount = protectionModel.protectedAmount.map { amt =>
       Display.currencyDisplayString(BigDecimal(amt))
@@ -117,36 +110,58 @@ trait DisplayConstructors {
   }
 
   // AMENDS
-
   def createAmendDisplayModel(model: AmendProtectionModel): AmendDisplayModel = {
     val amended = modelsDiffer(model.originalProtection, model.updatedProtection)
     val totalAmount = Display.currencyDisplayString(BigDecimal(model.updatedProtection.relevantAmount.getOrElse(0.0)))
-    val rows = createAmendRowsFromProtection(model.updatedProtection)
+    val sections = createAmendSectionsFromProtection(model.updatedProtection)
+    val protectionType  = Strings.protectionTypeString(model.updatedProtection.protectionType)
 
     AmendDisplayModel (
+      protectionType = protectionType,
       amended = amended,
-      rows =  Seq.empty,
+      sections = sections,
       totalAmount = totalAmount
     )
   }
 
-  def createAmendRowsFromProtection(protection: ProtectionModel): Seq[AmendDisplayRowModel] = {
+  def createAmendSectionsFromProtection(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
+    val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)
+    val pensionsTakenBeforeSection = createSection(protection, ApplicationStage.PensionsTakenBefore, protection.preADayPensionInPayment)
+    val pensionsTakenBetweenSection = createSection(protection, ApplicationStage.PensionsTakenBetween, protection.postADayBenefitCrystallisationEvents)
+    val overseasPensionsSection = createSection(protection, ApplicationStage.OverseasPensions, protection.nonUKRights)
 
-    Seq.empty
+    Seq(currentPensionsSection, pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection)
   }
 
-  def currencyOrNo(moneyOption: Option[BigDecimal]): String = {
+  def createSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double]): AmendDisplaySectionModel = {
+    val amendCall = Helpers.createAmendCall(protection, applicationStage)
+    createYesNoSection(applicationStage.toString, amendCall, amountOption)
+  }
 
-    moneyOption.map {
-      amt => {
-        if (amt == BigDecimal(0.0)) {
-          "No"
-        } else
-        {
-          Display.currencyDisplayString(amt)
-        }
+  def createCurrentPensionsSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value): AmendDisplaySectionModel = {
+    val amendCall = Helpers.createAmendCall(protection, applicationStage)
+    val currentPensions = protection.uncrystallisedRights.getOrElse(throw new Exceptions.OptionNotDefinedException("createCurrentPensionsSection","currentPensions",protection.protectionType.getOrElse("No protection type")))
+    AmendDisplaySectionModel(applicationStage.toString, Seq(AmendDisplayRowModel("Amt", amendCall, Display.currencyDisplayString(BigDecimal(currentPensions)))))
+  }
+
+  def createYesNoSection(stage: String, amendCall: Call, amountOption: Option[Double]) = {
+    amountOption.fold(
+      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, Messages("pla.base.no"))))
+    )(amt =>
+      if(amt < 0.01) {
+        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, Messages("pla.base.no"))))
+      } else {
+        AmendDisplaySectionModel(stage, Seq(
+          AmendDisplayRowModel("YesNo", amendCall, Messages("pla.base.yes")),
+          AmendDisplayRowModel("Amt", amendCall, Display.currencyDisplayString(amt))
+        ))
       }
-    }.getOrElse("No")
+    )
+  }
+
+  def currencyOrNo(moneyOption: Option[Double]): String = {
+
+    moneyOption.fold("No")({ amt => if (BigDecimal(amt) == BigDecimal(0.0)) "No" else Display.currencyDisplayString(amt)})
   }
 
   def modelsDiffer(modelA: ProtectionModel, modelB: ProtectionModel): Boolean = {
@@ -158,8 +173,8 @@ trait DisplayConstructors {
 
   // SUCCESSFUL APPLICATION RESPONSE
   def createSuccessDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): SuccessDisplayModel = {
-    val notificationId = model.protection.notificationId.getOrElse(throw new OptionNotDefinedException("CreateSuccessDisplayModel", "notification ID", protectionType.toString))
-    val protectedAmount = model.protection.protectedAmount.getOrElse(throw new OptionNotDefinedException("ApplyResponseModel", "protected amount", protectionType.toString))
+    val notificationId = model.protection.notificationId.getOrElse(throw new Exceptions.OptionNotDefinedException("CreateSuccessDisplayModel", "notification ID", protectionType.toString))
+    val protectedAmount = model.protection.protectedAmount.getOrElse(throw new Exceptions.OptionNotDefinedException("ApplyResponseModel", "protected amount", protectionType.toString))
     val printable = Constants.activeProtectionCodes.contains(notificationId)
 
     val details = if(Constants.successCodesRequiringProtectionInfo.contains(notificationId)) {
@@ -175,14 +190,14 @@ trait DisplayConstructors {
 
   // REJECTED APPLICATION RESPONSE
   def createRejectionDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): RejectionDisplayModel = {
-    val notificationId = model.protection.notificationId.getOrElse(throw new OptionNotDefinedException("CreateRejectionDisplayModel", "notification ID", protectionType.toString))
+    val notificationId = model.protection.notificationId.getOrElse(throw new Exceptions.OptionNotDefinedException("CreateRejectionDisplayModel", "notification ID", protectionType.toString))
     val additionalInfo = getAdditionalInfo(notificationId)
     RejectionDisplayModel(notificationId.toString, additionalInfo, protectionType)
   }
 
   private def createProtectionDetailsFromModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): ProtectionDetailsDisplayModel = {
     val protectionReference = model.protection.protectionReference
-    val psaReference = model.protection.psaCheckReference.getOrElse(throw new OptionNotDefinedException("createProtectionDetailsFromModel", "psaCheckReference", protectionType.toString))
+    val psaReference = model.protection.psaCheckReference.getOrElse(throw new Exceptions.OptionNotDefinedException("createProtectionDetailsFromModel", "psaCheckReference", protectionType.toString))
     val applicationDate = model.protection.certificateDate.map{ dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt))}
     ProtectionDetailsDisplayModel(protectionReference, psaReference, applicationDate)
   }

@@ -1,11 +1,39 @@
 @import models.AmendDisplayModel
+@import helpers.amends.amendSection
 
-@(model: AmendDisplayModel)
+@(model: AmendDisplayModel)(implicit request: Request[_])
 
+@main_template(title = Messages("pla.amends.title")) {
+
+    @if(model.amended) {
+        <h1 class="heading-large">@Messages(s"pla.amends.heading.${model.protectionType}.changed")</h1>
+        <p>@Html(Messages("pla.amends.cancelPara"))</p>
+    } else {
+        <h1 class="heading-large">@Messages(s"pla.amends.heading.${model.protectionType}.noChanges")</h1>
+    }
+
+    <table>
+        @model.sections.map { section =>
+            @amendSection(section, model.protectionType)
+        }
+
+        <tr class="grey-background">
+            <td class="total-font">@Messages("pla.amends.totalValueOfPensions")</td>
+            <td class="total-font">@model.totalAmount</td>
+            <td></td>
+        </tr>
+    </table>
+
+}
+
+@{/*
 <p>Amended: @model.amended</p>
 <ul>
-    @model.rows.map {rw =>
-        <li>ID: @{rw.rowID}, amt: @{rw.displayValue}</li>
+    @model.sections.map {section =>
+        @section.rows.map {rw =>
+            <li>ID: @{rw.rowID}, amt: @{rw.displayValue}</li>
+        }
     }
 </ul>
 <p>Total: @model.totalAmount</p>
+*/}
