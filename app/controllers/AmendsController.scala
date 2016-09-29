@@ -71,19 +71,22 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(data) =>
         val currentPensionModel = AmendCurrentPensionModel(Some(data.updatedProtection.uncrystallisedRights.get), protectionType, status)
-        Ok(pages.amends.amendCurrentPensions(amendCurrentPensionForm.fill(currentPensionModel)))
+        protectionType match {
+          case "ip2016" => Ok(pages.amends.amendCurrentPensions(amendCurrentPensionForm.fill(currentPensionModel)))
+          case "ip2014" => Ok(pages.amends.amendIP14CurrentPensions(amendCurrentPensionForm.fill(currentPensionModel)))
+        }
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend current UK pension page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
 
-
   val submitAmendCurrentPension = AuthorisedByAny.async { implicit user => implicit request =>
 
       amendCurrentPensionForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(pages.amends.amendCurrentPensions(errors))),
       success => {
+        //TODO case match on protection type and configure routes for each
         keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map{
           case Some(model) =>
             val updated = model.updatedProtection.copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
@@ -92,7 +95,7 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
             keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendModel)
             //TODO handle gets
-            Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get, updated.status.get))
+            Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
 
           case _ =>
             Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when amending current UK pension")

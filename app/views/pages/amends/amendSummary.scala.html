@@ -6,7 +6,7 @@
 @main_template(title = Messages("pla.amends.title")) {
 
     @if(model.amended) {
-        <h1 class="heading-large">@Messages(s"pla.amends.heading.${model.protectionType}.changed")</h1>
+        <h1 class="heading-large">@Messages(s"pla.amends.heading.changed")</h1>
         <p>@Html(Messages("pla.amends.cancelPara", controllers.routes.ReadProtectionsController.currentProtections))</p>
     } else {
         <h1 class="heading-large">@Messages(s"pla.amends.heading.${model.protectionType}.noChanges")</h1>
