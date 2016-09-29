@@ -16,10 +16,12 @@
 
 package controllers
 
+import common.{Helpers, Strings}
 import models._
 import enums.ApplicationType
 import auth.{PLAUser, AuthorisedForPLA}
 import config.{FrontendAppConfig,FrontendAuthConnector}
+import models.amendModels.AmendProtectionModel
 import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -75,15 +77,27 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
-
   }
 
   def saveAndDisplayExistingProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Result = {
     model.activeProtection.map { activeModel =>
       keyStoreConnector.saveData[ProtectionModel]("openProtection", activeModel)
     }
+    saveAmendableProtections(model)
     val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
     Ok(pages.existingProtections.existingProtections(displayModel))
+  }
+
+  def saveAmendableProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]) = {
+    getAmendableProtections(model).map(saveProtection)
+  }
+
+  def getAmendableProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] = {
+    model.inactiveProtections.filter(Helpers.protectionIsAmendable) ++ model.activeProtection.filter(Helpers.protectionIsAmendable)
+  }
+
+  def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]) = {
+    keyStoreConnector.saveData[AmendProtectionModel](Strings.keyStoreProtectionName(protection), AmendProtectionModel(protection, protection))
   }
 
 }
