@@ -459,15 +459,30 @@ pla.print.title                           = Print your active protection
 ## Amends ##
 pla.amends.title                                = Protection summary
 pla.amends.heading.IP2016.noChanges             = Your individual protection 2016 details
+pla.amends.heading.IP2014.noChanges             = Your individual protection 2014 details
+
 pla.amends.heading.IP2016.changed               = Check your answers and submit the changes
+pla.amends.heading.IP2014.changed               = Check your answers and submit the changes
+
 pla.amends.cancelPara                           = Alternatively, you can <a href="{0}" id="{1}">cancel the changes</a> and go back.
+
 pla.amends.CurrentPensions.IP2016.Amt           = What were your UK pensions worth on 5 April 2016?
+pla.amends.CurrentPensions.IP2014.Amt           = What were your UK pensions worth on 5 April 2014?
+
 pla.amends.PensionsTakenBefore.IP2016.YesNo     = Did you get an income from any of your pensions before 6 April 2006?
 pla.amends.PensionsTakenBefore.IP2016.Amt       = — What''s the value of the pensions you took before 6 April 2006?
+pla.amends.PensionsTakenBefore.IP2014.YesNo     = Did you get an income from any of your pensions before 6 April 2006?
+pla.amends.PensionsTakenBefore.IP2014.Amt       = — What''s the value of the pensions you took before 6 April 2006?
+
 pla.amends.PensionsTakenBetween.IP2016.YesNo    = Before 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.amends.PensionsTakenBetween.IP2016.Amt      = — How much lifetime allowance have you used?
+pla.amends.PensionsTakenBetween.IP2014.YesNo    = Before 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
+pla.amends.PensionsTakenBetween.IP2014.Amt      = — How much lifetime allowance have you used?
+
 pla.amends.OverseasPensions.IP2016.YesNo        = Have you put money into a pension scheme held overseas?
 pla.amends.OverseasPensions.IP2016.Amt          = — How much did you contribute?
+pla.amends.OverseasPensions.IP2014.YesNo        = Have you put money into a pension scheme held overseas?
+pla.amends.OverseasPensions.IP2014.Amt          = — How much did you contribute?
 pla.amends.totalValueOfPensions                 = Total value of pensions
 pla.amends.pageBreadcrumb                       = Change your protection details
 

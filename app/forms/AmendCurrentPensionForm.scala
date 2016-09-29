@@ -16,16 +16,21 @@
 
 package forms
 
+import common.Validation._
 import models.amendModels.AmendCurrentPensionModel
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.Messages
+import utils.Constants._
 
 object AmendCurrentPensionForm {
   val amendCurrentPensionForm = Form(
     mapping(
-      //TODO change error message if necessary
-      "amendedUKPensionAmt" -> optional(bigDecimal).verifying(Messages("pla.pensionsTaken.mandatoryErr"), {_.isDefined}),
+      "amendedUKPensionAmt" -> optional(bigDecimal)
+        .verifying(Messages("pla.currentPensions.errorQuestion"), currentPensionsAmt => currentPensionsAmt.isDefined)
+        .verifying(Messages("pla.currentPensions.errorNegative"), currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
+        .verifying(Messages("pla.currentPensions.errorDecimalPlaces"), currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))
+        .verifying(Messages("pla.currentPensions.errorMaximum"), currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency)),
       "protectionType" -> text,
       "status" -> text
     )(AmendCurrentPensionModel.apply)(AmendCurrentPensionModel.unapply)
