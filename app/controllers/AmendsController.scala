@@ -19,14 +19,16 @@ package controllers
 import auth.AuthorisedForPLA
 import common.{Helpers, Strings}
 import config.{FrontendAppConfig, FrontendAuthConnector}
-import connectors.KeyStoreConnector
+import connectors.{PLAConnector, KeyStoreConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
 import forms.AmendmentTypeForm._
 import models.amendModels.{AmendmentTypeModel, AmendCurrentPensionModel, AmendProtectionModel}
 import play.api.Logger
+import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.HttpResponse
 import views.html.pages
 
 import scala.concurrent.Future
@@ -57,12 +59,23 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   }
 
   val amendProtection = AuthorisedByAny.async { implicit user => implicit request =>
+    amendmentTypeForm.bindFromRequest.fold(
+      errors => {
+        Logger.error(s"Couldn't bind protection type or status to amend request for user with nino ${user.nino}")
+        Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+      },
+      success => for {
+        protectionAmendment <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
+        response <- PLAConnector.amendProtection(user.nino.get, protectionAmendment.get.updatedProtection)
+        result <- redirectFromSuccess(response)
+      } yield result
+    )
 
-
-    Future.successful(Ok)
   }
 
-
+  def redirectFromSuccess(response: HttpResponse): Future[Result] = {
+    Future.successful(Ok)
+  }
 
   def amendPensionsTakenBefore(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
     Future.successful(Ok)
@@ -106,7 +119,7 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
           case _ =>
             Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when amending current UK pension")
-            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
     )
