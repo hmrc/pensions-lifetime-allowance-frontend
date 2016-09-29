@@ -35,7 +35,7 @@ object IPApplicationConstructor {
     // uncrystallised Rights- current pensions
     val uncrystallisedRightsAmount = data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt
 
-
+f
     def getPensionsTakenBeforeAmt() = {
       data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore")) match {
         case Some(model) => model.pensionsTakenBefore match {
