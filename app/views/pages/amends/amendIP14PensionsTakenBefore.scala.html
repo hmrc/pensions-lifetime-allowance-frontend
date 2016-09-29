@@ -42,7 +42,7 @@ Messages("pla.base.errorSummaryLabel"), amendPensionsTakenBeforeForm
 </div>
 
 <button class="button" type="submit" id="continue-button" >@Messages("pla.base.change")</button>
-<div style="display:none; visibility:hidden;">
+<div class="form-hidden">
 
     @helper.inputText(amendPensionsTakenBeforeForm("protectionType"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
     @helper.inputText(amendPensionsTakenBeforeForm("status"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
