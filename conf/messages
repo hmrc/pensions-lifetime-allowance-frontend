@@ -6,7 +6,7 @@ pla.base.continue               = Continue
 pla.base.apply                  = Apply
 pla.base.submitApplication      = Submit your application
 pla.base.back                   = Back
-pla.base.change                 = change
+pla.base.change                 = Change
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
 pla.base.startAgain             = Start Again
@@ -371,7 +371,7 @@ pla.summary.ip14DeclarationPara2                        = The information that I
 pla.existingProtections.title                           = View your existing protections
 pla.existingProtections.pageHeading                     = Lifetime allowance protection
 pla.existingProtections.BreadcrumbPTAHome               = Account home
-pla.existingProtections.BreadcrumbPLA                   = Lifetime allowance protection
+pla.existingProtections.pageBreadcrumb                  = Lifetime allowance protection
 pla.existingProtections.details                         = Details
 pla.existingProtections.other                           = Other
 pla.existingProtections.noActiveProtections             = You currently have no open protections.
@@ -459,11 +459,16 @@ pla.print.title                           = Print your active protection
 ## Amends ##
 pla.amends.title                                = Protection summary
 pla.amends.heading.IP2016.noChanges             = Your individual protection 2016 details
+<<<<<<< HEAD
 pla.amends.heading.IP2014.noChanges             = Your individual protection 2014 details
 
 pla.amends.heading.changed                      = Check your answers and submit the changes
 pla.amends.cancelPara                           = Alternatively, you can <a href="{0}">cancel the changes</a> and go back.
 
+=======
+pla.amends.heading.IP2016.changed               = Check your answers and submit the changes
+pla.amends.cancelPara                           = Alternatively, you can <a href="{0}" id="{1}">cancel the changes</a> and go back.
+>>>>>>> Amends
 pla.amends.CurrentPensions.IP2016.Amt           = What were your UK pensions worth on 5 April 2016?
 pla.amends.CurrentPensions.IP2014.Amt           = What were your UK pensions worth on 5 April 2014?
 
@@ -482,6 +487,7 @@ pla.amends.OverseasPensions.IP2016.Amt          = — How much did you contribut
 pla.amends.OverseasPensions.IP2014.YesNo        = Have you put money into a pension scheme held overseas?
 pla.amends.OverseasPensions.IP2014.Amt          = — How much did you contribute?
 pla.amends.totalValueOfPensions                 = Total value of pensions
+pla.amends.pageBreadcrumb                       = Change your protection details
 
 
 ### RESULTS MESSAGES ###

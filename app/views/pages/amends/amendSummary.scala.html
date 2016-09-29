@@ -1,15 +1,37 @@
 @import models.AmendDisplayModel
 @import helpers.amends.amendSection
+@import config.FrontendAppConfig
 
 @(model: AmendDisplayModel)(implicit request: Request[_])
 
 @main_template(title = Messages("pla.amends.title")) {
 
+
+    <nav class="breadcrumb-nav breadcrumb-nav--slim">
+        <ul class="breadcrumb-nav__list" role="breadcrumbs">
+            <li class="breadcrumb-nav__item">
+                <a href="@{FrontendAppConfig.ptaFrontendUrl}" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
+            </li>
+            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
+            <li class="breadcrumb-nav__item">
+                <a href="@{controllers.routes.ReadProtectionsController.currentProtections}" id="existing-protections-breadcrumb-link">@Messages("pla.existingProtections.pageBreadcrumb")</a>
+            </li>
+            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
+            <li class="breadcrumb-nav__item">@Messages("pla.amends.pageBreadcrumb")</li>
+        </ul>
+    </nav>
+
+    <h1 class="heading-large" id="page-heading">
+        @if(model.amended) {
+            @Messages(s"pla.amends.heading.${model.protectionType}.changed")
+        } else {
+            @Messages(s"pla.amends.heading.${model.protectionType}.noChanges")
+        }
+    </h1>
+
     @if(model.amended) {
-        <h1 class="heading-large">@Messages(s"pla.amends.heading.changed")</h1>
-        <p>@Html(Messages("pla.amends.cancelPara", controllers.routes.ReadProtectionsController.currentProtections))</p>
-    } else {
-        <h1 class="heading-large">@Messages(s"pla.amends.heading.${model.protectionType}.noChanges")</h1>
+        <p>@Html(Messages("pla.amends.cancelPara", controllers.routes.ReadProtectionsController.currentProtections, "cancelLink"))</p>
+
     }
 
     <table>
@@ -18,22 +40,14 @@
         }
 
         <tr class="grey-background">
-            <td class="total-font">@Messages("pla.amends.totalValueOfPensions")</td>
-            <td class="total-font">@model.totalAmount</td>
+            <td class="total-font" id="total-message">@Messages("pla.amends.totalValueOfPensions")</td>
+            <td class="total-font" id="total-amount">@model.totalAmount</td>
             <td></td>
         </tr>
     </table>
 
-}
-
-@{/*
-<p>Amended: @model.amended</p>
-<ul>
-    @model.sections.map {section =>
-        @section.rows.map {rw =>
-            <li>ID: @{rw.rowID}, amt: @{rw.displayValue}</li>
-        }
+    @if(model.amended) {
+        <a id="submit" class="button" role="button" href="">Submit your changes</a>
     }
-</ul>
-<p>Total: @model.totalAmount</p>
-*/}
+
+}
