@@ -97,7 +97,20 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   }
 
   def amendmentOutcome = AuthorisedByAny.async { implicit user => implicit request =>
-    Future.successful(Ok)
+    keyStoreConnector.fetchAndGetFormData[TransformedAmendResponseModel]("amendResponseModel").map {
+      case Some(model) => {
+        val id = model.protection.notificationId.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId") }
+        if(Constants.activeAmendmentCodes.contains(id)) {
+          Ok(views.html.pages.amends.outcomeInactive())
+        } else {
+          Ok(views.html.pages.amends.outcomeActive())
+        }
+      }
+      case _ => {
+        Logger.error(s"Unable to retrieve amendment outcome model from keyStore for user nino :${user.nino}")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+      }
+    }
   }
 
   def amendPensionsTakenBefore(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
