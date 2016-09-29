@@ -90,6 +90,7 @@ POST        /amend-protection/current-pensions                                  
 
 POST        /amend-protection/submit-amendment                                          controllers.AmendsController.amendProtection
 
+GET         /amend-protection/amendment-outcome                                         controllers.AmendsController.amendmentOutcome
 GET         /amend-protection/:protectionType/:status                                   controllers.AmendsController.amendsSummary(protectionType, status)
 
 

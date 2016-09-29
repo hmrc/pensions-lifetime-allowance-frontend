@@ -47,4 +47,16 @@ trait ResponseConstructors {
         val otherProtections = respModel.lifetimeAllowanceProtections.filterNot(_.status.contains("Open")).map{_.copy(psaCheckReference = Some(respModel.psaCheckReference))}
         TransformedReadResponseModel(activeProtectionOpt, otherProtections)
     }
+
+    def createTransformedAmendResponseModelFromJson(json: JsValue): Option[TransformedAmendResponseModel] = {
+        val responseModel = json.validate[AmendResponseModel]
+        responseModel.fold (
+            errors => None,
+            valid = success => Some(transformAmendResponseModel(success))
+        )
+    }
+
+    def transformAmendResponseModel(respModel: AmendResponseModel): TransformedAmendResponseModel = {
+        TransformedAmendResponseModel(respModel.protection.copy(psaCheckReference = respModel.psaCheckReference))
+    }
 }

@@ -16,26 +16,30 @@
 
 package controllers
 
-import auth.AuthorisedForPLA
-import common.{Helpers, Strings}
+import auth.{PLAUser, AuthorisedForPLA}
+import common.{Exceptions, Helpers, Strings}
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.{PLAConnector, KeyStoreConnector}
-import constructors.DisplayConstructors
+import constructors.{ResponseConstructors, DisplayConstructors}
 import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
 import forms.AmendmentTypeForm._
+import models.{TransformedAmendResponseModel, AmendResponseModel}
 import models.amendModels.{AmendmentTypeModel, AmendCurrentPensionModel, AmendProtectionModel}
 import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HttpResponse
+import utils.Constants
 import views.html.pages
+import views.html.pages.result.manualCorrespondenceNeeded
 
 import scala.concurrent.Future
 
 object AmendsController extends AmendsController{
   val keyStoreConnector = KeyStoreConnector
   val displayConstructors = DisplayConstructors
+  val responseConstructors = ResponseConstructors
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
@@ -45,6 +49,7 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
   val displayConstructors: DisplayConstructors
+  val responseConstructors: ResponseConstructors
 
   def amendsSummary(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
     val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
@@ -67,13 +72,31 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
       success => for {
         protectionAmendment <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
         response <- PLAConnector.amendProtection(user.nino.get, protectionAmendment.get.updatedProtection)
-        result <- redirectFromSuccess(response)
+        result <- routeViaMCNeededCheck(response)
       } yield result
     )
 
   }
 
-  def redirectFromSuccess(response: HttpResponse): Future[Result] = {
+  private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent]): Future[Result] = {
+    response.status match {
+      case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
+      case _ => saveAndRedirectToDisplay(response)
+    }
+  }
+
+  def saveAndRedirectToDisplay(response: HttpResponse)(implicit request: Request[AnyContent]): Future[Result] = {
+    responseConstructors.createTransformedAmendResponseModelFromJson(response.json).map{
+      model => keyStoreConnector.saveData[TransformedAmendResponseModel]("amendResponseModel", model).map {
+        cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
+      }
+    }.getOrElse {
+      Logger.error("Unable to create Amend Response Model from PLA response")
+      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+    }
+  }
+
+  def amendmentOutcome = AuthorisedByAny.async { implicit user => implicit request =>
     Future.successful(Ok)
   }
 
