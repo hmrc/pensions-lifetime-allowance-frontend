@@ -86,7 +86,6 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
       amendCurrentPensionForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(pages.amends.amendCurrentPensions(errors))),
       success => {
-        //TODO case match on protection type and configure routes for each
         keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map{
           case Some(model) =>
             val updated = model.updatedProtection.copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
@@ -94,7 +93,6 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
             val amendModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
             keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendModel)
-            //TODO handle gets
             Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
 
           case _ =>
