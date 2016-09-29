@@ -30,7 +30,7 @@
             }
 
             @protection.amendCall.map{ call =>
-                <a href="@call">@Messages("pla.existingProtections.amendLinkText")</a>
+                <a href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>
             }
         </div>
 
