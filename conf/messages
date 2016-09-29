@@ -499,6 +499,7 @@ pla.amends.OverseasPensions.IP2014.Amt                      = — How much did y
 pla.amends.OverseasPensions.IP2014.Amt.changeHint           = Change how much you contributed to your overseas pension
 pla.amends.totalValueOfPensions                             = Total value of pensions
 pla.amends.pageBreadcrumb                                   = Change your protection details
+pla.amends.submit                                           = Submit your changes
 
 
 ### RESULTS MESSAGES ###

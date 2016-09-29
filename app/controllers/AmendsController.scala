@@ -23,7 +23,8 @@ import connectors.KeyStoreConnector
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
-import models.amendModels.{AmendCurrentPensionModel, AmendProtectionModel}
+import forms.AmendmentTypeForm._
+import models.amendModels.{AmendmentTypeModel, AmendCurrentPensionModel, AmendProtectionModel}
 import play.api.Logger
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.pages
@@ -46,11 +47,19 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   def amendsSummary(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
     val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
-      case Some(amendModel) => Ok(views.html.pages.amends.amendSummary(displayConstructors.createAmendDisplayModel(amendModel)))
+      case Some(amendModel) => Ok(views.html.pages.amends.amendSummary(displayConstructors.createAmendDisplayModel(amendModel),
+                                                                        amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))
+                                                                      ))
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend summary page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
+  }
+
+  val amendProtection = AuthorisedByAny.async { implicit user => implicit request =>
+
+
+    Future.successful(Ok)
   }
 
 
