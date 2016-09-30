@@ -20,7 +20,7 @@ import java.util.UUID
 
 import auth.{MockAuthConnector, MockConfig}
 import connectors.KeyStoreConnector
-import constructors.DisplayConstructors
+import constructors.{ResponseConstructors, DisplayConstructors}
 import models._
 import models.amendModels.{AmendCurrentPensionModel, AmendProtectionModel}
 import org.mockito.Matchers
@@ -46,6 +46,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   object TestAmendsController extends AmendsController {
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
+    override lazy val responseConstructors = mock[ResponseConstructors]
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
     override val displayConstructors: DisplayConstructors = displayConstructors
 

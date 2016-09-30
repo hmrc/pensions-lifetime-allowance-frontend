@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 
 case class ProtectionModel (
                              psaCheckReference: Option[String],
-                             protectionID: Option[Int],
+                             protectionID: Option[Long],
                              certificateDate: Option[String] = None,
                              version: Option[Int] = None,
                              protectionType: Option[String] = None,

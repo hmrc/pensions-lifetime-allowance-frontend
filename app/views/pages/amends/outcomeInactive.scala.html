@@ -1,0 +1,14 @@
+@import models.InactiveAmendResultDisplayModel
+@(model: InactiveAmendResultDisplayModel)(implicit request: Request[_])
+
+@views.html.main_template(title = Messages("pla.inactiveAmend.title"), bodyClasses = None) {
+
+<h1 class="heading-large" id="resultPageHeading">@Messages(s"amendResultCode.${model.notificationId}.heading")</h1>
+
+@for(infoNum <- model.additionalInfo) {
+    <p id=@{s"additionalInfo$infoNum"}>@Html(Messages("amendResultCode." + model.notificationId+ "." + infoNum))</p>
+}
+
+<p>@Html(Messages("pla.resultRejection.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultRejection.viewDetailsLinkText")</a>.</p>
+
+}

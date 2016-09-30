@@ -1,0 +1,33 @@
+@import models.ActiveAmendResultDisplayModel
+@import helpers.templates.resultDetails
+@import play.api.i18n._
+@import enums.ApplicationType
+@import utils.Constants
+
+@(model: ActiveAmendResultDisplayModel)(implicit request: Request[_])
+
+@views.html.main_template(title = Messages("pla.activeAmend.title"), bodyClasses = None) {
+
+<div class="grid-row">
+    <div class="transaction-banner--complete">
+        <p class="heading-large" id="amendmentOutcome">@Messages(s"amendResultCode.${model.notificationId}.heading")</p>
+        <p class="medium" id="amendedAllowanceText">@Messages("pla.activeAmend.allowanceSubHeading")</p>
+        <p class="bold-medium" id="protectedAmount">@model.protectedAmount</p>
+    </div>
+
+    <p>@Messages("pla.activeAmend.protectionDetailsPara")</p>
+    <h2>@Messages("pla.activeAmend.whatNextHeading")</h2>
+    <p>@Messages("pla.activeAmend.whatNextContent")</p>
+
+    @model.details.map{ details =>
+        @resultDetails(details)
+    }
+
+    <p>@Html(Messages("pla.activeAmend.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.activeAmend.viewDetailsLinkText")</a>.</p>
+
+</div>
+}
+
+
+
+

@@ -19,25 +19,33 @@ package controllers
 import java.text.DecimalFormat
 
 import auth.AuthorisedForPLA
-import common.{Helpers, Strings}
+import auth.{PLAUser, AuthorisedForPLA}
+import common.{Exceptions, Helpers, Strings}
 import config.{FrontendAppConfig, FrontendAuthConnector}
-import connectors.KeyStoreConnector
-import constructors.DisplayConstructors
+import connectors.{PLAConnector, KeyStoreConnector}
+import constructors.{ResponseConstructors, DisplayConstructors}
 import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
+import forms.AmendmentTypeForm._
+import models.AmendResponseModel
+import models.amendModels.AmendmentTypeModel
+import play.api.mvc._
 import forms.AmendPensionsTakenBeforeForm
 import forms.AmendPensionsTakenBeforeForm._
 import models.amendModels.{AmendCurrentPensionModel, AmendPensionsTakenBeforeModel, AmendProtectionModel}
 import play.api.Logger
-import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.HttpResponse
+import utils.Constants
 import views.html.pages
+import views.html.pages.result.manualCorrespondenceNeeded
 
 import scala.concurrent.Future
 
 object AmendsController extends AmendsController{
   val keyStoreConnector = KeyStoreConnector
   val displayConstructors = DisplayConstructors
+  val responseConstructors = ResponseConstructors
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
@@ -47,18 +55,70 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
   val displayConstructors: DisplayConstructors
+  val responseConstructors: ResponseConstructors
 
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
-      case Some(amendModel) => Ok(views.html.pages.amends.amendSummary(displayConstructors.createAmendDisplayModel(amendModel)))
+      case Some(amendModel) => Ok(views.html.pages.amends.amendSummary(displayConstructors.createAmendDisplayModel(amendModel),
+                                                                        amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))
+                                                                      ))
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend summary page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
 
+  val amendProtection = AuthorisedByAny.async { implicit user => implicit request =>
+    amendmentTypeForm.bindFromRequest.fold(
+      errors => {
+        Logger.error(s"Couldn't bind protection type or status to amend request for user with nino ${user.nino}")
+        Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+      },
+      success => for {
+        protectionAmendment <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
+        response <- PLAConnector.amendProtection(user.nino.get, protectionAmendment.get.updatedProtection)
+        result <- routeViaMCNeededCheck(response)
+      } yield result
+    )
 
+  }
+
+  private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
+    response.status match {
+      case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
+      case _ => saveAndRedirectToDisplay(response)
+    }
+  }
+
+  def saveAndRedirectToDisplay(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
+    responseConstructors.createAmendResponseModelFromJson(response.json).map{
+      model => keyStoreConnector.saveData[AmendResponseModel]("amendResponseModel", model).map {
+        cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
+      }
+    }.getOrElse {
+      Logger.error(s"Unable to create Amend Response Model from PLA response for user nino: ${user.nino}")
+      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+    }
+  }
+
+
+  def amendmentOutcome = AuthorisedByAny.async { implicit user => implicit request =>
+    keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel").map {
+      case Some(model) => {
+        val id = model.protection.notificationId.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId") }
+        if(Constants.activeAmendmentCodes.contains(id)) {
+          Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model)))
+        } else {
+          Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model)))
+        }
+      }
+      case _ => {
+        Logger.error(s"Unable to retrieve amendment outcome model from keyStore for user nino :${user.nino}")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+      }
+    }
+  }
   def amendPensionsTakenBefore(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
 
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
@@ -144,7 +204,7 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
           case _ =>
             Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend current UK pension")
-            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
     )
