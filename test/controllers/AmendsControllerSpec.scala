@@ -20,7 +20,7 @@ import java.util.UUID
 
 import auth.{MockAuthConnector, MockConfig}
 import connectors.KeyStoreConnector
-import constructors.DisplayConstructors
+import constructors.{ResponseConstructors, DisplayConstructors}
 import models._
 import models.amendModels.AmendProtectionModel
 import org.mockito.Matchers
@@ -43,6 +43,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   object TestAmendsController extends AmendsController {
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
+    override lazy val responseConstructors = mock[ResponseConstructors]
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
     override val displayConstructors: DisplayConstructors = displayConstructors
 
@@ -164,10 +165,10 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
           charset(DataItem.result) shouldBe Some("utf-8")
         }
 
-        //        "have the value 100000 completed in the amount input by default" in {
-        //          keystoreFetchCondition[AmendProtectionModel](Some(testModel))
-        //          DataItem.jsoupDoc.body.getElementById("amendedUKPensionAmt").attr("value") shouldBe "100000"
-        //        }
+        "have the value 100000 completed in the amount input by default" in {
+          keystoreFetchCondition[AmendProtectionModel](Some(testModel))
+          DataItem.jsoupDoc.body.getElementById("amendedUKPensionAmt").attr("value") shouldBe "100000"
+        }
       }
     }
 
@@ -183,7 +184,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   "Submitting Amend IP16 Current Pensions data" when {
 
     "amount is set as '100,000'" should {
-      //      val testModel = new AmendProtectionModel(ProtectionModel(None,None),ProtectionModel(None,None, status = Some("dormant"), relevantAmount = Some(100000), uncrystallisedRights = Some(100000)))
+
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendCurrentPension, ("amendedUKPensionAmt", "100000"), ("protectionType", "ip2016"), ("status", "dormant"))
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testIP16DormantModel))
@@ -295,10 +296,10 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
           DataItem.jsoupDoc.body.getElementById("pensionsTakenBefore-yes").attr("checked") shouldBe "checked"
         }
 
-        //        "have the value of the input field set to 2000 by default" in {
-        //          keystoreFetchCondition[AmendProtectionModel](Some(testAmendProtectionModel))
-        //          DataItem.jsoupDoc.body.getElementById("pensionsTakenBeforeAmt").attr("value") shouldBe "2000"
-        //        }
+        "have the value of the input field set to 2000 by default" in {
+          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          DataItem.jsoupDoc.body.getElementById("pensionsTakenBeforeAmt").attr("value") shouldBe "2000"
+        }
       }
     }
 
