@@ -16,6 +16,9 @@
 
 package controllers
 
+import java.text.DecimalFormat
+
+import auth.AuthorisedForPLA
 import auth.{PLAUser, AuthorisedForPLA}
 import common.{Exceptions, Helpers, Strings}
 import config.{FrontendAppConfig, FrontendAuthConnector}
@@ -173,7 +176,8 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   def amendCurrentPensions(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(data) =>
-        val amendModel = AmendCurrentPensionModel(Some(data.updatedProtection.uncrystallisedRights.get), protectionType, status)
+        def df(n: BigDecimal):String = new DecimalFormat("0.00").format(n).replace(".00","")
+        val amendModel = AmendCurrentPensionModel(Some(BigDecimal(df(data.updatedProtection.uncrystallisedRights.get))), protectionType, status)
         protectionType match {
           case "ip2016" => Ok(pages.amends.amendCurrentPensions(amendCurrentPensionForm.fill(amendModel)))
           case "ip2014" => Ok(pages.amends.amendIP14CurrentPensions(amendCurrentPensionForm.fill(amendModel)))
