@@ -24,7 +24,7 @@ import constructors.{ResponseConstructors, DisplayConstructors}
 import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
 import forms.AmendmentTypeForm._
-import models.{TransformedAmendResponseModel, AmendResponseModel}
+import models.AmendResponseModel
 import models.amendModels.AmendmentTypeModel
 import play.api.mvc._
 import forms.AmendPensionsTakenBeforeForm
@@ -81,33 +81,33 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
   }
 
-  private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent]): Future[Result] = {
+  private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
     response.status match {
       case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
       case _ => saveAndRedirectToDisplay(response)
     }
   }
 
-  def saveAndRedirectToDisplay(response: HttpResponse)(implicit request: Request[AnyContent]): Future[Result] = {
-    responseConstructors.createTransformedAmendResponseModelFromJson(response.json).map{
-      model => keyStoreConnector.saveData[TransformedAmendResponseModel]("amendResponseModel", model).map {
+  def saveAndRedirectToDisplay(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
+    responseConstructors.createAmendResponseModelFromJson(response.json).map{
+      model => keyStoreConnector.saveData[AmendResponseModel]("amendResponseModel", model).map {
         cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
       }
     }.getOrElse {
-      Logger.error("Unable to create Amend Response Model from PLA response")
+      Logger.error(s"Unable to create Amend Response Model from PLA response for user nino: ${user.nino}")
       Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
 
 
   def amendmentOutcome = AuthorisedByAny.async { implicit user => implicit request =>
-    keyStoreConnector.fetchAndGetFormData[TransformedAmendResponseModel]("amendResponseModel").map {
+    keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel").map {
       case Some(model) => {
         val id = model.protection.notificationId.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId") }
         if(Constants.activeAmendmentCodes.contains(id)) {
-          Ok(views.html.pages.amends.outcomeInactive())
+          Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model)))
         } else {
-          Ok(views.html.pages.amends.outcomeActive())
+          Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model)))
         }
       }
       case _ => {

@@ -43,18 +43,7 @@ object ReadResponseModel {
   implicit val format = Json.format[ReadResponseModel]
 }
 
-
-case class TransformedAmendResponseModel (
-                                protection: ProtectionModel
-                                )
-
-object TransformedAmendResponseModel {
-  implicit val format = Json.format[TransformedAmendResponseModel]
-}
-
 case class AmendResponseModel (
-                              nino: String,
-                              psaCheckReference: Option[String],
                               protection: ProtectionModel
                                 )
 

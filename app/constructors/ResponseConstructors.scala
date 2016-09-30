@@ -48,15 +48,10 @@ trait ResponseConstructors {
         TransformedReadResponseModel(activeProtectionOpt, otherProtections)
     }
 
-    def createTransformedAmendResponseModelFromJson(json: JsValue): Option[TransformedAmendResponseModel] = {
-        val responseModel = json.validate[AmendResponseModel]
-        responseModel.fold (
-            errors => None,
-            valid = success => Some(transformAmendResponseModel(success))
+    def createAmendResponseModelFromJson(json: JsValue): Option[AmendResponseModel] = {
+        json.validate[ProtectionModel].fold(
+        errors => None,
+        success => Some(AmendResponseModel(success))
         )
-    }
-
-    def transformAmendResponseModel(respModel: AmendResponseModel): TransformedAmendResponseModel = {
-        TransformedAmendResponseModel(respModel.protection.copy(psaCheckReference = respModel.psaCheckReference))
     }
 }

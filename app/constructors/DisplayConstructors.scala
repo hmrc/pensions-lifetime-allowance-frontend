@@ -159,15 +159,46 @@ trait DisplayConstructors {
     )
   }
 
-  def currencyOrNo(moneyOption: Option[Double]): String = {
-
-    moneyOption.fold("No")({ amt => if (BigDecimal(amt) == BigDecimal(0.0)) "No" else Display.currencyDisplayString(amt)})
-  }
-
   def modelsDiffer(modelA: ProtectionModel, modelB: ProtectionModel): Boolean = {
     modelA match {
       case `modelB` => false
       case _ => true
+    }
+  }
+
+  // ACTIVE AMEND RESPONSE
+  def createActiveAmendResponseDisplayModel(model: AmendResponseModel): ActiveAmendResultDisplayModel = {
+    val protectionDetails = createProtectionDetailsFromProtection(model.protection)
+    val protectionType = getProtectionTypeFromProtection(model.protection)
+
+    val protectedAmount = model.protection.protectedAmount.getOrElse {
+      println(model.protection)
+      throw new Exceptions.OptionNotDefinedException("createActiveAmendResponseDisplayModel", "protectedAmount",
+                model.protection.protectionType.getOrElse("No protection type in response"))}
+    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
+
+    val notificationId = model.protection.notificationId.getOrElse(
+        throw new Exceptions.OptionNotDefinedException("createActiveAmendResponseDisplayModel", "notificationId",
+                model.protection.protectionType.getOrElse("No protection type in response")))
+
+    ActiveAmendResultDisplayModel(protectionType, notificationId.toString, protectedAmountString, Some(protectionDetails))
+  }
+
+  // INACTIVE AMEND RESPONSE
+  def createInactiveAmendResponseDisplayModel(model: AmendResponseModel): InactiveAmendResultDisplayModel = {
+    val notificationId = model.protection.notificationId.getOrElse(
+      throw new Exceptions.OptionNotDefinedException("createInactiveAmendResponseDisplayModel", "notificationId",
+        model.protection.protectionType.getOrElse("No protection type in response")))
+    val additionalInfo = getAdditionalInfo("amendResultCode", notificationId)
+    InactiveAmendResultDisplayModel(notificationId.toString, additionalInfo)
+  }
+
+  def getProtectionTypeFromProtection(protection: ProtectionModel): ApplicationType.Value = {
+    val protectionTypeString = protection.protectionType.getOrElse(
+      throw new Exceptions.RequiredValueNotDefinedException("getProtectionTypeFromProtection", "protectionType")
+    )
+    ApplicationType.fromString(protectionTypeString).getOrElse {
+      throw new Exception("Invalid protection type passed to getProtectionTypeFromProtection")
     }
   }
 
@@ -178,12 +209,12 @@ trait DisplayConstructors {
     val printable = Constants.activeProtectionCodes.contains(notificationId)
 
     val details = if(Constants.successCodesRequiringProtectionInfo.contains(notificationId)) {
-      Some(createProtectionDetailsFromModel(model))
+      Some(createProtectionDetailsFromProtection(model.protection))
     } else None
 
     val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
 
-    val additionalInfo = getAdditionalInfo(notificationId)
+    val additionalInfo = getAdditionalInfo("resultCode", notificationId)
 
     SuccessDisplayModel(protectionType, notificationId.toString, protectedAmountString, printable, details, additionalInfo)
   }
@@ -191,23 +222,23 @@ trait DisplayConstructors {
   // REJECTED APPLICATION RESPONSE
   def createRejectionDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): RejectionDisplayModel = {
     val notificationId = model.protection.notificationId.getOrElse(throw new Exceptions.OptionNotDefinedException("CreateRejectionDisplayModel", "notification ID", protectionType.toString))
-    val additionalInfo = getAdditionalInfo(notificationId)
+    val additionalInfo = getAdditionalInfo("resultCode", notificationId)
     RejectionDisplayModel(notificationId.toString, additionalInfo, protectionType)
   }
 
-  private def createProtectionDetailsFromModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): ProtectionDetailsDisplayModel = {
-    val protectionReference = model.protection.protectionReference
-    val psaReference = model.protection.psaCheckReference.getOrElse(throw new Exceptions.OptionNotDefinedException("createProtectionDetailsFromModel", "psaCheckReference", protectionType.toString))
-    val applicationDate = model.protection.certificateDate.map{ dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt))}
+  private def createProtectionDetailsFromProtection(protection: ProtectionModel): ProtectionDetailsDisplayModel = {
+    val protectionReference = protection.protectionReference
+    val psaReference = protection.psaCheckReference.getOrElse(throw new Exceptions.OptionNotDefinedException("createProtectionDetailsFromModel", "psaCheckReference", protection.protectionType.getOrElse("No protection type in response")))
+    val applicationDate = protection.certificateDate.map{ dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt))}
     ProtectionDetailsDisplayModel(protectionReference, psaReference, applicationDate)
   }
 
 
   // HELPER FUNCTIONS
-  def getAdditionalInfo(notificationId: Int): List[String] = {
+  def getAdditionalInfo(messagesPrefix: String, notificationId: Int): List[String] = {
 
     def loop(notificationId: Int, i: Int = 1, paragraphs: List[String] = List.empty): List[String] = {
-      val x: String = s"resultCode.$notificationId.$i"
+      val x: String = s"$messagesPrefix.$notificationId.$i"
       if(Messages(x) == x){
         paragraphs
       } else {
