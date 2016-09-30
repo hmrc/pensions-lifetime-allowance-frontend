@@ -83,3 +83,14 @@ case class AmendDisplaySectionModel (
 case class AmendDisplayRowModel(rowId: String, changeLinkCall: Call, displayValue: String) {
 
 }
+
+case class ActiveAmendResultDisplayModel (
+                                         protectionType: ApplicationType.Value,
+                                         notificationId: String, protectedAmount: String,
+                                         details: Option[ProtectionDetailsDisplayModel]
+                                           )
+
+case class InactiveAmendResultDisplayModel (
+                                           notificationId: String,
+                                           additionalInfo: Seq[String]
+                                           )

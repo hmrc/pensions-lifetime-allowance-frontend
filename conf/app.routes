@@ -89,7 +89,10 @@ GET         /amend-protection/overseas-pensions/:protectionType/:status         
 GET         /amend-protection/current-pensions/:protectionType/:status                  controllers.AmendsController.amendCurrentPensions(protectionType, status)
 POST        /amend-protection/current-pensions                                          controllers.AmendsController.submitAmendCurrentPension
 
-GET         /amend-protection/:protectionType/:status           controllers.AmendsController.amendsSummary(protectionType, status)
+POST        /amend-protection/submit-amendment                                          controllers.AmendsController.amendProtection
+
+GET         /amend-protection/amendment-outcome                                         controllers.AmendsController.amendmentOutcome
+GET         /amend-protection/:protectionType/:status                                   controllers.AmendsController.amendsSummary(protectionType, status)
 
 
 #Feedback routes
