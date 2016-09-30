@@ -107,7 +107,6 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   "Submitting Amend IP16 Current Pensions data" when {
 
     "amount is set as '100,000'" should {
-//      val testModel = new AmendProtectionModel(ProtectionModel(None,None),ProtectionModel(None,None, status = Some("dormant"), relevantAmount = Some(100000), uncrystallisedRights = Some(100000)))
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendCurrentPension, ("amendedUKPensionAmt", "100000"), ("protectionType", "ip2016"), ("status", "dormant"))
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testIP16DormantModel))
