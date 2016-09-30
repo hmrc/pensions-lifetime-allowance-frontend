@@ -27,7 +27,7 @@ import forms.AmendPensionsTakenBeforeForm
 import forms.AmendPensionsTakenBeforeForm._
 import models.amendModels.{AmendCurrentPensionModel, AmendPensionsTakenBeforeModel, AmendProtectionModel}
 import play.api.Logger
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.pages
 
