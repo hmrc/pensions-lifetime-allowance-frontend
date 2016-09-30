@@ -12,8 +12,8 @@
         @model.displayValue
     </td>
 
-    <td class="@if(firstRow){has-child-item}" id=@{s"${sectionId}-${model.rowId}-change-link"}>
-        <a href="@model.changeLinkCall">@Messages("pla.base.change")</a>
+    <td class="@if(firstRow){has-child-item}">
+        <a id=@{s"${sectionId}-${model.rowId}-change-link"} href="@model.changeLinkCall">@Messages("pla.base.change")</a>
         <span class="visuallyhidden">@Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}.changeHint")</span>
     </td>
 </tr>
