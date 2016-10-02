@@ -34,6 +34,7 @@ import forms.AmendPensionsTakenBeforeForm
 import forms.AmendPensionsTakenBeforeForm._
 import models.amendModels.{AmendCurrentPensionModel, AmendPensionsTakenBeforeModel, AmendProtectionModel}
 import play.api.Logger
+import play.api.mvc.{Action, AnyContent, Result}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HttpResponse
 import utils.Constants
@@ -123,8 +124,10 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(data) =>
+        def df(n: BigDecimal):String = new DecimalFormat("0.00").format(n).replace(".00","")
         val yesNoValue = if (data.updatedProtection.preADayPensionInPayment.get > 0) "yes" else "no"
-        val amendModel = AmendPensionsTakenBeforeModel(yesNoValue, Some(data.updatedProtection.preADayPensionInPayment.get), protectionType, status)
+
+        val amendModel = AmendPensionsTakenBeforeModel(yesNoValue, Some(BigDecimal(df(data.updatedProtection.preADayPensionInPayment.get))), protectionType, status)
         protectionType match {
           case "ip2016" => Ok(pages.amends.amendPensionsTakenBefore(amendPensionsTakenBeforeForm.fill(amendModel)))
           case "ip2014" => Ok(pages.amends.amendIP14PensionsTakenBefore(amendPensionsTakenBeforeForm.fill(amendModel)))
