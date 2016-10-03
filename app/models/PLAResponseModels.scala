@@ -42,3 +42,11 @@ case class ReadResponseModel(psaCheckReference: String, lifetimeAllowanceProtect
 object ReadResponseModel {
   implicit val format = Json.format[ReadResponseModel]
 }
+
+case class AmendResponseModel (
+                              protection: ProtectionModel
+                                )
+
+object AmendResponseModel {
+  implicit val format = Json.format[AmendResponseModel]
+}

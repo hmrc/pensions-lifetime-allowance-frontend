@@ -1,8 +1,11 @@
 @import models.AmendDisplayModel
 @import helpers.amends.amendSection
 @import config.FrontendAppConfig
+@import models.amendModels.AmendmentTypeModel
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import views.html.helper
 
-@(model: AmendDisplayModel)(implicit request: Request[_])
+@(model: AmendDisplayModel, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_])
 
 @main_template(title = Messages("pla.amends.title")) {
 
@@ -46,8 +49,17 @@
         </tr>
     </table>
 
-    @if(model.amended) {
-        <a id="submit" class="button" role="button" href="">Submit your changes</a>
+    @govHelpers.form(action = routes.AmendsController.amendProtection) {
+        <div style="display:none; visibility:hidden;">
+
+            @helper.inputText(amendmentTypeForm("protectionType"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
+            @helper.inputText(amendmentTypeForm("status"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
+
+        </div>
+
+        @if(model.amended) {
+            <button id="submit" class="button" type="submit">@Messages("pla.amends.submit")</button>
+        }
     }
 
 }
