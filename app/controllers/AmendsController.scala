@@ -149,8 +149,8 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
           } else {
             keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
               case Some(model) =>
-                val updatedAmount = success.pensionsTakenBefore match {
-                  case "yes" => success.pensionsTakenBeforeAmt.get.toDouble
+                val updatedAmount = success.amendedPensionsTakenBefore match {
+                  case "yes" => success.amendedPensionsTakenBeforeAmt.get.toDouble
                   case "no"  => 0.asInstanceOf[Double]
                 }
                 val updated = model.updatedProtection.copy(preADayPensionInPayment = Some(updatedAmount))

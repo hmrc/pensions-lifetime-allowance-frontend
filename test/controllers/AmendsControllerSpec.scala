@@ -265,7 +265,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "have the value of the check box set as 'No' by default" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-        DataItem.jsoupDoc.body.getElementById("pensionsTakenBefore-no").attr("checked") shouldBe "checked"
+        DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBefore-no").attr("checked") shouldBe "checked"
       }
     }
 
@@ -280,6 +280,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "should take the user to the pensions taken before page" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        info(testAmendIP2016ProtectionModel.toString)
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.pageHeading")
       }
 
@@ -293,12 +294,12 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "have the value of the check box set as 'Yes' by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          DataItem.jsoupDoc.body.getElementById("pensionsTakenBefore-yes").attr("checked") shouldBe "checked"
+          DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBefore-yes").attr("checked") shouldBe "checked"
         }
 
         "have the value of the input field set to 2000 by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          DataItem.jsoupDoc.body.getElementById("pensionsTakenBeforeAmt").attr("value") shouldBe "2000"
+          DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBeforeAmt").attr("value") shouldBe "2000"
         }
       }
     }
@@ -323,7 +324,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "the model can't be fetched from keyStore" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "no"), ("pensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
@@ -333,7 +334,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "'Have you taken pensions before 2006?' is checked to 'No'" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "no"), ("pensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -346,7 +347,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "'Have you taken pensions before 2006?' is set to 'yes', and value set to 2000" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "2000"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "2000"), ("protectionType", "ip2016"), ("status", "dormant"))
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
@@ -360,7 +361,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "no amount is set" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
         status(DataItem.result) shouldBe 400
@@ -373,7 +374,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "amount is set as '5.001'" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "5.001"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "5.001"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
         status(DataItem.result) shouldBe 400
@@ -386,7 +387,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "amount is set as '-25'" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "-25"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "-25"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
         status(DataItem.result) shouldBe 400
@@ -399,7 +400,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "amount is set as '99999999999999.99'" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "99999999999999.99"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "99999999999999.99"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
         status(DataItem.result) shouldBe 400
@@ -421,7 +422,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "the model can't be fetched from keyStore" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "no"), ("pensionsTakenBeforeAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
 
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
@@ -431,7 +432,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "'Have you taken pensions before 2006?' is checked to 'No'" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "no"), ("pensionsTakenBeforeAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
 
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
@@ -445,7 +446,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "'Have you taken pensions before 2006?' is set to 'yes', and value set to 2000" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "2000"), ("protectionType", "ip2014"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "2000"), ("protectionType", "ip2014"), ("status", "dormant"))
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         status(DataItem.result) shouldBe 303

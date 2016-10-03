@@ -18,9 +18,9 @@ package models.amendModels
 import models.YesNoAmountModel
 import play.api.libs.json.Json
 
-case class AmendPensionsTakenBeforeModel(pensionsTakenBefore: String, pensionsTakenBeforeAmt: Option[BigDecimal], protectionType: String, status: String) extends YesNoAmountModel {
-  override def getYesNoValue: String = pensionsTakenBefore
-  override def getAmount: Option[BigDecimal] = pensionsTakenBeforeAmt
+case class AmendPensionsTakenBeforeModel(amendedPensionsTakenBefore: String, amendedPensionsTakenBeforeAmt: Option[BigDecimal], protectionType: String, status: String) extends YesNoAmountModel {
+  override def getYesNoValue: String = amendedPensionsTakenBefore
+  override def getAmount: Option[BigDecimal] = amendedPensionsTakenBeforeAmt
 }
 
 object AmendPensionsTakenBeforeModel {
