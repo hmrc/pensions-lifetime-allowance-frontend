@@ -16,6 +16,7 @@
 
 package common
 
+import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 import java.time.LocalDate
 
@@ -32,5 +33,10 @@ object Display {
   def dateDisplayString(date: LocalDate): String = {
     val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyy")
     date.format(dateFormat)
+  }
+
+  def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {
+    def df(n: BigDecimal):String = new DecimalFormat("0.00").format(n).replace(".00","")
+    BigDecimal(df(amt))
   }
 }
