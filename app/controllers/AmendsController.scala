@@ -25,6 +25,8 @@ import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
+import forms.AmendOverseasPensionsForm
+import forms.AmendOverseasPensionsForm._
 import forms.AmendPensionsTakenBeforeForm
 import forms.AmendPensionsTakenBeforeForm._
 import forms.AmendPensionsTakenBetweenForm._
@@ -218,7 +220,50 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   }
 
   def amendOverseasPensions(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-    Future.successful(Ok)
+    keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
+      case Some(data) =>
+        def df(n: BigDecimal):String = new DecimalFormat("0.00").format(n).replace(".00","")
+        val yesNoValue = if (data.updatedProtection.nonUKRights.get > 0) "yes" else "no"
+
+        val amendModel = AmendOverseasPensionsModel(yesNoValue, Some(BigDecimal(df(data.updatedProtection.nonUKRights.get))), protectionType, status)
+        protectionType match {
+          case "ip2016" => Ok(pages.amends.amendOverseasPensions(amendOverseasPensionsForm.fill(amendModel)))
+          case "ip2014" => Ok(pages.amends.amendIP14OverseasPensions(amendOverseasPensionsForm.fill(amendModel)))
+        }
+      case _ =>
+        Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend pensions taken before page")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
+  }
+
+  val submitAmendOverseasPensions = AuthorisedByAny.async {
+    implicit user => implicit request =>
+      amendOverseasPensionsForm.bindFromRequest.fold(
+        errors => Future.successful(BadRequest(pages.amends.amendOverseasPensions(errors))),
+        success => {
+          val validatedForm = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.fill(success))
+          if (validatedForm.hasErrors) {
+            Future.successful(BadRequest(pages.amends.amendOverseasPensions(validatedForm)))
+          } else {
+            keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
+              case Some(model) =>
+                val updatedAmount = success.amendedOverseasPensions match {
+                  case "yes" => success.amendedOverseasPensionsAmt.get.toDouble
+                  case "no"  => 0.asInstanceOf[Double]
+                }
+                val updated = model.updatedProtection.copy(nonUKRights = Some(updatedAmount))
+                val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+                val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+
+                keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
+                Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+              case _ =>
+                Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend pensions taken before")
+                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+            }
+          }
+        }
+      )
   }
 
   def amendCurrentPensions(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
