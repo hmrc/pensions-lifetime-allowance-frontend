@@ -174,10 +174,9 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
 
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(data) =>
-        def df(n: BigDecimal): String = new DecimalFormat("0.00").format(n).replace(".00", "")
         val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.get > 0) "yes" else "no"
 
-        val amendModel = AmendPensionsTakenBetweenModel(yesNoValue, Some(BigDecimal(df(data.updatedProtection.postADayBenefitCrystallisationEvents.get))), protectionType, status)
+        val amendModel = AmendPensionsTakenBetweenModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.get)), protectionType, status)
         protectionType match {
           case "ip2016" => Ok(pages.amends.amendPensionsTakenBetween(amendPensionsTakenBetweenForm.fill(amendModel)))
           case "ip2014" => Ok(pages.amends.amendIP14PensionsTakenBetween(amendPensionsTakenBetweenForm.fill(amendModel)))
@@ -225,8 +224,7 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   def amendCurrentPensions(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(data) =>
-        def df(n: BigDecimal):String = new DecimalFormat("0.00").format(n).replace(".00","")
-        val amendModel = AmendCurrentPensionModel(Some(BigDecimal(df(data.updatedProtection.uncrystallisedRights.get))), protectionType, status)
+        val amendModel = AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.get)), protectionType, status)
         protectionType match {
           case "ip2016" => Ok(pages.amends.amendCurrentPensions(amendCurrentPensionForm.fill(amendModel)))
           case "ip2014" => Ok(pages.amends.amendIP14CurrentPensions(amendCurrentPensionForm.fill(amendModel)))
