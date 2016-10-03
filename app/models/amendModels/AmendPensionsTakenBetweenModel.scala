@@ -15,14 +15,16 @@
  */
 
 package models.amendModels
-import models.YesNoAmountModel
-import play.api.libs.json.Json
 
-case class AmendPensionsTakenBeforeModel(amendedPensionsTakenBefore: String, amendedPensionsTakenBeforeAmt: Option[BigDecimal], protectionType: String, status: String) extends YesNoAmountModel {
-  override def getYesNoValue: String = amendedPensionsTakenBefore
-  override def getAmount: Option[BigDecimal] = amendedPensionsTakenBeforeAmt
+import models.YesNoAmountModel
+import play.api.libs.json._
+
+case class AmendPensionsTakenBetweenModel(amendedPensionsTakenBetween: String, amendedPensionsTakenBetweenAmt: Option[BigDecimal], protectionType: String, status: String) extends YesNoAmountModel {
+  override def getYesNoValue = amendedPensionsTakenBetween
+
+  override def getAmount = amendedPensionsTakenBetweenAmt
 }
 
-object AmendPensionsTakenBeforeModel {
-  implicit val format = Json.format[AmendPensionsTakenBeforeModel]
+object AmendPensionsTakenBetweenModel {
+  implicit val format = Json.format[AmendPensionsTakenBetweenModel]
 }
