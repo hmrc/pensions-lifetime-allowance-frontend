@@ -18,29 +18,29 @@ package controllers
 
 import java.text.DecimalFormat
 
-import auth.AuthorisedForPLA
 import auth.{PLAUser, AuthorisedForPLA}
-import common.{Exceptions, Helpers, Strings}
+import common.{Display, Exceptions, Helpers, Strings}
 import config.{FrontendAppConfig, FrontendAuthConnector}
-import connectors.{PLAConnector, KeyStoreConnector}
-import constructors.{ResponseConstructors, DisplayConstructors}
+import connectors.{KeyStoreConnector, PLAConnector}
+import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
+import forms.AmendOverseasPensionsForm
+import forms.AmendOverseasPensionsForm._
+import forms.AmendPensionsTakenBeforeForm
+import forms.AmendPensionsTakenBeforeForm._
+import forms.AmendPensionsTakenBetweenForm._
+import forms.AmendPensionsTakenBetweenForm
 import forms.AmendmentTypeForm._
 import models.AmendResponseModel
 import models.amendModels._
-import play.api.mvc._
-import forms.{AmendOverseasPensionsForm, AmendPensionsTakenBeforeForm}
-import forms.AmendPensionsTakenBeforeForm._
 import play.api.Logger
-import play.api.mvc.{Action, AnyContent, Result}
+import play.api.mvc.{Action, AnyContent, Result, _}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HttpResponse
 import utils.Constants
 import views.html.pages
 import views.html.pages.result.manualCorrespondenceNeeded
-
-import forms.AmendOverseasPensionsForm._
 
 import scala.concurrent.Future
 
@@ -62,9 +62,10 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
-      case Some(amendModel) => Ok(views.html.pages.amends.amendSummary(displayConstructors.createAmendDisplayModel(amendModel),
-                                                                        amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))
-                                                                      ))
+      case Some(amendModel) => Ok(views.html.pages.amends.amendSummary(
+        displayConstructors.createAmendDisplayModel(amendModel),
+        amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))
+        ))
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend summary page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
@@ -83,11 +84,14 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
         result <- routeViaMCNeededCheck(response)
       } yield result
     )
-
   }
 
   private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
     response.status match {
+      case 409 => {
+        Logger.error(s"conflict response returned for amend request for user nino ${user.nino}")
+        Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+      }
       case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
       case _ => saveAndRedirectToDisplay(response)
     }
@@ -103,7 +107,6 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
       Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
-
 
   def amendmentOutcome = AuthorisedByAny.async { implicit user => implicit request =>
     keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel").map {
@@ -121,14 +124,14 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
       }
     }
   }
+
   def amendPensionsTakenBefore(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
 
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(data) =>
-        def df(n: BigDecimal):String = new DecimalFormat("0.00").format(n).replace(".00","")
         val yesNoValue = if (data.updatedProtection.preADayPensionInPayment.get > 0) "yes" else "no"
 
-        val amendModel = AmendPensionsTakenBeforeModel(yesNoValue, Some(BigDecimal(df(data.updatedProtection.preADayPensionInPayment.get))), protectionType, status)
+        val amendModel = AmendPensionsTakenBeforeModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.get)), protectionType, status)
         protectionType match {
           case "ip2016" => Ok(pages.amends.amendPensionsTakenBefore(amendPensionsTakenBeforeForm.fill(amendModel)))
           case "ip2014" => Ok(pages.amends.amendIP14PensionsTakenBefore(amendPensionsTakenBeforeForm.fill(amendModel)))
@@ -150,8 +153,8 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
           } else {
             keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
               case Some(model) =>
-                val updatedAmount = success.pensionsTakenBefore match {
-                  case "yes" => success.pensionsTakenBeforeAmt.get.toDouble
+                val updatedAmount = success.amendedPensionsTakenBefore match {
+                  case "yes" => success.amendedPensionsTakenBeforeAmt.get.toDouble
                   case "no"  => 0.asInstanceOf[Double]
                 }
                 val updated = model.updatedProtection.copy(preADayPensionInPayment = Some(updatedAmount))
@@ -162,7 +165,7 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
                 Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
               case _ =>
                 Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend pensions taken before")
-                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
             }
           }
         }
@@ -170,7 +173,50 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   }
 
   def amendPensionsTakenBetween(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-    Future.successful(Ok)
+
+    keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
+      case Some(data) =>
+        val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.get > 0) "yes" else "no"
+
+        val amendModel = AmendPensionsTakenBetweenModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.get)), protectionType, status)
+        protectionType match {
+          case "ip2016" => Ok(pages.amends.amendPensionsTakenBetween(amendPensionsTakenBetweenForm.fill(amendModel)))
+          case "ip2014" => Ok(pages.amends.amendIP14PensionsTakenBetween(amendPensionsTakenBetweenForm.fill(amendModel)))
+        }
+      case _ =>
+        Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend pensions taken between page")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
+  }
+
+  val submitAmendPensionsTakenBetween = AuthorisedByAny.async { implicit user => implicit request =>
+    amendPensionsTakenBetweenForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(pages.amends.amendPensionsTakenBetween(errors))),
+      success => {
+        val validatedForm = AmendPensionsTakenBetweenForm.validateForm(amendPensionsTakenBetweenForm.fill(success))
+        if (validatedForm.hasErrors) {
+          Future.successful(BadRequest(pages.amends.amendPensionsTakenBetween(validatedForm)))
+        } else {
+          keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
+            case Some(model) =>
+              val updatedAmount = success.amendedPensionsTakenBetween match {
+                case "yes" => success.amendedPensionsTakenBetweenAmt.get.toDouble
+                case "no" => 0.asInstanceOf[Double]
+              }
+              val updated = model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(updatedAmount))
+              val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+              val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+
+              keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
+              Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+            case _ =>
+              Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} after submiiting amend pensions takne between")
+              InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+          }
+        }
+      }
+    )
+
   }
 
   def amendOverseasPensions(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
@@ -223,8 +269,7 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   def amendCurrentPensions(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(data) =>
-        def df(n: BigDecimal):String = new DecimalFormat("0.00").format(n).replace(".00","")
-        val amendModel = AmendCurrentPensionModel(Some(BigDecimal(df(data.updatedProtection.uncrystallisedRights.get))), protectionType, status)
+        val amendModel = AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.get)), protectionType, status)
         protectionType match {
           case "ip2016" => Ok(pages.amends.amendCurrentPensions(amendCurrentPensionForm.fill(amendModel)))
           case "ip2014" => Ok(pages.amends.amendIP14CurrentPensions(amendCurrentPensionForm.fill(amendModel)))

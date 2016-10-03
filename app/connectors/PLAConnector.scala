@@ -69,8 +69,7 @@ trait PLAConnector {
   }
 
   def amendProtection(nino: String, protection: ProtectionModel)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-    // TODO: better exception
-    val id = protection.protectionID.getOrElse(throw new Exceptions.RequiredValueNotDefinedException("amendProtection", "protectionID"))
+    val id = protection.protectionID.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino))
     val requestJson = Json.toJson[ProtectionModel](protection)
     http.PUT[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id", requestJson)
   }

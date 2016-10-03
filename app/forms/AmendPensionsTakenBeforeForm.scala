@@ -29,8 +29,8 @@ object AmendPensionsTakenBeforeForm {
 
   val amendPensionsTakenBeforeForm = Form (
     mapping(
-      "pensionsTakenBefore" -> nonEmptyText,
-      "pensionsTakenBeforeAmt" -> optional(bigDecimal),
+      "amendedPensionsTakenBefore" -> nonEmptyText,
+      "amendedPensionsTakenBeforeAmt" -> optional(bigDecimal),
       "protectionType" -> text,
       "status" -> text
     )(AmendPensionsTakenBeforeModel.apply)(AmendPensionsTakenBeforeModel.unapply)
@@ -38,26 +38,26 @@ object AmendPensionsTakenBeforeForm {
 
   def validateForm(form: Form[AmendPensionsTakenBeforeModel]): Form[AmendPensionsTakenBeforeModel] = {
     if(!validationNeeded(form)) form else {
-      if(!validateFieldCompleted(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorQuestion"))
-      else if(!validateMinimum(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorNegative"))
-      else if(!validateMaximum(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorMaximum"))
-      else if(!validateTwoDec(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
+      if(!validateFieldCompleted(form)) form.withError("amendedPensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorQuestion"))
+      else if(!validateMinimum(form)) form.withError("amendedPensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorNegative"))
+      else if(!validateMaximum(form)) form.withError("amendedPensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorMaximum"))
+      else if(!validateTwoDec(form)) form.withError("amendedPensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
       else form
     }
   }
 
   private def validationNeeded(data: Form[AmendPensionsTakenBeforeModel]): Boolean = {
-    data("pensionsTakenBefore").value.get match {
+    data("amendedPensionsTakenBefore").value.get match {
       case "yes" => true
       case "no" => false
     }
   }
 
-  private def validateFieldCompleted(data: Form[AmendPensionsTakenBeforeModel]) = data("pensionsTakenBeforeAmt").value.isDefined
+  private def validateFieldCompleted(data: Form[AmendPensionsTakenBeforeModel]) = data("amendedPensionsTakenBeforeAmt").value.isDefined
 
-  private def validateMinimum(data: Form[AmendPensionsTakenBeforeModel]) = isPositive(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
+  private def validateMinimum(data: Form[AmendPensionsTakenBeforeModel]) = isPositive(data("amendedPensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
 
-  private def validateMaximum(data: Form[AmendPensionsTakenBeforeModel]) = isLessThanDouble(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble, Constants.npsMaxCurrency)
+  private def validateMaximum(data: Form[AmendPensionsTakenBeforeModel]) = isLessThanDouble(data("amendedPensionsTakenBeforeAmt").value.getOrElse("0").toDouble, Constants.npsMaxCurrency)
 
-  private def validateTwoDec(data: Form[AmendPensionsTakenBeforeModel]) = isMaxTwoDecimalPlaces(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
+  private def validateTwoDec(data: Form[AmendPensionsTakenBeforeModel]) = isMaxTwoDecimalPlaces(data("amendedPensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
 }
