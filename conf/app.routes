@@ -86,6 +86,7 @@ GET         /amend-protection/pensions-taken-before/:protectionType/:status     
 POST        /amend-protection/pensions-taken-before                                     controllers.AmendsController.submitAmendPensionsTakenBefore
 GET         /amend-protection/pensions-taken-between/:protectionType/:status            controllers.AmendsController.amendPensionsTakenBetween(protectionType, status)
 GET         /amend-protection/overseas-pensions/:protectionType/:status                 controllers.AmendsController.amendOverseasPensions(protectionType, status)
+POST        /amend-protection/overseas-pensions                                         controllers.AmendsController.submitAmendOverseasPensions
 GET         /amend-protection/current-pensions/:protectionType/:status                  controllers.AmendsController.amendCurrentPensions(protectionType, status)
 POST        /amend-protection/current-pensions                                          controllers.AmendsController.submitAmendCurrentPension
 
