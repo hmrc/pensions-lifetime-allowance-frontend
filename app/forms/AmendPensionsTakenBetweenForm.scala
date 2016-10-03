@@ -28,33 +28,33 @@ object AmendPensionsTakenBetweenForm {
 
   def validateForm(form: Form[AmendPensionsTakenBetweenModel]): Form[AmendPensionsTakenBetweenModel] = {
     if(!validationNeeded(form)) form else {
-      if(!validateFieldCompleted(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorQuestion"))
-      else if(!validateMinimum(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorNegative"))
-      else if(!validateMaximum(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorMaximum"))
-      else if(!validateTwoDec(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorDecimalPlaces"))
+      if(!validateFieldCompleted(form)) form.withError("amendedPensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorQuestion"))
+      else if(!validateMinimum(form)) form.withError("amendedPensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorNegative"))
+      else if(!validateMaximum(form)) form.withError("amendedPensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorMaximum"))
+      else if(!validateTwoDec(form)) form.withError("amendedPensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorDecimalPlaces"))
       else form
     }
   }
 
   private def validationNeeded(data: Form[AmendPensionsTakenBetweenModel]): Boolean = {
-    data("pensionsTakenBetween").value.get match {
+    data("amendedPensionsTakenBetween").value.get match {
       case "yes" => true
       case "no" => false
     }
   }
 
-  private def validateFieldCompleted(data: Form[AmendPensionsTakenBetweenModel]) = data("pensionsTakenBetweenAmt").value.isDefined
+  private def validateFieldCompleted(data: Form[AmendPensionsTakenBetweenModel]) = data("amendedPensionsTakenBetweenAmt").value.isDefined
 
-  private def validateMinimum(data: Form[AmendPensionsTakenBetweenModel]) = isPositive(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
+  private def validateMinimum(data: Form[AmendPensionsTakenBetweenModel]) = isPositive(data("amendedPensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
 
-  private def validateMaximum(data: Form[AmendPensionsTakenBetweenModel]) = isLessThanDouble(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble, Constants.npsMaxCurrency)
+  private def validateMaximum(data: Form[AmendPensionsTakenBetweenModel]) = isLessThanDouble(data("amendedPensionsTakenBetweenAmt").value.getOrElse("0").toDouble, Constants.npsMaxCurrency)
 
-  private def validateTwoDec(data: Form[AmendPensionsTakenBetweenModel]) = isMaxTwoDecimalPlaces(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
+  private def validateTwoDec(data: Form[AmendPensionsTakenBetweenModel]) = isMaxTwoDecimalPlaces(data("amendedPensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
 
-  val pensionsTakenBetweenForm = Form (
+  val amendPensionsTakenBetweenForm = Form (
     mapping(
-      "pensionsTakenBetween" -> nonEmptyText,
-      "pensionsTakenBetweenAmt" -> optional(bigDecimal),
+      "amendedPensionsTakenBetween" -> nonEmptyText,
+      "amendedPensionsTakenBetweenAmt" -> optional(bigDecimal),
       "protectionType" -> text,
       "status" -> text
     )(AmendPensionsTakenBetweenModel.apply)(AmendPensionsTakenBetweenModel.unapply)
