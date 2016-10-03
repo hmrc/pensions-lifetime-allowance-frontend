@@ -516,7 +516,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     }
 
     "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBefore("ip2014", "dormant"))
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBetween("ip2014", "dormant"))
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         status(DataItem.result) shouldBe 200
