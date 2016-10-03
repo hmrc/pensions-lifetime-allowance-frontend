@@ -228,7 +228,7 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
         val amendModel = AmendOverseasPensionsModel(yesNoValue, Some(BigDecimal(df(data.updatedProtection.nonUKRights.get))), protectionType, status)
         protectionType match {
           case "ip2016" => Ok(pages.amends.amendOverseasPensions(amendOverseasPensionsForm.fill(amendModel)))
-          //case "ip2014" => Ok(pages.amends.amendIP14PensionsTakenBefore(amendPensionsTakenBeforeForm.fill(amendModel)))
+          case "ip2014" => Ok(pages.amends.amendIP14OverseasPensions(amendOverseasPensionsForm.fill(amendModel)))
         }
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend pensions taken before page")
