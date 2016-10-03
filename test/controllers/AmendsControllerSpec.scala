@@ -61,6 +61,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
       preADayPensionInPayment = Some(2000.00),
+      postADayBenefitCrystallisationEvents = Some(2000.00),
       notificationId = Some(12),
       protectionID = Some(12345),
       protectionType = Some("IP2016"),
@@ -72,6 +73,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
       preADayPensionInPayment = Some(2000.00),
+      postADayBenefitCrystallisationEvents = Some(2000.00),
       notificationId = Some(12),
       protectionID = Some(12345),
       protectionType = Some("IP2016"),
@@ -84,6 +86,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
       preADayPensionInPayment = Some(2000.00),
+      postADayBenefitCrystallisationEvents = Some(2000.00),
       notificationId = Some(12),
       protectionID = Some(12345),
       protectionType = Some("IP2014"),
@@ -95,6 +98,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
       preADayPensionInPayment = Some(2000.00),
+      postADayBenefitCrystallisationEvents = Some(2000.00),
       notificationId = Some(12),
       protectionID = Some(12345),
       protectionType = Some("IP2014"),
@@ -107,6 +111,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
       preADayPensionInPayment = Some(0.0),
+      postADayBenefitCrystallisationEvents = Some(0.0),
       notificationId = Some(12),
       protectionID = Some(12345),
       protectionType = Some("IP2016"),
@@ -118,6 +123,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
       preADayPensionInPayment = Some(0.0),
+      postADayBenefitCrystallisationEvents = Some(0.0),
       notificationId = Some(12),
       protectionID = Some(12345),
       protectionType = Some("IP2016"),
@@ -265,7 +271,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "have the value of the check box set as 'No' by default" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-        DataItem.jsoupDoc.body.getElementById("pensionsTakenBefore-no").attr("checked") shouldBe "checked"
+        DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBefore-no").attr("checked") shouldBe "checked"
       }
     }
 
@@ -293,12 +299,12 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "have the value of the check box set as 'Yes' by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          DataItem.jsoupDoc.body.getElementById("pensionsTakenBefore-yes").attr("checked") shouldBe "checked"
+          DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBefore-yes").attr("checked") shouldBe "checked"
         }
 
         "have the value of the input field set to 2000 by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          DataItem.jsoupDoc.body.getElementById("pensionsTakenBeforeAmt").attr("value") shouldBe "2000"
+          DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBeforeAmt").attr("value") shouldBe "2000"
         }
       }
     }
@@ -323,7 +329,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "the model can't be fetched from keyStore" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "no"), ("pensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
@@ -333,7 +339,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "'Have you taken pensions before 2006?' is checked to 'No'" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "no"), ("pensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -346,7 +352,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "'Have you taken pensions before 2006?' is set to 'yes', and value set to 2000" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "2000"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "2000"), ("protectionType", "ip2016"), ("status", "dormant"))
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
@@ -360,7 +366,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "no amount is set" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
         status(DataItem.result) shouldBe 400
@@ -373,7 +379,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "amount is set as '5.001'" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "5.001"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "5.001"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
         status(DataItem.result) shouldBe 400
@@ -386,7 +392,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "amount is set as '-25'" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "-25"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "-25"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
         status(DataItem.result) shouldBe 400
@@ -399,7 +405,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "amount is set as '99999999999999.99'" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "99999999999999.99"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "99999999999999.99"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
         status(DataItem.result) shouldBe 400
@@ -421,7 +427,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "the model can't be fetched from keyStore" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "no"), ("pensionsTakenBeforeAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
 
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
@@ -431,7 +437,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "'Have you taken pensions before 2006?' is checked to 'No'" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "no"), ("pensionsTakenBeforeAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
 
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
@@ -445,7 +451,214 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "'Have you taken pensions before 2006?' is set to 'yes', and value set to 2000" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "2000"), ("protectionType", "ip2014"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "2000"), ("protectionType", "ip2014"), ("status", "dormant"))
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+
+      "redirect to Amends Summary Page" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      }
+    }
+  }
+
+  "In AmendsController calling the .amendPensionsTakenBetween action" when {
+    "not supplied with a stored model" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBetween("ip2016", "open"))
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+    }
+    "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBetween("ip2016", "dormant"))
+
+      "have the value of the check box set as 'No' by default" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
+        DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBetween-no").attr("checked") shouldBe "checked"
+      }
+    }
+
+    "supplied with the stored test model for (dormant, IP2016, preADay = £2000)" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBetween("ip2016", "dormant"))
+      "return 200" in {
+
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "should take the user to the pensions taken before page" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.pageHeading")
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+
+        "have the value of the check box set as 'Yes' by default" in {
+          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBetween-yes").attr("checked") shouldBe "checked"
+        }
+
+        "have the value of the input field set to 2000 by default" in {
+          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBetweenAmt").attr("value") shouldBe "2000"
+        }
+      }
+    }
+
+    "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBetween("ip2014", "dormant"))
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        status(DataItem.result) shouldBe 200
+      }
+    }
+
+  }
+
+  "Submitting Amend IP16 Pensions Taken Between data" when {
+
+    "there is an error reading the form" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween)
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+    }
+
+    "the model can't be fetched from keyStore" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+    }
+
+    "'Have you taken pensions before 2006?' is checked to 'No'" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+      "redirect to Amends Summary Page" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      }
+    }
+
+    "'Before 5 April 1016, did you ...?' is set to 'yes', and value set to 2000" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "2000"), ("protectionType", "ip2016"), ("status", "dormant"))
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+
+      "redirect to Amends Summary Page" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      }
+
+    }
+
+    "no amount is set" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBetween.errorQuestion"))
+      }
+    }
+
+    "amount is set as '5.001'" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "5.001"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBetween.errorDecimalPlaces"))
+      }
+    }
+
+    "amount is set as '-25'" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "-25"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBetween.errorNegative"))
+      }
+    }
+
+    "amount is set as '99999999999999.99'" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "99999999999999.99"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBetween.errorMaximum"))
+      }
+    }
+  }
+
+  "Submitting Amend IP14 Pensions Taken Between data" when {
+
+    "there is an error reading the form" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween)
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+    }
+
+    "the model can't be fetched from keyStore" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
+
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+    }
+
+    "'Have you taken pensions before 2006?' is checked to 'No'" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
+
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+
+      "redirect to Amends Summary Page" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      }
+    }
+
+    "'Have you taken pensions before 2006?' is set to 'yes', and value set to 2000" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "2000"), ("protectionType", "ip2014"), ("status", "dormant"))
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         status(DataItem.result) shouldBe 303
