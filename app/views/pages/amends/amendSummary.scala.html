@@ -50,10 +50,10 @@
     </table>
 
     @govHelpers.form(action = routes.AmendsController.amendProtection) {
-        <div style="display:none; visibility:hidden;">
+        <div class="form-hidden">
 
-            @helper.inputText(amendmentTypeForm("protectionType"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
-            @helper.inputText(amendmentTypeForm("status"), 'type -> "hidden", 'style -> "display:none; visibility:hidden;")
+            @helper.inputText(amendmentTypeForm("protectionType"), 'type -> "hidden", 'class -> "form-hidden")
+            @helper.inputText(amendmentTypeForm("status"), 'type -> "hidden", 'class -> "form-hidden")
 
         </div>
 
