@@ -17,6 +17,7 @@
 package controllers
 
 import auth.{AuthorisedForPLA, PLAUser}
+import common.Exceptions
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
@@ -121,9 +122,9 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
         case Some(model) => applicationOutcome(model) match {
 
           case ApplicationOutcome.Successful =>
-            if(utils.Constants.activeProtectionCodes.contains(model.protection.notificationId.get)) {
+            val notificationId = model.protection.notificationId.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("displayResult", "notificationId", user.nino.get))
+            if(utils.Constants.activeProtectionCodes.contains(notificationId)) {
               keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
-              // TODO: Log failure to store data
             }
             val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
             Ok(resultSuccess(displayModel))
