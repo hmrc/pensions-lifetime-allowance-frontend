@@ -60,6 +60,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     ProtectionModel(
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
+      nonUKRights = Some(2000.00),
       preADayPensionInPayment = Some(2000.00),
       postADayBenefitCrystallisationEvents = Some(2000.00),
       notificationId = Some(12),
@@ -72,6 +73,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     ProtectionModel(
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
+      nonUKRights = Some(2000.00),
       preADayPensionInPayment = Some(2000.00),
       postADayBenefitCrystallisationEvents = Some(2000.00),
       notificationId = Some(12),
@@ -85,6 +87,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     ProtectionModel(
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
+      nonUKRights = Some(2000.00),
       preADayPensionInPayment = Some(2000.00),
       postADayBenefitCrystallisationEvents = Some(2000.00),
       notificationId = Some(12),
@@ -97,6 +100,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     ProtectionModel(
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
+      nonUKRights = Some(2000.00),
       preADayPensionInPayment = Some(2000.00),
       postADayBenefitCrystallisationEvents = Some(2000.00),
       notificationId = Some(12),
@@ -110,6 +114,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     ProtectionModel(
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
+      nonUKRights = Some(0.0),
       preADayPensionInPayment = Some(0.0),
       postADayBenefitCrystallisationEvents = Some(0.0),
       notificationId = Some(12),
@@ -122,6 +127,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     ProtectionModel(
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
+      nonUKRights = Some(0.0),
       preADayPensionInPayment = Some(0.0),
       postADayBenefitCrystallisationEvents = Some(0.0),
       notificationId = Some(12),
@@ -666,6 +672,167 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "redirect to Amends Summary Page" in {
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      }
+    }
+  }
+
+  "In AmendsController calling the .amendOverseasPensions action" when {
+
+    "not supplied with a stored model" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendOverseasPensions("ip2016", "open"))
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+    }
+    "supplied with the stored test model for (dormant, IP2016, nonUKRights = £0.0)" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendOverseasPensions("ip2016", "dormant"))
+
+      "have the value of the check box set as 'No' by default" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
+        DataItem.jsoupDoc.body.getElementById("amendedOverseasPensions-no").attr("checked") shouldBe "checked"
+      }
+    }
+
+    "supplied with the stored test model for (dormant, IP2016, nonUKRights = £2000)" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendOverseasPensions("ip2016", "dormant"))
+      "return 200" in {
+
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "should take the user to the overseas pensions page" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.pageHeading")
+      }
+
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in {
+          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          contentType(DataItem.result) shouldBe Some("text/html")
+          charset(DataItem.result) shouldBe Some("utf-8")
+        }
+
+        "have the value of the check box set as 'Yes' by default" in {
+          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          DataItem.jsoupDoc.body.getElementById("amendedOverseasPensions-yes").attr("checked") shouldBe "checked"
+        }
+
+        "have the value of the input field set to 2000 by default" in {
+          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          DataItem.jsoupDoc.body.getElementById("amendedOverseasPensionsAmt").attr("value") shouldBe "2000"
+        }
+      }
+    }
+
+    "supplied with the stored test model for (dormant, IP2014, nonUKRights = £2000)" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendOverseasPensions("ip2014", "dormant"))
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        status(DataItem.result) shouldBe 200
+      }
+    }
+  }
+
+
+  "Submitting Amend IP16 Overseas Pensions data" when {
+
+    "there is an error reading the form" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions)
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+    }
+
+    "the model can't be fetched from keyStore" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
+        ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+    }
+
+    "'Have you put money in an overseas pension?' is checked to 'No'" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
+        ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+      "redirect to Amends Summary Page" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      }
+    }
+
+    "'Have you put money in an overseas pension?' is checked to 'Yes', and value set to 2000" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "2000"), ("protectionType", "ip2016"), ("status", "dormant"))
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+
+      "redirect to Amends Summary Page" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      }
+
+    }
+
+    "no amount is set" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.overseasPensions.errorQuestion"))
+      }
+    }
+
+    "amount is set as '5.001'" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "5.001"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.overseasPensions.errorDecimalPlaces"))
+      }
+    }
+
+    "amount is set as '-25'" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "-25"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.overseasPensions.errorNegative"))
+      }
+    }
+
+    "amount is set as '99999999999999.99'" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "99999999999999.99"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.overseasPensions.errorMaximum"))
       }
     }
   }
