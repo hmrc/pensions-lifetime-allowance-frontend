@@ -16,9 +16,10 @@
 
 package constructors
 
+import enums.ApplicationType
 import models._
+import models.amendModels.AmendProtectionModel
 import play.api.i18n.Messages
-import play.test.FakeApplication
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 /**
@@ -31,7 +32,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
   "Existing Protections Constructor" should {
 
     "Create an ExistingProtectionsDisplayModel" in {
-      val tstProtectionModelOpen = ProtectionModel (
+      val tstProtectionModelOpen = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -43,13 +44,13 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       val tstExistingProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "open",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014","open")),
+        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "open")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"))
 
-      val tstProtectionModelDormant = ProtectionModel (
+      val tstProtectionModelDormant = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -61,7 +62,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       val tstExistingProtectionDisplayModelDormant = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "dormant",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014","dormant")),
+        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
@@ -73,7 +74,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     }
 
     "Correctly order existing protections with the same status" in {
-      val tstProtectionModelOpen = ProtectionModel (
+      val tstProtectionModelOpen = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -85,13 +86,13 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       val tstProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "open",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014","open")),
+        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "open")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"))
 
-      val tstProtectionModelDormant7 = ProtectionModel (
+      val tstProtectionModelDormant7 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("FP2014"),
@@ -109,7 +110,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant6 = ProtectionModel (
+      val tstProtectionModelDormant6 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Fixed"),
@@ -127,7 +128,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant5 = ProtectionModel (
+      val tstProtectionModelDormant5 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Enhanced"),
@@ -145,7 +146,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant4 = ProtectionModel (
+      val tstProtectionModelDormant4 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Primary"),
@@ -163,7 +164,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant3 = ProtectionModel (
+      val tstProtectionModelDormant3 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2016"),
@@ -175,13 +176,13 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       val tstProtectionDisplayModelDormant3 = ExistingProtectionDisplayModel(
         protectionType = "IP2016",
         status = "dormant",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2016","dormant")),
+        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2016", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant2 = ProtectionModel (
+      val tstProtectionModelDormant2 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("FP2016"),
@@ -199,7 +200,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant1 = ProtectionModel (
+      val tstProtectionModelDormant1 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -211,7 +212,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "dormant",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014","dormant")),
+        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
@@ -240,25 +241,8 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     }
 
     "Correctly order existing protections with a variety of statuses" in {
-      val tstProtectionModelOpen = ProtectionModel (
-        psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(12345),
-        protectionType = Some("IP2014"),
-        status = Some("Open"),
-        certificateDate = Some("2016-04-17"),
-        protectedAmount = Some(1250000),
-        protectionReference = Some("PSA123456")
-      )
-      val tstProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
-        protectionType = "IP2014",
-        status = "open",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014","open")),
-        psaCheckReference = Some(tstPSACheckRef),
-        protectionReference = "PSA123456",
-        protectedAmount = Some("£1,250,000"),
-        certificateDate = Some("17 April 2016"))
 
-      val tstProtectionModelDormant8 = ProtectionModel (
+      val tstProtectionModelDormant8 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("FP2014"),
@@ -276,7 +260,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant7 = ProtectionModel (
+      val tstProtectionModelDormant7 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("FP2016"),
@@ -294,7 +278,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant6 = ProtectionModel (
+      val tstProtectionModelDormant6 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -312,7 +296,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant5 = ProtectionModel (
+      val tstProtectionModelDormant5 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -330,7 +314,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant4 = ProtectionModel (
+      val tstProtectionModelDormant4 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Primary"),
@@ -348,7 +332,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant3 = ProtectionModel (
+      val tstProtectionModelDormant3 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2016"),
@@ -366,7 +350,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant2 = ProtectionModel (
+      val tstProtectionModelDormant2 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Fixed"),
@@ -384,7 +368,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant1 = ProtectionModel (
+      val tstProtectionModelDormant1 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Enhanced"),
@@ -424,8 +408,11 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
       DisplayConstructors.createExistingProtectionsDisplayModel(tstExistingProtectionModel) shouldBe tstExistingProtectionsDisplayModel
     }
+  }
 
-    "Create a Print Display model" in {
+  "createPrintDisplayModel" should {
+
+    "create a Print Display model" in {
 
       //Fake Input Values
       val tstPerson = Person("McTestface", "Testy")
@@ -458,6 +445,119 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     }
   }
 
+  "modelsDiffer" should {
 
+    "return false for the same model" in {
+      val tstModel = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000))
+      DisplayConstructors.modelsDiffer(tstModel, tstModel) shouldBe false
+    }
+
+    "return false for two models with the same properties" in {
+      val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000), preADayPensionInPayment = Some(23412.87))
+      val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), preADayPensionInPayment = Some(23412.87), protectionID = Some(10000))
+      DisplayConstructors.modelsDiffer(tstModel1, tstModel2) shouldBe false
+    }
+
+    "return true for two models with different properties" in {
+      val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(100001), preADayPensionInPayment = Some(23412.87))
+      val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000),  preADayPensionInPayment = Some(23412.87))
+      DisplayConstructors.modelsDiffer(tstModel1, tstModel2) shouldBe true
+    }
+
+    "return true for two models with different number of properties" in {
+      val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(100001), preADayPensionInPayment = Some(23412.87), version = Some(4))
+      val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000),  preADayPensionInPayment = Some(23412.87))
+      DisplayConstructors.modelsDiffer(tstModel1, tstModel2) shouldBe true
+    }
+
+  }
+
+  "createAmendDisplayModel" should {
+    "correctly transform an AmendProtectionModel into an AmendDisplayModel" in {
+      val tstProtection = ProtectionModel(
+        psaCheckReference = Some("psaRef"),
+        protectionID = Some(100001),
+        protectionType = Some("IP2016"),
+        status = Some("active"),
+        protectedAmount = Some(1100000.34),
+        relevantAmount = Some(1100000.34),
+        preADayPensionInPayment = Some(0.0),
+        postADayBenefitCrystallisationEvents = None,
+        nonUKRights = Some(100000.0),
+        uncrystallisedRights = Some(1000000.34)
+      )
+      val tstAmendProtecionModel = AmendProtectionModel(tstProtection, tstProtection)
+      val tstDisplaySections = Seq(
+        AmendDisplaySectionModel("CurrentPensions",Seq(
+          AmendDisplayRowModel("Amt", controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active"), "£1,000,000.34")
+          )
+        ),
+        AmendDisplaySectionModel("PensionsTakenBefore", Seq(
+          AmendDisplayRowModel("YesNo", controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active"), "No")
+          )
+        ),
+        AmendDisplaySectionModel("PensionsTakenBetween", Seq(
+          AmendDisplayRowModel("YesNo", controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active"), "No")
+          )
+        ),
+        AmendDisplaySectionModel("OverseasPensions", Seq(
+          AmendDisplayRowModel("YesNo", controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active"), "Yes"),
+          AmendDisplayRowModel("Amt", controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active"), "£100,000")
+          )
+        )
+      )
+
+      DisplayConstructors.createAmendDisplayModel(tstAmendProtecionModel) shouldBe AmendDisplayModel(
+        protectionType = "IP2016",
+        amended = false,
+        sections = tstDisplaySections,
+        totalAmount = "£1,100,000.34"
+      )
+    }
+  }
+
+  "createActiveAmendResponseModel" should {
+    "correctly transform an AmendResponseModel into an ActiveAmendResultDisplayModel" in {
+      val tstAmendResponseModel = AmendResponseModel(ProtectionModel(
+        psaCheckReference = Some("psaRef"),
+        protectionID = Some(100003),
+        protectionType = Some("IP2014"),
+        protectionReference = Some("protectionRef"),
+        certificateDate = Some("2016-06-14"),
+        protectedAmount = Some(1350000.45),
+        notificationId = Some(33)
+      ))
+
+      val tstActiveAmendResultDisplayModel = ActiveAmendResultDisplayModel(
+        protectionType = ApplicationType.IP2014,
+        notificationId = "33",
+        protectedAmount = "£1,350,000.45",
+        details = Some(ProtectionDetailsDisplayModel(
+          protectionReference = Some("protectionRef"),
+          psaReference = "psaRef",
+          applicationDate = Some("14 June 2016")
+        ))
+      )
+
+      DisplayConstructors.createActiveAmendResponseDisplayModel(tstAmendResponseModel) shouldBe tstActiveAmendResultDisplayModel
+    }
+  }
+
+  "createInactiveAmendResponseModel" should {
+    "correctly transform an AmendResponseModel into an InActiveAmendResultDisplayModel" in {
+      val tstAmendsResponseModel = AmendResponseModel(ProtectionModel(
+        psaCheckReference = None,
+        protectionID = None,
+        notificationId = Some(30)
+      ))
+      val tstInactiveAmendsResultDisplayModel = InactiveAmendResultDisplayModel(
+        notificationId = "30",
+        additionalInfo = Seq("1","2")
+      )
+
+      DisplayConstructors.createInactiveAmendResponseDisplayModel(tstAmendsResponseModel) shouldBe tstInactiveAmendsResultDisplayModel
+
+    }
+  }
 
 }
