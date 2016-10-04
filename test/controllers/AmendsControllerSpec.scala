@@ -45,7 +45,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     override lazy val authConnector = MockAuthConnector
     override lazy val responseConstructors = mock[ResponseConstructors]
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
-    override val displayConstructors: DisplayConstructors = displayConstructors
+    override val displayConstructors: DisplayConstructors = mock[DisplayConstructors]
 
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
   }
