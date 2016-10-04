@@ -172,7 +172,6 @@ trait DisplayConstructors {
     val protectionType = getProtectionTypeFromProtection(model.protection)
 
     val protectedAmount = model.protection.protectedAmount.getOrElse {
-      println(model.protection)
       throw new Exceptions.OptionNotDefinedException("createActiveAmendResponseDisplayModel", "protectedAmount",
                 model.protection.protectionType.getOrElse("No protection type in response"))}
     val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
