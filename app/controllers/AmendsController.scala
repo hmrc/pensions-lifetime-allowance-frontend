@@ -48,6 +48,7 @@ object AmendsController extends AmendsController{
   val keyStoreConnector = KeyStoreConnector
   val displayConstructors = DisplayConstructors
   val responseConstructors = ResponseConstructors
+  val plaConnector = PLAConnector
   override lazy val applicationConfig = FrontendAppConfig
   override lazy val authConnector = FrontendAuthConnector
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
@@ -58,6 +59,7 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
   val keyStoreConnector: KeyStoreConnector
   val displayConstructors: DisplayConstructors
   val responseConstructors: ResponseConstructors
+  val plaConnector: PLAConnector
 
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
@@ -80,7 +82,7 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
       },
       success => for {
         protectionAmendment <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
-        response <- PLAConnector.amendProtection(user.nino.get, protectionAmendment.get.updatedProtection)
+        response <- plaConnector.amendProtection(user.nino.get, protectionAmendment.get.updatedProtection)
         result <- routeViaMCNeededCheck(response)
       } yield result
     )
