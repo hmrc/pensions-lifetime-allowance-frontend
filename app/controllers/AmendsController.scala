@@ -132,10 +132,11 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
         val yesNoValue = if (data.updatedProtection.preADayPensionInPayment.get > 0) "yes" else "no"
 
         val amendModel = AmendPensionsTakenBeforeModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.get)), protectionType, status)
-        protectionType match {
-          case "ip2016" => Ok(pages.amends.amendPensionsTakenBefore(amendPensionsTakenBeforeForm.fill(amendModel)))
-          case "ip2014" => Ok(pages.amends.amendIP14PensionsTakenBefore(amendPensionsTakenBeforeForm.fill(amendModel)))
-        }
+        protectionTypeRoute(
+          Ok(pages.amends.amendPensionsTakenBefore(amendPensionsTakenBeforeForm.fill(amendModel))),
+          Ok(pages.amends.amendIP14PensionsTakenBefore(amendPensionsTakenBeforeForm.fill(amendModel))),
+          protectionType
+        )
       case _ =>
       Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend pensions taken before page")
       InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
@@ -179,10 +180,12 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
         val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.get > 0) "yes" else "no"
 
         val amendModel = AmendPensionsTakenBetweenModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.get)), protectionType, status)
-        protectionType match {
-          case "ip2016" => Ok(pages.amends.amendPensionsTakenBetween(amendPensionsTakenBetweenForm.fill(amendModel)))
-          case "ip2014" => Ok(pages.amends.amendIP14PensionsTakenBetween(amendPensionsTakenBetweenForm.fill(amendModel)))
-        }
+        protectionTypeRoute(
+          Ok(pages.amends.amendPensionsTakenBetween(amendPensionsTakenBetweenForm.fill(amendModel))),
+          Ok(pages.amends.amendIP14PensionsTakenBetween(amendPensionsTakenBetweenForm.fill(amendModel))),
+          protectionType
+        )
+
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend pensions taken between page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
@@ -225,10 +228,11 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
         val yesNoValue = if (data.updatedProtection.nonUKRights.get > 0) "yes" else "no"
 
         val amendModel = AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.get)), protectionType, status)
-        protectionType match {
-          case "ip2016" => Ok(pages.amends.amendOverseasPensions(amendOverseasPensionsForm.fill(amendModel)))
-          case "ip2014" => Ok(pages.amends.amendIP14OverseasPensions(amendOverseasPensionsForm.fill(amendModel)))
-        }
+        protectionTypeRoute(
+          Ok(pages.amends.amendOverseasPensions(amendOverseasPensionsForm.fill(amendModel))),
+          Ok(pages.amends.amendIP14OverseasPensions(amendOverseasPensionsForm.fill(amendModel))),
+          protectionType
+        )
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend pensions taken before page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
@@ -269,10 +273,11 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(data) =>
         val amendModel = AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.get)), protectionType, status)
-        protectionType match {
-          case "ip2016" => Ok(pages.amends.amendCurrentPensions(amendCurrentPensionForm.fill(amendModel)))
-          case "ip2014" => Ok(pages.amends.amendIP14CurrentPensions(amendCurrentPensionForm.fill(amendModel)))
-        }
+        protectionTypeRoute(
+          Ok(pages.amends.amendCurrentPensions(amendCurrentPensionForm.fill(amendModel))),
+          Ok(pages.amends.amendIP14CurrentPensions(amendCurrentPensionForm.fill(amendModel))),
+          protectionType
+        )
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend current UK pension page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
@@ -299,6 +304,13 @@ trait AmendsController  extends FrontendController with AuthorisedForPLA {
         }
       }
     )
+  }
+
+  private def protectionTypeRoute(ip16Route: Result, ip14Route: Result, protectionType: String): Result = {
+    protectionType match {
+      case "ip2016" => ip16Route
+      case "ip2014" => ip14Route
+    }
   }
 
 }
