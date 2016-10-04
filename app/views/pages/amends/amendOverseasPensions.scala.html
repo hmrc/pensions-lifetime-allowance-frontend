@@ -1,0 +1,51 @@
+@import models.amendModels.AmendOverseasPensionsModel
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import helpers.templates.{formInputMoney,formHiddenYesNoRadio}
+@import helpers.ip16.ip16Sidebar
+@import play.api.data._
+
+@(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel])(implicit request: Request[_])
+
+@hiddenYesNoContent = {
+
+@formInputMoney(
+amendOverseasPensionsForm,
+"amendedOverseasPensionsAmt",
+Messages("pla.overseasPensions.question")
+)
+}
+
+@scriptElement = {
+<script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
+
+@sidebar = {@ip16Sidebar()}
+
+@main_template(title=Messages("pla.overseasPensions.title"), scriptElem=Some(scriptElement), sidebarLinks = Some(sidebar)) {
+
+@govHelpers.errorSummary(
+Messages("pla.base.errorSummaryLabel"), amendOverseasPensionsForm
+)
+
+<h1 class="heading-large">@Messages("pla.overseasPensions.pageHeading")</h1>
+
+@govHelpers.form(action = routes.AmendsController.submitAmendOverseasPensions) {
+
+<div class="inline form-group">
+    @formHiddenYesNoRadio(
+    amendOverseasPensionsForm,
+    "amendedOverseasPensions",
+    "",
+    hiddenYesNoContent
+    )
+</div>
+
+<button class="button" type="submit" id="continue-button" >@Messages("pla.base.change")</button>
+<div class="form-hidden">
+
+    @helper.inputText(amendOverseasPensionsForm("protectionType"), 'type -> "hidden", 'class -> "form-hidden")
+    @helper.inputText(amendOverseasPensionsForm("status"), 'type -> "hidden", 'class -> "form-hidden")
+
+</div>
+}
+}
