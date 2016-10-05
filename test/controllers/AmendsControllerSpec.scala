@@ -19,17 +19,22 @@ package controllers
 import java.util.UUID
 
 import auth.{MockAuthConnector, MockConfig}
-import connectors.KeyStoreConnector
+import connectors.{PLAConnector, KeyStoreConnector}
 import constructors.{ResponseConstructors, DisplayConstructors}
+import enums.ApplicationType
 import models._
 import models.amendModels.AmendProtectionModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
+import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
+import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.play.http.HttpResponse
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
@@ -37,17 +42,21 @@ import scala.concurrent.Future
 class AmendsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
+  val mockDisplayConstructors = mock[DisplayConstructors]
+  val mockPLAConnector = mock[PLAConnector]
+  val mockResponseConstructors = mock[ResponseConstructors]
 
   val testIP16DormantModel = AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, protectionType = Some("IP2016"), status = Some("dormant"), relevantAmount = Some(100000), uncrystallisedRights = Some(100000)))
 
   object TestAmendsController extends AmendsController {
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
-    override lazy val responseConstructors = mock[ResponseConstructors]
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
-    override val displayConstructors: DisplayConstructors = mock[DisplayConstructors]
 
+    override val displayConstructors: DisplayConstructors = mockDisplayConstructors
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
+    override val plaConnector: PLAConnector = mockPLAConnector
+    override val responseConstructors: ResponseConstructors = mockResponseConstructors
   }
 
   val sessionId = UUID.randomUUID.toString
@@ -56,87 +65,85 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
 
-  val testAmendIP2016ProtectionModel = AmendProtectionModel(
-    ProtectionModel(
-      psaCheckReference = Some("testPSARef"),
-      uncrystallisedRights = Some(100000.00),
-      nonUKRights = Some(2000.00),
-      preADayPensionInPayment = Some(2000.00),
-      postADayBenefitCrystallisationEvents = Some(2000.00),
-      notificationId = Some(12),
-      protectionID = Some(12345),
-      protectionType = Some("IP2016"),
-      status = Some("dormant"),
-      certificateDate = Some("2016-04-17"),
-      protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456")),
-    ProtectionModel(
-      psaCheckReference = Some("testPSARef"),
-      uncrystallisedRights = Some(100000.00),
-      nonUKRights = Some(2000.00),
-      preADayPensionInPayment = Some(2000.00),
-      postADayBenefitCrystallisationEvents = Some(2000.00),
-      notificationId = Some(12),
-      protectionID = Some(12345),
-      protectionType = Some("IP2016"),
-      status = Some("dormant"),
-      certificateDate = Some("2016-04-17"),
-      protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456")))
-  val testAmendIP2014ProtectionModel = AmendProtectionModel(
-    ProtectionModel(
-      psaCheckReference = Some("testPSARef"),
-      uncrystallisedRights = Some(100000.00),
-      nonUKRights = Some(2000.00),
-      preADayPensionInPayment = Some(2000.00),
-      postADayBenefitCrystallisationEvents = Some(2000.00),
-      notificationId = Some(12),
-      protectionID = Some(12345),
-      protectionType = Some("IP2014"),
-      status = Some("dormant"),
-      certificateDate = Some("2016-04-17"),
-      protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456")),
-    ProtectionModel(
-      psaCheckReference = Some("testPSARef"),
-      uncrystallisedRights = Some(100000.00),
-      nonUKRights = Some(2000.00),
-      preADayPensionInPayment = Some(2000.00),
-      postADayBenefitCrystallisationEvents = Some(2000.00),
-      notificationId = Some(12),
-      protectionID = Some(12345),
-      protectionType = Some("IP2014"),
-      status = Some("dormant"),
-      certificateDate = Some("2016-04-17"),
-      protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456")))
-  val testAmendIP2016ProtectionModelWithNoDebit = AmendProtectionModel(
-    ProtectionModel(
-      psaCheckReference = Some("testPSARef"),
-      uncrystallisedRights = Some(100000.00),
-      nonUKRights = Some(0.0),
-      preADayPensionInPayment = Some(0.0),
-      postADayBenefitCrystallisationEvents = Some(0.0),
-      notificationId = Some(12),
-      protectionID = Some(12345),
-      protectionType = Some("IP2016"),
-      status = Some("dormant"),
-      certificateDate = Some("2016-04-17"),
-      protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456")),
-    ProtectionModel(
-      psaCheckReference = Some("testPSARef"),
-      uncrystallisedRights = Some(100000.00),
-      nonUKRights = Some(0.0),
-      preADayPensionInPayment = Some(0.0),
-      postADayBenefitCrystallisationEvents = Some(0.0),
-      notificationId = Some(12),
-      protectionID = Some(12345),
-      protectionType = Some("IP2016"),
-      status = Some("dormant"),
-      certificateDate = Some("2016-04-17"),
-      protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456")))
+  val ip2016Protection = ProtectionModel(
+    psaCheckReference = Some("testPSARef"),
+    uncrystallisedRights = Some(100000.00),
+    nonUKRights = Some(2000.00),
+    preADayPensionInPayment = Some(2000.00),
+    postADayBenefitCrystallisationEvents = Some(2000.00),
+    notificationId = Some(12),
+    protectionID = Some(12345),
+    protectionType = Some("IP2016"),
+    status = Some("dormant"),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("PSA123456"))
+
+  val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
+
+
+  val ip2014Protection = ProtectionModel(
+    psaCheckReference = Some("testPSARef"),
+    uncrystallisedRights = Some(100000.00),
+    nonUKRights = Some(2000.00),
+    preADayPensionInPayment = Some(2000.00),
+    postADayBenefitCrystallisationEvents = Some(2000.00),
+    notificationId = Some(12),
+    protectionID = Some(12345),
+    protectionType = Some("IP2014"),
+    status = Some("dormant"),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("PSA123456"))
+
+  val testAmendIP2014ProtectionModel = AmendProtectionModel(ip2014Protection, ip2014Protection)
+
+
+  val ip2016NoDebitProtection = ProtectionModel(
+    psaCheckReference = Some("testPSARef"),
+    uncrystallisedRights = Some(100000.00),
+    nonUKRights = Some(0.0),
+    preADayPensionInPayment = Some(0.0),
+    postADayBenefitCrystallisationEvents = Some(0.0),
+    notificationId = Some(12),
+    protectionID = Some(12345),
+    protectionType = Some("IP2016"),
+    status = Some("dormant"),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("PSA123456"))
+  val testAmendIP2016ProtectionModelWithNoDebit = AmendProtectionModel(ip2016NoDebitProtection, ip2016NoDebitProtection)
+
+  val tstAmendDisplayModel = AmendDisplayModel(
+    protectionType = "IP2014",
+    amended = true,
+    sections = Seq.empty,
+    totalAmount = "£1,100,000"
+  )
+
+  val ip2014ActiveAmendmentProtection = ProtectionModel(
+  psaCheckReference = Some("psaRef"),
+  protectionID = Some(12345),
+  notificationId = Some(33)
+  )
+  val tstActiveAmendResponseModel = AmendResponseModel(ip2014ActiveAmendmentProtection)
+  val tstActiveAmendResponseDisplayModel = ActiveAmendResultDisplayModel(
+    protectionType = ApplicationType.IP2014,
+    notificationId = "33",
+    protectedAmount = "£1,100,000",
+    details = None
+  )
+
+  val ip2016InactiveAmendmentProtection = ProtectionModel(
+    psaCheckReference = Some("psaRef"),
+    protectionID = Some(12345),
+    notificationId = Some(43)
+  )
+  val tstInactiveAmendResponseModel = AmendResponseModel(ip2016InactiveAmendmentProtection)
+  val tstInactiveAmendResponseDisplayModel = InactiveAmendResultDisplayModel(
+    notificationId = "43",
+    additionalInfo = Seq.empty
+  )
 
 
   def keystoreFetchCondition[T](data: Option[T]): Unit = {
@@ -144,7 +151,151 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       .thenReturn(Future.successful(data))
   }
 
-  "In AmendsController calling the .amendCurrentPensions action" when {
+
+  "In AmendsController calling the amendsSummary action" when {
+    "there is no stored amends model" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendsSummary("ip2016", "open"))
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "there is a stored, updated amends model" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendsSummary("ip2014", "dormant"))
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        when(mockDisplayConstructors.createAmendDisplayModel(Matchers.any())).thenReturn(tstAmendDisplayModel)
+        status(DataItem.result) shouldBe 200
+      }
+      "show the amends page for an updated protection for IP2014" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amends.heading.IP2014.changed")
+      }
+    }
+  }
+
+  "Calling the amendProtection action" when {
+    "the hidden fields in the amendment summary page have not been populated correctly" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionTypez", "stuff"))
+      "return 500" in {
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "the microservice returns a conflict response" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(409)))
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "the microservice returns a manual correspondence needed response" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      "return a Locked response" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(423)))
+        status(DataItem.result) shouldBe 423
+      }
+
+      "show the MC Needed page" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.mcNeeded.pageHeading")
+      }
+    }
+
+    "the microservice returns an invalid json response" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
+        when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any())).thenReturn(None)
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "the microservice returns a valid response" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
+        when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any())).thenReturn(Some(tstActiveAmendResponseModel))
+        when(mockKeyStoreConnector.saveData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+          .thenReturn(Future.successful(CacheMap("keyStoreId", Map.empty)))
+        status(DataItem.result) shouldBe 303
+      }
+      "redirect to amendment outcome" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendmentOutcome()}")
+      }
+    }
+
+  }
+
+  "Calling the amendmentOutcome action" when {
+    "there is no outcome object stored in keystore" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
+      "return 500" in {
+        keystoreFetchCondition[AmendResponseModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "there is an active protection outcome in keystore" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
+      "return 200" in {
+        keystoreFetchCondition[AmendResponseModel](Some(tstActiveAmendResponseModel))
+        when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the active amendment result page" in {
+        DataItem.jsoupDoc.body.getElementById("amendmentOutcome").text shouldEqual Messages("amendResultCode.33.heading")
+      }
+    }
+
+    "there is an inactive protection outcome in keystore" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
+      "return 200" in {
+        keystoreFetchCondition[AmendResponseModel](Some(tstInactiveAmendResponseModel))
+        when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstInactiveAmendResponseDisplayModel)
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the inactive amendment result page" in {
+        DataItem.jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
+      }
+    }
+
+  }
+
+  "Calling the .amendCurrentPensions action" when {
 
     "not supplied with a stored model" should {
 
