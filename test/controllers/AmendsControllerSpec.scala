@@ -21,6 +21,7 @@ import java.util.UUID
 import auth.{MockAuthConnector, MockConfig}
 import connectors.{PLAConnector, KeyStoreConnector}
 import constructors.{ResponseConstructors, DisplayConstructors}
+import enums.ApplicationType
 import models._
 import models.amendModels.AmendProtectionModel
 import org.mockito.Matchers
@@ -28,9 +29,11 @@ import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
+import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.HttpResponse
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -118,11 +121,36 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     totalAmount = "£1,100,000"
   )
 
+  val ip2014ActiveAmendmentProtection = ProtectionModel(
+  psaCheckReference = Some("psaRef"),
+  protectionID = Some(12345),
+  notificationId = Some(33)
+  )
+  val tstActiveAmendResponseModel = AmendResponseModel(ip2014ActiveAmendmentProtection)
+  val tstActiveAmendResponseDisplayModel = ActiveAmendResultDisplayModel(
+    protectionType = ApplicationType.IP2014,
+    notificationId = "33",
+    protectedAmount = "£1,100,000",
+    details = None
+  )
+
+  val ip2016InactiveAmendmentProtection = ProtectionModel(
+    psaCheckReference = Some("psaRef"),
+    protectionID = Some(12345),
+    notificationId = Some(43)
+  )
+  val tstInactiveAmendResponseModel = AmendResponseModel(ip2016InactiveAmendmentProtection)
+  val tstInactiveAmendResponseDisplayModel = InactiveAmendResultDisplayModel(
+    notificationId = "43",
+    additionalInfo = Seq.empty
+  )
+
 
   def keystoreFetchCondition[T](data: Option[T]): Unit = {
     when(mockKeyStoreConnector.fetchAndGetFormData[T](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
   }
+
 
   "In AmendsController calling the amendsSummary action" when {
     "there is no stored amends model" should {
@@ -177,6 +205,94 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
       "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
     }
+
+    "the microservice returns a manual correspondence needed response" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      "return a Locked response" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(423)))
+        status(DataItem.result) shouldBe 423
+      }
+
+      "show the MC Needed page" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.mcNeeded.pageHeading")
+      }
+    }
+
+    "the microservice returns an invalid json response" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
+        when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any())).thenReturn(None)
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "the microservice returns a valid response" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
+        when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any())).thenReturn(Some(tstActiveAmendResponseModel))
+        when(mockKeyStoreConnector.saveData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+          .thenReturn(Future.successful(CacheMap("keyStoreId", Map.empty)))
+        status(DataItem.result) shouldBe 303
+      }
+      "redirect to amendment outcome" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendmentOutcome()}")
+      }
+    }
+
+  }
+
+  "Calling the amendmentOutcome action" when {
+    "there is no outcome object stored in keystore" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
+      "return 500" in {
+        keystoreFetchCondition[AmendResponseModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "there is an active protection outcome in keystore" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
+      "return 200" in {
+        keystoreFetchCondition[AmendResponseModel](Some(tstActiveAmendResponseModel))
+        when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the active amendment result page" in {
+        DataItem.jsoupDoc.body.getElementById("amendmentOutcome").text shouldEqual Messages("amendResultCode.33.heading")
+      }
+    }
+
+    "there is an inactive protection outcome in keystore" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
+      "return 200" in {
+        keystoreFetchCondition[AmendResponseModel](Some(tstInactiveAmendResponseModel))
+        when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstInactiveAmendResponseDisplayModel)
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the inactive amendment result page" in {
+        DataItem.jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
+      }
+    }
+
   }
 
   "Calling the .amendCurrentPensions action" when {
