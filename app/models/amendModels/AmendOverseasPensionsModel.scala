@@ -18,10 +18,7 @@ package models.amendModels
 import models.YesNoAmountModel
 import play.api.libs.json.Json
 
-case class AmendOverseasPensionsModel(amendedOverseasPensions: String, amendedOverseasPensionsAmt: Option[BigDecimal], protectionType: String, status: String) extends YesNoAmountModel {
-  override def getYesNoValue: String = amendedOverseasPensions
-  override def getAmount: Option[BigDecimal] = amendedOverseasPensionsAmt
-}
+case class AmendOverseasPensionsModel(amendedOverseasPensions: String, amendedOverseasPensionsAmt: Option[BigDecimal], protectionType: String, status: String) extends AmendValueModel
 
 object AmendOverseasPensionsModel{
   implicit val format = Json.format[AmendOverseasPensionsModel]

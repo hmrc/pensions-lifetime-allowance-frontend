@@ -27,3 +27,5 @@ case class AmendProtectionModel (
 object AmendProtectionModel {
   implicit val format = Json.format[AmendProtectionModel]
 }
+
+trait AmendValueModel
