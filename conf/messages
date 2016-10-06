@@ -544,8 +544,8 @@ amendResultCode.31.1        = As you already have fixed protection in place, ind
 amendResultCode.31.2        = If this happens, you must tell HMRC Pension Schemes Services.
 
 amendResultCode.32.heading  = You''ve amended individual protection 2014
-amendResultCode.33.1        = As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-amendResultCode.34.2        = If this happens, you must tell HMRC Pension Schemes Services.
+amendResultCode.32.1        = As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
+amendResultCode.32.2        = If this happens, you must tell HMRC Pension Schemes Services.
 
 amendResultCode.33.heading  = You''ve amended individual protection 2014
 
