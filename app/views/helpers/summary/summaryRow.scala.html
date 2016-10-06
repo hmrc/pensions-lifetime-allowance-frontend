@@ -5,7 +5,7 @@
 
 @boldString = {"-bold"}
 
-@if(rowID == "totalPensionsAmt"){
+@if(rowID == "totalPensionsAmt" || rowID == "ip14TotalPensionsAmt"){
     <tr class="grey-background">
         <td class="total-font" id="total-message">@Messages("pla.summary.questions.totalPensionsAmt")</td>
         <td class="total-font" id="total-amount">@displayValues.head</td>
