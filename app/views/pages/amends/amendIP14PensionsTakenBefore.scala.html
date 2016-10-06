@@ -1,0 +1,52 @@
+@import models.amendModels.AmendPensionsTakenBeforeModel
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import helpers.templates.{formInputMoney,formHiddenYesNoRadio}
+@import helpers.ip14.ip14Sidebar
+@import play.api.data._
+
+@(amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel])(implicit request: Request[_])
+
+@hiddenYesNoContent = {
+
+@formInputMoney(
+amendPensionsTakenBeforeForm,
+"amendedPensionsTakenBeforeAmt",
+Messages("pla.pensionsTakenBefore.question"),
+Some(Messages("pla.ip14PensionsTakenBefore.helpText").toString())
+)
+}
+
+@scriptElement = {
+<script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
+
+@sidebar = {@ip14Sidebar()}
+
+@main_template(title=Messages("pla.pensionsTakenBefore.title"), scriptElem=Some(scriptElement), sidebarLinks = Some(sidebar)) {
+
+@govHelpers.errorSummary(
+Messages("pla.base.errorSummaryLabel"), amendPensionsTakenBeforeForm
+)
+
+<h1 class="heading-large">@Messages("pla.pensionsTakenBefore.pageHeading")</h1>
+
+@govHelpers.form(action = routes.AmendsController.submitAmendPensionsTakenBefore) {
+
+<div class="inline form-group">
+    @formHiddenYesNoRadio(
+    amendPensionsTakenBeforeForm,
+    "amendedPensionsTakenBefore",
+    "",
+    hiddenYesNoContent
+    )
+</div>
+
+<button class="button" type="submit" id="continue-button" >@Messages("pla.base.change")</button>
+<div class="form-hidden">
+
+    @helper.inputText(amendPensionsTakenBeforeForm("protectionType"), 'type -> "hidden", 'class -> "form-hidden")
+    @helper.inputText(amendPensionsTakenBeforeForm("status"), 'type -> "hidden", 'class -> "form-hidden")
+
+</div>
+}
+}

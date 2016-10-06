@@ -1,0 +1,19 @@
+@import models.AmendDisplayRowModel
+
+@(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean)
+
+
+<tr>
+    <td class="@if(firstRow){has-child-item}" id=@{s"${sectionId}-${model.rowId}-question"}>
+        @Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}")
+    </td>
+
+    <td class="@if(firstRow){has-child-item}" id=@{s"${sectionId}-${model.rowId}-value"}>
+        @model.displayValue
+    </td>
+
+    <td class="@if(firstRow){has-child-item}">
+        <a id=@{s"${sectionId}-${model.rowId}-change-link"} href="@model.changeLinkCall">@Messages("pla.base.change")</a>
+        <span class="visuallyhidden">@Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}.changeHint")</span>
+    </td>
+</tr>

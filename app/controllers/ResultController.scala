@@ -17,6 +17,7 @@
 package controllers
 
 import auth.{AuthorisedForPLA, PLAUser}
+import common.Exceptions
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
@@ -52,8 +53,8 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
   val processFPApplication = AuthorisedByAny.async {
     implicit user => implicit request =>
       implicit val protectionType = ApplicationType.FP2016
-      plaConnector.applyFP16(user.nino.get).flatMap (
-        response => routeViaMCNeededCheck (response)
+      plaConnector.applyFP16(user.nino.get).flatMap(
+        response => routeViaMCNeededCheck(response)
       )
   }
 
@@ -112,18 +113,15 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
 
   def displayResult(implicit protectionType: ApplicationType.Value): Action[AnyContent] = AuthorisedByAny.async {
 
-    implicit user => implicit request=>
-    val errorResponse = InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-
-
-
-    keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
+    implicit user => implicit request =>
+      val errorResponse = InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+      keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
         case Some(model) => applicationOutcome(model) match {
 
           case ApplicationOutcome.Successful =>
-            if(utils.Constants.activeProtectionCodes.contains(model.protection.notificationId.get)) {
+            val notificationId = model.protection.notificationId.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("displayResult", "notificationId", user.nino.get))
+            if (utils.Constants.activeProtectionCodes.contains(notificationId)) {
               keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
-              // TODO: Log failure to store data
             }
             val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
             Ok(resultSuccess(displayModel))
@@ -133,7 +131,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
             Ok(resultRejected(displayModel))
         }
         case _ => errorResponse
-    }
+      }
 
   }
 
@@ -148,5 +146,6 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     }
     if (successCodes.contains(notificationId.get)) ApplicationOutcome.Successful else ApplicationOutcome.Rejected
   }
+
 
 }

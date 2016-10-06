@@ -6,6 +6,7 @@ pla.base.continue               = Continue
 pla.base.apply                  = Apply
 pla.base.submitApplication      = Submit your application
 pla.base.back                   = Back
+pla.base.change                 = Change
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
 pla.base.startAgain             = Start Again
@@ -370,7 +371,7 @@ pla.summary.ip14DeclarationPara2                        = The information that I
 pla.existingProtections.title                           = View your existing protections
 pla.existingProtections.pageHeading                     = Lifetime allowance protection
 pla.existingProtections.BreadcrumbPTAHome               = Account home
-pla.existingProtections.BreadcrumbPLA                   = Lifetime allowance protection
+pla.existingProtections.pageBreadcrumb                  = Lifetime allowance protection
 pla.existingProtections.details                         = Details
 pla.existingProtections.other                           = Other
 pla.existingProtections.noActiveProtections             = You currently have no open protections.
@@ -379,6 +380,7 @@ pla.existingProtections.protectedAmount                 = Protected lifetime all
 pla.existingProtections.protectionRef                   = Protection notification number
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
+pla.existingProtections.amendLinkText                   = View or change details
 
 
 ## PROTECTION INFORMATION ##
@@ -453,6 +455,142 @@ pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##
 pla.print.title                           = Print your active protection
+
+## Amends ##
+pla.amends.title                                            = Protection summary
+pla.amends.heading.IP2016.noChanges                         = Your individual protection 2016 details
+pla.amends.heading.IP2014.noChanges                         = Your individual protection 2014 details
+
+pla.amends.heading.IP2016.changed                           = Check your answers and submit the changes
+pla.amends.heading.IP2014.changed                           = Check your answers and submit the changes
+
+pla.amends.cancelPara                                       = Alternatively, you can <a href="{0}" id="{1}">cancel the changes</a> and go back.
+
+pla.amends.CurrentPensions.IP2016.Amt                       = What were your UK pensions worth on 5 April 2016?
+pla.amends.CurrentPensions.IP2016.Amt.changeHint            = Change the amount that your pensions were worth on 5 April 2016
+pla.amends.CurrentPensions.IP2014.Amt                       = What were your UK pensions worth on 5 April 2014?
+pla.amends.CurrentPensions.IP2014.Amt.changeHint            = Change the amount that your pensions were worth on 5 April 2014
+
+pla.amends.PensionsTakenBefore.IP2016.YesNo                 = Did you get an income from any of your pensions before 6 April 2006?
+pla.amends.PensionsTakenBefore.IP2016.YesNo.changeHint      = Change whether you received an income from any of your pensions before 6 April 2006
+pla.amends.PensionsTakenBefore.IP2016.Amt                   = — What''s the value of the pensions you took before 6 April 2006?
+pla.amends.PensionsTakenBefore.IP2016.Amt.changeHint        = Change the value of the pensions you took before 6 April 2006
+pla.amends.PensionsTakenBefore.IP2014.YesNo                 = Did you get an income from any of your pensions before 6 April 2006?
+pla.amends.PensionsTakenBefore.IP2014.YesNo.changeHint      = Change whether you received an income from any of your pensions before 6 April 2006
+pla.amends.PensionsTakenBefore.IP2014.Amt                   = — What''s the value of the pensions you took before 6 April 2006?
+pla.amends.PensionsTakenBefore.IP2014.Amt.changeHint        = Change the value of the pensions you took before 6 April 2006
+
+pla.amends.PensionsTakenBetween.IP2016.YesNo                = Before 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
+pla.amends.PensionsTakenBetween.IP2016.YesNo.changeHint     = Change whether you got any money from your pensions before 5 April 2016?
+pla.amends.PensionsTakenBetween.IP2016.Amt                  = — How much lifetime allowance have you used?
+pla.amends.PensionsTakenBetween.IP2016.Amt.changeHint       = Change the amount of lifetime allowance you used
+pla.amends.PensionsTakenBetween.IP2014.YesNo                = Before 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
+pla.amends.PensionsTakenBetween.IP2014.YesNo.changeHint     = Change whether you got any money from your pensions before 5 April 2014?
+pla.amends.PensionsTakenBetween.IP2014.Amt                  = — How much lifetime allowance have you used?
+pla.amends.PensionsTakenBetween.IP2014.Amt.changeHint       = Change the amount of lifetime allowance you used
+
+pla.amends.OverseasPensions.IP2016.YesNo                    = Have you put money into a pension scheme held overseas?
+pla.amends.OverseasPensions.IP2016.YesNo.changeHint         = Change whether you put money into a pension scheme held overseas
+pla.amends.OverseasPensions.IP2016.Amt                      = — How much did you contribute?
+pla.amends.OverseasPensions.IP2016.Amt.changeHint           = Change how much you contributed to your overseas pension
+pla.amends.OverseasPensions.IP2014.YesNo                    = Have you put money into a pension scheme held overseas?
+pla.amends.OverseasPensions.IP2014.YesNo.changeHint         = Change whether you put money into a pension scheme held overseas
+pla.amends.OverseasPensions.IP2014.Amt                      = — How much did you contribute?
+pla.amends.OverseasPensions.IP2014.Amt.changeHint           = Change how much you contributed to your overseas pension
+pla.amends.totalValueOfPensions                             = Total value of pensions
+pla.amends.pageBreadcrumb                                   = Change your protection details
+pla.amends.declaration                                      = The information that I have provided is true and complete to the best of my knowledge and belief.
+pla.amends.submit                                           = Submit your changes
+
+
+### AMENDS RESULTS MESSAGES ###
+pla.activeAmend.title                                       = Protection amended
+pla.activeAmend.allowanceSubHeading                         = Your protected lifetime allowance is
+pla.activeAmend.protectionDetailsPara                       = Your new protection details are shown below.
+pla.activeAmend.whatNextHeading                             = What happens next?
+pla.activeAmend.whatNextContent                             = Give these details to your pension provider when you decide to take money from your pension.
+pla.activeAmend.viewDetails                                 = You can view these details in your
+pla.activeAmend.viewDetailsLinkText                         = personal tax account
+
+pla.inactiveAmend.title                                     = Protection amended
+
+amendResultCode.25.heading  = You''re no longer entitled to individual protection 2014
+amendResultCode.25.1        = This is because your total pension savings are below £1,250,001.
+amendResultCode.25.2        = If you''ve already started taking your pension, you''ll need to tell your pension provider that you''ve lost individual protection 2014.
+
+amendResultCode.26.heading  = You''re no longer entitled to individual protection 2014
+amendResultCode.26.1        = This is because your total pension savings are below £1,250,001.
+amendResultCode.26.2        = However, you already have enhanced protection which will remain active. If you lose enhanced protection, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.27.heading  = You''re no longer entitled to individual protection 2014
+amendResultCode.27.1        = This is because your total pension savings are below £1,250,001.
+amendResultCode.27.2        = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.28.heading  = You''re no longer entitled to individual protection 2014
+amendResultCode.28.1        = This is because your total pension savings are below £1,250,001.
+amendResultCode.28.2        = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.29.heading  = You''re no longer entitled to individual protection 2014
+amendResultCode.29.1        = This is because your total pension savings are below £1,250,001.
+amendResultCode.29.2        = However, you already had fixed protection 2016 which has now become active. You can view details of this protection in your personal tax account.
+amendResultCode.29.3        = If you lose fixed protection 2016, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.30.heading  = You''ve amended individual protection 2014
+amendResultCode.30.1        = As you already have enhanced protection in place, individual protection 2014 will only become active if you lose enhanced protection.
+amendResultCode.30.2        = If this happens, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.31.heading  = You''ve amended individual protection 2014
+amendResultCode.31.1        = As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
+amendResultCode.31.2        = If this happens, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.32.heading  = You''ve amended individual protection 2014
+amendResultCode.33.1        = As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
+amendResultCode.34.2        = If this happens, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.33.heading  = You''ve amended individual protection 2014
+
+amendResultCode.34.heading  = You''ve amended individual protection 2014
+
+amendResultCode.35.heading  = You''re no longer entitled to individual protection 2016
+amendResultCode.35.1        = This is because your total pension savings are below £1,000,001.
+amendResultCode.35.2        = If you''ve already started taking your pension, you''ll need to tell your pension provider that you''ve lost individual protection 2016.
+
+amendResultCode.36.heading  = You''re no longer entitled to individual protection 2016
+amendResultCode.36.1        = This is because your total pension savings are below £1,000,001.
+amendResultCode.36.2        = However, you already have enhanced protection which will remain active. If you lose enhanced protection, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.37.heading  = You''re no longer entitled to individual protection 2016
+amendResultCode.37.1        = This is because your total pension savings are below £1,000,001.
+amendResultCode.37.2        = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.38.heading  = You''re no longer entitled to individual protection 2016
+amendResultCode.38.1        = This is because your total pension savings are below £1,000,001.
+amendResultCode.38.2        = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.39.heading  = You''re no longer entitled to individual protection 2016
+amendResultCode.39.1        = This is because your total pension savings are below £1,000,001.
+amendResultCode.39.2        = However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.40.heading  = You''ve amended individual protection 2016
+amendResultCode.40.1        = As you already have enhanced protection in place, individual protection 2016 will only become active if you lose enhanced protection.
+amendResultCode.40.2        = If this happens, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.41.heading  = You''ve amended individual protection 2016
+amendResultCode.41.1        = As you already have fixed protection in place, individual protection 2016 will only become active if you lose fixed protection.
+amendResultCode.41.2        = If this happens, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.42.heading  = You''ve amended individual protection 2016
+amendResultCode.42.1        = As you already have fixed protection 2014 in place, individual protection 2016 will only become active if you lose fixed protection 2014.
+amendResultCode.42.2        = If this happens, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.43.heading  = You''ve amended individual protection 2016
+amendResultCode.43.1        = As you already have fixed protection 2016 in place, individual protection 2016 will only become active if you lose fixed protection 2016.
+amendResultCode.43.2        = If this happens, you must tell HMRC Pension Schemes Services.
+
+amendResultCode.44.heading  = You''ve amended individual protection 2016
+
+
+
 
 
 ### RESULTS MESSAGES ###

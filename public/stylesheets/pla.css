@@ -31,3 +31,24 @@
 .grid-wrapper {
 	margin-left: 0px;
 }
+
+.has-child-item {
+    border: none;
+}
+
+.grey-background {
+    border-top: 3px solid #ccc;
+    border-bottom: 3px solid #ccc;
+    background-color: #F8F8F8;
+}
+
+.total-font {
+    font-size: 19px;
+    line-height: 1.3157894737;
+    font-weight: 400;
+}
+
+.form-hidden {
+    display: none;
+    visibility: hidden;
+}

@@ -16,13 +16,13 @@
 
 package connectors
 
+import common.Exceptions
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json.{JsValue, Json}
 import scala.concurrent.Future
 import config.WSHttp
-import utils.Constants
 import enums.ApplicationType
 import constructors.IPApplicationConstructor
 
@@ -66,6 +66,12 @@ trait PLAConnector {
 
   def readProtections(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     http.GET[HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections")
+  }
+
+  def amendProtection(nino: String, protection: ProtectionModel)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+    val id = protection.protectionID.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino))
+    val requestJson = Json.toJson[ProtectionModel](protection)
+    http.PUT[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id", requestJson)
   }
 }
 

@@ -16,10 +16,12 @@
 
 package controllers
 
+import common.{Helpers, Strings}
 import models._
 import enums.ApplicationType
-import auth.{PLAUser, AuthorisedForPLA}
-import config.{FrontendAppConfig,FrontendAuthConnector}
+import auth.{AuthorisedForPLA, PLAUser}
+import config.{FrontendAppConfig, FrontendAuthConnector}
+import models.amendModels.AmendProtectionModel
 import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
@@ -28,7 +30,10 @@ import uk.gov.hmrc.play.http._
 import play.api.libs.json.Json
 import constructors.{DisplayConstructors, ResponseConstructors}
 import connectors.{KeyStoreConnector, PLAConnector}
+import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html._
+
+import scala.concurrent.Future
 
 
 object ReadProtectionsController extends ReadProtectionsController with ServicesConfig {
@@ -51,13 +56,13 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
 
   val currentProtections = AuthorisedByAny.async {
     implicit user =>  implicit request =>
-    plaConnector.readProtections(user.nino.get).map { response =>
+    plaConnector.readProtections(user.nino.get).flatMap { response =>
       response.status match {
         case 200 => redirectFromSuccess(response)
-        case 423 => Locked(pages.result.manualCorrespondenceNeeded())
+        case 423 => Future.successful(Locked(pages.result.manualCorrespondenceNeeded()))
         case num => {
           Logger.error(s"unexpected status $num passed to currentProtections for nino: ${user.nino}")
-          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+          Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
         }
       }
     }.recover{
@@ -67,23 +72,44 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
     }
   }
 
-  def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Result = {
-    responseConstructors.createTransformedReadResponseModelFromJson(Json.parse(response.body)) match {
-      case Some(model) => saveAndDisplayExistingProtections(model)
-      case _ => {
-        Logger.error(s"unable to create existing protections model from microservice response for nino: ${user.nino}")
-        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-      }
+  def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
+    responseConstructors.createTransformedReadResponseModelFromJson(Json.parse(response.body)).map {
+      readResponseModel =>
+        saveAndDisplayExistingProtections(readResponseModel)
+    }.getOrElse{
+      Logger.error(s"unable to create transformed read response model from microservice response for nino: ${user.nino}")
+      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
+  }
+
+  def saveAndDisplayExistingProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Future[Result] = {
+
+    val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
+    for {
+      stepOne <- saveActiveProtection(model.activeProtection)
+      stepTwo <- saveAmendableProtections(model)
+    } yield Ok(pages.existingProtections.existingProtections(displayModel))
 
   }
 
-  def saveAndDisplayExistingProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Result = {
-    model.activeProtection.map { activeModel =>
-      keyStoreConnector.saveData[ProtectionModel]("openProtection", activeModel)
-    }
-    val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
-    Ok(pages.existingProtections.existingProtections(displayModel))
+  def saveActiveProtection(activeModel: Option[ProtectionModel])(implicit request: Request[AnyContent]): Future[Boolean] = {
+    activeModel.map { model =>
+      keyStoreConnector.saveData[ProtectionModel]("openProtection", model).map { cacheMap =>
+        true
+      }
+    }.getOrElse(Future.successful(true))
+  }
+
+  def saveAmendableProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Future[Seq[CacheMap]] = {
+    Future.sequence(getAmendableProtections(model).map(x => saveProtection(x)))
+  }
+
+  def getAmendableProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] = {
+    model.inactiveProtections.filter(Helpers.protectionIsAmendable) ++ model.activeProtection.filter(Helpers.protectionIsAmendable)
+  }
+
+  def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]): Future[CacheMap] = {
+    keyStoreConnector.saveData[AmendProtectionModel](Strings.keyStoreProtectionName(protection), AmendProtectionModel(protection, protection))
   }
 
 }

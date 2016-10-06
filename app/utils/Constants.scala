@@ -42,4 +42,6 @@ object Constants {
     val ip14RelevantAmountThreshold = 1250001.0
 
     val activeProtectionCodes = List(22,23,12,3,4,8)
+
+    val activeAmendmentCodes = List(33,34,44)
 }
