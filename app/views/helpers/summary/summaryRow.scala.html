@@ -1,35 +1,42 @@
 @import play.api.mvc.Call
 @import controllers.SummaryController
 
-@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], boldText: Boolean)
+@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], boldText: Boolean, firstRow: Boolean, isPsoSection: Boolean)
 
 @boldString = {"-bold"}
 
-<div class="grid-wrapper">
-    <div class="grid grid-1-2">
-        <div class="inner-block">
-            <span @if(SummaryController.recordDataMetrics(rowID)){data-metrics = "summary:@rowID:@{displayValues(0)}"}></span>
-            <span class='@if(boldText){bold-}small' id="@{rowID}QuestionText">@Messages(s"pla.summary.questions.$rowID")</span>
-        </div>
-    </div>
-    <div class="grid grid-1-4">
-        <div class="inner-block">
-            @for((displayValue, index) <- displayValues.zipWithIndex) {
-                <div>
-                    <span id="@{rowID}DisplayValue@index" class='@if(boldText){bold-}medium'>@displayValue</span>
-                </div>
-            }
-        </div>
-    </div>
+@if(rowID == "totalPensionsAmt"){
+    <tr class="grey-background">
+        <td class="total-font" id="total-message">@Messages("pla.summary.questions.totalPensionsAmt")</td>
+        <td class="total-font" id="total-amount">@displayValues.head</td>
+        <td></td>
+    </tr>
 
-    <div class="grid grid-1-4">
-        <div class="inner-block">
-            @if(changeLinkCall.isDefined) {
-                <div>
-                    <a class="font-xsmall" id="@{rowID}ChangeLink" href=@changeLinkCall.get>@Messages("pla.summary.change")</a>
-                    <span class="visuallyhidden">@Messages(s"pla.summary.hiddenLinkText.$rowID")</span>
-                </div>
-            }
-        </div>
-    </div>
-</div>
+} else {
+
+<tr>
+    <td class="@if(firstRow){has-child-item}">
+        <span @if(SummaryController.recordDataMetrics(rowID)){data-metrics = "summary:@rowID:@{displayValues(0)}"}></span>
+        <span class='@if(boldText){bold-}small' id="@{rowID}QuestionText">@Messages(s"pla.summary.questions.$rowID")</span>
+    </td>
+    @if(isPsoSection && (displayValues.size != 2)){
+        <td></td>
+    }
+
+    @for((displayValue, index) <- displayValues.zipWithIndex) {
+    <td class="@if(firstRow){has-child-item}">
+        <span id="@{rowID}DisplayValue@index" class='@if(boldText){bold-}medium'>@displayValue</span>
+    </td>
+    }
+
+    @if(changeLinkCall.isDefined) {
+    <td class="@if(firstRow){has-child-item}">
+        <a class="font-xsmall" id="@{rowID}ChangeLink" href=@changeLinkCall.get>@Messages("pla.summary.change")</a>
+        <span class="visuallyhidden">@Messages(s"pla.summary.hiddenLinkText.$rowID")</span>
+    </td>
+    }
+
+</tr>
+}
+
+

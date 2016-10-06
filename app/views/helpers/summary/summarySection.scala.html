@@ -1,9 +1,8 @@
-@(section: SummarySectionModel)
+@(section: SummarySectionModel, isPsoSection: Boolean)
 
-    @for((row, index) <- section.rows.zipWithIndex) {
-        @summaryRow(row.rowID, row.displayValues, row.changeLinkCall, row.boldText)
-        @if(index < section.rows.length.-(1)) {
-            <div class="grid-divider divider-margin"></div>
-        }
-    }
-<div class="grid-divider divider-margin divider-thick"></div>
+@section.rows.headOption.map { firstRow =>
+    @summaryRow(firstRow.rowID, firstRow.displayValues, firstRow.changeLinkCall,firstRow.boldText, section.rows.tail.nonEmpty, isPsoSection)
+}
+@section.rows.tail.map { otherRow =>
+    @summaryRow(otherRow.rowID, otherRow.displayValues, otherRow.changeLinkCall, otherRow.boldText, false, isPsoSection)
+}
