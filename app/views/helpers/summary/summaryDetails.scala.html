@@ -1,5 +1,6 @@
 @import play.api.data._
 @import enums.ApplicationType
+@import config.FrontendAppConfig
 
 @(summary: SummaryModel)
 
@@ -7,31 +8,41 @@
     @summaryError(Messages("pla.summary.errorSummaryLabel"), summary.invalidRelevantAmount, summary.protectionType.toString)
 </div>
 
-<div>
-    <div class="grid grid-2-3">
-        <h1 class="heading-large">@Messages("pla.summary.pageHeading")</h1>
-    </div>
-</div>
+<h1 class="heading-large" id ="page-heading">@Messages("pla.summary.pageHeading")</h1>
+
 
 <div class="grid-wrapper"></div>
 
-<section>
-    <h2 class="heading-large">@Messages("pla.summary.pensionsHeading")</h2>
+    <table>
+    <thead>
+        <tr>
+            <th colspan="3">
+                @Messages("pla.summary.pensionsHeading")
+            </th>
+        </tr>
+    </thead>
+
 
     @for(section <- summary.pensionContributionSections) {
+
         @summarySection(section)
+
     }
-</section>
+    </table>
+    <table>
 
-<div>&nbsp;</div>
+    <thead>
+        <tr>
+            <th colspan="4">
+                @Messages("pla.summary.psosHeading")
+            </th>
+        </tr>
+    </thead>
 
-<section>
-    <h2 class="heading-large">@Messages("pla.summary.psosHeading")</h2>
-
-    @for(section <- summary.psoDetailsSections) {
-        @summarySection(section)
-    }
-</section>
+        @for(section <- summary.psoDetailsSections) {
+            @summarySection(section)
+        }
+    </table>
 
 <div class="declaration">
     @if(summary.protectionType == ApplicationType.IP2016) {
