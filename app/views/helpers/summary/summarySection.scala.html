@@ -1,8 +1,8 @@
-@(section: SummarySectionModel, isPsoSection: Boolean)
+@(section: SummarySectionModel)
 
 @section.rows.headOption.map { firstRow =>
-    @summaryRow(firstRow.rowID, firstRow.displayValues, firstRow.changeLinkCall,firstRow.boldText, section.rows.tail.nonEmpty, isPsoSection)
+    @summaryRow(firstRow.rowID, firstRow.displayValues, firstRow.changeLinkCall,firstRow.boldText, section.rows.tail.nonEmpty)
 }
 @section.rows.tail.map { otherRow =>
-    @summaryRow(otherRow.rowID, otherRow.displayValues, otherRow.changeLinkCall, otherRow.boldText, false, isPsoSection)
+    @summaryRow(otherRow.rowID, otherRow.displayValues, otherRow.changeLinkCall, otherRow.boldText, false)
 }

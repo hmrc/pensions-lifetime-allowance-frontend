@@ -1,7 +1,7 @@
 @import play.api.mvc.Call
 @import controllers.SummaryController
 
-@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], boldText: Boolean, firstRow: Boolean, isPsoSection: Boolean)
+@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], boldText: Boolean, firstRow: Boolean)
 
 @boldString = {"-bold"}
 
@@ -19,16 +19,12 @@
         <span @if(SummaryController.recordDataMetrics(rowID)){data-metrics = "summary:@rowID:@{displayValues(0)}"}></span>
         <span class='@if(boldText){bold-}small' id="@{rowID}QuestionText">@Messages(s"pla.summary.questions.$rowID")</span>
     </td>
-    @if(isPsoSection && (displayValues.size != 2)){
-        <td></td>
-    }
 
-    @for((displayValue, index) <- displayValues.zipWithIndex) {
     <td class="@if(firstRow){has-child-item}">
-        <span id="@{rowID}DisplayValue@index" class='@if(boldText){bold-}medium'>@displayValue</span>
-    </td>
+    @for((displayValue, index) <- displayValues.zipWithIndex) {
+        <span id="@{rowID}DisplayValue@index" class='@if(boldText){bold-}medium'>@displayValue</span></br>
     }
-
+    </td>
     @if(changeLinkCall.isDefined) {
     <td class="@if(firstRow){has-child-item}">
         <a class="font-xsmall" id="@{rowID}ChangeLink" href=@changeLinkCall.get>@Messages("pla.summary.change")</a>

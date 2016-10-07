@@ -25,7 +25,7 @@
 
     @for(section <- summary.pensionContributionSections) {
 
-        @summarySection(section, false)
+        @summarySection(section)
 
     }
     </table>
@@ -40,7 +40,7 @@
     </thead>
 
         @for(section <- summary.psoDetailsSections) {
-            @summarySection(section, true)
+            @summarySection(section)
         }
     </table>
 
