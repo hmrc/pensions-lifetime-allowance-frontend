@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package forms
+package models
 
-import play.api.i18n.Messages
-import play.api.data._
-import play.api.data.Forms._
-import models._
+import play.api.libs.json.Json
 
-object PensionDebitsForm {
-  val pensionDebitsForm = Form(
-    mapping(
-      "pensionDebits" -> optional(text).verifying(Messages("pla.pensionDebits.mandatoryErr"), {_.isDefined})
-    )(PensionDebitsAmtModel.apply)(PensionDebitsAmtModel.unapply)
-  )
+case class PensionDebitModel(startDate: String, amount: Double)
+
+object PensionDebitModel {
+  implicit val pdFormat = Json.format[PensionDebit]
 }

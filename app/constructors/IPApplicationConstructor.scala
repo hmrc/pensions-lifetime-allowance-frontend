@@ -87,7 +87,7 @@ object IPApplicationConstructor {
     val relevantAmount = amounts.flatten.sum
 
     
-    val numPSOs = data.getEntry[PensionDebitsModel](nameString("pensionDebits")) match {
+    val numPSOs = data.getEntry[PensionDebitsAmtModel](nameString("pensionDebits")) match {
       case Some(pdModel) => pdModel.pensionDebits match {
         case Some("yes") =>  data.getEntry[NumberOfPSOsModel](nameString("numberOfPSOs")) match {
                                 case Some(model) => model.numberOfPSOs.getOrElse("0").toInt
