@@ -43,6 +43,8 @@ trait UnauthorisedController extends FrontendController {
         case IdentityVerificationResult.Incomplete => unauthorised()
         case IdentityVerificationResult.PreconditionFailed => unauthorised()
         case IdentityVerificationResult.UserAborted => unauthorised()
+        case IdentityVerificationResult.FailedIV => unauthorised()
+        case IdentityVerificationResult.UnknownOutcome => unauthorised()
       }
     } getOrElse Future.successful(unauthorised()) // 2FA returns no journeyId
 
