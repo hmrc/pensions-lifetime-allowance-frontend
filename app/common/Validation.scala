@@ -63,7 +63,7 @@ object Validation {
     val overseasPensionsModel = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
     val currentPensionsModel = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
 
-    val PensionDebitsAmtModel = data.getEntry[PensionDebitsAmtModel](nameString("pensionDebits"))
+    val PensionDebitsAmtModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
     val numberOfPSOsModel = data.getEntry[NumberOfPSOsModel](nameString("numberOfPSOs"))
 
     def validPensionData(): Boolean = {

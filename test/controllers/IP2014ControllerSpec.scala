@@ -63,8 +63,8 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
           .thenReturn(Future.successful(data))
     }
 
-    def pensionDebitsKeystoreSetup(data: Option[PensionDebitsAmtModel]) = {
-        when(mockKeyStoreConnector.fetchAndGetFormData[PensionDebitsAmtModel](Matchers.eq("ip14PensionDebits"))(Matchers.any(), Matchers.any()))
+    def pensionDebitsKeystoreSetup(data: Option[PensionDebitsModel]) = {
+        when(mockKeyStoreConnector.fetchAndGetFormData[PensionDebitsModel](Matchers.eq("ip14PensionDebits"))(Matchers.any(), Matchers.any()))
           .thenReturn(Future.successful(data))
     }
 
@@ -619,40 +619,40 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PensionDebits)
             "return 200" in {
-                keystoreFetchCondition[PensionDebitsAmtModel](None)
+                keystoreFetchCondition[PensionDebitsModel](None)
                 status(DataItem.result) shouldBe 200
             }
 
             "take the user to the pension debits page" in {
-                keystoreFetchCondition[PensionDebitsAmtModel](None)
+                keystoreFetchCondition[PensionDebitsModel](None)
                 DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14PensionDebits.pageHeading")
             }
         }
 
         "supplied with a stored test model" should {
-            val testModel = new PensionDebitsAmtModel(Some("yes"))
+            val testModel = new PensionDebitsModel(Some("yes"))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PensionDebits)
 
             "return 200" in {
-                keystoreFetchCondition[PensionDebitsAmtModel](Some(testModel))
+                keystoreFetchCondition[PensionDebitsModel](Some(testModel))
                 status(DataItem.result) shouldBe 200
             }
 
             "take the user to the pension debits page" in {
-                keystoreFetchCondition[PensionDebitsAmtModel](None)
+                keystoreFetchCondition[PensionDebitsModel](None)
                 DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.ip14PensionDebits.pageHeading")
             }
 
             "return some HTML that" should {
 
                 "contain some text and use the character set utf-8" in {
-                    keystoreFetchCondition[PensionDebitsAmtModel](Some(testModel))
+                    keystoreFetchCondition[PensionDebitsModel](Some(testModel))
                     contentType(DataItem.result) shouldBe Some("text/html")
                     charset(DataItem.result) shouldBe Some("utf-8")
                 }
 
                 "have the radio option `yes` selected by default" in {
-                    keystoreFetchCondition[PensionDebitsAmtModel](Some(testModel))
+                    keystoreFetchCondition[PensionDebitsModel](Some(testModel))
                     DataItem.jsoupDoc.body.getElementById("pensionDebits-yes").parent.classNames().contains("selected") shouldBe true
                 }
             }
@@ -693,7 +693,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "not supplied with a stored model" should {
 
-            val testModel = PensionDebitsAmtModel(Some("yes"))
+            val testModel = PensionDebitsModel(Some("yes"))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14NumberOfPSOs)
             "return 200" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
@@ -727,7 +727,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "the user has declared they have no pension sharing orders" should {
 
-            val testModel = PensionDebitsAmtModel(Some("no"))
+            val testModel = PensionDebitsModel(Some("no"))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14NumberOfPSOs)
             "return 500" in {
                 keystoreFetchCondition[NumberOfPSOsModel](None)
@@ -745,7 +745,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "supplied with a pre-existing stored model" should {
 
-            val testPensionDebitsAmtModel = PensionDebitsAmtModel(Some("yes"))
+            val testPensionDebitsAmtModel = PensionDebitsModel(Some("yes"))
             val testModel = NumberOfPSOsModel(Some("3"))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14NumberOfPSOs)
             "return 200" in {

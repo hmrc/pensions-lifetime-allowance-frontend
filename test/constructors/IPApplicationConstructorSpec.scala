@@ -41,8 +41,8 @@ class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
 
     val validCurrentPensionsTuple = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
 
-    val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsAmtModel(Some("yes")))
-    val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsAmtModel(Some("no")))
+    val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
+    val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
     def numberOfPSOsTuple(numberOfPSOs: Int): (String, JsValue) = "numberOfPSOs" -> Json.toJson(NumberOfPSOsModel(Some(numberOfPSOs.toString)))
 

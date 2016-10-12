@@ -25,6 +25,6 @@ object PensionDebitsForm {
   val pensionDebitsForm = Form(
     mapping(
       "pensionDebits" -> optional(text).verifying(Messages("pla.pensionDebits.mandatoryErr"), {_.isDefined})
-    )(PensionDebitsAmtModel.apply)(PensionDebitsAmtModel.unapply)
+    )(PensionDebitsModel.apply)(PensionDebitsModel.unapply)
   )
 }

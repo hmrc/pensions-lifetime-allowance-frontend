@@ -16,7 +16,8 @@
 
 package constructors
 
-import enums.ApplicationType
+import common.Display
+import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import play.api.i18n.Messages
@@ -487,30 +488,36 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         uncrystallisedRights = Some(1000000.34)
       )
       val tstAmendProtecionModel = AmendProtectionModel(tstProtection, tstProtection)
-      val tstDisplaySections = Seq(
+      val tstPensionContributionDisplaySections = Seq(
         AmendDisplaySectionModel("CurrentPensions",Seq(
-          AmendDisplayRowModel("Amt", controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active"), "£1,000,000.34")
+          AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), "£1,000,000.34")
           )
         ),
         AmendDisplaySectionModel("PensionsTakenBefore", Seq(
-          AmendDisplayRowModel("YesNo", controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active"), "No")
+          AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), "No")
           )
         ),
         AmendDisplaySectionModel("PensionsTakenBetween", Seq(
-          AmendDisplayRowModel("YesNo", controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active"), "No")
+          AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active")), "No")
           )
         ),
         AmendDisplaySectionModel("OverseasPensions", Seq(
-          AmendDisplayRowModel("YesNo", controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active"), "Yes"),
-          AmendDisplayRowModel("Amt", controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active"), "£100,000")
+          AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), "Yes"),
+          AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), "£100,000")
           )
         )
+      )
+      val tstPsoDisplaySections = Seq(AmendDisplaySectionModel( ApplicationStage.CurrentPsos.toString, Seq(
+        AmendDisplayRowModel("YesNo", None, Messages("pla.base.yes")),
+        AmendDisplayRowModel("Amt", None, Display.currencyDisplayString(1234.56))))
       )
 
       DisplayConstructors.createAmendDisplayModel(tstAmendProtecionModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
-        sections = tstDisplaySections,
+        pensionContributionSections = tstPensionContributionDisplaySections,
+        psoAdded = false,
+        psoSections = tstPsoDisplaySections,
         totalAmount = "£1,100,000.34"
       )
     }

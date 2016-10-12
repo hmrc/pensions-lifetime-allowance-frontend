@@ -173,7 +173,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
 
     //PENSION DEBITS
     val pensionDebits = AuthorisedByAny.async { implicit user => implicit request =>
-        keyStoreConnector.fetchAndGetFormData[PensionDebitsAmtModel]("pensionDebits").map {
+        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").map {
             case Some(data) => Ok(pages.ip2016.pensionDebits(pensionDebitsForm.fill(data)))
             case None => Ok(pages.ip2016.pensionDebits(pensionDebitsForm))
         }
@@ -196,7 +196,7 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     //NUMBER OF PENSION SHARING ORDERS
     val numberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
 
-        keyStoreConnector.fetchAndGetFormData[PensionDebitsAmtModel]("pensionDebits").flatMap(PensionDebitsAmtModel => {
+        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").flatMap(PensionDebitsAmtModel => {
             PensionDebitsAmtModel.map {
                 completedModel => routeNumberOfPSOs(completedModel.pensionDebits.get)
             }.getOrElse {

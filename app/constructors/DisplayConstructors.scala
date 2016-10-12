@@ -146,7 +146,7 @@ trait DisplayConstructors {
 
     model.pensionDebits.flatMap { psoList =>
       if (psoList.length > 1) {
-        Logger.error("BAD THINGS")
+        Logger.error("More than one PSO amendment was found in the protection model, where only one is permitted.")
         None
       } else {
         psoList.headOption.map { debit =>

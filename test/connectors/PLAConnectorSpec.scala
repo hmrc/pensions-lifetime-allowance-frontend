@@ -52,12 +52,12 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
   val negativePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
   val negativeOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
   val validCurrentPensionsTuple = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
-  val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsAmtModel(Some("no")))
+  val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
   val negativeIP14PensionsTakenTuple = "ip14PensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
   val negativeIP14OverseasPensionsTuple = "ip14OverseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
   val validIP14CurrentPensionsTuple = "ip14CurrentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
-  val negativeIP14PensionDebitsTuple =  "ip14PensionDebits" -> Json.toJson(PensionDebitsAmtModel(Some("no")))
+  val negativeIP14PensionDebitsTuple =  "ip14PensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 

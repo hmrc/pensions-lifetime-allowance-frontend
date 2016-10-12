@@ -53,8 +53,8 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
     val validCurrentPensionsTuple = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
     val currentPensionsSummaryRow = SummaryRowModel("currentPensionsAmt", Some(controllers.routes.IP2016Controller.currentPensions()), false, "£1,001")
 
-    val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsAmtModel(Some("yes")))
-    val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsAmtModel(Some("no")))
+    val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
+    val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
     val negativePensionDebitsSummaryRow = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits()), false, "No")
     val positivePensionDebitsSummaryRow = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits()), false, "Yes")
 

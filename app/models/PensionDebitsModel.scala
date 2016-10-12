@@ -16,10 +16,12 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json._
 
-case class PensionDebitModel(startDate: String, amount: Double)
+case class PensionDebitsModel(pensionDebits: Option[String]) extends YesNoModel {
+  def getYesNoValue = pensionDebits.getOrElse("no")
+}
 
-object PensionDebitModel {
-  implicit val pdFormat = Json.format[PensionDebitModel]
+object PensionDebitsModel {
+  implicit val format = Json.format[PensionDebitsModel]
 }

@@ -86,13 +86,6 @@ case class AmendDisplayRowModel(rowId: String, changeLinkCall: Option[Call], dis
 
 }
 
-//case class AmendNoChangeDisplaySectionModel(
-//                                           sectionid: String,
-//                                           rows: Seq[AmendNoChangeDisplayRowModel]
-//                                           )
-//
-//case class AmendNoChangeDisplayRowModel(rowId: String, displayValue: String)
-
 case class ActiveAmendResultDisplayModel (
                                          protectionType: ApplicationType.Value,
                                          notificationId: String, protectedAmount: String,
