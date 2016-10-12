@@ -16,6 +16,7 @@
 
 package forms
 
+import common.Exceptions
 import common.Validation._
 import common.Dates._
 import models.amendModels.AmendPSODetailsModel
@@ -30,7 +31,17 @@ object AmendPSODetailsForm {
     val (day, month, year) = getFormDateValues(form)
     if(dateFieldsAlreadyInvalid(form)) form
     else if(!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
-    else if(dateBefore(day, month, year, Constants.minIP16PSODate)) form.withError("psoDay", Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
+    else validateMinDate(form, day, month, year)
+  }
+
+  private def validateMinDate(form: Form[AmendPSODetailsModel], day: Int, month: Int, year: Int): Form[AmendPSODetailsModel] = {
+    val pType = form("protectionType").value.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("validateMinDate", "protectionType")}
+    val (minDate, message) = pType match {
+      case "ip2016" => (Constants.minIP16PSODate, "IP16PsoDetails")
+      case "ip2014" => (Constants.minIP14PSODate, "IP14PsoDetails")
+    }
+
+    if(dateBefore(day, month, year, minDate)) form.withError("psoDay", Messages(s"pla.$message.errorDateOutOfRange"))
     else form
   }
 
