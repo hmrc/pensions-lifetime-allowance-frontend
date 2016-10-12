@@ -56,7 +56,10 @@ object AmendPSODetailsForm {
       "psoAmt"    -> bigDecimal
         .verifying(Messages("pla.psoDetails.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
         .verifying(Messages("pla.psoDetails.errorNegative"), psoAmt => isPositive(psoAmt.toDouble))
-        .verifying(Messages("pla.psoDetails.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
+        .verifying(Messages("pla.psoDetails.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble)),
+
+      "protectionType" -> text,
+      "status"         -> text
     )(AmendPSODetailsModel.apply)(AmendPSODetailsModel.unapply)
   )
 }

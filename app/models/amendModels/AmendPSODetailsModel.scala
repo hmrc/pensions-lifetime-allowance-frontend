@@ -23,18 +23,25 @@ trait AmendPSODetailsBaseModel {
   def psoMonth: Int
   def psoYear: Int
   def psoAmt: BigDecimal
+  def protectionType: String
+  def status: String
 }
 
-class AmendPSODetailsModel (val psoDay: Int, val psoMonth: Int, val psoYear: Int, val psoAmt: BigDecimal) extends AmendPSODetailsBaseModel {
+class AmendPSODetailsModel (val psoDay: Int,
+                            val psoMonth: Int,
+                            val psoYear: Int,
+                            val psoAmt: BigDecimal,
+                            val protectionType: String,
+                            val status: String) extends AmendPSODetailsBaseModel {
 }
 
 object AmendPSODetailsModel {
   implicit val format = Json.format[AmendPSODetailsModel]
 
-  def apply(psoDay: Option[Int], psoMonth: Option[Int], psoYear: Option[Int], psoAmt: BigDecimal) =
-    new AmendPSODetailsModel(psoDay.getOrElse(0), psoMonth.getOrElse(0), psoYear.getOrElse(0), psoAmt)
+  def apply(psoDay: Option[Int], psoMonth: Option[Int], psoYear: Option[Int], psoAmt: BigDecimal, protectionType: String, status: String) =
+    new AmendPSODetailsModel(psoDay.getOrElse(0), psoMonth.getOrElse(0), psoYear.getOrElse(0), psoAmt, protectionType, status)
 
-  def unapply(details: AmendPSODetailsModel): Option[(Option[Int], Option[Int], Option[Int], BigDecimal)] =
-    Some((Some(details.psoDay), Some(details.psoMonth), Some(details.psoYear), details.psoAmt))
+  def unapply(details: AmendPSODetailsModel): Option[(Option[Int], Option[Int], Option[Int], BigDecimal, String, String)] =
+    Some((Some(details.psoDay), Some(details.psoMonth), Some(details.psoYear), details.psoAmt, details.protectionType, details.status))
 
 }
