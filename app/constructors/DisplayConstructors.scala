@@ -138,7 +138,7 @@ trait DisplayConstructors {
 
   def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel = {
 //    print(s"\npensionDebitAmount: ${model.pensionDebitAmount}\npensionTotalAmount: ${model.pensionDebitTotalAmount}\nenteredAmount: ${model.pensionDebitEnteredAmount}\n")
-    createSection(model, ApplicationStage.PreviousPsos, model.pensionDebitTotalAmount)
+    createNoChangeSection(model, ApplicationStage.PreviousPsos, model.pensionDebitTotalAmount)
   }
 
 
@@ -155,19 +155,35 @@ trait DisplayConstructors {
   def createSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double]): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)
 
-//    print(s"\n\n\n\nApplication Stage: ${applicationStage.toString()}\nAmount: $amountOption\n\n\n")
-    createYesNoSection(applicationStage.toString, amendCall, amountOption)
+    createYesNoSection(applicationStage.toString, Some(amendCall), amountOption)
+  }
 
-
+  def createNoChangeSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double]): AmendDisplaySectionModel = {
+    createNoChangeYesNoSection(applicationStage.toString, amountOption)
   }
 
   def createCurrentPensionsSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)
     val currentPensions = protection.uncrystallisedRights.getOrElse(throw new Exceptions.OptionNotDefinedException("createCurrentPensionsSection","currentPensions",protection.protectionType.getOrElse("No protection type")))
-    AmendDisplaySectionModel(applicationStage.toString, Seq(AmendDisplayRowModel("Amt", amendCall, Display.currencyDisplayString(BigDecimal(currentPensions)))))
+    AmendDisplaySectionModel(applicationStage.toString, Seq(AmendDisplayRowModel("Amt", Some(amendCall), Display.currencyDisplayString(BigDecimal(currentPensions)))))
   }
 
-  def createYesNoSection(stage: String, amendCall: Call, amountOption: Option[Double]) = {
+  def createNoChangeYesNoSection(stage: String, amountOption: Option[Double]) = {
+    amountOption.fold(
+      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, Messages("pla.base.no"))))
+    )(amt =>
+      if(amt < 0.01) {
+        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, Messages("pla.base.no"))))
+      } else {
+        AmendDisplaySectionModel(stage, Seq(
+          AmendDisplayRowModel("YesNo", None, Messages("pla.base.yes")),
+          AmendDisplayRowModel("Amt", None, Display.currencyDisplayString(amt))
+        ))
+      }
+    )
+  }
+
+  def createYesNoSection(stage: String, amendCall: Option[Call], amountOption: Option[Double]) = {
     amountOption.fold(
       AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, Messages("pla.base.no"))))
     )(amt =>
