@@ -16,13 +16,15 @@
 
 package constructors
 
+import common.Strings._
 import common._
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
+import play.api.Logger
 import play.api.i18n.Messages
 import play.api.mvc.Call
-import utils.Constants
+import utils.{CallMap, Constants}
 
 object DisplayConstructors extends DisplayConstructors
 
@@ -115,36 +117,52 @@ trait DisplayConstructors {
     val totalAmount = Display.currencyDisplayString(BigDecimal(model.updatedProtection.relevantAmount.getOrElse(0.0)))
     val pcSections = createAmendPensionContributionSectionsFromProtection(model.updatedProtection)
     val protectionType  = Strings.protectionTypeString(model.updatedProtection.protectionType)
+    val pensionDebitAdded = model.updatedProtection.pensionDebits.isDefined
 
-    val psoSecs =  createPsoSectionFromProtectionModel(model.updatedProtection)
-
-    print(s"\n\nAmendProtectionModel: ${model}")
+    val psoSecs: Seq[AmendDisplaySectionModel] =  createPsoSectionFromProtectionModel(model.updatedProtection)
 
     AmendDisplayModel (
       protectionType = protectionType,
       amended = amended,
       pensionContributionSections = pcSections,
+      psoAdded = pensionDebitAdded,
       psoSections = psoSecs,
       totalAmount = totalAmount
     )
   }
 
   def createPsoSectionFromProtectionModel(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
-    val previousPsoSection = createPreviousPsoSection(protection)
-//    val currentPsoSection = createCurrentPsoSection(protection)
-//    val totalPsoAmtSection = createTotalPsoAmtSection()
-    Seq(previousPsoSection)
+    val previousPsoSection: AmendDisplaySectionModel = createPreviousPsoSection(protection)
+    val addedPsoSection: Option[Seq[AmendDisplaySectionModel]] = createCurrentPsoSection(protection)
+
+    Seq(previousPsoSection) ++ addedPsoSection.getOrElse(Seq())
   }
 
   def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel = {
     createNoChangeSection(model, ApplicationStage.PreviousPsos, model.pensionDebitTotalAmount)
   }
-//
-//  def createCurrentPsoSection(model: ProtectionModel): Seq[AmendDisplaySectionModel] = {
-//
-//  }
 
+  def createCurrentPsoSection(model: ProtectionModel): Option[Seq[AmendDisplaySectionModel]] = {
 
+    model.pensionDebits.flatMap { psoList =>
+      if (psoList.length > 1) {
+        Logger.error("BAD THINGS")
+        None
+      } else {
+        psoList.headOption.map { debit =>
+          //TODO change ID and add change call link
+          Seq(
+            AmendDisplaySectionModel("pensionDebits",
+              Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-psoDetails", None, debit.startDate, debit.amount.toString))
+            ),
+            AmendDisplaySectionModel("total-amount",
+              Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, (debit.amount + model.pensionDebitTotalAmount.getOrElse(0.0)).toString))
+            )
+          )
+        }
+      }
+    }
+  }
 
   def createAmendPensionContributionSectionsFromProtection(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
     val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)

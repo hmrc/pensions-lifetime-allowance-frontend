@@ -71,6 +71,11 @@
 
         }
     </table>
+    @if(!model.psoAdded){
+        <div>
+            <a href="" id="" >@Messages("pla.amends.addPsoLink")</a>
+        </div>
+    }
 
     @govHelpers.form(action = routes.AmendsController.amendProtection) {
         <div class="form-hidden">
