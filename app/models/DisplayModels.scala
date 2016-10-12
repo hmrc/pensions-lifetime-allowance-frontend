@@ -71,7 +71,8 @@ case class PrintDisplayModel (
 case class AmendDisplayModel (
                              protectionType: String,
                              amended: Boolean,
-                             sections: Seq[AmendDisplaySectionModel],
+                             pensionContributionSections: Seq[AmendDisplaySectionModel],
+                             psoSections : Seq[AmendDisplaySectionModel],
                              totalAmount: String
                                )
 

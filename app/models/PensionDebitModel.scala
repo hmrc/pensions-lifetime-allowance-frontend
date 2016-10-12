@@ -21,5 +21,5 @@ import play.api.libs.json.Json
 case class PensionDebitModel(startDate: String, amount: Double)
 
 object PensionDebitModel {
-  implicit val pdFormat = Json.format[PensionDebit]
+  implicit val pdFormat = Json.format[PensionDebitModel]
 }

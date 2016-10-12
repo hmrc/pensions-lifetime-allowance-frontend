@@ -113,18 +113,37 @@ trait DisplayConstructors {
   def createAmendDisplayModel(model: AmendProtectionModel): AmendDisplayModel = {
     val amended = modelsDiffer(model.originalProtection, model.updatedProtection)
     val totalAmount = Display.currencyDisplayString(BigDecimal(model.updatedProtection.relevantAmount.getOrElse(0.0)))
-    val sections = createAmendSectionsFromProtection(model.updatedProtection)
+    val pcSections = createAmendPensionContributionSectionsFromProtection(model.updatedProtection)
     val protectionType  = Strings.protectionTypeString(model.updatedProtection.protectionType)
+
+    val psoSecs =  createPsoSectionFromProtectionModel(model.updatedProtection)
+
+    print(s"\n\nAmendProtectionModel: ${model}")
 
     AmendDisplayModel (
       protectionType = protectionType,
       amended = amended,
-      sections = sections,
+      pensionContributionSections = pcSections,
+      psoSections = psoSecs,
       totalAmount = totalAmount
     )
   }
 
-  def createAmendSectionsFromProtection(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
+  def createPsoSectionFromProtectionModel(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
+    val previousPsoSection = createPreviousPsoSection(protection)
+//    val currentPsoSection = createCurrentPsoSection()
+//    val totalPsoAmtSection = createTotalPsoAmtSection()
+    Seq(previousPsoSection)
+  }
+
+  def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel = {
+//    print(s"\npensionDebitAmount: ${model.pensionDebitAmount}\npensionTotalAmount: ${model.pensionDebitTotalAmount}\nenteredAmount: ${model.pensionDebitEnteredAmount}\n")
+    createSection(model, ApplicationStage.PreviousPsos, model.pensionDebitTotalAmount)
+  }
+
+
+
+  def createAmendPensionContributionSectionsFromProtection(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
     val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)
     val pensionsTakenBeforeSection = createSection(protection, ApplicationStage.PensionsTakenBefore, protection.preADayPensionInPayment)
     val pensionsTakenBetweenSection = createSection(protection, ApplicationStage.PensionsTakenBetween, protection.postADayBenefitCrystallisationEvents)
@@ -135,7 +154,11 @@ trait DisplayConstructors {
 
   def createSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double]): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)
+
+//    print(s"\n\n\n\nApplication Stage: ${applicationStage.toString()}\nAmount: $amountOption\n\n\n")
     createYesNoSection(applicationStage.toString, amendCall, amountOption)
+
+
   }
 
   def createCurrentPensionsSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value): AmendDisplaySectionModel = {
