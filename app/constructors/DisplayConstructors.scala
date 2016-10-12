@@ -131,15 +131,18 @@ trait DisplayConstructors {
 
   def createPsoSectionFromProtectionModel(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
     val previousPsoSection = createPreviousPsoSection(protection)
-//    val currentPsoSection = createCurrentPsoSection()
+//    val currentPsoSection = createCurrentPsoSection(protection)
 //    val totalPsoAmtSection = createTotalPsoAmtSection()
     Seq(previousPsoSection)
   }
 
   def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel = {
-//    print(s"\npensionDebitAmount: ${model.pensionDebitAmount}\npensionTotalAmount: ${model.pensionDebitTotalAmount}\nenteredAmount: ${model.pensionDebitEnteredAmount}\n")
     createNoChangeSection(model, ApplicationStage.PreviousPsos, model.pensionDebitTotalAmount)
   }
+//
+//  def createCurrentPsoSection(model: ProtectionModel): Seq[AmendDisplaySectionModel] = {
+//
+//  }
 
 
 
