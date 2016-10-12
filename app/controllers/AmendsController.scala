@@ -262,7 +262,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(amendProtectionModel) => amendProtectionModel.updatedProtection.pensionDebits.map { debits =>
         routeFromPensionDebitsList(debits, protectionType, status)
-      }.getOrElse(Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm)))
+      }.getOrElse(Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status)))))
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend PSO details page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
@@ -271,7 +271,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
   def routeFromPensionDebitsList(debits: Seq[PensionDebitModel], protectionType: String, status: String)(implicit user: PLAUser, request: Request[AnyContent]): Result = {
     debits.length match {
-      case 0 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm))
+      case 0 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
       case 1 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head, protectionType, status))))
       case num => {
         Logger.error(s"$num pension debits recorded for user nino ${user.nino.getOrElse("NO NINO")} during amend journey")
@@ -283,6 +283,40 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   def createAmendPsoDetailsModel(psoDetails: PensionDebitModel, protectionType: String, status: String): AmendPSODetailsModel = {
     val (day, month, year) = Dates.extractDMYFromAPIDateString(psoDetails.startDate)
     AmendPSODetailsModel(Some(day), Some(month), Some(year), BigDecimal(psoDetails.amount), protectionType, status)
+  }
+
+  def createBlankAmendPsoDetailsModel(protectionType: String, status: String): AmendPSODetailsModel = {
+    AmendPSODetailsModel(psoDay = None, psoMonth = None, psoYear = None, psoAmt = 0, protectionType, status)
+  }
+
+  val submitAmendPsoDetails = AuthorisedByAny.async { implicit user => implicit request =>
+    amendPsoDetailsForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(pages.amends.amendPsoDetails(errors))),
+      success => {
+        val validatedForm = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.fill(success))
+        if (validatedForm.hasErrors) {
+          Future.successful(BadRequest(pages.amends.amendPsoDetails(validatedForm)))
+        } else {
+          val details = createPsoDetailsList(success)
+          for {
+            amendModel <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
+            storedModel <- updateAndSaveAmendModelWithPso(details, amendModel, Strings.keyStoreAmendFetchString(success.protectionType, success.status))
+          } yield Redirect(routes.AmendsController.amendsSummary(success.protectionType.toLowerCase, success.status.toLowerCase))
+        }
+      }
+    )
+  }
+
+  private def createPsoDetailsList(formModel: AmendPSODetailsModel): Option[List[PensionDebitModel]] = {
+    val date = Dates.apiDateFormat(formModel.psoDay, formModel.psoMonth, formModel.psoYear)
+    val amt = formModel.psoAmt.toDouble
+    Some(List(PensionDebitModel(startDate = date, amount = amt)))
+  }
+
+  private def updateAndSaveAmendModelWithPso(debits: Option[List[PensionDebitModel]], amendModelOption: Option[AmendProtectionModel], key: String)(implicit request: Request[AnyContent]) = {
+    val amendModel = amendModelOption.getOrElse {throw new Exceptions.RequiredValueNotDefinedException("updateAndSaveAmendModelWithPso", "amendModel")}
+    val newUpdatedProtection = amendModel.updatedProtection.copy(pensionDebits = debits)
+    keyStoreConnector.saveData[AmendProtectionModel](key, amendModel.copy(updatedProtection = newUpdatedProtection))
   }
 
   private def getRouteUsingModel(model: AmendValueModel)(implicit request: Request[AnyContent]) = {
