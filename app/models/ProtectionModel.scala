@@ -35,6 +35,7 @@ case class ProtectionModel (
                              pensionDebitEnteredAmount: Option[Double] = None,
                              pensionDebitStartDate: Option[String] = None,
                              pensionDebitTotalAmount: Option[Double] = None,
+                             pensionDebits: Option[List[PensionDebitModel]] = None,
                              notificationId: Option[Int] = None,
                              protectionReference: Option[String] = None
                              )

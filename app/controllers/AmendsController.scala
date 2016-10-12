@@ -16,10 +16,8 @@
 
 package controllers
 
-import java.text.DecimalFormat
-
 import auth.{PLAUser, AuthorisedForPLA}
-import common.{Display, Exceptions, Helpers, Strings}
+import common._
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
@@ -29,10 +27,12 @@ import forms.AmendOverseasPensionsForm
 import forms.AmendOverseasPensionsForm._
 import forms.AmendPensionsTakenBeforeForm
 import forms.AmendPensionsTakenBeforeForm._
-import forms.AmendPensionsTakenBetweenForm._
 import forms.AmendPensionsTakenBetweenForm
+import forms.AmendPensionsTakenBetweenForm._
+import forms.AmendPSODetailsForm
+import forms.AmendPSODetailsForm._
 import forms.AmendmentTypeForm._
-import models.AmendResponseModel
+import models.{PensionDebitModel, ProtectionModel, AmendResponseModel}
 import models.amendModels._
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Result, _}
@@ -256,6 +256,33 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
         }
       }
     )
+  }
+
+  def amendPsoDetails(protectionType: String, status: String) = AuthorisedByAny.async { implicit user => implicit request =>
+    keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
+      case Some(amendProtectionModel) => amendProtectionModel.updatedProtection.pensionDebits.map { debits =>
+        routeFromPensionDebitsList(debits, protectionType, status)
+      }.getOrElse(Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm)))
+      case _ =>
+        Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend PSO details page")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
+  }
+
+  def routeFromPensionDebitsList(debits: Seq[PensionDebitModel], protectionType: String, status: String)(implicit user: PLAUser, request: Request[AnyContent]): Result = {
+    debits.length match {
+      case 0 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm))
+      case 1 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head, protectionType, status))))
+      case num => {
+        Logger.error(s"$num pension debits recorded for user nino ${user.nino.getOrElse("NO NINO")} during amend journey")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+      }
+    }
+  }
+
+  def createAmendPsoDetailsModel(psoDetails: PensionDebitModel, protectionType: String, status: String): AmendPSODetailsModel = {
+    val (day, month, year) = Dates.extractDMYFromAPIDateString(psoDetails.startDate)
+    AmendPSODetailsModel(Some(day), Some(month), Some(year), BigDecimal(psoDetails.amount), protectionType, status)
   }
 
   private def getRouteUsingModel(model: AmendValueModel)(implicit request: Request[AnyContent]) = {

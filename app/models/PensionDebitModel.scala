@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package models.amendModels
+package models
 
-import models.ProtectionModel
 import play.api.libs.json.Json
 
-case class AmendProtectionModel (
-                                  originalProtection: ProtectionModel,
-                                  updatedProtection: ProtectionModel
-                                  )
+case class PensionDebitModel(startDate: String, amount: Double)
 
-object AmendProtectionModel {
-  implicit val format = Json.format[AmendProtectionModel]
+object PensionDebitModel {
+  implicit val pdFormat = Json.format[PensionDebitModel]
 }
-
-trait AmendValueModel
