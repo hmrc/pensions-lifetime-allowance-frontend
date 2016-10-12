@@ -196,8 +196,8 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     //NUMBER OF PENSION SHARING ORDERS
     val numberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
 
-        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").flatMap(PensionDebitsAmtModel => {
-            PensionDebitsAmtModel.map {
+        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").flatMap(PensionDebitsModel => {
+            PensionDebitsModel.map {
                 completedModel => routeNumberOfPSOs(completedModel.pensionDebits.get)
             }.getOrElse {
                 Logger.error(s"User with nino ${user.nino} navigated to IP16 number of PSOs when ip16PensionDebits was not recorded")

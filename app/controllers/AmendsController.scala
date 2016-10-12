@@ -61,10 +61,6 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   val responseConstructors: ResponseConstructors
   val plaConnector: PLAConnector
 
-  def dummy: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-    Future(Ok)
-  }
-
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {

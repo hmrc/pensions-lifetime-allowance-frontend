@@ -98,8 +98,6 @@ POST        /amend-protection/submit-amendment                                  
 GET         /amend-protection/amendment-outcome                                         controllers.AmendsController.amendmentOutcome
 GET         /amend-protection/:protectionType/:status                                   controllers.AmendsController.amendsSummary(protectionType, status)
 
-GET         /dummy                  controllers.AmendsController.dummy
-
 
 #Feedback routes
 GET         /feedback                                           controllers.FeedbackController.show

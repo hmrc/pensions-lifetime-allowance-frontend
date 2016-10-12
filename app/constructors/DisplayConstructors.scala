@@ -139,7 +139,7 @@ trait DisplayConstructors {
   }
 
   def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel = {
-    createNoChangeSection(model, ApplicationStage.PreviousPsos, model.pensionDebitTotalAmount)
+    createNoChangeSection(model, ApplicationStage.CurrentPsos, model.pensionDebitTotalAmount)
   }
 
   def createCurrentPsoSection(model: ProtectionModel): Option[Seq[AmendDisplaySectionModel]] = {
@@ -149,14 +149,21 @@ trait DisplayConstructors {
         Logger.error("More than one PSO amendment was found in the protection model, where only one is permitted.")
         None
       } else {
+        val psoAmendCall = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)
         psoList.headOption.map { debit =>
           //TODO change ID and add change call link
           Seq(
             AmendDisplaySectionModel("pensionDebits",
-              Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-psoDetails", None, debit.startDate, debit.amount.toString))
+              Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-psoDetails",
+                Some(psoAmendCall),
+                debit.startDate,
+                Display.currencyDisplayString(BigDecimal(debit.amount))))
             ),
             AmendDisplaySectionModel("total-amount",
-              Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, (debit.amount + model.pensionDebitTotalAmount.getOrElse(0.0)).toString))
+              Seq(AmendDisplayRowModel(
+                s"${ApplicationStage.CurrentPsos.toString}-currentTotal",
+                None,
+                Display.currencyDisplayString(BigDecimal(debit.amount + model.pensionDebitTotalAmount.getOrElse(0.0)))))
             )
           )
         }

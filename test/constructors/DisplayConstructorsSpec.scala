@@ -20,6 +20,7 @@ import common.Display
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
+import org.mockito.Matchers
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -508,9 +509,8 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         )
       )
       val tstPsoDisplaySections = Seq(AmendDisplaySectionModel( ApplicationStage.CurrentPsos.toString, Seq(
-        AmendDisplayRowModel("YesNo", None, Messages("pla.base.yes")),
-        AmendDisplayRowModel("Amt", None, Display.currencyDisplayString(1234.56))))
-      )
+        AmendDisplayRowModel("YesNo", None, Messages("pla.base.no"))
+      )))
 
       DisplayConstructors.createAmendDisplayModel(tstAmendProtecionModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
