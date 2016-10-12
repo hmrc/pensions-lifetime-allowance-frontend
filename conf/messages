@@ -285,6 +285,8 @@ pla.psoDetails.errorNegative                = Enter an amount that''s £0 or mor
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
 
+pla.amendPsoDetails.pageHeading             = Pension sharing order
+
 pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date after 5 April 2014
 pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date after 5 April 2016
 

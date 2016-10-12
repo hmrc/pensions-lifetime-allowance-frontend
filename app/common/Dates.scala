@@ -30,6 +30,11 @@ object Dates {
     LocalDate.parse(date.split("T")(0), dateFormat)
   }
 
+  def extractDMYFromAPIDateString(dateString: String): (Int, Int, Int) = {
+    val date = constructDateFromAPIString(dateString)
+    (date.getDayOfMonth, date.getMonthValue, date.getYear)
+  }
+
   def dateBefore(day: Int, month: Int, year: Int, date2: LocalDate): Boolean = {
     LocalDate.of(year, month, day).isBefore(date2)
   }
