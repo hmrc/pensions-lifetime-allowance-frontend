@@ -36,9 +36,10 @@ object AmendPSODetailsForm {
 
   private def validateMinDate(form: Form[AmendPSODetailsModel], day: Int, month: Int, year: Int): Form[AmendPSODetailsModel] = {
     val pType = form("protectionType").value.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("validateMinDate", "protectionType")}
-    val (minDate, message) = pType match {
+    val (minDate, message) = pType.toLowerCase match {
       case "ip2016" => (Constants.minIP16PSODate, "IP16PsoDetails")
       case "ip2014" => (Constants.minIP14PSODate, "IP14PsoDetails")
+      case other => {throw new Exceptions.RequiredValueNotDefinedException("validateMinDate", other)}
     }
 
     if(dateBefore(day, month, year, minDate)) form.withError("psoDay", Messages(s"pla.$message.errorDateOutOfRange"))
