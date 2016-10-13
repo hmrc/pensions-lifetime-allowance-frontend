@@ -990,7 +990,114 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     }
   }
 
+  "Calling the amendPsoDetails action" when {
 
+    val testProtectionNoPsoList = ProtectionModel (
+      psaCheckReference = Some("psaRef"),
+      protectionID = Some(1234),
+      pensionDebits = None
+    )
+
+    val testProtectionEmptyPsoList = ProtectionModel (
+      psaCheckReference = Some("psaRef"),
+      protectionID = Some(1234),
+      pensionDebits = Some(List.empty)
+    )
+
+    val testProtectionSinglePsoList = ProtectionModel (
+      psaCheckReference = Some("psaRef"),
+      protectionID = Some(1234),
+      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
+    )
+
+    val testProtectionMultiplePsoList = ProtectionModel (
+      psaCheckReference = Some("psaRef"),
+      protectionID = Some(1234),
+      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0), PensionDebitModel("2016-12-27", 11322.75)))
+    )
+
+    "there is no amendment model fetched from keystore" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2014", "open"))
+
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "there is no PSO list stored in the AmendProtectionModel" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2014", "open"))
+
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionNoPsoList, testProtectionNoPsoList)))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the amend PSO details page with no data completed" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amendPsoDetails.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
+        DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
+        DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
+      }
+    }
+
+    "there is an empty PSO list stored in the AmendProtectionModel" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2016", "open"))
+
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionEmptyPsoList, testProtectionEmptyPsoList)))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the amend PSO details page with no data completed" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amendPsoDetails.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
+        DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
+        DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
+      }
+    }
+
+    "there is a PSO list of one PSO stored in the AmendProtectionModel" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2016", "open"))
+
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the amend PSO details page with the correct data completed" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amendPsoDetails.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual "23"
+        DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual "12"
+        DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual "2016"
+        DataItem.jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "1000"
+      }
+    }
+
+    "there is a PSO list of more then one PSO stored in the AmendProtectionModel" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2016", "open"))
+
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionMultiplePsoList, testProtectionMultiplePsoList)))
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+  }
 
   "Submitting Amend PSOs data" when {
 
@@ -1005,7 +1112,9 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("status", "open"),
         ("existingPSO", "true")
       )
+
       "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         status(DataItem.result) shouldBe 303
       }
 
