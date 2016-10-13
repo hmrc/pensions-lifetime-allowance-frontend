@@ -117,7 +117,9 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   val tstAmendDisplayModel = AmendDisplayModel(
     protectionType = "IP2014",
     amended = true,
-    sections = Seq.empty,
+    pensionContributionSections = Seq.empty,
+    psoAdded = false,
+    psoSections = Seq.empty,
     totalAmount = "£1,100,000"
   )
 
