@@ -267,7 +267,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
         routeFromPensionDebitsList(debits, protectionType, status)
       }.getOrElse(Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status)))))
       case _ =>
-        Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend PSO details page")
+        Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when sading the amend PSO details page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
@@ -285,11 +285,11 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
   def createAmendPsoDetailsModel(psoDetails: PensionDebitModel, protectionType: String, status: String): AmendPSODetailsModel = {
     val (day, month, year) = Dates.extractDMYFromAPIDateString(psoDetails.startDate)
-    AmendPSODetailsModel(Some(day), Some(month), Some(year), Display.currencyInputDisplayFormat(psoDetails.amount), protectionType, status)
+    AmendPSODetailsModel(Some(day), Some(month), Some(year), Display.currencyInputDisplayFormat(psoDetails.amount), protectionType, status, true)
   }
 
   def createBlankAmendPsoDetailsModel(protectionType: String, status: String): AmendPSODetailsModel = {
-    AmendPSODetailsModel(psoDay = None, psoMonth = None, psoYear = None, psoAmt = Display.currencyInputDisplayFormat(0.0), protectionType, status)
+    AmendPSODetailsModel(psoDay = None, psoMonth = None, psoYear = None, psoAmt = Display.currencyInputDisplayFormat(0.0), protectionType, status, false)
   }
 
   val submitAmendPsoDetails = AuthorisedByAny.async { implicit user => implicit request =>

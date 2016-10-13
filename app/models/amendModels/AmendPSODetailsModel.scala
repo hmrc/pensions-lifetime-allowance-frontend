@@ -19,11 +19,12 @@ package models.amendModels
 import play.api.libs.json._
 
 case class AmendPSODetailsModel (psoDay: Option[Int],
-                            psoMonth: Option[Int],
-                            psoYear: Option[Int],
-                            psoAmt: BigDecimal,
-                            protectionType: String,
-                            status: String)  {
+                                  psoMonth: Option[Int],
+                                  psoYear: Option[Int],
+                                  psoAmt: BigDecimal,
+                                  protectionType: String,
+                                  status: String,
+                                  existingPSO: Boolean)  {
 }
 
 object AmendPSODetailsModel {
