@@ -46,8 +46,8 @@ object Helpers {
       case PensionsTakenBetween => controllers.routes.AmendsController.amendPensionsTakenBetween(protectionType, status)
       case OverseasPensions     => controllers.routes.AmendsController.amendOverseasPensions(protectionType, status)
       case CurrentPensions      => controllers.routes.AmendsController.amendCurrentPensions(protectionType, status)
+      case CurrentPsos          => controllers.routes.AmendsController.amendPsoDetails(protectionType, status)
     }
-
   }
 
   def totalValue(protection: ProtectionModel): Double = {

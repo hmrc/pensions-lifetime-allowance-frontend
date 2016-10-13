@@ -504,6 +504,16 @@ pla.amends.pageBreadcrumb                                   = Change your protec
 pla.amends.declaration                                      = The information that I have provided is true and complete to the best of my knowledge and belief.
 pla.amends.submit                                           = Submit your changes
 
+pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
+pla.amends.CurrentPsos.IP2016.Amt                           = - Total of previous pension sharing orders
+pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Date and amount of pension sharing order
+
+pla.amends.CurrentPsos.IP2014.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2014?
+pla.amends.CurrentPsos.IP2014.Amt                           = - Total of previous pension sharing orders
+pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails      = Date and amount of pension sharing order
+pla.summary.questions.totalPsoAmt                           = Total value of pension sharing orders
+
+pla.amends.addPsoLink                                       = Add a pension sharing order
 
 ### AMENDS RESULTS MESSAGES ###
 pla.activeAmend.title                                       = Protection amended

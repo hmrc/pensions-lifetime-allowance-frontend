@@ -64,9 +64,12 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
     val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
-      case Some(amendModel) => Ok(views.html.pages.amends.amendSummary(
+      case Some(amendModel) =>
+        Ok(views.html.pages.amends.amendSummary(
         displayConstructors.createAmendDisplayModel(amendModel),
+        status,
         amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))
+
       ))
       case _ =>
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend summary page")

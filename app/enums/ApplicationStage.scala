@@ -23,6 +23,8 @@ object ApplicationStage extends Enumeration {
   val PensionsTakenBetween = Value
   val OverseasPensions = Value
   val CurrentPensions = Value
+  val PreviousPsos = Value
+  val CurrentPsos = Value
 
   def fromString(applicationStage: String): Option[Value] = {
     applicationStage.toLowerCase match {
@@ -30,6 +32,8 @@ object ApplicationStage extends Enumeration {
       case "pensionstakenbetween" => Some(PensionsTakenBetween)
       case "overseaspensions"     => Some(OverseasPensions)
       case "currentpensions"      => Some(CurrentPensions)
+      case "previouspsos"         => Some(PreviousPsos)
+      case "currentpsos"          => Some(CurrentPsos)
       case _                      => None
     }
   }
