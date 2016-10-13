@@ -63,11 +63,12 @@ class IdentityVerificationConnectorSpec extends UnitSpec with OneAppPerSuite wit
     MockIdentityVerificationConnector.identityVerificationResponse("precondition-failed-journey-id").futureValue shouldBe IdentityVerificationResult.PreconditionFailed
   }
 
-  "return failed future when identityVerification returns non-existant result type" in {
-    val result = MockIdentityVerificationConnector.identityVerificationResponse("invalid-journey-id")
-    ScalaFutures.whenReady(result.failed) { e =>
-      e shouldBe a [NoSuchElementException]
-    }
+  "return failed IV when identityVerification returns failed IV result type" in {
+    MockIdentityVerificationConnector.identityVerificationResponse("failed-iv-journey-id").futureValue shouldBe IdentityVerificationResult.FailedIV
+  }
+
+  "return unknown outcome when identityVerification returns non-existent result type" in {
+    MockIdentityVerificationConnector.identityVerificationResponse("invalid-journey-id").futureValue shouldBe IdentityVerificationResult.UnknownOutcome
   }
 
   "return failed future for invalid json fields" in {
