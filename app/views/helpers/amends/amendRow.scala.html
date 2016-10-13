@@ -3,13 +3,25 @@
 @(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean)
 
 
+@if(sectionId == "total-amount") {
+    <tr class="grey-background">
+        <td class="total-font" id="total-message">@Messages("pla.summary.questions.totalPsoAmt")</td>
+        <td class="total-font" id=@{s"${sectionId}-${model.rowId}"}>@model.displayValue</td>
+        <td></td>
+    </tr>
+} else {
+
 <tr>
+
     <td class="@if(firstRow){has-child-item}" id=@{s"${sectionId}-${model.rowId}-question"}>
         @Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}")
     </td>
 
     <td class="@if(firstRow){has-child-item}" id=@{s"${sectionId}-${model.rowId}-value"}>
-        @model.displayValue
+
+        @for((displayValue, index) <- model.displayValue.zipWithIndex) {
+        <span id="@{model.rowId}DisplayValue@index" class='' >@displayValue</span></br>
+        }
     </td>
 
     <td class="@if(firstRow){has-child-item}">
@@ -20,3 +32,4 @@
         }
     </td>
 </tr>
+}

@@ -5,7 +5,7 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import views.html.helper
 
-@(model: AmendDisplayModel, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_])
+@(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_])
 
 @main_template(title = Messages("pla.amends.title")) {
 
@@ -68,12 +68,11 @@
         </thead>
         @model.psoSections.map { section =>
         @amendSection(section, model.protectionType)
-
         }
     </table>
     @if(!model.psoAdded){
         <div>
-            <a href="" id="" >@Messages("pla.amends.addPsoLink")</a>
+            <a href="@routes.AmendsController.amendPsoDetails(model.protectionType, status)" id="" >@Messages("pla.amends.addPsoLink")</a>
         </div>
     }
 

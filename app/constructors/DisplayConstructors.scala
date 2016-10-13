@@ -151,13 +151,13 @@ trait DisplayConstructors {
       } else {
         val psoAmendCall = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)
         psoList.headOption.map { debit =>
-          //TODO change ID and add change call link
           Seq(
             AmendDisplaySectionModel("pensionDebits",
               Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-psoDetails",
                 Some(psoAmendCall),
-                debit.startDate,
-                Display.currencyDisplayString(BigDecimal(debit.amount))))
+                Display.currencyDisplayString(BigDecimal(debit.amount)),
+                Display.dateDisplayString(Dates.constructDateFromAPIString(debit.startDate))))
+
             ),
             AmendDisplaySectionModel("total-amount",
               Seq(AmendDisplayRowModel(
