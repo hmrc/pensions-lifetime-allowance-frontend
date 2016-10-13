@@ -35,10 +35,18 @@ case class ProtectionModel (
                              pensionDebitEnteredAmount: Option[Double] = None,
                              pensionDebitStartDate: Option[String] = None,
                              pensionDebitTotalAmount: Option[Double] = None,
+                             pensionDebits: Option[List[PensionDebitModel]] = None,
                              notificationId: Option[Int] = None,
                              protectionReference: Option[String] = None
                              )
 
 object ProtectionModel {
+  implicit val pensionDebitFormat = PensionDebitModel.pdFormat
   implicit val format = Json.format[ProtectionModel]
+}
+
+case class PensionDebitModel(startDate: String, amount: Double)
+
+object PensionDebitModel {
+  implicit val pdFormat = Json.format[PensionDebitModel]
 }

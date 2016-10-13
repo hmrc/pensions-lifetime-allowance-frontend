@@ -117,7 +117,9 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   val tstAmendDisplayModel = AmendDisplayModel(
     protectionType = "IP2014",
     amended = true,
-    sections = Seq.empty,
+    pensionContributionSections = Seq.empty,
+    psoAdded = false,
+    psoSections = Seq.empty,
     totalAmount = "£1,100,000"
   )
 
@@ -984,6 +986,320 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
       "fail with the correct error message" in {
         DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.overseasPensions.errorMaximum"))
+      }
+    }
+  }
+
+  "Calling the amendPsoDetails action" when {
+
+    val testProtectionNoPsoList = ProtectionModel (
+      psaCheckReference = Some("psaRef"),
+      protectionID = Some(1234),
+      pensionDebits = None
+    )
+
+    val testProtectionEmptyPsoList = ProtectionModel (
+      psaCheckReference = Some("psaRef"),
+      protectionID = Some(1234),
+      pensionDebits = Some(List.empty)
+    )
+
+    val testProtectionSinglePsoList = ProtectionModel (
+      psaCheckReference = Some("psaRef"),
+      protectionID = Some(1234),
+      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
+    )
+
+    val testProtectionMultiplePsoList = ProtectionModel (
+      psaCheckReference = Some("psaRef"),
+      protectionID = Some(1234),
+      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0), PensionDebitModel("2016-12-27", 11322.75)))
+    )
+
+    "there is no amendment model fetched from keystore" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2014", "open"))
+
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "there is no PSO list stored in the AmendProtectionModel" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2014", "open"))
+
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionNoPsoList, testProtectionNoPsoList)))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the amend PSO details page with no data completed" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amendPsoDetails.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
+        DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
+        DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
+      }
+    }
+
+    "there is an empty PSO list stored in the AmendProtectionModel" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2016", "open"))
+
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionEmptyPsoList, testProtectionEmptyPsoList)))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the amend PSO details page with no data completed" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amendPsoDetails.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
+        DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
+        DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
+      }
+    }
+
+    "there is a PSO list of one PSO stored in the AmendProtectionModel" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2016", "open"))
+
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the amend PSO details page with the correct data completed" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amendPsoDetails.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual "23"
+        DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual "12"
+        DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual "2016"
+        DataItem.jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "1000"
+      }
+    }
+
+    "there is a PSO list of more then one PSO stored in the AmendProtectionModel" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2016", "open"))
+
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionMultiplePsoList, testProtectionMultiplePsoList)))
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+  }
+
+  "Submitting Amend PSOs data" when {
+
+    "submitting a valid PSO's details" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+
+      "redirect to the psoDetails controller action with a psoNum of 5" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "open")}")
+      }
+    }
+
+    "submitting an invalid set of PSO details - missing day" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", ""),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.dayEmpty"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - missing month" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", ""),
+        ("psoYear", "2015"),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.monthEmpty"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - missing year" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", ""),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.yearEmpty"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - invalid date" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "29"),
+        ("psoMonth", "2"),
+        ("psoYear", "2015"),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.invalidDate"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - date out of range for ip14" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "5"),
+        ("psoMonth", "4"),
+        ("psoYear", "2014"),
+        ("psoAmt", "1000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP14PsoDetails.errorDateOutOfRange"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - date out of range for ip16" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "5"),
+        ("psoMonth", "4"),
+        ("psoYear", "2016"),
+        ("psoAmt", "1000"),
+        ("protectionType", "ip2016"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - missing PSO amount" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", ""),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("error.real"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - amount negative" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "-1"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorNegative"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - amount too many decimal places" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "0.001"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorDecimalPlaces"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - amount too large" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "999999999999999"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorMaximum"))
       }
     }
   }

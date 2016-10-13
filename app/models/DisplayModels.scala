@@ -71,7 +71,9 @@ case class PrintDisplayModel (
 case class AmendDisplayModel (
                              protectionType: String,
                              amended: Boolean,
-                             sections: Seq[AmendDisplaySectionModel],
+                             pensionContributionSections: Seq[AmendDisplaySectionModel],
+                             psoAdded: Boolean,
+                             psoSections : Seq[AmendDisplaySectionModel],
                              totalAmount: String
                                )
 
@@ -80,7 +82,7 @@ case class AmendDisplaySectionModel (
                                     rows: Seq[AmendDisplayRowModel]
                                       )
 
-case class AmendDisplayRowModel(rowId: String, changeLinkCall: Call, displayValue: String) {
+case class AmendDisplayRowModel(rowId: String, changeLinkCall: Option[Call], displayValue: String*) {
 
 }
 

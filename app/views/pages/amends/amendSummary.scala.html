@@ -5,7 +5,7 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import views.html.helper
 
-@(model: AmendDisplayModel, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_])
+@(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_])
 
 @main_template(title = Messages("pla.amends.title")) {
 
@@ -38,7 +38,15 @@
     }
 
     <table>
-        @model.sections.map { section =>
+        <thead>
+            <tr>
+                <th colspan="3">
+                    @Messages("pla.summary.pensionsHeading")
+                </th>
+            </tr>
+        </thead>
+
+        @model.pensionContributionSections.map { section =>
             @amendSection(section, model.protectionType)
         }
 
@@ -47,7 +55,23 @@
             <td class="total-font" id="total-amount">@model.totalAmount</td>
             <td></td>
         </tr>
+
+        <thead>
+            <tr>
+                <th colspan="3" class="table-divider">
+                    @Messages("pla.summary.psosHeading")
+                </th>
+            </tr>
+        </thead>
+        @model.psoSections.map { section =>
+            @amendSection(section, model.protectionType)
+        }
     </table>
+    @if(!model.psoAdded){
+        <div>
+            <a href="@routes.AmendsController.amendPsoDetails(model.protectionType, status)" id="addPsoLink" >@Messages("pla.amends.addPsoLink")</a>
+        </div>
+    }
 
     @govHelpers.form(action = routes.AmendsController.amendProtection) {
         <div class="form-hidden">

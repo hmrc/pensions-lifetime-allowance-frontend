@@ -1,0 +1,50 @@
+@import models.amendModels.AmendPSODetailsModel
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import helpers.templates.{plaInputRadioGroup, formInputMoney, formInlineDateInput}
+@import play.api.data._
+
+@(psoDetailsForm: Form[AmendPSODetailsModel])(implicit request: Request[_])
+
+@scriptElement = {
+<script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
+
+@views.html.main_template(title = Messages("pla.psoDetails.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+
+    @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), psoDetailsForm)
+
+    <h1 class="heading-large">@Messages(s"pla.amendPsoDetails.pageHeading")</h1>
+
+    @govHelpers.form(action = routes.AmendsController.submitAmendPsoDetails) {
+
+    <div class="inline form-group">
+
+        @formInlineDateInput(psoDetailsForm, "pso", Messages("pla.psoDetails.dateQuestionText"), Some(Messages("pla.psoDetails.dateHintText")))
+
+        @formInputMoney(
+        psoDetailsForm,
+        "psoAmt",
+        Messages("pla.psoDetails.psoAmountQuestion")
+        )
+
+    </div>
+
+    <button class="button" type="submit" id="continue-button">
+        @if(psoDetailsForm("existingPSO").value.getOrElse("false") == "true") {
+            @Messages("pla.base.update")
+        } else {
+            @Messages("pla.base.add")
+        }
+    </button>
+
+    <div class="form-hidden">
+
+        @helper.inputText(psoDetailsForm("protectionType"), 'type -> "hidden", 'class -> "form-hidden")
+        @helper.inputText(psoDetailsForm("status"), 'type -> "hidden", 'class -> "form-hidden")
+        @helper.inputText(psoDetailsForm("existingPSO"), 'type -> "hidden", 'class -> "form-hidden")
+
+    </div>
+
+    }
+
+}
