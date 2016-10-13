@@ -508,9 +508,19 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
           )
         )
       )
-      val tstPsoDisplaySections = Seq(AmendDisplaySectionModel( ApplicationStage.CurrentPsos.toString, Seq(
-        AmendDisplayRowModel("YesNo", None, Messages("pla.base.no"))
-      )))
+      val tstPsoDisplaySections = Seq(
+
+        AmendDisplaySectionModel(
+          ApplicationStage.CurrentPsos.toString, Seq(
+            AmendDisplayRowModel("YesNo", None, Messages("pla.base.no"))
+          )
+        ),
+        AmendDisplaySectionModel(
+          "total-amount", Seq(
+            AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, "£0")
+          )
+        )
+      )
 
       DisplayConstructors.createAmendDisplayModel(tstAmendProtecionModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",

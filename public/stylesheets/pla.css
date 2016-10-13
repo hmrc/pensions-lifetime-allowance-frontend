@@ -52,3 +52,7 @@
     display: none;
     visibility: hidden;
 }
+
+.table-divider {
+    padding-top: 30px;
+}
