@@ -990,4 +990,209 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     }
   }
 
+
+
+  "Submitting Amend PSOs data" when {
+
+    "submitting a valid PSO's details" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 303" in {
+        status(DataItem.result) shouldBe 303
+      }
+
+      "redirect to the psoDetails controller action with a psoNum of 5" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "open")}")
+      }
+    }
+
+    "submitting an invalid set of PSO details - missing day" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", ""),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.dayEmpty"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - missing month" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", ""),
+        ("psoYear", "2015"),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.monthEmpty"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - missing year" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", ""),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.yearEmpty"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - invalid date" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "29"),
+        ("psoMonth", "2"),
+        ("psoYear", "2015"),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.invalidDate"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - date out of range for ip14" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "5"),
+        ("psoMonth", "4"),
+        ("psoYear", "2014"),
+        ("psoAmt", "1000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP14PsoDetails.errorDateOutOfRange"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - date out of range for ip16" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "5"),
+        ("psoMonth", "4"),
+        ("psoYear", "2016"),
+        ("psoAmt", "1000"),
+        ("protectionType", "ip2016"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - missing PSO amount" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", ""),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("error.real"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - amount negative" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "-1"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorNegative"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - amount too many decimal places" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "0.001"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorDecimalPlaces"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - amount too large" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "1"),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "999999999999999"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorMaximum"))
+      }
+    }
+  }
+
 }

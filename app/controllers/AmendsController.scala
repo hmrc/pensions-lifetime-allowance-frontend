@@ -294,7 +294,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
   val submitAmendPsoDetails = AuthorisedByAny.async { implicit user => implicit request =>
     amendPsoDetailsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(pages.amends.amendPsoDetails(errors))),
+      errors => Future.successful(BadRequest(pages.amends.amendPsoDetails(AmendPSODetailsForm.validateForm(errors)))),
       success => {
         val validatedForm = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.fill(success))
         if (validatedForm.hasErrors) {
