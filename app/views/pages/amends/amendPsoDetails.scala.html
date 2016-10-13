@@ -29,12 +29,19 @@
 
     </div>
 
-    <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
+    <button class="button" type="submit" id="continue-button">
+        @if(psoDetailsForm("existingPSO").value.getOrElse("false") == "true") {
+            @Messages("pla.base.update")
+        } else {
+            @Messages("pla.base.add")
+        }
+    </button>
 
     <div class="form-hidden">
 
         @helper.inputText(psoDetailsForm("protectionType"), 'type -> "hidden", 'class -> "form-hidden")
         @helper.inputText(psoDetailsForm("status"), 'type -> "hidden", 'class -> "form-hidden")
+        @helper.inputText(psoDetailsForm("existingPSO"), 'type -> "hidden", 'class -> "form-hidden")
 
     </div>
 

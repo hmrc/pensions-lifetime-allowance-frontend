@@ -71,7 +71,8 @@ object AmendPSODetailsForm {
         .verifying(Messages("pla.psoDetails.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble)),
 
       "protectionType" -> text,
-      "status"         -> text
+      "status"         -> text,
+      "existingPSO"    -> boolean
     )(AmendPSODetailsModel.apply)(AmendPSODetailsModel.unapply)
   )
 }

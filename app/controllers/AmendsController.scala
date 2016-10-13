@@ -285,11 +285,11 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
   def createAmendPsoDetailsModel(psoDetails: PensionDebitModel, protectionType: String, status: String): AmendPSODetailsModel = {
     val (day, month, year) = Dates.extractDMYFromAPIDateString(psoDetails.startDate)
-    AmendPSODetailsModel(Some(day), Some(month), Some(year), Display.currencyInputDisplayFormat(psoDetails.amount), protectionType, status)
+    AmendPSODetailsModel(Some(day), Some(month), Some(year), Display.currencyInputDisplayFormat(psoDetails.amount), protectionType, status, existingPSO = true)
   }
 
   def createBlankAmendPsoDetailsModel(protectionType: String, status: String): AmendPSODetailsModel = {
-    AmendPSODetailsModel(psoDay = None, psoMonth = None, psoYear = None, psoAmt = Display.currencyInputDisplayFormat(0.0), protectionType, status)
+    AmendPSODetailsModel(psoDay = None, psoMonth = None, psoYear = None, psoAmt = Display.currencyInputDisplayFormat(0.0), protectionType, status, existingPSO = false)
   }
 
   val submitAmendPsoDetails = AuthorisedByAny.async { implicit user => implicit request =>
