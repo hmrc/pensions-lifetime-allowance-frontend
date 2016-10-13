@@ -40,6 +40,7 @@ object MockIdentityVerificationHttp extends MockitoSugar {
     "timeout-journey-id" -> "test/resources/identity-verification/timeout.json",
     "technical-issue-journey-id" -> "test/resources/identity-verification/technical-issue.json",
     "precondition-failed-journey-id" -> "test/resources/identity-verification/precondition-failed.json",
+    "failed-iv-journey-id" -> "test/resources/identity-verification/failed-iv.json",
     "invalid-journey-id" -> "test/resources/identity-verification/invalid-result.json",
     "invalid-fields-journey-id" -> "test/resources/identity-verification/invalid-fields.json"
   )
