@@ -46,7 +46,7 @@ trait SummaryConstructor {
     val overseasPensionsModel = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
     val currentPensionsModel = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
 
-    val PensionDebitsModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
+    val pensionDebitsModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
     val numberOfPSOsModel = data.getEntry[NumberOfPSOsModel](nameString("numberOfPSOs"))
 
 
@@ -88,8 +88,8 @@ trait SummaryConstructor {
       totalPensionsSection
       ).flatten
 
-    val pensionDebitsSection = helper.createYesNoSection("pensionDebits", PensionDebitsModel, boldText = false)
-    val (numPSOsSection, numberOfPSOs) = helper.createNumberOfPSOsSection(PensionDebitsModel, numberOfPSOsModel)
+    val pensionDebitsSection = helper.createYesNoSection("pensionDebits", pensionDebitsModel, boldText = false)
+    val (numPSOsSection, numberOfPSOs) = helper.createNumberOfPSOsSection(pensionDebitsModel, numberOfPSOsModel)
     val psoDetailsList = (1 to numberOfPSOs).flatMap{ psoNum =>
       data.getEntry[PSODetailsModel](nameString(s"psoDetails$psoNum"))
     }

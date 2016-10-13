@@ -195,8 +195,8 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     //IP14 NUMBER OF PENSION SHARING ORDERS
     val ip14NumberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
 
-        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("ip14PensionDebits").flatMap(PensionDebitsModel => {
-            PensionDebitsModel.map {
+        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("ip14PensionDebits").flatMap(pensionDebitsModel => {
+            pensionDebitsModel.map {
                 completedModel => routeIP14NumberOfPSOs(completedModel.pensionDebits.get)
             }.getOrElse {
                 Logger.error(s"User with nino ${user.nino} navigated to IP14 number of PSOs when ip14PensionDebits was not recorded")

@@ -63,7 +63,7 @@ object Validation {
     val overseasPensionsModel = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
     val currentPensionsModel = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
 
-    val PensionDebitsModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
+    val pensionDebitsModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
     val numberOfPSOsModel = data.getEntry[NumberOfPSOsModel](nameString("numberOfPSOs"))
 
     def validPensionData(): Boolean = {
@@ -76,9 +76,9 @@ object Validation {
     }
 
     def validPSOData(): Boolean = {
-      if (PensionDebitsModel.isEmpty) false
+      if (pensionDebitsModel.isEmpty) false
       else {
-        if (PensionDebitsModel.get.pensionDebits.get == "no") true
+        if (pensionDebitsModel.get.pensionDebits.get == "no") true
         else {
           if (numberOfPSOsModel.isEmpty) false
           else {
