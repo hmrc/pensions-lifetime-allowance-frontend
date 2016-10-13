@@ -25,7 +25,7 @@
     </td>
 
     <td class="@if(firstRow){has-child-item}">
-        @if(!model.changeLinkCall.isEmpty) {
+        @if(model.changeLinkCall.isDefined) {
             <a id=@{s"${sectionId}-${model.rowId}-change-link"} href="@model.changeLinkCall">@Messages("pla.base.change")</a>
             <span class="visuallyhidden">@Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}.changeHint")</span>
 

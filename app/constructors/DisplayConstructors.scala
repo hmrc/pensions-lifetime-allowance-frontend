@@ -134,8 +134,9 @@ trait DisplayConstructors {
   def createPsoSectionFromProtectionModel(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
     val previousPsoSection: AmendDisplaySectionModel = createPreviousPsoSection(protection)
     val addedPsoSection: Option[Seq[AmendDisplaySectionModel]] = createCurrentPsoSection(protection)
+    val totalSection: AmendDisplaySectionModel = createPsoTotalSection(protection)
 
-    Seq(previousPsoSection) ++ addedPsoSection.getOrElse(Seq())
+    Seq(previousPsoSection) ++ addedPsoSection.getOrElse(Seq()) ++ Seq(totalSection)
   }
 
   def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel = {
@@ -157,18 +158,21 @@ trait DisplayConstructors {
                 Some(psoAmendCall),
                 Display.currencyDisplayString(BigDecimal(debit.amount)),
                 Display.dateDisplayString(Dates.constructDateFromAPIString(debit.startDate))))
-
-            ),
-            AmendDisplaySectionModel("total-amount",
-              Seq(AmendDisplayRowModel(
-                s"${ApplicationStage.CurrentPsos.toString}-currentTotal",
-                None,
-                Display.currencyDisplayString(BigDecimal(debit.amount + model.pensionDebitTotalAmount.getOrElse(0.0)))))
             )
           )
         }
       }
     }
+  }
+
+  def createPsoTotalSection(protection: ProtectionModel): AmendDisplaySectionModel = {
+    val newPSOAmt: Option[Double] = protection.pensionDebits.flatMap{debitList => debitList.headOption.map {debit => debit.amount}}
+    AmendDisplaySectionModel("total-amount",
+      Seq(AmendDisplayRowModel(
+        s"${ApplicationStage.CurrentPsos.toString}-currentTotal",
+        None,
+        Display.currencyDisplayString(BigDecimal(newPSOAmt.getOrElse(0.0) + protection.pensionDebitTotalAmount.getOrElse(0.0)))))
+    )
   }
 
   def createAmendPensionContributionSectionsFromProtection(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
