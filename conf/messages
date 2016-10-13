@@ -513,6 +513,8 @@ pla.amends.CurrentPsos.IP2014.Amt                           = - Total of previou
 pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails      = Date and amount of pension sharing order
 pla.summary.questions.totalPsoAmt                           = Total value of pension sharing orders
 
+pla.amends.addPsoLink                                       = Add a pension sharing order
+
 ### AMENDS RESULTS MESSAGES ###
 pla.activeAmend.title                                       = Protection amended
 pla.activeAmend.allowanceSubHeading                         = Your protected lifetime allowance is
