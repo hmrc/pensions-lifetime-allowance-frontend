@@ -77,14 +77,28 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     )
   )
 
-  val tstNoPsoDisplaySections = Seq(AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString, Seq(
-    AmendDisplayRowModel("YesNo", None, "No")
-  )))
+  val tstNoPsoDisplaySections = Seq(
+    AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString,
+      Seq(
+      AmendDisplayRowModel("YesNo", None, "No")
+      )
+    ),
+    AmendDisplaySectionModel("total-amount",
+      Seq(
+      AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, "£0")
+      )
+    )
+  )
   val tstPsoDisplaySections = Seq(
     AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString, Seq(
       AmendDisplayRowModel("YesNo", None, "Yes"),
       AmendDisplayRowModel("Amt", None, "£1,000")
-    ))
+    )),
+    AmendDisplaySectionModel("total-amount",
+      Seq(
+        AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, "£1,000")
+      )
+    )
   )
 
   "Existing Protections Constructor" should {
@@ -603,36 +617,21 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         preADayPensionInPayment = Some(0.0),
         postADayBenefitCrystallisationEvents = None,
         pensionDebits = Some(List(PensionDebitModel("2017-03-02", 1000.0))),
-        pensionDebitTotalAmount = Some(0.00),
+        pensionDebitTotalAmount = Some(0.0),
         nonUKRights = Some(100000.0),
         uncrystallisedRights = Some(1000000.34)      )
 
       val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
 
-      val tstPsoAddedSection =  Seq(
+      val tstPsoAddedSection = Seq(
         AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString,
           Seq(AmendDisplayRowModel("YesNo", None, "No"))),
         AmendDisplaySectionModel("pensionDebits",
           Seq(
-            AmendDisplayRowModel("CurrentPsos-psodetails", Some(controllers.routes.AmendsController.amendPsoDetails("ip2016", "active")), "£1,000", "2 March 2017")
+            AmendDisplayRowModel("CurrentPsos-psoDetails", Some(controllers.routes.AmendsController.amendPsoDetails("ip2016", "active")), "£1,000", "2 March 2017")
           )),
         AmendDisplaySectionModel("total-amount",
-          Seq(AmendDisplayRowModel("total-amount", None, "£"))
-
-        )
-      )
-
-      val tstPsoDisplaySections = Seq(
-
-        AmendDisplaySectionModel(
-          ApplicationStage.CurrentPsos.toString, Seq(
-            AmendDisplayRowModel("YesNo", None, Messages("pla.base.no"))
-          )
-        ),
-        AmendDisplaySectionModel(
-          "total-amount", Seq(
-            AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, "£0")
-          )
+          Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, "£1,000"))
         )
       )
 
@@ -643,6 +642,43 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         psoAdded = true,
         psoSections = tstPsoAddedSection,
         totalAmount = "£1,100,000.34"
+      )
+
+    }
+
+    "should not create a display section for current PSO's if there is more than one pension debit in the model" in {
+
+      val tstNewPsoAmountProtection = ProtectionModel(
+        psaCheckReference = Some("psaRef"),
+        protectionID = Some(100001),
+        protectionType = Some("IP2016"),
+        status = Some("active"),
+        protectedAmount = Some(1000000.34),
+        relevantAmount = Some(1000000.34),
+        preADayPensionInPayment = Some(0.0),
+        postADayBenefitCrystallisationEvents = None,
+        pensionDebits = Some(List(PensionDebitModel("2017-03-02", 1000.0), PensionDebitModel("2017-03-02", 2000.0))),
+        pensionDebitTotalAmount = Some(0.0),
+        nonUKRights = Some(100000.0),
+        uncrystallisedRights = Some(1000000.34)      )
+
+      val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
+
+      val tstPsoSection = Seq(
+        AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString,
+          Seq(AmendDisplayRowModel("YesNo", None, "No"))
+        ),
+        AmendDisplaySectionModel("total-amount",
+          Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, "£1,000"))
+      ))
+
+      DisplayConstructors.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
+        protectionType = "IP2016",
+        amended = false,
+        pensionContributionSections = tstPensionContributionDisplaySections,
+        psoAdded = true,
+        psoSections = tstPsoSection,
+        totalAmount = "£1,000,000.34"
       )
 
     }
