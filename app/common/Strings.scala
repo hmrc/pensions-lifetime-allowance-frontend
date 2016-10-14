@@ -39,10 +39,6 @@ object Strings {
     statusString(protection.status)+protectionTypeString(protection.protectionType)+"Amendment"
   }
 
-  def keyStoreProtectionName(amendment: AmendProtectionModel): String = {
-    keyStoreProtectionName(amendment.originalProtection)
-  }
-
   def keyStoreAmendFetchString(protectionType: String, status: String): String = {
     status.toLowerCase + protectionType.toUpperCase + "Amendment"
   }

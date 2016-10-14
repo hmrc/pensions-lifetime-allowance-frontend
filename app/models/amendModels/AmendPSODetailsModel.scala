@@ -16,16 +16,18 @@
 
 package models.amendModels
 
-import models.ProtectionModel
-import play.api.libs.json.Json
+import play.api.libs.json._
 
-case class AmendProtectionModel (
-                                  originalProtection: ProtectionModel,
-                                  updatedProtection: ProtectionModel
-                                  )
-
-object AmendProtectionModel {
-  implicit val format = Json.format[AmendProtectionModel]
+case class AmendPSODetailsModel (psoDay: Option[Int],
+                                  psoMonth: Option[Int],
+                                  psoYear: Option[Int],
+                                  psoAmt: BigDecimal,
+                                  protectionType: String,
+                                  status: String,
+                                  existingPSO: Boolean)  {
 }
 
-trait AmendValueModel
+object AmendPSODetailsModel {
+  implicit val format = Json.format[AmendPSODetailsModel]
+
+}

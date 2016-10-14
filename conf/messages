@@ -7,6 +7,8 @@ pla.base.apply                  = Apply
 pla.base.submitApplication      = Submit your application
 pla.base.back                   = Back
 pla.base.change                 = Change
+pla.base.update                 = Update
+pla.base.add                    = Add
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
 pla.base.startAgain             = Start Again
@@ -292,6 +294,8 @@ pla.psoDetails.errorNegative                = Enter an amount that''s £0 or mor
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
 
+pla.amendPsoDetails.pageHeading             = Pension sharing order
+
 pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date after 5 April 2014
 pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date after 5 April 2016
 
@@ -509,6 +513,16 @@ pla.amends.pageBreadcrumb                                   = Change your protec
 pla.amends.declaration                                      = The information that I have provided is true and complete to the best of my knowledge and belief.
 pla.amends.submit                                           = Submit your changes
 
+pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
+pla.amends.CurrentPsos.IP2016.Amt                           = — Total of previous pension sharing orders
+pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Date and amount of pension sharing order
+
+pla.amends.CurrentPsos.IP2014.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2014?
+pla.amends.CurrentPsos.IP2014.Amt                           = — Total of previous pension sharing orders
+pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails      = Date and amount of pension sharing order
+pla.summary.questions.totalPsoAmt                           = Total value of pension sharing orders
+
+pla.amends.addPsoLink                                       = Add a pension sharing order
 
 ### AMENDS RESULTS MESSAGES ###
 pla.activeAmend.title                                       = Protection amended

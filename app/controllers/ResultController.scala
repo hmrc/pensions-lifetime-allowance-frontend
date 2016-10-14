@@ -92,7 +92,8 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
   private def saveAndRedirectToDisplay(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser, protectionType: ApplicationType.Value): Future[Result] = {
 
     responseConstructors.createApplyResponseModelFromJson(response.json).map {
-      model => keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
+      model =>
+        keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
         cacheMap => protectionType match {
           case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16())
           case ApplicationType.IP2014 => Redirect(routes.ResultController.displayIP14())
