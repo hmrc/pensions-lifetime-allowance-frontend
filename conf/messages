@@ -176,10 +176,12 @@ pla.pensionsTaken.bulletOne                 = You got money from your pensions
 pla.pensionsTaken.bulletTwo                 = You transferred a pension to a scheme held overseas
 pla.pensionsTaken.bulletThree               = You turned 75 with pension savings which you hadn''t yet taken
 pla.pensionsTaken.mandatoryErr              = Please answer this question
+pla.pensionsTaken.legend                    = Before 5 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken ##
-pla.ip14PensionsTaken.pageHeading               = Did any of the following happen before 5 April 2014?
-pla.ip14PensionsTaken.title                     = Did any of the following happen before 5 April 2014?
+pla.ip14PensionsTaken.pageHeading           = Did any of the following happen before 5 April 2014?
+pla.ip14PensionsTaken.title                 = Did any of the following happen before 5 April 2014?
+pla.ip14PensionsTaken.legend                = Before 5 April 2014, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 
 ## Pensions Taken Before ##
@@ -191,6 +193,7 @@ pla.pensionsTakenBefore.errorQuestion       = Enter an amount in the correct for
 pla.pensionsTakenBefore.errorNegative       = Enter an amount that''s £0 or more
 pla.pensionsTakenBefore.errorMaximum        = Enter an amount less than £99,999,999,999,999.98
 pla.pensionsTakenBefore.errorDecimalPlaces  = The amount you''ve entered has too many decimal places
+pla.pensionsTakenBefore.legend              = Did you start taking any of your pensions before 6 April 2006?
 
 ## IP14 Pensions Taken Before ##
 pla.ip14PensionsTakenBefore.helpText        = You can ask your pension providers for a valuation for individual protection 2014
@@ -209,11 +212,13 @@ pla.pensionsTakenBetween.errorQuestion      = Enter an amount in the correct for
 pla.pensionsTakenBetween.errorNegative      = Enter an amount that''s £0 or more
 pla.pensionsTakenBetween.errorMaximum       = Enter an amount less than £99,999,999,999,999.98
 pla.pensionsTakenBetween.errorDecimalPlaces = The amount you''ve entered has too many decimal places
+pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken Between ##
 pla.ip14PensionsTakenBetween.pageHeading    = Did any of the following happen between 6 April 2006 and 5 April 2014?
 pla.ip14PensionsTakenBetween.title          = Did any of the following happen between 6 April 2006 and 5 April 2014?
 pla.ip14PensionsTakenBetween.helpText       = You can ask your pension providers to tell you the amount of lifetime allowance you''ve used for individual protection 2014
+pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 
 ## Overseas Pensions ##
@@ -225,9 +230,11 @@ pla.overseasPensions.errorQuestion          = Enter an amount in the correct for
 pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
 pla.overseasPensions.errorMaximum           = Enter an amount less than £99,999,999,999,999.98
 pla.overseasPensions.errorDecimalPlaces     = The amount you''ve entered has too many decimal places
+pla.overseasPensions.legend                 = Did you put money into an overseas pension scheme between 6 April 2016 and 5 April 2014?
 
 ## IP14 Overseas Pensions ##
 pla.ip14OverseasPensions.question           = Only include contributions you made between 6 April 2006 and 5 April 2014, which you got UK tax relief on.
+pla.ip14OverseasPensions.legend             = Did you put money into an overseas pension scheme between 6 April 2016 and 5 April 2016?
 
 
 ## CURRENT PENSIONS ##
