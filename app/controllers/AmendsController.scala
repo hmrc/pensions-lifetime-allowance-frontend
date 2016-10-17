@@ -359,23 +359,23 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
         getRouteUsingModel(
           journey match {
             case `currentPension` =>
-              AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.get)), protectionType, status)
+              AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.getOrElse[Double](0))), protectionType, status)
             case `pensionTakenBefore` =>
-              val yesNoValue = if (data.updatedProtection.preADayPensionInPayment.get > 0) "yes" else "no"
+              val yesNoValue = if (data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0) > 0) "yes" else "no"
               AmendPensionsTakenBeforeModel(yesNoValue,
-                Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.get)),
+                Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0))),
                 protectionType,
                 status)
             case `pensionTakenBetween` =>
-              val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.get > 0) "yes" else "no"
+              val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes" else "no"
               AmendPensionsTakenBetweenModel(
                 yesNoValue,
-                Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.get)),
+                Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0))),
                 protectionType,
                 status)
             case `overseasPension` =>
-              val yesNoValue = if (data.updatedProtection.nonUKRights.get > 0) "yes" else "no"
-              AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.get)), protectionType, status)
+              val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
+              AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))), protectionType, status)
           }
         )(request)
       case _ =>
