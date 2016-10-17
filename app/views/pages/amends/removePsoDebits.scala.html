@@ -1,0 +1,31 @@
+@import models.amendModels.AmendmentTypeModel
+@import config.FrontendAppConfig
+
+@(amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_])
+
+@main_template(title = Messages("pla.amends.title")) {
+
+
+<nav class="breadcrumb-nav breadcrumb-nav--slim">
+    <ul class="breadcrumb-nav__list" role="breadcrumbs">
+        <li class="breadcrumb-nav__item">
+            <a href="@{FrontendAppConfig.ptaFrontendUrl}" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
+        </li>
+        <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
+        <li class="breadcrumb-nav__item">
+            <a href="@{controllers.routes.ReadProtectionsController.currentProtections}" id="existing-protections-breadcrumb-link">@Messages("pla.existingProtections.pageBreadcrumb")</a>
+        </li>
+        <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
+        <li class="breadcrumb-nav__item">@Messages("pla.amends.pageBreadcrumb")</li>
+    </ul>
+</nav>
+
+<h1 class="heading-large" id="page-heading">
+@Messages("pla.heading.pensionSharingOrder")
+</h1>
+
+
+
+<button id="submit" class="button" type="submit">@Messages("pla.amends.remove")</button>
+
+}

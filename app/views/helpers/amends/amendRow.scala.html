@@ -7,7 +7,7 @@
     <tr class="grey-background">
         <td class="total-font" id="total-message">@Messages("pla.summary.questions.totalPsoAmt")</td>
         <td class="total-font" id=@{s"${sectionId}-${model.rowId}"}>@model.displayValue</td>
-        <td></td>
+        <td></td><td></td>
     </tr>
 } else {
 
@@ -31,5 +31,13 @@
 
         }
     </td>
+    @if(model.removeLinkCall.isDefined){
+    <td class = "@if(firstRow){has-child-item}">
+        <a id=@{s"${sectionId}-${model.rowId}-remove-link"} href="@model.removeLinkCall">@Messages("pla.base.remove")</a>
+        <span class ="visuallyhidden">@Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}.removeHint")</span>
+    </td>
+    } else {
+    <td class = "@if(firstRow){has-child-item}"></td>
+    }
 </tr>
 }
