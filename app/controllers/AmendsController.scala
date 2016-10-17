@@ -272,7 +272,6 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   def removePsoDebits(protectionType: String, status: String) = AuthorisedByAny.async { implicit user=> implicit request=>
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(model) =>
-//        println(s"\n\n\n$model\n\n\n")
           Ok(pages.amends.removePsoDebits(amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))))
       case _ =>
         Logger.error(s"Could not retrieve Amend ProtectionModel for user with nino ${user.nino} when removing the new pension debit")
@@ -295,9 +294,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
             Logger.error(s"Could not retrieve Amend Protection Model for user with nino ${user.nino} when submitting a removal of a pension debit")
             InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
-
     }
-
     )
 
   }

@@ -1343,12 +1343,6 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "choosing remove on the remove page" should {
 
-      val testProtectionSinglePsoList = ProtectionModel (
-        psaCheckReference = Some("psaRef"),
-        protectionID = Some(1234),
-        pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
-      )
-
       "return 400 if the hidden form details were incorrect" in {
         object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePsoDebits)
         status(DataItem.result) shouldEqual 400
@@ -1364,14 +1358,36 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldEqual 500
       }
 
-//      "return 303" in {
-//        object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePsoDebits,
-//          ("protectionType", "ip2016"),
-//          ("status", "open")
-//        )
-//        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
-//        status(DataItem.result) shouldEqual 303
-//      }
+    }
+
+    "Choosing remove with a valid amend protection model" should {
+      val ip2016Protection = ProtectionModel(
+        psaCheckReference = Some("testPSARef"),
+        uncrystallisedRights = Some(100000.00),
+        nonUKRights = Some(2000.00),
+        preADayPensionInPayment = Some(2000.00),
+        postADayBenefitCrystallisationEvents = Some(2000.00),
+        notificationId = Some(12),
+        protectionID = Some(12345),
+        protectionType = Some("IP2016"),
+        status = Some("open"),
+        certificateDate = Some("2016-04-17"),
+        pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0))),
+        protectedAmount = Some(1250000),
+        protectionReference = Some("PSA123456"))
+
+      val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePsoDebits, ("protectionType", "ip2016"), ("status", "open"))
+
+
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+
+      "redirect location should be the amends summary page" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "open")}")
+      }
     }
 
     "choosing cancel on the remove page" should {}
