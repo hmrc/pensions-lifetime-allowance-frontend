@@ -8,6 +8,7 @@ pla.base.submitApplication      = Submit your application
 pla.base.back                   = Back
 pla.base.change                 = Change
 pla.base.update                 = Update
+pla.base.remove                 = Remove
 pla.base.add                    = Add
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
@@ -509,6 +510,7 @@ pla.amends.submit                                           = Submit your change
 pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.amends.CurrentPsos.IP2016.Amt                           = — Total of previous pension sharing orders
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Date and amount of pension sharing order
+pla.amends.pensionDebits.removePso                          = This will remove your pension sharing order
 
 pla.amends.CurrentPsos.IP2014.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2014?
 pla.amends.CurrentPsos.IP2014.Amt                           = — Total of previous pension sharing orders

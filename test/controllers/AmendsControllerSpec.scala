@@ -1304,4 +1304,76 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     }
   }
 
+  "Removing a recently added PSO" when {
+
+    val testProtectionSinglePsoList = ProtectionModel (
+      psaCheckReference = Some("psaRef"),
+      protectionID = Some(1234),
+      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
+    )
+
+    "there is no amend protection model fetched from keystore" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.removePsoDebits("ip2016", "open"))
+
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for existing protections" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "a valid amend protection model is fetched from keystore" should {
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.removePsoDebits("ip2016", "open"))
+
+      "return 200" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
+        status(DataItem.result) shouldBe 200
+      }
+
+      "show the remove pso page with correct details" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+        DataItem.jsoupDoc.body.getElementById("protectionType").`val`() shouldEqual "ip2016"
+        DataItem.jsoupDoc.body.getElementById("status").`val`() shouldEqual "open"
+      }
+    }
+
+    "choosing remove on the remove page" should {
+
+      val testProtectionSinglePsoList = ProtectionModel (
+        psaCheckReference = Some("psaRef"),
+        protectionID = Some(1234),
+        pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
+      )
+
+      "return 400 if the hidden form details were incorrect" in {
+        object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePsoDebits)
+        status(DataItem.result) shouldEqual 400
+      }
+
+      "return 500 if the an amend protection model could not be retrieved from keystore" in {
+        object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePsoDebits,
+          ("protectionType", "ip2016"),
+          ("status", "open")
+        )
+
+        keystoreFetchCondition[AmendProtectionModel](None)
+        status(DataItem.result) shouldEqual 500
+      }
+
+//      "return 303" in {
+//        object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePsoDebits,
+//          ("protectionType", "ip2016"),
+//          ("status", "open")
+//        )
+//        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
+//        status(DataItem.result) shouldEqual 303
+//      }
+    }
+
+    "choosing cancel on the remove page" should {}
+  }
 }
