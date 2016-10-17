@@ -24,12 +24,12 @@
 <fieldset class="@fieldsetClass" id="@field.id"
           @if(elements.args.get('_fieldsetAttributes).isDefined) {@elements.args.get('_fieldsetAttributes)}>
 @if(elements.args.get('_legend).isDefined) {
-    <legend class="visually-hidden" @if(elements.args.get('_legendClass).isDefined) {class="@elements.args.get('_legendClass)"}>
+    <legend @if(elements.args.get('_legendClass).isDefined) {class="@elements.args.get('_legendClass)"}>
         @elements.args.get('_legend)
     </legend>
 }
 @if(elements.args.get('_helpText).isDefined) {
-    <span class="form-hint">
+<span class="form-hint">
         @elements.args.get('_helpText)
     </span>
 }

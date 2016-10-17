@@ -30,13 +30,15 @@
 
     <h1 class="heading-large">@Messages("pla.overseasPensions.pageHeading")</h1>
 
+    <p>@Messages("pla.overseasPensions.question")</p>
+
     @govHelpers.form(action = routes.IP2016Controller.submitOverseasPensions) {
 
         <div class="inline form-group">
             @formHiddenYesNoRadio(
                 overseasPensionsForm,
                 "overseasPensions",
-                Messages("pla.overseasPensions.question"),
+                Messages("pla.overseasPensions.legend"),
                 hiddenYesNoContent
             )
 

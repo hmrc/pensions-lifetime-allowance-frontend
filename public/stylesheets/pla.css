@@ -53,6 +53,10 @@
     visibility: hidden;
 }
 
+.visually-hidden {
+    display: none;
+}
+
 .table-divider {
     padding-top: 30px;
 }
