@@ -1,13 +1,13 @@
 @import models.ExitSurveyModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.{formHiddenYesNoRadioExitSurvey,plaInputRadioGroup,checkbox}
+@import helpers.templates.{formHiddenYesNoRadioExitSurvey,exitSurveyInputRadio,checkbox}
 @import play.api.data._
 
 @(exitSurveyForm: Form[ExitSurveyModel])(implicit request: Request[_])
 
 @hiddenYesNoContent = {
 
-    @plaInputRadioGroup(
+    @exitSurveyInputRadio(
         field = exitSurveyForm("phoneOrWriteNow"),
         Seq(
             "Yes"->"Yes",
@@ -54,7 +54,7 @@
                 '_fieldsetAttributes -> "id=anythingElse"
         )
 
-        @plaInputRadioGroup(
+        @exitSurveyInputRadio(
             field = exitSurveyForm("recommend"),
             Seq(
                 "Very likely" -> "Very likely",
@@ -69,7 +69,7 @@
             '_groupClass -> "form-group"
         )
 
-        @plaInputRadioGroup(
+        @exitSurveyInputRadio(
             field = exitSurveyForm("satisfaction"),
             Seq(
                 "Very satisfied" -> "Very satisfied",
