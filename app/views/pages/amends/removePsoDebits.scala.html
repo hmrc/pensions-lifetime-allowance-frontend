@@ -18,12 +18,12 @@
 </div>
 
 <div class="form-group">
-@govHelpers.form(action = routes.AmendsController.submitRemovePsoDebits) {
+@govHelpers.form(action = routes.AmendsController.submitRemovePso) {
     <p>
         <button id="submit" class="button" type="submit">@Messages("pla.base.remove")</button>
     </p>
 
-    @Html(Messages("pla.amends.cancelPara",
+    @Html(Messages("pla.amends.pensionDebits.cancelRemove",
         routes.AmendsController.amendsSummary(amendmentTypeForm("protectionType").value.getOrElse(""), amendmentTypeForm("status").value.getOrElse("")), "cancel-link"))
     <div class ="form-hidden">
 

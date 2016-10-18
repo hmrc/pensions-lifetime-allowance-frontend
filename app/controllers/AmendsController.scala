@@ -269,7 +269,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
     }
   }
 
-  def removePsoDebits(protectionType: String, status: String) = AuthorisedByAny.async { implicit user=> implicit request=>
+  def removePso(protectionType: String, status: String) = AuthorisedByAny.async { implicit user=> implicit request=>
     keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
       case Some(model) =>
           Ok(pages.amends.removePsoDebits(amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))))
@@ -279,7 +279,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
     }
   }
 
-  val submitRemovePsoDebits = AuthorisedByAny.async { implicit user => implicit request =>
+  val submitRemovePso = AuthorisedByAny.async { implicit user => implicit request =>
     amendmentTypeForm.bindFromRequest.fold(
       errors => Future.successful(BadRequest(pages.amends.removePsoDebits(errors))),
       success => {
