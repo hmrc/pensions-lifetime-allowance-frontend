@@ -1313,7 +1313,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     )
 
     "there is no amend protection model fetched from keystore" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.removePsoDebits("ip2016", "open"))
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.removePso("ip2016", "open"))
 
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
@@ -1327,7 +1327,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     }
 
     "a valid amend protection model is fetched from keystore" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.removePsoDebits("ip2016", "open"))
+      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.removePso("ip2016", "open"))
 
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
@@ -1344,12 +1344,12 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "choosing remove on the remove page" should {
 
       "return 400 if the hidden form details were incorrect" in {
-        object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePsoDebits)
+        object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePso)
         status(DataItem.result) shouldEqual 400
       }
 
       "return 500 if the an amend protection model could not be retrieved from keystore" in {
-        object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePsoDebits,
+        object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePso,
           ("protectionType", "ip2016"),
           ("status", "open")
         )
@@ -1377,7 +1377,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         protectionReference = Some("PSA123456"))
 
       val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePsoDebits, ("protectionType", "ip2016"), ("status", "open"))
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePso, ("protectionType", "ip2016"), ("status", "open"))
 
 
       "return 303" in {
