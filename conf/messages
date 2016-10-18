@@ -294,6 +294,7 @@ pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
 pla.psoDetails.errorNegative                = Enter an amount that''s £0 or more
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
+pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
 
 pla.amendPsoDetails.pageHeading             = Pension sharing order
 
