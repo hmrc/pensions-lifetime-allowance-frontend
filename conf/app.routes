@@ -92,6 +92,8 @@ GET         /amend-protection/current-pensions/:protectionType/:status          
 POST        /amend-protection/current-pensions                                          controllers.AmendsController.submitAmendCurrentPension
 GET         /amend-protection/pension-sharing-order/:protectionType/:status             controllers.AmendsController.amendPsoDetails(protectionType, status)
 POST        /amend-protection/pension-sharing-order                                     controllers.AmendsController.submitAmendPsoDetails
+GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status      controllers.AmendsController.removePso(protectionType, status)
+POST        /amend-protection/pension-sharing-order/remove                              controllers.AmendsController.submitRemovePso
 
 POST        /amend-protection/submit-amendment                                          controllers.AmendsController.amendProtection
 
