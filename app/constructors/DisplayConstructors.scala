@@ -151,11 +151,13 @@ trait DisplayConstructors {
         None
       } else {
         val psoAmendCall = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)
+        val psoRemoveCall = Helpers.createPsoRemoveCall(model)
         psoList.headOption.map { debit =>
           Seq(
             AmendDisplaySectionModel("pensionDebits",
               Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-psoDetails",
-                Some(psoAmendCall),
+                changeLinkCall = Some(psoAmendCall),
+                removeLinkCall = psoRemoveCall,
                 Display.currencyDisplayString(BigDecimal(debit.amount)),
                 Display.dateDisplayString(Dates.constructDateFromAPIString(debit.startDate))))
             )
@@ -170,7 +172,8 @@ trait DisplayConstructors {
     AmendDisplaySectionModel("total-amount",
       Seq(AmendDisplayRowModel(
         s"${ApplicationStage.CurrentPsos.toString}-currentTotal",
-        None,
+        changeLinkCall = None,
+        removeLinkCall = None,
         Display.currencyDisplayString(BigDecimal(newPSOAmt.getOrElse(0.0) + protection.pensionDebitTotalAmount.getOrElse(0.0)))))
     )
   }
@@ -197,19 +200,19 @@ trait DisplayConstructors {
   def createCurrentPensionsSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)
     val currentPensions = protection.uncrystallisedRights.getOrElse(throw new Exceptions.OptionNotDefinedException("createCurrentPensionsSection","currentPensions",protection.protectionType.getOrElse("No protection type")))
-    AmendDisplaySectionModel(applicationStage.toString, Seq(AmendDisplayRowModel("Amt", Some(amendCall), Display.currencyDisplayString(BigDecimal(currentPensions)))))
+    AmendDisplaySectionModel(applicationStage.toString, Seq(AmendDisplayRowModel("Amt", Some(amendCall),  removeLinkCall = None, Display.currencyDisplayString(BigDecimal(currentPensions)))))
   }
 
   def createNoChangeYesNoSection(stage: String, amountOption: Option[Double]) = {
     amountOption.fold(
-      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, Messages("pla.base.no"))))
+      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.no"))))
     )(amt =>
       if(amt < 0.01) {
-        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, Messages("pla.base.no"))))
+        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.no"))))
       } else {
         AmendDisplaySectionModel(stage, Seq(
-          AmendDisplayRowModel("YesNo", None, Messages("pla.base.yes")),
-          AmendDisplayRowModel("Amt", None, Display.currencyDisplayString(amt))
+          AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.yes")),
+          AmendDisplayRowModel("Amt", None, None, Display.currencyDisplayString(amt))
         ))
       }
     )
@@ -217,14 +220,14 @@ trait DisplayConstructors {
 
   def createYesNoSection(stage: String, amendCall: Option[Call], amountOption: Option[Double]) = {
     amountOption.fold(
-      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, Messages("pla.base.no"))))
+      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no"))))
     )(amt =>
       if(amt < 0.01) {
-        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, Messages("pla.base.no"))))
+        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no"))))
       } else {
         AmendDisplaySectionModel(stage, Seq(
-          AmendDisplayRowModel("YesNo", amendCall, Messages("pla.base.yes")),
-          AmendDisplayRowModel("Amt", amendCall, Display.currencyDisplayString(amt))
+          AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes")),
+          AmendDisplayRowModel("Amt", amendCall, removeLinkCall = None, Display.currencyDisplayString(amt))
         ))
       }
     )

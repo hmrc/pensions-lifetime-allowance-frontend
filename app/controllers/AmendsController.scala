@@ -16,23 +16,20 @@
 
 package controllers
 
-import auth.{PLAUser, AuthorisedForPLA}
+import auth.{AuthorisedForPLA, PLAUser}
 import common._
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
-import forms.AmendOverseasPensionsForm
+import forms._
 import forms.AmendOverseasPensionsForm._
-import forms.AmendPensionsTakenBeforeForm
 import forms.AmendPensionsTakenBeforeForm._
-import forms.AmendPensionsTakenBetweenForm
 import forms.AmendPensionsTakenBetweenForm._
-import forms.AmendPSODetailsForm
 import forms.AmendPSODetailsForm._
 import forms.AmendmentTypeForm._
-import models.{PensionDebitModel, ProtectionModel, AmendResponseModel}
+import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import models.amendModels._
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Result, _}
@@ -246,7 +243,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
       success => {
         keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
           case Some(model) =>
-            val updated = model.updatedProtection.copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
+            val updated= model.updatedProtection.copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
             val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
             val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
@@ -270,6 +267,36 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
         Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend PSO details page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
+  }
+
+  def removePso(protectionType: String, status: String) = AuthorisedByAny.async { implicit user=> implicit request=>
+    keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
+      case Some(model) =>
+          Ok(pages.amends.removePsoDebits(amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))))
+      case _ =>
+        Logger.error(s"Could not retrieve Amend ProtectionModel for user with nino ${user.nino} when removing the new pension debit")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
+  }
+
+  val submitRemovePso = AuthorisedByAny.async { implicit user => implicit request =>
+    amendmentTypeForm.bindFromRequest.fold(
+      errors => Future.successful(BadRequest(pages.amends.removePsoDebits(errors))),
+      success => {
+        keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
+          case Some(model) =>
+            val updated = model.updatedProtection.copy(pensionDebits = None)
+            val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+            val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+            keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
+            Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+          case None =>
+            Logger.error(s"Could not retrieve Amend Protection Model for user with nino ${user.nino} when submitting a removal of a pension debit")
+            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+        }
+    }
+    )
+
   }
 
   def routeFromPensionDebitsList(debits: Seq[PensionDebitModel], protectionType: String, status: String)(implicit user: PLAUser, request: Request[AnyContent]): Result = {
@@ -359,23 +386,23 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
         getRouteUsingModel(
           journey match {
             case `currentPension` =>
-              AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.get)), protectionType, status)
+              AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.getOrElse[Double](0))), protectionType, status)
             case `pensionTakenBefore` =>
-              val yesNoValue = if (data.updatedProtection.preADayPensionInPayment.get > 0) "yes" else "no"
+              val yesNoValue = if (data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0) > 0) "yes" else "no"
               AmendPensionsTakenBeforeModel(yesNoValue,
-                Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.get)),
+                Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0))),
                 protectionType,
                 status)
             case `pensionTakenBetween` =>
-              val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.get > 0) "yes" else "no"
+              val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes" else "no"
               AmendPensionsTakenBetweenModel(
                 yesNoValue,
-                Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.get)),
+                Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0))),
                 protectionType,
                 status)
             case `overseasPension` =>
-              val yesNoValue = if (data.updatedProtection.nonUKRights.get > 0) "yes" else "no"
-              AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.get)), protectionType, status)
+              val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
+              AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))), protectionType, status)
           }
         )(request)
       case _ =>
