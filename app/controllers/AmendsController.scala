@@ -312,11 +312,11 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
   def createAmendPsoDetailsModel(psoDetails: PensionDebitModel, protectionType: String, status: String): AmendPSODetailsModel = {
     val (day, month, year) = Dates.extractDMYFromAPIDateString(psoDetails.startDate)
-    AmendPSODetailsModel(Some(day), Some(month), Some(year), Display.currencyInputDisplayFormat(psoDetails.amount), protectionType, status, existingPSO = true)
+    AmendPSODetailsModel(Some(day), Some(month), Some(year), Some(Display.currencyInputDisplayFormat(psoDetails.amount)), protectionType, status, existingPSO = true)
   }
 
   def createBlankAmendPsoDetailsModel(protectionType: String, status: String): AmendPSODetailsModel = {
-    AmendPSODetailsModel(psoDay = None, psoMonth = None, psoYear = None, psoAmt = Display.currencyInputDisplayFormat(0.0), protectionType, status, existingPSO = false)
+    AmendPSODetailsModel(psoDay = None, psoMonth = None, psoYear = None, psoAmt = None, protectionType, status, existingPSO = false)
   }
 
   val submitAmendPsoDetails = AuthorisedByAny.async { implicit user => implicit request =>
@@ -339,8 +339,8 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
   private def createPsoDetailsList(formModel: AmendPSODetailsModel): Option[List[PensionDebitModel]] = {
     val date = Dates.apiDateFormat(formModel.psoDay.get, formModel.psoMonth.get, formModel.psoYear.get)
-    val amt = formModel.psoAmt.toDouble
-    Some(List(PensionDebitModel(startDate = date, amount = amt)))
+    val amt = formModel.psoAmt.getOrElse{ throw new Exceptions.RequiredValueNotDefinedException("createPsoDetailsList", "psoAmt") }
+    Some(List(PensionDebitModel(startDate = date, amount = amt.toDouble)))
   }
 
   private def updateAndSaveAmendModelWithPso(debits: Option[List[PensionDebitModel]], amendModelOption: Option[AmendProtectionModel], key: String)(implicit request: Request[AnyContent]) = {
