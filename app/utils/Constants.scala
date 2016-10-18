@@ -29,19 +29,17 @@ object Constants {
 
     val fpProtectedAmountString = "£1,250,000"
 
-    val ip16SuccessCodes = List(12,13,14,15,16)
-    val ip16RejectCodes = List(9,10,11)
+    val ip16SuccessCodes = List(12,13,14,15,16,44)
 
-    val ip14SuccessCodes = List(3,4,5,6,7,8)
-    val ip14RejectCodes = List(1,2)
+    val ip14SuccessCodes = List(3,4,5,6,7,8,33,34)
 
-    val successCodesRequiringProtectionInfo = List(3,4,8,12,22,23)
+    val successCodesRequiringProtectionInfo = List(3,4,8,12,22,23,33,34,44)
     val fpShowPensionSharing = List(23,24)
 
     val ip16RelevantAmountThreshold = 1000001.0
     val ip14RelevantAmountThreshold = 1250001.0
 
-    val activeProtectionCodes = List(22,23,12,3,4,8)
+    val activeProtectionCodes = List(22,23,12,3,4,8,33,34,44)
 
     val activeAmendmentCodes = List(33,34,44)
 }
