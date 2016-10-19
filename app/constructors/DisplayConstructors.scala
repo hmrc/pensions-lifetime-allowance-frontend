@@ -123,7 +123,7 @@ trait DisplayConstructors {
 
     val pensionDebitAdded = model.updatedProtection.pensionDebits.isDefined
 
-    val psoSecs: Seq[AmendDisplaySectionModel] =  createPsoSectionFromProtectionModel(model.updatedProtection)
+    val psoSecs: Seq[AmendDisplaySectionModel] =  createCurrentPsoSection(model.updatedProtection).getOrElse(Seq())
 
     AmendDisplayModel (
       protectionType = protectionType,
@@ -133,15 +133,6 @@ trait DisplayConstructors {
       psoSections = psoSecs,
       totalAmount = totalAmount
     )
-  }
-
-  def createPsoSectionFromProtectionModel(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
-//    val previousPsoSection: AmendDisplaySectionModel = createPreviousPsoSection(protection)
-    val addedPsoSection: Option[Seq[AmendDisplaySectionModel]] = createCurrentPsoSection(protection)
-//    val totalSection: AmendDisplaySectionModel = createPsoTotalSection(protection)
-
-    addedPsoSection.getOrElse(Seq()) //++ Seq(totalSection)
-//    addedPsoSection.getOrElse(Seq(AmendDisplaySectionModel("no-pso", Seq(AmendDisplayRowModel("row", None, None, "*No PSO message*"))))) //++ Seq(totalSection)
   }
 
   def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel = {
@@ -171,17 +162,6 @@ trait DisplayConstructors {
       }
     }
   }
-
-//  def createPsoTotalSection(protection: ProtectionModel): AmendDisplaySectionModel = {
-//    val newPSOAmt: Option[Double] = protection.pensionDebits.flatMap{debitList => debitList.headOption.map {debit => debit.amount}}
-//    AmendDisplaySectionModel("total-amount",
-//      Seq(AmendDisplayRowModel(
-//        s"${ApplicationStage.CurrentPsos.toString}-currentTotal",
-//        changeLinkCall = None,
-//        removeLinkCall = None,
-//        Display.currencyDisplayString(BigDecimal(newPSOAmt.getOrElse(0.0) + protection.pensionDebitTotalAmount.getOrElse(0.0)))))
-//    )
-//  }
 
   def createAmendPensionContributionSectionsFromProtection(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
     val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)

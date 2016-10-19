@@ -3,14 +3,6 @@
 @(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean)
 
 
-@if(sectionId == "total-amount") {
-    <tr class="grey-background">
-        <td class="total-font" id="total-message">@Messages("pla.summary.questions.totalPsoAmt")</td>
-        <td class="total-font" id=@{s"${sectionId}-${model.rowId}"}>@model.displayValue</td>
-        <td></td><td></td>
-    </tr>
-} else {
-
 <tr>
 
     <td class="@if(firstRow){has-child-item}" id=@{s"${sectionId}-${model.rowId}-question"}>
@@ -40,4 +32,3 @@
     <td class = "@if(firstRow){has-child-item}"></td>
     }
 </tr>
-}
