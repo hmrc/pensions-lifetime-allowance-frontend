@@ -56,6 +56,8 @@
             <td></td><td></td>
         </tr>
 
+        @if(!model.psoSections.isEmpty){
+
         <thead>
             <tr>
                 <th colspan="4" class="table-divider">
@@ -66,6 +68,9 @@
         @model.psoSections.map { section =>
             @amendSection(section, model.protectionType)
         }
+        }
+
+
     </table>
     @if(!model.psoAdded){
         <div>
