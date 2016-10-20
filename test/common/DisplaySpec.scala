@@ -29,6 +29,11 @@ class DisplaySpec extends UnitSpec {
       currencyDisplayString(tstAmt) shouldBe "£1,000.45"
     }
 
+    "correctly create a currency string for -1000.45" in {
+      val tstAmt = BigDecimal(-1000.45)
+      currencyDisplayString(tstAmt) shouldBe "£-1,000.45"
+    }
+
     "create a currency string for 7" in { 
       val tstAmt = BigDecimal(7)
       currencyDisplayString(tstAmt) shouldBe "£7"
