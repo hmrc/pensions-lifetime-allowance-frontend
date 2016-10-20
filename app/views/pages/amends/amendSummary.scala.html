@@ -74,7 +74,7 @@
     </table>
     @if(!model.psoAdded){
         <div>
-            <a href="@routes.AmendsController.amendPsoDetails(model.protectionType, status)" id="addPsoLink" >@Messages("pla.amends.addPsoLink")</a>
+            <a href="@routes.AmendsController.amendPsoDetails(model.protectionType.toLowerCase(), status)" id="addPsoLink" >@Messages("pla.amends.addPsoLink")</a>
         </div>
     }
 
