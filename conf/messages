@@ -545,7 +545,7 @@ amendResultCode.25.2        = If you''ve already started taking your pension, yo
 
 amendResultCode.26.heading  = You''re no longer entitled to individual protection 2014
 amendResultCode.26.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.26.2        = However, you already have enhanced protection which will remain active. If you lose enhanced protection, you must tell HMRC Pension Schemes Services.
+amendResultCode.26.2        = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell HMRC Pension Schemes Services.
 
 amendResultCode.27.heading  = You''re no longer entitled to individual protection 2014
 amendResultCode.27.1        = This is because your total pension savings are below £1,250,001.
@@ -561,7 +561,7 @@ amendResultCode.29.2        = However, you already had fixed protection 2016 whi
 amendResultCode.29.3        = If you lose fixed protection 2016, you must tell HMRC Pension Schemes Services.
 
 amendResultCode.30.heading  = You''ve amended individual protection 2014
-amendResultCode.30.1        = As you already have enhanced protection in place, individual protection 2014 will only become active if you lose enhanced protection.
+amendResultCode.30.1        = As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
 amendResultCode.30.2        = If this happens, you must tell HMRC Pension Schemes Services.
 
 amendResultCode.31.heading  = You''ve amended individual protection 2014
@@ -582,7 +582,7 @@ amendResultCode.35.2        = If you''ve already started taking your pension, yo
 
 amendResultCode.36.heading  = You''re no longer entitled to individual protection 2016
 amendResultCode.36.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.36.2        = However, you already have enhanced protection which will remain active. If you lose enhanced protection, you must tell HMRC Pension Schemes Services.
+amendResultCode.36.2        = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell HMRC Pension Schemes Services.
 
 amendResultCode.37.heading  = You''re no longer entitled to individual protection 2016
 amendResultCode.37.1        = This is because your total pension savings are below £1,000,001.
@@ -597,7 +597,7 @@ amendResultCode.39.1        = This is because your total pension savings are bel
 amendResultCode.39.2        = However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell HMRC Pension Schemes Services.
 
 amendResultCode.40.heading  = You''ve amended individual protection 2016
-amendResultCode.40.1        = As you already have enhanced protection in place, individual protection 2016 will only become active if you lose enhanced protection.
+amendResultCode.40.1        = As you already have enhanced protection in place, individual protection 2016 will only become active if you give up enhanced protection.
 amendResultCode.40.2        = If this happens, you must tell HMRC Pension Schemes Services.
 
 amendResultCode.41.heading  = You''ve amended individual protection 2016
@@ -701,7 +701,7 @@ resultCode.25.1         =   This is because your total pensions savings are belo
 
 resultCode.26.heading   =   You''re not entitled to individual protection 2014
 resultCode.26.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.26.2         =   However, you already have enhanced protection which will remain active. If you lose enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.26.2         =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
 resultCode.27.heading   =   You''re not entitled to individual protection 2014
 resultCode.27.1         =   This is because your total pension savings are below £1,250,001.
@@ -739,7 +739,7 @@ resultCode.35.1         =   This is because your total pensions savings are belo
 
 resultCode.36.heading   =   You''re not entitled to individual protection 2016
 resultCode.36.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.36.2         =   However, you already have enhanced protection which will remain active. If you lose enhanced protection, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.36.2         =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
 resultCode.37.heading   =   You''re not entitled to individual protection 2016
 resultCode.37.1         =   This is because your total pensions savings are below £1,000,001.
