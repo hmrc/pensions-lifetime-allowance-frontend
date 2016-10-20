@@ -27,7 +27,7 @@ object Constants {
     val minIP14PSODate: LocalDate = LocalDate.of(2014, 4, 6)
     val minIP16PSODate: LocalDate = LocalDate.of(2016, 4, 6)
 
-    val fpProtectedAmountString = "£1,250,000"
+    val fpProtectedAmount = 1250000.0
 
     val ip16SuccessCodes = List(12,13,14,15,16,44)
 
