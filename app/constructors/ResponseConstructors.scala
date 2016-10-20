@@ -27,7 +27,7 @@ trait ResponseConstructors {
 
     def createApplyResponseModelFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value): Option[ApplyResponseModel] = {
         val psaReference = (json \ "psaCheckReference").asOpt[String]
-        
+
         json.validate[ProtectionModel].fold(
             errors => None,
             success => Some(ApplyResponseModel(success.copy(psaCheckReference = psaReference)))
