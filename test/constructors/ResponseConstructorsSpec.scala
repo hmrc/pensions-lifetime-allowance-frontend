@@ -32,7 +32,6 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
     protectionID = Some(12345),
     protectionType = Some("FP2016"),
     certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456"))
   val testFPSuccessApplyResponseModel     = ApplyResponseModel(testFPSuccessProtectionModel)
 
@@ -43,7 +42,6 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
       val jsn: JsValue = Json.parse(
         """{"certificateDate":"2016-04-17",
           |"notificationId":24,
-          |"protectedAmount":1250000,
           |"protectionID":12345,
           |"protectionReference":"PSA123456",
           |"protectionType":"FP2016",
