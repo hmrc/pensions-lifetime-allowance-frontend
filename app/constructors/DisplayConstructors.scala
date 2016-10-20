@@ -114,12 +114,16 @@ trait DisplayConstructors {
   // AMENDS
   def createAmendDisplayModel(model: AmendProtectionModel): AmendDisplayModel = {
     val amended = modelsDiffer(model.originalProtection, model.updatedProtection)
-    val totalAmount = Display.currencyDisplayString(BigDecimal(model.updatedProtection.relevantAmount.getOrElse(0.0)))
-    val pcSections = createAmendPensionContributionSectionsFromProtection(model.updatedProtection)
+    val totalAmount = Display.currencyDisplayString(BigDecimal(
+      model.updatedProtection.relevantAmount.getOrElse(0.0)
+    ))
     val protectionType  = Strings.protectionTypeString(model.updatedProtection.protectionType)
+
+    val pcSections: Seq[AmendDisplaySectionModel] = createAmendPensionContributionSectionsFromProtection(model.updatedProtection)
+
     val pensionDebitAdded = model.updatedProtection.pensionDebits.isDefined
 
-    val psoSecs: Seq[AmendDisplaySectionModel] =  createPsoSectionFromProtectionModel(model.updatedProtection)
+    val psoSecs: Seq[AmendDisplaySectionModel] =  createCurrentPsoSection(model.updatedProtection).getOrElse(Seq())
 
     AmendDisplayModel (
       protectionType = protectionType,
@@ -129,14 +133,6 @@ trait DisplayConstructors {
       psoSections = psoSecs,
       totalAmount = totalAmount
     )
-  }
-
-  def createPsoSectionFromProtectionModel(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
-    val previousPsoSection: AmendDisplaySectionModel = createPreviousPsoSection(protection)
-    val addedPsoSection: Option[Seq[AmendDisplaySectionModel]] = createCurrentPsoSection(protection)
-    val totalSection: AmendDisplaySectionModel = createPsoTotalSection(protection)
-
-    Seq(previousPsoSection) ++ addedPsoSection.getOrElse(Seq()) ++ Seq(totalSection)
   }
 
   def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel = {
@@ -167,24 +163,14 @@ trait DisplayConstructors {
     }
   }
 
-  def createPsoTotalSection(protection: ProtectionModel): AmendDisplaySectionModel = {
-    val newPSOAmt: Option[Double] = protection.pensionDebits.flatMap{debitList => debitList.headOption.map {debit => debit.amount}}
-    AmendDisplaySectionModel("total-amount",
-      Seq(AmendDisplayRowModel(
-        s"${ApplicationStage.CurrentPsos.toString}-currentTotal",
-        changeLinkCall = None,
-        removeLinkCall = None,
-        Display.currencyDisplayString(BigDecimal(newPSOAmt.getOrElse(0.0) + protection.pensionDebitTotalAmount.getOrElse(0.0)))))
-    )
-  }
-
   def createAmendPensionContributionSectionsFromProtection(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
     val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)
     val pensionsTakenBeforeSection = createSection(protection, ApplicationStage.PensionsTakenBefore, protection.preADayPensionInPayment)
     val pensionsTakenBetweenSection = createSection(protection, ApplicationStage.PensionsTakenBetween, protection.postADayBenefitCrystallisationEvents)
     val overseasPensionsSection = createSection(protection, ApplicationStage.OverseasPensions, protection.nonUKRights)
+    val previousPsoSection = createPreviousPsoSection(protection)
 
-    Seq(currentPensionsSection, pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection)
+    Seq(currentPensionsSection, pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, previousPsoSection)
   }
 
   def createSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double]): AmendDisplaySectionModel = {

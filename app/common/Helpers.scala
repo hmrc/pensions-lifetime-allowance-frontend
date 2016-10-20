@@ -64,6 +64,6 @@ object Helpers {
       protection.postADayBenefitCrystallisationEvents,
       protection.nonUKRights,
       protection.uncrystallisedRights
-    ).flatten.sum
+    ).flatten.sum - protection.pensionDebitTotalAmount.getOrElse(0.0)
   }
 }
