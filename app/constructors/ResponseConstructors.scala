@@ -16,7 +16,7 @@
 
 package constructors
 
-import play.api.libs.json.{Json, JsObject, JsValue}
+import play.api.libs.json.JsValue
 import models._
 import enums.ApplicationType
 
@@ -27,10 +27,8 @@ trait ResponseConstructors {
 
     def createApplyResponseModelFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value): Option[ApplyResponseModel] = {
         val psaReference = (json \ "psaCheckReference").asOpt[String]
-
-        val updatedJson = if(protectionType == ApplicationType.FP2016){json.as[JsObject] ++ Json.obj("protectedAmount" -> 1250000.toDouble)} else json
-
-        updatedJson.validate[ProtectionModel].fold(
+        
+        json.validate[ProtectionModel].fold(
             errors => None,
             success => Some(ApplyResponseModel(success.copy(psaCheckReference = psaReference)))
         )
