@@ -57,7 +57,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
   val tstNoPsoAmendProtectionModel = AmendProtectionModel(tstProtection, tstProtection)
   val tstWithPsoAmendProtectionModel = AmendProtectionModel(tstWithPsoProtection, tstWithPsoProtection)
 
-  val tstPensionContributionDisplaySections = Seq(
+  val tstPensionContributionNoPsoDisplaySections = Seq(
     AmendDisplaySectionModel("CurrentPensions",Seq(
       AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
     )
@@ -74,31 +74,44 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
       AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
     )
+    ),
+    AmendDisplaySectionModel("CurrentPsos", Seq(
+      AmendDisplayRowModel("YesNo", None, None, "No")
+    )
+    )
+  )
+  val tstPensionContributionPsoDisplaySections = Seq(
+    AmendDisplaySectionModel("CurrentPensions",Seq(
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
+    )
+    ),
+    AmendDisplaySectionModel("PensionsTakenBefore", Seq(
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
+    )
+    ),
+    AmendDisplaySectionModel("PensionsTakenBetween", Seq(
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active")), None, "No")
+    )
+    ),
+    AmendDisplaySectionModel("OverseasPensions", Seq(
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
+    )
+    ),
+    AmendDisplaySectionModel("CurrentPsos", Seq(
+      AmendDisplayRowModel("YesNo", None, None, "Yes"),
+      AmendDisplayRowModel("Amt", None, None, "£1,000")
+    )
     )
   )
 
-  val tstNoPsoDisplaySections = Seq(
-    AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString,
-      Seq(
-      AmendDisplayRowModel("YesNo", None, None, "No")
-      )
-    ),
-    AmendDisplaySectionModel("total-amount",
-      Seq(
-      AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, None, "£0")
-      )
-    )
-  )
+  val tstNoPsoDisplaySections = Seq()
+
   val tstPsoDisplaySections = Seq(
     AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString, Seq(
       AmendDisplayRowModel("YesNo", None, None, "Yes"),
       AmendDisplayRowModel("Amt", None, None, "£1,000")
-    )),
-    AmendDisplaySectionModel("total-amount",
-      Seq(
-        AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, None, "£1,000")
-      )
-    )
+    ))
   )
 
   "Existing Protections Constructor" should {
@@ -550,7 +563,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       DisplayConstructors.createAmendDisplayModel(tstNoPsoAmendProtectionModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
-        pensionContributionSections = tstPensionContributionDisplaySections,
+        pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = false,
         psoSections = tstNoPsoDisplaySections,
         totalAmount = "£1,100,000.34"
@@ -561,9 +574,9 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       DisplayConstructors.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
-        pensionContributionSections = tstPensionContributionDisplaySections,
+        pensionContributionSections = tstPensionContributionPsoDisplaySections,
         psoAdded = false,
-        psoSections = tstPsoDisplaySections,
+        psoSections = tstNoPsoDisplaySections,
         totalAmount = "£1,100,000.34"
       )
     }
@@ -572,9 +585,9 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       DisplayConstructors.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
-        pensionContributionSections = tstPensionContributionDisplaySections,
+        pensionContributionSections = tstPensionContributionPsoDisplaySections,
         psoAdded = false,
-        psoSections = tstPsoDisplaySections,
+        psoSections = tstNoPsoDisplaySections,
         totalAmount = "£1,100,000.34"
       )
     }
@@ -591,14 +604,14 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         postADayBenefitCrystallisationEvents = None,
         pensionDebitTotalAmount = Some(0.00),
         nonUKRights = Some(100000.0),
-        uncrystallisedRights = Some(1000000.34)      )
+        uncrystallisedRights = Some(1000000.34))
 
       val amendModel = AmendProtectionModel(tstNoPsoAmountProtection, tstNoPsoAmountProtection)
 
       DisplayConstructors.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
-        pensionContributionSections = tstPensionContributionDisplaySections,
+        pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = false,
         psoSections = tstNoPsoDisplaySections,
         totalAmount = "£1,100,000.34"
@@ -624,24 +637,19 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
 
       val tstPsoAddedSection = Seq(
-        AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString,
-          Seq(AmendDisplayRowModel("YesNo", None, None, "No"))),
         AmendDisplaySectionModel("pensionDebits",
           Seq(
             AmendDisplayRowModel("CurrentPsos-psoDetails",
               changeLinkCall = Some(controllers.routes.AmendsController.amendPsoDetails("ip2016", "active")),
               removeLinkCall = None,
               "£1,000", "2 March 2017")
-          )),
-        AmendDisplaySectionModel("total-amount",
-          Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, None, "£1,000"))
-        )
+          ))
       )
 
       DisplayConstructors.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
-        pensionContributionSections = tstPensionContributionDisplaySections,
+        pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = true,
         psoSections = tstPsoAddedSection,
         totalAmount = "£1,100,000.34"
@@ -667,20 +675,12 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
       val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
 
-      val tstPsoSection = Seq(
-        AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString,
-          Seq(AmendDisplayRowModel("YesNo", None, None, "No"))
-        ),
-        AmendDisplaySectionModel("total-amount",
-          Seq(AmendDisplayRowModel(s"${ApplicationStage.CurrentPsos.toString}-currentTotal", None, None, "£1,000"))
-      ))
-
       DisplayConstructors.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
-        pensionContributionSections = tstPensionContributionDisplaySections,
+        pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = true,
-        psoSections = tstPsoSection,
+        psoSections = tstNoPsoDisplaySections,
         totalAmount = "£1,000,000.34"
       )
 
