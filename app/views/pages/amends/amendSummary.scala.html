@@ -7,7 +7,7 @@
 
 @(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_])
 
-@main_template(title = Messages("pla.amends.title")) {
+@full_width_template(title = Messages("pla.amends.title")) {
 
 
     <nav class="breadcrumb-nav breadcrumb-nav--slim">
@@ -37,7 +37,7 @@
 
     }
 
-    <table>
+    <table >
         <thead>
             <tr>
                 <th colspan="4">
@@ -51,8 +51,8 @@
         }
 
         <tr class="grey-background">
-            <td class="total-font" id="total-message">@Messages("pla.amends.totalValueOfPensions")</td>
-            <td class="total-font" id="total-amount">@model.totalAmount</td>
+            <td class="total-font summary-text" id="total-message">@Messages("pla.amends.totalValueOfPensions")</td>
+            <td class="total-font summary-data" id="total-amount">@model.totalAmount</td>
             <td></td><td></td>
         </tr>
 
@@ -86,10 +86,12 @@
 
         </div>
 
+        <div>
         @if(model.amended) {
             <p id="declaration">@Messages("pla.amends.declaration")</p>
             <button id="submit" class="button" type="submit">@Messages("pla.amends.submit")</button>
         }
+        </div>
     }
 
 }

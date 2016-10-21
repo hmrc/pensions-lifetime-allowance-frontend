@@ -5,18 +5,18 @@
 
 <tr>
 
-    <td class="@if(firstRow){has-child-item}" id=@{s"${sectionId}-${model.rowId}-question"}>
+    <td class="@if(firstRow){has-child-item} summary-text" id=@{s"${sectionId}-${model.rowId}-question"}>
         @Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}")
     </td>
 
-    <td class="@if(firstRow){has-child-item}" id=@{s"${sectionId}-${model.rowId}-value"}>
+    <td class="@if(firstRow){has-child-item} summary-data" id=@{s"${sectionId}-${model.rowId}-value"}>
 
         @for((displayValue, index) <- model.displayValue.zipWithIndex) {
         <span id="@{model.rowId}DisplayValue@index" class='' >@displayValue</span></br>
         }
     </td>
 
-    <td class="@if(firstRow){has-child-item}" id=@{s"${sectionId}-${model.rowId}-changeLink"}>
+    <td class="@if(firstRow){has-child-item} summary-link" id=@{s"${sectionId}-${model.rowId}-changeLink"}>
         @if(model.changeLinkCall.isDefined) {
             <a id=@{s"${sectionId}-${model.rowId}-change-link"} href="@model.changeLinkCall">@Messages("pla.base.change")</a>
             <span class="visuallyhidden">@Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}.changeHint")</span>
@@ -24,7 +24,7 @@
         }
     </td>
     @if(model.removeLinkCall.isDefined){
-    <td class = "@if(firstRow){has-child-item}" id=@{s"${sectionId}-${model.rowId}-removeLink"}>
+    <td class = "@if(firstRow){has-child-item} summary-link" id=@{s"${sectionId}-${model.rowId}-removeLink"}>
         <a id=@{s"${sectionId}-${model.rowId}-remove-link"} href="@{model.removeLinkCall}">@Messages("pla.base.remove")</a>
         <span class ="visuallyhidden">@Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}.removeHint")</span>
     </td>

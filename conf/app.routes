@@ -1,6 +1,6 @@
 # microservice specific routes
 
-GET         /assets/*file                                       controllers.Assets.at(path="/public", file)
+GET         /assets/*file                                       controllers.Assets.at(path="/public", file: String)
 
 
 ## Auth ##
@@ -31,7 +31,7 @@ GET         /apply-for-ip14-number-of-pension-sharing-orders    controllers.IP20
 POST        /apply-for-ip14-number-of-pension-sharing-orders    controllers.IP2014Controller.submitIP14NumberOfPSOs
 
 POST        /apply-for-ip14-pension-sharing-order-details           controllers.IP2014Controller.submitIP14PSODetails
-GET         /apply-for-ip14-pension-sharing-order-details/:psoNum   controllers.IP2014Controller.ip14PsoDetails(psoNum)
+GET         /apply-for-ip14-pension-sharing-order-details/:psoNum   controllers.IP2014Controller.ip14PsoDetails(psoNum: String)
 
 GET         /apply-for-ip14-submit-your-application             controllers.SummaryController.summaryIP14
 
@@ -59,7 +59,7 @@ GET         /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP20
 POST        /apply-for-ip16-number-of-pension-sharing-orders    controllers.IP2016Controller.submitNumberOfPSOs
 
 POST        /apply-for-ip16-pension-sharing-order-details           controllers.IP2016Controller.submitPSODetails
-GET         /apply-for-ip16-pension-sharing-order-details/:psoNum   controllers.IP2016Controller.psoDetails(psoNum)
+GET         /apply-for-ip16-pension-sharing-order-details/:psoNum   controllers.IP2016Controller.psoDetails(psoNum: String)
 
 GET         /apply-for-ip16-submit-your-application             controllers.SummaryController.summaryIP16
 
