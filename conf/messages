@@ -298,8 +298,8 @@ pla.psoDetails.errorQuestion                = Enter a number without commas, for
 
 pla.amendPsoDetails.pageHeading             = Pension sharing order
 
-pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date after 5 April 2014
-pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date after 5 April 2016
+pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2014 and today
+pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2016 and today
 
 
 ## SUMMARY ##

@@ -16,6 +16,7 @@
 
 package controllers
 
+import java.time.LocalDate
 import java.util.UUID
 
 import auth.{MockAuthConnector, MockConfig}
@@ -1101,12 +1102,12 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "Submitting Amend PSOs data" when {
 
-    "submitting a valid PSO's details" should {
+    "submitting a valid IP14 PSO's details on first valid day" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", "1"),
-        ("psoMonth", "1"),
-        ("psoYear", "2015"),
+        ("psoDay", "6"),
+        ("psoMonth", "4"),
+        ("psoYear", "2014"),
         ("psoAmt", "100000"),
         ("protectionType", "ip2014"),
         ("status", "open"),
@@ -1118,8 +1119,30 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 303
       }
 
-      "redirect to the psoDetails controller action with a psoNum of 5" in {
+      "redirect to the amends summary action for open IP 2014" in {
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "open")}")
+      }
+    }
+
+    "submitting a valid IP16 PSO's details on first valid day" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "6"),
+        ("psoMonth", "4"),
+        ("psoYear", "2016"),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2016"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+
+      "redirect to the amends summary action for open IP 2016" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "open")}")
       }
     }
 
@@ -1195,7 +1218,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "submitting an invalid set of PSO details - date out of range for ip14" should {
+    "submitting an invalid set of PSO details - date before 6 April 2014 for ip14" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
         ("psoDay", "5"),
@@ -1213,7 +1236,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "submitting an invalid set of PSO details - date out of range for ip16" should {
+    "submitting an invalid set of PSO details - date before 6 April 2016 for ip16" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
         ("psoDay", "5"),
@@ -1228,6 +1251,44 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "fail with the correct error message" in {
         DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - date in future for IP2016" should {
+
+      val tomorrow = LocalDate.now.plusDays(1)
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", tomorrow.getDayOfMonth.toString),
+        ("psoMonth", tomorrow.getMonthValue.toString),
+        ("psoYear", tomorrow.getYear.toString),
+        ("psoAmt", "1000"),
+        ("protectionType", "ip2016"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
+      }
+    }
+
+    "submitting an invalid set of PSO details - date in future for IP2014" should {
+
+      val tomorrow = LocalDate.now.plusDays(1)
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", tomorrow.getDayOfMonth.toString),
+        ("psoMonth", tomorrow.getMonthValue.toString),
+        ("psoYear", tomorrow.getYear.toString),
+        ("psoAmt", "1000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+
+      "fail with the correct error message" in {
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP14PsoDetails.errorDateOutOfRange"))
       }
     }
 

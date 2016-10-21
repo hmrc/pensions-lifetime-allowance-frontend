@@ -60,4 +60,22 @@ class DatesSpec extends UnitSpec {
     }
   }
 
+  "futureDate" should {
+    val today = LocalDate.now
+    val tomorrow = today.plusDays(1)
+    val yesterday = today.minusDays(1)
+
+    "return true for tomorrow" in {
+      futureDate(tomorrow.getDayOfMonth, tomorrow.getMonthValue, tomorrow.getYear) shouldBe true
+    }
+
+    "return false for today" in {
+      futureDate(today.getDayOfMonth, today.getMonthValue, today.getYear) shouldBe false
+    }
+
+    "return false for yesterday" in {
+      futureDate(yesterday.getDayOfMonth, yesterday.getMonthValue, yesterday.getYear) shouldBe false
+    }
+  }
+
 }

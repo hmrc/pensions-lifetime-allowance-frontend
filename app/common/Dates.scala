@@ -43,6 +43,10 @@ object Dates {
     LocalDate.of(year, month, day).isAfter(date2)
   }
 
+  def futureDate(day: Int, month: Int, year: Int): Boolean = {
+    dateAfter(day,month,year,LocalDate.now)
+  }
+
   def apiDateFormat(day: Int, month: Int, year: Int): String = {
 
     val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
