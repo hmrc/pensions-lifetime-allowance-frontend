@@ -16,6 +16,7 @@
 
 package controllers
 
+import java.time.LocalDate
 import java.util.UUID
 import connectors.KeyStoreConnector
 import org.scalatest.mock.MockitoSugar
@@ -889,13 +890,13 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "Submitting valid PSO details data" when {
 
-        "submitting a valid 4th PSO's details" should {
+        "submitting a valid 4th PSO's details on first possible day" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
                 ("psoNumber", "4"),
-                ("psoDay", "1"),
-                ("psoMonth", "1"),
-                ("psoYear", "2015"),
+                ("psoDay", "6"),
+                ("psoMonth", "4"),
+                ("psoYear", "2016"),
                 ("psoAmt", "100000")
             )
             "return 303" in {
@@ -904,6 +905,25 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "redirect to the psoDetails controller action with a psoNum of 5" in {
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14PsoDetails("5")}")
+            }
+        }
+
+        "submitting a valid 3rd PSO's details on today's date" should {
+
+            val todaysDate = LocalDate.now()
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
+                ("psoNumber", "3"),
+                ("psoDay", todaysDate.getDayOfMonth.toString),
+                ("psoMonth", todaysDate.getMonthValue.toString),
+                ("psoYear", todaysDate.getYear.toString),
+                ("psoAmt", "1000000")
+            )
+            "return 303" in {
+                status(DataItem.result) shouldBe 303
+            }
+
+            "redirect to the psoDetails controller action with a psoNum of 4" in {
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14PsoDetails("4")}")
             }
         }
 
@@ -971,13 +991,30 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             }
         }
 
-        "submitting an invalid set of PSO details - date out of range" should {
+        "submitting an invalid set of PSO details - date before 6 April 2014" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
                 ("psoNumber", "4"),
                 ("psoDay", "5"),
                 ("psoMonth", "4"),
                 ("psoYear", "2014"),
+                ("psoAmt", "1000")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+            "fail with the correct error message" in {
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP14PsoDetails.errorDateOutOfRange"))
+            }
+        }
+
+        "submitting an invalid set of PSO details - date in future" should {
+
+            val tomorrow = LocalDate.now.plusDays(1)
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
+                ("psoNumber", "4"),
+                ("psoDay", tomorrow.getDayOfMonth.toString),
+                ("psoMonth", tomorrow.getMonthValue.toString),
+                ("psoYear", tomorrow.getYear.toString),
                 ("psoAmt", "1000")
             )
             "return 400" in { status(DataItem.result) shouldBe 400 }

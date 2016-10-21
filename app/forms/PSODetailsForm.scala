@@ -31,6 +31,7 @@ object PSODetailsForm {
     if(dateFieldsAlreadyInvalid(form)) form
     else if(!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
     else if(dateBefore(day, month, year, Constants.minIP16PSODate)) form.withError("psoDay", Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
+    else if(futureDate(day, month, year)) form.withError("psoDay", Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
     else form
   }
 
