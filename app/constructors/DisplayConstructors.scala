@@ -264,7 +264,7 @@ trait DisplayConstructors {
   // SUCCESSFUL APPLICATION RESPONSE
   def createSuccessDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): SuccessDisplayModel = {
     val notificationId = model.protection.notificationId.getOrElse(throw new Exceptions.OptionNotDefinedException("CreateSuccessDisplayModel", "notification ID", protectionType.toString))
-    val protectedAmount = model.protection.protectedAmount.getOrElse(throw new Exceptions.OptionNotDefinedException("ApplyResponseModel", "protected amount", protectionType.toString))
+    val protectedAmount = model.protection.protectedAmount.getOrElse(if(protectionType == ApplicationType.FP2016) Constants.fpProtectedAmount else throw new Exceptions.OptionNotDefinedException("ApplyResponseModel", "protected amount", protectionType.toString))
     val printable = Constants.activeProtectionCodes.contains(notificationId)
 
     val details = if(Constants.successCodesRequiringProtectionInfo.contains(notificationId)) {
