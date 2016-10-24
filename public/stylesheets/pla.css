@@ -28,6 +28,18 @@
 #listProtections .protection-detail { margin-bottom: 20px; }
 #listProtections .protection-detail:last-child { margin-bottom: 0; }
 
+.summary-text {
+    width:50%;
+}
+
+.summary-data {
+    padding-left: 5%;
+}
+
+.summary-link {
+    text-align: right;
+}
+
 .grid-wrapper {
 	margin-left: 0px;
 }
