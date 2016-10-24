@@ -29,9 +29,11 @@ object Constants {
 
     val fpProtectedAmount = 1250000.0
 
-    val ip16SuccessCodes = List(12,13,14,15,16,44)
+    val ip16SuccessCodes = List(12,13,14,15,16,40,41,42,43,44)
 
-    val ip14SuccessCodes = List(3,4,5,6,7,8,33,34)
+    val ip14SuccessCodes = List(3,4,5,6,7,8,30,31,32,33,34)
+
+    val inactiveSuccessCodes = List(24,30,31,32,40,41,42,43)
 
     val successCodesRequiringProtectionInfo = List(3,4,8,12,22,23,33,34,44)
     val fpShowPensionSharing = List(23,24)
@@ -39,7 +41,7 @@ object Constants {
     val ip16RelevantAmountThreshold = 1000001.0
     val ip14RelevantAmountThreshold = 1250001.0
 
-    val activeProtectionCodes = List(22,23,12,3,4,8,33,34,44)
+    val activeProtectionCodes = List(3,4,8,12,22,23,33,34,44)
 
     val activeAmendmentCodes = List(33,34,44)
 }
