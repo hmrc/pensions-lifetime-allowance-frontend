@@ -18,6 +18,7 @@ package enums
 
 object ApplicationOutcome extends Enumeration {
   val Successful = Value
+  val SuccessfulInactive = Value
   val Rejected = Value
   val MCNeeded = Value
 }

@@ -630,7 +630,7 @@ resultCode.1.1          =   If you''ve lost primary protection, contact <a href=
 resultCode.2.heading    =   Your application for individual protection 2014 was rejected as you already have this.
 
 resultCode.3.heading    =   You''ve added individual protection 2014
-resultCode.3.1          =   As you already had individual protection 2016 in place, this has been made inactive.
+resultCode.3.1          =   As you already had individual protection 2016 in place, individual protection 2016 has been made inactive.
 
 resultCode.4.heading    =   You''ve added individual protection 2014
 
@@ -647,7 +647,7 @@ resultCode.7.1          =   As you already have fixed protection 2014 in place, 
 resultCode.7.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
 resultCode.8.heading    =   You''ve added individual protection 2014
-resultCode.8.1          =   As you already had fixed protection 2016 in place, this has been made inactive. It will become active again if you lose individual protection 2014.
+resultCode.8.1          =   As you already had fixed protection 2016 in place, fixed protection 2016 has been made inactive. It will become active again if you lose individual protection 2014.
 resultCode.8.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
 resultCode.9.heading    =   Your application for individual protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
@@ -693,7 +693,7 @@ resultCode.21.heading   =   Your application for fixed protection 2016 was rejec
 resultCode.22.heading   =   You''ve added fixed protection 2016.
 
 resultCode.23.heading   =   You''ve added fixed protection 2016.
-resultCode.23.1         =   As you already had individual protection 2016 in place, this has been made inactive. It will become active again if you lose fixed protection 2016.
+resultCode.23.1         =   As you already had individual protection 2016 in place, individual protection 2016 has been made inactive. It will become active again if you lose fixed protection 2016.
 resultCode.23.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
 resultCode.24.heading   =   You''ve added fixed protection 2016.
@@ -733,7 +733,7 @@ resultCode.32.1         =   As you already have fixed protection 2014 in place, 
 resultCode.32.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
 resultCode.33.heading   =   You''ve added individual protection 2014
-resultCode.33.1         =   As you already had fixed protection 2016 in place, this has been made inactive. It will become active again if you lose individual protection 2014.
+resultCode.33.1         =   As you already had fixed protection 2016 in place, fixed protection 2016 has been made inactive. It will become active again if you lose individual protection 2014.
 resultCode.33.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
 
 resultCode.34.heading   =   You''ve added individual protection 2014

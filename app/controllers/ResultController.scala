@@ -117,36 +117,40 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     implicit user => implicit request =>
       val errorResponse = InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
-        case Some(model) => applicationOutcome(model) match {
+        case Some(model) =>
+          val notificationId = model.protection.notificationId.getOrElse{throw new Exceptions.OptionNotDefinedException("applicationOutcome", "notificationId", protectionType.toString)}
+          applicationOutcome(notificationId) match {
 
-          case ApplicationOutcome.Successful =>
-            val notificationId = model.protection.notificationId.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("displayResult", "notificationId", user.nino.get))
-            if (utils.Constants.activeProtectionCodes.contains(notificationId)) {
+            case ApplicationOutcome.Successful =>
               keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
-            }
-            val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
-            Ok(resultSuccess(displayModel))
+              val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
+              Ok(resultSuccess(displayModel))
 
-          case ApplicationOutcome.Rejected =>
-            val displayModel = DisplayConstructors.createRejectionDisplayModel(model)
-            Ok(resultRejected(displayModel))
-        }
+            case ApplicationOutcome.SuccessfulInactive =>
+              val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
+              Ok(resultSuccessInactive(displayModel))
+
+            case ApplicationOutcome.Rejected =>
+              val displayModel = DisplayConstructors.createRejectionDisplayModel(model)
+              Ok(resultRejected(displayModel))
+          }
         case _ => errorResponse
       }
 
   }
 
 
-  def applicationOutcome(model: ApplyResponseModel)(implicit user: PLAUser, protectionType: ApplicationType.Value): ApplicationOutcome.Value = {
-    val notificationId = model.protection.notificationId
-    assert(notificationId.isDefined, s"no notification ID returned in $protectionType application response for user nino ${user.nino}")
+  def applicationOutcome(notificationId: Int)(implicit protectionType: ApplicationType.Value): ApplicationOutcome.Value = {
     val successCodes = protectionType match {
       case ApplicationType.FP2016 => Constants.successCodes
       case ApplicationType.IP2016 => Constants.ip16SuccessCodes
       case ApplicationType.IP2014 => Constants.ip14SuccessCodes
     }
-    if (successCodes.contains(notificationId.get)) ApplicationOutcome.Successful else ApplicationOutcome.Rejected
+    if (successCodes.contains(notificationId)) successfulOutcomeType(notificationId) else ApplicationOutcome.Rejected
   }
 
+  private def successfulOutcomeType(notificationId: Int): ApplicationOutcome.Value = {
+    if(Constants.inactiveSuccessCodes.contains(notificationId)) ApplicationOutcome.SuccessfulInactive else ApplicationOutcome.Successful
+  }
 
 }
