@@ -1,3 +1,5 @@
+@import common.Links
+
 @{
 /*
 
@@ -10,7 +12,7 @@
 
     <p>@Messages("pla.cannotApply.paraOne")</p>
 
-    <p>@Messages("pla.cannotApply.paraTwo") <a href="https://www.gov.uk/tax-on-your-private-pension/lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.cannotApply.plaLinkText")</a></p>
+    <p>@Messages("pla.cannotApply.paraTwo") <a href=@Links.lifetimeAllowance rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.cannotApply.plaLinkText")</a></p>
 
     <p><a id="startAgain" href="@routes.IntroductionController.introduction">@Messages("pla.base.startAgain")</a></p>
 

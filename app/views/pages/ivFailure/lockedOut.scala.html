@@ -1,3 +1,5 @@
+@import common.Links
+
 @()(implicit request: Request[_])
 
 @views.html.main_template(title = Messages("pla.lockedOut.title"), bodyClasses = None, showLogout = false) {
@@ -6,6 +8,6 @@
 
 <p>@Messages("pla.lockedOut.paraOne")</p>
 
-@Html(Messages("pla.lockedOut.paraTwo", "https://www.gov.uk/contact-hmrc"))
+@Html(Messages("pla.lockedOut.paraTwo", Links.contactInfo))
 
 }
