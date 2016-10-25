@@ -468,6 +468,10 @@ pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##
 pla.print.title                           = Print your active protection
+pla.print.giveToPensionProvider           = Give these details to your pension provider when you decide to take money from your pension
+pla.print.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC (Pension Schemes Services) within 60 days.
+pla.print.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC (Pension Schemes Services) within 60 days.
+pla.print.FP2016.contactHMRC              = If you or your employer adds to your pension, contact HMRC (Pension Schemes Services) within 90 days.
 
 ## Amends ##
 pla.amends.title                                            = Protection summary
