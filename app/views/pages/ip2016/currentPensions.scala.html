@@ -7,7 +7,7 @@
 
 @(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_])
 
-@sidebar = {@ipSidebar(Links.currentPensions, Messages("pla.links.currentPensions"))}
+@sidebar = {@ipSidebar(Links.currentPensions, Messages("pla.links.currentPensions"), "ip16-what-is-your-pension-worth")}
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>

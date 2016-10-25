@@ -21,7 +21,7 @@
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@sidebar = {@ipSidebar(Links.pensionsTakenBefore, Messages("pla.links.pensionsTakenBeforeHelp"))}
+@sidebar = {@ipSidebar(Links.pensionsTakenBefore, Messages("pla.links.pensionsTakenBeforeHelp"), "ip16-pensions-taken-before-calculation")}
 
 @main_template(title=Messages("pla.pensionsTakenBefore.title"), scriptElem=Some(scriptElement), sidebarLinks = Some(sidebar)) {
 

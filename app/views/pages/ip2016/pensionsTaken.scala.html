@@ -7,7 +7,7 @@
 
 @(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_])
 
-@sidebar = {@ipSidebar(Links.ip16Info, Messages("pla.links.IPHelp"))}
+@sidebar = {@ipSidebar(Links.ip16Info, Messages("pla.links.IPHelp"), "ip16-what-is-ip")}
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
