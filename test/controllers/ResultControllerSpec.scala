@@ -44,9 +44,11 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   val rejectionFP16Json = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
 
   val successIP16Json = Json.parse("""{"notificationId":12,"protectedAmount":1230000.0}""")
+  val inactiveSuccessIP16Json = Json.parse("""{"notificationId":43,"protectedAmount":1600000.0}""")
   val rejectionIP16Json = Json.parse("""{"notificationId":9}""")
 
   val successIP14Json = Json.parse("""{"notificationId":3,"protectedAmount":1230000.0}""")
+  val inactiveSuccessIP14Json = Json.parse("""{"notificationId":32,"protectedAmount":1400000.0}""")
   val rejectionIP14Json = Json.parse("""{"notificationId":1}""")
 
   val testFP16SuccessResponse = HttpResponse(200,Some(successFP16Json))
@@ -56,6 +58,9 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   val testIP14SuccessResponse = HttpResponse(200,Some(successIP14Json))
   val testIP14RejectionResponse = HttpResponse(409,Some(rejectionIP14Json))
   val testMCNeededResponse = HttpResponse(423)
+
+  val testIP16InactiveSuccessResponse = HttpResponse(200,Some(inactiveSuccessIP16Json))
+  val testIP14InactiveSuccessResponse = HttpResponse(200,Some(inactiveSuccessIP14Json))
 
   val testFPSuccessProtectionModel = ProtectionModel (
     Some("testPSARef"),
@@ -84,6 +89,15 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456"))
 
+  val testIP16InactiveSuccessProtectionModel = ProtectionModel (
+    Some("testPSARef"),
+    notificationId = Some(43),
+    protectionID = Some(12345),
+    protectionType = Some("IP2016"),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1600000),
+    protectionReference = Some("PSA123456"))
+
   val testIP16RejectionProtectionModel = ProtectionModel (
     None,
     notificationId = Some(9),
@@ -102,6 +116,15 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456"))
 
+  val testIP14InactiveSuccessProtectionModel = ProtectionModel (
+    Some("testPSARef"),
+    notificationId = Some(32),
+    protectionID = Some(12345),
+    protectionType = Some("IP2014"),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1400000),
+    protectionReference = Some("PSA123456"))
+
   val testIP14RejectionProtectionModel = ProtectionModel (
     None,
     notificationId = Some(1),
@@ -111,12 +134,14 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456"))
 
-  val testFPSuccessApplyResponseModel     = ApplyResponseModel(testFPSuccessProtectionModel)
-  val testFPRejectionApplyResponseModel   = ApplyResponseModel(testFPRejectionProtectionModel)
-  val testIP16SuccessApplyResponseModel   = ApplyResponseModel(testIP16SuccessProtectionModel)
-  val testIP16RejectionApplyResponseModel = ApplyResponseModel(testIP16RejectionProtectionModel)
-  val testIP14SuccessApplyResponseModel   = ApplyResponseModel(testIP14SuccessProtectionModel)
-  val testIP14RejectionApplyResponseModel = ApplyResponseModel(testIP14RejectionProtectionModel)
+  val testFPSuccessApplyResponseModel             = ApplyResponseModel(testFPSuccessProtectionModel)
+  val testFPRejectionApplyResponseModel           = ApplyResponseModel(testFPRejectionProtectionModel)
+  val testIP16SuccessApplyResponseModel           = ApplyResponseModel(testIP16SuccessProtectionModel)
+  val testIP16InactiveSuccessApplyResponseModel   = ApplyResponseModel(testIP16InactiveSuccessProtectionModel)
+  val testIP16RejectionApplyResponseModel         = ApplyResponseModel(testIP16RejectionProtectionModel)
+  val testIP14SuccessApplyResponseModel           = ApplyResponseModel(testIP14SuccessProtectionModel)
+  val testIP14InactiveSuccessApplyResponseModel   = ApplyResponseModel(testIP14InactiveSuccessProtectionModel)
+  val testIP14RejectionApplyResponseModel         = ApplyResponseModel(testIP14RejectionProtectionModel)
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockResponseConstructors = mock[ResponseConstructors]
@@ -141,6 +166,31 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("fp16ApplyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("ip14ApplyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testIP14SuccessApplyResponseModel))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("applyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testIP16SuccessApplyResponseModel))
+
+
+    override val responseConstructors = mockResponseConstructors
+    when(responseConstructors.createApplyResponseModelFromJson(Matchers.any())(Matchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+  }
+
+  object TestInactiveSuccessResultController extends ResultController {
+    override lazy val applicationConfig = MockConfig
+    override lazy val authConnector = MockAuthConnector
+    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+
+    implicit val hc: HeaderCarrier = HeaderCarrier()
+
+    override val plaConnector = mock[PLAConnector]
+    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testFP16SuccessResponse))
+    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP16InactiveSuccessResponse))
+    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP14InactiveSuccessResponse))
+
+
+    override val keyStoreConnector = mock[KeyStoreConnector]
+    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("fp16ApplyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("ip14ApplyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testIP14InactiveSuccessApplyResponseModel))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("applyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testIP16InactiveSuccessApplyResponseModel))
 
 
     override val responseConstructors = mockResponseConstructors
@@ -319,5 +369,23 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
      DataItem.result.header.headers.head._2 shouldBe "no-cache"
    }
  }
+
+  "Applying for inactive IP2016 protection" should {
+    object DataItem extends AuthorisedFakeRequestToPost(TestInactiveSuccessResultController.processIPApplication)
+    object GetItem extends AuthorisedFakeRequestTo(TestInactiveSuccessResultController.displayResult(ApplicationType.IP2016))
+
+    "return 303" in {
+      status(DataItem.result) shouldBe 303
+    }
+    "redirect the user to the result inactive success page" in {
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayIP16()}")
+    }
+    "return 200" in {
+      status(GetItem.result) shouldBe 200
+    }
+    "take the user to the result inactive success page" in {
+      GetItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")
+    }
+  }
 
 }
