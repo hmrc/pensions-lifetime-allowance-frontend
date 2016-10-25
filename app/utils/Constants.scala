@@ -33,7 +33,7 @@ object Constants {
 
     val ip14SuccessCodes = List(3,4,5,6,7,8,30,31,32,33,34)
 
-    val inactiveSuccessCodes = List(24,30,31,32,40,41,42,43)
+    val inactiveSuccessCodes = List(5,6,7,13,14,15,16,24,30,31,32,40,41,42,43)
 
     val successCodesRequiringProtectionInfo = List(3,4,8,12,22,23,33,34,44)
     val fpShowPensionSharing = List(23,24)

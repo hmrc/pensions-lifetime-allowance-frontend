@@ -30,7 +30,7 @@ import config.{FrontendAppConfig, FrontendAuthConnector}
 import play.api.libs.json.{JsValue, Json}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.ResponseConstructors
-import enums.ApplicationType
+import enums.{ApplicationOutcome, ApplicationType}
 import models.{ApplyResponseModel, ProtectionModel}
 import org.scalatest.BeforeAndAfter
 import play.api.mvc.{Action, AnyContent, Result}
@@ -385,6 +385,78 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     }
     "take the user to the result inactive success page" in {
       GetItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")
+    }
+  }
+
+  "Application outcome for IP14" should {
+    implicit val protectionType = ApplicationType.IP2014
+    "return Rejected for rejection codes" in {
+      val rejectionCodes = List(1,2,25,26,27,28,29)
+      for(code <- rejectionCodes) {
+        TestSuccessResultController.applicationOutcome(code) shouldBe ApplicationOutcome.Rejected
+      }
+    }
+
+    "return Successful for successful, active codes" in {
+      val successfulActiveCodes = List(3,4,8,33,34)
+      for(code <- successfulActiveCodes) {
+        TestSuccessResultController.applicationOutcome(code) shouldBe ApplicationOutcome.Successful
+      }
+    }
+
+    "return SuccessfulInactive for successful, inactive codes" in {
+      val successfulInactiveCodes = List(5,6,7,30,31,32)
+      for(code <- successfulInactiveCodes) {
+        TestSuccessResultController.applicationOutcome(code) shouldBe ApplicationOutcome.SuccessfulInactive
+      }
+    }
+  }
+
+  "Application outcome for IP16" should {
+    implicit val protectionType = ApplicationType.IP2016
+    "return Rejected for rejection codes" in {
+      val rejectionCodes = List(9,10,11,35,36,37,38,39)
+      for(code <- rejectionCodes) {
+        TestSuccessResultController.applicationOutcome(code) shouldBe ApplicationOutcome.Rejected
+      }
+    }
+
+    "return Successful for successful, active codes" in {
+      val successfulActiveCodes = List(12,44)
+      for(code <- successfulActiveCodes) {
+        TestSuccessResultController.applicationOutcome(code) shouldBe ApplicationOutcome.Successful
+      }
+    }
+
+    "return SuccessfulInactive for successful, inactive codes" in {
+      val successfulInactiveCodes = List(13,14,15,16,40,41,42,43)
+      for(code <- successfulInactiveCodes) {
+        TestSuccessResultController.applicationOutcome(code) shouldBe ApplicationOutcome.SuccessfulInactive
+      }
+    }
+  }
+
+  "Application outcome for FP16" should {
+    implicit val protectionType = ApplicationType.FP2016
+    "return Rejected for rejection codes" in {
+      val rejectionCodes = List(17,18,19,20,21)
+      for(code <- rejectionCodes) {
+        TestSuccessResultController.applicationOutcome(code) shouldBe ApplicationOutcome.Rejected
+      }
+    }
+
+    "return Successful for successful, active codes" in {
+      val successfulActiveCodes = List(22,23)
+      for(code <- successfulActiveCodes) {
+        TestSuccessResultController.applicationOutcome(code) shouldBe ApplicationOutcome.Successful
+      }
+    }
+
+    "return SuccessfulInactive for successful, inactive codes" in {
+      val successfulInactiveCodes = List(24)
+      for(code <- successfulInactiveCodes) {
+        TestSuccessResultController.applicationOutcome(code) shouldBe ApplicationOutcome.SuccessfulInactive
+      }
     }
   }
 
