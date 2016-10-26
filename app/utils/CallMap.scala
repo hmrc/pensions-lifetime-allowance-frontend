@@ -43,7 +43,7 @@ object CallMap {
 //    "ip14NumberOfPSOs"   -> controllers.routes.IP2014Controller.ip14NumberOfPSOs(),
 //
     "psoDetails"     -> controllers.routes.IP2016Controller.psoDetails,
-    "ip14PsoDetails" -> controllers.routes.IP2014Controller.ip14PsoDetails("1")
+    "ip14PsoDetails" -> controllers.routes.IP2014Controller.ip14PsoDetails
 //
 //    "psoDetails2"     -> controllers.routes.IP2016Controller.psoDetails("2"),
 //    "ip14PsoDetails2" -> controllers.routes.IP2014Controller.ip14PsoDetails("2"),

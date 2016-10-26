@@ -27,11 +27,8 @@ POST        /apply-for-ip14-current-pensions                    controllers.IP20
 GET         /apply-for-ip14-pension-sharing-orders              controllers.IP2014Controller.ip14PensionDebits
 POST        /apply-for-ip14-pension-sharing-orders              controllers.IP2014Controller.submitIP14PensionDebits
 
-GET         /apply-for-ip14-number-of-pension-sharing-orders    controllers.IP2014Controller.ip14NumberOfPSOs
-POST        /apply-for-ip14-number-of-pension-sharing-orders    controllers.IP2014Controller.submitIP14NumberOfPSOs
-
-POST        /apply-for-ip14-pension-sharing-order-details           controllers.IP2014Controller.submitIP14PSODetails
-GET         /apply-for-ip14-pension-sharing-order-details/:psoNum   controllers.IP2014Controller.ip14PsoDetails(psoNum)
+POST        /apply-for-ip14-pension-sharing-order-details       controllers.IP2014Controller.submitIP14PSODetails
+GET         /apply-for-ip14-pension-sharing-order-details       controllers.IP2014Controller.ip14PsoDetails
 
 GET         /apply-for-ip14-submit-your-application             controllers.SummaryController.summaryIP14
 

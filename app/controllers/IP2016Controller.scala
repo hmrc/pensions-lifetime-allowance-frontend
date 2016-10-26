@@ -195,9 +195,8 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     //PENSION SHARING ORDER DETAILS
     val psoDetails = AuthorisedByAny.async { implicit user => implicit request =>
         keyStoreConnector.fetchAndGetFormData[PSODetailsModel]("psoDetails").map {
-            case Some(data) =>
-                Ok(pages.ip2016.psoDetails(psoDetailsForm.fill(data), 1))
-            case _ => Ok(pages.ip2016.psoDetails(psoDetailsForm, 1))
+            case Some(data) => Ok(pages.ip2016.psoDetails(psoDetailsForm.fill(data), 1))
+            case _          => Ok(pages.ip2016.psoDetails(psoDetailsForm, 1))
         }
     }
 
