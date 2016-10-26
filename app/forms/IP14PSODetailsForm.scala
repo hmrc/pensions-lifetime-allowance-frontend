@@ -51,7 +51,6 @@ object IP14PSODetailsForm {
 
   val IP14PsoDetailsForm = Form(
     mapping(
-        "psoNumber" -> number,
         "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),
         "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),
         "psoYear"   -> optional(number).verifying(Messages("pla.base.errors.yearEmpty"), {_.isDefined}),

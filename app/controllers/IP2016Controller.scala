@@ -195,8 +195,8 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     //PENSION SHARING ORDER DETAILS
     val psoDetails = AuthorisedByAny.async { implicit user => implicit request =>
         keyStoreConnector.fetchAndGetFormData[PSODetailsModel]("psoDetails").map {
-            case Some(data) => Ok(pages.ip2016.psoDetails(psoDetailsForm.fill(data), 1))
-            case _          => Ok(pages.ip2016.psoDetails(psoDetailsForm, 1))
+            case Some(data) => Ok(pages.ip2016.psoDetails(psoDetailsForm.fill(data)))
+            case _          => Ok(pages.ip2016.psoDetails(psoDetailsForm))
         }
     }
 
@@ -267,11 +267,11 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     val submitPSODetails = AuthorisedByAny.async { implicit user => implicit request =>
 
             psoDetailsForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2016.psoDetails(PSODetailsForm.validateForm(errors), errors("psoNumber").value.get.toInt))),
+                errors => Future.successful(BadRequest(pages.ip2016.psoDetails(PSODetailsForm.validateForm(errors)))),
                 form => {
                     val validatedForm = PSODetailsForm.validateForm(psoDetailsForm.fill(form))
                     if(validatedForm.hasErrors) {
-                        Future.successful(BadRequest(pages.ip2016.psoDetails(validatedForm, form.psoNumber)))
+                        Future.successful(BadRequest(pages.ip2016.psoDetails(validatedForm)))
                     } else {
                         keyStoreConnector.saveFormData(s"psoDetails", form)
                         Future.successful(Redirect(routes.SummaryController.summaryIP16()))

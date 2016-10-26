@@ -193,8 +193,8 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
 
     val ip14PsoDetails = AuthorisedByAny.async { implicit user => implicit request =>
       keyStoreConnector.fetchAndGetFormData[PSODetailsModel]("ip14PsoDetails").map {
-          case Some(data)   => Ok(pages.ip2014.ip14PsoDetails(IP14PsoDetailsForm.fill(data), 1))
-          case _            => Ok(pages.ip2014.ip14PsoDetails(IP14PsoDetailsForm, 1))
+          case Some(data)   => Ok(pages.ip2014.ip14PsoDetails(IP14PsoDetailsForm.fill(data)))
+          case _            => Ok(pages.ip2014.ip14PsoDetails(IP14PsoDetailsForm))
       }
     }
 
@@ -266,11 +266,11 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     val submitIP14PSODetails = AuthorisedByAny.async { implicit user => implicit request =>
 
             IP14PsoDetailsForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(IP14PSODetailsForm.validateForm(errors), errors("psoNumber").value.get.toInt))),
+                errors => Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(IP14PSODetailsForm.validateForm(errors)))),
                 form => {
                     val validatedForm = IP14PSODetailsForm.validateForm(IP14PsoDetailsForm.fill(form))
                     if(validatedForm.hasErrors) {
-                        Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(validatedForm, form.psoNumber)))
+                        Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(validatedForm)))
                     } else {
                         keyStoreConnector.saveFormData(s"ip14PsoDetails", form)
                         Future.successful(Redirect(routes.SummaryController.summaryIP14()))

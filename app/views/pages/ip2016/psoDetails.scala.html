@@ -3,29 +3,23 @@
 @import helpers.templates.{plaInputRadioGroup, formInputMoney, formInlineDateInput}
 @import play.api.data._
 
-@(psoDetailsForm: Form[PSODetailsModel], psoNum: Int)(implicit request: Request[_])
+@(psoDetailsForm: Form[PSODetailsModel])(implicit request: Request[_])
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@views.html.main_template(title = Messages("pla.psoDetails.title")+s" $psoNum", scriptElem=Some(scriptElement), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.psoDetails.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), psoDetailsForm
     )
 
-    <h1 class="heading-large">@Messages(s"pla.psoDetails.pageHeading$psoNum")</h1>
+    <h1 class="heading-large">@Messages(s"pla.psoDetails.pageHeading")</h1>
 
     @govHelpers.form(action = routes.IP2016Controller.submitPSODetails) {
 
         <div class="inline form-group">
-            <div class="form-hidden">
-                <label for="psoNumber">
-                    <span>@Messages("pla.psoDetails.psoNumLabel")</span>
-                    <input type="number" value= @psoNum name="psoNumber" id="psoNumber">
-                </label>
-            </div>
 
             @formInlineDateInput(psoDetailsForm, "pso", Messages("pla.psoDetails.dateQuestionText"), Some(Messages("pla.psoDetails.dateHintText")))
 
