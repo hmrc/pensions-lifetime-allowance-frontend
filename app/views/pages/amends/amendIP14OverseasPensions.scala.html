@@ -1,7 +1,6 @@
 @import models.amendModels.AmendOverseasPensionsModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import helpers.templates.{formInputMoney,formHiddenYesNoRadio}
-@import helpers.ip14.ip14Sidebar
 @import play.api.data._
 
 @(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel])(implicit request: Request[_])
@@ -19,7 +18,7 @@ Messages("pla.ip14OverseasPensions.question")
 <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@sidebar = {@ip14Sidebar()}
+@sidebar = {}
 
 @main_template(title=Messages("pla.overseasPensions.title"), scriptElem=Some(scriptElement), sidebarLinks = Some(sidebar)) {
 
