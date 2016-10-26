@@ -57,7 +57,7 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
 
   private def routeIP2016SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent], user: PLAUser) : Result = {
     summaryConstructor.createSummaryData(data).map {
-      summaryModel => Ok(pages.ip2016.summary(summaryModel))
+      summaryModel => println(summaryModel); Ok(pages.ip2016.summary(summaryModel))
     }.getOrElse {
       Logger.error(s"Unable to create IP16 summary model from summary data for user nino ${user.nino}")
       InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")

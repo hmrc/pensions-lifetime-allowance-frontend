@@ -17,25 +17,6 @@
 
     <h1 class="heading-large">@Messages("pla.numberOfPSOs.pageHeading")</h1>
 
-    @govHelpers.form(action = routes.IP2016Controller.submitNumberOfPSOs) {
 
-        <div class="inline form-group">
-            @plaInputRadioGroup(
-                field = numberOfPSOsForm("numberOfPSOs"),
-                Seq(
-                    "1"-> Messages("pla.numberOfPSOs.one"),
-                    "2"-> Messages("pla.numberOfPSOs.two"),
-                    "3"-> Messages("pla.numberOfPSOs.three"),
-                    "4"-> Messages("pla.numberOfPSOs.four"),
-                    "5"-> Messages("pla.numberOfPSOs.five")),
-                '_labelAfter -> true,
-                '_labelClass -> "block-label",
-                '_legend -> Messages("pla.numberOfPSOs.title"),
-                '_legendID -> "numberOfPSOs"
-            )
-        </div>
-
-        <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
-    }
 
 }

@@ -65,6 +65,9 @@ object Validation {
 
     val pensionDebitsModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
     val numberOfPSOsModel = data.getEntry[NumberOfPSOsModel](nameString("numberOfPSOs"))
+    val PSODetailsModel = data.getEntry[PSODetailsModel](nameString("psoDetails"))
+
+//    println(s"\n\n\nPSODetailsModel: ${PSODetailsModel.get.psoAmt}\n${PSODetailsModel.get.psoDay}\n${PSODetailsModel.get.psoMonth}\n${PSODetailsModel.get.psoYear}\n${PSODetailsModel.get.psoNumber}")
 
     def validPensionData(): Boolean = {
       if (pensionsTakenModel.isEmpty || overseasPensionsModel.isEmpty || currentPensionsModel.isEmpty) false
@@ -80,17 +83,13 @@ object Validation {
       else {
         if (pensionDebitsModel.get.pensionDebits.get == "no") true
         else {
-          if (numberOfPSOsModel.isEmpty) false
-          else {
             !invalidPSODetails()
-          }
         }
       }
     }
 
     def invalidPSODetails(): Boolean = {
-      val numberOfPSOs = numberOfPSOsModel.get.numberOfPSOs.get.toInt
-      (1 to numberOfPSOs).exists(psoNum => data.getEntry[PSODetailsModel](nameString(s"psoDetails$psoNum")).isEmpty)
+      data.getEntry[PSODetailsModel](nameString(s"psoDetails")).isEmpty
     }
 
     validPensionData() && validPSOData()

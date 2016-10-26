@@ -50,6 +50,9 @@ trait SummaryConstructor {
     val numberOfPSOsModel = data.getEntry[NumberOfPSOsModel](nameString("numberOfPSOs"))
 
 
+    val psoDetails = data.getEntry[PSODetailsModel](nameString("psoDetails"))
+
+
     def relevantAmount: BigDecimal = {
       val (pensionsBeforeAmt, pensionsBetweenAmt) = if(helper.positiveAnswer(pensionsTakenModel)) (
         if(helper.positiveAnswer(pensionsTakenBeforeModel)) helper.amountValue(pensionsTakenBeforeModel) else None,
@@ -89,17 +92,19 @@ trait SummaryConstructor {
       ).flatten
 
     val pensionDebitsSection = helper.createYesNoSection("pensionDebits", pensionDebitsModel, boldText = false)
-    val (numPSOsSection, numberOfPSOs) = helper.createNumberOfPSOsSection(pensionDebitsModel, numberOfPSOsModel)
-    val psoDetailsList = (1 to numberOfPSOs).flatMap{ psoNum =>
-      data.getEntry[PSODetailsModel](nameString(s"psoDetails$psoNum"))
-    }
+//    val (numPSOsSection, numberOfPSOs) = helper.createNumberOfPSOsSection(pensionDebitsModel, numberOfPSOsModel)
+//    val psoDetailsList = (1 to numberOfPSOs).flatMap{ psoNum =>
+//      data.getEntry[PSODetailsModel](nameString(s"psoDetails$psoNum"))
+//    }
+//
+//    val psoDetailsSections = helper.createAllPSODetailsSections(psoDetailsList)
 
-    val psoDetailsSections = helper.createAllPSODetailsSections(psoDetailsList)
+
+    val psoDetailsSection = helper.createPSODetailsSection(psoDetails.get, 1)
 
     val pensionDebits = List(
-      pensionDebitsSection,
-      numPSOsSection
-    ).flatten ::: psoDetailsSections
+      pensionDebitsSection
+    ).flatten ++ List(psoDetailsSection)
 
     if(!Validation.validIPData(data)) {
       None
@@ -186,28 +191,28 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
 
     // returns an option on SummarySectionModel for number of PSOs and an Int value of the total number of PSOs
     // if no PSOs, returns (None, 0)
-    def createNumberOfPSOsSection(debitsOptionModel: Option[YesNoModel], numPSOsOptionModel: Option[NumberOfPSOsModel]): (Option[SummarySectionModel], Int) = {
-      val name = nameString("numberOfPSOs")
-      if(positiveAnswer(debitsOptionModel)) {
-        numPSOsOptionModel.map { model =>
-          val numPSOs = model.numberOfPSOs
-          (Some(SummarySectionModel(
-            List(SummaryRowModel(
-              name+"Amt", CallMap.get(name), boldText = false, numPSOs.getOrElse("0")
-            )))), numPSOs.getOrElse("0").toInt)
-        }.getOrElse((None, 0))
-      }
-      else (None, 0)
-    }
-
-    def createAllPSODetailsSections(psoModels: IndexedSeq[PSODetailsModel]): List[SummarySectionModel] = {
-      psoModels.indices.map{index =>
-        createPSODetailsSection(psoModels(index), index.+(1))
-      }.toList
-    }
+//    def createNumberOfPSOsSection(debitsOptionModel: Option[YesNoModel], numPSOsOptionModel: Option[NumberOfPSOsModel]): (Option[SummarySectionModel], Int) = {
+//      val name = nameString("numberOfPSOs")
+//      if(positiveAnswer(debitsOptionModel)) {
+//        numPSOsOptionModel.map { model =>
+//          val numPSOs = model.numberOfPSOs
+//          (Some(SummarySectionModel(
+//            List(SummaryRowModel(
+//              name+"Amt", CallMap.get(name), boldText = false, numPSOs.getOrElse("0")
+//            )))), numPSOs.getOrElse("0").toInt)
+//        }.getOrElse((None, 0))
+//      }
+//      else (None, 0)
+//    }
+//
+//    def createAllPSODetailsSections(psoModels: IndexedSeq[PSODetailsModel]): List[SummarySectionModel] = {
+//      psoModels.indices.map{index =>
+//        createPSODetailsSection(psoModels(index), index.+(1))
+//      }.toList
+//    }
 
     def createPSODetailsSection(model: PSODetailsModel, modelNum: Int): SummarySectionModel = {
-      val name = nameString(s"psoDetails$modelNum")
+      val name = nameString(s"psoDetails")
       val call = CallMap.get(name)
       val date = dateDisplayString(constructDate(model.psoDay, model.psoMonth, model.psoYear))
       val amt = currencyDisplayString(model.psoAmt)
@@ -224,7 +229,9 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
         case ApplicationType.IP2014 => Constants.ip14RelevantAmountThreshold
       }
       val invalidRelevantAmount = relevantAmount < threshold
-      SummaryModel(protectionType, invalidRelevantAmount, pensionContributions, pensionDebits)
+      val s = SummaryModel(protectionType, invalidRelevantAmount, pensionContributions, pensionDebits)
+      println(s"\n\n\nSummaryModel:\n$s\n\n\n")
+      s
     }
   
 }
