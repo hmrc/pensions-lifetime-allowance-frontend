@@ -1,3 +1,5 @@
+@import common.Links
+
 @()(implicit request: Request[_])
 
 
@@ -5,6 +7,6 @@
     
     <h1 class="heading-large">@Messages("pla.timeout.pageHeading")</h1>
 
-    <p>@Html(Messages("pla.timeout.returnToPTA", "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"))</p>
+    <p>@Html(Messages("pla.timeout.returnToPTA", Links.plaMain))</p>
 
 }

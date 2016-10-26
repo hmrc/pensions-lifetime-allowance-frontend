@@ -38,6 +38,10 @@ pla.links.IP16LinkText                  = Individual protection 2016
 pla.links.IP14LinkText                  = Individual protection 2014
 pla.links.ExistingProtectionsLinkText   = View your existing protections
 pla.links.signout                       = Sign out
+pla.links.IPHelp                        = What is individual protection
+pla.links.pensionsTakenBeforeHelp       = What is your pension worth
+pla.links.pensionsTakenBetweenHelp       = How much lifetime allowance have you used
+pla.links.currentPensions               = What is your pension worth
 
 ## Timeout ##
 pla.timeout.title       = Session closed due to inactivity

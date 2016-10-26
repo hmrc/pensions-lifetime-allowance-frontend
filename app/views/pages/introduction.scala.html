@@ -1,3 +1,5 @@
+@import common.Links
+
 @{
 
 
@@ -9,8 +11,8 @@
 	<div class="service-info">
 		<h2>@Messages("pla.base.readMore")</h2>
 		<ul>
-			<li><a id="lifetimeAllowance" href="https://www.gov.uk/tax-on-your-private-pension/lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.lifetimeAllowance")</a></li>
-			<li><a id="protectLifetimeAllowance" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance" rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.protectLifetimeAllowance")</a></li>
+			<li><a id="lifetimeAllowance" href=@Links.lifetimeAllowance rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.lifetimeAllowance")</a></li>
+			<li><a id="protectLifetimeAllowance" href=@Links.plaMain rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.protectLifetimeAllowance")</a></li>
 		</ul>
 	</div>
 }
