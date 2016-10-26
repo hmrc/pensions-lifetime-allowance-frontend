@@ -186,7 +186,9 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
                 keyStoreConnector.saveFormData("pensionDebits", success)
                 success.pensionDebits.get match {
                     case "yes"  => Redirect(routes.IP2016Controller.psoDetails())
-                    case "no"   => Redirect(routes.SummaryController.summaryIP16())
+                    case "no"   =>
+
+                        Redirect(routes.SummaryController.summaryIP16())
                 }
             }
         )
@@ -199,70 +201,6 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
             case _          => Ok(pages.ip2016.psoDetails(psoDetailsForm))
         }
     }
-
-//    //NUMBER OF PENSION SHARING ORDERS
-//    val numberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
-//
-//        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").flatMap(pensionDebitsModel => {
-//            pensionDebitsModel.map {
-//                completedModel => routeNumberOfPSOs(completedModel.pensionDebits.get)
-//            }.getOrElse {
-//                Logger.error(s"User with nino ${user.nino} navigated to IP16 number of PSOs when ip16PensionDebits was not recorded")
-//                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-//            }
-//        })
-//    }
-
-//    private def routeNumberOfPSOs(havePSOs: String)(implicit user: PLAUser, req: Request[AnyContent]): Future[Result] = {
-//        havePSOs match {
-//            case "no"  => {
-//                Logger.error(s"User with nino ${user.nino} navigated to IP16 number of PSOs when ip16PensionDebits was recorded as 'No'")
-//                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-//            }
-//            case "yes" => keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").map {
-//                            case Some(data) => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm.fill(data)))
-//                            case _ => Ok(pages.ip2016.numberOfPSOs(numberOfPSOsForm))
-//                          }
-//        }
-//    }
-
-//    val submitNumberOfPSOs = AuthorisedByAny.async { implicit user => implicit request =>
-//
-//        numberOfPSOsForm.bindFromRequest.fold(
-//            errors => Future.successful(BadRequest(pages.ip2016.numberOfPSOs(errors))),
-//            success => {
-//                keyStoreConnector.saveFormData("numberOfPSOs", success)
-//                Future.successful(Redirect(routes.IP2016Controller.psoDetails("1")))
-//            }
-//        )
-//    }
-
-//    //PENSION SHARING ORDER DETAILS
-//    def psoDetails(psoNumber:String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
-//
-//        val psoNum = psoNumber.toInt
-//        keyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel]("numberOfPSOs").flatMap(numberOfPSOsModel => {
-//            numberOfPSOsModel.map {
-//                completedModel => routePSODetails(completedModel.numberOfPSOs.get.toInt, psoNum, request)
-//            }.getOrElse {
-//                Logger.error(s"User with nino ${user.nino} navigated to IP16 PSO details when ip16NumberOfPSOs was not recorded")
-//                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-//            }
-//
-//        })
-//    }
-
-//    private def routePSODetails(totalPSOs: Int, psoNum: Int, req: Request[AnyContent]): Future[Result] = {
-//        implicit val request = req
-//        if (psoNum > totalPSOs) {
-//            Future.successful(Redirect(routes.SummaryController.summaryIP16()))
-//        } else {
-//            keyStoreConnector.fetchAndGetFormData[PSODetailsModel](s"psoDetails$psoNum").map {
-//                case Some(storedData) => Ok(pages.ip2016.psoDetails(psoDetailsForm.fill(storedData), psoNum))
-//                case _ => Ok(pages.ip2016.psoDetails(psoDetailsForm, psoNum))
-//            }
-//        }
-//    }
 
     val submitPSODetails = AuthorisedByAny.async { implicit user => implicit request =>
 

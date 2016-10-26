@@ -67,8 +67,6 @@ object Validation {
     val numberOfPSOsModel = data.getEntry[NumberOfPSOsModel](nameString("numberOfPSOs"))
     val PSODetailsModel = data.getEntry[PSODetailsModel](nameString("psoDetails"))
 
-//    println(s"\n\n\nPSODetailsModel: ${PSODetailsModel.get.psoAmt}\n${PSODetailsModel.get.psoDay}\n${PSODetailsModel.get.psoMonth}\n${PSODetailsModel.get.psoYear}\n${PSODetailsModel.get.psoNumber}")
-
     def validPensionData(): Boolean = {
       if (pensionsTakenModel.isEmpty || overseasPensionsModel.isEmpty || currentPensionsModel.isEmpty) false
       else {
