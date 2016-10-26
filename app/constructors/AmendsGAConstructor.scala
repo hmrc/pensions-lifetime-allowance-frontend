@@ -17,16 +17,16 @@
 package constructors
 
 import models.ProtectionModel
+import models.amendModels.AmendsGAModel
 
 object AmendsGAConstructor {
 
-  def identifyAmendsChanges(updated: ProtectionModel, original: ProtectionModel): List[Int] ={
-    List(
-      if(updated.uncrystallisedRights != original.uncrystallisedRights) 1 else 0,
-      if(updated.preADayPensionInPayment != original.preADayPensionInPayment) 1 else 0,
-      if(updated.postADayBenefitCrystallisationEvents != original.postADayBenefitCrystallisationEvents) 1 else 0,
-      if(updated.nonUKRights != original.nonUKRights) 1 else 0
-    )
+  def identifyAmendsChanges(updated: ProtectionModel, original: ProtectionModel): AmendsGAModel ={
+    val current: Boolean = if(updated.uncrystallisedRights != original.uncrystallisedRights) true else false
+    val before: Boolean = if(updated.preADayPensionInPayment != original.preADayPensionInPayment) true else false
+    val between: Boolean = if(updated.postADayBenefitCrystallisationEvents != original.postADayBenefitCrystallisationEvents) true else false
+    val overseas: Boolean = if(updated.nonUKRights != original.nonUKRights) true else false
+    AmendsGAModel(current,before,between,overseas)
   }
 
 }

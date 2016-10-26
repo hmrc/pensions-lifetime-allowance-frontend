@@ -20,7 +20,7 @@ import auth.{AuthorisedForPLA, PLAUser}
 import common._
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.{KeyStoreConnector, PLAConnector}
-import constructors.{DisplayConstructors, ResponseConstructors}
+import constructors.{AmendsGAConstructor, DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
 import forms._
@@ -82,6 +82,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
       },
       success => for {
         protectionAmendment <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
+        saveAmendsGA <- keyStoreConnector.saveData[AmendsGAModel]("AmendsGA",AmendsGAConstructor.identifyAmendsChanges(protectionAmendment.get.updatedProtection,protectionAmendment.get.originalProtection))
         response <- plaConnector.amendProtection(user.nino.get, protectionAmendment.get.updatedProtection)
         result <- routeViaMCNeededCheck(response)
       } yield result
