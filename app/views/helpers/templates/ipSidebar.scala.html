@@ -1,0 +1,16 @@
+@import common.Links
+
+@(href: String, linkText: String, target: String)
+
+<div class="service-info">
+    <h2>@Messages("pla.base.readMore")</h2>
+    <ul>
+        <li><a id="helpLink"
+               href=@href
+               rel="external"
+               target="_blank"
+               title='@Messages("pla.base.newWindow")'
+               onclick="ga('send', 'event', 'read-more-link', 'get-external-link', '@target');"
+        >@linkText</a></li>
+    </ul>
+</div>

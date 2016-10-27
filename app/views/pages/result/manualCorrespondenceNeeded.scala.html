@@ -1,3 +1,5 @@
+@import common.Links
+
 @()(implicit request: Request[_])
 
 
@@ -33,7 +35,7 @@
             <p>@Messages("pla.mcNeeded.linesOpen")</p>
             <p>@Messages("pla.mcNeeded.linesClosed")</p>
             <p>@Messages("pla.mcNeeded.linesBusy")</p>
-            <p><a href="https://www.gov.uk/call-charges" target="_blank">@Messages("pla.mcNeeded.callCharges") (@Messages("pla.base.newWindow"))</a></p>
+            <p><a href=@Links.callCharges target="_blank">@Messages("pla.mcNeeded.callCharges") (@Messages("pla.base.newWindow"))</a></p>
         </div>
     </div>
 

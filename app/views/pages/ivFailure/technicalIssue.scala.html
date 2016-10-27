@@ -1,3 +1,5 @@
+@import common.Links
+
 @()(implicit request: Request[_])
 
 @views.html.main_template(title = Messages("pla.technicalIssue.title"), bodyClasses = None, showLogout = false) {
@@ -8,6 +10,6 @@
 
 <p>@Messages("pla.technicalIssue.paraTwo")</p>
 
-@Html(Messages("pla.technicalIssue.tryAgain", "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"))
+@Html(Messages("pla.technicalIssue.tryAgain", Links.plaMain))
 
 }

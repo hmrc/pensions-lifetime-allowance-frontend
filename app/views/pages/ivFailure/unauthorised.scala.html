@@ -1,11 +1,13 @@
+@import common.Links
+
 @()(implicit request: Request[_])
 
 @views.html.main_template(title = Messages("pla.notAuthorised.title"), bodyClasses = None, showLogout = false) {
 
 <h1 class="heading-large">@Messages("pla.notAuthorised.pageHeading")</h1>
 
-@Html(Messages("pla.notAuthorised.paraOne", "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/online-services-helpdesk"))
+@Html(Messages("pla.notAuthorised.paraOne", Links.helpDesk))
 
-@Html(Messages("pla.notAuthorised.tryAgain", "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"))
+@Html(Messages("pla.notAuthorised.tryAgain", Links.plaMain))
 
 }
