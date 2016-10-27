@@ -112,60 +112,35 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   }
 
   def amendmentOutcome = AuthorisedByAny.async { implicit user => implicit request =>
-    keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel").map {
-      case Some(model) => {
-        val id = model.protection.notificationId.getOrElse {
-          throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
-        }
-        val gaAmends: Future[AmendsGAModel] = keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA").map {
-          case Some(thing) => AmendsGAModel(thing.current, thing.before,thing.between,thing.overseas)
-//          case _ => {
-//            Logger.error("GA Amends model does not exist")
-//            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-//          }
-        }
-        if (Constants.activeAmendmentCodes.contains(id)) {
-          Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), bull))
-        } else {
-          Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model)))
-        }
-      }
-      case _ => {
-        Logger.error(s"Unable to retrieve amendment outcome model from keyStore for user nino :${user.nino}")
-        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-      }
-    }
+//    keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel").map {
+//      case Some(model) => {
+//        val id = model.protection.notificationId.getOrElse {
+//          throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
+//        }
+//        val gaAmends: Future[AmendsGAModel] = keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA").map {
+//          case Some(thing) => AmendsGAModel(thing.current, thing.before,thing.between,thing.overseas)
+////          case _ => {
+////            Logger.error("GA Amends model does not exist")
+////            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+////          }
+//        }
+//        if (Constants.activeAmendmentCodes.contains(id)) {
+//          Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), bull))
+//        } else {
+//          Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model)))
+//        }
+//      }
+//      case _ => {
+//        Logger.error(s"Unable to retrieve amendment outcome model from keyStore for user nino :${user.nino}")
+//        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+//      }
+//    }
+    for {
+      modelA <- keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
+      modelB <- keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
+
+    } yield Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(modelA.get), modelB.get))
   }
-
-
-  def bull = {
-    keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA").map {
-      case Some(model) => {
-        dummy(AmendsGAModel(model.current, model.before, model.between, model.overseas))
-      }
-    }
-  }
-
-  def dummy(a:AmendsGAModel): AmendsGAModel = {
-    a
-  }
-
-
-
-  def unFuture: AmendsGAModel = {
-    val c: Future[Option[AmendsGAModel]] = for {
-      a <- keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
-//      b <- AmendsGAModel(a.get.current,a.get.before,a.get.between,a.get.overseas)
-    } yield a
-    val w = c.map(a => a.get.current)
-    val x = c.map(a => a.get.before)
-    val y = c.map(a => a.get.between)
-    val z = c.map(a => a.get.overseas)
-    AmendsGAModel(w,x,y,z)
-  }
-
-
-
 
   def amendPensionsTakenBefore(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
 
@@ -455,12 +430,6 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
     val pensionTakenBefore = Value
     val pensionTakenBetween = Value
     val overseasPension = Value
-  }
-
-  // returns true if the passed ID corresponds to a data field which requires GA monitoring
-  def recordDataMetrics(rowId: String): Boolean = {
-    val dataMetricsIds = List("pensionsTaken", "pensionsTakenBefore", "pensionsTakenBetween", "overseasPensions", "pensionDebits", "numberOfPSOsAmt")
-    dataMetricsIds.map{_.toLowerCase}.contains(rowId.stripPrefix("ip14").toLowerCase)
   }
 
 }

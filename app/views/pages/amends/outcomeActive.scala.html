@@ -5,11 +5,18 @@
 @import enums.ApplicationType
 @import utils.Constants
 
-@(model: ActiveAmendResultDisplayModel, ga: AmendsGAModel)(implicit request: Request[_])
+@(model: ActiveAmendResultDisplayModel, gaModel: AmendsGAModel)(implicit request: Request[_])
 
-@views.html.main_template(title = Messages("pla.activeAmend.title"), bodyClasses = None) {
+@scriptElement = {
+<script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
 
-<span @if(AmendsController.recordDataMetrics(rowID)){data-metrics = "amends:@rowID:@{displayValues(0)}"}></span>
+@views.html.main_template(title = Messages("pla.activeAmend.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+
+<div @if(gaModel.current){data-metrics = "amends:current:a"}></div>
+<div @if(gaModel.before){data-metrics = "amends:before:b"}></div>
+<div @if(gaModel.between){data-metrics = "amends:between:c"}></div>
+<div @if(gaModel.overseas){data-metrics = "amends:overseas:d"}></div>
 
 <div class="grid-row">
     <div class="transaction-banner--complete">
