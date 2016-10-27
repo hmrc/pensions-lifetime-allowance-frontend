@@ -1,12 +1,15 @@
 @import models.ActiveAmendResultDisplayModel
+@import models.amendModels.AmendsGAModel
 @import helpers.templates.resultDetails
 @import play.api.i18n._
 @import enums.ApplicationType
 @import utils.Constants
 
-@(model: ActiveAmendResultDisplayModel)(implicit request: Request[_])
+@(model: ActiveAmendResultDisplayModel, ga: AmendsGAModel)(implicit request: Request[_])
 
 @views.html.main_template(title = Messages("pla.activeAmend.title"), bodyClasses = None) {
+
+<span @if(AmendsController.recordDataMetrics(rowID)){data-metrics = "amends:@rowID:@{displayValues(0)}"}></span>
 
 <div class="grid-row">
     <div class="transaction-banner--complete">

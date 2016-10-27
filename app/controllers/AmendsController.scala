@@ -117,8 +117,15 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
         val id = model.protection.notificationId.getOrElse {
           throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
         }
+        val gaAmends: Future[AmendsGAModel] = keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA").map {
+          case Some(thing) => AmendsGAModel(thing.current, thing.before,thing.between,thing.overseas)
+//          case _ => {
+//            Logger.error("GA Amends model does not exist")
+//            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+//          }
+        }
         if (Constants.activeAmendmentCodes.contains(id)) {
-          Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model)))
+          Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), bull))
         } else {
           Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model)))
         }
@@ -129,6 +136,36 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
       }
     }
   }
+
+
+  def bull = {
+    keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA").map {
+      case Some(model) => {
+        dummy(AmendsGAModel(model.current, model.before, model.between, model.overseas))
+      }
+    }
+  }
+
+  def dummy(a:AmendsGAModel): AmendsGAModel = {
+    a
+  }
+
+
+
+  def unFuture: AmendsGAModel = {
+    val c: Future[Option[AmendsGAModel]] = for {
+      a <- keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
+//      b <- AmendsGAModel(a.get.current,a.get.before,a.get.between,a.get.overseas)
+    } yield a
+    val w = c.map(a => a.get.current)
+    val x = c.map(a => a.get.before)
+    val y = c.map(a => a.get.between)
+    val z = c.map(a => a.get.overseas)
+    AmendsGAModel(w,x,y,z)
+  }
+
+
+
 
   def amendPensionsTakenBefore(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
 
@@ -418,6 +455,12 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
     val pensionTakenBefore = Value
     val pensionTakenBetween = Value
     val overseasPension = Value
+  }
+
+  // returns true if the passed ID corresponds to a data field which requires GA monitoring
+  def recordDataMetrics(rowId: String): Boolean = {
+    val dataMetricsIds = List("pensionsTaken", "pensionsTakenBefore", "pensionsTakenBetween", "overseasPensions", "pensionDebits", "numberOfPSOsAmt")
+    dataMetricsIds.map{_.toLowerCase}.contains(rowId.stripPrefix("ip14").toLowerCase)
   }
 
 }

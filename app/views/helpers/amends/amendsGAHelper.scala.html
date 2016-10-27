@@ -1,0 +1,8 @@
+@import play.api.mvc.Call
+@import controllers.AmendsController
+
+@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], firstRow: Boolean)
+
+<div class="form-hidden">
+    <span @if(AmendsController.recordDataMetrics(rowID)){data-metrics = "amends:@rowID:@{displayValues(0)}"}></span>
+</div>
