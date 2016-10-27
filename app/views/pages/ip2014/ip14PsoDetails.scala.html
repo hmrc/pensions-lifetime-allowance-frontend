@@ -15,13 +15,13 @@
         Messages("pla.base.errorSummaryLabel"), psoDetailsForm
     )
 
-    <h1 class="heading-large">@Messages(s"pla.psoDetails.pageHeading")</h1>
+    <h1 class="heading-large">@Messages(s"pla.psoDetails.title")</h1>
 
     @govHelpers.form(action = routes.IP2014Controller.submitIP14PSODetails) {
 
         <div class="inline form-group">
 
-            @formInlineDateInput(psoDetailsForm, "pso", Messages("pla.psoDetails.dateQuestionText"), Some(Messages("pla.psoDetails.dateHintText")))
+            @formInlineDateInput(psoDetailsForm, "pso", Messages("pla.psoDetails.dateQuestionText"), Some(Messages("pla.psoDetails.dateHintText14")))
 
             @formInputMoney(
                 psoDetailsForm,

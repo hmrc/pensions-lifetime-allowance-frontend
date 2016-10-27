@@ -90,15 +90,14 @@ trait SummaryConstructor {
 
     val pensionDebitsSection = helper.createYesNoSection("pensionDebits", pensionDebitsModel, boldText = false)
 
-    println(s"\n\n\nPENSION DeBITS SECTION:\n$pensionDebitsSection\n\n\n")
-
     val psoDetailsSection: Option[SummarySectionModel] = {
       pensionDebitsModel.flatMap {
-        _.getYesNoValue match {
-          case "yes" => Some(helper.createPSODetailsSection(psoDetails.get))
+        case s: PensionDebitsModel => s.getYesNoValue match {
+          case "yes" => Some(helper.createPSODetailsSection(psoDetails))
           case "no" => None
           case _ => None
         }
+        case _  => None
       }
     }
 
@@ -107,11 +106,9 @@ trait SummaryConstructor {
       psoDetailsSection
     ).flatten
 
-    println(s"\n\n\n$pensionDebits\n\n")
-
     if(!Validation.validIPData(data)) {
       None
-    } else {val s = Some(helper.createSummaryModel(relevantAmount, pensionContributions, pensionDebits)); println(s"\n\n$s\n\n"); s}
+    } else {Some(helper.createSummaryModel(relevantAmount, pensionContributions, pensionDebits))}
 
   }
 
@@ -192,14 +189,19 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
       }.getOrElse(None)
     }
 
-    def createPSODetailsSection(model: PSODetailsModel): SummarySectionModel = {
-      val name = nameString(s"psoDetails")
-      val call = CallMap.get(name)
-      val date = dateDisplayString(constructDate(model.psoDay, model.psoMonth, model.psoYear))
-      val amt = currencyDisplayString(model.psoAmt)
-      SummarySectionModel(List(
-        SummaryRowModel(name, call, boldText = false, amt, date)
-      ))
+    def createPSODetailsSection(model: Option[PSODetailsModel]) = {
+      model match {
+        case Some(m) =>
+          val name = nameString(s"psoDetails")
+          val call = CallMap.get(name)
+          val date = dateDisplayString(constructDate(m.psoDay, m.psoMonth, m.psoYear))
+          val amt = currencyDisplayString(m.psoAmt)
+          SummarySectionModel(List(
+            SummaryRowModel(name, call, boldText = false, amt, date)
+          ))
+        case None => SummarySectionModel(List.empty)
+      }
+
     }
 
     def createSummaryModel(relevantAmount: BigDecimal,

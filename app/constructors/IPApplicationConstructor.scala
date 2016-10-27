@@ -87,20 +87,17 @@ object IPApplicationConstructor {
     val relevantAmount = amounts.flatten.sum
 
     
-    val numPSOs = data.getEntry[PensionDebitsModel](nameString("pensionDebits")) match {
+    val hasPso = data.getEntry[PensionDebitsModel](nameString("pensionDebits")) match {
       case Some(pdModel) => pdModel.pensionDebits match {
-        case Some("yes") =>  data.getEntry[NumberOfPSOsModel](nameString("numberOfPSOs")) match {
-                                case Some(model) => model.numberOfPSOs.getOrElse("0").toInt
-                                case _ => 0
-                              }
-        case _ => 0
+        case Some("yes")  =>  true
+        case Some("no")   => false
+        case _            => false
       }
-      case _ => 0
+      case None => false
     }
 
-
-    lazy val pensionDebits = if(numPSOs == 0) None else {
-      Some((1 to numPSOs).map(psoNum => createPensionDebit(data.getEntry[PSODetailsModel](nameString(s"psoDetails$psoNum")).get)).toList)
+    lazy val pensionDebits = if(!hasPso) None else {
+      Option(List(createPensionDebit(data.getEntry[PSODetailsModel](nameString(s"psoDetails")).get)))
     }
 
     def createPensionDebit(model: PSODetailsModel): PensionDebit = {
