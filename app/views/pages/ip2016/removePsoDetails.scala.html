@@ -3,7 +3,7 @@
 
 @()(implicit request: Request[_])
 
-@main_template(title = Messages("SOME TITLE")) {
+@main_template(title = Messages("pla.psoDetails.title"), scriptElem=None, bodyClasses = None) {
 
 <header class ="page-header">
     <h1 class="heading-large" id="page-heading">
@@ -12,7 +12,7 @@
 </header>
 
 <div class="panel-indent panel panel-border-wide spacelarge">
-    <p>@Messages("pla.pensionDetails.removePso")</p>
+    <p>@Messages("pla.psoDetails.removePso")</p>
 </div>
 
 <div class="form-group">
@@ -21,7 +21,7 @@
         <button id="submit" class="button" type="submit">@Messages("pla.base.remove")</button>
     </p>
 
-    @Html("Some Stuff")
+    @Html(Messages("pla.psoDetails.cancelRemove", routes.SummaryController.summaryIP16(), "cancel-link"))
     }
 </div>
 }

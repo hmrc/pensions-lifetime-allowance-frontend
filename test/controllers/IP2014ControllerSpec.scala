@@ -689,6 +689,56 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     // PENSION DETAILS
     ///////////////////////////////////////////////
 
+    "In IP2014Controller calling the .psoDetails action" when {
+
+
+        "not supplied with a stored model" should {
+
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PsoDetails)
+
+            "return 200" in {
+                keystoreFetchCondition[PSODetailsModel](None)
+                status(DataItem.result) shouldBe 200
+            }
+            "take the user to the pso details page" in {
+                keystoreFetchCondition[PSODetailsModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+            }
+        }
+
+        "supplied with a stored test model" should {
+            val testModel = PSODetailsModel(Some(1), Some(8), Some(2014), BigDecimal(1234))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PsoDetails)
+
+            "return 200" in {
+                keystoreFetchCondition[PSODetailsModel](Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the pso details page" in {
+                keystoreFetchCondition[PSODetailsModel](Some(testModel))
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+            }
+
+            "return some HTML that" should {
+                "contain some text and use the character set utf-8" in {
+                    keystoreFetchCondition[PSODetailsModel](Some(testModel))
+                    contentType(DataItem.result) shouldBe Some("text/html")
+                    charset(DataItem.result) shouldBe Some("utf-8")
+                }
+
+                "have the input values set as default" in {
+                    keystoreFetchCondition[PSODetailsModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("psoDay").`val`() shouldBe "1"
+                    DataItem.jsoupDoc.body.getElementById("psoMonth").`val`() shouldBe "8"
+                    DataItem.jsoupDoc.body.getElementById("psoYear").`val`() shouldBe "2014"
+                    DataItem.jsoupDoc.body.getElementById("psoAmt").`val`() shouldBe "1234"
+                }
+            }
+        }
+
+    }
+
     "Submitting valid PSO details data" when {
 
         "submitting valid PSO details on first possible day" should {
@@ -874,6 +924,64 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "fail with the correct error message" in {
                 DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorMaximum"))
+            }
+        }
+    }
+
+    "In IP2014Controller calling the .removePsoDetails action" when {
+
+        "not supplied with a stored model" should {
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.removeIp14PsoDetails)
+            "return 500 " in {
+                keystoreFetchCondition[PSODetailsModel](None)
+                status(DataItem.result) shouldBe 500
+            }
+
+            "take the user to the technical error page" in {
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+            }
+        }
+
+        "supplied with a stored model" should {
+            val testModel = new PensionDebitsModel(Some("yes"))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.removeIp14PsoDetails)
+
+            "return 200" in {
+                keystoreFetchCondition[PensionDebitsModel](Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the remove PSO page" in {
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+            }
+        }
+    }
+
+    "Submitting a pso for removal from application" when {
+
+        "not supplied with a stored model" should {
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitRemoveIp14PsoDetails)
+            "return 500 " in {
+                keystoreFetchCondition[PensionDebitsModel](None)
+                status(DataItem.result) shouldBe 500
+            }
+
+            "take the user to the technical error page" in {
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+            }
+        }
+
+        "supplied with a stored model" should {
+            val testModel = new PensionDebitsModel(Some("yes"))
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitRemoveIp14PsoDetails)
+
+            "return 303" in {
+                keystoreFetchCondition[PensionDebitsModel](Some(testModel))
+                status(DataItem.result) shouldBe 303
+            }
+
+            "redirect location should be the summary page" in {
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
             }
         }
     }

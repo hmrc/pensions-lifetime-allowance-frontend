@@ -296,6 +296,9 @@ pla.psoDetails.errorNegative                = Enter an amount that''s £0 or mor
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
 pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
+pla.psoDetails.removePso                    = This will remove your pension sharing order
+pla.psoDetails.cancelRemove                 = <a href="{0}" id="{1}">Do not remove</a>
+
 
 pla.amendPsoDetails.pageHeading             = Pension sharing order
 

@@ -980,7 +980,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "not supplied with a stored model" should {
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitRemovePsoDetails)
             "return 500 " in {
-                keystoreFetchCondition[PSODetailsModel](None)
+                keystoreFetchCondition[PensionDebitsModel](None)
                 status(DataItem.result) shouldBe 500
             }
 

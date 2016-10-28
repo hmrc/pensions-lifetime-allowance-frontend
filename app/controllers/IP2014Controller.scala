@@ -215,22 +215,23 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     }
 
     val removeIp14PsoDetails = AuthorisedByAny.async {implicit user => implicit request =>
-        keyStoreConnector.fetchAndGetFormData[PSODetailsModel]("psoDetails").map {
-            case Some(model) => Ok(pages.ip2016.removePsoDetails())
+        keyStoreConnector.fetchAndGetFormData[PSODetailsModel]("ip14PsoDetails").map {
+            case Some(model) => Ok(pages.ip2014.ip14RemovePsoDetails())
             case _           =>
                 Logger.error(s"Could not retrieve PSODetailsModel for user with ${user.nino} when removing a PSO during application")
-                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2014.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
     }
 
     val submitRemoveIp14PsoDetails = AuthorisedByAny.async { implicit user => implicit request =>
-        keyStoreConnector.fetchAndGetFormData[PSODetailsModel]("psoDetails").map {
+        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("ip14PensionDebits").map {
             case Some(model) =>
-                keyStoreConnector.saveData[PSODetailsModel]("psoDetails", model)
-                Redirect(routes.SummaryController.summaryIP16())
+                val updatedModel = PensionDebitsModel(Some("no"))
+                keyStoreConnector.saveData[PensionDebitsModel]("ip14PensionDebits", updatedModel)
+                Redirect(routes.SummaryController.summaryIP14())
             case _ =>
-                Logger.error(s"Could not retrieve PSO Details Model for user with nino ${user.nino} when submitting a removal of a PSO during application")
-                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString())).withHeaders(CACHE_CONTROL -> "no-cache")
+                Logger.error(s"Could not retrieve PSO Debits Model for user with nino ${user.nino} when submitting a removal of a PSO during application")
+                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2014.toString())).withHeaders(CACHE_CONTROL -> "no-cache")
         }
     }
 
