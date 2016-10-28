@@ -136,10 +136,24 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 //      }
 //    }
     for {
-      modelA <- keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
-      modelB <- keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
-
-    } yield Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(modelA.get), modelB.get))
+      modelAR <- keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
+      modelGA <- keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
+      thing <- Future(modelAR.map{
+              case model => {
+                val id = model.protection.notificationId.getOrElse {
+                  throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
+                }
+                if(Constants.activeAmendmentCodes.contains(id)){
+                  Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(modelAR.get), modelGA.get))
+                } else {
+                  Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(modelAR.get), modelGA.get))
+                }
+              }
+            }.getOrElse {
+              Logger.error(s"Unable to retrieve amendment outcome model from keyStore for user nino :${user.nino}")
+              InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+            })
+    } yield thing
   }
 
   def amendPensionsTakenBefore(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
