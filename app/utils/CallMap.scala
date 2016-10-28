@@ -40,7 +40,10 @@ object CallMap {
     "ip14PensionDebits"   -> controllers.routes.IP2014Controller.ip14PensionDebits(),
 
     "psoDetails"     -> controllers.routes.IP2016Controller.psoDetails,
-    "ip14PsoDetails" -> controllers.routes.IP2014Controller.ip14PsoDetails
+    "ip14PsoDetails" -> controllers.routes.IP2014Controller.ip14PsoDetails,
+
+    "removePsoDetails" -> controllers.routes.IP2016Controller.removePsoDetails,
+    "removeIp14PsoDetails" -> controllers.routes.IP2014Controller.removeIp14PsoDetails
     )
 
   def get(name: String): Option[Call] = callMap.get(name)

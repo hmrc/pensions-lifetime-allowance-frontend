@@ -358,6 +358,7 @@ pla.summary.questions.ip14TotalPensionsAmt              = Your total pension sav
 pla.summary.ip14PsosHeading                             = Pension sharing orders
 pla.summary.questions.ip14PensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2014?
 pla.summary.hiddenLinkText.ip14PensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2014?''
+pla.summary.hiddenLinkText.removePsoHint                = Remove your response to the amount or date of your pension sharing order
 
 pla.summary.questions.ip14PsoDetails                    = Date and amount of pension sharing order
 pla.summary.hiddenLinkText.ip14PsoDetails               = Change the details of your pension sharing order

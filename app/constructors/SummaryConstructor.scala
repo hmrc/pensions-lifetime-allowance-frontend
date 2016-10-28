@@ -75,7 +75,7 @@ trait SummaryConstructor {
 
     val totalPensionsSection = Some(
       SummarySectionModel(List(
-        SummaryRowModel(nameString("totalPensionsAmt"), None, boldText = true, currencyDisplayString(relevantAmount))
+        SummaryRowModel(nameString("totalPensionsAmt"), None, None, boldText = true, currencyDisplayString(relevantAmount))
       ))
     )
 
@@ -159,7 +159,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
         val call = CallMap.get(name)
         val displayValue = yesNoValue(model)
         SummaryRowModel(
-          name, call, boldText, displayValue
+          name, call, None, boldText, displayValue
         )
       }
     }
@@ -173,7 +173,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
       val call = CallMap.get(name)
       if(positiveAnswer(modelOption))
         Some(SummaryRowModel(
-          name+"Amt", call, boldText, amountDisplayValue(modelOption.get)
+          name+"Amt", call, None, boldText, amountDisplayValue(modelOption.get)
           )
         )
       else None
@@ -184,7 +184,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
       modelOption.map{ model =>
         val call = CallMap.get(name)
           Some(SummaryRowModel(
-            name+"Amt", call, boldText, amountDisplayValue(model)
+            name+"Amt", call, None, boldText, amountDisplayValue(model)
           ))
       }.getOrElse(None)
     }
@@ -193,11 +193,12 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
       model match {
         case Some(m) =>
           val name = nameString(s"psoDetails")
-          val call = CallMap.get(name)
+          val changeCall = CallMap.get(name)
+          val removeCall = CallMap.get("remove"+name.capitalize)
           val date = dateDisplayString(constructDate(m.psoDay, m.psoMonth, m.psoYear))
           val amt = currencyDisplayString(m.psoAmt)
           SummarySectionModel(List(
-            SummaryRowModel(name, call, boldText = false, amt, date)
+            SummaryRowModel(name, changeCall, removeCall, boldText = false, amt, date)
           ))
         case None => SummarySectionModel(List.empty)
       }

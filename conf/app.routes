@@ -30,6 +30,9 @@ POST        /apply-for-ip14-pension-sharing-orders              controllers.IP20
 POST        /apply-for-ip14-pension-sharing-order-details       controllers.IP2014Controller.submitIP14PSODetails
 GET         /apply-for-ip14-pension-sharing-order-details       controllers.IP2014Controller.ip14PsoDetails
 
+GET         /apply-for-ip14-remove-pension-sharing-order-details    controllers.IP2014Controller.removeIp14PsoDetails
+POST        /apply-for-ip14-remove-pension-sharing-order-details    controllers.IP2014Controller.submitRemoveIp14PsoDetails
+
 GET         /apply-for-ip14-submit-your-application             controllers.SummaryController.summaryIP14
 
 
@@ -54,6 +57,9 @@ POST        /apply-for-ip16-pension-sharing-orders              controllers.IP20
 
 POST        /apply-for-ip16-pension-sharing-order-details       controllers.IP2016Controller.submitPSODetails
 GET         /apply-for-ip16-pension-sharing-order-details/      controllers.IP2016Controller.psoDetails
+
+GET         /apply-for-ip16-remove-pension-sharing-order-details    controllers.IP2016Controller.removePsoDetails
+POST        /apply-for-ip16-remove-pension-sharing-order-details    controllers.IP2016Controller.submitRemovePsoDetails
 
 GET         /apply-for-ip16-submit-your-application             controllers.SummaryController.summaryIP16
 
