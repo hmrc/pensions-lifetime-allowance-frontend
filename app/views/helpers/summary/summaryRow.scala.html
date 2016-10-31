@@ -34,8 +34,8 @@
         </td>
         }
         @if(removeLinkCall.isDefined) {
-            <td class="@if(firstRow){has-child-element} summary-link" id="rowID-remove-link">
-                <a href="@removeLinkCall">@Messages("pla.base.remove")</a>
+            <td class="@if(firstRow){has-child-element} summary-link" a id="@{rowID}-removeLink">
+                <a id="@{rowID}-remove-link" href="@removeLinkCall">@Messages("pla.base.remove")</a>
                 <span class ="visuallyhidden">@Messages(s"pla.summary.hiddenLinkText.removePsoHint")</span>
             </td>
         } else {@if(removeLinkDefined) {
