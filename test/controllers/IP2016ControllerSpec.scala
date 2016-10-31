@@ -979,22 +979,8 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "not supplied with a stored model" should {
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitRemovePsoDetails)
-            "return 500 " in {
-                keystoreFetchCondition[PensionDebitsModel](None)
-                status(DataItem.result) shouldBe 500
-            }
-
-            "take the user to the technical error page" in {
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-            }
-        }
-
-        "supplied with a stored model" should {
-            val testModel = new PensionDebitsModel(Some("yes"))
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitRemovePsoDetails)
 
             "return 303" in {
-                keystoreFetchCondition[PensionDebitsModel](Some(testModel))
                 status(DataItem.result) shouldBe 303
             }
 
