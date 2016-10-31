@@ -24,6 +24,7 @@ case class SummaryModel(protectionType: ApplicationType.Value, invalidRelevantAm
     psoDetailsSections.foldLeft(false)((bool, next) =>
       bool match {
         case false => next.rows.exists(_.removeLinkCall.isDefined)
+        case _ => bool
       }
     )
 }

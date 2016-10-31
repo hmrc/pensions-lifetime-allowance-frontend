@@ -31,7 +31,6 @@ import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.OverseasPensionsForm.overseasPensionsForm
 import forms.CurrentPensionsForm.currentPensionsForm
-//import forms.NumberOfPSOsForm.numberOfPSOsForm
 import forms.PSODetailsForm.psoDetailsForm
 import forms.PensionDebitsForm.pensionDebitsForm
 import models._
@@ -228,15 +227,9 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     }
 
     val submitRemovePsoDetails = AuthorisedByAny.async { implicit user => implicit request =>
-      keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").map {
-          case Some(model) =>
-              val updatedModel = PensionDebitsModel(Some("no"))
-              keyStoreConnector.saveData[PensionDebitsModel]("pensionDebits", updatedModel)
-              Redirect(routes.SummaryController.summaryIP16())
-          case _ =>
-              Logger.error(s"Could not retrieve PSO Details Model for user with nino ${user.nino} when submitting a removal of a PSO during application")
-              InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString())).withHeaders(CACHE_CONTROL -> "no-cache")
-      }
+      val updatedModel = PensionDebitsModel(Some("no"))
+      keyStoreConnector.saveData[PensionDebitsModel]("pensionDebits", updatedModel)
+      Future(Redirect(routes.SummaryController.summaryIP16()))
     }
 
 }

@@ -32,7 +32,6 @@ import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.OverseasPensionsForm.overseasPensionsForm
 import forms.CurrentPensionsForm.currentPensionsForm
 import forms.PensionDebitsForm.pensionDebitsForm
-//import forms.NumberOfPSOsForm.numberOfPSOsForm
 import forms.IP14PSODetailsForm.IP14PsoDetailsForm
 import models._
 
@@ -224,15 +223,10 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     }
 
     val submitRemoveIp14PsoDetails = AuthorisedByAny.async { implicit user => implicit request =>
-        keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("ip14PensionDebits").map {
-            case Some(model) =>
-                val updatedModel = PensionDebitsModel(Some("no"))
-                keyStoreConnector.saveData[PensionDebitsModel]("ip14PensionDebits", updatedModel)
-                Redirect(routes.SummaryController.summaryIP14())
-            case _ =>
-                Logger.error(s"Could not retrieve PSO Debits Model for user with nino ${user.nino} when submitting a removal of a PSO during application")
-                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2014.toString())).withHeaders(CACHE_CONTROL -> "no-cache")
-        }
+        val updatedModel = PensionDebitsModel(Some("no"))
+        keyStoreConnector.saveData[PensionDebitsModel]("ip14PensionDebits", updatedModel)
+        Future(Redirect(routes.SummaryController.summaryIP14()))
     }
+
 
 }
