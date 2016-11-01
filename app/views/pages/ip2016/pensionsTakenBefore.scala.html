@@ -1,6 +1,6 @@
 @import models.PensionsTakenBeforeModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.{formInputMoney,formHiddenYesNoRadio}
+@import helpers.templates.{formInputMoney,formHiddenYesNoRadio,hiddenText}
 @import helpers.templates.ipSidebar
 @import play.api.data._
 @import common.Links
@@ -8,13 +8,15 @@
 @(pensionsTakenBeforeForm: Form[PensionsTakenBeforeModel])(implicit request: Request[_])
 
 @hiddenYesNoContent = {
-
     @formInputMoney(
         pensionsTakenBeforeForm,
         "pensionsTakenBeforeAmt",
         Messages("pla.pensionsTakenBefore.question"),
-        Some(Messages("pla.pensionsTakenBefore.helpText").toString())
+        Some(Messages("pla.pensionsTakenBefore.helpText").toString()),
+        Some(hiddenText("value", Messages("pla.pensionsTakenBefore.hiddenLink"), Messages("pla.pensionsTakenBefore.hiddenText")))
     )
+
+
 }
 
 @scriptElement = {
