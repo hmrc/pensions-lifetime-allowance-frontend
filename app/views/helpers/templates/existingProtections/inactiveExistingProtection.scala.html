@@ -38,6 +38,16 @@
                         @protectionDetails(Messages("pla.resultSuccess.applicationDate"), cDate, s"inactiveCertificateDate$protectionNum")
                     }
 
+                    @if(protection.status.toLowerCase == "dormant") {
+                        @defining(protection.protectionType.toUpperCase) { protectionType =>
+                            @if(protectionType == "IP2014" || protectionType == "IP2016" || protectionType == "FP2016") {
+                                <p id=@{s"${protection.status}-${protection.protectionType}-contact-HMRC-text"}>
+                                    @Html(Messages(s"pla.existingProtections.$protectionType.contactHMRC", "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries"))
+                                </p>
+                            }
+                        }
+                    }
+
                     @protection.amendCall.map{ call =>
                         <a href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>
                     }
@@ -45,6 +55,8 @@
             </details>
         </div>
     </div>
+
+
 
 
 </div>

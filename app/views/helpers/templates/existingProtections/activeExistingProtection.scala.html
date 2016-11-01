@@ -13,27 +13,38 @@
                 <a id="printLink" href="@controllers.routes.PrintController.printView" target="_blank" onclick="ga('send', 'event', 'print-active-protection', 'print-@{protection.protectionType.toString}', 'existing');">Print (opens in a new window)</a>
             </div>
         </div>
-        
-        <div class="panel-indent">
-            @protection.protectedAmount.map { amt =>
-                @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount")
-            }
 
-            @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, "activeProtectionReference")
+        <div class="grid-wrapper">
+            <div class="grid grid-2-3">
+                <div class="panel-indent">
+                    @protection.protectedAmount.map { amt =>
+                        @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount")
+                    }
 
-            @protection.psaCheckReference.map { checkRef =>
-                @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, "activePSACheckRef")
-            }
+                    @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, "activeProtectionReference")
 
-            @protection.certificateDate.map{ cDate =>
-                @protectionDetails(Messages("pla.resultSuccess.applicationDate"), cDate, "activeCertificateDate")
-            }
+                    @protection.psaCheckReference.map { checkRef =>
+                        @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, "activePSACheckRef")
+                    }
 
-            @protection.amendCall.map{ call =>
-                <a href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>
-            }
+                    @protection.certificateDate.map{ cDate =>
+                        @protectionDetails(Messages("pla.resultSuccess.applicationDate"), cDate, "activeCertificateDate")
+                    }
+
+                    @defining(protection.protectionType.toUpperCase) { protectionType =>
+                        @if(protectionType == "IP2014" || protectionType == "IP2016" || protectionType == "FP2016") {
+                            <p id=@{s"${protection.status}-${protection.protectionType}-contact-HMRC-text"}>
+                                @Html(Messages(s"pla.existingProtections.$protectionType.contactHMRC", "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries"))
+                            </p>
+                        }
+                    }
+
+                    @protection.amendCall.map{ call =>
+                        <a href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>
+                    }
+                </div>
+            </div>
         </div>
-
 
     </div>
 </div>
