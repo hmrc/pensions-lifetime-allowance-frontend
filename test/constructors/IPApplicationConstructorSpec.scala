@@ -44,13 +44,8 @@ class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
     val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
     val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
-    def numberOfPSOsTuple(numberOfPSOs: Int): (String, JsValue) = "numberOfPSOs" -> Json.toJson(NumberOfPSOsModel(Some(numberOfPSOs.toString)))
+    val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(Some(1), Some(2), Some(2016), BigDecimal(10000)))
 
-    val psoDetails1Tuple = "psoDetails1" -> Json.toJson(PSODetailsModel(1, Some(1), Some(2), Some(2016), BigDecimal(10000)))
-    val psoDetails2Tuple = "psoDetails2" -> Json.toJson(PSODetailsModel(2, Some(2), Some(3), Some(2016), BigDecimal(11000)))
-    val psoDetails3Tuple = "psoDetails3" -> Json.toJson(PSODetailsModel(3, Some(3), Some(4), Some(2016), BigDecimal(10100)))
-    val psoDetails4Tuple = "psoDetails4" -> Json.toJson(PSODetailsModel(4, Some(4), Some(5), Some(2016), BigDecimal(10010)))
-    val psoDetails5Tuple = "psoDetails5" -> Json.toJson(PSODetailsModel(5, Some(5), Some(6), Some(2016), BigDecimal(10001)))
 
     "Create an application object" when {
         implicit val protectionType = ApplicationType.IP2016
@@ -78,12 +73,8 @@ class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
                                         positivePensionDebitsTuple,
-                                        numberOfPSOsTuple(5),
-                                        psoDetails1Tuple,
-                                        psoDetails2Tuple,
-                                        psoDetails3Tuple,
-                                        psoDetails4Tuple,
-                                        psoDetails5Tuple))
+                                        psoDetailsTuple
+                                        ))
 
         val tstModel = IPApplicationModel(protectionType = "IP2016",
                                         relevantAmount = 4111,
@@ -92,11 +83,7 @@ class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
                                         postADayBenefitCrystallisationEvents = Some(1100),
                                         nonUKRights = Some(1010),
                                         pensionDebits = Some(List(
-                                            PensionDebit("2016-02-01", 10000),
-                                            PensionDebit("2016-03-02", 11000),
-                                            PensionDebit("2016-04-03", 10100),
-                                            PensionDebit("2016-05-04", 10010),
-                                            PensionDebit("2016-06-05", 10001)
+                                            PensionDebit("2016-02-01", 10000)
                                             ))
                                         )
         IPApplicationConstructor.createIPApplication(tstMap) shouldBe tstModel

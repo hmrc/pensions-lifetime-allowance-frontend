@@ -297,11 +297,15 @@ pla.psoDetails.pageHeading4                 = Fourth pension sharing order
 pla.psoDetails.pageHeading5                 = Fifth pension sharing order
 pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2016
+pla.psoDetails.dateHintText14               = For example, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
 pla.psoDetails.errorNegative                = Enter an amount that''s £0 or more
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
 pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
+pla.psoDetails.removePso                    = This will remove your pension sharing order
+pla.psoDetails.cancelRemove                 = <a href="{0}" id="{1}">Do not remove</a>
+
 
 pla.amendPsoDetails.pageHeading             = Pension sharing order
 
@@ -336,18 +340,10 @@ pla.summary.questions.totalPensionsAmt              = Your total pension savings
 pla.summary.psosHeading                             = Pension sharing orders
 pla.summary.questions.pensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.summary.hiddenLinkText.pensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2016?''
-pla.summary.questions.numberOfPSOsAmt               = Number of pension sharing orders
-pla.summary.hiddenLinkText.numberOfPSOsAmt          = Change your response to the number of pension sharing orders you have
-pla.summary.questions.psoDetails1                   = First pension sharing order
-pla.summary.hiddenLinkText.psoDetails1              = Change the details of your first pension sharing order
-pla.summary.questions.psoDetails2                   = Second pension sharing order
-pla.summary.hiddenLinkText.psoDetails2              = Change the details of your second pension sharing order
-pla.summary.questions.psoDetails3                   = Third pension sharing order
-pla.summary.hiddenLinkText.psoDetails3              = Change the details of your third pension sharing order
-pla.summary.questions.psoDetails4                   = Fourth pension sharing order
-pla.summary.hiddenLinkText.psoDetails4              = Change the details of your fourth pension sharing order
-pla.summary.questions.psoDetails5                   = Fifth pension sharing order
-pla.summary.hiddenLinkText.psoDetails5              = Change the details of your fifth pension sharing order
+
+pla.summary.questions.psoDetails                    = Date and amount of pension sharing order
+pla.summary.hiddenLinkText.psoDetails               = Change the details of your pension sharing order
+
 pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold primary protection or individual protection 2014.
 pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
@@ -372,18 +368,11 @@ pla.summary.questions.ip14TotalPensionsAmt              = Your total pension sav
 pla.summary.ip14PsosHeading                             = Pension sharing orders
 pla.summary.questions.ip14PensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2014?
 pla.summary.hiddenLinkText.ip14PensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2014?''
-pla.summary.questions.ip14NumberOfPSOsAmt               = Number of pension sharing orders
-pla.summary.hiddenLinkText.ip14NumberOfPSOsAmt          = Change your response to the number of pension sharing orders you have
-pla.summary.questions.ip14PsoDetails1                   = First pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails1              = Change the details of your first pension sharing order
-pla.summary.questions.ip14PsoDetails2                   = Second pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails2              = Change the details of your second pension sharing order
-pla.summary.questions.ip14PsoDetails3                   = Third pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails3              = Change the details of your third pension sharing order
-pla.summary.questions.ip14PsoDetails4                   = Fourth pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails4              = Change the details of your fourth pension sharing order
-pla.summary.questions.ip14PsoDetails5                   = Fifth pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails5              = Change the details of your fifth pension sharing order
+pla.summary.hiddenLinkText.removePsoHint                = Remove your response to the amount or date of your pension sharing order
+
+pla.summary.questions.ip14PsoDetails                    = Date and amount of pension sharing order
+pla.summary.hiddenLinkText.ip14PsoDetails               = Change the details of your pension sharing order
+
 pla.summary.ip14DeclarationPara1                        = I confirm that at 5 April 2014 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2014 I did not hold primary protection.
 pla.summary.ip14DeclarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
