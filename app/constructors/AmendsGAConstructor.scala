@@ -22,11 +22,28 @@ import models.amendModels.AmendsGAModel
 object AmendsGAConstructor {
 
   def identifyAmendsChanges(updated: ProtectionModel, original: ProtectionModel): AmendsGAModel ={
-    val current: Boolean = if(updated.uncrystallisedRights != original.uncrystallisedRights) true else false
-    val before: Boolean = if(updated.preADayPensionInPayment != original.preADayPensionInPayment) true else false
-    val between: Boolean = if(updated.postADayBenefitCrystallisationEvents != original.postADayBenefitCrystallisationEvents) true else false
-    val overseas: Boolean = if(updated.nonUKRights != original.nonUKRights) true else false
-    AmendsGAModel(current,before,between,overseas)
+    val current: String = if(updated.uncrystallisedRights != original.uncrystallisedRights) "UpdatedValue" else "false"
+
+    val before: String = if(updated.preADayPensionInPayment != original.preADayPensionInPayment){
+      if(!updated.preADayPensionInPayment.contains(0.0) && !original.preADayPensionInPayment.contains(0.0)) "UpdatedValue"
+      else if(updated.preADayPensionInPayment.contains(0.0)) "ChangedToNo"
+      else "ChangedToYes"
+    } else "false"
+
+    val between: String = if(updated.postADayBenefitCrystallisationEvents != original.postADayBenefitCrystallisationEvents){
+      if(!updated.postADayBenefitCrystallisationEvents.contains(0.0) && !original.postADayBenefitCrystallisationEvents.contains(0.0)) "UpdatedValue"
+      else if(updated.postADayBenefitCrystallisationEvents.contains(0.0)) "ChangedToNo"
+      else "ChangedToYes"
+    } else "false"
+
+    val overseas: String = if(updated.nonUKRights != original.nonUKRights){
+      if(!updated.nonUKRights.contains(0.0) && !original.nonUKRights.contains(0.0)) "UpdatedValue"
+      else if(updated.nonUKRights.contains(0.0)) "ChangedToNo"
+      else "ChangedToYes"
+    } else "false"
+
+    val pso: String = if(updated.pensionDebits.isDefined) "addedPSO" else "false"
+    AmendsGAModel(current,before,between,overseas,pso)
   }
 
 }

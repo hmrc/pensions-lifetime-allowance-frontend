@@ -13,10 +13,11 @@
 
 @views.html.main_template(title = Messages("pla.activeAmend.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
-<div @if(gaModel.current){data-metrics = "activeAmends:current:a"}></div>
-<div @if(gaModel.before){data-metrics = "activeAmends:before:b"}></div>
-<div @if(gaModel.between){data-metrics = "activeAmends:between:c"}></div>
-<div @if(gaModel.overseas){data-metrics = "activeAmends:overseas:d"}></div>
+<div @if(gaModel.current != "false"){data-metrics = "activeAmends:@gaModel.current:amendCurrentPensions"}></div>
+<div @if(gaModel.before != "false"){data-metrics = "activeAmends:@gaModel.before:amendPTBefore"}></div>
+<div @if(gaModel.between != "false"){data-metrics = "activeAmends:@gaModel.between:amendPTBetween"}></div>
+<div @if(gaModel.overseas != "false"){data-metrics = "activeAmends:@gaModel.overseas:amendOverseasPensions"}></div>
+<div @if(gaModel.pso != "false"){data-metrics = "activeAmends:@gaModel.pso:amendPSOs"}></div>
 
 <div class="grid-row">
     <div class="transaction-banner--complete">
