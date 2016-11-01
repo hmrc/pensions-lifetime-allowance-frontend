@@ -54,10 +54,10 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         .thenReturn(Future.successful(data))
     }
 
-    def psoNumKeystoreSetup(data: Option[NumberOfPSOsModel]) = {
-        when(mockKeyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel](Matchers.eq("ip14NumberOfPSOs"))(Matchers.any(), Matchers.any()))
-          .thenReturn(Future.successful(data))
-    }
+//    def psoNumKeystoreSetup(data: Option[NumberOfPSOsModel]) = {
+//        when(mockKeyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel](Matchers.eq("ip14NumberOfPSOs"))(Matchers.any(), Matchers.any()))
+//          .thenReturn(Future.successful(data))
+//    }
 
     def psoDeetsKeystoreSetup(data: Option[PSODetailsModel], deetsNum: Int) = {
         when(mockKeyStoreConnector.fetchAndGetFormData[PSODetailsModel](Matchers.eq(s"ip14PsoDetails$deetsNum"))(Matchers.any(), Matchers.any()))
@@ -68,7 +68,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         when(mockKeyStoreConnector.fetchAndGetFormData[PensionDebitsModel](Matchers.eq("ip14PensionDebits"))(Matchers.any(), Matchers.any()))
           .thenReturn(Future.successful(data))
     }
-
 
 
     ///////////////////////////////////////////////
@@ -666,7 +665,7 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PensionDebits, ("pensionDebits", "yes"))
             "return 303" in {status(DataItem.result) shouldBe 303}
-            "redirect to ip14 number of pension sharing orders" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14NumberOfPSOs()}") }
+            "redirect to ip14 pso details page" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14PsoDetails}") }
         }
 
         "Submitting 'no' in pensionDebitsForm" should {
@@ -686,214 +685,65 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         }
     }
 
+    ///////////////////////////////////////////////
+    // PENSION DETAILS
+    ///////////////////////////////////////////////
 
-    ///////////////////////////////////////////////
-    // IP14 NUMBER OF PENSION SHARING ORDERS
-    ///////////////////////////////////////////////
-    "In IP2014Controller calling the .ip14NumberOfPSOs action" when {
+    "In IP2014Controller calling the .psoDetails action" when {
+
 
         "not supplied with a stored model" should {
 
-            val testModel = PensionDebitsModel(Some("yes"))
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14NumberOfPSOs)
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PsoDetails)
+
             "return 200" in {
-                keystoreFetchCondition[NumberOfPSOsModel](None)
-                pensionDebitsKeystoreSetup(Some(testModel))
+                keystoreFetchCondition[PSODetailsModel](None)
+                status(DataItem.result) shouldBe 200
+            }
+            "take the user to the pso details page" in {
+                keystoreFetchCondition[PSODetailsModel](None)
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+            }
+        }
+
+        "supplied with a stored test model" should {
+            val testModel = PSODetailsModel(Some(1), Some(8), Some(2014), BigDecimal(1234))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PsoDetails)
+
+            "return 200" in {
+                keystoreFetchCondition[PSODetailsModel](Some(testModel))
                 status(DataItem.result) shouldBe 200
             }
 
-            "take the user to the number of PSOs page" in {
-                keystoreFetchCondition[NumberOfPSOsModel](None)
-                pensionDebitsKeystoreSetup(Some(testModel))
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.numberOfPSOs.pageHeading")
-            }
-        }
-
-        "the user has not declared any pension sharing orders" should {
-
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14NumberOfPSOs)
-            "return 500" in {
-                keystoreFetchCondition[NumberOfPSOsModel](None)
-                pensionDebitsKeystoreSetup(None)
-                status(DataItem.result) shouldBe 500
-            }
-
-            "display the technical error page for IP14" in {
-                keystoreFetchCondition[NumberOfPSOsModel](None)
-                pensionDebitsKeystoreSetup(None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-                DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
-            }
-        }
-
-        "the user has declared they have no pension sharing orders" should {
-
-            val testModel = PensionDebitsModel(Some("no"))
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14NumberOfPSOs)
-            "return 500" in {
-                keystoreFetchCondition[NumberOfPSOsModel](None)
-                pensionDebitsKeystoreSetup(Some(testModel))
-                status(DataItem.result) shouldBe 500
-            }
-
-            "display the technical error page for IP14" in {
-                keystoreFetchCondition[NumberOfPSOsModel](None)
-                pensionDebitsKeystoreSetup(Some(testModel))
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-                DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
-            }
-        }
-
-        "supplied with a pre-existing stored model" should {
-
-            val testPensionDebitsAmtModel = PensionDebitsModel(Some("yes"))
-            val testModel = NumberOfPSOsModel(Some("3"))
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14NumberOfPSOs)
-            "return 200" in {
-                keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
-                pensionDebitsKeystoreSetup(Some(testPensionDebitsAmtModel))
-                status(DataItem.result) shouldBe 200
-            }
-
-            "take the user to the number of PSOs page" in {
-                keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
-                pensionDebitsKeystoreSetup(Some(testPensionDebitsAmtModel))
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.numberOfPSOs.pageHeading")
+            "take the user to the pso details page" in {
+                keystoreFetchCondition[PSODetailsModel](Some(testModel))
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
             }
 
             "return some HTML that" should {
-
                 "contain some text and use the character set utf-8" in {
-                    keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
-                    pensionDebitsKeystoreSetup(Some(testPensionDebitsAmtModel))
+                    keystoreFetchCondition[PSODetailsModel](Some(testModel))
                     contentType(DataItem.result) shouldBe Some("text/html")
                     charset(DataItem.result) shouldBe Some("utf-8")
                 }
 
-                "have the radio option `3` selected by default" in {
-                    keystoreFetchCondition[NumberOfPSOsModel](Some(testModel))
-                    pensionDebitsKeystoreSetup(Some(testPensionDebitsAmtModel))
-                    DataItem.jsoupDoc.body.getElementById("numberOfPSOs-3").parent.classNames().contains("selected") shouldBe true
+                "have the input values set as default" in {
+                    keystoreFetchCondition[PSODetailsModel](Some(testModel))
+                    DataItem.jsoupDoc.body.getElementById("psoDay").`val`() shouldBe "1"
+                    DataItem.jsoupDoc.body.getElementById("psoMonth").`val`() shouldBe "8"
+                    DataItem.jsoupDoc.body.getElementById("psoYear").`val`() shouldBe "2014"
+                    DataItem.jsoupDoc.body.getElementById("psoAmt").`val`() shouldBe "1234"
                 }
             }
         }
 
     }
 
-    "Submitting number of Pension Sharing Orders data" when {
-
-        "Submitting '1' in numberOfPSOsForm" should {
-
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14NumberOfPSOs, ("numberOfPSOs", "1"))
-            "return 303" in {status(DataItem.result) shouldBe 303}
-            "redirect to PSO details" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14PsoDetails("1")}") }
-        }
-
-        "Submitting numberOfPSOsForm with no data" should {
-
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14NumberOfPSOs, ("numberOfPSOs", ""))
-            "return 400" in { status(DataItem.result) shouldBe 400 }
-            "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.numberOfPSOs.mandatoryErr"))
-            }
-        }
-    }
-
-
-
-    ///////////////////////////////////////////////
-    // IP14 PENSION SHARING ORDER DETAILS
-    ///////////////////////////////////////////////
-    "In IP2014Controller calling the .ip14PsoDetails action" when {
-
-        "there is no total PSOs number stored in keystore" should {
-
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PsoDetails("1"))
-            "return 500" in {
-                keystoreFetchCondition[NumberOfPSOsModel](None)
-                status(DataItem.result) shouldBe 500
-            }
-
-            "show the technical error page for IP14" in {
-                keystoreFetchCondition[NumberOfPSOsModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-                DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
-            }
-        }
-
-        "a PSO number higher than the total number of PSOs is passed in" should {
-
-            val testModel = new NumberOfPSOsModel(Some("2"))
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PsoDetails("3"))
-            "return 303" in {
-                psoNumKeystoreSetup(Some(testModel))
-                status(DataItem.result) shouldBe 303
-            }
-
-            "redirect the user to the ip14 summary page" in {
-                psoNumKeystoreSetup(Some(testModel))
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
-            }
-        }
-
-        "a PSO number (2) less than the total number of PSOs is passed in" should {
-
-            val testModel = new NumberOfPSOsModel(Some("3"))
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PsoDetails("2"))
-            "return 200" in {
-                psoNumKeystoreSetup(Some(testModel))
-                status(DataItem.result) shouldBe 200
-            }
-
-            "take the user to the second PSO details page" in {
-                psoNumKeystoreSetup(Some(testModel))
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.pageHeading2")
-            }
-        }
-
-        "a PSO number (2) equal the total number of PSOs is passed in with a stored model" should {
-
-            val day = 13
-            val month = 5
-            val year = 2016
-            val psoAmt = 100000
-            val testModel = new NumberOfPSOsModel(Some("2"))
-            val testDetailsModel = new PSODetailsModel(2, day, month, year, psoAmt)
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.ip14PsoDetails("2"))
-            "return 200" in {
-                psoNumKeystoreSetup(Some(testModel))
-                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
-                status(DataItem.result) shouldBe 200
-            }
-
-            "take the user to the second PSO details page" in {
-                psoNumKeystoreSetup(Some(testModel))
-                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.pageHeading2")
-            }
-
-            "have the PSO date fields completed correctly" in {
-                psoNumKeystoreSetup(Some(testModel))
-                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
-                DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual "13"
-                DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual "5"
-                DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual "2016"
-            }
-
-            "have the PSO amount field completed correctly" in {
-                psoNumKeystoreSetup(Some(testModel))
-                psoDeetsKeystoreSetup(Some(testDetailsModel), 2)
-                DataItem.jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "100000"
-            }
-        }
-    }
-
     "Submitting valid PSO details data" when {
 
-        "submitting a valid 4th PSO's details on first possible day" should {
+        "submitting valid PSO details on first possible day" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", "6"),
                 ("psoMonth", "4"),
                 ("psoYear", "2016"),
@@ -903,16 +753,15 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(DataItem.result) shouldBe 303
             }
 
-            "redirect to the psoDetails controller action with a psoNum of 5" in {
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14PsoDetails("5")}")
+            "redirect to the summary page" in {
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14}")
             }
         }
 
-        "submitting a valid 3rd PSO's details on today's date" should {
+        "submitting valid PSO details on today's date" should {
 
             val todaysDate = LocalDate.now()
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "3"),
                 ("psoDay", todaysDate.getDayOfMonth.toString),
                 ("psoMonth", todaysDate.getMonthValue.toString),
                 ("psoYear", todaysDate.getYear.toString),
@@ -923,14 +772,13 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             }
 
             "redirect to the psoDetails controller action with a psoNum of 4" in {
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2014Controller.ip14PsoDetails("4")}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
             }
         }
 
         "submitting an invalid set of PSO details - missing day" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", ""),
                 ("psoMonth", "1"),
                 ("psoYear", "2015"),
@@ -946,7 +794,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "submitting an invalid set of PSO details - missing month" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", "1"),
                 ("psoMonth", ""),
                 ("psoYear", "2015"),
@@ -962,7 +809,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "submitting an invalid set of PSO details - missing year" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", "1"),
                 ("psoMonth", "1"),
                 ("psoYear", ""),
@@ -978,7 +824,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "submitting an invalid set of PSO details - invalid date" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", "29"),
                 ("psoMonth", "2"),
                 ("psoYear", "2015"),
@@ -994,7 +839,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "submitting an invalid set of PSO details - date before 6 April 2014" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", "5"),
                 ("psoMonth", "4"),
                 ("psoYear", "2014"),
@@ -1011,7 +855,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             val tomorrow = LocalDate.now.plusDays(1)
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", tomorrow.getDayOfMonth.toString),
                 ("psoMonth", tomorrow.getMonthValue.toString),
                 ("psoYear", tomorrow.getYear.toString),
@@ -1027,7 +870,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "submitting an invalid set of PSO details - missing PSO amount" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", "1"),
                 ("psoMonth", "1"),
                 ("psoYear", "2015"),
@@ -1043,7 +885,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "submitting an invalid set of PSO details - amount negative" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", "1"),
                 ("psoMonth", "1"),
                 ("psoYear", "2015"),
@@ -1059,7 +900,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "submitting an invalid set of PSO details - amount too many decimal places" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", "1"),
                 ("psoMonth", "1"),
                 ("psoYear", "2015"),
@@ -1075,7 +915,6 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "submitting an invalid set of PSO details - amount too large" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitIP14PSODetails,
-                ("psoNumber", "4"),
                 ("psoDay", "1"),
                 ("psoMonth", "1"),
                 ("psoYear", "2015"),
@@ -1085,6 +924,50 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "fail with the correct error message" in {
                 DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorMaximum"))
+            }
+        }
+    }
+
+    "In IP2014Controller calling the .removePsoDetails action" when {
+
+        "not supplied with a stored model" should {
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.removeIp14PsoDetails)
+            "return 500 " in {
+                keystoreFetchCondition[PSODetailsModel](None)
+                status(DataItem.result) shouldBe 500
+            }
+
+            "take the user to the technical error page" in {
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+            }
+        }
+
+        "supplied with a stored model" should {
+            val testModel = new PensionDebitsModel(Some("yes"))
+            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.removeIp14PsoDetails)
+
+            "return 200" in {
+                keystoreFetchCondition[PensionDebitsModel](Some(testModel))
+                status(DataItem.result) shouldBe 200
+            }
+
+            "take the user to the remove PSO page" in {
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+            }
+        }
+    }
+
+    "Submitting a pso for removal from application" when {
+
+        "not supplied with a stored model" should {
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2014Controller.submitRemoveIp14PsoDetails)
+
+            "return 303" in {
+                status(DataItem.result) shouldBe 303
+            }
+
+            "redirect location should be the summary page" in {
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP14()}")
             }
         }
     }

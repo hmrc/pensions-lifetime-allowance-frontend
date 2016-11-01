@@ -1,0 +1,27 @@
+@import config.FrontendAppConfig
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+
+@()(implicit request: Request[_])
+
+@main_template(title = Messages("pla.psoDetails.title"), scriptElem=None, bodyClasses = None) {
+
+<header class ="page-header">
+    <h1 class="heading-large" id="page-heading">
+        @Messages("pla.psoDetails.title")
+    </h1>
+</header>
+
+<div class="panel-indent panel panel-border-wide spacelarge">
+    <p>@Messages("pla.psoDetails.removePso")</p>
+</div>
+
+<div class="form-group">
+    @govHelpers.form(action = routes.IP2014Controller.submitRemoveIp14PsoDetails) {
+    <p>
+        <button id="submit" class="button" type="submit">@Messages("pla.base.remove")</button>
+    </p>
+
+    @Html(Messages("pla.psoDetails.cancelRemove", routes.SummaryController.summaryIP14(), "cancel-link"))
+    }
+</div>
+}
