@@ -23,8 +23,7 @@
         <button id="submit" class="button" type="submit">@Messages("pla.base.remove")</button>
     </p>
 
-    @Html(Messages("pla.amends.pensionDebits.cancelRemove",
-        routes.AmendsController.amendsSummary(amendmentTypeForm("protectionType").value.getOrElse(""), amendmentTypeForm("status").value.getOrElse("")), "cancel-link"))
+    @Html(Messages("pla.amends.pensionDebits.cancelRemove", routes.AmendsController.amendsSummary(amendmentTypeForm("protectionType").value.getOrElse(""), amendmentTypeForm("status").value.getOrElse("")), "cancel-link"))
     <div class ="form-hidden">
 
         @helper.inputText(amendmentTypeForm("protectionType"), 'type -> "hidden", 'class -> "form-hidden")

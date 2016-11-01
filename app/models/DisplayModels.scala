@@ -82,7 +82,7 @@ case class AmendDisplaySectionModel (
                                     rows: Seq[AmendDisplayRowModel]
                                       )
 
-case class AmendDisplayRowModel(rowId: String, changeLinkCall: Option[Call],removeLinkCall: Option[Call], displayValue: String*)
+case class AmendDisplayRowModel(rowId: String, changeLinkCall: Option[Call], removeLinkCall: Option[Call], displayValue: String*)
 
 case class ActiveAmendResultDisplayModel (
                                          protectionType: ApplicationType.Value,

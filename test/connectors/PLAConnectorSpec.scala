@@ -80,8 +80,6 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
     }
   }
 
-
-
   "Calling applyIP16" should {
     "should return a 200 from a valid apply IP16 request" in {
       when(mockHttp.POST[JsValue, HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
@@ -90,7 +88,6 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
                                       negativeOverseasPensionsTuple,
                                       validCurrentPensionsTuple,
                                       negativePensionDebitsTuple))
-
       val response = TestPLAConnector.applyIP16(nino, tstMap)
       await(response).status shouldBe OK
     }
@@ -106,6 +103,28 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
                                       negativeIP14PensionDebitsTuple))
 
       val response = TestPLAConnector.applyIP14(nino, tstMap)
+      await(response).status shouldBe OK
+    }
+  }
+
+  "Calling amendProtection" should {
+    "return 200 from a valid amendProtection request" in {
+      when(mockHttp.PUT[JsValue, HttpResponse](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
+      val protectionModel = ProtectionModel(
+        psaCheckReference = Some("testPSARef"),
+        uncrystallisedRights = Some(100000.00),
+        nonUKRights = Some(2000.00),
+        preADayPensionInPayment = Some(2000.00),
+        postADayBenefitCrystallisationEvents = Some(2000.00),
+        notificationId = Some(12),
+        protectionID = Some(12345),
+        protectionType = Some("IP2016"),
+        status = Some("dormant"),
+        certificateDate = Some("2016-04-17"),
+        protectedAmount = Some(1250000),
+        protectionReference = Some("PSA123456"))
+
+      val response = TestPLAConnector.amendProtection(nino, protectionModel)
       await(response).status shouldBe OK
     }
   }

@@ -119,6 +119,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
       keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
         case Some(model) =>
           val notificationId = model.protection.notificationId.getOrElse{throw new Exceptions.OptionNotDefinedException("applicationOutcome", "notificationId", protectionType.toString)}
+
           applicationOutcome(notificationId) match {
 
             case ApplicationOutcome.Successful =>
