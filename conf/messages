@@ -202,12 +202,12 @@ pla.pensionsTakenBefore.errorMaximum        = Enter an amount less than £99,999
 pla.pensionsTakenBefore.errorDecimalPlaces  = The amount you''ve entered has too many decimal places
 pla.pensionsTakenBefore.legend              = Did you get an income from any of your pensions before 6 April 2006?
 pla.pensionsTakenBefore.hiddenLink          = How do I work out the value?
-pla.pensionsTakenBefore.hiddenText          = In most cases, this is the annual amount of your pension at 5 April 2016 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension see the guidance.
+pla.pensionsTakenBefore.hiddenText          = In most cases, this is the annual amount of your pension at 5 April 2016 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension, see the guidance.
 
 ## IP14 Pensions Taken Before ##
 pla.ip14PensionsTakenBefore.question        = What were your pensions worth on 5 April 2014?
 pla.ip14PensionsTakenBefore.helpText        = If you had more than one pension in payment on 5 April 2006, you should include the total of the values of each pension.
-pla.ip14PensionsTakenBefore.hiddenText      = In most cases, this is the annual amount of your pension at 5 April 2014 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension see the guidance.
+pla.ip14PensionsTakenBefore.hiddenText      = In most cases, this is the annual amount of your pension at 5 April 2014 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension, see the guidance.
 
 ## Pensions Taken Between ##
 pla.pensionsTakenBetween.pageHeading        = Did any of the following happen between 6 April 2006 and 5 April 2016?
