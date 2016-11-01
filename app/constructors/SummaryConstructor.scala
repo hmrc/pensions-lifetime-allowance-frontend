@@ -94,7 +94,6 @@ trait SummaryConstructor {
       pensionDebitsModel.flatMap {
         case s: PensionDebitsModel => s.getYesNoValue match {
           case "yes" => Some(helper.createPSODetailsSection(psoDetails))
-          case "no" => None
           case _ => None
         }
         case _  => None

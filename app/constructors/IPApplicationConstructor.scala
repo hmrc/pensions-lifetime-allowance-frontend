@@ -90,7 +90,6 @@ object IPApplicationConstructor {
     val hasPso = data.getEntry[PensionDebitsModel](nameString("pensionDebits")) match {
       case Some(pdModel) => pdModel.pensionDebits match {
         case Some("yes")  =>  true
-        case Some("no")   => false
         case _            => false
       }
       case None => false

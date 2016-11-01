@@ -214,12 +214,7 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     }
 
     val removeIp14PsoDetails = AuthorisedByAny.async {implicit user => implicit request =>
-        keyStoreConnector.fetchAndGetFormData[PSODetailsModel]("ip14PsoDetails").map {
-            case Some(model) => Ok(pages.ip2014.ip14RemovePsoDetails())
-            case _           =>
-                Logger.error(s"Could not retrieve PSODetailsModel for user with ${user.nino} when removing a PSO during application")
-                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2014.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-        }
+        Future(Ok(pages.ip2014.ip14RemovePsoDetails()))
     }
 
     val submitRemoveIp14PsoDetails = AuthorisedByAny.async { implicit user => implicit request =>

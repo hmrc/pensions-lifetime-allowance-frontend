@@ -218,12 +218,8 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     }
 
     val removePsoDetails = AuthorisedByAny.async {implicit user => implicit request =>
-        keyStoreConnector.fetchAndGetFormData[PSODetailsModel]("psoDetails").map {
-            case Some(model) => Ok(pages.ip2016.removePsoDetails())
-            case _           =>
-                Logger.error(s"Could not retrieve PSODetailsModel for user with ${user.nino} when removing a PSO during application")
-                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-        }
+        Future(Ok(pages.ip2016.removePsoDetails()))
+
     }
 
     val submitRemovePsoDetails = AuthorisedByAny.async { implicit user => implicit request =>

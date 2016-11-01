@@ -930,24 +930,10 @@ class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "In IP2014Controller calling the .removePsoDetails action" when {
 
-        "not supplied with a stored model" should {
-            object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.removeIp14PsoDetails)
-            "return 500 " in {
-                keystoreFetchCondition[PSODetailsModel](None)
-                status(DataItem.result) shouldBe 500
-            }
-
-            "take the user to the technical error page" in {
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-            }
-        }
-
         "supplied with a stored model" should {
-            val testModel = new PensionDebitsModel(Some("yes"))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2014Controller.removeIp14PsoDetails)
 
             "return 200" in {
-                keystoreFetchCondition[PensionDebitsModel](Some(testModel))
                 status(DataItem.result) shouldBe 200
             }
 
