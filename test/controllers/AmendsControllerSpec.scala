@@ -24,7 +24,7 @@ import connectors.{PLAConnector, KeyStoreConnector}
 import constructors.{ResponseConstructors, DisplayConstructors}
 import enums.ApplicationType
 import models._
-import models.amendModels.AmendProtectionModel
+import models.amendModels.{AmendsGAModel, AmendProtectionModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
