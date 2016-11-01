@@ -441,7 +441,7 @@ pla.resultSuccess.exitSurvey            = Your feedback helps us improve.</p><p>
 pla.resultRejection.title                 = Unsuccessful
 pla.resultRejection.pageHeading           = Your application was unsuccessful
 pla.resultRejection.viewDetails           = You can view details of your protections at any time on the
-pla.resultRejection.viewDetailsLinkText   = existing protections page
+pla.resultRejection.viewDetailsLinkText   = personal tax account
 
 ## Manual Correspondence Needed ##
 pla.mcNeeded.title                        = There is a problem accessing your account

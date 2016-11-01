@@ -11,11 +11,11 @@
         <p id=@{s"additionalInfo$infoNum"}>@Html(Messages(s"resultCode.${res.notificationId}.$infoNum"))</p>
     }
 
-    @if(res.protectionType == ApplicationType.IP2016 || res.protectionType == ApplicationType.IP2014) {
+    @if(res.protectionType == ApplicationType.IP2016 || res.protectionType == ApplicationType.IP2014 || Constants.fpShowPensionSharing.contains(res.notificationId.toInt)) {
         <p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
     }
 
-    @if(res.protectionType == ApplicationType.FP2016) {
+    @if(res.protectionType == ApplicationType.FP2016 || Constants.ipShowAddToPension.contains(res.notificationId.toInt)) {
         <p id="fpAddToPension">@Html(Messages("pla.resultSuccess.FPAddToPension"))</p>
     }
 
