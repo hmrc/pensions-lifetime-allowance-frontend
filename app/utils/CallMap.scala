@@ -39,23 +39,11 @@ object CallMap {
     "pensionDebits"       -> controllers.routes.IP2016Controller.pensionDebits(),
     "ip14PensionDebits"   -> controllers.routes.IP2014Controller.ip14PensionDebits(),
 
-    "numberOfPSOs"       -> controllers.routes.IP2016Controller.numberOfPSOs(),
-    "ip14NumberOfPSOs"   -> controllers.routes.IP2014Controller.ip14NumberOfPSOs(),
+    "psoDetails"     -> controllers.routes.IP2016Controller.psoDetails,
+    "ip14PsoDetails" -> controllers.routes.IP2014Controller.ip14PsoDetails,
 
-    "psoDetails1"     -> controllers.routes.IP2016Controller.psoDetails("1"),
-    "ip14PsoDetails1" -> controllers.routes.IP2014Controller.ip14PsoDetails("1"),
-
-    "psoDetails2"     -> controllers.routes.IP2016Controller.psoDetails("2"),
-    "ip14PsoDetails2" -> controllers.routes.IP2014Controller.ip14PsoDetails("2"),
-
-    "psoDetails3"     -> controllers.routes.IP2016Controller.psoDetails("3"),
-    "ip14PsoDetails3" -> controllers.routes.IP2014Controller.ip14PsoDetails("3"),
-
-    "psoDetails4"     -> controllers.routes.IP2016Controller.psoDetails("4"),
-    "ip14PsoDetails4" -> controllers.routes.IP2014Controller.ip14PsoDetails("4"),
-
-    "psoDetails5"     -> controllers.routes.IP2016Controller.psoDetails("5"),
-    "ip14PsoDetails5" -> controllers.routes.IP2014Controller.ip14PsoDetails("5")
+    "removePsoDetails" -> controllers.routes.IP2016Controller.removePsoDetails,
+    "removeIp14PsoDetails" -> controllers.routes.IP2014Controller.removeIp14PsoDetails
     )
 
   def get(name: String): Option[Call] = callMap.get(name)

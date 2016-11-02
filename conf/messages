@@ -40,8 +40,10 @@ pla.links.ExistingProtectionsLinkText   = View your existing protections
 pla.links.signout                       = Sign out
 pla.links.IPHelp                        = What is individual protection
 pla.links.pensionsTakenBeforeHelp       = What is your pension worth
-pla.links.pensionsTakenBetweenHelp       = How much lifetime allowance have you used
+pla.links.pensionsTakenBetweenHelp      = How much lifetime allowance have you used
 pla.links.currentPensions               = What is your pension worth
+pla.links.fpArrangementHelp             = What is an arrangement
+pla.links.fpRelievedPensionHelp         = What is a relieved non-UK pension scheme
 
 ## Timeout ##
 pla.timeout.title       = Session closed due to inactivity
@@ -294,11 +296,15 @@ pla.psoDetails.pageHeading4                 = Fourth pension sharing order
 pla.psoDetails.pageHeading5                 = Fifth pension sharing order
 pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2016
+pla.psoDetails.dateHintText14               = For example, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
 pla.psoDetails.errorNegative                = Enter an amount that''s £0 or more
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
 pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
+pla.psoDetails.removePso                    = This will remove your pension sharing order
+pla.psoDetails.cancelRemove                 = <a href="{0}" id="{1}">Do not remove</a>
+
 
 pla.amendPsoDetails.pageHeading             = Pension sharing order
 
@@ -333,18 +339,10 @@ pla.summary.questions.totalPensionsAmt              = Your total pension savings
 pla.summary.psosHeading                             = Pension sharing orders
 pla.summary.questions.pensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.summary.hiddenLinkText.pensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2016?''
-pla.summary.questions.numberOfPSOsAmt               = Number of pension sharing orders
-pla.summary.hiddenLinkText.numberOfPSOsAmt          = Change your response to the number of pension sharing orders you have
-pla.summary.questions.psoDetails1                   = First pension sharing order
-pla.summary.hiddenLinkText.psoDetails1              = Change the details of your first pension sharing order
-pla.summary.questions.psoDetails2                   = Second pension sharing order
-pla.summary.hiddenLinkText.psoDetails2              = Change the details of your second pension sharing order
-pla.summary.questions.psoDetails3                   = Third pension sharing order
-pla.summary.hiddenLinkText.psoDetails3              = Change the details of your third pension sharing order
-pla.summary.questions.psoDetails4                   = Fourth pension sharing order
-pla.summary.hiddenLinkText.psoDetails4              = Change the details of your fourth pension sharing order
-pla.summary.questions.psoDetails5                   = Fifth pension sharing order
-pla.summary.hiddenLinkText.psoDetails5              = Change the details of your fifth pension sharing order
+
+pla.summary.questions.psoDetails                    = Date and amount of pension sharing order
+pla.summary.hiddenLinkText.psoDetails               = Change the details of your pension sharing order
+
 pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold primary protection or individual protection 2014.
 pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
@@ -369,18 +367,11 @@ pla.summary.questions.ip14TotalPensionsAmt              = Your total pension sav
 pla.summary.ip14PsosHeading                             = Pension sharing orders
 pla.summary.questions.ip14PensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2014?
 pla.summary.hiddenLinkText.ip14PensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2014?''
-pla.summary.questions.ip14NumberOfPSOsAmt               = Number of pension sharing orders
-pla.summary.hiddenLinkText.ip14NumberOfPSOsAmt          = Change your response to the number of pension sharing orders you have
-pla.summary.questions.ip14PsoDetails1                   = First pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails1              = Change the details of your first pension sharing order
-pla.summary.questions.ip14PsoDetails2                   = Second pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails2              = Change the details of your second pension sharing order
-pla.summary.questions.ip14PsoDetails3                   = Third pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails3              = Change the details of your third pension sharing order
-pla.summary.questions.ip14PsoDetails4                   = Fourth pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails4              = Change the details of your fourth pension sharing order
-pla.summary.questions.ip14PsoDetails5                   = Fifth pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails5              = Change the details of your fifth pension sharing order
+pla.summary.hiddenLinkText.removePsoHint                = Remove your response to the amount or date of your pension sharing order
+
+pla.summary.questions.ip14PsoDetails                    = Date and amount of pension sharing order
+pla.summary.hiddenLinkText.ip14PsoDetails               = Change the details of your pension sharing order
+
 pla.summary.ip14DeclarationPara1                        = I confirm that at 5 April 2014 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2014 I did not hold primary protection.
 pla.summary.ip14DeclarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
 
@@ -398,6 +389,9 @@ pla.existingProtections.protectionRef                   = Protection notificatio
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
 pla.existingProtections.amendLinkText                   = View or change details
+pla.existingProtections.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
+pla.existingProtections.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
+pla.existingProtections.FP2016.contactHMRC              = If you or your employer adds to your pension, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 90 days.
 
 
 ## PROTECTION INFORMATION ##
@@ -427,6 +421,7 @@ pla.resultSuccess.protectionRef         = Protection notification number
 pla.resultSuccess.psaRef                = Scheme administrator reference
 pla.resultSuccess.applicationDate       = Application date
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 60 days.
+pla.resultSuccess.FPAddToPension        = If you or your employer adds to your pension, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 90 days.
 pla.resultSuccess.viewDetails           = You can view these details in your
 pla.resultSuccess.viewDetailsLinkText   = personal tax account
 pla.resultSuccess.print                 = Print these details
@@ -437,7 +432,7 @@ pla.resultSuccess.exitSurvey            = Your feedback helps us improve.</p><p>
 pla.resultRejection.title                 = Unsuccessful
 pla.resultRejection.pageHeading           = Your application was unsuccessful
 pla.resultRejection.viewDetails           = You can view details of your protections at any time on the
-pla.resultRejection.viewDetailsLinkText   = existing protections page
+pla.resultRejection.viewDetailsLinkText   = personal tax account
 
 ## Manual Correspondence Needed ##
 pla.mcNeeded.title                        = There is a problem accessing your account
@@ -472,6 +467,10 @@ pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##
 pla.print.title                           = Print your active protection
+pla.print.giveToPensionProvider           = Give these details to your pension provider when you decide to take money from your pension
+pla.print.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC (Pension Schemes Services) within 60 days.
+pla.print.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC (Pension Schemes Services) within 60 days.
+pla.print.FP2016.contactHMRC              = If you or your employer adds to your pension, contact HMRC (Pension Schemes Services) within 90 days.
 
 ## Amends ##
 pla.amends.title                                            = Protection summary

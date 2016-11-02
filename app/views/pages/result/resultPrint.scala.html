@@ -86,7 +86,10 @@
         </div>
 
         <div>
-            <p class="faint">Give these details to your pension provider when you decide to take money from your pension</p>
+            <p class="faint">@Messages("pla.print.giveToPensionProvider")</p>
+            @if(model.protectionType == "IP2014" || model.protectionType == "IP2016" || model.protectionType == "FP2016") {
+                <p class="faint" id="contactHMRC">@Messages(s"pla.print.${model.protectionType}.contactHMRC")</p>
+            }
         </div>
     </div>
 </body>
