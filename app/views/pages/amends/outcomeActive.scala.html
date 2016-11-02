@@ -1,12 +1,25 @@
 @import models.ActiveAmendResultDisplayModel
+@import models.amendModels.AmendsGAModel
 @import helpers.templates.resultDetails
 @import play.api.i18n._
 @import enums.ApplicationType
 @import utils.Constants
 
-@(model: ActiveAmendResultDisplayModel)(implicit request: Request[_])
+@(model: ActiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_])
 
-@views.html.main_template(title = Messages("pla.activeAmend.title"), bodyClasses = None) {
+@scriptElement = {
+<script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
+
+@views.html.main_template(title = Messages("pla.activeAmend.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+
+@gaModel.map{ gaModel =>
+<div @if(gaModel.current.isDefined){data-metrics = "activeAmends:@gaModel.current:amendCurrentPensions"}></div>
+<div @if(gaModel.before.isDefined){data-metrics = "activeAmends:@gaModel.before:amendPTBefore"}></div>
+<div @if(gaModel.between.isDefined){data-metrics = "activeAmends:@gaModel.between:amendPTBetween"}></div>
+<div @if(gaModel.overseas.isDefined){data-metrics = "activeAmends:@gaModel.overseas:amendOverseasPensions"}></div>
+<div @if(gaModel.pso.isDefined){data-metrics = "activeAmends:@gaModel.pso:amendPSOs"}></div>
+}
 
 <div class="grid-row">
     <div class="transaction-banner--complete">
