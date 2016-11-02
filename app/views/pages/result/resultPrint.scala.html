@@ -87,7 +87,9 @@
 
         <div>
             <p class="faint">@Messages("pla.print.giveToPensionProvider")</p>
-            <p class="faint" id="contactHMRC">@Messages(s"pla.print.${model.protectionType}.contactHMRC")</p>
+            @if(model.protectionType == "IP2014" || model.protectionType == "IP2016" || model.protectionType == "FP2016") {
+                <p class="faint" id="contactHMRC">@Messages(s"pla.print.${model.protectionType}.contactHMRC")</p>
+            }
         </div>
     </div>
 </body>

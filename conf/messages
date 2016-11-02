@@ -40,8 +40,10 @@ pla.links.ExistingProtectionsLinkText   = View your existing protections
 pla.links.signout                       = Sign out
 pla.links.IPHelp                        = What is individual protection
 pla.links.pensionsTakenBeforeHelp       = What is your pension worth
-pla.links.pensionsTakenBetweenHelp       = How much lifetime allowance have you used
+pla.links.pensionsTakenBetweenHelp      = How much lifetime allowance have you used
 pla.links.currentPensions               = What is your pension worth
+pla.links.fpArrangementHelp             = What is an arrangement
+pla.links.fpRelievedPensionHelp         = What is a relieved non-UK pension scheme
 
 ## Timeout ##
 pla.timeout.title       = Session closed due to inactivity
