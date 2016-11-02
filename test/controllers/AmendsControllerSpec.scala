@@ -115,6 +115,20 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     protectionReference = Some("PSA123456"))
   val testAmendIP2016ProtectionModelWithNoDebit = AmendProtectionModel(ip2016NoDebitProtection, ip2016NoDebitProtection)
 
+  val noNotificationIdProtection = ProtectionModel(
+    psaCheckReference = Some("testPSARef"),
+    protectionID = Some(12345),
+    uncrystallisedRights = Some(100000.00),
+    nonUKRights = Some(0.0),
+    preADayPensionInPayment = Some(0.0),
+    postADayBenefitCrystallisationEvents = Some(0.0),
+    protectionType = Some("IP2014"),
+    status = Some("dormant"),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("PSA123456")
+  )
+
   val tstAmendDisplayModel = AmendDisplayModel(
     protectionType = "IP2014",
     amended = true,
@@ -234,6 +248,22 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "show the technical error page for existing protections" in {
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      }
+      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+    }
+
+    "the microservice returns a response with no notificationId" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      "return 500" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
+        when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any())).thenReturn(Some(AmendResponseModel(noNotificationIdProtection)))
+        status(DataItem.result) shouldBe 500
+      }
+      "show the technical error page for no notification ID" in {
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.noNotificationId.pageHeading")
+        DataItem.jsoupDoc.body.getElementById("existingProtectionsLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
       "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
     }

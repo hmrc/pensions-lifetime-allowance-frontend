@@ -1,0 +1,10 @@
+@()(implicit request: Request[_])
+
+
+@views.html.main_template(title = Messages("pla.noNotificationId.title"), bodyClasses = None) {
+
+<h1 class="heading-large" id="pageHeading">@Messages("pla.noNotificationId.pageHeading")</h1>
+
+<p>@Html(Messages("pla.noNotificationId.paraOne", controllers.routes.ReadProtectionsController.currentProtections))</p>
+
+}
