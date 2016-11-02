@@ -275,7 +275,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
       "return 200" in {
         when(mockKeyStoreConnector.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
-        when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel("updatedValue","changedToYes","changedToNo","false","addedPSO"))))
+        when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(Some("updatedValue"),Some("changedToYes"),Some("changedToNo"),None,Some("addedPSO")))))
         when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
         status(DataItem.result) shouldBe 200
       }
@@ -289,7 +289,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
       "return 200" in {
         when(mockKeyStoreConnector.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
-        when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel("false","changedToNo","changedToYes","false","false"))))
+        when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(None,Some("changedToNo"),Some("changedToYes"),None,None))))
         when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstInactiveAmendResponseDisplayModel)
         status(DataItem.result) shouldBe 200
       }

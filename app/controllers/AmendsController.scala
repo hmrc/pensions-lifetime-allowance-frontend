@@ -115,23 +115,26 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
     for {
       modelAR <- keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
       modelGA <- keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
-      result <- Future(modelAR.map{
-              case model => {
-                val id = model.protection.notificationId.getOrElse {
-                  throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
-                }
-                if(Constants.activeAmendmentCodes.contains(id)){
-                  Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA.get))
-                } else {
-                  Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA.get))
-                }
-              }
-            }.getOrElse {
-              Logger.error(s"Unable to retrieve amendment outcome model from keyStore for user nino :${user.nino}")
-              InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-            }
-      )
+      result <- amendmentOutcomeResult(modelAR,modelGA)
     } yield result
+  }
+
+  def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel])(implicit user:PLAUser, request:Request[AnyContent]):Future[Result] = {
+    Future(modelAR.map{
+      case model => {
+        val id = model.protection.notificationId.getOrElse {
+          throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
+        }
+        if(Constants.activeAmendmentCodes.contains(id)){
+          Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA.get))
+        } else {
+          Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA.get))
+        }
+      }
+    }.getOrElse {
+      Logger.error(s"Unable to retrieve amendment outcome model from keyStore for user nino :${user.nino}")
+      InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    })
   }
 
   def amendPensionsTakenBefore(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>

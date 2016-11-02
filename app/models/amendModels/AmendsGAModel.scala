@@ -18,7 +18,7 @@ package models.amendModels
 
 import play.api.libs.json.Json
 
-case class AmendsGAModel(current: String, before: String, between: String, overseas: String, pso: String) {
+case class AmendsGAModel(current: Option[String], before: Option[String], between: Option[String], overseas: Option[String], pso: Option[String]) {
 
 }
 

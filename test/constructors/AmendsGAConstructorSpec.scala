@@ -73,7 +73,7 @@ class AmendsGAConstructorSpec extends UnitSpec with WithFakeApplication{
       val original = testProtectionModel1
       val updated = testProtectionModel1
 
-      AmendsGAConstructor.identifyAmendsChanges(updated,original) shouldBe AmendsGAModel("false","false","false","false","false")
+      AmendsGAConstructor.identifyAmendsChanges(updated,original) shouldBe AmendsGAModel(None,None,None,None,None)
     }
 
     "The original and updated protection models are different" when {
@@ -82,21 +82,21 @@ class AmendsGAConstructorSpec extends UnitSpec with WithFakeApplication{
         val original = testProtectionModel1
         val updated = testProtectionModel2
 
-        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel("UpdatedValue", "UpdatedValue", "UpdatedValue", "UpdatedValue", "addedPSO")
+        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(Some("UpdatedValue"), Some("UpdatedValue"), Some("UpdatedValue"), Some("UpdatedValue"), Some("addedPSO"))
       }
 
       "PTBefore, PTBetween and Overseas Pensions are amended from 'No' to 'Yes'" in {
         val original = testProtectionModel3
         val updated = testProtectionModel1
 
-        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel("UpdatedValue", "ChangedToYes", "ChangedToYes", "ChangedToYes", "false")
+        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(Some("UpdatedValue"), Some("ChangedToYes"), Some("ChangedToYes"), Some("ChangedToYes"), None)
       }
 
       "PTBefore, PTBetween and Overseas Pensions are amended from 'Yes' to 'No'" in {
         val original = testProtectionModel1
         val updated = testProtectionModel3
 
-        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel("UpdatedValue", "ChangedToNo", "ChangedToNo", "ChangedToNo", "false")
+        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(Some("UpdatedValue"), Some("ChangedToNo"), Some("ChangedToNo"), Some("ChangedToNo"), None)
       }
     }
 
