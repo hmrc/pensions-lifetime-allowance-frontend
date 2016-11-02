@@ -120,15 +120,18 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   }
 
   def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel])(implicit user:PLAUser, request:Request[AnyContent]):Future[Result] = {
+    if(modelGA.isEmpty){
+      Logger.warn(s"Unable to retrieve amendsGAModel from keyStore for user nino :${user.nino}")
+    }
     Future(modelAR.map{
       case model => {
         val id = model.protection.notificationId.getOrElse {
           throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
         }
         if(Constants.activeAmendmentCodes.contains(id)){
-          Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA.get))
+          Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
         } else {
-          Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA.get))
+          Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
         }
       }
     }.getOrElse {
