@@ -40,8 +40,10 @@ pla.links.ExistingProtectionsLinkText   = View your existing protections
 pla.links.signout                       = Sign out
 pla.links.IPHelp                        = What is individual protection
 pla.links.pensionsTakenBeforeHelp       = What is your pension worth
-pla.links.pensionsTakenBetweenHelp       = How much lifetime allowance have you used
+pla.links.pensionsTakenBetweenHelp      = How much lifetime allowance have you used
 pla.links.currentPensions               = What is your pension worth
+pla.links.fpArrangementHelp             = What is an arrangement
+pla.links.fpRelievedPensionHelp         = What is a relieved non-UK pension scheme
 
 ## Timeout ##
 pla.timeout.title       = Session closed due to inactivity
@@ -390,6 +392,9 @@ pla.existingProtections.protectionRef                   = Protection notificatio
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
 pla.existingProtections.amendLinkText                   = View or change details
+pla.existingProtections.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
+pla.existingProtections.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
+pla.existingProtections.FP2016.contactHMRC              = If you or your employer adds to your pension, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 90 days.
 
 
 ## PROTECTION INFORMATION ##
@@ -419,6 +424,7 @@ pla.resultSuccess.protectionRef         = Protection notification number
 pla.resultSuccess.psaRef                = Scheme administrator reference
 pla.resultSuccess.applicationDate       = Application date
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 60 days.
+pla.resultSuccess.FPAddToPension        = If you or your employer adds to your pension, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 90 days.
 pla.resultSuccess.viewDetails           = You can view these details in your
 pla.resultSuccess.viewDetailsLinkText   = personal tax account
 pla.resultSuccess.print                 = Print these details
@@ -429,7 +435,7 @@ pla.resultSuccess.exitSurvey            = Your feedback helps us improve.</p><p>
 pla.resultRejection.title                 = Unsuccessful
 pla.resultRejection.pageHeading           = Your application was unsuccessful
 pla.resultRejection.viewDetails           = You can view details of your protections at any time on the
-pla.resultRejection.viewDetailsLinkText   = existing protections page
+pla.resultRejection.viewDetailsLinkText   = personal tax account
 
 ## Manual Correspondence Needed ##
 pla.mcNeeded.title                        = There is a problem accessing your account
@@ -464,6 +470,10 @@ pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##
 pla.print.title                           = Print your active protection
+pla.print.giveToPensionProvider           = Give these details to your pension provider when you decide to take money from your pension
+pla.print.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC (Pension Schemes Services) within 60 days.
+pla.print.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC (Pension Schemes Services) within 60 days.
+pla.print.FP2016.contactHMRC              = If you or your employer adds to your pension, contact HMRC (Pension Schemes Services) within 90 days.
 
 ## Amends ##
 pla.amends.title                                            = Protection summary

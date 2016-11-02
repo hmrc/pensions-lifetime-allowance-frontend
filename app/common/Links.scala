@@ -22,6 +22,7 @@ object Links {
 
   val lifetimeAllowance = baseGovUrl + "tax-on-your-private-pension/lifetime-allowance"
   val plaMain           = baseGovUrl + "guidance/pension-schemes-protect-your-lifetime-allowance"
+  val ptaManual         = baseGovUrl + "hmrc-internal-manuals/pensions-tax-manual/"
   val contactInfo       = baseGovUrl + "contact-hmrc"
   val helpDesk          = baseGovUrl + "government/organisations/hm-revenue-customs/contact/online-services-helpdesk"
   val callCharges       = baseGovUrl + "call-charges"
@@ -35,6 +36,8 @@ object Links {
   val pensionsTakenBetween  = pensionValue + "#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
   val overseasPension       = pensionValue + "#money-put-into-overseas-pensions-between-6-april-2006-and-the-relevant-date"
   val currentPensions       = pensionValue + "#pensions-youve-not-taken-yet"
+  val fpArrangement         = ptaManual + "ptm023200#IDAILSUB"
+  val fpRelievedPension     = ptaManual + "ptm023200#IDAILSUB"
 
 
 
