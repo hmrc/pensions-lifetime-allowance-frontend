@@ -24,7 +24,7 @@ import connectors.{PLAConnector, KeyStoreConnector}
 import constructors.{ResponseConstructors, DisplayConstructors}
 import enums.ApplicationType
 import models._
-import models.amendModels.AmendProtectionModel
+import models.amendModels.{AmendsGAModel, AmendProtectionModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -199,6 +199,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        when(mockKeyStoreConnector.saveData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
         when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(409)))
         status(DataItem.result) shouldBe 500
       }
@@ -273,7 +274,8 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "there is an active protection outcome in keystore" should {
       object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
       "return 200" in {
-        keystoreFetchCondition[AmendResponseModel](Some(tstActiveAmendResponseModel))
+        when(mockKeyStoreConnector.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
+        when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel("updatedValue","changedToYes","changedToNo","false","addedPSO"))))
         when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
         status(DataItem.result) shouldBe 200
       }
@@ -286,7 +288,8 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "there is an inactive protection outcome in keystore" should {
       object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
       "return 200" in {
-        keystoreFetchCondition[AmendResponseModel](Some(tstInactiveAmendResponseModel))
+        when(mockKeyStoreConnector.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
+        when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel("false","changedToNo","changedToYes","false","false"))))
         when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstInactiveAmendResponseDisplayModel)
         status(DataItem.result) shouldBe 200
       }

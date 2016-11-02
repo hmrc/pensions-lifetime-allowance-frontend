@@ -1,7 +1,19 @@
 @import models.InactiveAmendResultDisplayModel
-@(model: InactiveAmendResultDisplayModel)(implicit request: Request[_])
+@import models.amendModels.AmendsGAModel
 
-@views.html.main_template(title = Messages("pla.inactiveAmend.title"), bodyClasses = None) {
+@(model: InactiveAmendResultDisplayModel, gaModel: AmendsGAModel)(implicit request: Request[_])
+
+@scriptElement = {
+<script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
+
+@views.html.main_template(title = Messages("pla.inactiveAmend.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+
+<div @if(gaModel.current != "false"){data-metrics = "inactiveAmends:@gaModel.current:amendCurrentPensions"}></div>
+<div @if(gaModel.before != "false"){data-metrics = "inactiveAmends:@gaModel.before:amendPTBefore"}></div>
+<div @if(gaModel.between != "false"){data-metrics = "inactiveAmends:@gaModel.between:amendPTBetween"}></div>
+<div @if(gaModel.overseas != "false"){data-metrics = "inactiveAmends:@gaModel.overseas:amendOverseasPensions"}></div>
+<div @if(gaModel.pso != "false"){data-metrics = "inactiveAmends:@gaModel.pso:amendPSOs"}></div>
 
 <h1 class="heading-large" id="resultPageHeading">@Messages(s"amendResultCode.${model.notificationId}.heading")</h1>
 
