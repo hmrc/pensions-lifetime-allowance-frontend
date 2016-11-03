@@ -167,6 +167,10 @@ pla.techError.paraOne                       = You''ll need to start your applica
 pla.techError.startAgain                    = Start again
 pla.techError.retry                         = Retry
 
+## No notification ID returned ##
+pla.noNotificationId.title                  = Error processing amendment response
+pla.noNotificationId.pageHeading            = Sorry, there''s been a problem displaying your result
+pla.noNotificationId.paraOne                = You should check your <a id="existingProtectionsLink" href="{0}">personal tax account</a> before trying to amend your protection again, as your amendment may already have been applied.
 
 ## Insufficient Information ##
 pla.insuffInfo.title                        = Insufficient Information

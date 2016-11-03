@@ -102,8 +102,13 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
   def saveAndRedirectToDisplay(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
     responseConstructors.createAmendResponseModelFromJson(response.json).map {
-      model => keyStoreConnector.saveData[AmendResponseModel]("amendResponseModel", model).map {
-        cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
+      model =>
+      if(model.protection.notificationId.isDefined) {
+        keyStoreConnector.saveData[AmendResponseModel]("amendResponseModel", model).map {
+          cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
+        }
+      } else {
+        Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
     }.getOrElse {
       Logger.error(s"Unable to create Amend Response Model from PLA response for user nino: ${user.nino}")
