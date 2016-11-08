@@ -10,9 +10,9 @@
 
 	<div class="grid-row">
 		<div class="transaction-banner--complete">
-	        <p class="heading-large" id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</p>
+	        <span class="heading-large" id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</span>
 	        <p class="medium" id="resultAllowanceText">@Messages("pla.resultSuccess.allowanceSubHeading")</p>
-	        <p class="bold-medium" id="protectedAmount">@res.protectedAmount</p>
+	        <span class="bold-medium" id="protectedAmount">@res.protectedAmount</span>
 	    </div>
 	    
 	    @for(infoNum <- res.additionalInfo) {
