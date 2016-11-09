@@ -36,6 +36,10 @@
     padding-left: 5%;
 }
 
+.summary-data span {
+    display: block;
+}
+
 .summary-link {
     text-align: right;
 }
