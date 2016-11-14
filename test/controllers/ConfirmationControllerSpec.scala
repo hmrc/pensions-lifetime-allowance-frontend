@@ -18,15 +18,18 @@ package controllers
 
 
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mock.MockitoSugar
 import java.util.UUID
+
 import play.api.i18n.Messages
 import testHelpers._
-import config.{FrontendAppConfig,FrontendAuthConnector}
+import config.{FrontendAppConfig, FrontendAuthConnector}
 import auth._
+import com.kenshoo.play.metrics.PlayModule
 
 class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+    override def bindModules = Seq(new PlayModule)
 
     object TestConfirmationController extends ConfirmationController {
         override lazy val applicationConfig = FrontendAppConfig

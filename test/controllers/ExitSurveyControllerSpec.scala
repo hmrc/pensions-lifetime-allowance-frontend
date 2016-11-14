@@ -17,25 +17,29 @@
 package controllers
 
 import java.util.UUID
+
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.http._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.mvc.{AnyContent, Action}
+import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.jsoup._
 import testHelpers._
 import org.mockito.Matchers
 import org.mockito.Mockito._
+
 import scala.concurrent.Future
-import config.{FrontendAppConfig,FrontendAuthConnector}
+import config.{FrontendAppConfig, FrontendAuthConnector}
 import models._
 import auth._
+import com.kenshoo.play.metrics.PlayModule
 
 
 class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+    override def bindModules = Seq(new PlayModule)
 
 
     val sessionId = UUID.randomUUID.toString

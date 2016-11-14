@@ -20,11 +20,12 @@ import java.time.LocalDate
 import java.util.UUID
 
 import auth.{MockAuthConnector, MockConfig}
-import connectors.{PLAConnector, KeyStoreConnector}
-import constructors.{ResponseConstructors, DisplayConstructors}
+import com.kenshoo.play.metrics.PlayModule
+import connectors.{KeyStoreConnector, PLAConnector}
+import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import models._
-import models.amendModels.{AmendsGAModel, AmendProtectionModel}
+import models.amendModels.{AmendProtectionModel, AmendsGAModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -41,6 +42,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import scala.concurrent.Future
 
 class AmendsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+  override def bindModules = Seq(new PlayModule)
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockDisplayConstructors = mock[DisplayConstructors]

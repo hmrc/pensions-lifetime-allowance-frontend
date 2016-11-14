@@ -17,6 +17,7 @@
 package controllers
 
 import auth.{MockAuthConnector, MockConfig}
+import com.kenshoo.play.metrics.PlayModule
 import org.mockito.Matchers
 import play.api.i18n.Messages
 import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost, FakeRequestTo}
@@ -35,10 +36,12 @@ import models.{ApplyResponseModel, ProtectionModel}
 import org.scalatest.BeforeAndAfter
 import play.api.mvc.{Action, AnyContent, Result}
 import play.api.test.Helpers._
+
 import scala.concurrent.Future
 
 
 class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfter {
+  override def bindModules = Seq(new PlayModule)
 
   val successFP16Json = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1}""")
   val rejectionFP16Json = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")

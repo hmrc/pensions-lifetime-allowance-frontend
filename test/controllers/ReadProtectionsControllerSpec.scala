@@ -17,9 +17,10 @@
 package controllers
 
 import auth.{MockAuthConnector, MockConfig}
-import connectors.{PLAConnector, KeyStoreConnector}
-import constructors.{ResponseConstructors, DisplayConstructors}
-import models.{ExistingProtectionsDisplayModel, ExistingProtectionDisplayModel, TransformedReadResponseModel}
+import com.kenshoo.play.metrics.PlayModule
+import connectors.{KeyStoreConnector, PLAConnector}
+import constructors.{DisplayConstructors, ResponseConstructors}
+import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel, TransformedReadResponseModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -28,9 +29,10 @@ import play.api.libs.json.Json
 import play.api.http.HeaderNames.CACHE_CONTROL
 import testHelpers.AuthorisedFakeRequestTo
 import uk.gov.hmrc.play.http.HttpResponse
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+  override def bindModules = Seq(new PlayModule)
 
 
   val testSuccessResponse = HttpResponse(200, Some(Json.parse("""{"thisJson":"doesNotMatter"}""")))

@@ -18,21 +18,25 @@ package controllers
 
 import java.time.LocalDate
 import java.util.UUID
+
 import connectors.KeyStoreConnector
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import testHelpers._
 import org.mockito.Matchers
 import org.mockito.Mockito._
+
 import scala.concurrent.Future
-import config.{FrontendAppConfig,FrontendAuthConnector}
+import config.{FrontendAppConfig, FrontendAuthConnector}
 import models._
 import auth._
+import com.kenshoo.play.metrics.PlayModule
 
 class IP2014ControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+    override def bindModules = Seq(new PlayModule)
 
     val mockKeyStoreConnector = mock[KeyStoreConnector]
 

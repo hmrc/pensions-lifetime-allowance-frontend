@@ -29,16 +29,19 @@ import play.api.libs.json.JsValue
 import play.api.test.Helpers.redirectLocation
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mock.MockitoSugar
 import java.util.UUID
+
 import testHelpers._
 import config.FrontendAppConfig
 import auth._
+import com.kenshoo.play.metrics.PlayModule
 
 import scala.concurrent.Future
 
 class SummaryControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+  override def bindModules = Seq(new PlayModule)
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockSummaryConstructor = mock[SummaryConstructor]
