@@ -31,16 +31,17 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val playHealthVersion = "1.1.0"
-  private val playJsonLoggerVersion = "2.1.1"
-  private val frontendBootstrapVersion = "6.7.0"
-  private val govukTemplateVersion = "4.0.0"
-  private val playUiVersion = "4.16.0"
-  private val playPartialsVersion = "4.6.0"
-  private val playAuthorisedFrontendVersion = "5.8.0"
-  private val playConfigVersion = "2.1.0"
-  private val hmrcTestVersion = "1.9.0"
+  private val playHealthVersion = "2.0.0"
+  private val playJsonLoggerVersion = "3.0.0"
+  private val frontendBootstrapVersion = "7.9.0"
+  private val govukTemplateVersion = "5.0.0"
+  private val playUiVersion = "5.0.0"
+  private val playPartialsVersion = "5.2.0"
+  private val playAuthorisedFrontendVersion = "6.2.0"
+  private val playConfigVersion = "3.0.0"
+  private val hmrcTestVersion = "2.1.0"
   private val scalaTestVersion = "2.2.6"
+  private val scalaTestPlusVersion = "1.5.1"
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "5.6.0"
   private val mongoCachingVersion = "3.2.0"
@@ -68,11 +69,11 @@ private object AppDependencies {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
-        "org.scalatest" %% "scalatest" % "2.2.6" % scope,
-        "org.scalatestplus" %% "play" % "1.2.0" % scope,
-        "org.pegdown" % "pegdown" % "1.5.0" % scope,
+        "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
+        "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % "1.7.3" % scope,
-        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
+        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
+        "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope
       )
     }.test
   }
