@@ -1,7 +1,6 @@
 @import models.ProtectionDetailsDisplayModel
-@import play.api.i18n._
 
-@(details: ProtectionDetailsDisplayModel)
+@(details: ProtectionDetailsDisplayModel)(implicit messages: Messages)
 
 <ul>
     @if(details.protectionReference.isDefined) {<li id="protectionRef">@Messages("pla.resultSuccess.protectionRef"): @details.protectionReference.get</li>}

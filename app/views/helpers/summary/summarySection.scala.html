@@ -1,4 +1,4 @@
-@(section: SummarySectionModel, removeLinkDefined: Boolean)
+@(section: SummarySectionModel, removeLinkDefined: Boolean)(implicit messages: Messages)
 
 @section.rows.headOption.map { firstRow =>
     @summaryRow(firstRow.rowID, firstRow.displayValues, firstRow.changeLinkCall, firstRow.removeLinkCall, removeLinkDefined, firstRow.boldText, section.rows.tail.nonEmpty)

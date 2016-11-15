@@ -2,7 +2,7 @@
 @import enums.ApplicationType
 @import config.FrontendAppConfig
 
-@(summary: SummaryModel)
+@(summary: SummaryModel)(implicit messages: Messages)
 
 @defining(summary.hasRemoveLink){ removeLinkDefined =>
 

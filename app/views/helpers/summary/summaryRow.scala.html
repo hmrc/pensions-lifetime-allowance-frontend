@@ -1,7 +1,7 @@
 @import play.api.mvc.Call
 @import controllers.SummaryController
 
-@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], removeLinkCall: Option[Call], removeLinkDefined: Boolean, boldText: Boolean, firstRow: Boolean)
+@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], removeLinkCall: Option[Call], removeLinkDefined: Boolean, boldText: Boolean, firstRow: Boolean)(implicit messages: Messages)
 
 @boldString = {"-bold"}
     @if(rowID == "totalPensionsAmt" || rowID == "ip14TotalPensionsAmt"){

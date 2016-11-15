@@ -1,6 +1,6 @@
 @import models.AmendDisplaySectionModel
 
-@(model: AmendDisplaySectionModel, protectionType: String)
+@(model: AmendDisplaySectionModel, protectionType: String)(implicit messages: Messages)
 
 @model.rows.headOption.map { firstRow =>
     @amendRow(firstRow, protectionType, model.sectionId, model.rows.tail.nonEmpty)
