@@ -12,7 +12,14 @@
 	<div class="service-info">
 		<h2>@Messages("pla.base.readMore")</h2>
 		<ul>
-			<li><a id="moreInfoFP16" href=@Links.plaMain rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.fixedProtection2016")</a></li>
+			<li><a id="moreInfoFP16"
+                   href=@Links.plaMain
+                   rel="external"
+                   target="_blank"
+                   title='@Messages("pla.base.newWindow")'
+                   onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'apply-fp');">
+                @Messages("pla.links.fixedProtection2016") (@Messages("pla.base.newWindow"))
+            </a></li>
 		</ul>
 	</div>
 }

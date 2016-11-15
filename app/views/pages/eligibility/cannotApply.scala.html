@@ -12,7 +12,15 @@
 
     <p>@Messages("pla.cannotApply.paraOne")</p>
 
-    <p>@Messages("pla.cannotApply.paraTwo") <a href=@Links.lifetimeAllowance rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.cannotApply.plaLinkText")</a></p>
+    <p>@Messages("pla.cannotApply.paraTwo")
+        <a href=@Links.lifetimeAllowance
+           rel="external"
+           target="_blank"
+           title='@Messages("pla.base.newWindow")'
+           onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'cannot-apply');"
+        >
+        @Messages("pla.cannotApply.plaLinkText")(@Messages("pla.base.newWindow"))
+        </a></p>
 
     <p><a id="startAgain" href="@routes.IntroductionController.introduction">@Messages("pla.base.startAgain")</a></p>
 

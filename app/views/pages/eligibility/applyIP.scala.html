@@ -12,7 +12,15 @@
 	<div class="service-info">
 		<h2>@Messages("pla.base.readMore")</h2>
 		<ul>
-			<li><a id="ip2016" href=@Links.lifetimeAllowance rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.lifetimeAllowance")</a></li>
+			<li><a id="ip2016"
+				   href=@Links.lifetimeAllowance
+				   rel="external"
+				   target="_blank"
+				   title='@Messages("pla.base.newWindow")'
+				   onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'apply-ip');"
+			>
+				@Messages("pla.links.lifetimeAllowance") (@Messages("pla.base.newWindow"))
+			</a></li>
 		</ul>
 	</div>
 }

@@ -11,8 +11,22 @@
 	<div class="service-info">
 		<h2>@Messages("pla.base.readMore")</h2>
 		<ul>
-			<li><a id="lifetimeAllowance" href=@Links.lifetimeAllowance rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.lifetimeAllowance")</a></li>
-			<li><a id="protectLifetimeAllowance" href=@Links.plaMain rel="external" target="_blank" title='@Messages("pla.base.newWindow")'>@Messages("pla.links.protectLifetimeAllowance")</a></li>
+			<li><a id="lifetimeAllowance"
+				   href=@Links.lifetimeAllowance
+				   rel="external"
+				   target="_blank"
+				   title='@Messages("pla.base.newWindow")'
+				   onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'lifetime-allowance');">
+				@Messages("pla.links.lifetimeAllowance")(@Messages("pla.base.newWindow"))
+			</a></li>
+			<li><a id="protectLifetimeAllowance"
+				   href=@Links.plaMain
+				   rel="external"
+				   target="_blank"
+				   title='@Messages("pla.base.newWindow")'
+				   onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'pla-main');">
+				@Messages("pla.links.protectLifetimeAllowance")(@Messages("pla.base.newWindow"))
+			</a></li>
 		</ul>
 	</div>
 }
