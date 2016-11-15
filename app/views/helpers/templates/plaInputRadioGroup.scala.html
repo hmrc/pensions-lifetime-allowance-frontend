@@ -40,10 +40,10 @@
             @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
             @if(!labelAfter) {
                 @if(elements.args.get('_stackedLabel)) {
-                    @if(label.split(" ").length < 2) {<br>@label
+                    @if(label.split(" ").length < 2) { @label
                     } else {
                         @for( (l, index) <- label.split(" ").zipWithIndex) {
-                            @if(index != 0) {<br>}@l
+                            @if(index != 0) { }@l
                         }
                     }
                 } else { @label }
@@ -58,10 +58,10 @@
                 @field.value.filter( _ == value).map{_ => checked="checked"}/>
             @if(labelAfter) {
                 @if(elements.args.get('_stackedLabel)) {
-                    @if(label.split(" ").length < 2) {<br>@label
+                    @if(label.split(" ").length < 2) { @label
                     } else {
                         @for( (l, index) <- label.split(" ").zipWithIndex) {
-                            @if(index != 0) {<br>}@l
+                            @if(index != 0) { }@l
                         }
                     }
                 } else { @label }
