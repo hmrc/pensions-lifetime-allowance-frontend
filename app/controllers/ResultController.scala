@@ -93,11 +93,15 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
 
     responseConstructors.createApplyResponseModelFromJson(response.json).map {
       model =>
-        keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
-        cacheMap => protectionType match {
-          case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16())
-          case ApplicationType.IP2014 => Redirect(routes.ResultController.displayIP14())
-          case ApplicationType.FP2016 => Redirect(routes.ResultController.displayFP16())
+        if(model.protection.notificationId.isEmpty) {
+          Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+        } else {
+          keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
+            cacheMap => protectionType match {
+              case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16())
+              case ApplicationType.IP2014 => Redirect(routes.ResultController.displayIP14())
+              case ApplicationType.FP2016 => Redirect(routes.ResultController.displayFP16())
+            }
         }
       }
     }.getOrElse {
