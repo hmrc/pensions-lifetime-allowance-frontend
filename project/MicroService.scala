@@ -27,7 +27,6 @@ trait MicroService {
   import uk.gov.hmrc._
   import DefaultBuildSettings._
   import uk.gov.hmrc.SbtAutoBuildPlugin
-  import uk.gov.hmrc.{SbtBuildInfo, ShellPrompt}
   import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
   import uk.gov.hmrc.versioning.SbtGitVersioning
 
