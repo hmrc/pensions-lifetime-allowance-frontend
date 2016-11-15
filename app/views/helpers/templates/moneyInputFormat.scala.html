@@ -38,6 +38,11 @@
             </span>
         }
     }
+@if(elements.args.get('_legend).isDefined) {
+    <legend class="visually-hidden" @if(elements.args.get('_legendClass).isDefined) {class="@elements.args.get('_legendClass)"}>
+    @elements.args.get('_legend)
+    </legend>
+}
 
     @if(parentElements.isDefined) {
         @parentElements.get.errors.map { error => <span class="error-notification">@Messages(error)</span>}
