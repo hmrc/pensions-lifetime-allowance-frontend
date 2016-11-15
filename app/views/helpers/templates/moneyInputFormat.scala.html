@@ -59,9 +59,14 @@
                     id="@elements.args.get('_hintId)"
             }>
                 @elements.args.get('_inputHint)
+
             </span>
         }
         @if(labelHighlight){</strong>}
+    }
+
+    @if(elements.args.contains('_additionalHelp)) {
+        @elements.args.get('_additionalHelp)
     }
 
     <span class="poundSign">&pound;</span>
