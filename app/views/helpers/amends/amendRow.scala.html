@@ -12,7 +12,7 @@
     <td class="@if(firstRow){has-child-item} summary-data" id=@{s"${sectionId}-${model.rowId}-value"}>
 
         @for((displayValue, index) <- model.displayValue.zipWithIndex) {
-        <span id=@{s"${sectionId}${model.rowId}DisplayValue$index"} class='' >@displayValue</span></br>
+        <span id=@{s"${sectionId}${model.rowId}DisplayValue$index"} class='' >@displayValue</span>
         }
     </td>
 
