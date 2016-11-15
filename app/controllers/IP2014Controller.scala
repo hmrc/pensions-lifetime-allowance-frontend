@@ -36,6 +36,8 @@ import forms.IP14PSODetailsForm.IP14PsoDetailsForm
 import models._
 
 import views.html._
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object IP2014Controller extends IP2014Controller {
     val keyStoreConnector = KeyStoreConnector

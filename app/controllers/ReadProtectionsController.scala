@@ -34,6 +34,8 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html._
 
 import scala.concurrent.Future
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 
 object ReadProtectionsController extends ReadProtectionsController with ServicesConfig {

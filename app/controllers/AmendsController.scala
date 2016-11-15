@@ -38,6 +38,8 @@ import uk.gov.hmrc.play.http.HttpResponse
 import utils.Constants
 import views.html.pages
 import views.html.pages.result.manualCorrespondenceNeeded
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 import scala.concurrent.Future
 

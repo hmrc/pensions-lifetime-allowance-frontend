@@ -6,7 +6,7 @@
 @import helpers.templates.plaInputRadioGroup
 @import play.api.data._
 
-@(ip14PensionSavingsForm: Form[IP14PensionSavingsModel])(implicit request: Request[_])
+@(ip14PensionSavingsForm: Form[IP14PensionSavingsModel])(implicit request: Request[_], messages: Messages)
 
 
 @views.html.main_template(title = Messages("pla.ip14PensionSavings.title"), bodyClasses = None) {

@@ -6,7 +6,7 @@
 @import helpers.templates.plaInputRadioGroup
 @import play.api.data._
 
-@(addToPensionForm: Form[AddingToPensionModel])(implicit request: Request[_])
+@(addToPensionForm: Form[AddingToPensionModel])(implicit request: Request[_], messages: Messages)
 
 
 @views.html.main_template(title = Messages("pla.addingToPension.title"), bodyClasses = None) {

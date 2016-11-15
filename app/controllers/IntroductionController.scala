@@ -22,6 +22,8 @@ import uk.gov.hmrc.play.http.{SessionKeys, HeaderCarrier}
 import uk.gov.hmrc.play.http.logging.SessionId
 import play.api.mvc._
 import scala.concurrent.Future
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 
 object IntroductionController extends IntroductionController

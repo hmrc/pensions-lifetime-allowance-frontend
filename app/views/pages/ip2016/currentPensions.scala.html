@@ -5,7 +5,7 @@
 @import play.api.data._
 @import common.Links
 
-@(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_])
+@(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_], messages: Messages)
 
 @sidebar = {@ipSidebar(Links.currentPensions, Messages("pla.links.currentPensions"), "ip16-what-is-your-pension-worth")}
 

@@ -5,7 +5,7 @@
 @import play.api.data._
 @import common.Links
 
-@(pensionsTakenBetweenForm: Form[PensionsTakenBetweenModel])(implicit request: Request[_])
+@(pensionsTakenBetweenForm: Form[PensionsTakenBetweenModel])(implicit request: Request[_], messages: Messages)
 
 @hiddenYesNoContent = {
 

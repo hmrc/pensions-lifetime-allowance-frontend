@@ -22,6 +22,8 @@ import scala.concurrent.Future
 import views.html.pages.ivFailure._
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object UnauthorisedController extends UnauthorisedController {
 	override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector

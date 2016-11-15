@@ -36,6 +36,8 @@ import forms.PensionDebitsForm.pensionDebitsForm
 import models._
 
 import views.html._
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object IP2016Controller extends IP2016Controller {
 

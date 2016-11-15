@@ -3,7 +3,7 @@
 @import helpers.summary._
 @import play.api.data._
 
-@(summary: SummaryModel)(implicit request: Request[_])
+@(summary: SummaryModel)(implicit request: Request[_], messages: Messages)
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>

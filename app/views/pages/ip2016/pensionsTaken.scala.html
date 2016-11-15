@@ -5,7 +5,7 @@
 @import play.api.data._
 @import common.Links
 
-@(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_])
+@(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_], messages: Messages)
 
 @sidebar = {@ipSidebar(Links.ip16Info, Messages("pla.links.IPHelp"), "ip16-what-is-ip")}
 

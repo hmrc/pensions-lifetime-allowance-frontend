@@ -1,4 +1,4 @@
-@(pType: String)(implicit request: Request[_])
+@(pType: String)(implicit request: Request[_], messages: Messages)
 
 @restartTarget = @{
     pType match {

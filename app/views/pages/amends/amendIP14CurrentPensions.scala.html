@@ -6,7 +6,7 @@
 @import views.html.helper
 @import common.Links
 
-@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_])
+@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_], messages: Messages)
 
 @sidebar = {@ipSidebar(Links.currentPensions, Messages("pla.links.currentPensions"), "ip14-what-is-your-pension-worth")}
 

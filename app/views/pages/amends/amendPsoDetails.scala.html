@@ -3,7 +3,7 @@
 @import helpers.templates.{plaInputRadioGroup, formInputMoney, formInlineDateInput}
 @import play.api.data._
 
-@(psoDetailsForm: Form[AmendPSODetailsModel])(implicit request: Request[_])
+@(psoDetailsForm: Form[AmendPSODetailsModel])(implicit request: Request[_], messages: Messages)
 
 @scriptElement = {
 <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
