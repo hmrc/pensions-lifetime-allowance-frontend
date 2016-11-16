@@ -32,6 +32,7 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mock.MockitoSugar
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 import testHelpers._
 import config.FrontendAppConfig
@@ -95,7 +96,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
         status(DataItem.result) shouldBe 500
       }
       "show technical error for IP16" in {
-        implicit val timeout: Timeout = 5000
+        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
       }
@@ -107,7 +108,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
         status(DataItem.result) shouldBe 500
       }
       "show technical error for IP14" in {
-        implicit val timeout: Timeout = 5000
+        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
       }
@@ -122,7 +123,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
         status(DataItem.result) shouldBe 500
       }
       "show technical error for IP16" in {
-        implicit val timeout: Timeout = 5000
+        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
       }
@@ -134,7 +135,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
         status(DataItem.result) shouldBe 500
       }
       "show technical error for IP14" in {
-        implicit val timeout: Timeout = 5000
+        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
       }

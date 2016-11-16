@@ -17,15 +17,18 @@
 package testHelpers
 
 
-import play.api.mvc.{AnyContent, Action}
+import akka.actor.ActorSystem
+import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
 import auth._
-
+import akka.stream.{ActorMaterializer, Materializer}
 
 class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: Option[String], data: (String, String)*) extends UnitSpec {
+  implicit val system = ActorSystem("test")
+  implicit def mat: Materializer = ActorMaterializer()
   val fakeRequest = constructRequest(url, sessionId)
   val result = controllerAction(fakeRequest)
   val jsoupDoc = Jsoup.parse(bodyOf(result))
@@ -39,6 +42,8 @@ class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId
 }
 
 class AuthorisedFakeRequestTo(controllerAction: Action[AnyContent]) extends UnitSpec {
+  implicit val system = ActorSystem("test")
+  implicit def mat: Materializer = ActorMaterializer()
   val result = controllerAction(authenticatedFakeRequest())
   val jsoupDoc = Jsoup.parse(bodyOf(result))
 }

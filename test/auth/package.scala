@@ -72,7 +72,8 @@ package object auth {
         confidenceLevel = ConfidenceLevel.L200,
         userDetailsLink = None,
         enrolments = None,
-        ids = None
+        ids = None,
+        ggSession.oid
       )
 
       val allowedAuthContext = AuthContext(
@@ -90,7 +91,8 @@ package object auth {
         confidenceLevel = ConfidenceLevel.L200,
         userDetailsLink = None,
         enrolments = None,
-        ids = None
+        ids = None,
+        ggSession.oid
       )
 
       val tooWeakCredentialsAuthContext = AuthContext(
@@ -108,7 +110,8 @@ package object auth {
         confidenceLevel = ConfidenceLevel.L50,
         userDetailsLink = None,
         enrolments = None,
-        ids = None
+        ids = None,
+        ggSession.oid
       )
 
       val needsUpliftAuthContext = AuthContext(
