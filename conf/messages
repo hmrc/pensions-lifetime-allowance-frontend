@@ -4,7 +4,7 @@ pla.base.yes                    = Yes
 pla.base.no                     = No
 pla.base.continue               = Continue
 pla.base.apply                  = Apply
-pla.base.submitApplication      = Submit your application
+pla.base.submitApplication      = Confirm and submit
 pla.base.back                   = Back
 pla.base.change                 = Change
 pla.base.update                 = Update
@@ -338,10 +338,10 @@ pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2016 
 
 ## SUMMARY ##
 pla.summary.title                                   = Submit your application
-pla.summary.pageHeading                             = Check your answers before sending your application
+pla.summary.pageHeading                             = Check and submit your protection details
 pla.summary.errorSummaryLabel                       = There''s a problem with your application
 pla.summary.underThresholdError.IP2016              = Your total pension savings were less than £1,000,001 on 5 April 2016. You can only apply for individual protection 2016 if your pension savings were £1,000,001 or more.
-pla.summary.pensionsHeading                         = Pensions
+pla.summary.pensionsHeading                         = Value of pensions
 pla.summary.change                                  = Change
 pla.summary.questions.pensionsTaken                 = Before 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.pensionsTaken            = Change your response to the question ''have you taken any of your pensions''
@@ -360,12 +360,21 @@ pla.summary.hiddenLinkText.overseasPensionsAmt      = Change your response to th
 pla.summary.questions.currentPensionsAmt            = Value of your UK pension savings on 5 April 2016
 pla.summary.hiddenLinkText.currentPensionsAmt       = Change your response to the value of your UK pension savings on 5 April 2016
 pla.summary.questions.totalPensionsAmt              = Your total pension savings are
-pla.summary.psosHeading                             = Pension sharing orders
+pla.summary.psosHeading                             = Value of pension sharing orders
 pla.summary.questions.pensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.summary.hiddenLinkText.pensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2016?''
 
 pla.summary.questions.psoDetails                    = Date and amount of pension sharing order
 pla.summary.hiddenLinkText.psoDetails               = Change the details of your pension sharing order
+
+pla.summary.getIP16                                 = Get individual protection 2016
+pla.success.confirmation                            = You must confirm that you meet both of the following conditions:
+pla.success.confirm1                                = On 5 April 2016 you were a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
+pla.success.confirm2                                = On 6 April 2016 you did not hold either of these protections:
+pla.success.confirmBullet1                          = primary protection
+pla.success.confirmBullet2                          = individual protection 2014
+
+pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016. Do not proceed if you don''t meet these conditions.
 
 pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold primary protection or individual protection 2014.
 pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
