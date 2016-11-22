@@ -197,11 +197,11 @@ pla.api.badRequest              = There was an error processing the client''s re
 
 
 ## Pensions Taken ##
-pla.pensionsTaken.pageHeading               = Did any of the following happen before 5 April 2016?
-pla.pensionsTaken.title                     = Did any of the following happen before 5 April 2016?
-pla.pensionsTaken.bulletOne                 = You got money from your pensions
-pla.pensionsTaken.bulletTwo                 = You transferred a pension to a scheme held overseas
-pla.pensionsTaken.bulletThree               = You turned 75 with pension savings which you hadn''t yet taken
+pla.pensionsTaken.pageHeading               = Did any of the following happen before 6 April 2016?
+pla.pensionsTaken.title                     = Did any of the following happen before 6 April 2016?
+pla.pensionsTaken.bullet.1                  = You got money from your pensions.
+pla.pensionsTaken.bullet.2                  = You transferred a pension to a scheme held overseas.
+pla.pensionsTaken.bullet.3                  = You turned 75 with pension savings that you hadn''t yet taken.
 pla.pensionsTaken.mandatoryErr              = Please answer this question
 pla.pensionsTaken.legend                    = Before 5 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
