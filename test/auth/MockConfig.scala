@@ -19,7 +19,6 @@ package auth
 import config.AppConfig
 
 object MockConfig extends AppConfig {
-  override val assetsPrefix: String = ""
   override val betaFeedbackUrl: String = ""
   override val betaFeedbackUnauthenticatedUrl = ""
   override val analyticsToken: String = ""
