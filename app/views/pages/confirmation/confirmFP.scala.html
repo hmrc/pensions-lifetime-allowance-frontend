@@ -43,13 +43,13 @@
 
     @helpTextAccordion("fp16Help", Messages("pla.confirmFP16.help"), hiddenContent)
 
-    <div>
-            <span class="exclamation">
-                <span class="visually-hidden">Warning</span>
-            </span>
+
+    <div class="form-group">
+        <p class="important-notice">
             <strong class="bold-small">
                 @Messages("pla.confirmFP16.declaration")
             </strong>
+        </p>
     </div>
 
     @govHelpers.form(action = routes.ResultController.processFPApplication) {
