@@ -67,7 +67,6 @@ class FeedbackControllerSpec extends UnitSpec with MockitoSugar with WithFakeApp
       override val citizenAuthHost: Option[String] = None
       override val ggSignInUrl: String = ""
       override val twoFactorUrl: String = ""
-      override val assetsPrefix: String = ""
       override val reportAProblemNonJSUrl: String = ""
       override val ssoUrl: Option[String] = None
       override val identityVerification: Boolean = false
