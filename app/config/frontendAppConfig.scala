@@ -20,7 +20,6 @@ import play.api.Play._
 import uk.gov.hmrc.play.config.ServicesConfig
 
 trait AppConfig {
-  val assetsPrefix: String
   val betaFeedbackUrl: String
   val betaFeedbackUnauthenticatedUrl: String
   val analyticsToken: String
@@ -52,7 +51,6 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
   private val contactHost = configuration.getString(s"contact-frontend.host").getOrElse("")
   private val baseUrl = "protect-your-lifetime-allowance"
 
-  override lazy val assetsPrefix: String = loadConfig(s"assets.url") + loadConfig(s"assets.version")
   override lazy val betaFeedbackUrl = s"$baseUrl/feedback"
   override lazy val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
   override lazy val analyticsToken: String = configuration.getString(s"google-analytics.token").getOrElse("")
