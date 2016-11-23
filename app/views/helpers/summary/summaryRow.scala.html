@@ -29,7 +29,7 @@
         </td>
 
         @if(removeLinkDefined && removeLinkCall.isEmpty) {
-            <td></td>
+            <td class="@if(firstRow){has-child-item}"></td>
         }
 
         @if(changeLinkCall.isDefined) {
