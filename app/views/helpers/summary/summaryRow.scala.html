@@ -32,18 +32,19 @@
             <td class="@if(firstRow){has-child-item}"></td>
         }
 
-        @if(changeLinkCall.isDefined) {
-        <td class="@if(firstRow){has-child-item} summary-link">
-            <a class="bold-xsmall" id="@{rowID}ChangeLink" href=@changeLinkCall.get>@Messages("pla.summary.change")</a>
-            <span class="visuallyhidden">@Messages(s"pla.summary.hiddenLinkText.$rowID")</span>
-        </td>
-        }
         @if(removeLinkCall.isDefined) {
             <td class="@if(firstRow){has-child-item} summary-link" a id="@{rowID}-removeLink">
                 <a class="bold-xsmall" id="@{rowID}-remove-link" href="@removeLinkCall">@Messages("pla.base.remove")</a>
                 <span class ="visuallyhidden ">@Messages(s"pla.summary.hiddenLinkText.removePsoHint")</span>
             </td>
         }
+        @if(changeLinkCall.isDefined) {
+        <td class="@if(firstRow){has-child-item} summary-link">
+            <a class="bold-xsmall" id="@{rowID}ChangeLink" href=@changeLinkCall.get>@Messages("pla.summary.change")</a>
+            <span class="visuallyhidden">@Messages(s"pla.summary.hiddenLinkText.$rowID")</span>
+        </td>
+        }
+
     </tr>
     }
 
