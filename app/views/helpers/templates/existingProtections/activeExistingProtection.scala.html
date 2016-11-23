@@ -10,7 +10,14 @@
         </div>
         <div class="grid grid-2-3">
             <div class="inner-block">
-                <a id="printLink" href="@controllers.routes.PrintController.printView" target="_blank" onclick="ga('send', 'event', 'print-active-protection', 'print-@{protection.protectionType.toString}', 'existing');">Print (opens in a new window)</a>
+                <a
+                class="print-link"
+                id="printLink"
+                href="@controllers.routes.PrintController.printView"
+                target="_blank"
+                onclick="ga('send', 'event', 'print-active-protection', 'print-@{protection.protectionType.toString}', 'existing');">
+                    @{s"${Messages("pla.existingProtections.print")} (${Messages("pla.base.newWindow")})"}
+                </a>
             </div>
         </div>
 
@@ -29,7 +36,7 @@
 
                     @protection.certificateDate.map{ cDate =>
                         @protectionDetails(Messages("pla.resultSuccess.applicationDate"), cDate, "activeCertificateDate")
-                    }
+                    }f
 
                     @protection.amendCall.map{ call =>
                         <a href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>
