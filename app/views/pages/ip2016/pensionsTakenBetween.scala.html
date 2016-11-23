@@ -1,11 +1,39 @@
 @import models.PensionsTakenBetweenModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.{formInputMoney,formHiddenYesNoRadio}
+@import helpers.templates.{formInputMoney,formHiddenYesNoRadio, helpTextAccordion}
 @import helpers.templates.ipSidebar
 @import play.api.data._
 @import common.Links
 
 @(pensionsTakenBetweenForm: Form[PensionsTakenBetweenModel])(implicit request: Request[_])
+
+@helpTextAccordionContent = {
+    <ol>
+        <li>@Messages("pla.pensionsTakenBetween.step.1.1")</li>
+        <li>@Messages("pla.pensionsTakenBetween.step.1.2")</li>
+        <li>@Messages("pla.pensionsTakenBetween.step.1.3")</li>
+    </ol>
+    <p>@Messages("pla.pensionsTakenBetween.para.2")</p>
+    <ol>
+        <li>@Messages("pla.pensionsTakenBetween.step.2.1")</li>
+        <li>@Messages("pla.pensionsTakenBetween.step.2.2")</li>
+    </ol>
+    <p>@Messages("pla.pensionsTakenBetween.para.3")</p>
+    <p>@Html(
+        Messages(
+            "pla.pensionsTakenBetween.para.4",
+            s"""
+               <a href="${Links.pensionsTakenBetween}"
+                    id = "ip16-pensions-taken-between-help-link"
+                    rel="external"
+                    target="_blank"
+                    onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'ip16-pensions-taken-between-technical-guidance')">
+                        ${Messages("pla.pensionsTakenBetween.helpLinkText")} (${Messages("pla.base.newWindow")})
+                    </a>
+             """.stripMargin
+        ))
+    </p>
+}
 
 @hiddenYesNoContent = {
 
@@ -13,7 +41,12 @@
         pensionsTakenBetweenForm,
         "pensionsTakenBetweenAmt",
         Messages("pla.pensionsTakenBetween.questionTwo"),
-        Some(Messages("pla.pensionsTakenBetween.helpText").toString())
+        None,
+        Some(
+            Html(s"""<p>
+                    ${Messages("pla.pensionsTakenBetween.para.1")}
+                 </p>""".stripMargin +
+            helpTextAccordion("ip16-pensions-taken-between-help", Messages("pla.pensionsTakenBetween.help"), helpTextAccordionContent)))
     )
 }
 
@@ -21,9 +54,7 @@
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@sidebar = {@ipSidebar(Links.pensionsTakenBetween, Messages("pla.links.pensionsTakenBetweenHelp"), "ip16-pensions-taken-between-calculation")}
-
-@main_template(title=Messages("pla.pensionsTakenBetween.title"), scriptElem=Some(scriptElement), sidebarLinks = Some(sidebar)) {
+@main_template(title=Messages("pla.pensionsTakenBetween.title"), scriptElem=Some(scriptElement)) {
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenBetweenForm
@@ -35,11 +66,10 @@
 
         <legend>
             <ul class="list list-bullet">
-                <li>@Messages("pla.pensionsTakenBetween.bulletOne")</li>
-                <li>@Messages("pla.pensionsTakenBetween.bulletTwo")</li>
-                <li>@Messages("pla.pensionsTakenBetween.bulletThree")</li>
+                <li>@Messages("pla.pensionsTakenBetween.bullet.1")</li>
+                <li>@Messages("pla.pensionsTakenBetween.bullet.2")</li>
+                <li>@Messages("pla.pensionsTakenBetween.bullet.3")</li>
             </ul>
-            <p>@Messages("pla.pensionsTakenBetween.paraOne")</p>
         </legend>
         <div class="inline form-group">
             @formHiddenYesNoRadio(
