@@ -27,6 +27,11 @@
             <span id="@{rowID}DisplayValue@index" class='@if(boldText){bold-}medium'>@displayValue</span>
         }
         </td>
+
+        @if(removeLinkDefined && removeLinkCall.isEmpty) {
+            <td></td>
+        }
+
         @if(changeLinkCall.isDefined) {
         <td class="@if(firstRow){has-child-item} summary-link">
             <a class="bold-xsmall" id="@{rowID}ChangeLink" href=@changeLinkCall.get>@Messages("pla.summary.change")</a>
@@ -38,9 +43,7 @@
                 <a class="bold-xsmall" id="@{rowID}-remove-link" href="@removeLinkCall">@Messages("pla.base.remove")</a>
                 <span class ="visuallyhidden ">@Messages(s"pla.summary.hiddenLinkText.removePsoHint")</span>
             </td>
-        } else {@if(removeLinkDefined) {
-            <td class="@if(firstRow){has-child-item}"></td>
-        }}
+        }
     </tr>
     }
 
