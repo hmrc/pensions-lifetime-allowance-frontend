@@ -1,30 +1,56 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import common.Links
-@import helpers.templates.fpSidebar
+@import helpers.templates.helpTextAccordion
 
 @()(implicit request: Request[_])
 
-
-@sidebar = { @fpSidebar()
+@hiddenContent = {
+    <p>@Messages("pla.confirmFP16.hiddenPara.1")</p>
+    <p>@Html(
+            Messages(s"pla.confirmFP16.hiddenPara.2",
+                s"""
+                    <a href="${Links.fpGuidance}"
+                    id = "fp16-help-link"
+                    rel="external"
+                    target="_blank"
+                    onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'fp16-technical-guidance')">
+                        ${Messages("pla.confirmFP16.hiddenPara.linkText")} (${Messages("pla.base.newWindow")})
+                    </a>
+                 """
+                )
+            )
+    </p>
 }
 
-@views.html.main_template(title = Messages("pla.confirmFP16.title"), bodyClasses = None, sidebarLinks = Some(sidebar)) {
+@views.html.main_template(title = Messages("pla.confirmFP16.title"), bodyClasses = None) {
 
     <h1 class="heading-large">@Messages("pla.confirmFP16.pageHeading")</h1>
 
     <p>@Messages("pla.confirmFP16.paraOne")</p>
-
-    <ul class="list list-bullet">
-        <li>@Messages("pla.confirmFP16.bulletOne")</li>
-        <li>@Messages("pla.confirmFP16.bulletTwo")</li>
-        <li>@Messages("pla.confirmFP16.bulletThree")</li>
-        <li>@Messages("pla.confirmFP16.bulletFour")</li>
-    </ul>
-
     <p>@Messages("pla.confirmFP16.paraTwo")</p>
 
-    <p>@Messages("pla.confirmFP16.paraThree")</p>
+    <ul class="list list-bullet">
+        <li>@Messages("pla.confirmFP16.bullet.1")</li>
+        <li>@Messages("pla.confirmFP16.bullet.2")</li>
+        <ul class="list list-bullet">
+            <li>@Messages("pla.confirmFP16.bullet.2.1")</li>
+            <li>@Messages("pla.confirmFP16.bullet.2.2")</li>
+            <li>@Messages("pla.confirmFP16.bullet.2.3")</li>
+            <li>@Messages("pla.confirmFP16.bullet.2.4")</li>
+        </ul>
+        <li>@Messages("pla.confirmFP16.bullet.3")</li>
+    </ul>
 
+    @helpTextAccordion("fp16Help", Messages("pla.confirmFP16.help"), hiddenContent)
+
+
+    <div class="form-group">
+        <p class="important-notice">
+            <strong class="bold-small">
+                @Messages("pla.confirmFP16.declaration")
+            </strong>
+        </p>
+    </div>
 
     @govHelpers.form(action = routes.ResultController.processFPApplication) {
         
