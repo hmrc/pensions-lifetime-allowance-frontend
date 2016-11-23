@@ -10,9 +10,9 @@
 
 <fieldset class="form-group form-date @fieldsetClasses" id="@fieldName-fieldset">
 
-    <legend class="noBottomMargin">
+    <h2>
         @questionText
-    </legend>
+    </h2>
 
     @if(formItem.hasErrors) {
         @formItem.errors.filter(_.key != "psoAmt").map { error => <span class="error-notification" id='@{s"${error.key}-error-message"}'>@Messages(s"${error.message}")</span>}
