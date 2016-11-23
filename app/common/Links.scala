@@ -36,8 +36,7 @@ object Links {
   val pensionsTakenBetween  = pensionValue + "#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
   val overseasPension       = pensionValue + "#money-put-into-overseas-pensions-between-6-april-2006-and-the-relevant-date"
   val currentPensions       = pensionValue + "#pensions-youve-not-taken-yet"
-  val fpArrangement         = ptaManual + "ptm023200#IDAILSUB"
-  val fpRelievedPension     = ptaManual + "ptm023200#IDAILSUB"
+  val fpGuidance            = ptaManual + "ptm093100"
 
 
 

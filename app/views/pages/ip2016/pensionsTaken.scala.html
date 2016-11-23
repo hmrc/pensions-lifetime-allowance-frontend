@@ -1,19 +1,15 @@
 @import models.PensionsTakenModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import helpers.templates.plaInputRadioGroup
-@import helpers.templates.ipSidebar
 @import play.api.data._
-@import common.Links
 
 @(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_])
-
-@sidebar = {@ipSidebar(Links.ip16Info, Messages("pla.links.IPHelp"), "ip16-what-is-ip")}
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@views.html.main_template(title = Messages("pla.pensionsTaken.title"), scriptElem=Some(scriptElement), bodyClasses = None, sidebarLinks = Some(sidebar)) {
+@views.html.main_template(title = Messages("pla.pensionsTaken.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenForm
@@ -22,9 +18,9 @@
     <h1 class="heading-large">@Messages("pla.pensionsTaken.pageHeading")</h1>
 
     <ul class="list list-bullet">
-        <li>@Messages("pla.pensionsTaken.bulletOne")</li>
-        <li>@Messages("pla.pensionsTaken.bulletTwo")</li>
-        <li>@Messages("pla.pensionsTaken.bulletThree")</li>
+        <li>@Messages("pla.pensionsTaken.bullet.1")</li>
+        <li>@Messages("pla.pensionsTaken.bullet.2")</li>
+        <li>@Messages("pla.pensionsTaken.bullet.3")</li>
     </ul>
 
     @govHelpers.form(action = routes.IP2016Controller.submitPensionsTaken) {
