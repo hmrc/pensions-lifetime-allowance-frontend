@@ -399,9 +399,9 @@ pla.existingProtections.protectionRef                   = Protection notificatio
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
 pla.existingProtections.amendLinkText                   = View or change details
-pla.existingProtections.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
-pla.existingProtections.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
-pla.existingProtections.FP2016.contactHMRC              = If you or your employer adds to your pension, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 90 days.
+pla.existingProtections.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 60 days.
+pla.existingProtections.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 60 days.
+pla.existingProtections.FP2016.contactHMRC              = If you or your employer adds to your pension, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 90 days.
 
 
 ## PROTECTION INFORMATION ##
@@ -480,9 +480,9 @@ pla.exitSurvey.sendFeedback                             = Send feedback
 ## Printing ##
 pla.print.title                           = Print your active protection
 pla.print.giveToPensionProvider           = Give these details to your pension provider when you decide to take money from your pension
-pla.print.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC (Pension Schemes Services) within 60 days.
-pla.print.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC (Pension Schemes Services) within 60 days.
-pla.print.FP2016.contactHMRC              = If you or your employer adds to your pension, contact HMRC (Pension Schemes Services) within 90 days.
+pla.print.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.print.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.print.FP2016.contactHMRC              = If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days.
 
 ## Amends ##
 pla.amends.title                                            = Protection summary
