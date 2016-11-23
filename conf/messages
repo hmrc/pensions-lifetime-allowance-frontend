@@ -281,8 +281,17 @@ pla.currentPensions.title                   = What were your UK pensions worth o
 pla.currentPensions.paraOne                 = Include any money you have in pension pots.
 pla.currentPensions.paraTwo                 = If you have any pensions where your employer will pay you a set income once you take them, include the value of them.
 pla.currentPensions.hiddenLink              = How do I work out the value?
+
 pla.currentPensions.hiddenText              = Multiply the amount you''ll get each year by 20. Add any lump sum you''ll get if it''s on top of what you''ll get each year. 
-pla.currentPensions.question                = Don''t include any pensions you''ve already taken or the State Pension.
+pla.currentPensions.hiddenTextPara          = Use figures that were correct at 5 April 2016.
+pla.currentPensions.hiddenText1             = Take any pensions where your employer guarantees you a specified annual income.
+pla.currentPensions.hiddenText2             = Multiply the annual income from these pensions by 20.
+pla.currentPensions.hiddenText3             = Add the amount of any lump sum payments you''ll get on top of this annual income.
+pla.currentPensions.hiddenText4             = Add the total amount you''ve built up in your other pension pots.
+pla.currentPensions.readGuidance            = Read technical guidance on {0}
+pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
+
+pla.currentPensions.question                = Do not include pensions you''ve already taken or the State Pension.
 pla.currentPensions.errorQuestion           = Enter an amount in the correct format eg £500000
 pla.currentPensions.errorNegative           = Enter an amount that''s £0 or more
 pla.currentPensions.errorMaximum            = Enter an amount less than £99,999,999,999,999.98
