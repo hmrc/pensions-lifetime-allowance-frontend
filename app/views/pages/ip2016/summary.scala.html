@@ -13,20 +13,20 @@
 }
 
 @hiddenContent = {
-    <p>@Messages("pla.confirmFP16.hiddenPara.1")</p>
+    <p>@Messages("pla.summary.hiddenPara.1")</p>
     <p>@Html(
-        Messages(s"pla.confirmFP16.hiddenPara.2",
+        Messages(s"pla.summary.hiddenPara.2",
             s"""
-                    <a href="${Links.fpGuidance}"
-                    id = "fp16-help-link"
-                    rel="external"
-                    target="_blank"
-                    onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'fp16-technical-guidance')">
-                        ${Messages("pla.confirmFP16.hiddenPara.linkText")} (${Messages("pla.base.newWindow")})
-                    </a>
-                 """
+                <a href="${Links.ipGuidance}"
+                id = "ip16-help-link"
+                rel="external"
+                target="_blank"
+                onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'ip16-technical-guidance')">
+                    ${Messages("pla.summary.hiddenPara.linkText")} (${Messages("pla.base.newWindow")})
+                </a>
+             """
+            )
         )
-    )
     </p>
 }
 
@@ -34,29 +34,30 @@
 
     @summaryDetails(summary)
 
-    <h2>@Messages("pla.summary.getIP16")</h2>
-    <p>@Messages("pla.success.confirmation")</p>
-    <ul class="list list-number">
-        <li>@Messages("pla.success.confirm1")</li>
-        <li>@Messages("pla.success.confirm2")</li>
-        <ul class="list list-bullet">
-            <li>@Messages("pla.success.confirmBullet1")</li>
-            <li>@Messages("pla.success.confirmBullet2")</li>
+    <div class="form-group">
+        <h2>@Messages("pla.summary.getIP16")</h2>
+        <p>@Messages("pla.summary.confirmation")</p>
+        <ul class="list list-number">
+            <li>@Messages("pla.summary.confirm1")</li>
+            <li>@Messages("pla.summary.confirm2")</li>
+            <ul class="list list-bullet">
+                <li>@Messages("pla.summary.confirmBullet1")</li>
+                <li>@Messages("pla.summary.confirmBullet2")</li>
+            </ul>
         </ul>
-    </ul>
-    @helpTextAccordion("fp16Help", Messages("pla.confirmFP16.help"), hiddenContent)
+        @helpTextAccordion("ip16Help", Messages("pla.summary.help"), hiddenContent)
+    </div>
 
-    <div class="declaration">
-        <span class="exclamation">
-            <span class="visually-hidden">Warning</span>
-        </span>
-        <strong class="bold-small">
-            @if(summary.protectionType == ApplicationType.IP2016){
-                @Messages("pla.summary.declaration")
-            } else {
-                @Messages("pla.summary.ip14Declaration")
-            }
-        </strong>
+    <div class="form-group">
+        <p class="important-notice">
+            <strong class="bold-small">
+                @if(summary.protectionType == ApplicationType.IP2016){
+                    @Messages("pla.summary.declaration")
+                } else {
+                    @Messages("pla.summary.ip14Declaration")
+                }
+            </strong>
+        </p>
     </div>
 
     @govHelpers.form(action = routes.ResultController.processIPApplication) {

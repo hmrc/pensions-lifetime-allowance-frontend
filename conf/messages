@@ -148,6 +148,7 @@ pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ‘protection c
 pla.confirmFP16.help        = Help with these conditions
 pla.confirmFP16.hiddenPara.1 = Speak to your pension scheme administrator to get professional help understanding these conditions.
 pla.confirmFP16.hiddenPara.2 = HMRC’s Pensions Tax Manual has {0}
+
 pla.confirmFP16.hiddenPara.linkText = technical guidance about fixed protection
 pla.confirmFP16.declaration = By confirming, you will automatically submit your application for fixed protection 2016. Do not proceed if you don’t meet these conditions.
 
@@ -368,13 +369,18 @@ pla.summary.questions.psoDetails                    = Date and amount of pension
 pla.summary.hiddenLinkText.psoDetails               = Change the details of your pension sharing order
 
 pla.summary.getIP16                                 = Get individual protection 2016
-pla.success.confirmation                            = You must confirm that you meet both of the following conditions:
-pla.success.confirm1                                = On 5 April 2016 you were a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
-pla.success.confirm2                                = On 6 April 2016 you did not hold either of these protections:
-pla.success.confirmBullet1                          = primary protection
-pla.success.confirmBullet2                          = individual protection 2014
+pla.summary.confirmation                            = You must confirm that you meet both of the following conditions:
+pla.summary.confirm1                                = On 5 April 2016 you were a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
+pla.summary.confirm2                                = On 6 April 2016 you did not hold either of these protections:
+pla.summary.confirmBullet1                          = primary protection
+pla.summary.confirmBullet2                          = individual protection 2014
+pla.summary.help                                    = Help with these conditions
+pla.summary.hiddenPara.1                            = Speak to your pension scheme administrator to get professional help understanding these conditions.
+pla.summary.hiddenPara.2                            = HMRC’s Pensions Tax Manual has {0}
+pla.summary.hiddenPara.linkText                     = technical guidance about individual protection 2016
 
 pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016. Do not proceed if you don''t meet these conditions.
+pla.summary.ip14Declaration                         = By confirming, you will automatically submit your application for individual protection 2014. Do not proceed if you don''t meet these conditions.
 
 pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold primary protection or individual protection 2014.
 pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
