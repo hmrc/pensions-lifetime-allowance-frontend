@@ -257,7 +257,6 @@ pla.pensionsTakenBetween.para.4             = Read technical guidance on {0}
 pla.pensionsTakenBetween.helpLinkText       = how to value your pension
 
 
-
 pla.pensionsTakenBetween.errorQuestion      = Enter an amount in the correct format eg £500000
 pla.pensionsTakenBetween.errorNegative      = Enter an amount that''s £0 or more
 pla.pensionsTakenBetween.errorMaximum       = Enter an amount less than £99,999,999,999,999.98
@@ -265,9 +264,11 @@ pla.pensionsTakenBetween.errorDecimalPlaces = The amount you''ve entered has too
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken Between ##
-pla.ip14PensionsTakenBetween.pageHeading    = Did any of the following happen between 6 April 2006 and 5 April 2014?
-pla.ip14PensionsTakenBetween.title          = Did any of the following happen between 6 April 2006 and 5 April 2014?
-pla.ip14PensionsTakenBetween.helpText       = You can ask your pension providers to tell you the amount of lifetime allowance you''ve used for individual protection 2014
+pla.ip14PensionsTakenBetween.pageHeading    = Did any of the these events happen between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.title          = Did any of the these events happen between 6 April 2006 and 5 April 2014?
+pla.ip14pensionsTakenBetween.step.1.1       = Take your lifetime allowance at 5 April 2014.
+pla.ip14pensionsTakenBetween.para.3         = You can also ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2014.
+
 pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 
