@@ -262,7 +262,7 @@ pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2
 ## Overseas Pensions ##
 pla.overseasPensions.pageHeading            = Have you put money into a pension scheme held overseas?
 pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
-pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016, which you got UK tax relief on.
+pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016, that you got UK tax relief on.
 pla.overseasPensions.questionTwo            = How much did you contribute?
 pla.overseasPensions.errorQuestion          = Enter an amount in the correct format eg £500000
 pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
