@@ -1,6 +1,6 @@
 @import models.AmendDisplayRowModel
 
-@(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean)
+@(model: AmendDisplayRowModel, protectionType: String, sectionId: String, removeLinkDefined: Boolean, firstRow: Boolean)
 
 
 <tr>
@@ -28,7 +28,7 @@
         <a id=@{s"${sectionId}-${model.rowId}-remove-link"} href="@{model.removeLinkCall}">@Messages("pla.base.remove")</a>
         <span class ="visuallyhidden">@Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}.removeHint")</span>
     </td>
-    } else {
+    } else {@if(removeLinkDefined) {
     <td class = "@if(firstRow){has-child-item}"></td>
-    }
+    }}
 </tr>
