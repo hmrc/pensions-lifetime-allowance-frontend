@@ -234,8 +234,10 @@ pla.pensionsTakenBefore.helpLinkText        = technical guidance on valuing your
 
 ## IP14 Pensions Taken Before ##
 pla.ip14PensionsTakenBefore.question        = What were your pensions worth on 5 April 2014?
-pla.ip14PensionsTakenBefore.helpText        = If you had more than one pension in payment on 5 April 2006, you should include the total of the values of each pension.
-pla.ip14PensionsTakenBefore.hiddenText      = In most cases, this is the annual amount of your pension at 5 April 2014 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension, see the guidance.
+pla.ip14PensionsTakenBefore.step.2          = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014.
+
+#pla.ip14PensionsTakenBefore.helpText        = If you had more than one pension in payment on 5 April 2006, you should include the total of the values of each pension.
+#pla.ip14PensionsTakenBefore.hiddenText      = In most cases, this is the annual amount of your pension at 5 April 2014 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension, see the guidance.
 
 ## Pensions Taken Between ##
 pla.pensionsTakenBetween.pageHeading        = Did any of the following happen between 6 April 2006 and 5 April 2016?
@@ -262,7 +264,7 @@ pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2
 ## Overseas Pensions ##
 pla.overseasPensions.pageHeading            = Have you put money into a pension scheme held overseas?
 pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
-pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016, which you got UK tax relief on.
+pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on.
 pla.overseasPensions.questionTwo            = How much did you contribute?
 pla.overseasPensions.errorQuestion          = Enter an amount in the correct format eg £500000
 pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
