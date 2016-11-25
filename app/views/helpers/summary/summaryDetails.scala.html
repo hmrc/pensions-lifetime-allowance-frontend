@@ -1,5 +1,4 @@
 @import play.api.data._
-@import enums.ApplicationType
 @import config.FrontendAppConfig
 
 @(summary: SummaryModel)
@@ -19,7 +18,7 @@
     <thead>
         <tr>
             <th colspan="@if(removeLinkDefined){4} else {3}">
-                @Messages("pla.summary.pensionsHeading")
+                <h2>@Messages("pla.summary.pensionsHeading")</h2>
             </th>
         </tr>
     </thead>
@@ -33,7 +32,7 @@
     <thead>
         <tr>
             <th colspan="@if(removeLinkDefined){4} else {3}">
-                @Messages("pla.summary.psosHeading")
+                <h2>@Messages("pla.summary.psosHeading")</h2>
             </th>
         </tr>
     </thead>
@@ -43,14 +42,5 @@
         }
     </table>
 
-<div class="declaration">
-    @if(summary.protectionType == ApplicationType.IP2016) {
-        <p>@Messages("pla.summary.declarationPara1")</p>
-        <p>@Messages("pla.summary.declarationPara2")</p>
-    } else {
-        <p>@Messages("pla.summary.ip14DeclarationPara1")</p>
-        <p>@Messages("pla.summary.ip14DeclarationPara2")</p>
-    }
-</div>
 <div class="grid-wrapper"></div>
 }
