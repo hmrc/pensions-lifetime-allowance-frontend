@@ -37,6 +37,7 @@ object Links {
   val overseasPension       = pensionValue + "#money-put-into-overseas-pensions-between-6-april-2006-and-the-relevant-date"
   val currentPensions       = pensionValue + "#pensions-youve-not-taken-yet"
   val fpGuidance            = ptaManual + "ptm093100"
+  val ipGuidance            = ptaManual + "ptm094210"
 
 
 

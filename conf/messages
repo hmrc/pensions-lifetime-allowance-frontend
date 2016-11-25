@@ -4,7 +4,7 @@ pla.base.yes                    = Yes
 pla.base.no                     = No
 pla.base.continue               = Continue
 pla.base.apply                  = Apply
-pla.base.submitApplication      = Submit your application
+pla.base.submitApplication      = Confirm and submit
 pla.base.back                   = Back
 pla.base.change                 = Change
 pla.base.update                 = Update
@@ -148,6 +148,7 @@ pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ‘protection c
 pla.confirmFP16.help        = Help with these conditions
 pla.confirmFP16.hiddenPara.1 = Speak to your pension scheme administrator to get professional help understanding these conditions.
 pla.confirmFP16.hiddenPara.2 = HMRC’s Pensions Tax Manual has {0}
+
 pla.confirmFP16.hiddenPara.linkText = technical guidance about fixed protection
 pla.confirmFP16.declaration = By confirming, you will automatically submit your application for fixed protection 2016. Do not proceed if you don’t meet these conditions.
 
@@ -378,10 +379,10 @@ pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2016 
 
 ## SUMMARY ##
 pla.summary.title                                   = Submit your application
-pla.summary.pageHeading                             = Check your answers before sending your application
+pla.summary.pageHeading                             = Check and submit your protection details
 pla.summary.errorSummaryLabel                       = There''s a problem with your application
 pla.summary.underThresholdError.IP2016              = Your total pension savings were less than £1,000,001 on 5 April 2016. You can only apply for individual protection 2016 if your pension savings were £1,000,001 or more.
-pla.summary.pensionsHeading                         = Pensions
+pla.summary.pensionsHeading                         = Value of pensions
 pla.summary.change                                  = Change
 pla.summary.questions.pensionsTaken                 = Before 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.pensionsTaken            = Change your response to the question ''have you taken any of your pensions''
@@ -400,12 +401,31 @@ pla.summary.hiddenLinkText.overseasPensionsAmt      = Change your response to th
 pla.summary.questions.currentPensionsAmt            = Value of your UK pension savings on 5 April 2016
 pla.summary.hiddenLinkText.currentPensionsAmt       = Change your response to the value of your UK pension savings on 5 April 2016
 pla.summary.questions.totalPensionsAmt              = Your total pension savings are
-pla.summary.psosHeading                             = Pension sharing orders
+pla.summary.psosHeading                             = Value of pension sharing orders
 pla.summary.questions.pensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.summary.hiddenLinkText.pensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2016?''
 
 pla.summary.questions.psoDetails                    = Date and amount of pension sharing order
 pla.summary.hiddenLinkText.psoDetails               = Change the details of your pension sharing order
+
+pla.summary.getIP16                                 = Get individual protection 2016
+pla.summary.getIP14                                 = Get individual protection 2014
+pla.summary.confirmation1                           = To get this protection you must agree to this declaration.
+pla.summary.confirmation2                           = To the best of my knowledge and belief, I meet both of the following conditions:
+pla.summary.confirm1                                = On 5 April 2016 you were a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
+pla.summary.confirm2                                = On 6 April 2016 you did not hold either of these protections:
+pla.summary.ip14Confirm1                            = On 5 April 2014 you were a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
+pla.summary.ip14Confirm2                            = On 6 April 2014 you did not hold primary protection.
+pla.summary.confirmBullet1                          = primary protection
+pla.summary.confirmBullet2                          = individual protection 2014
+pla.summary.help                                    = Help with these conditions
+pla.summary.hiddenPara.1                            = Speak to your pension scheme administrator to get professional help understanding these conditions.
+pla.summary.hiddenPara.2                            = HMRC’s Pensions Tax Manual has {0}
+pla.summary.hiddenPara.linkText                     = technical guidance about individual protection 2016
+pla.summary.hiddenPara.ip14LinkText                 = technical guidance about individual protection 2014
+
+pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016. Do not proceed if you don''t meet these conditions.
+pla.summary.ip14Declaration                         = By confirming, you will automatically submit your application for individual protection 2014. Do not proceed if you don''t meet these conditions.
 
 pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold primary protection or individual protection 2014.
 pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
@@ -415,17 +435,17 @@ pla.summary.questions.ip14PensionsTaken                 = Before 5 April 2014, d
 pla.summary.hiddenLinkText.ip14PensionsTaken            = Change your response to the question ''have you taken any of your pensions''
 pla.summary.questions.ip14PensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
 pla.summary.hiddenLinkText.ip14PensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
-pla.summary.questions.ip14PensionsTakenBeforeAmt        = Value of the pensions you took before 6 April 2006
+pla.summary.questions.ip14PensionsTakenBeforeAmt        = What's the value of the pensions you took before 6 April 2006?
 pla.summary.hiddenLinkText.ip14PensionsTakenBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
 pla.summary.questions.ip14PensionsTakenBetween          = Between 6 April 2006 and 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.ip14PensionsTakenBetween     = Change your response to the question ''did you get money from your pensions between 6 April 2006 and 5 April 2014''
-pla.summary.questions.ip14PensionsTakenBetweenAmt       = Lifetime allowance used
+pla.summary.questions.ip14PensionsTakenBetweenAmt       = How much lifetime allowance have you used?
 pla.summary.hiddenLinkText.ip14PensionsTakenBetweenAmt  = Change your response to the amount of lifetime allowance used
 pla.summary.questions.ip14OverseasPensions              = Have you put money into a pension scheme held overseas?
 pla.summary.hiddenLinkText.ip14OverseasPensions         = Change your response to the question ''Have you put money into a pension scheme held overseas?''
-pla.summary.questions.ip14OverseasPensionsAmt           = Amount you put in between 6 April 2006 and 5 April 2014
+pla.summary.questions.ip14OverseasPensionsAmt           = How much did you contribute?
 pla.summary.hiddenLinkText.ip14OverseasPensionsAmt      = Change your response to the amount of overseas pensions you put in between 6 April 2006 and 5 April 2014
-pla.summary.questions.ip14CurrentPensionsAmt            = Value of your UK pension savings on 5 April 2014
+pla.summary.questions.ip14CurrentPensionsAmt            = What were your UK pensions worth on 5 April 2014?
 pla.summary.hiddenLinkText.ip14CurrentPensionsAmt       = Change your response to the value of your UK pension savings on 5 April 2014
 pla.summary.questions.ip14TotalPensionsAmt              = Your total pension savings are
 pla.summary.ip14PsosHeading                             = Pension sharing orders
