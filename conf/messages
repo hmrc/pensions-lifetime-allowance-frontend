@@ -197,11 +197,11 @@ pla.api.badRequest              = There was an error processing the client''s re
 
 
 ## Pensions Taken ##
-pla.pensionsTaken.pageHeading               = Did any of the following happen before 5 April 2016?
-pla.pensionsTaken.title                     = Did any of the following happen before 5 April 2016?
-pla.pensionsTaken.bulletOne                 = You got money from your pensions
-pla.pensionsTaken.bulletTwo                 = You transferred a pension to a scheme held overseas
-pla.pensionsTaken.bulletThree               = You turned 75 with pension savings which you hadn''t yet taken
+pla.pensionsTaken.pageHeading               = Did any of the following happen before 6 April 2016?
+pla.pensionsTaken.title                     = Did any of the following happen before 6 April 2016?
+pla.pensionsTaken.bullet.1                  = You got money from your pensions.
+pla.pensionsTaken.bullet.2                  = You transferred a pension to a scheme held overseas.
+pla.pensionsTaken.bullet.3                  = You turned 75 with pension savings that you hadn''t yet taken.
 pla.pensionsTaken.mandatoryErr              = Please answer this question
 pla.pensionsTaken.legend                    = Before 5 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
@@ -214,15 +214,23 @@ pla.ip14PensionsTaken.legend                = Before 5 April 2014, did you turn 
 ## Pensions Taken Before ##
 pla.pensionsTakenBefore.pageHeading         = Did you get an income from any of your pensions before 6 April 2006?
 pla.pensionsTakenBefore.title               = Did you get an income from any of your pensions before 6 April 2006?
-pla.pensionsTakenBefore.question            = What were your pensions worth on 5 April 2016?
+pla.pensionsTakenBefore.question            = What were these pensions worth on 5 April 2016?
 pla.pensionsTakenBefore.helpText            = If you had more than one pension in payment on 5 April 2006 you should include the total of the values of each pension.
 pla.pensionsTakenBefore.errorQuestion       = Enter an amount in the correct format eg £500000
 pla.pensionsTakenBefore.errorNegative       = Enter an amount that''s £0 or more
 pla.pensionsTakenBefore.errorMaximum        = Enter an amount less than £99,999,999,999,999.98
 pla.pensionsTakenBefore.errorDecimalPlaces  = The amount you''ve entered has too many decimal places
 pla.pensionsTakenBefore.legend              = Did you get an income from any of your pensions before 6 April 2006?
-pla.pensionsTakenBefore.hiddenLink          = How do I work out the value?
-pla.pensionsTakenBefore.hiddenText          = In most cases, this is the annual amount of your pension at 5 April 2016 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension, see the guidance.
+pla.pensionsTakenBefore.help                = How to work out the amount
+pla.pensionsTakenBefore.para.1              = If you did not get an income from any other pensions since 6 April 2006:
+pla.pensionsTakenBefore.step.1              = Take only the pensions from which you got an income prior to 6 April 2006.
+pla.pensionsTakenBefore.step.2              = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2016.
+pla.pensionsTakenBefore.step.3              = Multiply this figure by 25.
+pla.pensionsTakenBefore.para.2              = You'll need to do a different calculation if either of the following apply:
+pla.pensionsTakenBefore.bullet.1            = you did receive an income from other pensions since 6 April 2006.
+pla.pensionsTakenBefore.bullet.2            = you have a drawdown pension.
+pla.pensionsTakenBefore.para.3              = Find out how in this {0}
+pla.pensionsTakenBefore.helpLinkText        = technical guidance on valuing your pensions
 
 ## IP14 Pensions Taken Before ##
 pla.ip14PensionsTakenBefore.question        = What were your pensions worth on 5 April 2014?
@@ -230,14 +238,32 @@ pla.ip14PensionsTakenBefore.helpText        = If you had more than one pension i
 pla.ip14PensionsTakenBefore.hiddenText      = In most cases, this is the annual amount of your pension at 5 April 2014 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension, see the guidance.
 
 ## Pensions Taken Between ##
-pla.pensionsTakenBetween.pageHeading        = Did any of the following happen between 6 April 2006 and 5 April 2016?
-pla.pensionsTakenBetween.title              = Did any of the following happen between 6 April 2006 and 5 April 2016?
-pla.pensionsTakenBetween.bulletOne          = You got money from your pensions
-pla.pensionsTakenBetween.bulletTwo          = You transferred a pension to a scheme held overseas
-pla.pensionsTakenBetween.bulletThree        = You turned 75 with pension savings which you hadn''t yet taken
-pla.pensionsTakenBetween.paraOne            = You''ll have used some of your lifetime allowance if any of these happened.
+pla.pensionsTakenBetween.pageHeading        = Did any of these events happen between 6 April 2006 and 5 April 2016?
+pla.pensionsTakenBetween.title              = Did any of these events happen between 6 April 2006 and 5 April 2016?
+pla.pensionsTakenBetween.bullet.1           = You got money from your pensions.
+pla.pensionsTakenBetween.bullet.2           = You transferred a pension to a scheme held overseas.
+pla.pensionsTakenBetween.bullet.3           = You turned 75 with pension savings which you hadn''t yet taken.
+pla.pensionsTakenBetween.para.1             = You''ll have used some of your lifetime allowance if any of these events happened.
 pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance have you used?
-pla.pensionsTakenBetween.helpText           = You can ask your pension providers to tell you the amount of lifetime allowance you''ve used for individual protection 2016
+pla.pensionsTakenBetween.help               = How do I work out the value?
+pla.pensionsTakenBetween.part.1             = Part 1
+pla.pensionsTakenBetween.step.1.1           = Take any pensions where your employer guarantees you a specified annual income.
+pla.pensionsTakenBetween.step.1.2           = Work out the value of this annual income on the day before this event happened.
+pla.pensionsTakenBetween.step.1.3           = Multiply the result by 20.
+pla.pensionsTakenBetween.step.1.4           = Add the amount of any lump sum payments you'll get on top of this annual income.
+pla.pensionsTakenBetween.part.2             = Part 2
+pla.pensionsTakenBetween.step.2.1           = Take the value of your lifetime allowance on 5th April 2016 (£1.25m).
+pla.pensionsTakenBetween.step.2.2           = Divide by the value of your lifetime allowance on the date the event happened.
+pla.pensionsTakenBetween.part.3             = Part 3
+pla.pensionsTakenBetween.step.3.1           = Take the result from part 1.
+pla.pensionsTakenBetween.step.3.2           = Divide by the result from part 2.
+pla.pensionsTakenBetween.para.2             = You''ll need to do a different calculation if you have a drawdown pension.
+pla.pensionsTakenBetween.para.3             = Read technical guidance on {0}
+pla.pensionsTakenBetween.helpLinkText       = how to value your pension
+pla.pensionsTakenBetween.para.4             = You can also ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2016.
+
+
+
 pla.pensionsTakenBetween.errorQuestion      = Enter an amount in the correct format eg £500000
 pla.pensionsTakenBetween.errorNegative      = Enter an amount that''s £0 or more
 pla.pensionsTakenBetween.errorMaximum       = Enter an amount less than £99,999,999,999,999.98
@@ -254,7 +280,7 @@ pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2
 ## Overseas Pensions ##
 pla.overseasPensions.pageHeading            = Have you put money into a pension scheme held overseas?
 pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
-pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016, which you got UK tax relief on.
+pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016, that you got UK tax relief on.
 pla.overseasPensions.questionTwo            = How much did you contribute?
 pla.overseasPensions.errorQuestion          = Enter an amount in the correct format eg £500000
 pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
@@ -273,7 +299,15 @@ pla.currentPensions.title                   = What were your UK pensions worth o
 pla.currentPensions.paraOne                 = Include any money you have in pension pots.
 pla.currentPensions.paraTwo                 = If you have any pensions where your employer will pay you a set income once you take them, include the value of them.
 pla.currentPensions.hiddenLink              = How do I work out the value?
-pla.currentPensions.hiddenText              = Multiply the amount you''ll get each year by 20. Add any lump sum you''ll get if it''s on top of what you''ll get each year. 
+
+pla.currentPensions.hiddenText              = Multiply the amount you''ll get each year by 20. Add any lump sum you''ll get if it''s on top of what you''ll get each year.
+pla.currentPensions.hiddenTextPara          = Use figures that were correct at 5 April 2016.
+pla.currentPensions.hiddenText1             = Take any pensions where your employer guarantees you a specified annual income.
+pla.currentPensions.hiddenText2             = Multiply the annual income from these pensions by 20.
+pla.currentPensions.hiddenText3             = Add the amount of any lump sum payments you''ll get on top of this annual income.
+pla.currentPensions.hiddenText4             = Add the total amount you''ve built up in your other pension pots.
+pla.currentPensions.readGuidance            = Read technical guidance on {0}
+pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
 pla.currentPensions.question                = Don''t include any pensions you''ve already taken or the State Pension.
 pla.currentPensions.errorQuestion           = Enter an amount in the correct format eg £500000
 pla.currentPensions.errorNegative           = Enter an amount that''s £0 or more
@@ -286,6 +320,8 @@ pla.currentPensions.legend                  = What were your UK pensions worth o
 pla.ip14CurrentPensions.pageHeading         = What were your UK pensions worth on 5 April 2014?
 pla.ip14CurrentPensions.title               = What were your UK pensions worth on 5 April 2014?
 pla.ip14CurrentPensions.legend              = What were your UK pensions worth on 5 April 2014?
+pla.ip14CurrentPensions.hiddenTextPara      = Use figures that were correct at 5 April 2014.
+
 
 
 
@@ -322,6 +358,7 @@ pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2016
 pla.psoDetails.dateHintText14               = For example, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
+pla.psoDetails.visitPTA                     = Once you''ve completed this service, you can add a pension sharing order at any time by visiting your personal tax account
 pla.psoDetails.errorNegative                = Enter an amount that''s £0 or more
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
