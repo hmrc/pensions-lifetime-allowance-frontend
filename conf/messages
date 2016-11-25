@@ -470,17 +470,10 @@ pla.existingProtections.protectedAmount                 = Protected lifetime all
 pla.existingProtections.protectionRef                   = Protection notification number
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
-<<<<<<< HEAD
 pla.existingProtections.amendLinkText                   = View or change your protection details
-pla.existingProtections.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
-pla.existingProtections.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
-pla.existingProtections.FP2016.contactHMRC              = If you or your employer adds to your pension, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 90 days.
-=======
-pla.existingProtections.amendLinkText                   = View or change details
 pla.existingProtections.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 60 days.
 pla.existingProtections.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 60 days.
 pla.existingProtections.FP2016.contactHMRC              = If you or your employer adds to your pension, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 90 days.
->>>>>>> PLA-1124
 
 
 ## PROTECTION INFORMATION ##
