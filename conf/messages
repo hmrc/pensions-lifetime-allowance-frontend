@@ -204,12 +204,12 @@ pla.pensionsTaken.bullet.1                  = You got money from your pensions.
 pla.pensionsTaken.bullet.2                  = You transferred a pension to a scheme held overseas.
 pla.pensionsTaken.bullet.3                  = You turned 75 with pension savings that you hadn''t yet taken.
 pla.pensionsTaken.mandatoryErr              = Please answer this question
-pla.pensionsTaken.legend                    = Before 5 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.pensionsTaken.legend                    = Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken ##
-pla.ip14PensionsTaken.pageHeading           = Did any of the following happen before 5 April 2014?
-pla.ip14PensionsTaken.title                 = Did any of the following happen before 5 April 2014?
-pla.ip14PensionsTaken.legend                = Before 5 April 2014, did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.ip14PensionsTaken.pageHeading           = Did any of the following happen before 6 April 2014?
+pla.ip14PensionsTaken.title                 = Did any of the following happen before 6 April 2014?
+pla.ip14PensionsTaken.legend                = Before 6 April 2014, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 
 ## Pensions Taken Before ##
@@ -235,8 +235,10 @@ pla.pensionsTakenBefore.helpLinkText        = technical guidance on valuing your
 
 ## IP14 Pensions Taken Before ##
 pla.ip14PensionsTakenBefore.question        = What were your pensions worth on 5 April 2014?
-pla.ip14PensionsTakenBefore.helpText        = If you had more than one pension in payment on 5 April 2006, you should include the total of the values of each pension.
-pla.ip14PensionsTakenBefore.hiddenText      = In most cases, this is the annual amount of your pension at 5 April 2014 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension, see the guidance.
+pla.ip14PensionsTakenBefore.step.2          = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014.
+
+#pla.ip14PensionsTakenBefore.helpText        = If you had more than one pension in payment on 5 April 2006, you should include the total of the values of each pension.
+#pla.ip14PensionsTakenBefore.hiddenText      = In most cases, this is the annual amount of your pension at 5 April 2014 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension, see the guidance.
 
 ## Pensions Taken Between ##
 pla.pensionsTakenBetween.pageHeading        = Did any of these events happen between 6 April 2006 and 5 April 2016?
@@ -264,7 +266,6 @@ pla.pensionsTakenBetween.helpLinkText       = how to value your pension
 pla.pensionsTakenBetween.para.4             = You can also ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2016.
 
 
-
 pla.pensionsTakenBetween.errorQuestion      = Enter an amount in the correct format eg £500000
 pla.pensionsTakenBetween.errorNegative      = Enter an amount that''s £0 or more
 pla.pensionsTakenBetween.errorMaximum       = Enter an amount less than £99,999,999,999,999.98
@@ -272,16 +273,22 @@ pla.pensionsTakenBetween.errorDecimalPlaces = The amount you''ve entered has too
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken Between ##
-pla.ip14PensionsTakenBetween.pageHeading    = Did any of the following happen between 6 April 2006 and 5 April 2014?
-pla.ip14PensionsTakenBetween.title          = Did any of the following happen between 6 April 2006 and 5 April 2014?
-pla.ip14PensionsTakenBetween.helpText       = You can ask your pension providers to tell you the amount of lifetime allowance you''ve used for individual protection 2014
+pla.ip14PensionsTakenBetween.pageHeading    = Did any of the these events happen between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.title          = Did any of the these events happen between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.step.2.1       = Take the value of your lifetime allowance on 5th April 2014 (£1.25m).
+pla.ip14PensionsTakenBetween.para.4         = You can also ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2014.
+
 pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 
 ## Overseas Pensions ##
 pla.overseasPensions.pageHeading            = Have you put money into a pension scheme held overseas?
 pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
+<<<<<<< HEAD
 pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016, that you got UK tax relief on.
+=======
+pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on.
+>>>>>>> PLA-ip14Content
 pla.overseasPensions.questionTwo            = How much did you contribute?
 pla.overseasPensions.errorQuestion          = Enter an amount in the correct format eg £500000
 pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
@@ -359,7 +366,7 @@ pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2016
 pla.psoDetails.dateHintText14               = For example, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
-pla.psoDetails.visitPTA                     = Once you''ve completed this service, you can add a pension sharing order at any time by visiting your personal tax account
+pla.psoDetails.visitPTA                     = Once you''ve completed this service, you can add a pension sharing order at any time by visiting your personal tax account.
 pla.psoDetails.errorNegative                = Enter an amount that''s £0 or more
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
@@ -406,6 +413,7 @@ pla.summary.questions.psoDetails                    = Date and amount of pension
 pla.summary.hiddenLinkText.psoDetails               = Change the details of your pension sharing order
 
 pla.summary.getIP16                                 = Get individual protection 2016
+pla.summary.getIP14                                 = Get individual protection 2014
 pla.summary.mustAgree                               = To get this protection you must agree to this declaration.
 pla.summary.confirmation                            = To the best of my knowledge and belief, I meet both of the following conditions:
 pla.summary.confirm1                                = On 5 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
@@ -416,6 +424,7 @@ pla.summary.help                                    = Help with these conditions
 pla.summary.hiddenPara.1                            = Speak to your pension scheme administrator to get professional help understanding these conditions.
 pla.summary.hiddenPara.2                            = HMRC’s Pensions Tax Manual has {0}
 pla.summary.hiddenPara.linkText                     = technical guidance about individual protection 2016
+pla.summary.hiddenPara.ip14LinkText                 = technical guidance about individual protection 2014
 
 pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016. Do not proceed if you don''t meet these conditions.
 pla.summary.ip14Declaration                         = By confirming, you will automatically submit your application for individual protection 2014. Do not proceed if you don''t meet these conditions.
@@ -428,19 +437,19 @@ pla.summary.questions.ip14PensionsTaken                 = Before 5 April 2014, d
 pla.summary.hiddenLinkText.ip14PensionsTaken            = Change your response to the question ''have you taken any of your pensions''
 pla.summary.questions.ip14PensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
 pla.summary.hiddenLinkText.ip14PensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
-pla.summary.questions.ip14PensionsTakenBeforeAmt        = Value of the pensions you took before 6 April 2006
+pla.summary.questions.ip14PensionsTakenBeforeAmt        = What's the value of the pensions you took before 6 April 2006?
 pla.summary.hiddenLinkText.ip14PensionsTakenBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
 pla.summary.questions.ip14PensionsTakenBetween          = Between 6 April 2006 and 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.ip14PensionsTakenBetween     = Change your response to the question ''did you get money from your pensions between 6 April 2006 and 5 April 2014''
-pla.summary.questions.ip14PensionsTakenBetweenAmt       = Lifetime allowance used
+pla.summary.questions.ip14PensionsTakenBetweenAmt       = How much lifetime allowance have you used?
 pla.summary.hiddenLinkText.ip14PensionsTakenBetweenAmt  = Change your response to the amount of lifetime allowance used
 pla.summary.questions.ip14OverseasPensions              = Have you put money into a pension scheme held overseas?
 pla.summary.hiddenLinkText.ip14OverseasPensions         = Change your response to the question ''Have you put money into a pension scheme held overseas?''
-pla.summary.questions.ip14OverseasPensionsAmt           = Amount you put in between 6 April 2006 and 5 April 2014
+pla.summary.questions.ip14OverseasPensionsAmt           = How much did you contribute?
 pla.summary.hiddenLinkText.ip14OverseasPensionsAmt      = Change your response to the amount of overseas pensions you put in between 6 April 2006 and 5 April 2014
-pla.summary.questions.ip14CurrentPensionsAmt            = Value of your UK pension savings on 5 April 2014
+pla.summary.questions.ip14CurrentPensionsAmt            = What were your UK pensions worth on 5 April 2014?
 pla.summary.hiddenLinkText.ip14CurrentPensionsAmt       = Change your response to the value of your UK pension savings on 5 April 2014
-pla.summary.questions.ip14TotalPensionsAmt              = Your total pension savings are
+pla.summary.questions.ip14TotalPensionsAmt              = Total value of pensions
 pla.summary.ip14PsosHeading                             = Pension sharing orders
 pla.summary.questions.ip14PensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2014?
 pla.summary.hiddenLinkText.ip14PensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2014?''
