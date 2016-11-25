@@ -141,9 +141,9 @@ pla.confirmFP16.paraTwo     = To the best of my knowledge and belief, I meet all
 pla.confirmFP16.bullet.1    = on 6 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme
 pla.confirmFP16.bullet.2    = on 6 April 2016 I did not hold any of these protections:
 pla.confirmFP16.bullet.2.1  = enhanced protection
-pla.confirmFP16.bullet.2.2  = fixed protection 2012
-pla.confirmFP16.bullet.2.3  = fixed protection 2014
-pla.confirmFP16.bullet.2.4  = primary protection
+pla.confirmFP16.bullet.2.2  = primary protection
+pla.confirmFP16.bullet.2.3  = fixed protection (FP2012)
+pla.confirmFP16.bullet.2.4  = fixed protection 2014
 pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ‘protection cessation event’ (these are specific events that make you ineligible for fixed protection)
 pla.confirmFP16.help        = Help with these conditions
 pla.confirmFP16.hiddenPara.1 = Speak to your pension scheme administrator to get professional help understanding these conditions.
@@ -280,7 +280,7 @@ pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2
 ## Overseas Pensions ##
 pla.overseasPensions.pageHeading            = Have you put money into a pension scheme held overseas?
 pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
-pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016, which you got UK tax relief on.
+pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016, that you got UK tax relief on.
 pla.overseasPensions.questionTwo            = How much did you contribute?
 pla.overseasPensions.errorQuestion          = Enter an amount in the correct format eg £500000
 pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
@@ -299,7 +299,15 @@ pla.currentPensions.title                   = What were your UK pensions worth o
 pla.currentPensions.paraOne                 = Include any money you have in pension pots.
 pla.currentPensions.paraTwo                 = If you have any pensions where your employer will pay you a set income once you take them, include the value of them.
 pla.currentPensions.hiddenLink              = How do I work out the value?
-pla.currentPensions.hiddenText              = Multiply the amount you''ll get each year by 20. Add any lump sum you''ll get if it''s on top of what you''ll get each year. 
+
+pla.currentPensions.hiddenText              = Multiply the amount you''ll get each year by 20. Add any lump sum you''ll get if it''s on top of what you''ll get each year.
+pla.currentPensions.hiddenTextPara          = Use figures that were correct at 5 April 2016.
+pla.currentPensions.hiddenText1             = Take any pensions where your employer guarantees you a specified annual income.
+pla.currentPensions.hiddenText2             = Multiply the annual income from these pensions by 20.
+pla.currentPensions.hiddenText3             = Add the amount of any lump sum payments you''ll get on top of this annual income.
+pla.currentPensions.hiddenText4             = Add the total amount you''ve built up in your other pension pots.
+pla.currentPensions.readGuidance            = Read technical guidance on {0}
+pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
 pla.currentPensions.question                = Don''t include any pensions you''ve already taken or the State Pension.
 pla.currentPensions.errorQuestion           = Enter an amount in the correct format eg £500000
 pla.currentPensions.errorNegative           = Enter an amount that''s £0 or more
@@ -312,6 +320,8 @@ pla.currentPensions.legend                  = What were your UK pensions worth o
 pla.ip14CurrentPensions.pageHeading         = What were your UK pensions worth on 5 April 2014?
 pla.ip14CurrentPensions.title               = What were your UK pensions worth on 5 April 2014?
 pla.ip14CurrentPensions.legend              = What were your UK pensions worth on 5 April 2014?
+pla.ip14CurrentPensions.hiddenTextPara      = Use figures that were correct at 5 April 2014.
+
 
 
 
