@@ -272,8 +272,8 @@ pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2
 ## IP14 Pensions Taken Between ##
 pla.ip14PensionsTakenBetween.pageHeading    = Did any of the these events happen between 6 April 2006 and 5 April 2014?
 pla.ip14PensionsTakenBetween.title          = Did any of the these events happen between 6 April 2006 and 5 April 2014?
-pla.ip14pensionsTakenBetween.step.1.1       = Take your lifetime allowance at 5 April 2014.
-pla.ip14pensionsTakenBetween.para.3         = You can also ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2014.
+pla.ip14PensionsTakenBetween.step.2.1       = Take the value of your lifetime allowance on 5th April 2014 (£1.25m).
+pla.ip14PensionsTakenBetween.para.4         = You can also ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2014.
 
 pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
