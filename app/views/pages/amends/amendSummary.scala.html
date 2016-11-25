@@ -83,8 +83,8 @@
 
     </table>
     @if(!model.psoAdded){
-        <div>
-            <a href="@routes.AmendsController.amendPsoDetails(model.protectionType.toLowerCase(), status)" id="addPsoLink" >@Messages("pla.amends.addPsoLink")</a>
+        <div class="form-group">
+            <a href="@routes.AmendsController.amendPsoDetails(model.protectionType.toLowerCase(), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
         </div>
     }
 
@@ -96,14 +96,12 @@
 
         </div>
 
-        <div>
         @if(model.amended) {
             <div class="form-group">
-                <p class="important-notice" id="declaration">@Messages("pla.amends.declaration")</p>
+                <p class="important-notice icon-min-height" id="declaration">@Messages("pla.amends.declaration")</p>
             </div>
             <button id="submit" class="button" type="submit">@Messages("pla.amends.submit")</button>
         }
-        </div>
     }
 
 }
