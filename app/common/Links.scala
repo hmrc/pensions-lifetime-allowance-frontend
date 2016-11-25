@@ -38,6 +38,7 @@ object Links {
   val currentPensions       = pensionValue + "#pensions-youve-not-taken-yet"
   val fpGuidance            = ptaManual + "ptm093100"
   val ipGuidance            = ptaManual + "ptm094210"
+  val ip14Guidance          = ptaManual + "ptm094200"
 
 
 
