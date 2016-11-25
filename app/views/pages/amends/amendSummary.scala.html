@@ -41,11 +41,10 @@
         <thead>
             <tr>
                 <th colspan="@if(model.psoAdded){4} else {3}">
-                    @Messages("pla.summary.pensionsHeading")
+                    <h2>@Messages("pla.summary.pensionsHeading")</h2>
                 </th>
             </tr>
         </thead>
-
 
         @if(model.psoAdded) {
             @model.pensionContributionSections.map { section =>
@@ -69,19 +68,18 @@
         <thead>
             <tr>
                 <th colspan="4" class="table-divider">
-                    @Messages("pla.summary.psosHeading")
+                    <h2>@Messages("pla.summary.psosHeading")</h2>
                 </th>
             </tr>
         </thead>
 
         @if(model.psoSections.nonEmpty){
-        @model.psoSections.map { section =>
-            @amendSection(section, model.protectionType, model.psoAdded)
-        }
+            @model.psoSections.map { section =>
+                @amendSection(section, model.protectionType, model.psoAdded)
+            }
         } else {
-            @amendSection(model.pensionContributionSections(4), model.protectionType, model.psoAdded)
+            @amendSection(model.pensionContributionSections.last, model.protectionType, model.psoAdded)
         }
-
 
     </table>
     @if(!model.psoAdded){
@@ -100,7 +98,9 @@
 
         <div>
         @if(model.amended) {
-            <p id="declaration">@Messages("pla.amends.declaration")</p>
+            <div class="form-group">
+                <p class="important-notice" id="declaration">@Messages("pla.amends.declaration")</p>
+            </div>
             <button id="submit" class="button" type="submit">@Messages("pla.amends.submit")</button>
         }
         </div>
