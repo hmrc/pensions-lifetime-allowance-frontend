@@ -11,7 +11,11 @@
     	<p id=@{s"additionalInfo$infoNum"}>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
     }
 
+    <h2>@Messages("pla.resultSuccess.IPChangePSODetails")</h2>
+
     <p>@Html(Messages("pla.resultRejection.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultRejection.viewDetailsLinkText")</a>.</p>
+
+    <h2>@Messages("pla.resultSuccess.giveFeedback")</h2>
 
     <p><a href=@controllers.routes.ExitSurveyController.exitSurvey>@Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Html(Messages("pla.resultSuccess.exitSurvey"))</p>
 }

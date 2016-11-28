@@ -170,7 +170,7 @@ trait DisplayConstructors {
     val overseasPensionsSection = createSection(protection, ApplicationStage.OverseasPensions, protection.nonUKRights)
     val previousPsoSection = createPreviousPsoSection(protection)
 
-    Seq(currentPensionsSection, pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, previousPsoSection)
+    Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
   }
 
   def createSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double]): AmendDisplaySectionModel = {

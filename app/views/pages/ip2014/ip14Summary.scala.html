@@ -1,7 +1,10 @@
 @import models.SummaryModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import helpers.summary._
+@import helpers.templates.helpTextAccordion
 @import play.api.data._
+@import enums.ApplicationType
+@import common.Links
 
 @(summary: SummaryModel)(implicit request: Request[_])
 
@@ -9,9 +12,50 @@
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
+@hiddenContent = {
+    <p>@Messages("pla.summary.hiddenPara.1")</p>
+    <p>@Html(
+        Messages(s"pla.summary.hiddenPara.2",
+            s"""
+                <a href="${Links.ip14Guidance}"
+                id = "ip14-help-link"
+                rel="external"
+                target="_blank"
+                onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'ip14-technical-guidance')">
+                    ${Messages("pla.summary.hiddenPara.ip14LinkText")} (${Messages("pla.base.newWindow")})
+                </a>
+             """
+        )
+    )
+    </p>
+}
+
 @views.html.full_width_template(title = Messages("pla.summary.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
     @summaryDetails(summary)
+
+    <div class="form-group">
+        <h2>@Messages("pla.summary.getIP14")</h2>
+        <p>@Messages("pla.summary.mustAgree")</p>
+        <p>@Messages("pla.summary.confirmation")</p>
+        <ul class="list list-number">
+            <li>@Messages("pla.summary.ip14Confirm1")</li>
+            <li>@Messages("pla.summary.ip14Confirm2")</li>
+        </ul>
+        @helpTextAccordion("ip14Help", Messages("pla.summary.help"), hiddenContent)
+    </div>
+
+    <div class="form-group">
+        <p class="important-notice">
+            <strong class="bold-small">
+            @if(summary.protectionType == ApplicationType.IP2016){
+                @Messages("pla.summary.declaration")
+            } else {
+                @Messages("pla.summary.ip14Declaration")
+            }
+            </strong>
+        </p>
+    </div>
 
     @govHelpers.form(action = routes.ResultController.processIP14Application) {
         

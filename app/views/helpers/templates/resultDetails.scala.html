@@ -3,7 +3,9 @@
 
 @(details: ProtectionDetailsDisplayModel)
 
-<ul>
+<ul class="list list-bullet">
+    <li id="yourFullName">@Messages("pla.resultSuccess.yourName")</li>
+    <li id="yourNino">@Messages("pla.resultSuccess.yourNino")</li>
     @if(details.protectionReference.isDefined) {<li id="protectionRef">@Messages("pla.resultSuccess.protectionRef"): @details.protectionReference.get</li>}
     <li id="psaRef">@Messages("pla.resultSuccess.psaRef"): @details.psaReference</li>
     @if(details.applicationDate.isDefined) {<li id="applicationDate">@Messages("pla.resultSuccess.applicationDate"): @details.applicationDate.get</li>}

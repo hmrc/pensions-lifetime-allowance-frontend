@@ -1,31 +1,55 @@
 @import models.PensionsTakenBeforeModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.{formInputMoney,formHiddenYesNoRadio,hiddenText}
-@import helpers.templates.ipSidebar
-@import play.api.data._
+@import helpers.templates.{formInputMoney,formHiddenYesNoRadio, helpTextAccordion}
 @import common.Links
+@import play.api.data._
 
 @(pensionsTakenBeforeForm: Form[PensionsTakenBeforeModel])(implicit request: Request[_])
 
+@helpTextAccordionContent = {
+    <p>@Messages("pla.pensionsTakenBefore.para.1")</p>
+    <ol>
+        <li>@Messages("pla.pensionsTakenBefore.step.1")</li>
+        <li>@Messages("pla.pensionsTakenBefore.step.2")</li>
+        <li>@Messages("pla.pensionsTakenBefore.step.3")</li>
+    </ol>
+    <p>@Messages("pla.pensionsTakenBefore.para.2")</p>
+    <ul class="list list-bullet">
+        <li>@Messages("pla.pensionsTakenBefore.bullet.1")</li>
+        <li>@Messages("pla.pensionsTakenBefore.bullet.2")</li>
+    </ul>
+    <p>@Html(
+        Messages(
+            "pla.pensionsTakenBefore.para.3",
+            s"""
+               <a href="${Links.pensionsTakenBefore}"
+                    id = "ip16-pensions-taken-before-help-link"
+                    rel="external"
+                    target="_blank"
+                    onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'ip16-pensions-taken-before-technical-guidance')">
+                        ${Messages("pla.pensionsTakenBefore.helpLinkText")} (${Messages("pla.base.newWindow")})
+                    </a>
+             """.stripMargin
+        ))
+    </p>
+
+}
+
 @hiddenYesNoContent = {
     @formInputMoney(
-        pensionsTakenBeforeForm,
-        "pensionsTakenBeforeAmt",
+       pensionsTakenBeforeForm,
+       "pensionsTakenBeforeAmt",
         Messages("pla.pensionsTakenBefore.question"),
-        Some(Messages("pla.pensionsTakenBefore.helpText").toString()),
-        Some(hiddenText("value", Messages("pla.pensionsTakenBefore.hiddenLink"), Messages("pla.pensionsTakenBefore.hiddenText")))
+        None,
+        Some(helpTextAccordion("ip16-pensions-taken-before-help", Messages("pla.pensionsTakenBefore.help"), helpTextAccordionContent))
     )
-
-
 }
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@sidebar = {@ipSidebar(Links.pensionsTakenBefore, Messages("pla.links.pensionsTakenBeforeHelp"), "ip16-pensions-taken-before-calculation")}
-
-@main_template(title=Messages("pla.pensionsTakenBefore.title"), scriptElem=Some(scriptElement), sidebarLinks = Some(sidebar)) {
+@main_template(title=Messages("pla.pensionsTakenBefore.title"), scriptElem=Some(scriptElement)) {
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenBeforeForm

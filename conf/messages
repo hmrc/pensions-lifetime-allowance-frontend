@@ -4,7 +4,7 @@ pla.base.yes                    = Yes
 pla.base.no                     = No
 pla.base.continue               = Continue
 pla.base.apply                  = Apply
-pla.base.submitApplication      = Submit your application
+pla.base.submitApplication      = Confirm and submit
 pla.base.back                   = Back
 pla.base.change                 = Change
 pla.base.update                 = Update
@@ -128,14 +128,24 @@ pla.applyFP.bulletTwo       = you have a defined benefits pension, such as a fin
 
 ## Confirm FP 2016##
 pla.confirmFP16.title       = Apply for FP 2016
-pla.confirmFP16.pageHeading = You''re about to apply for fixed protection 2016
-pla.confirmFP16.paraOne     = I confirm that as at 6 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member, and that at 6 April 2016 I did not hold any of the following protections:
-pla.confirmFP16.bulletOne   = Primary Protection
-pla.confirmFP16.bulletTwo   = Enhanced Protection
-pla.confirmFP16.bulletThree = Fixed Protection
-pla.confirmFP16.bulletFour  = Fixed Protection 2014
-pla.confirmFP16.paraTwo     = I confirm that I have not had a protection cessation event since 6 April 2016 that would mean I am not entitled to apply for Fixed Protection 2016.
-pla.confirmFP16.paraThree   = The information that I have provided is true and complete to the best of my knowledge and belief.
+pla.confirmFP16.pageHeading = Get fixed protection 2016 for your lifetime allowance
+pla.confirmFP16.heading.2  = You''re about to apply for fixed protection 2016
+pla.confirmFP16.para.1      = To get this protection you must agree to these declarations.
+pla.confirmFP16.para.2      = I declare:
+pla.confirmFP16.bullet.1    = on 6 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme
+pla.confirmFP16.bullet.2    = on 6 April 2016 I did not hold any of these protections:
+pla.confirmFP16.bullet.2.1  = enhanced protection
+pla.confirmFP16.bullet.2.2  = primary protection
+pla.confirmFP16.bullet.2.3  = fixed protection
+pla.confirmFP16.bullet.2.4  = fixed protection 2014
+pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ‘protection cessation event’ (these are specific events that make you ineligible for fixed protection)
+pla.confirmFP16.help        = Help with these conditions
+pla.confirmFP16.hiddenPara.1 = Speak to your pension scheme administrator to get professional help understanding these conditions.
+pla.confirmFP16.hiddenPara.2 = HMRC’s Pensions Tax Manual has {0}
+pla.confirmFP16.para.3      = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
+
+pla.confirmFP16.hiddenPara.linkText = technical guidance about fixed protection
+pla.confirmFP16.declaration = By confirming, you will automatically submit your application for fixed protection 2016.
 
 ## Cannot Apply ##
 pla.cannotApply.title       = Don''t need PLA
@@ -183,47 +193,65 @@ pla.api.badRequest              = There was an error processing the client''s re
 
 
 ## Pensions Taken ##
-pla.pensionsTaken.pageHeading               = Did any of the following happen before 5 April 2016?
-pla.pensionsTaken.title                     = Did any of the following happen before 5 April 2016?
-pla.pensionsTaken.bulletOne                 = You got money from your pensions
-pla.pensionsTaken.bulletTwo                 = You transferred a pension to a scheme held overseas
-pla.pensionsTaken.bulletThree               = You turned 75 with pension savings which you hadn''t yet taken
+pla.pensionsTaken.pageHeading               = Did any of the following happen before 6 April 2016?
+pla.pensionsTaken.title                     = Did any of the following happen before 6 April 2016?
+pla.pensionsTaken.bullet.1                  = You got money from your pensions.
+pla.pensionsTaken.bullet.2                  = You transferred a pension to a scheme held overseas.
+pla.pensionsTaken.bullet.3                  = You turned 75 with pension savings that you hadn''t yet taken.
 pla.pensionsTaken.mandatoryErr              = Please answer this question
-pla.pensionsTaken.legend                    = Before 5 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.pensionsTaken.legend                    = Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken ##
-pla.ip14PensionsTaken.pageHeading           = Did any of the following happen before 5 April 2014?
-pla.ip14PensionsTaken.title                 = Did any of the following happen before 5 April 2014?
-pla.ip14PensionsTaken.legend                = Before 5 April 2014, did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.ip14PensionsTaken.pageHeading           = Did any of the following happen before 6 April 2014?
+pla.ip14PensionsTaken.title                 = Did any of the following happen before 6 April 2014?
+pla.ip14PensionsTaken.legend                = Before 6 April 2014, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 
 ## Pensions Taken Before ##
 pla.pensionsTakenBefore.pageHeading         = Did you get an income from any of your pensions before 6 April 2006?
 pla.pensionsTakenBefore.title               = Did you get an income from any of your pensions before 6 April 2006?
-pla.pensionsTakenBefore.question            = What were your pensions worth on 5 April 2016?
+pla.pensionsTakenBefore.question            = What were these pensions worth on 5 April 2016?
 pla.pensionsTakenBefore.helpText            = If you had more than one pension in payment on 5 April 2006 you should include the total of the values of each pension.
 pla.pensionsTakenBefore.errorQuestion       = Enter an amount in the correct format eg £500000
 pla.pensionsTakenBefore.errorNegative       = Enter an amount that''s £0 or more
 pla.pensionsTakenBefore.errorMaximum        = Enter an amount less than £99,999,999,999,999.98
 pla.pensionsTakenBefore.errorDecimalPlaces  = The amount you''ve entered has too many decimal places
 pla.pensionsTakenBefore.legend              = Did you get an income from any of your pensions before 6 April 2006?
-pla.pensionsTakenBefore.hiddenLink          = How do I work out the value?
-pla.pensionsTakenBefore.hiddenText          = In most cases, this is the annual amount of your pension at 5 April 2016 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension, see the guidance.
+pla.pensionsTakenBefore.help                = How to work out the amount
+pla.pensionsTakenBefore.para.1              = If you did not get an income from any other pensions since 6 April 2006:
+pla.pensionsTakenBefore.step.1              = Take only the pensions from which you got an income prior to 6 April 2006.
+pla.pensionsTakenBefore.step.2              = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2016.
+pla.pensionsTakenBefore.step.3              = Multiply this figure by 25.
+pla.pensionsTakenBefore.para.2              = You'll need to do a different calculation if either of the following apply:
+pla.pensionsTakenBefore.bullet.1            = you did receive an income from other pensions since 6 April 2006.
+pla.pensionsTakenBefore.bullet.2            = you have a drawdown pension.
+pla.pensionsTakenBefore.para.3              = Find out how in this {0}
+pla.pensionsTakenBefore.helpLinkText        = technical guidance on valuing your pensions
 
 ## IP14 Pensions Taken Before ##
-pla.ip14PensionsTakenBefore.question        = What were your pensions worth on 5 April 2014?
-pla.ip14PensionsTakenBefore.helpText        = If you had more than one pension in payment on 5 April 2006, you should include the total of the values of each pension.
-pla.ip14PensionsTakenBefore.hiddenText      = In most cases, this is the annual amount of your pension at 5 April 2014 multiplied by 25.</p><p>If you have taken money from your pensions since 2006 or have a drawdown pension, see the guidance.
+pla.ip14PensionsTakenBefore.question        = What were these pensions worth on 5 April 2014?
+pla.ip14PensionsTakenBefore.step.2          = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014.
 
 ## Pensions Taken Between ##
-pla.pensionsTakenBetween.pageHeading        = Did any of the following happen between 6 April 2006 and 5 April 2016?
-pla.pensionsTakenBetween.title              = Did any of the following happen between 6 April 2006 and 5 April 2016?
-pla.pensionsTakenBetween.bulletOne          = You got money from your pensions
-pla.pensionsTakenBetween.bulletTwo          = You transferred a pension to a scheme held overseas
-pla.pensionsTakenBetween.bulletThree        = You turned 75 with pension savings which you hadn''t yet taken
-pla.pensionsTakenBetween.paraOne            = You''ll have used some of your lifetime allowance if any of these happened.
+pla.pensionsTakenBetween.pageHeading        = Did any of these events happen between 6 April 2006 and 5 April 2016?
+pla.pensionsTakenBetween.title              = Did any of these events happen between 6 April 2006 and 5 April 2016?
+pla.pensionsTakenBetween.bullet.1           = You got money from your pensions.
+pla.pensionsTakenBetween.bullet.2           = You transferred a pension to a scheme held overseas.
+pla.pensionsTakenBetween.bullet.3           = You turned 75 with pension savings which you hadn''t yet taken.
+pla.pensionsTakenBetween.para.1             = You''ll have used some of your lifetime allowance if any of these events happened.
+
 pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance have you used?
-pla.pensionsTakenBetween.helpText           = You can ask your pension providers to tell you the amount of lifetime allowance you''ve used for individual protection 2016
+pla.pensionsTakenBetween.help               = How do I work out the value?
+pla.pensionsTakenBetween.para.2             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
+pla.pensionsTakenBetween.step.1             = Take the lifetime allowance at 5 April 2016 (£1.25m) and divide by the value of your lifetime allowance on the date the event happened.
+pla.pensionsTakenBetween.step.2             = Multiply by the value of your lifetime allowance on the date the event happened by the percentage of lifetime allowance used.
+pla.pensionsTakenBetween.step.3             = Take the result from step 1 and multiply by the result of step 2.
+pla.pensionsTakenBetween.step.4             = Repeat for each event and total the amounts together.
+pla.pensionsTakenBetween.para.3             = Read technical guidance on {0}
+pla.pensionsTakenBetween.helpLinkText       = how to value your pension
+pla.pensionsTakenBetween.para.4             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2016.
+
+
 pla.pensionsTakenBetween.errorQuestion      = Enter an amount in the correct format eg £500000
 pla.pensionsTakenBetween.errorNegative      = Enter an amount that''s £0 or more
 pla.pensionsTakenBetween.errorMaximum       = Enter an amount less than £99,999,999,999,999.98
@@ -231,16 +259,18 @@ pla.pensionsTakenBetween.errorDecimalPlaces = The amount you''ve entered has too
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken Between ##
-pla.ip14PensionsTakenBetween.pageHeading    = Did any of the following happen between 6 April 2006 and 5 April 2014?
-pla.ip14PensionsTakenBetween.title          = Did any of the following happen between 6 April 2006 and 5 April 2014?
-pla.ip14PensionsTakenBetween.helpText       = You can ask your pension providers to tell you the amount of lifetime allowance you''ve used for individual protection 2014
+pla.ip14PensionsTakenBetween.pageHeading    = Did any of the these events happen between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.title          = Did any of the these events happen between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.step.1         = Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened.
+pla.ip14PensionsTakenBetween.para.2         = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2014.
+
 pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 
 ## Overseas Pensions ##
 pla.overseasPensions.pageHeading            = Have you put money into a pension scheme held overseas?
 pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
-pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016, which you got UK tax relief on.
+pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on.
 pla.overseasPensions.questionTwo            = How much did you contribute?
 pla.overseasPensions.errorQuestion          = Enter an amount in the correct format eg £500000
 pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
@@ -249,7 +279,7 @@ pla.overseasPensions.errorDecimalPlaces     = The amount you''ve entered has too
 pla.overseasPensions.legend                 = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2016?
 
 ## IP14 Overseas Pensions ##
-pla.ip14OverseasPensions.question           = Only include contributions you made between 6 April 2006 and 5 April 2014, which you got UK tax relief on.
+pla.ip14OverseasPensions.question           = Only include contributions you made between 6 April 2006 and 5 April 2014 that you got UK tax relief on.
 pla.ip14OverseasPensions.legend             = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2014?
 
 
@@ -260,7 +290,16 @@ pla.currentPensions.paraOne                 = Include any money you have in pens
 pla.currentPensions.paraTwo                 = If you have any pensions where your employer will pay you a set income once you take them, include the value of them.
 pla.currentPensions.hiddenLink              = How do I work out the value?
 pla.currentPensions.hiddenText              = Multiply the amount you''ll get each year by 20. Add any lump sum you''ll get if it''s on top of what you''ll get each year. 
-pla.currentPensions.question                = Don''t include any pensions you''ve already taken or the State Pension.
+
+pla.currentPensions.hiddenTextPara          = Use figures that were correct at 5 April 2016.
+pla.currentPensions.hiddenText1             = Take any pensions where your employer guarantees you a specified annual income.
+pla.currentPensions.hiddenText2             = Multiply the annual income from these pensions by 20.
+pla.currentPensions.hiddenText3             = Add the amount of any lump sum payments you''ll get on top of this annual income.
+pla.currentPensions.hiddenText4             = Add the total amount you''ve built up in your other pension pots.
+pla.currentPensions.readGuidance            = Read technical guidance on {0}
+pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
+pla.currentPensions.question                = Do not include pensions you''ve already taken or the State Pension.
+
 pla.currentPensions.errorQuestion           = Enter an amount in the correct format eg £500000
 pla.currentPensions.errorNegative           = Enter an amount that''s £0 or more
 pla.currentPensions.errorMaximum            = Enter an amount less than £99,999,999,999,999.98
@@ -272,6 +311,8 @@ pla.currentPensions.legend                  = What were your UK pensions worth o
 pla.ip14CurrentPensions.pageHeading         = What were your UK pensions worth on 5 April 2014?
 pla.ip14CurrentPensions.title               = What were your UK pensions worth on 5 April 2014?
 pla.ip14CurrentPensions.legend              = What were your UK pensions worth on 5 April 2014?
+pla.ip14CurrentPensions.hiddenTextPara      = Use figures that were correct at 5 April 2014.
+
 
 
 
@@ -308,6 +349,7 @@ pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2016
 pla.psoDetails.dateHintText14               = For example, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
+pla.psoDetails.visitPTA                     = Once you''ve completed this service, you can add a pension sharing order at any time by visiting your personal tax account.
 pla.psoDetails.errorNegative                = Enter an amount that''s £0 or more
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
@@ -324,34 +366,53 @@ pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2016 
 
 ## SUMMARY ##
 pla.summary.title                                   = Submit your application
-pla.summary.pageHeading                             = Check your answers before sending your application
+pla.summary.pageHeading                             = Check and submit your protection details
 pla.summary.errorSummaryLabel                       = There''s a problem with your application
 pla.summary.underThresholdError.IP2016              = Your total pension savings were less than £1,000,001 on 5 April 2016. You can only apply for individual protection 2016 if your pension savings were £1,000,001 or more.
-pla.summary.pensionsHeading                         = Pensions
+pla.summary.pensionsHeading                         = Value of pensions
 pla.summary.change                                  = Change
 pla.summary.questions.pensionsTaken                 = Before 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.pensionsTaken            = Change your response to the question ''have you taken any of your pensions''
 pla.summary.questions.pensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
 pla.summary.hiddenLinkText.pensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
-pla.summary.questions.pensionsTakenBeforeAmt        = Value of the pensions you took before 6 April 2006
+pla.summary.questions.pensionsTakenBeforeAmt        = What''s the value of the pensions you took before 6 April 2006?
 pla.summary.hiddenLinkText.pensionsTakenBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
 pla.summary.questions.pensionsTakenBetween          = Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.pensionsTakenBetween     = Change your response to the question ''did you get money from your pensions between 6 April 2006 and 5 April 2016''
-pla.summary.questions.pensionsTakenBetweenAmt       = Lifetime allowance used
+pla.summary.questions.pensionsTakenBetweenAmt       = How much lifetime allowance have you used?
 pla.summary.hiddenLinkText.pensionsTakenBetweenAmt  = Change your response to the amount of lifetime allowance used
 pla.summary.questions.overseasPensions              = Have you put money into a pension scheme held overseas?
 pla.summary.hiddenLinkText.overseasPensions         = Change your response to the question ''Have you put money into a pension scheme held overseas?''
-pla.summary.questions.overseasPensionsAmt           = Amount you put in between 6 April 2006 and 5 April 2016
+pla.summary.questions.overseasPensionsAmt           = How much did you contribute?
 pla.summary.hiddenLinkText.overseasPensionsAmt      = Change your response to the amount of overseas pensions you put in between 6 April 2006 and 5 April 2016
-pla.summary.questions.currentPensionsAmt            = Value of your UK pension savings on 5 April 2016
+pla.summary.questions.currentPensionsAmt            = What were your UK pensions worth on 5 April 2016?
 pla.summary.hiddenLinkText.currentPensionsAmt       = Change your response to the value of your UK pension savings on 5 April 2016
-pla.summary.questions.totalPensionsAmt              = Your total pension savings are
-pla.summary.psosHeading                             = Pension sharing orders
+pla.summary.questions.totalPensionsAmt              = Total value of pensions
+pla.summary.psosHeading                             = Value of pension sharing orders
 pla.summary.questions.pensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.summary.hiddenLinkText.pensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2016?''
 
 pla.summary.questions.psoDetails                    = Date and amount of pension sharing order
 pla.summary.hiddenLinkText.psoDetails               = Change the details of your pension sharing order
+
+pla.summary.getIP16                                 = Get individual protection 2016
+pla.summary.getIP14                                 = Get individual protection 2014
+pla.summary.mustAgree                               = To get this protection you must agree to this declaration.
+pla.summary.confirmation                            = To the best of my knowledge and belief, I meet both of the following conditions:
+pla.summary.confirm1                                = On 5 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
+pla.summary.confirm2                                = On 6 April 2016 I didn''t hold either of these protections:
+pla.summary.ip14Confirm1                            = On 5 April 2014 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
+pla.summary.ip14Confirm2                            = On 6 April 2014 I didn''t hold primary protection.
+pla.summary.confirmBullet1                          = primary protection
+pla.summary.confirmBullet2                          = individual protection 2014
+pla.summary.help                                    = Help with these conditions
+pla.summary.hiddenPara.1                            = Speak to your pension scheme administrator to get professional help understanding these conditions.
+pla.summary.hiddenPara.2                            = HMRC’s Pensions Tax Manual has {0}
+pla.summary.hiddenPara.linkText                     = technical guidance about individual protection 2016
+pla.summary.hiddenPara.ip14LinkText                 = technical guidance about individual protection 2014
+
+pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016. Do not proceed if you don''t meet these conditions.
+pla.summary.ip14Declaration                         = By confirming, you will automatically submit your application for individual protection 2014. Do not proceed if you don''t meet these conditions.
 
 pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold primary protection or individual protection 2014.
 pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
@@ -361,19 +422,19 @@ pla.summary.questions.ip14PensionsTaken                 = Before 5 April 2014, d
 pla.summary.hiddenLinkText.ip14PensionsTaken            = Change your response to the question ''have you taken any of your pensions''
 pla.summary.questions.ip14PensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
 pla.summary.hiddenLinkText.ip14PensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
-pla.summary.questions.ip14PensionsTakenBeforeAmt        = Value of the pensions you took before 6 April 2006
+pla.summary.questions.ip14PensionsTakenBeforeAmt        = What's the value of the pensions you took before 6 April 2006?
 pla.summary.hiddenLinkText.ip14PensionsTakenBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
 pla.summary.questions.ip14PensionsTakenBetween          = Between 6 April 2006 and 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.ip14PensionsTakenBetween     = Change your response to the question ''did you get money from your pensions between 6 April 2006 and 5 April 2014''
-pla.summary.questions.ip14PensionsTakenBetweenAmt       = Lifetime allowance used
+pla.summary.questions.ip14PensionsTakenBetweenAmt       = How much lifetime allowance have you used?
 pla.summary.hiddenLinkText.ip14PensionsTakenBetweenAmt  = Change your response to the amount of lifetime allowance used
 pla.summary.questions.ip14OverseasPensions              = Have you put money into a pension scheme held overseas?
 pla.summary.hiddenLinkText.ip14OverseasPensions         = Change your response to the question ''Have you put money into a pension scheme held overseas?''
-pla.summary.questions.ip14OverseasPensionsAmt           = Amount you put in between 6 April 2006 and 5 April 2014
+pla.summary.questions.ip14OverseasPensionsAmt           = How much did you contribute?
 pla.summary.hiddenLinkText.ip14OverseasPensionsAmt      = Change your response to the amount of overseas pensions you put in between 6 April 2006 and 5 April 2014
-pla.summary.questions.ip14CurrentPensionsAmt            = Value of your UK pension savings on 5 April 2014
+pla.summary.questions.ip14CurrentPensionsAmt            = What were your UK pensions worth on 5 April 2014?
 pla.summary.hiddenLinkText.ip14CurrentPensionsAmt       = Change your response to the value of your UK pension savings on 5 April 2014
-pla.summary.questions.ip14TotalPensionsAmt              = Your total pension savings are
+pla.summary.questions.ip14TotalPensionsAmt              = Total value of pensions
 pla.summary.ip14PsosHeading                             = Pension sharing orders
 pla.summary.questions.ip14PensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2014?
 pla.summary.hiddenLinkText.ip14PensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2014?''
@@ -391,17 +452,17 @@ pla.existingProtections.pageHeading                     = Lifetime allowance pro
 pla.existingProtections.BreadcrumbPTAHome               = Account home
 pla.existingProtections.pageBreadcrumb                  = Lifetime allowance protection
 pla.existingProtections.details                         = Details
-pla.existingProtections.other                           = Other
+pla.existingProtections.print                           = Print and save your details
 pla.existingProtections.noActiveProtections             = You currently have no open protections.
 pla.existingProtections.noOtherProtections              = You have no other protections.
 pla.existingProtections.protectedAmount                 = Protected lifetime allowance
 pla.existingProtections.protectionRef                   = Protection notification number
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
-pla.existingProtections.amendLinkText                   = View or change details
-pla.existingProtections.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
-pla.existingProtections.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 60 days.
-pla.existingProtections.FP2016.contactHMRC              = If you or your employer adds to your pension, contact <a href={0} rel="external">HMRC (Pension Schemes Services)</a> within 90 days.
+pla.existingProtections.amendLinkText                   = View or change your protection details
+pla.existingProtections.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 60 days.
+pla.existingProtections.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 60 days.
+pla.existingProtections.FP2016.contactHMRC              = If you or your employer adds to your pension, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 90 days.
 
 
 ## PROTECTION INFORMATION ##
@@ -425,23 +486,28 @@ pla.protection.protectionReference                      = None
 ## Result Success ##
 pla.resultSuccess.title                 = Success
 pla.resultSuccess.allowanceSubHeading   = Your protected lifetime allowance is
-pla.resultSuccess.whatNextHeading       = What happens next?
-pla.resultSuccess.whatNextContent       = Give these details to your pension provider when you decide to take money from your pension.
+pla.resultSuccess.protectionDetails     = Your protection details
+pla.resultSuccess.detailsContent        = When you decide to take money from your pension, give these details to your pension provider:
 pla.resultSuccess.protectionRef         = Protection notification number
 pla.resultSuccess.psaRef                = Scheme administrator reference
 pla.resultSuccess.applicationDate       = Application date
-pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 60 days.
-pla.resultSuccess.FPAddToPension        = If you or your employer adds to your pension, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external" title="opens in a new window">HMRC (Pension Schemes Services)</a> within 90 days.
-pla.resultSuccess.viewDetails           = You can view these details in your
+pla.resultSuccess.print                 = Print and save your details
+pla.resultSuccess.IPChangePSODetails    = Changing your protection details
+pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 60 days.
+pla.resultSuccess.FPAddToPension        = If you or your employer adds to your pension, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 90 days.
+pla.resultSuccess.viewDetails           = You can view or change your protection details in your
 pla.resultSuccess.viewDetailsLinkText   = personal tax account
-pla.resultSuccess.print                 = Print these details
+pla.resultSuccess.giveFeedback          = Give us feedback
 pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
-pla.resultSuccess.exitSurvey            = Your feedback helps us improve.</p><p>(takes 30 seconds to complete)
+pla.resultSuccess.exitSurvey            = Your feedback helps us improve.
+
+pla.resultSuccess.yourName              = Your full name
+pla.resultSuccess.yourNino              = Your National Insurance number
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
 pla.resultRejection.pageHeading           = Your application was unsuccessful
-pla.resultRejection.viewDetails           = You can view details of your protections at any time on the
+pla.resultRejection.viewDetails           = You can view or change details of your protections in your
 pla.resultRejection.viewDetailsLinkText   = personal tax account
 
 ## Manual Correspondence Needed ##
@@ -478,9 +544,9 @@ pla.exitSurvey.sendFeedback                             = Send feedback
 ## Printing ##
 pla.print.title                           = Print your active protection
 pla.print.giveToPensionProvider           = Give these details to your pension provider when you decide to take money from your pension
-pla.print.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC (Pension Schemes Services) within 60 days.
-pla.print.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC (Pension Schemes Services) within 60 days.
-pla.print.FP2016.contactHMRC              = If you or your employer adds to your pension, contact HMRC (Pension Schemes Services) within 90 days.
+pla.print.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.print.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.print.FP2016.contactHMRC              = If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days.
 
 ## Amends ##
 pla.amends.title                                            = Protection summary
@@ -506,7 +572,7 @@ pla.amends.PensionsTakenBefore.IP2014.YesNo.changeHint      = Change whether you
 pla.amends.PensionsTakenBefore.IP2014.Amt                   = What''s the value of the pensions you took before 6 April 2006?
 pla.amends.PensionsTakenBefore.IP2014.Amt.changeHint        = Change the value of the pensions you took before 6 April 2006
 
-pla.amends.PensionsTakenBetween.IP2016.YesNo                = Before 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
+pla.amends.PensionsTakenBetween.IP2016.YesNo                = Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.amends.PensionsTakenBetween.IP2016.YesNo.changeHint     = Change whether you got any money from your pensions before 5 April 2016?
 pla.amends.PensionsTakenBetween.IP2016.Amt                  = How much lifetime allowance have you used?
 pla.amends.PensionsTakenBetween.IP2016.Amt.changeHint       = Change the amount of lifetime allowance you used
@@ -529,13 +595,13 @@ pla.amends.declaration                                      = The information th
 pla.amends.submit                                           = Submit your changes
 
 pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
-pla.amends.CurrentPsos.IP2016.Amt                           = Total of previous pension sharing orders
+pla.amends.CurrentPsos.IP2016.Amt                           = Value of pension sharing orders
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Date and amount of pension sharing order
 pla.amends.pensionDebits.removePso                          = This will remove your pension sharing order
 pla.amends.pensionDebits.cancelRemove                        = <a href="{0}" id="{1}">Do not remove</a>
 
 pla.amends.CurrentPsos.IP2014.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2014?
-pla.amends.CurrentPsos.IP2014.Amt                           = Total of previous pension sharing orders
+pla.amends.CurrentPsos.IP2014.Amt                           = Value of pension sharing orders
 pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails      = Date and amount of pension sharing order
 pla.summary.questions.totalPsoAmt                           = Total value of pension sharing orders
 
@@ -558,32 +624,32 @@ amendResultCode.25.2        = If you''ve already started taking your pension, yo
 
 amendResultCode.26.heading  = You''re no longer entitled to individual protection 2014
 amendResultCode.26.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.26.2        = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.26.2        = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.27.heading  = You''re no longer entitled to individual protection 2014
 amendResultCode.27.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.27.2        = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.27.2        = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.28.heading  = You''re no longer entitled to individual protection 2014
 amendResultCode.28.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.28.2        = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.28.2        = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.29.heading  = You''re no longer entitled to individual protection 2014
 amendResultCode.29.1        = This is because your total pension savings are below £1,250,001.
 amendResultCode.29.2        = However, you already had fixed protection 2016 which has now become active. You can view details of this protection in your personal tax account.
-amendResultCode.29.3        = If you lose fixed protection 2016, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.29.3        = If you lose fixed protection 2016, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.30.heading  = You''ve amended individual protection 2014
 amendResultCode.30.1        = As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-amendResultCode.30.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.30.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.31.heading  = You''ve amended individual protection 2014
 amendResultCode.31.1        = As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-amendResultCode.31.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.31.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.32.heading  = You''ve amended individual protection 2014
 amendResultCode.32.1        = As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-amendResultCode.32.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.32.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.33.heading  = You''ve amended individual protection 2014
 
@@ -595,35 +661,35 @@ amendResultCode.35.2        = If you''ve already started taking your pension, yo
 
 amendResultCode.36.heading  = You''re no longer entitled to individual protection 2016
 amendResultCode.36.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.36.2        = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.36.2        = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.37.heading  = You''re no longer entitled to individual protection 2016
 amendResultCode.37.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.37.2        = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.37.2        = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.38.heading  = You''re no longer entitled to individual protection 2016
 amendResultCode.38.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.38.2        = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.38.2        = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.39.heading  = You''re no longer entitled to individual protection 2016
 amendResultCode.39.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.39.2        = However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.39.2        = However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.40.heading  = You''ve amended individual protection 2016
 amendResultCode.40.1        = As you already have enhanced protection in place, individual protection 2016 will only become active if you give up enhanced protection.
-amendResultCode.40.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.40.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.41.heading  = You''ve amended individual protection 2016
 amendResultCode.41.1        = As you already have fixed protection in place, individual protection 2016 will only become active if you lose fixed protection.
-amendResultCode.41.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.41.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.42.heading  = You''ve amended individual protection 2016
 amendResultCode.42.1        = As you already have fixed protection 2014 in place, individual protection 2016 will only become active if you lose fixed protection 2014.
-amendResultCode.42.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.42.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.43.heading  = You''ve amended individual protection 2016
 amendResultCode.43.1        = As you already have fixed protection 2016 in place, individual protection 2016 will only become active if you lose fixed protection 2016.
-amendResultCode.43.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+amendResultCode.43.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 amendResultCode.44.heading  = You''ve amended individual protection 2016
 
@@ -634,7 +700,7 @@ amendResultCode.44.heading  = You''ve amended individual protection 2016
 ### RESULTS MESSAGES ###
 
 resultCode.1.heading    =   Your application for individual protection 2014 was unsuccessful as you held primary protection on 5 April 2014.
-resultCode.1.1          =   If you''ve lost primary protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.1.1          =   If you''ve lost primary protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.2.heading    =   Your application for individual protection 2014 was rejected as you already have this.
 
@@ -645,22 +711,22 @@ resultCode.4.heading    =   You''ve added individual protection 2014
 
 resultCode.5.heading    =   You''ve added individual protection 2014
 resultCode.5.1          =   As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-resultCode.5.2          =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.5.2          =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.6.heading    =   You''ve added individual protection 2014
 resultCode.6.1          =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection. 
-resultCode.6.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.6.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.7.heading    =   You''ve added individual protection 2014
 resultCode.7.1          =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014. 
-resultCode.7.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.7.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.8.heading    =   You''ve added individual protection 2014
 resultCode.8.1          =   As you already had fixed protection 2016 in place, fixed protection 2016 has been made inactive. It will become active again if you lose individual protection 2014.
-resultCode.8.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.8.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.9.heading    =   Your application for individual protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
-resultCode.9.1          =   If you''ve lost primary protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.9.1          =   If you''ve lost primary protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.10.heading   =   Your application for individual protection 2016 was unsuccessful as you already have individual protection 2014.
 
@@ -670,80 +736,80 @@ resultCode.12.heading   =   You''ve added individual protection 2016
 
 resultCode.13.heading   =   You''ve added individual protection 2016
 resultCode.13.1         =   As you already have enhanced protection in place, your individual protection 2016 will only become active if you give up enhanced protection.
-resultCode.13.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.13.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.14.heading   =   You''ve added individual protection 2016
 resultCode.14.1         =   As you already have fixed protection in place, your individual protection 2016 will only become active if you lose fixed protection.
-resultCode.14.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.14.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.15.heading   =   You''ve added individual protection 2016
 resultCode.15.1         =   As you already have fixed protection 2014 in place, your individual protection 2016 will only become active if you lose fixed protection 2014.
-resultCode.15.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.15.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.16.heading   =   You''ve added individual protection 2016
 resultCode.16.1         =   As you already have fixed protection 2016 in place, your individual protection 2016 will only become active if you lose fixed protection 2016.
-resultCode.16.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.16.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.17.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have enhanced protection.
 resultCode.17.1         =   If enhanced protection is given up you can re-apply for fixed protection 2016.
-resultCode.17.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.17.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.18.heading   =   Your application for fixed protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
-resultCode.18.1         =   If you lost primary protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.18.1         =   If you lost primary protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.19.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection.
-resultCode.19.1         =   If you lost fixed protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>. You can then re-apply for fixed protection 2016.
+resultCode.19.1         =   If you lost fixed protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>. You can then re-apply for fixed protection 2016.
 
 resultCode.20.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection 2014.
-resultCode.20.1         =   If you lost fixed protection 2014 before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>. You can then re-apply for fixed protection 2016.
+resultCode.20.1         =   If you lost fixed protection 2014 before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>. You can then re-apply for fixed protection 2016.
 
 resultCode.21.heading   =   Your application for fixed protection 2016 was rejected as you already have this.
 
-resultCode.22.heading   =   You''ve added fixed protection 2016.
+resultCode.22.heading   =   You''ve added fixed protection 2016
 
-resultCode.23.heading   =   You''ve added fixed protection 2016.
+resultCode.23.heading   =   You''ve added fixed protection 2016
 resultCode.23.1         =   As you already had individual protection 2016 in place, individual protection 2016 has been made inactive. It will become active again if you lose fixed protection 2016.
-resultCode.23.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.23.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
-resultCode.24.heading   =   You''ve added fixed protection 2016.
+resultCode.24.heading   =   You''ve added fixed protection 2016
 resultCode.24.1         =   As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014.
-resultCode.24.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.24.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.25.heading   =   You''re not entitled to individual protection 2014
 resultCode.25.1         =   This is because your total pensions savings are below £1,250,001.
 
 resultCode.26.heading   =   You''re not entitled to individual protection 2014
 resultCode.26.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.26.2         =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.26.2         =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.27.heading   =   You''re not entitled to individual protection 2014
 resultCode.27.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.27.2         =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.27.2         =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.28.heading   =   You''re not entitled to individual protection 2014
 resultCode.28.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.28.2         =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.28.2         =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.29.heading   =   You''re not entitled to individual protection 2014
 resultCode.29.1         =   This is because your total pension savings are below £1,250,001.
 resultCode.29.2         =   However, you already had fixed protection 2016 which has now become active. Your fixed protection 2016 details are shown below. You can view details of this protection in your personal tax account.
-resultCode.29.3         =   If you lose fixed protection 2016, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.29.3         =   If you lose fixed protection 2016, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.30.heading   =   You''ve added individual protection 2014
 resultCode.30.1         =   As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-resultCode.30.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.30.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.31.heading   =   You''ve added individual protection 2014
 resultCode.31.1         =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-resultCode.31.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.31.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.32.heading   =   You''ve added individual protection 2014
 resultCode.32.1         =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-resultCode.32.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.32.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.33.heading   =   You''ve added individual protection 2014
 resultCode.33.1         =   As you already had fixed protection 2016 in place, fixed protection 2016 has been made inactive. It will become active again if you lose individual protection 2014.
-resultCode.33.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.33.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.34.heading   =   You''ve added individual protection 2014
 
@@ -752,34 +818,34 @@ resultCode.35.1         =   This is because your total pensions savings are belo
 
 resultCode.36.heading   =   You''re not entitled to individual protection 2016
 resultCode.36.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.36.2         =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.36.2         =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.37.heading   =   You''re not entitled to individual protection 2016
 resultCode.37.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.37.2         =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.37.2         =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.38.heading   =   You''re not entitled to individual protection 2016
 resultCode.38.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.38.2         =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.38.2         =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.39.heading   =   You''re not entitled to individual protection 2016
 resultCode.39.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.39.2         =   However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.39.2         =   However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.40.heading   =   You''ve added individual protection 2016
 resultCode.40.1         =   As you already have enhanced protection in place, your individual protection 2016 will only become active if you give up enhanced protection.
-resultCode.40.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.40.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.41.heading   =   You''ve added individual protection 2016
 resultCode.41.1         =   As you already have fixed protection in place, your individual protection 2016 will only become active if you lose fixed protection.
-resultCode.41.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.41.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.42.heading   =   You''ve added individual protection 2016
 resultCode.42.1         =   As you already have fixed protection 2014 in place, your individual protection 2016 will only become active if you lose fixed protection 2014.
-resultCode.42.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.42.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.43.heading   =   You''ve added individual protection 2016
 resultCode.43.1         =   As you already have fixed protection 2016 in place, your individual protection 2016 will only become active if you lose fixed protection 2016.
-resultCode.43.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries" rel="external">HMRC (Pension Schemes Services)</a>.
+resultCode.43.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.44.heading   =   You''ve added individual protection 2016

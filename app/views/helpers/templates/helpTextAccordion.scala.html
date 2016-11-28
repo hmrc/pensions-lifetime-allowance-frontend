@@ -1,0 +1,13 @@
+@(summaryId: String, linkText: String, hiddenContent: Html)
+
+<details role="group">
+    <summary id=@{s"${summaryId}"} role="button">
+        <span class="summary">@linkText</span>
+    </summary>
+
+    <div class="panel-indent">
+        <p id=@{s"${summaryId}-content"}>
+            @hiddenContent
+        </p>
+    </div>
+</details>

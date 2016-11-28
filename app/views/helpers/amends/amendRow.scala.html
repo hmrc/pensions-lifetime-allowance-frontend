@@ -1,6 +1,6 @@
 @import models.AmendDisplayRowModel
 
-@(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean)
+@(model: AmendDisplayRowModel, protectionType: String, sectionId: String, removeLinkDefined: Boolean, firstRow: Boolean)
 
 
 <tr>
@@ -16,19 +16,24 @@
         }
     </td>
 
-    <td class="@if(firstRow){has-child-item} summary-link" id=@{s"${sectionId}-${model.rowId}-changeLink"}>
-        @if(model.changeLinkCall.isDefined) {
-            <a id=@{s"${sectionId}-${model.rowId}-change-link"} href="@model.changeLinkCall">@Messages("pla.base.change")</a>
-            <span class="visuallyhidden">@Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}.changeHint")</span>
 
-        }
-    </td>
     @if(model.removeLinkCall.isDefined){
     <td class = "@if(firstRow){has-child-item} summary-link" id=@{s"${sectionId}-${model.rowId}-removeLink"}>
-        <a id=@{s"${sectionId}-${model.rowId}-remove-link"} href="@{model.removeLinkCall}">@Messages("pla.base.remove")</a>
+        <a class="bold-xsmall" id=@{s"${sectionId}-${model.rowId}-remove-link"} href="@{model.removeLinkCall}">@Messages("pla.base.remove")</a>
         <span class ="visuallyhidden">@Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}.removeHint")</span>
     </td>
-    } else {
+    } else {@if(removeLinkDefined) {
     <td class = "@if(firstRow){has-child-item}"></td>
+    }}
+
+
+    <td class="@if(firstRow){has-child-item} summary-link" id=@{s"${sectionId}-${model.rowId}-changeLink"}>
+    @if(model.changeLinkCall.isDefined) {
+        <a class="bold-xsmall" id=@{s"${sectionId}-${model.rowId}-change-link"} href="@model.changeLinkCall">@Messages("pla.base.change")</a>
+        <span class="visuallyhidden">@Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}.changeHint")</span>
+
     }
+    </td>
+
+
 </tr>

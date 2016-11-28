@@ -76,3 +76,7 @@
 .table-divider {
     padding-top: 30px;
 }
+
+.icon-min-height {
+    min-height: 35px;
+}
