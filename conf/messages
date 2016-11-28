@@ -501,7 +501,8 @@ pla.resultSuccess.giveFeedback          = Give us feedback
 pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
 pla.resultSuccess.exitSurvey            = Your feedback helps us improve.
 
-pla.resultSuccess.yourName              = Your
+pla.resultSuccess.yourName              = Your full name
+pla.resultSuccess.yourNino              = Your National Insurance number
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
