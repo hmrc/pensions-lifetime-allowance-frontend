@@ -501,8 +501,7 @@ pla.resultSuccess.giveFeedback          = Give us feedback
 pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
 pla.resultSuccess.exitSurvey            = Your feedback helps us improve.
 
-pla.resultSuccess.yourName              = Your full name
-pla.resultSuccess.yourNino              = Your National Insurance number
+pla.resultSuccess.yourName              = Your
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
@@ -576,7 +575,7 @@ pla.amends.PensionsTakenBetween.IP2016.YesNo                = Between 6 April 20
 pla.amends.PensionsTakenBetween.IP2016.YesNo.changeHint     = Change whether you got any money from your pensions before 5 April 2016?
 pla.amends.PensionsTakenBetween.IP2016.Amt                  = How much lifetime allowance have you used?
 pla.amends.PensionsTakenBetween.IP2016.Amt.changeHint       = Change the amount of lifetime allowance you used
-pla.amends.PensionsTakenBetween.IP2014.YesNo                = Before 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
+pla.amends.PensionsTakenBetween.IP2014.YesNo                = Between 6 April 2006 and 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.amends.PensionsTakenBetween.IP2014.YesNo.changeHint     = Change whether you got any money from your pensions before 5 April 2014?
 pla.amends.PensionsTakenBetween.IP2014.Amt                  = How much lifetime allowance have you used?
 pla.amends.PensionsTakenBetween.IP2014.Amt.changeHint       = Change the amount of lifetime allowance you used
