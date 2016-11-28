@@ -44,10 +44,11 @@
             <li>@Messages("pla.summary.ip14Confirm2")</li>
         </ul>
         @helpTextAccordion("ip14Help", Messages("pla.summary.help"), hiddenContent)
+        <p>@Messages("pla.summary.confirmation2")</p>
     </div>
 
     <div class="form-group">
-        <p class="important-notice">
+        <p class="important-notice icon-min-height">
             <strong class="bold-small">
             @if(summary.protectionType == ApplicationType.IP2016){
                 @Messages("pla.summary.declaration")
