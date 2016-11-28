@@ -129,28 +129,23 @@ pla.applyFP.bulletTwo       = you have a defined benefits pension, such as a fin
 ## Confirm FP 2016##
 pla.confirmFP16.title       = Apply for FP 2016
 pla.confirmFP16.pageHeading = Get fixed protection 2016 for your lifetime allowance
-#pla.confirmFP16.paraOne     = I confirm that as at 6 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member, and that at 6 April 2016 I did not hold any of the following protections:
-#pla.confirmFP16.bulletOne   = Primary Protection
-#pla.confirmFP16.bulletTwo   = Enhanced Protection
-#pla.confirmFP16.bulletThree = Fixed Protection
-#pla.confirmFP16.bulletFour  = Fixed Protection 2014
-#pla.confirmFP16.paraTwo     = I confirm that I have not had a protection cessation event since 6 April 2016 that would mean I am not entitled to apply for Fixed Protection 2016.
-#pla.confirmFP16.paraThree   = The information that I have provided is true and complete to the best of my knowledge and belief.
-pla.confirmFP16.paraOne     = You must agree to this declaration.
-pla.confirmFP16.paraTwo     = To the best of my knowledge and belief, I meet all of the following conditions:
+pla.confirmFP16.heading.2  = You''re about to apply for fixed protection 2016
+pla.confirmFP16.para.1      = To get this protection you must agree to these declarations.
+pla.confirmFP16.para.2      = I declare:
 pla.confirmFP16.bullet.1    = on 6 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme
 pla.confirmFP16.bullet.2    = on 6 April 2016 I did not hold any of these protections:
 pla.confirmFP16.bullet.2.1  = enhanced protection
 pla.confirmFP16.bullet.2.2  = primary protection
-pla.confirmFP16.bullet.2.3  = fixed protection (FP2012)
+pla.confirmFP16.bullet.2.3  = fixed protection
 pla.confirmFP16.bullet.2.4  = fixed protection 2014
 pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ‘protection cessation event’ (these are specific events that make you ineligible for fixed protection)
 pla.confirmFP16.help        = Help with these conditions
 pla.confirmFP16.hiddenPara.1 = Speak to your pension scheme administrator to get professional help understanding these conditions.
 pla.confirmFP16.hiddenPara.2 = HMRC’s Pensions Tax Manual has {0}
+pla.confirmFP16.para.3      = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
 
 pla.confirmFP16.hiddenPara.linkText = technical guidance about fixed protection
-pla.confirmFP16.declaration = By confirming, you will automatically submit your application for fixed protection 2016. Do not proceed if you don’t meet these conditions.
+pla.confirmFP16.declaration = By confirming, you will automatically submit your application for fixed protection 2016.
 
 ## Cannot Apply ##
 pla.cannotApply.title       = Don''t need PLA
