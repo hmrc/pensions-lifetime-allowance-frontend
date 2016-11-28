@@ -35,7 +35,8 @@
     @summaryDetails(summary)
 
     <div class="form-group">
-        <h2>@Messages("pla.summary.getIP14")</h2>
+        <h1>@Messages("pla.summary.getIP14")</h1>
+
         <p>@Messages("pla.summary.mustAgree")</p>
         <p>@Messages("pla.summary.confirmation")</p>
         <ul class="list list-number">
@@ -43,10 +44,11 @@
             <li>@Messages("pla.summary.ip14Confirm2")</li>
         </ul>
         @helpTextAccordion("ip14Help", Messages("pla.summary.help"), hiddenContent)
+        <p>@Messages("pla.summary.confirmation2")</p>
     </div>
 
     <div class="form-group">
-        <p class="important-notice">
+        <p class="important-notice icon-min-height">
             <strong class="bold-small">
             @if(summary.protectionType == ApplicationType.IP2016){
                 @Messages("pla.summary.declaration")

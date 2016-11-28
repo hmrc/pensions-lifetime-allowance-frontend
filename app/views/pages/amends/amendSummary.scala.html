@@ -40,48 +40,40 @@
     <table >
         <thead>
             <tr>
-                <th colspan="@if(model.psoAdded){4} else {3}">
+                <th colspan="4">
                     <h2>@Messages("pla.summary.pensionsHeading")</h2>
                 </th>
             </tr>
         </thead>
 
-        @if(model.psoAdded) {
-            @model.pensionContributionSections.map { section =>
-                @amendSection(section, model.protectionType, model.psoAdded)
-            }
-        } else {
-            @model.pensionContributionSections.filterNot(p => p.sectionId == "CurrentPsos").map { section =>
-                @amendSection(section, model.protectionType, model.psoAdded)
-            }
-        }
 
+            @model.pensionContributionSections.map { section =>
+                @amendSection(section, model.protectionType)
+            }
 
         <tr class="grey-background">
             <td class="total-font summary-text" id="total-message">@Messages("pla.amends.totalValueOfPensions")</td>
             <td class="total-font summary-data" id="total-amount">@model.totalAmount</td>
-            <td></td>@if(model.psoAdded){<td></td>}
+            <td colspan="2"></td>
         </tr>
 
-
-
-        <thead>
-            <tr>
-                <th colspan="4" class="table-divider">
-                    <h2>@Messages("pla.summary.psosHeading")</h2>
-                </th>
-            </tr>
-        </thead>
-
         @if(model.psoSections.nonEmpty){
+
+            <thead>
+                <tr>
+                    <th colspan="4" class="table-divider">
+                        <h2>@Messages("pla.summary.psosHeading")</h2>
+                    </th>
+                </tr>
+            </thead>
+
             @model.psoSections.map { section =>
-                @amendSection(section, model.protectionType, model.psoAdded)
+                @amendSection(section, model.protectionType)
             }
-        } else {
-            @amendSection(model.pensionContributionSections.last, model.protectionType, model.psoAdded)
         }
 
     </table>
+
     @if(!model.psoAdded){
         <div class="form-group">
             <a href="@routes.AmendsController.amendPsoDetails(model.protectionType.toLowerCase(), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>

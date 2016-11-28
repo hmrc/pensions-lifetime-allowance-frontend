@@ -249,7 +249,7 @@ pla.pensionsTakenBetween.step.3             = Take the result from step 1 and mu
 pla.pensionsTakenBetween.step.4             = Repeat for each event and total the amounts together.
 pla.pensionsTakenBetween.para.3             = Read technical guidance on {0}
 pla.pensionsTakenBetween.helpLinkText       = how to value your pension
-pla.pensionsTakenBetween.para.4             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2016.
+pla.pensionsTakenBetween.para.4             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
 
 
 pla.pensionsTakenBetween.errorQuestion      = Enter an amount in the correct format eg £500000
@@ -262,7 +262,7 @@ pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2
 pla.ip14PensionsTakenBetween.pageHeading    = Did any of the these events happen between 6 April 2006 and 5 April 2014?
 pla.ip14PensionsTakenBetween.title          = Did any of the these events happen between 6 April 2006 and 5 April 2014?
 pla.ip14PensionsTakenBetween.step.1         = Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened.
-pla.ip14PensionsTakenBetween.para.2         = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2014.
+pla.ip14PensionsTakenBetween.para.2         = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2014.
 
 pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
@@ -397,8 +397,9 @@ pla.summary.hiddenLinkText.psoDetails               = Change the details of your
 
 pla.summary.getIP16                                 = Get individual protection 2016
 pla.summary.getIP14                                 = Get individual protection 2014
-pla.summary.mustAgree                               = To get this protection you must agree to this declaration.
-pla.summary.confirmation                            = To the best of my knowledge and belief, I meet both of the following conditions:
+
+pla.summary.mustAgree                               = To get this protection you must agree to these declarations.
+pla.summary.confirmation                            = I declare:
 pla.summary.confirm1                                = On 5 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
 pla.summary.confirm2                                = On 6 April 2016 I didn''t hold either of these protections:
 pla.summary.ip14Confirm1                            = On 5 April 2014 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
@@ -410,9 +411,9 @@ pla.summary.hiddenPara.1                            = Speak to your pension sche
 pla.summary.hiddenPara.2                            = HMRC’s Pensions Tax Manual has {0}
 pla.summary.hiddenPara.linkText                     = technical guidance about individual protection 2016
 pla.summary.hiddenPara.ip14LinkText                 = technical guidance about individual protection 2014
-
-pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016. Do not proceed if you don''t meet these conditions.
-pla.summary.ip14Declaration                         = By confirming, you will automatically submit your application for individual protection 2014. Do not proceed if you don''t meet these conditions.
+pla.summary.confirmation2                           = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
+pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016.
+pla.summary.ip14Declaration                         = By confirming, you will automatically submit your application for individual protection 2014.
 
 pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold primary protection or individual protection 2014.
 pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
