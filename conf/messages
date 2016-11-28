@@ -398,7 +398,7 @@ pla.summary.hiddenLinkText.psoDetails               = Change the details of your
 pla.summary.getIP16                                 = Get individual protection 2016
 pla.summary.getIP14                                 = Get individual protection 2014
 
-pla.summary.mustAgree                               = To get this protection you must agree to this declaration.
+pla.summary.mustAgree                               = To get this protection you must agree to these declarations.
 pla.summary.confirmation                            = I declare:
 pla.summary.confirm1                                = On 5 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
 pla.summary.confirm2                                = On 6 April 2016 I didn''t hold either of these protections:
