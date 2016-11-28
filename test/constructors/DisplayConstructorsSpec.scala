@@ -58,10 +58,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
   val tstWithPsoAmendProtectionModel = AmendProtectionModel(tstWithPsoProtection, tstWithPsoProtection)
 
   val tstPensionContributionNoPsoDisplaySections = Seq(
-    AmendDisplaySectionModel("CurrentPensions",Seq(
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
-    )
-    ),
+
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
     )
@@ -73,6 +70,10 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     AmendDisplaySectionModel("OverseasPensions", Seq(
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
       AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
+    )
+    ),
+    AmendDisplaySectionModel("CurrentPensions",Seq(
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
     )
     ),
     AmendDisplaySectionModel("CurrentPsos", Seq(
@@ -81,10 +82,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     )
   )
   val tstPensionContributionPsoDisplaySections = Seq(
-    AmendDisplaySectionModel("CurrentPensions",Seq(
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
-    )
-    ),
+
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
     )
@@ -96,6 +94,10 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     AmendDisplaySectionModel("OverseasPensions", Seq(
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
       AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
+    )
+    ),
+    AmendDisplaySectionModel("CurrentPensions",Seq(
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
     )
     ),
     AmendDisplaySectionModel("CurrentPsos", Seq(

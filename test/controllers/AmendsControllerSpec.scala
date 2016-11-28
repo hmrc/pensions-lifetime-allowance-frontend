@@ -129,10 +129,35 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     protectionReference = Some("PSA123456")
   )
 
+  val tstPensionContributionNoPsoDisplaySections = Seq(
+
+    AmendDisplaySectionModel("PensionsTakenBefore", Seq(
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2014", "active")), None, "No")
+    )
+    ),
+    AmendDisplaySectionModel("PensionsTakenBetween", Seq(
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2014", "active")), None, "No")
+    )
+    ),
+    AmendDisplaySectionModel("OverseasPensions", Seq(
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2014", "active")), None, "Yes"),
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2014", "active")), None, "£100,000")
+    )
+    ),
+    AmendDisplaySectionModel("CurrentPensions",Seq(
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2014", "active")), None, "£1,000,000")
+    )
+    ),
+    AmendDisplaySectionModel("CurrentPsos", Seq(
+      AmendDisplayRowModel("YesNo", None, None, "No")
+    )
+    )
+  )
+
   val tstAmendDisplayModel = AmendDisplayModel(
     protectionType = "IP2014",
     amended = true,
-    pensionContributionSections = Seq.empty,
+    pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
     psoAdded = false,
     psoSections = Seq.empty,
     totalAmount = "£1,100,000"
