@@ -1,10 +1,10 @@
 @import models.AmendDisplaySectionModel
 
-@(model: AmendDisplaySectionModel, protectionType: String, removeLinkDefined: Boolean)
+@(model: AmendDisplaySectionModel, protectionType: String)
 
 @model.rows.headOption.map { firstRow =>
-    @amendRow(firstRow, protectionType, model.sectionId, removeLinkDefined, model.rows.tail.nonEmpty)
+    @amendRow(firstRow, protectionType, model.sectionId, model.rows.tail.nonEmpty)
 }
 @model.rows.tail.map { otherRow =>
-    @amendRow(otherRow, protectionType, model.sectionId, removeLinkDefined, false)
+    @amendRow(otherRow, protectionType, model.sectionId, false)
 }
