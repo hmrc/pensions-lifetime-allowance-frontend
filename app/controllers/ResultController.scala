@@ -94,6 +94,7 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
     responseConstructors.createApplyResponseModelFromJson(response.json).map {
       model =>
         if(model.protection.notificationId.isEmpty) {
+          Logger.error(s"No notification ID found in the ApplyResponseModel for user with nino ${user.nino}")
           Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
         } else {
           keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
@@ -139,7 +140,9 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
               val displayModel = DisplayConstructors.createRejectionDisplayModel(model)
               Ok(resultRejected(displayModel))
           }
-        case _ => errorResponse
+        case _ =>
+          Logger.error(s"Could not retrieve ApplyResponseModel from keystore for user with nino: ${user.nino}")
+          errorResponse
       }
 
   }
