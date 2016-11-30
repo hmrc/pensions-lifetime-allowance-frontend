@@ -10,7 +10,7 @@
 @formInputMoney(
 amendOverseasPensionsForm,
 "amendedOverseasPensionsAmt",
-Messages("pla.overseasPensions.question")
+Messages("pla.overseasPensions.questionTwo")
 )
 }
 
@@ -27,6 +27,8 @@ Messages("pla.base.errorSummaryLabel"), amendOverseasPensionsForm
 <h1 class="heading-large">@Messages("pla.overseasPensions.pageHeading")</h1>
 
 @govHelpers.form(action = routes.AmendsController.submitAmendOverseasPensions) {
+
+    <p>@Messages("pla.overseasPensions.question")</p>
 
 <div class="inline form-group">
     @formHiddenYesNoRadio(
