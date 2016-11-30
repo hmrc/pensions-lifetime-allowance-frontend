@@ -24,10 +24,10 @@
             "pla.currentPensions.readGuidance",
             s"""
                     <a href="${Links.currentPensions}"
-                    id = "ip16-current-pensions-help-link"
+                    id = "ip16-amend-current-pensions-help-link"
                     rel="external"
                     target="_blank"
-                    onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'pensions-youve-not-taken-yet-technical-guidance')">
+                    onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'pensions-youve-not-taken-yet-amends-technical-guidance')">
                         ${Messages("pla.currentPensions.helpLinkText")} (${Messages("pla.base.newWindow")})
                     </a>
                 """
@@ -43,7 +43,7 @@
 
     <p>@Messages("pla.currentPensions.question")</p>
 
-    @helpTextAccordion("ip16-current-pensions-help", Messages("pla.currentPensions.hiddenLink"), helpTextAccordionContent)
+    @helpTextAccordion("ip16-amend-current-pensions-help", Messages("pla.currentPensions.hiddenLink"), helpTextAccordionContent)
 
     @govHelpers.form(action = routes.AmendsController.submitAmendCurrentPension) {
 
