@@ -108,6 +108,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
           cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
         }
       } else {
+        Logger.error(s"No notification ID found in the AmendResponseModel for user with nino ${user.nino}")
         Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
     }.getOrElse {
