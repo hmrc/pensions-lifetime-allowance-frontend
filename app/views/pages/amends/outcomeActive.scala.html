@@ -39,13 +39,7 @@
 
     <h2>@Messages("pla.resultSuccess.IPChangeDetails")</h2>
 
-    @if(model.protectionType == ApplicationType.IP2016 || model.protectionType == ApplicationType.IP2014 || Constants.fpShowPensionSharing.contains(model.notificationId.toInt)) {
-        <p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
-    }
-
-    @if(model.protectionType == ApplicationType.FP2016 || Constants.ipShowAddToPension.contains(model.notificationId.toInt)) {
-        <p id="fpAddToPension">@Html(Messages("pla.resultSuccess.FPAddToPension"))</p>
-    }
+    <p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
 
     <p>@Html(Messages("pla.activeAmend.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.activeAmend.viewDetailsLinkText")</a>.</p>
 
