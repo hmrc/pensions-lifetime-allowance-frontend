@@ -28,15 +28,24 @@
         <span class="bold-medium" id="protectedAmount">@model.protectedAmount</span>
     </div>
 
-    <p>@Messages("pla.activeAmend.protectionDetailsPara")</p>
-    <h2>@Messages("pla.activeAmend.whatNextHeading")</h2>
-    <p>@Messages("pla.activeAmend.whatNextContent")</p>
+    <h2>@Messages("pla.activeAmend.protectionDetails")</h2>
+    <p>@Messages("pla.activeAmend.detailsContent")</p>
 
     @model.details.map{ details =>
         @resultDetails(details)
     }
 
+    <p class="print-link"><a id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" onclick="ga('send', 'event', 'print-amended-protection', 'print-@{model.protectionType.toString}', 'result');">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newWindow"))</a></p>
+
+    <h2>@Messages("pla.resultSuccess.IPChangeDetails")</h2>
+
+    <p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
+
     <p>@Html(Messages("pla.activeAmend.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.activeAmend.viewDetailsLinkText")</a>.</p>
+
+    <h2>@Messages("pla.resultSuccess.giveFeedback")</h2>
+
+    <p><a href=@controllers.routes.ExitSurveyController.exitSurvey>@Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Messages("pla.resultSuccess.exitSurvey")</p>
 
 </div>
 }

@@ -493,7 +493,7 @@ pla.resultSuccess.protectionRef         = Protection notification number
 pla.resultSuccess.psaRef                = Scheme administrator reference
 pla.resultSuccess.applicationDate       = Application date
 pla.resultSuccess.print                 = Print and save your details
-pla.resultSuccess.IPChangePSODetails    = Changing your protection details
+pla.resultSuccess.IPChangeDetails       = Changing your protection details
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 60 days.
 pla.resultSuccess.FPAddToPension        = If you or your employer adds to your pension, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 90 days.
 pla.resultSuccess.viewDetails           = You can view or change your protection details in your
@@ -612,8 +612,8 @@ pla.amends.addPsoLink                                       = Add a pension shar
 pla.activeAmend.title                                       = Protection amended
 pla.activeAmend.allowanceSubHeading                         = Your protected lifetime allowance is
 pla.activeAmend.protectionDetailsPara                       = Your new protection details are shown below.
-pla.activeAmend.whatNextHeading                             = What happens next?
-pla.activeAmend.whatNextContent                             = Give these details to your pension provider when you decide to take money from your pension.
+pla.activeAmend.protectionDetails                           = Your protection details
+pla.activeAmend.detailsContent                              = When you decide to take money from your pension, give these details to your pension provider:
 pla.activeAmend.viewDetails                                 = You can view these details in your
 pla.activeAmend.viewDetailsLinkText                         = personal tax account
 
