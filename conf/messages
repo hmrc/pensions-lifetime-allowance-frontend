@@ -248,7 +248,7 @@ pla.pensionsTakenBetween.step.2             = Multiply by the value of your life
 pla.pensionsTakenBetween.step.3             = Take the result from step 1 and multiply by the result of step 2.
 pla.pensionsTakenBetween.step.4             = Repeat for each event and total the amounts together.
 pla.pensionsTakenBetween.para.3             = Read technical guidance on {0}
-pla.pensionsTakenBetween.helpLinkText       = how to value your pension
+pla.pensionsTakenBetween.helpLinkText       = working out how much lifetime allowance you''ve used
 pla.pensionsTakenBetween.para.4             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
 
 
