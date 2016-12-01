@@ -654,7 +654,7 @@ amendResultCode.32.2        = If this happens, you must tell <a href="https://ww
 amendResultCode.33.heading  = You''ve amended individual protection 2014
 
 amendResultCode.34.heading  = You''ve amended individual protection 2014
-#amendResultCode.4.heading   = You''ve amended individual protection 2014
+amendResultCode.4.heading   = You''ve amended individual protection 2014
 
 amendResultCode.35.heading  = You''re no longer entitled to individual protection 2016
 amendResultCode.35.1        = This is because your total pension savings are below £1,000,001.
