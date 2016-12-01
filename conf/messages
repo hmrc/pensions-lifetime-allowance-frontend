@@ -354,7 +354,7 @@ pla.psoDetails.errorNegative                = Enter an amount that''s £0 or mor
 pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
 pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
 pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
-pla.psoDetails.removePso                    = This will remove your pension sharing order
+pla.psoDetails.removePso                    = This will remove your pension sharing order.
 pla.psoDetails.cancelRemove                 = <a href="{0}" id="{1}">Do not remove</a>
 
 
@@ -598,7 +598,7 @@ pla.amends.submit                                           = Submit your change
 pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.amends.CurrentPsos.IP2016.Amt                           = Value of pension sharing orders
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Date and amount of pension sharing order
-pla.amends.pensionDebits.removePso                          = This will remove your pension sharing order
+pla.amends.pensionDebits.removePso                          = This will remove your pension sharing order.
 pla.amends.pensionDebits.cancelRemove                        = <a href="{0}" id="{1}">Do not remove</a>
 
 pla.amends.CurrentPsos.IP2014.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2014?
