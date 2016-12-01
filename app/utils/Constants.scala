@@ -44,5 +44,5 @@ object Constants {
 
     val activeProtectionCodes = List(3,4,8,12,22,23,33,34,44)
 
-    val activeAmendmentCodes = List(33,34,44)
+    val activeAmendmentCodes = List(33,34,44,4,12)
 }
