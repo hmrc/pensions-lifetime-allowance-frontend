@@ -3,7 +3,7 @@
 @import helpers.templates.plaInputRadioGroup
 @import play.api.data._
 
-@(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_])
+@(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_], lang: Lang)
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
@@ -14,6 +14,8 @@
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenForm
     )
+
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
 
     <h1 class="heading-large">@Messages("pla.pensionsTaken.pageHeading")</h1>
 

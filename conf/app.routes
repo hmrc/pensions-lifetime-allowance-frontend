@@ -1,7 +1,7 @@
 # microservice specific routes
 
 GET         /assets/*file                                       controllers.Assets.at(path="/public", file)
-
+GET         /language/:lang                                     controllers.PlaLanguageController.switchToLanguage(lang: String)
 
 ## Auth ##
 GET         /timeout                                            controllers.TimeoutController.timeout

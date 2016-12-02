@@ -4,7 +4,7 @@
 @import play.api.data._
 @import common.Links
 
-@(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_])
+@(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_], lang: Lang)
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
@@ -37,6 +37,8 @@
 @main_template(title = Messages("pla.currentPensions.pageHeading"), scriptElem=Some(scriptElement)) {
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), currentPensionsForm)
+
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
 
     <h1 class="heading-large">@Messages("pla.currentPensions.pageHeading")</h1>
 

@@ -3,7 +3,7 @@
 @import helpers.templates.{formInputMoney,formHiddenYesNoRadio}
 @import play.api.data._
 
-@(overseasPensionsForm: Form[OverseasPensionsModel])(implicit request: Request[_])
+@(overseasPensionsForm: Form[OverseasPensionsModel])(implicit request: Request[_], lang: Lang)
 
 @hiddenYesNoContent = {
 
@@ -24,6 +24,8 @@
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), overseasPensionsForm
     )
+
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
 
     <h1 class="heading-large">@Messages("pla.overseasPensions.pageHeading")</h1>
 

@@ -21,11 +21,11 @@ import common.Validation._
 import utils.Constants
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 
 object PensionsTakenBeforeForm {
 
-  def validateForm(form: Form[PensionsTakenBeforeModel]): Form[PensionsTakenBeforeModel] = {
+  def validateForm(form: Form[PensionsTakenBeforeModel])(implicit lang:Lang): Form[PensionsTakenBeforeModel] = {
     if(!validationNeeded(form)) form else {
       if(!validateFieldCompleted(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorQuestion"))
       else if(!validateMinimum(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.pensionsTakenBefore.errorNegative"))

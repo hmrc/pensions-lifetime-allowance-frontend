@@ -4,7 +4,7 @@
 @import play.api.data._
 @import common.Links
 
-@(pensionsTakenBetweenForm: Form[PensionsTakenBetweenModel])(implicit request: Request[_])
+@(pensionsTakenBetweenForm: Form[PensionsTakenBetweenModel])(implicit request: Request[_], lang: Lang)
 
 @helpTextAccordionContent = {
 
@@ -56,6 +56,8 @@
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenBetweenForm
     )
+
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
 
     <h1 class="heading-large">@Messages("pla.pensionsTakenBetween.pageHeading")</h1>
 

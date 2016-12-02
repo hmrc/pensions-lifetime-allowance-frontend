@@ -45,6 +45,7 @@ private object AppDependencies {
   private val hmrcTestVersion = "1.8.0"
   private val cachingClientVersion = "5.6.0"
   private val mongoCachingVersion = "3.2.0"
+  private val playLanguageVersion = "2.2.0"
 
   val compile = Seq(
     ws,
@@ -57,7 +58,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
-    "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion
+    "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
+    "uk.gov.hmrc" %% "play-language" % playLanguageVersion
   )
 
   trait TestDependencies {
