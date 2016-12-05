@@ -44,18 +44,18 @@ class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar {
   "Calculator Connector" should {
 
     "fetch and get from keystore" in {
-      val testModel = AddingToPensionModel(Some("No"))
-      when(mockSessionCache.fetchAndGetEntry[AddingToPensionModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
+      val testModel = PensionsTakenModel(Some("No"))
+      when(mockSessionCache.fetchAndGetEntry[PensionsTakenModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(Option(testModel)))
 
-      lazy val result = TestKeyStoreConnector.fetchAndGetFormData[AddingToPensionModel]("willAddToPension")
+      lazy val result = TestKeyStoreConnector.fetchAndGetFormData[PensionsTakenModel]("willAddToPension")
       await(result) shouldBe Some(testModel)
     }
 
     "save data to keystore" in {
-      val testModel = AddedToPensionModel(Some("No"))
+      val testModel = PensionsTakenModel(Some("No"))
       val returnedCacheMap = CacheMap("haveAddedToPension", Map("data" -> Json.toJson(testModel)))
-      when(mockSessionCache.cache[AddedToPensionModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockSessionCache.cache[PensionsTakenModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(returnedCacheMap))
 
       lazy val result = TestKeyStoreConnector.saveFormData("haveAddedToPension", testModel)
