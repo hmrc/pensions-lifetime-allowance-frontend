@@ -18,8 +18,10 @@
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
 @(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], formPartialRetriever: FormPartialRetriever,
-  partialRetriever: CachedStaticHtmlPartialRetriever)
+  partialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang)
 
 @main_template(Messages("feedback.title")) {
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
+
     @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
 }

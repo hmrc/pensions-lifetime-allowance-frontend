@@ -1,9 +1,11 @@
 @import models.ExistingProtectionsDisplayModel
 @import helpers.templates.existingProtections.{activeExistingProtection, inactiveExistingProtection}
-@(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_])
+@(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], lang: Lang)
 @import config.FrontendAppConfig
 
 @views.html.full_width_template(title = Messages("pla.existingProtections.title"), bodyClasses = None) {
+
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
 
     <nav class="breadcrumb-nav breadcrumb-nav--slim">
         <ul class="breadcrumb-nav__list" role="breadcrumbs">

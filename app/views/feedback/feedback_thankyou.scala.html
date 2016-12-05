@@ -16,9 +16,11 @@
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(partialUrl: String, redirectUrl: String)(implicit request: Request[_], cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
+@(partialUrl: String, redirectUrl: String)(implicit request: Request[_], cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang)
 
 @main_template(Messages("feedback.thankyou.title")) {
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
+
     @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)
     <a id="back" href='@redirectUrl' role="button" tabindex="0" class="button">@Messages("pla.base.back")</a>
 }
