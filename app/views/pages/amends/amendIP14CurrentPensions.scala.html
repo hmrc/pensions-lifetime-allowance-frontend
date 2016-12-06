@@ -35,11 +35,11 @@
     </p>
 }
 
-@main_template(title = Messages("pla.ip14CurrentPensions.pageHeading"), scriptElem=Some(scriptElement)) {
+@main_template(title = Messages("pla.ip14CurrentPensions.title"), scriptElem=Some(scriptElement)) {
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), amendCurrentPensionForm)
 
-    <h1 class="heading-large">@Messages("pla.ip14CurrentPensions.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("pla.ip14CurrentPensions.title")</h1>
 
     <p>@Messages("pla.currentPensions.question")</p>
 
@@ -50,7 +50,7 @@
         <div class="form-group">
         @moneyInputFormat(
             amendCurrentPensionForm("amendedUKPensionAmt"),
-            '_legend -> s"${Messages("pla.currentPensions.legend")}"
+            '_legend -> s"${Messages("pla.ip14CurrentPensions.title")}"
         )
         </div>
 

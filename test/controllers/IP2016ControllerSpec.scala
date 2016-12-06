@@ -94,7 +94,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the pensions taken page" in {
                 keystoreFetchCondition[PensionsTakenModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTaken.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTaken.title")
             }
         }
 
@@ -109,7 +109,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the pensions taken page" in {
                 keystoreFetchCondition[PensionsTakenModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTaken.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTaken.title")
             }
 
             "return some HTML that" should {
@@ -170,7 +170,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the pensions taken before page" in {
                 keystoreFetchCondition[PensionsTakenBeforeModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.title")
             }
         }
 
@@ -185,7 +185,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the pensions taken before page" in {
                 keystoreFetchCondition[PensionsTakenBeforeModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.title")
             }
 
             "return some HTML that" should {
@@ -289,7 +289,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the pensions taken between page" in {
                 keystoreFetchCondition[PensionsTakenBetweenModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.title")
             }
         }
 
@@ -304,7 +304,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the pensions taken between page" in {
                 keystoreFetchCondition[PensionsTakenBetweenModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.title")
             }
 
             "return some HTML that" should {
@@ -411,7 +411,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the overseas pensions page" in {
                 keystoreFetchCondition[OverseasPensionsModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.title")
             }
         }
 
@@ -426,7 +426,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the pensions taken page" in {
                 keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.title")
             }
 
             "return some HTML that" should {
@@ -533,7 +533,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the current pensions page" in {
                 keystoreFetchCondition[CurrentPensionsModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
             }
         }
 
@@ -548,7 +548,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the current pensions page" in {
                 keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
             }
 
             "return some HTML that" should {
@@ -631,7 +631,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the pension debits page" in {
                 keystoreFetchCondition[PensionDebitsModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionDebits.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionDebits.title")
             }
         }
 
@@ -646,7 +646,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "take the user to the pension debits page" in {
                 keystoreFetchCondition[PensionDebitsModel](None)
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionDebits.pageHeading")
+                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionDebits.title")
             }
 
             "return some HTML that" should {
