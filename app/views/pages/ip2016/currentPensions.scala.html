@@ -34,13 +34,13 @@
     </p>
 }
 
-@main_template(title = Messages("pla.currentPensions.pageHeading"), scriptElem=Some(scriptElement)) {
-
-    @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), currentPensionsForm)
+@main_template(title = Messages("pla.currentPensions.title"), scriptElem=Some(scriptElement)) {
 
     @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
-    <h1 class="heading-large">@Messages("pla.currentPensions.pageHeading")</h1>
+    @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), currentPensionsForm)
+
+    <h1 class="heading-large">@Messages("pla.currentPensions.title")</h1>
 
     <p>@Messages("pla.currentPensions.question")</p>
 
@@ -54,7 +54,7 @@
         <div class="form-group">
         @moneyInputFormat(
             currentPensionsForm("currentPensionsAmt"),
-            '_legend -> s"${Messages("pla.currentPensions.legend")}"
+            '_legend -> s"${Messages("pla.currentPensions.title")}"
         )
         </div>
 

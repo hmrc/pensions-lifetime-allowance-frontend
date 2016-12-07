@@ -53,13 +53,13 @@
 
 @main_template(title=Messages("pla.pensionsTakenBetween.title"), scriptElem=Some(scriptElement)) {
 
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenBetweenForm
     )
 
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
-
-    <h1 class="heading-large">@Messages("pla.pensionsTakenBetween.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("pla.pensionsTakenBetween.title")</h1>
 
     @govHelpers.form(action = routes.IP2016Controller.submitPensionsTakenBetween) {
 

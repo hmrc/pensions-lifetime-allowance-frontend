@@ -21,13 +21,12 @@
 
 @main_template(title=Messages("pla.overseasPensions.title"), scriptElem=Some(scriptElement)) {
 
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), overseasPensionsForm
     )
-
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
-
-    <h1 class="heading-large">@Messages("pla.overseasPensions.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("pla.overseasPensions.title")</h1>
 
     <p>@Messages("pla.overseasPensions.question")</p>
 

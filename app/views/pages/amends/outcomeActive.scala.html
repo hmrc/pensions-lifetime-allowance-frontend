@@ -24,12 +24,12 @@
 <div class="grid-row">
     <div class="transaction-banner--complete">
         <span class="heading-large" id="amendmentOutcome">@Messages(s"amendResultCode.${model.notificationId}.heading")</span>
-        <p class="medium" id="amendedAllowanceText">@Messages("pla.activeAmend.allowanceSubHeading")</p>
+        <p class="medium" id="amendedAllowanceText">@Messages("pla.resultSuccess.allowanceSubHeading")</p>
         <span class="bold-medium" id="protectedAmount">@model.protectedAmount</span>
     </div>
 
-    <h2>@Messages("pla.activeAmend.protectionDetails")</h2>
-    <p>@Messages("pla.activeAmend.detailsContent")</p>
+    <h2>@Messages("pla.resultSuccess.protectionDetails")</h2>
+    <p>@Messages("pla.resultSuccess.detailsContent")</p>
 
     @model.details.map{ details =>
         @resultDetails(details)

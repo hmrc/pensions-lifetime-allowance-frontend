@@ -35,7 +35,7 @@
 </head>
 <header>
     <p class="header">
-        HM Revenue & Customs
+        @Messages("pla.print.hmrc")
     </p>
 </header>
 <body onload="window.print()">
@@ -45,13 +45,13 @@
                 @{model.firstName} @{model.surname}
             </h1>
             <p id="userNino">
-                National Insurance number @{model.nino}
+                @{Messages("pla.print.nino")} @{model.nino}
             </p>
         </div>
 
         <div>
             <h2>
-                Protection details
+                @Messages("pla.print.protectionDetails")
                 <hr noshade/>
             </h2>
 
@@ -59,26 +59,26 @@
                 <tbody>
                 @model.certificateDate.map { cDate =>
                     <tr>
-                        <td>Application date</td>
+                        <td>@Messages("pla.print.applicationDate")</td>
                         <td id="applicationDate">@{cDate}</td>
                     </tr>
                 }
                 <tr>
-                    <td>Protection type</td>
+                    <td>@Messages("pla.print.protectionType")</td>
                     <td id="protectionType">@Messages(s"pla.protection.types.${model.protectionType}")</td>
                 </tr>
                 @model.protectedAmount.map { amt =>
                     <tr>
-                        <td>Protected lifetime allowance</td>
+                        <td>@Messages("pla.print.pla")</td>
                         <td id="protectedAmount">@{amt}</td>
                     </tr>
                 }
                 <tr>
-                    <td>Protection notification number</td>
+                    <td>@Messages("pla.print.protectionNotificationNumber")</td>
                     <td id="protectionRef">@{model.protectionReference}</td>
                 </tr>
                 <tr>
-                    <td>Scheme administrator reference</td>
+                    <td>@Messages("pla.print.schemeAdministratorReference")</td>
                     <td id="psaRef">@{model.psaCheckReference}</td>
                 </tr>
                 </tbody>

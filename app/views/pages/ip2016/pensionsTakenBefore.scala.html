@@ -51,13 +51,13 @@
 
 @main_template(title=Messages("pla.pensionsTakenBefore.title"), scriptElem=Some(scriptElement)) {
 
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenBeforeForm
     )
 
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
-
-    <h1 class="heading-large">@Messages("pla.pensionsTakenBefore.pageHeading")</h1>
+    <h1 class="heading-large">@Messages("pla.pensionsTakenBefore.title")</h1>
 
     @govHelpers.form(action = routes.IP2016Controller.submitPensionsTakenBefore) {
 
@@ -65,7 +65,7 @@
             @formHiddenYesNoRadio(
                 pensionsTakenBeforeForm,
                 "pensionsTakenBefore",
-                Messages("pla.pensionsTakenBefore.legend"),
+                Messages("pla.pensionsTakenBefore.title"),
                 hiddenYesNoContent
             )
 
