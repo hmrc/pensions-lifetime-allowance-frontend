@@ -378,11 +378,19 @@ pla.exitSurvey.writeFeedback                            = If you have any additi
 pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##
-pla.print.title                           = Print your active protection
-pla.print.giveToPensionProvider           = Give these details to your pension provider when you decide to take money from your pension
-pla.print.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.FP2016.contactHMRC              = If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days.
+pla.print.title                             = Print your active protection
+pla.print.hmrc                              = HM Revenue & Customs
+pla.print.nino                              = National Insurance number
+pla.print.protectionDetails                 = Protection details
+pla.print.applicationDate                   = Application date
+pla.print.protectionType                    = Protection type
+pla.print.pla                               = Protected lifetime allowance
+pla.print.protectionNotificationNumber      = Protection notification number
+pla.print.schemeAdministratorReference      = Scheme administrator reference
+pla.print.giveToPensionProvider             = Give these details to your pension provider when you decide to take money from your pension
+pla.print.IP2014.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.print.IP2016.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.print.FP2016.contactHMRC                = If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days.
 
 ## Amends ##
 pla.amends.title                                            = Protection summary
