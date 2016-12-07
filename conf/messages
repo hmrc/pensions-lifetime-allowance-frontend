@@ -28,7 +28,6 @@ pla.base.errors.errorDecimalPlaces      = The amount you''ve entered has too man
 
 
 ## PLAY! Error Overrides ##
-error.number                            = Enter a number without commas, for example 10000.00
 error.real                              = Enter a number without commas, for example 10000.00
 
 ## Link Text ##
@@ -202,6 +201,7 @@ pla.psoDetails.dateHintText                 = For example, 18 4 2016
 pla.psoDetails.dateHintText14               = For example, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
 pla.psoDetails.visitPTA                     = Once you''ve completed this service, you can add a pension sharing order at any time by visiting your personal tax account.
+pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
 pla.psoDetails.removePso                    = This will remove your pension sharing order.
 pla.psoDetails.cancelRemove                 = <a href="{0}" id="{1}">Do not remove</a>
 

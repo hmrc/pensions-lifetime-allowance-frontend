@@ -78,7 +78,7 @@ object AmendPSODetailsForm {
         .verifying(Messages("pla.base.errors.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
         .verifying(Messages("pla.base.errors.errorNegative"), psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
         .verifying(Messages("pla.base.errors.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying(Messages("pla.base.errors.errorQuestion"), _.isDefined),
+        .verifying(Messages("pla.psoDetails.errorQuestion"), _.isDefined),
 
       "protectionType" -> text,
       "status"         -> text,
