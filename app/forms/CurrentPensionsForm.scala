@@ -16,16 +16,17 @@
 
 package forms
 
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import play.api.data._
 import play.api.data.Forms._
 import models._
 import utils.Constants._
 import common.Validation._
+import utils.Constants
 
 object CurrentPensionsForm {
 
-  val currentPensionsForm = Form(
+  def currentPensionsForm(implicit lang: Lang) = Form(
     mapping(
       "currentPensionsAmt" -> optional(bigDecimal)
         .verifying(Messages("pla.currentPensions.errorQuestion"), currentPensionsAmt => currentPensionsAmt.isDefined)

@@ -20,7 +20,7 @@ import common.Validation._
 import models.amendModels.AmendOverseasPensionsModel
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import utils.Constants
 
 object AmendOverseasPensionsForm {
@@ -34,7 +34,7 @@ object AmendOverseasPensionsForm {
     )(AmendOverseasPensionsModel.apply)(AmendOverseasPensionsModel.unapply)
   )
 
-  def validateForm(form: Form[AmendOverseasPensionsModel]): Form[AmendOverseasPensionsModel] = {
+  def validateForm(form: Form[AmendOverseasPensionsModel])(implicit lang:Lang): Form[AmendOverseasPensionsModel] = {
     if(!validationNeeded(form)) form else {
       if(!validateFieldCompleted(form)) form.withError("amendedOverseasPensionsAmt", Messages("pla.overseasPensions.errorQuestion"))
       else if(!validateMinimum(form)) form.withError("amendedOverseasPensionsAmt", Messages("pla.overseasPensions.errorNegative"))

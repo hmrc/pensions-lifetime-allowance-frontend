@@ -3,7 +3,7 @@
 @()(implicit request: Request[_], lang: Lang)
 
 @views.html.main_template(title = Messages("pla.technicalIssue.title"), bodyClasses = None, showLogout = false) {
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
 <h1 class="heading-large">@Messages("pla.technicalIssue.pageHeading")</h1>
 

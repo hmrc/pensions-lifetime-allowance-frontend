@@ -22,11 +22,11 @@ import models.amendModels.AmendPensionsTakenBetweenModel
 import utils.Constants
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 
 object AmendPensionsTakenBetweenForm {
 
-  def validateForm(form: Form[AmendPensionsTakenBetweenModel]): Form[AmendPensionsTakenBetweenModel] = {
+  def validateForm(form: Form[AmendPensionsTakenBetweenModel])(implicit lang:Lang): Form[AmendPensionsTakenBetweenModel] = {
     if(!validationNeeded(form)) form else {
       if(!validateFieldCompleted(form)) form.withError("amendedPensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorQuestion"))
       else if(!validateMinimum(form)) form.withError("amendedPensionsTakenBetweenAmt", Messages("pla.pensionsTakenBetween.errorNegative"))

@@ -25,6 +25,7 @@ pla.base.date.fields.year       = Lorem ipsum
 ## PLAY! Error Overrides ##
 error.number                            = Lorem ipsum
 error.real                              = Lorem ipsum
+error.required                          = Lorem ipsum
 
 ## Link Text ##
 pla.links.lifetimeAllowance             = Lorem ipsum

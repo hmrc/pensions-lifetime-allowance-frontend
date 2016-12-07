@@ -50,7 +50,7 @@ object PensionsTakenBeforeForm {
 
   private def validateTwoDec(data: Form[PensionsTakenBeforeModel]) = isMaxTwoDecimalPlaces(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
 
-  val pensionsTakenBeforeForm = Form (
+  def pensionsTakenBeforeForm(implicit lang:Lang) = Form (
     mapping(
       "pensionsTakenBefore" -> nonEmptyText,
       "pensionsTakenBeforeAmt" -> optional(bigDecimal)

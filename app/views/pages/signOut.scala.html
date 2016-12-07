@@ -2,7 +2,7 @@
 
 
 @views.html.main_template(title = Messages("pla.signOut.title"), bodyClasses = None, showLogout = false) {
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
     <h1 class="heading-large">@Messages("pla.signOut.pageHeading")</h1>
 

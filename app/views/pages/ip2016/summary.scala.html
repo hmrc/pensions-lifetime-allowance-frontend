@@ -32,7 +32,7 @@
 
 @views.html.full_width_template(title = Messages("pla.summary.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
     @summaryDetails(summary)
 

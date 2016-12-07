@@ -22,6 +22,9 @@ import play.api.i18n.Lang
 import play.api.mvc._
 import play.api.Play.current
 
+object PlaLanguageController extends PlaLanguageController{
+
+}
 trait PlaLanguageController extends LanguageController with RunMode {
 
   /** Converts a string to a URL, using the route to this controller. **/
@@ -37,6 +40,4 @@ trait PlaLanguageController extends LanguageController with RunMode {
   )
 }
 
-object PlaLanguageController extends PlaLanguageController{
 
-}

@@ -21,7 +21,7 @@ import common.Validation._
 import utils.Constants
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 
 object PensionsTakenBetweenForm {
 
@@ -51,7 +51,7 @@ object PensionsTakenBetweenForm {
   private def validateTwoDec(data: Form[PensionsTakenBetweenModel]) = isMaxTwoDecimalPlaces(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
 
 
-  val pensionsTakenBetweenForm = Form (
+  def pensionsTakenBetweenForm(implicit lang:Lang) = Form (
     mapping(
       "pensionsTakenBetween" -> nonEmptyText,
       "pensionsTakenBetweenAmt" -> optional(bigDecimal)

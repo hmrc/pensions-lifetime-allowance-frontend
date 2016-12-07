@@ -22,11 +22,14 @@ import common.Dates._
 import utils.Constants
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
+import uk.gov.hmrc.play.http.HeaderCarrier
 
 object PSODetailsForm {
 
-  def validateForm(form: Form[PSODetailsModel]): Form[PSODetailsModel] = {
+  val hc = new HeaderCarrier()
+
+  def validateForm(form: Form[PSODetailsModel])(implicit lang:Lang): Form[PSODetailsModel] = {
     val (day, month, year) = getFormDateValues(form)
     if(dateFieldsAlreadyInvalid(form)) form
     else if(!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
@@ -49,15 +52,23 @@ object PSODetailsForm {
     form.errors.map(_.key).exists(List("psoDay","psoMonth","psoYear").contains(_))
   }
 
-  val psoDetailsForm = Form(
-    mapping(
-        "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),
-        "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),
-        "psoYear"   -> optional(number).verifying(Messages("pla.base.errors.yearEmpty"), {_.isDefined}),
-        "psoAmt"    -> bigDecimal
-                        .verifying(Messages("pla.psoDetails.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
-                        .verifying(Messages("pla.psoDetails.errorNegative"), psoAmt => isPositive(psoAmt.toDouble))
-                        .verifying(Messages("pla.psoDetails.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
+//  private def invalidPsoAmt(psoAmt: BigDecimal) {
+//    if(!isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency)) Messages("pla.psoDetails.errorMaximum")
+//    if(!isPositive(psoAmt.toDouble)) Messages("pla.psoDetails.errorNegative")
+//
+//  }
+
+  def psoDetailsForm(implicit lang: Lang) = Form(
+  mapping(
+    "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),
+    "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),
+    "psoYear"   -> optional(number).verifying(Messages("pla.base.errors.yearEmpty"), {_.isDefined}),
+    "psoAmt"    -> bigDecimal
+      .verifying(Messages("pla.psoDetails.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
+      .verifying(Messages("pla.psoDetails.errorNegative"), psoAmt => isPositive(psoAmt.toDouble))
+      .verifying(Messages("pla.psoDetails.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
     )(PSODetailsModel.apply)(PSODetailsModel.unapply)
   )
 }
+
+

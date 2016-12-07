@@ -10,6 +10,7 @@
 }
 
 @views.html.main_template(title = Messages("pla.psoDetails.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), psoDetailsForm

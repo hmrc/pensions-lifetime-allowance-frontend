@@ -24,7 +24,7 @@
 }
 
 @views.html.full_width_template(Messages("pla.exitSurvey.title"), scriptElem=Some(scriptElement)) {
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), exitSurveyForm)

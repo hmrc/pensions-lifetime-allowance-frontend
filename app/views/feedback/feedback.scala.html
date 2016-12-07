@@ -21,7 +21,7 @@
   partialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang)
 
 @main_template(Messages("feedback.title")) {
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, Some("custom-class"))
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
     @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
 }

@@ -25,6 +25,7 @@ pla.base.date.fields.year       = Year
 ## PLAY! Error Overrides ##
 error.number                            = Enter a number without commas, for example 10000.00
 error.real                              = Enter a number without commas, for example 10000.00
+error.required                          = This field is required
 
 ## Link Text ##
 pla.links.lifetimeAllowance             = Lifetime allowance
