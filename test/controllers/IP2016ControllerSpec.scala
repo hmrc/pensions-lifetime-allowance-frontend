@@ -225,7 +225,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", ""))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorQuestion"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorQuestion"))
                 }
             }
 
@@ -234,7 +234,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "5.001"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorDecimalPlaces"))
                 }
             }
 
@@ -243,7 +243,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "-25"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorNegative"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorNegative"))
                 }
             }
 
@@ -252,7 +252,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "99999999999999.99"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBefore.errorMaximum"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorMaximum"))
                 }
             }
         }
@@ -344,7 +344,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", ""))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorQuestion"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorQuestion"))
                 }
             }
 
@@ -353,7 +353,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "5.001"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorDecimalPlaces"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorDecimalPlaces"))
                 }
             }
 
@@ -362,7 +362,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "-25"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorNegative"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorNegative"))
                 }
             }
 
@@ -371,7 +371,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "99999999999999.99"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.pensionsTakenBetween.errorMaximum"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorMaximum"))
                 }
             }
         }
@@ -483,7 +483,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", ""))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorQuestion"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorQuestion"))
                 }
             }
 
@@ -492,7 +492,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "5.001"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorDecimalPlaces"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorDecimalPlaces"))
                 }
             }
 
@@ -501,7 +501,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "-25"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorNegative"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorNegative"))
                 }
             }
 
@@ -510,7 +510,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "99999999999999.99"))
                 "return 400" in {status(DataItem.result) shouldBe 400}
                 "fail with the correct error message" in {
-                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.overseasPensions.errorMaximum"))
+                    DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorMaximum"))
                 }
             }
         }
@@ -581,7 +581,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitCurrentPensions, ("currentPensionsAmt", ""))
             "return 400" in {status(DataItem.result) shouldBe 400}
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.currentPensions.errorQuestion"))
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorQuestion"))
             }
         }
 
@@ -590,7 +590,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitCurrentPensions, ("currentPensionsAmt", "5.001"))
             "return 400" in {status(DataItem.result) shouldBe 400}
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.currentPensions.errorDecimalPlaces"))
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorDecimalPlaces"))
             }
         }
 
@@ -599,7 +599,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitCurrentPensions, ("currentPensionsAmt", "-25"))
             "return 400" in {status(DataItem.result) shouldBe 400}
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.currentPensions.errorNegative"))
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorNegative"))
             }
         }
 
@@ -608,7 +608,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitCurrentPensions, ("currentPensionsAmt", "99999999999999.99"))
             "return 400" in {status(DataItem.result) shouldBe 400}
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.currentPensions.errorMaximum"))
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorMaximum"))
             }
         }
         
@@ -909,7 +909,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "return 400" in { status(DataItem.result) shouldBe 400 }
 
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorNegative"))
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorNegative"))
             }
         }
 
@@ -925,7 +925,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "return 400" in { status(DataItem.result) shouldBe 400 }
 
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorDecimalPlaces"))
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorDecimalPlaces"))
             }
         }
 
@@ -941,7 +941,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "return 400" in { status(DataItem.result) shouldBe 400 }
 
             "fail with the correct error message" in {
-                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorMaximum"))
+                DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorMaximum"))
             }
         }
     }

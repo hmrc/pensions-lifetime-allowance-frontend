@@ -55,9 +55,9 @@ object PSODetailsForm {
         "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),
         "psoYear"   -> optional(number).verifying(Messages("pla.base.errors.yearEmpty"), {_.isDefined}),
         "psoAmt"    -> bigDecimal
-                        .verifying(Messages("pla.psoDetails.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
-                        .verifying(Messages("pla.psoDetails.errorNegative"), psoAmt => isPositive(psoAmt.toDouble))
-                        .verifying(Messages("pla.psoDetails.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
+                        .verifying(Messages("pla.base.errors.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
+                        .verifying(Messages("pla.base.errors.errorNegative"), psoAmt => isPositive(psoAmt.toDouble))
+                        .verifying(Messages("pla.base.errors.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
     )(PSODetailsModel.apply)(PSODetailsModel.unapply)
   )
 }
