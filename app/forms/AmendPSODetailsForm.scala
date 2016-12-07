@@ -75,9 +75,9 @@ object AmendPSODetailsForm {
       "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),
       "psoYear"   -> optional(number).verifying(Messages("pla.base.errors.yearEmpty"), {_.isDefined}),
       "psoAmt"    -> optional(bigDecimal)
-        .verifying(Messages("pla.psoDetails.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
-        .verifying(Messages("pla.psoDetails.errorNegative"), psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying(Messages("pla.psoDetails.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying(Messages("pla.base.errors.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
+        .verifying(Messages("pla.base.errors.errorNegative"), psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying(Messages("pla.base.errors.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
         .verifying(Messages("pla.psoDetails.errorQuestion"), _.isDefined),
 
       "protectionType" -> text,

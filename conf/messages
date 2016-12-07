@@ -12,7 +12,6 @@ pla.base.remove                 = Remove
 pla.base.add                    = Add
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
-pla.base.startAgain             = Start Again
 pla.base.errorSummaryLabel      = There are errors on this page.
 pla.base.errors.invalidDate     = Enter a date in the correct format eg 14 6 2016
 pla.base.errors.yearEmpty       = Enter a year
@@ -22,28 +21,17 @@ pla.base.date.fields.day        = Day
 pla.base.date.fields.month      = Month
 pla.base.date.fields.year       = Year
 
+pla.base.errors.errorQuestion           = Enter an amount in the correct format eg £500000
+pla.base.errors.errorNegative           = Enter an amount that''s £0 or more
+pla.base.errors.errorMaximum            = Enter an amount less than £99,999,999,999,999.98
+pla.base.errors.errorDecimalPlaces      = The amount you''ve entered has too many decimal places
+
+
 ## PLAY! Error Overrides ##
-error.number                            = Enter a number without commas, for example 10000.00
 error.real                              = Enter a number without commas, for example 10000.00
 
 ## Link Text ##
-pla.links.lifetimeAllowance             = Lifetime allowance
-pla.links.protectLifetimeAllowance      = Lifetime allowance protection schemes
-pla.links.fixedProtection2016           = Fixed protection 2016
-pla.links.individualProtection2016      = Individual protection 2016
-pla.links.individualProtection2014      = Individual protection 2014
-pla.links.onlineServicesAccount         = HMRC Online Services account
-pla.links.FP16LinkText                  = Fixed protection 2016
-pla.links.IP16LinkText                  = Individual protection 2016
-pla.links.IP14LinkText                  = Individual protection 2014
-pla.links.ExistingProtectionsLinkText   = View your existing protections
 pla.links.signout                       = Sign out
-pla.links.IPHelp                        = What is individual protection
-pla.links.pensionsTakenBeforeHelp       = What is your pension worth
-pla.links.pensionsTakenBetweenHelp      = How much lifetime allowance have you used
-pla.links.currentPensions               = What is your pension worth
-pla.links.fpArrangementHelp             = What is an arrangement
-pla.links.fpRelievedPensionHelp         = What is a relieved non-UK pension scheme
 
 ## Timeout ##
 pla.timeout.title       = Session closed due to inactivity
@@ -59,73 +47,6 @@ pla.notFound.title          = Page not found - 404
 pla.notFound.pageHeading    = This page can''t be found
 pla.notFound.paraOne        = Please check that you have entered the correct web address.
 
-## Introduction ##
-pla.intro.title         = Introduction
-pla.intro.pageHeading   = Apply for Lifetime Allowance protection
-pla.intro.paraOne       = The Lifetime Allowance is the amount of pension savings you can have before you pay tax.
-pla.intro.paraTwo       = This was reduced to £1 million, but you may be able to protect your pension savings from the reduction by applying for Lifetime Allowance protection.
-pla.intro.paraThree     = Use this service to check if you''re eligible for Lifetime Allowance protection and apply.
-pla.intro.ip14Text      = If your pension savings were over £1.25 million on 5 April 2014, you can still
-pla.intro.ip14LinkText  = apply for individual protection 2014
-pla.intro.start         = Start
-
-## IP14 Pension Savings ##
-pla.ip14PensionSavings.title                    = IP14 pension savings
-pla.ip14PensionSavings.pageHeading              = Value of your pensions
-pla.ip14PensionSavings.paraOne                  = On 5 April 2014, were your total pension savings over £1.25 million?
-pla.ip14PensionSavings.help                     = Include UK pensions and overseas pensions which gained UK tax relief.
-pla.ip14PensionSavings.paraTwo                  = For defined benefit schemes, your pension value is usually 20 times the annual amount payable, plus any additional lump sums.
-pla.ip14PensionSavings.mandatoryErr             = Please answer this question
-
-## Will be Adding to Your Pension ##
-pla.addingToPension.title                  = Add to pension
-pla.addingToPension.pageHeading            = Will you be adding to your pension?
-pla.addingToPension.paraOne                = Will you, or anyone else, be adding to your pension in the future?
-pla.addingToPension.help                   = This includes pension contributions or gaining more benefits in a final salary scheme.
-pla.addingToPension.mandatoryErr           = Please answer this question
-
-## Have You Added to Your Pension ##
-pla.addedToPension.title                = Added to pension
-pla.addedToPension.pageHeading          = Have you added to your pension?
-pla.addedToPension.paraOne              = Have you added to your pension since 6 April 2016?
-pla.addedToPension.help                 = This includes pension contributions made by you or someone else, such as your employer. It also includes gaining more benefits in a final salary scheme.
-pla.addedToPension.mandatoryErr         = Please answer this question
-
-## Pension Savings ##
-pla.pensionSavings.title                    = Pension savings
-pla.pensionSavings.pageHeading              = Value of your pensions
-pla.pensionSavings.paraOne                  = Were your total pension savings worth £1 million or more on 5 April 2016?
-pla.pensionSavings.help                     = This includes UK pensions and overseas pensions which gained UK tax relief.
-pla.pensionSavings.paraTwo                  = For defined benefit schemes, such as ''final salary schemes'', the value is normally 20 times the pension you get in the first year plus your lump sum.
-pla.pensionSavings.mandatoryErr             = Please answer this question
-
-## Apply for IP 2014 ##
-pla.applyIP14.title       = Apply for IP 2014
-pla.applyIP14.pageHeading = Apply for individual protection 2014
-pla.applyIP14.paraOne     = We''ll ask you:
-pla.applyIP14.bulletOne   = about pensions you took money from before 6 April 2014
-pla.applyIP14.bulletTwo   = what your current pensions were worth on 6 April 2014
-pla.applyIP14.paraTwo     = Ask your pension provider to give you this information.
-pla.applyIP14.paraThree   = You''ll need to apply by 5 April 2017.
-
-## Apply for IP 2016 ##
-pla.applyIP.title       = Apply for IP 2016
-pla.applyIP.pageHeading = Apply for individual protection 2016
-pla.applyIP.paraOne     = We''ll ask you:
-pla.applyIP.bulletOne   = about pensions you took money from before 6 April 2016
-pla.applyIP.bulletTwo   = what your current pensions were worth on 6 April 2016
-pla.applyIP.paraTwo     = Ask your pension provider to give you this information.
-pla.applyIP.paraThree   = You will still be able to add to your pension without losing this protection.
-pla.applyIP.signIn      = To apply, you''ll need to sign in to your HMRC online services account, or create one.
-
-## Apply for FP 2016 ##
-pla.applyFP.title           = Confirm
-pla.applyFP.pageHeading     = You can apply for fixed protection 2016
-pla.applyFP.paraOne         = This will protect your lifetime allowance at £1.25 million.
-pla.applyFP.paraTwo         = You''ll lose this protection if:
-pla.applyFP.bulletOne       = you or anyone else, such as your employer, adds to your pension savings
-pla.applyFP.bulletTwo       = you have a defined benefits pension, such as a final salary scheme, and gain a higher annual pension amount
-
 ## Confirm FP 2016##
 pla.confirmFP16.title       = Apply for FP 2016
 pla.confirmFP16.pageHeading = Get fixed protection 2016 for your lifetime allowance
@@ -138,20 +59,13 @@ pla.confirmFP16.bullet.2.2  = primary protection
 pla.confirmFP16.bullet.2.3  = fixed protection
 pla.confirmFP16.bullet.2.4  = fixed protection 2014
 pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ‘protection cessation event’ (these are specific events that make you ineligible for fixed protection)
+pla.confirmFP16.para.3      = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
 pla.confirmFP16.help        = Help with these conditions
 pla.confirmFP16.hiddenPara.1 = Speak to your pension scheme administrator to get professional help understanding these conditions.
 pla.confirmFP16.hiddenPara.2 = HMRC’s Pensions Tax Manual has {0}
-pla.confirmFP16.para.3      = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
 
 pla.confirmFP16.hiddenPara.linkText = technical guidance about fixed protection
 pla.confirmFP16.declaration = By confirming, you will automatically submit your application for fixed protection 2016.
-
-## Cannot Apply ##
-pla.cannotApply.title       = Don''t need PLA
-pla.cannotApply.pageHeading = You don''t need Lifetime Allowance protection
-pla.cannotApply.paraOne     = This is because your pension savings are less than £1 million, which is the current Lifetime Allowance.
-pla.cannotApply.paraTwo     = For more information, visit
-pla.cannotApply.plaLinkText = Pension Lifetime Allowance
 
 
 ## Failure Messages ##
@@ -160,7 +74,7 @@ pla.notAuthorised.pageHeading   = We were unable to confirm your identity
 pla.notAuthorised.paraOne       = <p>If you can''t confirm your identity and you have a query you can <a href="{0}" target="_blank">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
 pla.notAuthorised.tryAgain      = Return to the <a href="{0}" rel="external">protect your lifetime allowance</a> page to try again.
 pla.lockedOut.title             = Locked Out
-pla.lockedOut.pageHeading       = You have tried to confirm your identity too many times 
+pla.lockedOut.pageHeading       = You have tried to confirm your identity too many times
 pla.lockedOut.paraOne           = You can try again in 7 days.
 pla.lockedOut.paraTwo           = <p>If you have a query you can <a href="{0}" target="_blank">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
 pla.technicalIssue.title        = Technical Issues
@@ -178,21 +92,10 @@ pla.techError.retry                         = Retry
 
 ## No notification ID returned ##
 pla.noNotificationId.title                  = Check your protection
-pla.noNotificationId.pageHeading            = Check your protection
 pla.noNotificationId.paraOne                = Visit your <a id="existingProtectionsLink" href="{0}">personal tax account</a> to see the new application or amendment.
-
-## Insufficient Information ##
-pla.insuffInfo.title                        = Insufficient Information
-pla.insuffInfo.pageHeading                  = Some of the required information for your application is missing
-pla.insuffInfo.paraOne                      = Use one of the links below to restart your journey. Any information you''ve already entered will be pre-populated
-pla.insuffInfo.returnToPTA                  = Alternatively, you can <a href="https://www.gov.uk/personal-tax-account">return to your Personal Tax Account</a>.
-
-## API ##
-pla.api.badRequest              = There was an error processing the client''s request
 
 
 ## Pensions Taken ##
-pla.pensionsTaken.pageHeading               = Did any of the following happen before 6 April 2016?
 pla.pensionsTaken.title                     = Did any of the following happen before 6 April 2016?
 pla.pensionsTaken.bullet.1                  = You got money from your pensions.
 pla.pensionsTaken.bullet.2                  = You transferred a pension to a scheme held overseas.
@@ -201,21 +104,13 @@ pla.pensionsTaken.mandatoryErr              = Please answer this question
 pla.pensionsTaken.legend                    = Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken ##
-pla.ip14PensionsTaken.pageHeading           = Did any of the following happen before 6 April 2014?
 pla.ip14PensionsTaken.title                 = Did any of the following happen before 6 April 2014?
 pla.ip14PensionsTaken.legend                = Before 6 April 2014, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 
 ## Pensions Taken Before ##
-pla.pensionsTakenBefore.pageHeading         = Did you get an income from any of your pensions before 6 April 2006?
 pla.pensionsTakenBefore.title               = Did you get an income from any of your pensions before 6 April 2006?
 pla.pensionsTakenBefore.question            = What were these pensions worth on 5 April 2016?
-pla.pensionsTakenBefore.helpText            = If you had more than one pension in payment on 5 April 2006 you should include the total of the values of each pension.
-pla.pensionsTakenBefore.errorQuestion       = Enter an amount in the correct format eg £500000
-pla.pensionsTakenBefore.errorNegative       = Enter an amount that''s £0 or more
-pla.pensionsTakenBefore.errorMaximum        = Enter an amount less than £99,999,999,999,999.98
-pla.pensionsTakenBefore.errorDecimalPlaces  = The amount you''ve entered has too many decimal places
-pla.pensionsTakenBefore.legend              = Did you get an income from any of your pensions before 6 April 2006?
 pla.pensionsTakenBefore.help                = How to work out the amount
 pla.pensionsTakenBefore.para.1              = If you did not get an income from any other pensions since 6 April 2006:
 pla.pensionsTakenBefore.step.1              = Take only the pensions from which you got an income prior to 6 April 2006.
@@ -232,7 +127,6 @@ pla.ip14PensionsTakenBefore.question        = What were these pensions worth on 
 pla.ip14PensionsTakenBefore.step.2          = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014.
 
 ## Pensions Taken Between ##
-pla.pensionsTakenBetween.pageHeading        = Did any of these events happen between 6 April 2006 and 5 April 2016?
 pla.pensionsTakenBetween.title              = Did any of these events happen between 6 April 2006 and 5 April 2016?
 pla.pensionsTakenBetween.bullet.1           = You got money from your pensions.
 pla.pensionsTakenBetween.bullet.2           = You transferred a pension to a scheme held overseas.
@@ -248,17 +142,10 @@ pla.pensionsTakenBetween.step.3             = Take the result from step 1 and mu
 pla.pensionsTakenBetween.step.4             = Repeat for each event and total the amounts together.
 pla.pensionsTakenBetween.para.3             = Read technical guidance on {0}
 pla.pensionsTakenBetween.helpLinkText       = working out how much lifetime allowance you''ve used
-pla.pensionsTakenBetween.para.4             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
 
-
-pla.pensionsTakenBetween.errorQuestion      = Enter an amount in the correct format eg £500000
-pla.pensionsTakenBetween.errorNegative      = Enter an amount that''s £0 or more
-pla.pensionsTakenBetween.errorMaximum       = Enter an amount less than £99,999,999,999,999.98
-pla.pensionsTakenBetween.errorDecimalPlaces = The amount you''ve entered has too many decimal places
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken Between ##
-pla.ip14PensionsTakenBetween.pageHeading    = Did any of the these events happen between 6 April 2006 and 5 April 2014?
 pla.ip14PensionsTakenBetween.title          = Did any of the these events happen between 6 April 2006 and 5 April 2014?
 pla.ip14PensionsTakenBetween.step.1         = Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened.
 pla.ip14PensionsTakenBetween.para.2         = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2014.
@@ -267,14 +154,9 @@ pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2
 
 
 ## Overseas Pensions ##
-pla.overseasPensions.pageHeading            = Have you put money into a pension scheme held overseas?
 pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
 pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on.
 pla.overseasPensions.questionTwo            = How much did you contribute?
-pla.overseasPensions.errorQuestion          = Enter an amount in the correct format eg £500000
-pla.overseasPensions.errorNegative          = Enter an amount that''s £0 or more
-pla.overseasPensions.errorMaximum           = Enter an amount less than £99,999,999,999,999.98
-pla.overseasPensions.errorDecimalPlaces     = The amount you''ve entered has too many decimal places
 pla.overseasPensions.legend                 = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2016?
 
 ## IP14 Overseas Pensions ##
@@ -283,12 +165,8 @@ pla.ip14OverseasPensions.legend             = Did you put money into an overseas
 
 
 ## CURRENT PENSIONS ##
-pla.currentPensions.pageHeading             = What were your UK pensions worth on 5 April 2016?
 pla.currentPensions.title                   = What were your UK pensions worth on 5 April 2016?
-pla.currentPensions.paraOne                 = Include any money you have in pension pots.
-pla.currentPensions.paraTwo                 = If you have any pensions where your employer will pay you a set income once you take them, include the value of them.
 pla.currentPensions.hiddenLink              = How do I work out the value?
-pla.currentPensions.hiddenText              = Multiply the amount you''ll get each year by 20. Add any lump sum you''ll get if it''s on top of what you''ll get each year. 
 
 pla.currentPensions.hiddenTextPara          = Use figures that were correct at 5 April 2016.
 pla.currentPensions.hiddenText1             = Take any pensions where your employer guarantees you a specified annual income.
@@ -299,65 +177,33 @@ pla.currentPensions.readGuidance            = Read technical guidance on {0}
 pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
 pla.currentPensions.question                = Do not include pensions you''ve already taken or the State Pension.
 
-pla.currentPensions.errorQuestion           = Enter an amount in the correct format eg £500000
-pla.currentPensions.errorNegative           = Enter an amount that''s £0 or more
-pla.currentPensions.errorMaximum            = Enter an amount less than £99,999,999,999,999.98
-pla.currentPensions.errorDecimalPlaces      = The amount you''ve entered has too many decimal places
-pla.currentPensions.helpText                = Ask your pension provider to give you this amount
-pla.currentPensions.legend                  = What were your UK pensions worth on 5 April 2016?
 
 ## IP14 CURRENT PENSIONS ##
-pla.ip14CurrentPensions.pageHeading         = What were your UK pensions worth on 5 April 2014?
 pla.ip14CurrentPensions.title               = What were your UK pensions worth on 5 April 2014?
-pla.ip14CurrentPensions.legend              = What were your UK pensions worth on 5 April 2014?
 pla.ip14CurrentPensions.hiddenTextPara      = Use figures that were correct at 5 April 2014.
 
 
 
 
 ## PENSION DEBITS ##
-pla.pensionDebits.pageHeading               = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.pensionDebits.title                     = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.pensionDebits.paraOne                   = This is called a pension sharing order and is issued by a court.
 pla.pensionDebits.mandatoryErr              = Please answer this question
 
 ## IP14 PENSION DEBITS ##
-pla.ip14PensionDebits.pageHeading           = Have any of your pensions been shared in a divorce since 5 April 2014?
 pla.ip14PensionDebits.title                 = Have any of your pensions been shared in a divorce since 5 April 2014?
 
 
-## Number of Pension Sharing Orders ##
-pla.numberOfPSOs.title                      = How many pension sharing orders do you have?
-pla.numberOfPSOs.pageHeading                = How many pension sharing orders do you have?
-pla.numberOfPSOs.mandatoryErr               = Enter a number of Pension Sharing Orders
-pla.numberOfPSOs.one                        = One
-pla.numberOfPSOs.two                        = Two
-pla.numberOfPSOs.three                      = Three
-pla.numberOfPSOs.four                       = Four
-pla.numberOfPSOs.five                       = Five
-
 ## Pension Sharing Order Details ##
-pla.psoDetails.title                        = Pension sharing order 
-pla.psoDetails.psoNumLabel                  = PSO number. Do not change this number
-pla.psoDetails.pageHeading1                 = First pension sharing order
-pla.psoDetails.pageHeading2                 = Second pension sharing order
-pla.psoDetails.pageHeading3                 = Third pension sharing order
-pla.psoDetails.pageHeading4                 = Fourth pension sharing order
-pla.psoDetails.pageHeading5                 = Fifth pension sharing order
+pla.psoDetails.title                        = Pension sharing order
 pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2016
 pla.psoDetails.dateHintText14               = For example, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
 pla.psoDetails.visitPTA                     = Once you''ve completed this service, you can add a pension sharing order at any time by visiting your personal tax account.
-pla.psoDetails.errorNegative                = Enter an amount that''s £0 or more
-pla.psoDetails.errorMaximum                 = Enter an amount less than £99,999,999,999,999.98
-pla.psoDetails.errorDecimalPlaces           = The amount you''ve entered has too many decimal places
 pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
 pla.psoDetails.removePso                    = This will remove your pension sharing order.
 pla.psoDetails.cancelRemove                 = <a href="{0}" id="{1}">Do not remove</a>
-
-
-pla.amendPsoDetails.pageHeading             = Pension sharing order
 
 pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2014 and today
 pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2016 and today
@@ -414,9 +260,6 @@ pla.summary.confirmation2                           = I declare that the informa
 pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016.
 pla.summary.ip14Declaration                         = By confirming, you will automatically submit your application for individual protection 2014.
 
-pla.summary.declarationPara1                        = I confirm that at 5 April 2016 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2016 I did not hold primary protection or individual protection 2014.
-pla.summary.declarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
-
 pla.summary.underThresholdError.IP2014                  = Your total pension savings were less than £1,250,001 on 5 April 2014. You can only apply for individual protection 2014 if your pension savings were £1,250,001 or more.
 pla.summary.questions.ip14PensionsTaken                 = Before 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.ip14PensionsTaken            = Change your response to the question ''have you taken any of your pensions''
@@ -443,9 +286,6 @@ pla.summary.hiddenLinkText.removePsoHint                = Remove your response t
 pla.summary.questions.ip14PsoDetails                    = Date and amount of pension sharing order
 pla.summary.hiddenLinkText.ip14PsoDetails               = Change the details of your pension sharing order
 
-pla.summary.ip14DeclarationPara1                        = I confirm that at 5 April 2014 I had one or more arrangements under a registered pension scheme, or a relieved non-UK pension scheme of which I was a relieved member and, that at 6 April 2014 I did not hold primary protection.
-pla.summary.ip14DeclarationPara2                        = The information that I have provided is true and complete to the best of my knowledge and belief.
-
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = View your existing protections
 pla.existingProtections.pageHeading                     = Lifetime allowance protection
@@ -460,9 +300,6 @@ pla.existingProtections.protectionRef                   = Protection notificatio
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
 pla.existingProtections.amendLinkText                   = View or change your protection details
-pla.existingProtections.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 60 days.
-pla.existingProtections.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 60 days.
-pla.existingProtections.FP2016.contactHMRC              = If you or your employer adds to your pension, contact <a href={0} rel="external">HMRC Pension Schemes Services</a> within 90 days.
 
 
 ## PROTECTION INFORMATION ##
@@ -514,10 +351,10 @@ pla.resultRejection.viewDetailsLinkText   = personal tax account
 pla.mcNeeded.title                        = There is a problem accessing your account
 pla.mcNeeded.pageHeading                  = There''s a problem logging you in
 pla.mcNeeded.needToSpeakToYou             = We need to speak to you before you can log in to your account.
-pla.mcNeeded.howToFix                       = How to fix this
+pla.mcNeeded.howToFix                     = How to fix this
 pla.mcNeeded.telephone                    = Phone 0300 200 3300
 pla.mcNeeded.sayCantLogIn                 = Say ''I can''t log in''
-pla.mcNeeded.sayYes                         = Say ''Yes'' when asked if you are having problems logging in
+pla.mcNeeded.sayYes                       = Say ''Yes'' when asked if you are having problems logging in
 pla.mcNeeded.advisorHelp                  = You will hear a recorded message advising you to call another number - do not hang up and redial. Stay on the line and an advisor will hep you.
 pla.mcNeeded.tellAdvisor                                    = Tell the advisor this is an ''MCI issue''
 
@@ -534,7 +371,6 @@ pla.exitSurvey.title                                    = Exit survey
 pla.exitSurvey.pageHeading                              = Before you go, please answer some questions to help us improve your experience
 pla.exitSurvey.question1                                = <p class="bold-small">Before using your tax account, were you going to phone or write to HMRC about your query?</p>
 pla.exitSurvey.hiddenQ1                                 = <p class="bold-small">After using your tax account, do you need to phone or write to HMRC?</p>
-pla.exitSurvey.hiddenQ2                                 = <p class="bold-small">After using your tax account, do you now need to phone or write to HMRC?</p>
 pla.exitSurvey.question2                                = <p class="bold-small">Based on what you have done today, do you need to do anything else? You can tick more than one box.</p>
 pla.exitSurvey.question3                                = <p class="bold-small">How likely are you to recommend your tax account to your friends or family?</p>
 pla.exitSurvey.question4                                = <p class="bold-small">Overall, how do you feel about your experience using your tax account today?</p>
@@ -542,11 +378,19 @@ pla.exitSurvey.writeFeedback                            = If you have any additi
 pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##
-pla.print.title                           = Print your active protection
-pla.print.giveToPensionProvider           = Give these details to your pension provider when you decide to take money from your pension
-pla.print.IP2014.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.IP2016.contactHMRC              = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.FP2016.contactHMRC              = If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days.
+pla.print.title                             = Print your active protection
+pla.print.hmrc                              = HM Revenue & Customs
+pla.print.nino                              = National Insurance number
+pla.print.protectionDetails                 = Protection details
+pla.print.applicationDate                   = Application date
+pla.print.protectionType                    = Protection type
+pla.print.pla                               = Protected lifetime allowance
+pla.print.protectionNotificationNumber      = Protection notification number
+pla.print.schemeAdministratorReference      = Scheme administrator reference
+pla.print.giveToPensionProvider             = Give these details to your pension provider when you decide to take money from your pension
+pla.print.IP2014.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.print.IP2016.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.print.FP2016.contactHMRC                = If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days.
 
 ## Amends ##
 pla.amends.title                                            = Protection summary
@@ -589,6 +433,8 @@ pla.amends.OverseasPensions.IP2014.YesNo                    = Have you put money
 pla.amends.OverseasPensions.IP2014.YesNo.changeHint         = Change whether you put money into a pension scheme held overseas
 pla.amends.OverseasPensions.IP2014.Amt                      = How much did you contribute?
 pla.amends.OverseasPensions.IP2014.Amt.changeHint           = Change how much you contributed to your overseas pension
+pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.removeHint   = Remove your response to the amount or date of your pension sharing order
+pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.changeHint   = Change the details of your pension sharing order
 pla.amends.totalValueOfPensions                             = Total value of pensions
 pla.amends.pageBreadcrumb                                   = Change your protection details
 pla.amends.declaration                                      = The information that I have provided is true and complete to the best of my knowledge and belief.
@@ -603,16 +449,11 @@ pla.amends.pensionDebits.cancelRemove                        = <a href="{0}" id=
 pla.amends.CurrentPsos.IP2014.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2014?
 pla.amends.CurrentPsos.IP2014.Amt                           = Value of pension sharing orders
 pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails      = Date and amount of pension sharing order
-pla.summary.questions.totalPsoAmt                           = Total value of pension sharing orders
 
 pla.amends.addPsoLink                                       = Add a pension sharing order
 
 ### AMENDS RESULTS MESSAGES ###
 pla.activeAmend.title                                       = Protection amended
-pla.activeAmend.allowanceSubHeading                         = Your protected lifetime allowance is
-pla.activeAmend.protectionDetailsPara                       = Your new protection details are shown below.
-pla.activeAmend.protectionDetails                           = Your protection details
-pla.activeAmend.detailsContent                              = When you decide to take money from your pension, give these details to your pension provider:
 pla.activeAmend.viewDetails                                 = You can view these details in your
 pla.activeAmend.viewDetailsLinkText                         = personal tax account
 

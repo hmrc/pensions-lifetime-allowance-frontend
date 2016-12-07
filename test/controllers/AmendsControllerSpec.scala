@@ -288,7 +288,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 500
       }
       "show the technical error page for no notification ID" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.noNotificationId.pageHeading")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.noNotificationId.title")
         DataItem.jsoupDoc.body.getElementById("existingProtectionsLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
       "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
@@ -378,7 +378,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "take the user to the amend ip16 current pensions page" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testModel))
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.pageHeading")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
       }
 
       "return some HTML that" should {
@@ -426,7 +426,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.currentPensions.errorQuestion"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
       }
     }
 
@@ -437,7 +437,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.currentPensions.errorDecimalPlaces"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorDecimalPlaces"))
       }
     }
 
@@ -448,7 +448,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.currentPensions.errorNegative"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorNegative"))
       }
     }
 
@@ -459,7 +459,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.currentPensions.errorMaximum"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorMaximum"))
       }
     }
 
@@ -504,7 +504,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "should take the user to the pensions taken before page" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.pageHeading")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.title")
       }
 
       "return some HTML that" should {
@@ -590,7 +590,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBefore.errorQuestion"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
       }
     }
 
@@ -603,7 +603,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBefore.errorDecimalPlaces"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorDecimalPlaces"))
       }
     }
 
@@ -616,7 +616,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBefore.errorNegative"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorNegative"))
       }
     }
 
@@ -629,7 +629,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBefore.errorMaximum"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorMaximum"))
       }
     }
   }
@@ -710,7 +710,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "should take the user to the pensions taken before page" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.pageHeading")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.title")
       }
 
       "return some HTML that" should {
@@ -797,7 +797,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBetween.errorQuestion"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
       }
     }
 
@@ -810,7 +810,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBetween.errorDecimalPlaces"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorDecimalPlaces"))
       }
     }
 
@@ -823,7 +823,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBetween.errorNegative"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorNegative"))
       }
     }
 
@@ -836,7 +836,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.pensionsTakenBetween.errorMaximum"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorMaximum"))
       }
     }
   }
@@ -918,7 +918,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "should take the user to the overseas pensions page" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.pageHeading")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.title")
       }
 
       "return some HTML that" should {
@@ -1005,7 +1005,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.overseasPensions.errorQuestion"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
       }
     }
 
@@ -1018,7 +1018,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.overseasPensions.errorDecimalPlaces"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorDecimalPlaces"))
       }
     }
 
@@ -1031,7 +1031,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.overseasPensions.errorNegative"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorNegative"))
       }
     }
 
@@ -1044,7 +1044,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.overseasPensions.errorMaximum"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorMaximum"))
       }
     }
   }
@@ -1100,7 +1100,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       "show the amend PSO details page with no data completed" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amendPsoDetails.pageHeading")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
         DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
         DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
         DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
@@ -1117,7 +1117,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       "show the amend PSO details page with no data completed" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amendPsoDetails.pageHeading")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
         DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
         DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
         DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
@@ -1134,7 +1134,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
 
       "show the amend PSO details page with the correct data completed" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amendPsoDetails.pageHeading")
+        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
         DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual "23"
         DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual "12"
         DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual "2016"
@@ -1382,7 +1382,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "return 400" in { status(DataItem.result) shouldBe 400 }
 
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorNegative"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorNegative"))
       }
     }
 
@@ -1400,7 +1400,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "return 400" in { status(DataItem.result) shouldBe 400 }
 
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorDecimalPlaces"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorDecimalPlaces"))
       }
     }
 
@@ -1418,7 +1418,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "return 400" in { status(DataItem.result) shouldBe 400 }
 
       "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.psoDetails.errorMaximum"))
+        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorMaximum"))
       }
     }
   }

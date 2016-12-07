@@ -56,7 +56,7 @@
 Messages("pla.base.errorSummaryLabel"), amendPensionsTakenBeforeForm
 )
 
-<h1 class="heading-large">@Messages("pla.pensionsTakenBefore.pageHeading")</h1>
+<h1 class="heading-large">@Messages("pla.pensionsTakenBefore.title")</h1>
 
 @govHelpers.form(action = routes.AmendsController.submitAmendPensionsTakenBefore) {
 
@@ -64,7 +64,7 @@ Messages("pla.base.errorSummaryLabel"), amendPensionsTakenBeforeForm
     @formHiddenYesNoRadio(
     amendPensionsTakenBeforeForm,
     "amendedPensionsTakenBefore",
-    Messages("pla.pensionsTakenBefore.legend"),
+    Messages("pla.pensionsTakenBefore.title"),
     hiddenYesNoContent
     )
 </div>
