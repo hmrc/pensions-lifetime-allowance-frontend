@@ -52,13 +52,6 @@ object PSODetailsForm {
     form.errors.map(_.key).exists(List("psoDay","psoMonth","psoYear").contains(_))
   }
 
-<<<<<<< HEAD
-//  private def invalidPsoAmt(psoAmt: BigDecimal) {
-//    if(!isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency)) Messages("pla.psoDetails.errorMaximum")
-//    if(!isPositive(psoAmt.toDouble)) Messages("pla.psoDetails.errorNegative")
-//
-//  }
-
   def psoDetailsForm(implicit lang: Lang) = Form(
   mapping(
     "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),
@@ -68,17 +61,7 @@ object PSODetailsForm {
       .verifying(Messages("pla.psoDetails.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
       .verifying(Messages("pla.psoDetails.errorNegative"), psoAmt => isPositive(psoAmt.toDouble))
       .verifying(Messages("pla.psoDetails.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
-=======
-  val psoDetailsForm = Form(
-    mapping(
-        "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),
-        "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),
-        "psoYear"   -> optional(number).verifying(Messages("pla.base.errors.yearEmpty"), {_.isDefined}),
-        "psoAmt"    -> bigDecimal
-                        .verifying(Messages("pla.base.errors.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
-                        .verifying(Messages("pla.base.errors.errorNegative"), psoAmt => isPositive(psoAmt.toDouble))
-                        .verifying(Messages("pla.base.errors.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
->>>>>>> master
+
     )(PSODetailsModel.apply)(PSODetailsModel.unapply)
   )
 }

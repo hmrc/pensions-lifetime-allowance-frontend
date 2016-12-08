@@ -34,12 +34,10 @@
     </p>
 }
 
-<<<<<<< HEAD
-@main_template(title = Messages("pla.ip14CurrentPensions.pageHeading"), scriptElem=Some(scriptElement)) {
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
-=======
+
+
 @main_template(title = Messages("pla.ip14CurrentPensions.title"), scriptElem=Some(scriptElement)) {
->>>>>>> master
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), currentPensionsForm)
 
