@@ -80,3 +80,6 @@
 .icon-min-height {
     min-height: 35px;
 }
+
+input[type=number]
+{ -moz-appearance:textfield; }
