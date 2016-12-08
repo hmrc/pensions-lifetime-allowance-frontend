@@ -27,8 +27,6 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 
 object PSODetailsForm {
 
-  val hc = new HeaderCarrier()
-
   def validateForm(form: Form[PSODetailsModel])(implicit lang:Lang): Form[PSODetailsModel] = {
     val (day, month, year) = getFormDateValues(form)
     if(dateFieldsAlreadyInvalid(form)) form
@@ -58,9 +56,9 @@ object PSODetailsForm {
     "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),
     "psoYear"   -> optional(number).verifying(Messages("pla.base.errors.yearEmpty"), {_.isDefined}),
     "psoAmt"    -> bigDecimal
-      .verifying(Messages("pla.psoDetails.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
-      .verifying(Messages("pla.psoDetails.errorNegative"), psoAmt => isPositive(psoAmt.toDouble))
-      .verifying(Messages("pla.psoDetails.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
+      .verifying(Messages("pla.base.errors.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
+      .verifying(Messages("pla.base.errors.errorNegative"), psoAmt => isPositive(psoAmt.toDouble))
+      .verifying(Messages("pla.base.errors.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
 
     )(PSODetailsModel.apply)(PSODetailsModel.unapply)
   )
