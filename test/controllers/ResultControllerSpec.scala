@@ -17,24 +17,24 @@
 package controllers
 
 import auth.{MockAuthConnector, MockConfig}
-import org.mockito.Matchers
-import play.api.i18n.Messages
-import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost, FakeRequestTo}
-import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.http._
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.scalatest.mock.MockitoSugar
-import org.mockito.Mockito._
-import org.mockito.Matchers.anyString
-import config.{FrontendAppConfig, FrontendAuthConnector}
-import play.api.libs.json.{JsValue, Json}
+import config.FrontendAuthConnector
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.ResponseConstructors
 import enums.{ApplicationOutcome, ApplicationType}
 import models.{ApplyResponseModel, ProtectionModel}
+import org.mockito.Matchers
+import org.mockito.Matchers.anyString
+import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
-import play.api.mvc.{Action, AnyContent, Result}
+import org.scalatest.mock.MockitoSugar
+import play.api.i18n.Messages
+import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
+import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
+import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.play.http._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
 import scala.concurrent.Future
 
 
