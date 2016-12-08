@@ -19,7 +19,7 @@ package config
 import play.api.Play._
 import uk.gov.hmrc.play.config.ServicesConfig
 
-trait AppConfig extends {
+trait AppConfig {
   val betaFeedbackUrl: String
   val betaFeedbackUnauthenticatedUrl: String
   val analyticsToken: String
