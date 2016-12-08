@@ -17,22 +17,16 @@
 package controllers
 
 import java.util.UUID
+
+import auth._
+import config.FrontendAuthConnector
+import models._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
-import play.api.http._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.mvc.{AnyContent, Action}
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
-import org.jsoup._
 import testHelpers._
-import org.mockito.Matchers
-import org.mockito.Mockito._
-import scala.concurrent.Future
-import config.{FrontendAppConfig,FrontendAuthConnector}
-import models._
-import auth._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 
 class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
@@ -41,7 +35,7 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
     val sessionId = UUID.randomUUID.toString
     val fakeRequest = FakeRequest("GET", "/protect-your-lifetime-allowance/")
     object TestExitSurveyController extends ExitSurveyController {
-        override lazy val applicationConfig = FrontendAppConfig
+        override lazy val applicationConfig = MockConfig
         override lazy val authConnector = MockAuthConnector
         override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
     }

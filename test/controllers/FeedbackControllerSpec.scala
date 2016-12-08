@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{AppConfig}
+import auth.MockConfig
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -26,10 +26,11 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
-import uk.gov.hmrc.play.http.{HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.http.ws.WSHttp
+import uk.gov.hmrc.play.http.{HttpGet, HttpPost, HttpResponse}
 import uk.gov.hmrc.play.partials.{CachedStaticHtmlPartialRetriever, FormPartialRetriever, HtmlPartial}
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
 import scala.concurrent.Future
 
 class FeedbackControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
@@ -63,29 +64,8 @@ class FeedbackControllerSpec extends UnitSpec with MockitoSugar with WithFakeApp
 
     override def contactFormReferer(implicit request: Request[AnyContent]): String = request.headers.get(REFERER).getOrElse("")
 
-    override val applicationConfig: AppConfig = new AppConfig {
-      override val citizenAuthHost: Option[String] = None
-      override val ggSignInUrl: String = ""
-      override val twoFactorUrl: String = ""
-      override val reportAProblemNonJSUrl: String = ""
-      override val ssoUrl: Option[String] = None
-      override val identityVerification: Boolean = false
-      override val betaFeedbackUnauthenticatedUrl: String = ""
-      override val existingProtectionsUrl: String = ""
-      override val notAuthorisedRedirectUrl: String = ""
-      override val ipStartUrl: String = ""
-      override val contactFrontendPartialBaseUrl: String = ""
-      override val excludeCopeTab: Boolean = false
-      override val analyticsHost: String = ""
-      override val betaFeedbackUrl: String = ""
-      override val analyticsToken: String = ""
-      override val reportAProblemPartialUrl: String = ""
-      override val contactFormServiceIdentifier: String = ""
-      override val confirmFPUrl: String = ""
-      override val ivUpliftUrl: String = ""
-      override val ptaFrontendUrl: String = ""
-      override val ip14StartUrl: String = ""
-    }
+    override val applicationConfig = MockConfig
+
   }
 
   "GET /feedback" should {

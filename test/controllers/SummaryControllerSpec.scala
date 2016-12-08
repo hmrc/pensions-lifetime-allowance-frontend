@@ -17,24 +17,23 @@
 package controllers
 
 
+import java.util.UUID
+
 import akka.util.Timeout
+import auth._
 import connectors.KeyStoreConnector
 import constructors.SummaryConstructor
 import enums.ApplicationType
 import models.SummaryModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.libs.json.JsValue
-import play.api.test.Helpers.redirectLocation
+import testHelpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.HeaderCarrier
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
-import org.scalatest.mock.MockitoSugar
-import java.util.UUID
-import testHelpers._
-import config.FrontendAppConfig
-import auth._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
@@ -46,7 +45,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
 
   object TestSummaryControllerNoData extends SummaryController {
-    override lazy val applicationConfig = FrontendAppConfig
+    override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
 
@@ -57,7 +56,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   }
 
   object TestSummaryControllerInvalidData extends SummaryController {
-    override lazy val applicationConfig = FrontendAppConfig
+    override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
 
@@ -69,7 +68,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   }
 
   object TestSummaryControllerValidData extends SummaryController {
-    override lazy val applicationConfig = FrontendAppConfig
+    override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
 

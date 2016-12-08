@@ -17,19 +17,20 @@
 package controllers
 
 
-import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
-import org.scalatest.mock.MockitoSugar
 import java.util.UUID
-import play.api.i18n.Messages
-import testHelpers._
-import config.{FrontendAppConfig,FrontendAuthConnector}
+
 import auth._
+import config.FrontendAuthConnector
+import org.scalatest.mock.MockitoSugar
+import play.api.i18n.Messages
+import play.api.test.FakeRequest
+import testHelpers._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
     object TestConfirmationController extends ConfirmationController {
-        override lazy val applicationConfig = FrontendAppConfig
+        override lazy val applicationConfig = MockConfig
         override lazy val authConnector = MockAuthConnector
         override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
     }
