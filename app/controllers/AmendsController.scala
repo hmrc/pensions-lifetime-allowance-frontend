@@ -128,7 +128,6 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   }
 
   def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel])(implicit user:PLAUser, request:Request[AnyContent]):Future[Result] = {
-    println("\n\nmodelAR: " + modelAR + "\n\n")
     if(modelGA.isEmpty){
       Logger.warn(s"Unable to retrieve amendsGAModel from keyStore for user nino :${user.nino}")
     }
