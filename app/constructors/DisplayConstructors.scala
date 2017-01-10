@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,7 +143,7 @@ trait DisplayConstructors {
 
     model.pensionDebits.flatMap { psoList =>
       if (psoList.length > 1) {
-        Logger.error("More than one PSO amendment was found in the protection model, where only one is permitted.")
+        Logger.warn("More than one PSO amendment was found in the protection model, where only one is permitted.")
         None
       } else {
         val psoAmendCall = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)

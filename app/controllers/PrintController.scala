@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ trait PrintController extends FrontendController with AuthorisedForPLA {
           protectionModel <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
         } yield routePrintView(personalDetailsModel, protectionModel, nino)
       }.getOrElse {
-        Logger.error("No associated nino for user in printView action")
+        Logger.warn("No associated nino for user in printView action")
         Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
     }
