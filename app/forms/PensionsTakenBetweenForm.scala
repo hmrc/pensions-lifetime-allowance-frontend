@@ -25,7 +25,7 @@ import play.api.i18n.{Lang, Messages}
 
 object PensionsTakenBetweenForm {
 
-  def validateForm(form: Form[PensionsTakenBetweenModel]): Form[PensionsTakenBetweenModel] = {
+  def validateForm(form: Form[PensionsTakenBetweenModel])(implicit lang: Lang): Form[PensionsTakenBetweenModel] = {
     if(!validationNeeded(form)) form else {
       if(!validateFieldCompleted(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.base.errors.errorQuestion"))
       else if(!validateMinimum(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.base.errors.errorNegative"))
