@@ -20,6 +20,8 @@ Messages("pla.overseasPensions.questionTwo")
 
 @main_template(title=Messages("pla.overseasPensions.title"), scriptElem=Some(scriptElement)) {
 
+@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+
 @govHelpers.errorSummary(
 Messages("pla.base.errorSummaryLabel"), amendOverseasPensionsForm
 )

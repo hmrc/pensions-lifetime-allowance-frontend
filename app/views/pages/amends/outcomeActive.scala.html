@@ -13,6 +13,8 @@
 
 @views.html.main_template(title = Messages("pla.activeAmend.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
+@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+
 @gaModel.map{ gaModel =>
 <div @if(gaModel.current.isDefined){data-metrics = "activeAmends:@gaModel.current:amendCurrentPensions"}></div>
 <div @if(gaModel.before.isDefined){data-metrics = "activeAmends:@gaModel.before:amendPTBefore"}></div>
