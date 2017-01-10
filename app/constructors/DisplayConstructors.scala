@@ -44,8 +44,12 @@ trait DisplayConstructors {
     val psaCheckReference = protectionModel.psaCheckReference.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "psaCheckReference")}
     val protectionReference = protectionModel.protectionReference.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "protectionReference")}
 
-    val protectedAmount = protectionModel.protectedAmount.map { amt =>
-      Display.currencyDisplayString(BigDecimal(amt))
+    val protectedAmountOption = protectionModel.protectedAmount.map { amt =>
+      Display.currencyDisplayString(BigDecimal(amt))    }
+
+    val protectedAmount = protectionModel.protectionType match {
+      case Some("FP2016") => Some(Display.currencyDisplayString(Constants.fpProtectedAmount))
+      case _ => protectedAmountOption
     }
 
     val certificateDate = protectionModel.certificateDate.map { cDate =>
