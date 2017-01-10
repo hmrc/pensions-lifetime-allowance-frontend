@@ -82,7 +82,6 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
       },
       success => for {
         protectionAmendment <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
-        saveProtection <- keyStoreConnector.saveData[ProtectionModel]("openProtection", protectionAmendment.get.updatedProtection)
         saveAmendsGA <- keyStoreConnector.saveData[AmendsGAModel]("AmendsGA",AmendsGAConstructor.identifyAmendsChanges(protectionAmendment.get.updatedProtection,protectionAmendment.get.originalProtection))
         response <- plaConnector.amendProtection(user.nino.get, protectionAmendment.get.updatedProtection)
         result <- routeViaMCNeededCheck(response)
