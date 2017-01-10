@@ -58,7 +58,6 @@ trait PrintController extends FrontendController with AuthorisedForPLA {
 
   private def routePrintView(personalDetailsModel: Option[PersonalDetailsModel], protectionModel: Option[ProtectionModel], nino: String)(implicit request: Request[AnyContent]): Result = {
       val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, protectionModel, nino)
-      println(s"\n\n${displayModel}\n\n")
       Ok(views.html.pages.result.resultPrint(displayModel))
   }
 
