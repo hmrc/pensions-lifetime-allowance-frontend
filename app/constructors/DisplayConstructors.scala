@@ -22,7 +22,7 @@ import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import play.api.Logger
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import play.api.mvc.Call
 import utils.{CallMap, Constants}
 
@@ -116,7 +116,7 @@ trait DisplayConstructors {
   }
 
   // AMENDS
-  def createAmendDisplayModel(model: AmendProtectionModel): AmendDisplayModel = {
+  def createAmendDisplayModel(model: AmendProtectionModel)(implicit lang: Lang): AmendDisplayModel = {
     val amended = modelsDiffer(model.originalProtection, model.updatedProtection)
     val totalAmount = Display.currencyDisplayString(BigDecimal(
       model.updatedProtection.relevantAmount.getOrElse(0.0)
@@ -139,11 +139,11 @@ trait DisplayConstructors {
     )
   }
 
-  def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel = {
+  def createPreviousPsoSection(model: ProtectionModel)(implicit lang: Lang): AmendDisplaySectionModel = {
     createNoChangeSection(model, ApplicationStage.CurrentPsos, model.pensionDebitTotalAmount)
   }
 
-  def createCurrentPsoSection(model: ProtectionModel): Option[Seq[AmendDisplaySectionModel]] = {
+  def createCurrentPsoSection(model: ProtectionModel)(implicit lang: Lang): Option[Seq[AmendDisplaySectionModel]] = {
 
     model.pensionDebits.flatMap { psoList =>
       if (psoList.length > 1) {
@@ -167,7 +167,7 @@ trait DisplayConstructors {
     }
   }
 
-  def createAmendPensionContributionSectionsFromProtection(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
+  def createAmendPensionContributionSectionsFromProtection(protection: ProtectionModel)(implicit lang: Lang): Seq[AmendDisplaySectionModel] = {
     val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)
     val pensionsTakenBeforeSection = createSection(protection, ApplicationStage.PensionsTakenBefore, protection.preADayPensionInPayment)
     val pensionsTakenBetweenSection = createSection(protection, ApplicationStage.PensionsTakenBetween, protection.postADayBenefitCrystallisationEvents)
@@ -177,23 +177,23 @@ trait DisplayConstructors {
     Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
   }
 
-  def createSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double]): AmendDisplaySectionModel = {
+  def createSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double])(implicit lang: Lang): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)
 
     createYesNoSection(applicationStage.toString, Some(amendCall), amountOption)
   }
 
-  def createNoChangeSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double]): AmendDisplaySectionModel = {
+  def createNoChangeSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double])(implicit lang: Lang): AmendDisplaySectionModel = {
     createNoChangeYesNoSection(applicationStage.toString, amountOption)
   }
 
-  def createCurrentPensionsSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value): AmendDisplaySectionModel = {
+  def createCurrentPensionsSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value)(implicit lang: Lang): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)
     val currentPensions = protection.uncrystallisedRights.getOrElse(throw new Exceptions.OptionNotDefinedException("createCurrentPensionsSection","currentPensions",protection.protectionType.getOrElse("No protection type")))
     AmendDisplaySectionModel(applicationStage.toString, Seq(AmendDisplayRowModel("Amt", Some(amendCall),  removeLinkCall = None, Display.currencyDisplayString(BigDecimal(currentPensions)))))
   }
 
-  def createNoChangeYesNoSection(stage: String, amountOption: Option[Double]) = {
+  def createNoChangeYesNoSection(stage: String, amountOption: Option[Double])(implicit lang: Lang) = {
     amountOption.fold(
       AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.no"))))
     )(amt =>
@@ -208,7 +208,7 @@ trait DisplayConstructors {
     )
   }
 
-  def createYesNoSection(stage: String, amendCall: Option[Call], amountOption: Option[Double]) = {
+  def createYesNoSection(stage: String, amendCall: Option[Call], amountOption: Option[Double])(implicit lang: Lang) = {
     amountOption.fold(
       AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no"))))
     )(amt =>

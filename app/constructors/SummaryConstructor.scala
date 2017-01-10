@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import enums.ApplicationType
 import play.api.Logger
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import models._
 import common.Display._
 import common.Dates._
@@ -35,7 +35,7 @@ object SummaryConstructor extends SummaryConstructor {
 
 trait SummaryConstructor {
 
-  def createSummaryData(data: CacheMap)(implicit protectionType: ApplicationType.Value): Option[SummaryModel] = {
+  def createSummaryData(data: CacheMap)(implicit protectionType: ApplicationType.Value, lang: Lang) : Option[SummaryModel] = {
 
     val helper = new SummaryConstructorHelper()
 
@@ -50,7 +50,7 @@ trait SummaryConstructor {
     val psoDetails = data.getEntry[PSODetailsModel](nameString("psoDetails"))
 
 
-    def relevantAmount: BigDecimal = {
+    def relevantAmount(implicit lang: Lang): BigDecimal = {
       val (pensionsBeforeAmt, pensionsBetweenAmt) = if(helper.positiveAnswer(pensionsTakenModel)) (
         if(helper.positiveAnswer(pensionsTakenBeforeModel)) helper.amountValue(pensionsTakenBeforeModel) else None,
         if(helper.positiveAnswer(pensionsTakenBetweenModel)) helper.amountValue(pensionsTakenBetweenModel) else None
@@ -127,7 +127,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
       modelOption.map{_.getAmount}.getOrElse(None)
     }
 
-    def createYesNoSection(dataName: String, modelOption: Option[YesNoModel], boldText: Boolean): Option[SummarySectionModel] = {
+    def createYesNoSection(dataName: String, modelOption: Option[YesNoModel], boldText: Boolean)(implicit lang: Lang): Option[SummarySectionModel] = {
       createYesNoRow(dataName, modelOption, boldText).map { row =>
         SummarySectionModel(
           List(row)
@@ -143,7 +143,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
       )
     }
 
-    def createYesNoAmountSection(dataName: String, modelOption: Option[YesNoAmountModel], boldText: Boolean) = {
+    def createYesNoAmountSection(dataName: String, modelOption: Option[YesNoAmountModel], boldText: Boolean)(implicit lang: Lang) = {
       SummarySectionModel(
         List(
           createYesNoRow(dataName, modelOption, boldText),
@@ -152,7 +152,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
       )
     }
 
-    def createYesNoRow(dataName: String, modelOption: Option[YesNoModel], boldText: Boolean) = {
+    def createYesNoRow(dataName: String, modelOption: Option[YesNoModel], boldText: Boolean)(implicit lang: Lang) = {
       modelOption.map { model =>
         val name = nameString(dataName)
         val call = CallMap.get(name)
@@ -163,7 +163,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
       }
     }
 
-    def yesNoValue(model: YesNoModel): String = {
+    def yesNoValue(model: YesNoModel)(implicit lang: Lang): String = {
       Messages(s"pla.base.${model.getYesNoValue}")
     }
 
