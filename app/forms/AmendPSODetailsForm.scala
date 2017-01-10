@@ -69,7 +69,7 @@ object AmendPSODetailsForm {
     form.errors.map(_.key).exists(List("psoDay","psoMonth","psoYear").contains(_))
   }
 
-  val amendPsoDetailsForm = Form(
+  def amendPsoDetailsForm(implicit lang:Lang) = Form(
     mapping(
       "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),
       "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),

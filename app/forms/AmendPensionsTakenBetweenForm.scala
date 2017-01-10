@@ -51,7 +51,7 @@ object AmendPensionsTakenBetweenForm {
 
   private def validateTwoDec(data: Form[AmendPensionsTakenBetweenModel]) = isMaxTwoDecimalPlaces(data("amendedPensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
 
-  val amendPensionsTakenBetweenForm = Form (
+  def amendPensionsTakenBetweenForm(implicit lang:Lang) = Form (
     mapping(
       "amendedPensionsTakenBetween" -> nonEmptyText,
       "amendedPensionsTakenBetweenAmt" -> optional(bigDecimal),

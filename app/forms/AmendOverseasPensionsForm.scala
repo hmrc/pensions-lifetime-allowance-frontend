@@ -25,7 +25,7 @@ import utils.Constants
 
 object AmendOverseasPensionsForm {
 
-  val amendOverseasPensionsForm = Form (
+  def amendOverseasPensionsForm(implicit lang:Lang) = Form (
     mapping(
       "amendedOverseasPensions" -> nonEmptyText,
       "amendedOverseasPensionsAmt" -> optional(bigDecimal),
