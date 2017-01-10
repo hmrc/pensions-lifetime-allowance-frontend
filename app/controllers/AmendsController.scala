@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,6 +123,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
       modelGA <- keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
       result <- amendmentOutcomeResult(modelAR,modelGA)
     } yield result
+
   }
 
   def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel])(implicit user:PLAUser, request:Request[AnyContent]):Future[Result] = {
@@ -135,6 +136,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
           throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
         }
         if(Constants.activeAmendmentCodes.contains(id)){
+          keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
           Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
         } else {
           Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
