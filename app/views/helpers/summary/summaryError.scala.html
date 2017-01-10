@@ -1,4 +1,4 @@
-@(heading: String, showError: Boolean, protectionType: String)
+@(heading: String, showError: Boolean, protectionType: String)(implicit lang:Lang)
 
 <div class="flash error-summary@if(showError) { error-summary--show}"
      id="error-summary-display"

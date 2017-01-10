@@ -2,7 +2,7 @@
 @import models.amendModels.AmendsGAModel
 @import utils.Constants
 
-@(model: InactiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_])
+@(model: InactiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], lang: Lang)
 
 @scriptElement = {
 <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>

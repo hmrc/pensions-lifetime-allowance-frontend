@@ -3,7 +3,7 @@
 @import helpers.templates.{formInputMoney,formHiddenYesNoRadio}
 @import play.api.data._
 
-@(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel])(implicit request: Request[_])
+@(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel])(implicit request: Request[_], lang: Lang)
 
 @hiddenYesNoContent = {
 

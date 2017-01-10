@@ -22,11 +22,11 @@ import common.Dates._
 import utils.Constants
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 
 object IP14PSODetailsForm {
 
-  def validateForm(form: Form[PSODetailsModel]): Form[PSODetailsModel] = {
+  def validateForm(form: Form[PSODetailsModel])(implicit lang:Lang): Form[PSODetailsModel] = {
     val (day, month, year) = getFormDateValues(form)
     if(dateFieldsAlreadyInvalid(form)) form
     else if(!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
@@ -49,7 +49,7 @@ object IP14PSODetailsForm {
     form.errors.map(_.key).exists(List("psoDay","psoMonth","psoYear").contains(_))
   }
 
-  val IP14PsoDetailsForm = Form(
+  def IP14PsoDetailsForm(implicit lang:Lang): Form[PSODetailsModel] = Form(
     mapping(
         "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),
         "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),

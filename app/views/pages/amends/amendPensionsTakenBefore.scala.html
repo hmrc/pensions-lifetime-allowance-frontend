@@ -5,7 +5,7 @@
 @import common.Links
 
 
-@(amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel])(implicit request: Request[_])
+@(amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel])(implicit request: Request[_], lang: Lang)
 
 @helpTextAccordionContent = {
     <p>@Messages("pla.pensionsTakenBefore.para.1")</p>

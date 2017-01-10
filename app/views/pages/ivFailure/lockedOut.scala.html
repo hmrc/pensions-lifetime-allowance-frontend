@@ -1,8 +1,9 @@
 @import common.Links
 
-@()(implicit request: Request[_])
+@()(implicit request: Request[_], lang: Lang)
 
 @views.html.main_template(title = Messages("pla.lockedOut.title"), bodyClasses = None, showLogout = false) {
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
 <h1 class="heading-large">@Messages("pla.lockedOut.pageHeading")</h1>
 

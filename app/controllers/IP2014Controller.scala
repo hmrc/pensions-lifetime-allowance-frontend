@@ -16,14 +16,14 @@
 
 package controllers
 
-import auth.{PLAUser, AuthorisedForPLA}
-import config.{FrontendAppConfig,FrontendAuthConnector}
-
+import auth.{AuthorisedForPLA, PLAUser}
+import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.KeyStoreConnector
 import enums.ApplicationType
 import play.api.Logger
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+
 import scala.concurrent.Future
 import forms._
 import forms.PensionsTakenForm.pensionsTakenForm
@@ -34,7 +34,8 @@ import forms.CurrentPensionsForm.currentPensionsForm
 import forms.PensionDebitsForm.pensionDebitsForm
 import forms.IP14PSODetailsForm.IP14PsoDetailsForm
 import models._
-
+import play.api.data.FormError
+import play.api.i18n.Messages
 import views.html._
 
 object IP2014Controller extends IP2014Controller {
@@ -58,7 +59,10 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
 
     val submitIP14PensionsTaken = AuthorisedByAny { implicit user => implicit request =>
         pensionsTakenForm.bindFromRequest.fold(
-            errors => BadRequest(pages.ip2014.ip14PensionsTaken(errors)),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                BadRequest(pages.ip2014.ip14PensionsTaken(form))
+            },
             success => {
                 keyStoreConnector.saveFormData("ip14PensionsTaken", success)
                 success.pensionsTaken.get match {
@@ -82,7 +86,10 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     val submitIP14PensionsTakenBefore = AuthorisedByAny.async { implicit user => implicit request =>
 
         pensionsTakenBeforeForm.bindFromRequest.fold(
-            errors => Future.successful(BadRequest(pages.ip2014.ip14PensionsTakenBefore(errors))),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                Future.successful(BadRequest(pages.ip2014.ip14PensionsTakenBefore(form)))
+            },
             success => {
                 val validatedForm = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.fill(success))
                 if(validatedForm.hasErrors) {
@@ -108,7 +115,10 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     val submitIP14PensionsTakenBetween = AuthorisedByAny.async { implicit user => implicit request =>
 
         pensionsTakenBetweenForm.bindFromRequest.fold(
-            errors => Future.successful(BadRequest(pages.ip2014.ip14PensionsTakenBetween(errors))),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                Future.successful(BadRequest(pages.ip2014.ip14PensionsTakenBetween(form)))
+            },
             success => {
                 val validatedForm = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.fill(success))
                 if(validatedForm.hasErrors) {
@@ -134,7 +144,10 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     val submitIP14OverseasPensions = AuthorisedByAny.async { implicit user => implicit request =>
 
         overseasPensionsForm.bindFromRequest.fold(
-            errors => Future.successful(BadRequest(pages.ip2014.ip14OverseasPensions(errors))),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                Future.successful(BadRequest(pages.ip2014.ip14OverseasPensions(form)))
+            },
             success => {
                 val validatedForm = OverseasPensionsForm.validateForm(overseasPensionsForm.fill(success))
                 if(validatedForm.hasErrors) {
@@ -160,7 +173,10 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     val submitIP14CurrentPensions = AuthorisedByAny.async { implicit user => implicit request =>
 
         currentPensionsForm.bindFromRequest.fold(
-            errors => Future.successful(BadRequest(pages.ip2014.ip14CurrentPensions(errors))),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                Future.successful(BadRequest(pages.ip2014.ip14CurrentPensions(form)))
+            },
             success => {
                 keyStoreConnector.saveFormData("ip14CurrentPensions", success)
                 Future.successful(Redirect(routes.IP2014Controller.ip14PensionDebits()))
@@ -179,7 +195,10 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
 
     val submitIP14PensionDebits = AuthorisedByAny { implicit user => implicit request =>
         pensionDebitsForm.bindFromRequest.fold(
-            errors => BadRequest(pages.ip2014.ip14PensionDebits(errors)),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                BadRequest(pages.ip2014.ip14PensionDebits(form))
+            },
             success => {
                 keyStoreConnector.saveFormData("ip14PensionDebits", success)
                 success.pensionDebits.get match {
@@ -200,7 +219,10 @@ trait IP2014Controller extends FrontendController with AuthorisedForPLA {
     val submitIP14PSODetails = AuthorisedByAny.async { implicit user => implicit request =>
 
             IP14PsoDetailsForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(IP14PSODetailsForm.validateForm(errors)))),
+                errors => {
+                    val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                    Future.successful(BadRequest(pages.ip2014.ip14PsoDetails(IP14PSODetailsForm.validateForm(form))))
+                },
                 form => {
                     val validatedForm = IP14PSODetailsForm.validateForm(IP14PsoDetailsForm.fill(form))
                     if(validatedForm.hasErrors) {

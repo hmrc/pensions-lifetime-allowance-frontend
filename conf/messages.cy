@@ -138,7 +138,7 @@ pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance have y
 pla.pensionsTakenBetween.help               = How do I work out the value?
 pla.pensionsTakenBetween.para.2             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
 pla.pensionsTakenBetween.step.1             = Take the lifetime allowance at 5 April 2016 (£1.25m) and divide by the value of your lifetime allowance on the date the event happened.
-pla.pensionsTakenBetween.step.2             = Multiply the value of your lifetime allowance on the date the event happened by the percentage of lifetime allowance used.
+pla.pensionsTakenBetween.step.2             = Multiply by the value of your lifetime allowance on the date the event happened by the percentage of lifetime allowance used.
 pla.pensionsTakenBetween.step.3             = Take the result from step 1 and multiply by the result of step 2.
 pla.pensionsTakenBetween.step.4             = Repeat for each event and total the amounts together.
 pla.pensionsTakenBetween.para.3             = Read technical guidance on {0}
@@ -558,11 +558,11 @@ resultCode.5.1          =   As you already have enhanced protection in place, in
 resultCode.5.2          =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.6.heading    =   You''ve added individual protection 2014
-resultCode.6.1          =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection. 
+resultCode.6.1          =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
 resultCode.6.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.7.heading    =   You''ve added individual protection 2014
-resultCode.7.1          =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014. 
+resultCode.7.1          =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
 resultCode.7.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.8.heading    =   You''ve added individual protection 2014

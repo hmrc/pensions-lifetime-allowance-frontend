@@ -16,13 +16,13 @@
 
 package forms
 
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import play.api.data._
 import play.api.data.Forms._
 import models._
 
 object PensionsTakenForm {
-  val pensionsTakenForm = Form(
+  def pensionsTakenForm(implicit lang: Lang) = Form(
     mapping(
       "pensionsTaken" -> optional(text).verifying(Messages("pla.pensionsTaken.mandatoryErr"), {_.isDefined})
     )(PensionsTakenModel.apply)(PensionsTakenModel.unapply)

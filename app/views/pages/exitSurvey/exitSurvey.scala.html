@@ -3,7 +3,7 @@
 @import helpers.templates.{formHiddenYesNoRadioExitSurvey,exitSurveyInputRadio,checkbox}
 @import play.api.data._
 
-@(exitSurveyForm: Form[ExitSurveyModel])(implicit request: Request[_])
+@(exitSurveyForm: Form[ExitSurveyModel])(implicit request: Request[_], lang: Lang)
 
 @hiddenYesNoContent = {
 
@@ -24,6 +24,8 @@
 }
 
 @views.html.full_width_template(Messages("pla.exitSurvey.title"), scriptElem=Some(scriptElement)) {
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), exitSurveyForm)
 

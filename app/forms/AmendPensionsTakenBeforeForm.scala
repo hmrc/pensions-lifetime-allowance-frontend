@@ -21,7 +21,7 @@ import models.PensionsTakenBeforeModel
 import models.amendModels.AmendPensionsTakenBeforeModel
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import utils.Constants
 
 
@@ -36,7 +36,7 @@ object AmendPensionsTakenBeforeForm {
     )(AmendPensionsTakenBeforeModel.apply)(AmendPensionsTakenBeforeModel.unapply)
   )
 
-  def validateForm(form: Form[AmendPensionsTakenBeforeModel]): Form[AmendPensionsTakenBeforeModel] = {
+  def validateForm(form: Form[AmendPensionsTakenBeforeModel])(implicit lang:Lang): Form[AmendPensionsTakenBeforeModel] = {
     if(!validationNeeded(form)) form else {
       if(!validateFieldCompleted(form)) form.withError("amendedPensionsTakenBeforeAmt", Messages("pla.base.errors.errorQuestion"))
       else if(!validateMinimum(form)) form.withError("amendedPensionsTakenBeforeAmt", Messages("pla.base.errors.errorNegative"))
