@@ -379,163 +379,163 @@ pla.exitSurvey.writeFeedback                            = If you have any additi
 pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##
-pla.print.title                             = Print your active protection
-pla.print.hmrc                              = HM Revenue & Customs
-pla.print.nino                              = National Insurance number
-pla.print.protectionDetails                 = Protection details
-pla.print.applicationDate                   = Application date
-pla.print.protectionType                    = Protection type
-pla.print.pla                               = Protected lifetime allowance
-pla.print.protectionNotificationNumber      = Protection notification number
-pla.print.schemeAdministratorReference      = Scheme administrator reference
-pla.print.giveToPensionProvider             = Give these details to your pension provider when you decide to take money from your pension
-pla.print.IP2014.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.IP2016.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.FP2016.contactHMRC                = If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days.
+pla.print.title                             = Argraffu''ch diogelwch sydd ar waith
+pla.print.hmrc                              = Cyllid a Thollau EM
+pla.print.nino                              = Rhif Yswiriant Gwladol
+pla.print.protectionDetails                 = Manylion diogelwch
+pla.print.applicationDate                   = Dyddiad y cais
+pla.print.protectionType                    = Math o ddiogelwch
+pla.print.pla                               = Lwfans oes sydd wedi''i ddiogelu
+pla.print.protectionNotificationNumber      = Rhif hysbysu diogelwch
+pla.print.schemeAdministratorReference      = Cyfeirnod gweinyddwr y cynllun
+pla.print.giveToPensionProvider             = Rhowch y manylion hyn i''ch darparwr pensiwn pan fyddwch yn penderfynu cymryd arian o''ch pensiwn.
+pla.print.IP2014.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEM cyn pen 60 diwrnod.
+pla.print.IP2016.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEM cyn pen 60 diwrnod.
+pla.print.FP2016.contactHMRC                = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEM cyn pen 90 diwrnod.
 
 ## Amends ##
-pla.amends.title                                            = Protection summary
-pla.amends.heading.IP2016.noChanges                         = Your individual protection 2016 details
-pla.amends.heading.IP2014.noChanges                         = Your individual protection 2014 details
+pla.amends.title                                            = Crynodeb o ddiogelwch
+pla.amends.heading.IP2016.noChanges                         = Manylion eich diogelwch unigol 2016
+pla.amends.heading.IP2014.noChanges                         = Manylion eich diogelwch unigol 2014
 
-pla.amends.heading.IP2016.changed                           = Check your answers and submit the changes
-pla.amends.heading.IP2014.changed                           = Check your answers and submit the changes
+pla.amends.heading.IP2016.changed                           = Gwiriwch eich atebion a chyflwynwch y newidiadau
+pla.amends.heading.IP2014.changed                           = Gwiriwch eich atebion a chyflwynwch y newidiadau
 
-pla.amends.cancelPara                                       = Alternatively, you can <a href="{0}" id="{1}">cancel the changes</a> and go back.
+pla.amends.cancelPara                                       = Fel arall, gallwch <a href="{0}" id="{1}">ganslo''r newidiadau</a> a mynd yn ôl.
 
-pla.amends.CurrentPensions.IP2016.Amt                       = What were your UK pensions worth on 5 April 2016?
-pla.amends.CurrentPensions.IP2016.Amt.changeHint            = Change the amount that your pensions were worth on 5 April 2016
-pla.amends.CurrentPensions.IP2014.Amt                       = What were your UK pensions worth on 5 April 2014?
-pla.amends.CurrentPensions.IP2014.Amt.changeHint            = Change the amount that your pensions were worth on 5 April 2014
+pla.amends.CurrentPensions.IP2016.Amt                       = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016?
+pla.amends.CurrentPensions.IP2016.Amt.changeHint            = Newidiwch beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016
+pla.amends.CurrentPensions.IP2014.Amt                       = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014?
+pla.amends.CurrentPensions.IP2014.Amt.changeHint            = Newidiwch beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014
 
-pla.amends.PensionsTakenBefore.IP2016.YesNo                 = Did you get an income from any of your pensions before 6 April 2006?
-pla.amends.PensionsTakenBefore.IP2016.YesNo.changeHint      = Change whether you received an income from any of your pensions before 6 April 2006
-pla.amends.PensionsTakenBefore.IP2016.Amt                   = What''s the value of the pensions you took before 6 April 2006?
-pla.amends.PensionsTakenBefore.IP2016.Amt.changeHint        = Change the value of the pensions you took before 6 April 2006
-pla.amends.PensionsTakenBefore.IP2014.YesNo                 = Did you get an income from any of your pensions before 6 April 2006?
-pla.amends.PensionsTakenBefore.IP2014.YesNo.changeHint      = Change whether you received an income from any of your pensions before 6 April 2006
-pla.amends.PensionsTakenBefore.IP2014.Amt                   = What''s the value of the pensions you took before 6 April 2006?
-pla.amends.PensionsTakenBefore.IP2014.Amt.changeHint        = Change the value of the pensions you took before 6 April 2006
+pla.amends.PensionsTakenBefore.IP2016.YesNo                 = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
+pla.amends.PensionsTakenBefore.IP2016.YesNo.changeHint      = Newidiwch p''un a gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
+pla.amends.PensionsTakenBefore.IP2016.Amt                   = Beth yw gwerth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006?
+pla.amends.PensionsTakenBefore.IP2016.Amt.changeHint        = Newidiwch werth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006
+pla.amends.PensionsTakenBefore.IP2014.YesNo                 = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
+pla.amends.PensionsTakenBefore.IP2014.YesNo.changeHint      = Newidiwch p''un a gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
+pla.amends.PensionsTakenBefore.IP2014.Amt                   = Beth yw gwerth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006?
+pla.amends.PensionsTakenBefore.IP2014.Amt.changeHint        = Newidiwch werth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006
 
-pla.amends.PensionsTakenBetween.IP2016.YesNo                = Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.amends.PensionsTakenBetween.IP2016.YesNo.changeHint     = Change whether you got any money from your pensions before 5 April 2016?
-pla.amends.PensionsTakenBetween.IP2016.Amt                  = How much lifetime allowance have you used?
-pla.amends.PensionsTakenBetween.IP2016.Amt.changeHint       = Change the amount of lifetime allowance you used
-pla.amends.PensionsTakenBetween.IP2014.YesNo                = Between 6 April 2006 and 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.amends.PensionsTakenBetween.IP2014.YesNo.changeHint     = Change whether you got any money from your pensions before 5 April 2014?
-pla.amends.PensionsTakenBetween.IP2014.Amt                  = How much lifetime allowance have you used?
-pla.amends.PensionsTakenBetween.IP2014.Amt.changeHint       = Change the amount of lifetime allowance you used
+pla.amends.PensionsTakenBetween.IP2016.YesNo                = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.amends.PensionsTakenBetween.IP2016.YesNo.changeHint     = Newidiwch p''un a gawsoch unrhyw arian o''ch pensiynau cyn 5 Ebrill 2016
+pla.amends.PensionsTakenBetween.IP2016.Amt                  = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.amends.PensionsTakenBetween.IP2016.Amt.changeHint       = Newidiwch swm y lwfans oes a ddefnyddiwyd gennych
+pla.amends.PensionsTakenBetween.IP2014.YesNo                = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.amends.PensionsTakenBetween.IP2014.YesNo.changeHint     = Newidiwch p''un a gawsoch unrhyw arian o''ch pensiynau cyn 5 Ebrill 2014
+pla.amends.PensionsTakenBetween.IP2014.Amt                  = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.amends.PensionsTakenBetween.IP2014.Amt.changeHint       = Newidiwch swm y lwfans oes a ddefnyddiwyd gennych
 
-pla.amends.OverseasPensions.IP2016.YesNo                    = Have you put money into a pension scheme held overseas?
-pla.amends.OverseasPensions.IP2016.YesNo.changeHint         = Change whether you put money into a pension scheme held overseas
-pla.amends.OverseasPensions.IP2016.Amt                      = How much did you contribute?
-pla.amends.OverseasPensions.IP2016.Amt.changeHint           = Change how much you contributed to your overseas pension
-pla.amends.OverseasPensions.IP2014.YesNo                    = Have you put money into a pension scheme held overseas?
-pla.amends.OverseasPensions.IP2014.YesNo.changeHint         = Change whether you put money into a pension scheme held overseas
-pla.amends.OverseasPensions.IP2014.Amt                      = How much did you contribute?
-pla.amends.OverseasPensions.IP2014.Amt.changeHint           = Change how much you contributed to your overseas pension
-pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.removeHint   = Remove your response to the amount or date of your pension sharing order
-pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.changeHint   = Change the details of your pension sharing order
-pla.amends.totalValueOfPensions                             = Total value of pensions
-pla.amends.pageBreadcrumb                                   = Change your protection details
-pla.amends.declaration                                      = The information that I have provided is true and complete to the best of my knowledge and belief.
-pla.amends.submit                                           = Submit your changes
+pla.amends.OverseasPensions.IP2016.YesNo                    = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
+pla.amends.OverseasPensions.IP2016.YesNo.changeHint         = Newidiwch p''un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.amends.OverseasPensions.IP2016.Amt                      = Faint gwnaethoch gyfrannu?
+pla.amends.OverseasPensions.IP2016.Amt.changeHint           = Newidiwch faint yr ydych wedi''i gyfrannu i''ch pensiwn dramor
+pla.amends.OverseasPensions.IP2014.YesNo                    = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
+pla.amends.OverseasPensions.IP2014.YesNo.changeHint         = Newidiwch p''un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.amends.OverseasPensions.IP2014.Amt                      = Faint gwnaethoch gyfrannu?
+pla.amends.OverseasPensions.IP2014.Amt.changeHint           = Newidiwch faint yr ydych wedi''i gyfrannu i''ch pensiwn dramor
+pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.removeHint   = Dilëwch eich ateb i swm neu ddyddiad eich gorchymyn rhannu pensiwn
+pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.changeHint   = Newidiwch fanylion eich gorchymyn rhannu pensiwn
+pla.amends.totalValueOfPensions                             = Cyfanswm gwerth pensiynau
+pla.amends.pageBreadcrumb                                   = Newidiwch eich manylion diogelwch
+pla.amends.declaration                                      = Mae''r wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
+pla.amends.submit                                           = Cyflwyno''ch newidiadau
 
-pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
-pla.amends.CurrentPsos.IP2016.Amt                           = Value of pension sharing orders
-pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Date and amount of pension sharing order
-pla.amends.pensionDebits.removePso                          = This will remove your pension sharing order.
-pla.amends.pensionDebits.cancelRemove                        = <a href="{0}" id="{1}">Do not remove</a>
+pla.amends.CurrentPsos.IP2016.YesNo                         = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?
+pla.amends.CurrentPsos.IP2016.Amt                           = Gwerth gorchmynion rhannu pensiwn
+pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Dyddiad a swm y gorchymyn rhannu pensiwn
+pla.amends.pensionDebits.removePso                          = Bydd hyn yn dileu''ch gorchymyn rhannu pensiwn
+pla.amends.pensionDebits.cancelRemove                        = <a href="{0}" id="{1}">Peidiwch â dileu</a>
 
-pla.amends.CurrentPsos.IP2014.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2014?
-pla.amends.CurrentPsos.IP2014.Amt                           = Value of pension sharing orders
-pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails      = Date and amount of pension sharing order
+pla.amends.CurrentPsos.IP2014.YesNo                         = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?
+pla.amends.CurrentPsos.IP2014.Amt                           = Gwerth gorchmynion rhannu pensiwn
+pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails      = Dyddiad a swm y gorchymyn rhannu pensiwn
 
-pla.amends.addPsoLink                                       = Add a pension sharing order
+pla.amends.addPsoLink                                       = Ychwanegu gorchymyn rhannu pensiwn
 
 ### AMENDS RESULTS MESSAGES ###
-pla.activeAmend.title                                       = Protection amended
-pla.activeAmend.viewDetails                                 = You can view these details in your
-pla.activeAmend.viewDetailsLinkText                         = personal tax account
+pla.activeAmend.title                                       = Diogelwch wedi''i ddiwygio
+pla.activeAmend.viewDetails                                 = Gallwch fwrw golwg ar y manylion hyn yn eich
+pla.activeAmend.viewDetailsLinkText                         = cyfrif treth personol
 
-pla.inactiveAmend.title                                     = Protection amended
+pla.inactiveAmend.title                                     = Diogelwch wedi''i ddiwygio
 
-amendResultCode.25.heading  = You''re no longer entitled to individual protection 2014
-amendResultCode.25.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.25.2        = If you''ve already started taking your pension, you''ll need to tell your pension provider that you''ve lost individual protection 2014.
+amendResultCode.25.heading  = Nid oes gennych hawl i ddiogelwch unigol 2014 erbyn hyn
+amendResultCode.25.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
+amendResultCode.25.2        = Os ydych eisoes wedi dechrau cymryd eich pensiwn, bydd angen i chi rhoi gwybod i''ch darparwr pensiwn eich bod wedi colli diogelwch unigol 2014.
 
-amendResultCode.26.heading  = You''re no longer entitled to individual protection 2014
-amendResultCode.26.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.26.2        = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.26.heading  = Nid oes gennych hawl i ddiogelwch unigol 2014 erbyn hyn
+amendResultCode.26.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
+amendResultCode.26.2        = Fodd bynnag, mae eisoes gennych ddiogelwch uwch a fydd yn aros ar waith. Os ydych yn rhoi''r gorau i ddiogelwch uwch, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
-amendResultCode.27.heading  = You''re no longer entitled to individual protection 2014
-amendResultCode.27.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.27.2        = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.27.heading  = Nid oes gennych hawl i ddiogelwch unigol 2014 erbyn hyn
+amendResultCode.27.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
+amendResultCode.27.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.28.heading  = You''re no longer entitled to individual protection 2014
-amendResultCode.28.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.28.2        = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.28.heading  = Nid oes gennych hawl i ddiogelwch unigol 2014 erbyn hyn
+amendResultCode.28.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
+amendResultCode.28.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.29.heading  = You''re no longer entitled to individual protection 2014
-amendResultCode.29.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.29.2        = However, you already had fixed protection 2016 which has now become active. You can view details of this protection in your personal tax account.
-amendResultCode.29.3        = If you lose fixed protection 2016, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.29.heading  = Nid oes gennych hawl i ddiogelwch unigol 2014 erbyn hyn
+amendResultCode.29.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
+amendResultCode.29.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2016 sydd nawr ar waith. Gallwch fwrw golwg ar fanylion y diogelwch hwn yn eich cyfrif treth personol.
+amendResultCode.29.3        = Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.30.heading  = You''ve amended individual protection 2014
-amendResultCode.30.1        = As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-amendResultCode.30.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.30.heading  = Rydych wedi diwygio diogelwch unigol 2014
+amendResultCode.30.1        = Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
+amendResultCode.30.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.31.heading  = You''ve amended individual protection 2014
-amendResultCode.31.1        = As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-amendResultCode.31.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.31.heading  = Rydych wedi diwygio diogelwch unigol 2014
+amendResultCode.31.1        = Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog.
+amendResultCode.31.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.32.heading  = You''ve amended individual protection 2014
-amendResultCode.32.1        = As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-amendResultCode.32.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.32.heading  = Rydych wedi diwygio diogelwch unigol 2014
+amendResultCode.32.1        = Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
+amendResultCode.32.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.33.heading  = You''ve amended individual protection 2014
+amendResultCode.33.heading  = Rydych wedi diwygio diogelwch unigol 2014
 
-amendResultCode.34.heading  = You''ve amended individual protection 2014
-amendResultCode.4.heading   = You''ve amended individual protection 2014
+amendResultCode.34.heading  = Rydych wedi diwygio diogelwch unigol 2014
+amendResultCode.4.heading   = Rydych wedi diwygio diogelwch unigol 2014
 
-amendResultCode.35.heading  = You''re no longer entitled to individual protection 2016
-amendResultCode.35.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.35.2        = If you''ve already started taking your pension, you''ll need to tell your pension provider that you''ve lost individual protection 2016.
+amendResultCode.35.heading  = Nid oes gennych hawl i ddiogelwch unigol 2016 erbyn hyn
+amendResultCode.35.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
+amendResultCode.35.2        = Os ydych eisoes wedi dechrau cymryd eich pensiwn, bydd angen i chi rhoi gwybod i''ch darparwr pensiwn eich bod wedi colli diogelwch unigol 2016.
 
-amendResultCode.36.heading  = You''re no longer entitled to individual protection 2016
-amendResultCode.36.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.36.2        = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.36.heading  = Nid oes gennych hawl i ddiogelwch unigol 2016 erbyn hyn
+amendResultCode.36.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
+amendResultCode.36.2        = Fodd bynnag, mae eisoes gennych ddiogelwch uwch a fydd yn aros ar waith. Os ydych yn rhoi''r gorau i ddiogelwch uwch, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.37.heading  = You''re no longer entitled to individual protection 2016
-amendResultCode.37.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.37.2        = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.37.heading  = Nid oes gennych hawl i ddiogelwch unigol 2016 erbyn hyn
+amendResultCode.37.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
+amendResultCode.37.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.38.heading  = You''re no longer entitled to individual protection 2016
-amendResultCode.38.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.38.2        = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.38.heading  = Nid oes gennych hawl i ddiogelwch unigol 2016 erbyn hyn
+amendResultCode.38.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
+amendResultCode.38.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.39.heading  = You''re no longer entitled to individual protection 2016
-amendResultCode.39.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.39.2        = However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.39.heading  = Nid oes gennych hawl i ddiogelwch unigol 2016 erbyn hyn
+amendResultCode.39.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
+amendResultCode.39.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2016 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.40.heading  = You''ve amended individual protection 2016
-amendResultCode.40.1        = As you already have enhanced protection in place, individual protection 2016 will only become active if you give up enhanced protection.
-amendResultCode.40.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.40.heading  = Rydych wedi diwygio diogelwch unigol 2016
+amendResultCode.40.1        = Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2016 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
+amendResultCode.40.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.41.heading  = You''ve amended individual protection 2016
-amendResultCode.41.1        = As you already have fixed protection in place, individual protection 2016 will only become active if you lose fixed protection.
-amendResultCode.41.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.41.heading  = Rydych wedi diwygio diogelwch unigol 2016
+amendResultCode.41.1        = Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog.
+amendResultCode.41.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.42.heading  = You''ve amended individual protection 2016
-amendResultCode.42.1        = As you already have fixed protection 2014 in place, individual protection 2016 will only become active if you lose fixed protection 2014.
-amendResultCode.42.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.42.heading  = Rydych wedi diwygio diogelwch unigol 2016
+amendResultCode.42.1        = Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
+amendResultCode.42.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.43.heading  = You''ve amended individual protection 2016
-amendResultCode.43.1        = As you already have fixed protection 2016 in place, individual protection 2016 will only become active if you lose fixed protection 2016.
-amendResultCode.43.2        = If this happens, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.43.heading  = Rydych wedi diwygio diogelwch unigol 2016
+amendResultCode.43.1        = Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2016.
+amendResultCode.43.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-amendResultCode.44.heading  = You''ve amended individual protection 2016
-amendResultCode.12.heading  = You''ve amended individual protection 2016
+amendResultCode.44.heading  = Rydych wedi diwygio diogelwch unigol 2016
+amendResultCode.12.heading  = Rydych wedi diwygio diogelwch unigol 2016
 
 
 
@@ -543,153 +543,153 @@ amendResultCode.12.heading  = You''ve amended individual protection 2016
 
 ### RESULTS MESSAGES ###
 
-resultCode.1.heading    =   Your application for individual protection 2014 was unsuccessful as you held primary protection on 5 April 2014.
-resultCode.1.1          =   If you''ve lost primary protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.1.heading    =   Mae''ch cais am ddiogelwch unigol 2014 wedi bod yn aflwyddiannus gan fod diogelwch sylfaenol gennych ar 5 Ebrill 2014.
+resultCode.1.1          =   Os ydych wedi colli prif ddiogelwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.2.heading    =   Your application for individual protection 2014 was rejected as you already have this.
+resultCode.2.heading    =   Mae''ch cais am ddiogelwch unigol 2014 wedi''i wrthod gan fod hyn gennych eisoes.
 
-resultCode.3.heading    =   You''ve added individual protection 2014
-resultCode.3.1          =   As you already had individual protection 2016 in place, individual protection 2016 has been made inactive.
+resultCode.3.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
+resultCode.3.1          =   Gan fod diogelwch unigol 2016 wedi''i sefydlu gennych eisoes, mae diogelwch unigol 2016 wedi''i wneud yn anweithredol.
 
-resultCode.4.heading    =   You''ve added individual protection 2014
+resultCode.4.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
 
-resultCode.5.heading    =   You''ve added individual protection 2014
-resultCode.5.1          =   As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-resultCode.5.2          =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.5.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
+resultCode.5.1          =   Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
+resultCode.5.2          =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.6.heading    =   You''ve added individual protection 2014
-resultCode.6.1          =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-resultCode.6.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.6.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
+resultCode.6.1          =   Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog.
+resultCode.6.2          =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.7.heading    =   You''ve added individual protection 2014
-resultCode.7.1          =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-resultCode.7.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.7.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
+resultCode.7.1          =   Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
+resultCode.7.2          =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.8.heading    =   You''ve added individual protection 2014
-resultCode.8.1          =   As you already had fixed protection 2016 in place, fixed protection 2016 has been made inactive. It will become active again if you lose individual protection 2014.
-resultCode.8.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.8.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
+resultCode.8.1          =   Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, mae diogelwch sefydlog 2016 wedi''i wneud yn anweithredol. Bydd yn dod ar waith eto os ydych yn colli diogelwch unigol 2014.
+resultCode.8.2          =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.9.heading    =   Your application for individual protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
-resultCode.9.1          =   If you''ve lost primary protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.9.heading    =   Mae''ch cais am ddiogelwch unigol 2016 wedi bod yn aflwyddiannus gan fod prif ddiogelwch gennych ar 5 Ebrill 2016.
+resultCode.9.1          =   Os ydych wedi colli prif ddiogelwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.10.heading   =   Your application for individual protection 2016 was unsuccessful as you already have individual protection 2014.
+resultCode.10.heading   =   Mae''ch cais am ddiogelwch unigol 2016 wedi bod yn aflwyddiannus gan fod diogelwch unigol 2014 gennych eisoes.
 
-resultCode.11.heading   =   Your application for individual protection 2016 was rejected as you already have this.
+resultCode.11.heading   =   Mae''ch cais am ddiogelwch unigol 2016 wedi''i wrthod gan fod hyn gennych eisoes.
 
-resultCode.12.heading   =   You''ve added individual protection 2016
+resultCode.12.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 
-resultCode.13.heading   =   You''ve added individual protection 2016
-resultCode.13.1         =   As you already have enhanced protection in place, your individual protection 2016 will only become active if you give up enhanced protection.
-resultCode.13.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.13.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
+resultCode.13.1         =   Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
+resultCode.13.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.14.heading   =   You''ve added individual protection 2016
-resultCode.14.1         =   As you already have fixed protection in place, your individual protection 2016 will only become active if you lose fixed protection.
-resultCode.14.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.14.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
+resultCode.14.1         =   Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog.
+resultCode.14.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.15.heading   =   You''ve added individual protection 2016
-resultCode.15.1         =   As you already have fixed protection 2014 in place, your individual protection 2016 will only become active if you lose fixed protection 2014.
-resultCode.15.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.15.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
+resultCode.15.1         =   Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
+resultCode.15.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.16.heading   =   You''ve added individual protection 2016
-resultCode.16.1         =   As you already have fixed protection 2016 in place, your individual protection 2016 will only become active if you lose fixed protection 2016.
-resultCode.16.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.16.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
+resultCode.16.1         =   Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2016.
+resultCode.16.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.17.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have enhanced protection.
-resultCode.17.1         =   If enhanced protection is given up you can re-apply for fixed protection 2016.
-resultCode.17.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.17.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod diogelwch uwch gennych eisoes.
+resultCode.17.1         =   Os rhoddir gorau i ddiogelwch uwch, gallwch ail-wneud eich cais am ddiogelwch sefydlog 2016.
+resultCode.17.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.18.heading   =   Your application for fixed protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
-resultCode.18.1         =   If you lost primary protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.18.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod prif ddiogelwch gennych ar 5 Ebrill 2016.
+resultCode.18.1         =   Os colloch brif ddiogelwch cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.19.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection.
-resultCode.19.1         =   If you lost fixed protection before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>. You can then re-apply for fixed protection 2016.
+resultCode.19.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod diogelwch sefydlog gennych eisoes.
+resultCode.19.1         =   Os colloch ddiogelwch sefydlog cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>. Gallwch wedyn ail-wneud eich cais am ddiogelwch sefydlog 2016
 
-resultCode.20.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection 2014.
-resultCode.20.1         =   If you lost fixed protection 2014 before 6 April 2016, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>. You can then re-apply for fixed protection 2016.
+resultCode.20.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod diogelwch sefydlog 2014 gennych eisoes.
+resultCode.20.1         =   Os colloch ddiogelwch sefydlog 2014 cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>. Gallwch wedyn ail-wneud eich cais am ddiogelwch sefydlog 2016
 
-resultCode.21.heading   =   Your application for fixed protection 2016 was rejected as you already have this.
+resultCode.21.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi''i wrthod gan fod hyn gennych eisoes.
 
-resultCode.22.heading   =   You''ve added fixed protection 2016
+resultCode.22.heading   =   Rydych wedi ychwanegu diogelwch sefydlog 2016
 
-resultCode.23.heading   =   You''ve added fixed protection 2016
-resultCode.23.1         =   As you already had individual protection 2016 in place, individual protection 2016 has been made inactive. It will become active again if you lose fixed protection 2016.
-resultCode.23.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.23.heading   =   Rydych wedi ychwanegu diogelwch sefydlog 2016
+resultCode.23.1         =   Gan fod diogelwch unigol 2016 wedi''i sefydlu gennych eisoes, mae diogelwch unigol 2016 wedi''i wneud yn anweithredol. Bydd yn dod ar waith eto os ydych yn colli diogelwch sefydlog 2016.
+resultCode.23.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.24.heading   =   You''ve added fixed protection 2016
-resultCode.24.1         =   As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014.
-resultCode.24.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.24.heading   =   Rydych wedi ychwanegu diogelwch sefydlog 2016
+resultCode.24.1         =   Gan fod diogelwch unigol 2014 wedi''i sefydlu gennych eisoes, daw diogelwch sefydlog 2016 ar waith dim ond os ydych yn colli diogelwch unigol 2014.
+resultCode.24.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.25.heading   =   You''re not entitled to individual protection 2014
-resultCode.25.1         =   This is because your total pensions savings are below £1,250,001.
+resultCode.25.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2014
+resultCode.25.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
 
-resultCode.26.heading   =   You''re not entitled to individual protection 2014
-resultCode.26.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.26.2         =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.26.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2014
+resultCode.26.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
+resultCode.26.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch uwch a fydd yn aros ar waith. Os ydych yn rhoi''r gorau i ddiogelwch uwch, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.27.heading   =   You''re not entitled to individual protection 2014
-resultCode.27.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.27.2         =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.27.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2014
+resultCode.27.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
+resultCode.27.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.28.heading   =   You''re not entitled to individual protection 2014
-resultCode.28.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.28.2         =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.28.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2014
+resultCode.28.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
+resultCode.28.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.29.heading   =   You''re not entitled to individual protection 2014
-resultCode.29.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.29.2         =   However, you already had fixed protection 2016 which has now become active. Your fixed protection 2016 details are shown below. You can view details of this protection in your personal tax account.
-resultCode.29.3         =   If you lose fixed protection 2016, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.29.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2014
+resultCode.29.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
+resultCode.29.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2016 sydd nawr ar waith. Dangosir isod manylion eich diogelwch sefydlog 2016. Gallwch fwrw golwg ar fanylion y diogelwch hwn yn eich cyfrif treth personol.
+resultCode.29.3         =   Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.30.heading   =   You''ve added individual protection 2014
-resultCode.30.1         =   As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-resultCode.30.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.30.heading   =   Rydych wedi ychwanegu diogelwch unigol 2014
+resultCode.30.1         =   Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
+resultCode.30.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.31.heading   =   You''ve added individual protection 2014
-resultCode.31.1         =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-resultCode.31.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.31.heading   =   Rydych wedi ychwanegu diogelwch unigol 2014
+resultCode.31.1         =   Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog.
+resultCode.31.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.32.heading   =   You''ve added individual protection 2014
-resultCode.32.1         =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-resultCode.32.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.32.heading   =   Rydych wedi ychwanegu diogelwch unigol 2014
+resultCode.32.1         =   Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
+resultCode.32.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.33.heading   =   You''ve added individual protection 2014
-resultCode.33.1         =   As you already had fixed protection 2016 in place, fixed protection 2016 has been made inactive. It will become active again if you lose individual protection 2014.
-resultCode.33.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.33.heading   =   Rydych wedi ychwanegu diogelwch unigol 2014
+resultCode.33.1         =   Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, mae diogelwch sefydlog 2016 wedi''i wneud yn anweithredol. Bydd yn dod ar waith eto os ydych yn colli diogelwch unigol 2014.
+resultCode.33.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.34.heading   =   You''ve added individual protection 2014
+resultCode.34.heading   =   Rydych wedi ychwanegu diogelwch unigol 2014
 
-resultCode.35.heading   =   You''re not entitled to individual protection 2016
-resultCode.35.1         =   This is because your total pensions savings are below £1,000,001.
+resultCode.35.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2016
+resultCode.35.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
 
-resultCode.36.heading   =   You''re not entitled to individual protection 2016
-resultCode.36.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.36.2         =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.36.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2016
+resultCode.36.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
+resultCode.36.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch uwch a fydd yn aros ar waith. Os ydych yn rhoi''r gorau i ddiogelwch uwch, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.37.heading   =   You''re not entitled to individual protection 2016
-resultCode.37.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.37.2         =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.37.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2016
+resultCode.37.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
+resultCode.37.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.38.heading   =   You''re not entitled to individual protection 2016
-resultCode.38.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.38.2         =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.38.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2016
+resultCode.38.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
+resultCode.38.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.39.heading   =   You''re not entitled to individual protection 2016
-resultCode.39.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.39.2         =   However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.39.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2016
+resultCode.39.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
+resultCode.39.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2016 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.40.heading   =   You''ve added individual protection 2016
-resultCode.40.1         =   As you already have enhanced protection in place, your individual protection 2016 will only become active if you give up enhanced protection.
-resultCode.40.2         =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.40.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
+resultCode.40.1         =   Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
+resultCode.40.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.41.heading   =   You''ve added individual protection 2016
-resultCode.41.1         =   As you already have fixed protection in place, your individual protection 2016 will only become active if you lose fixed protection.
-resultCode.41.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.41.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
+resultCode.41.1         =   Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog.
+resultCode.41.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.42.heading   =   You''ve added individual protection 2016
-resultCode.42.1         =   As you already have fixed protection 2014 in place, your individual protection 2016 will only become active if you lose fixed protection 2014.
-resultCode.42.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.42.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
+resultCode.42.1         =   Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
+resultCode.42.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.43.heading   =   You''ve added individual protection 2016
-resultCode.43.1         =   As you already have fixed protection 2016 in place, your individual protection 2016 will only become active if you lose fixed protection 2016.
-resultCode.43.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.43.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
+resultCode.43.1         =   Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2016.
+resultCode.43.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
-resultCode.44.heading   =   You''ve added individual protection 2016
+resultCode.44.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
