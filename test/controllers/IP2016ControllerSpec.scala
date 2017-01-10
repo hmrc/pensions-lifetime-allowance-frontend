@@ -18,19 +18,21 @@ package controllers
 
 import java.time.LocalDate
 import java.util.UUID
+
+import auth._
+import config.FrontendAuthConnector
 import connectors.KeyStoreConnector
+import models._
+import org.mockito.Matchers
+import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
 import testHelpers._
-import org.mockito.Matchers
-import org.mockito.Mockito._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
 import scala.concurrent.Future
-import config.{FrontendAppConfig,FrontendAuthConnector}
-import models._
-import auth._
 
 class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
