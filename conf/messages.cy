@@ -1,382 +1,382 @@
 ## Base ##
-pla.base.appName                = Protect your lifetime allowance
-pla.base.yes                    = Yes
-pla.base.no                     = No
-pla.base.continue               = Continue
-pla.base.apply                  = Apply
-pla.base.submitApplication      = Confirm and submit
-pla.base.back                   = Back
-pla.base.change                 = Change
-pla.base.update                 = Update
-pla.base.remove                 = Remove
-pla.base.add                    = Add
-pla.base.readMore               = Read more
-pla.base.newWindow              = opens in a new window
-pla.base.errorSummaryLabel      = There are errors on this page.
-pla.base.errors.invalidDate     = Enter a date in the correct format eg 14 6 2016
-pla.base.errors.yearEmpty       = Enter a year
-pla.base.errors.monthEmpty      = Enter a month
-pla.base.errors.dayEmpty        = Enter a day
-pla.base.date.fields.day        = Day
-pla.base.date.fields.month      = Month
-pla.base.date.fields.year       = Year
+pla.base.appName                = Diogelu''ch lwfans oes
+pla.base.yes                    = Iawn
+pla.base.no                     = Na
+pla.base.continue               = Parhau
+pla.base.apply                  = Gwneud cais
+pla.base.submitApplication      = Cadarnhau a chyflwyno
+pla.base.back                   = Yn ôl
+pla.base.change                 = Newid
+pla.base.update                 = Diweddaru
+pla.base.remove                 = Dileu
+pla.base.add                    = Ychwanegu
+pla.base.readMore               = Darllen mwy
+pla.base.newWindow              = yn agor ffenestr newydd
+pla.base.errorSummaryLabel      = Mae gwallau ar y dudalen hon.
+pla.base.errors.invalidDate     = Nodwch ddyddiad yn y fformat cywir h.y. 14 6 2016
+pla.base.errors.yearEmpty       = Nodwch flwyddyn
+pla.base.errors.monthEmpty      = Nodwch fis
+pla.base.errors.dayEmpty        = Nodwch ddiwrnod
+pla.base.date.fields.day        = Diwrnod
+pla.base.date.fields.month      = Mis
+pla.base.date.fields.year       = Blwyddyn
 
-pla.base.errors.errorQuestion           = Enter an amount in the correct format eg £500000
-pla.base.errors.errorNegative           = Enter an amount that''s £0 or more
-pla.base.errors.errorMaximum            = Enter an amount less than £99,999,999,999,999.98
-pla.base.errors.errorDecimalPlaces      = The amount you''ve entered has too many decimal places
+pla.base.errors.errorQuestion           = Nodwch swm yn y fformat cywir h.y. £500000
+pla.base.errors.errorNegative           = Nodwch swm sy''n £0 neu''n fwy
+pla.base.errors.errorMaximum            = Nodwch swm sy''n llai na £99,999,999,999,999.98
+pla.base.errors.errorDecimalPlaces      = Mae gan y swm yr ydych wedi''i nodi ormod o lefydd degol
 
 
 ## PLAY! Error Overrides ##
-error.real                              = Enter a number without commas, for example 10000.00
-error.required                          = This field is required
+error.real                              = Nodwch rif heb comas, er enghraifft 10000.00
+error.required                          = Mae angen llenwi''r blwch hwn
 
 ## Link Text ##
-pla.links.signout                       = Sign out
+pla.links.signout                       = Allgofnodi
 
 ## Timeout ##
-pla.timeout.title       = Session closed due to inactivity
-pla.timeout.pageHeading = You''ve been signed out due to inactivity
-pla.timeout.returnToPTA = You can start again from the <a href="{0}" rel="external">protect your lifetime allowance</a> page.
+pla.timeout.title       = Mae''r sesiwn wedi dod i ben o ganlyniad i anweithgarwch
+pla.timeout.pageHeading = Rydych wedi''ch allgofnodi o ganlyniad i anweithgarwch
+pla.timeout.returnToPTA = Gallwch ddechrau eto o''r dudalen <a href="{0}" rel="external">diogelu''ch lwfans oes</a>.
 
 ## Signout ##
-pla.signOut.title       = Signed out
-pla.signOut.pageHeading = You have signed out.
+pla.signOut.title       = Wedi allgofnodi
+pla.signOut.pageHeading = Rydych wedi allgofnodi.
 
 ## Not Found ##
-pla.notFound.title          = Page not found - 404
-pla.notFound.pageHeading    = This page can''t be found
-pla.notFound.paraOne        = Please check that you have entered the correct web address.
+pla.notFound.title          = Heb ddod o hyd i''r dudalen – 404
+pla.notFound.pageHeading    = Ni ellir dod o hyd i''r dudalen hon
+pla.notFound.paraOne        = Gwiriwch eich bod wedi nodi''r cyfeiriad gwe cywir.
 
 ## Confirm FP 2016##
-pla.confirmFP16.title       = Apply for FP 2016
-pla.confirmFP16.pageHeading = Get fixed protection 2016 for your lifetime allowance
-pla.confirmFP16.para.1      = To get this protection you must agree to these declarations.
-pla.confirmFP16.para.2      = I declare:
-pla.confirmFP16.bullet.1    = on 6 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme
-pla.confirmFP16.bullet.2    = on 6 April 2016 I did not hold any of these protections:
-pla.confirmFP16.bullet.2.1  = enhanced protection
-pla.confirmFP16.bullet.2.2  = primary protection
-pla.confirmFP16.bullet.2.3  = fixed protection
-pla.confirmFP16.bullet.2.4  = fixed protection 2014
-pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ‘protection cessation event’ (these are specific events that make you ineligible for fixed protection)
-pla.confirmFP16.para.3      = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
-pla.confirmFP16.help        = Help with these conditions
-pla.confirmFP16.hiddenPara.1 = Speak to your pension scheme administrator to get professional help understanding these conditions.
-pla.confirmFP16.hiddenPara.2 = HMRC’s Pensions Tax Manual has {0}
+pla.confirmFP16.title       = Gwneud cais am FP 2016
+pla.confirmFP16.pageHeading = Cael diogelwch sefydlog 2016 ar gyfer eich lwfans oes
+pla.confirmFP16.para.1      = I gael y diogelwch hwn mae''n rhaid i chi gytuno ar y datganiadau hyn.
+pla.confirmFP16.para.2      = Rwy''n datgan:
+pla.confirmFP16.bullet.1    = ar 6 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEM, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau sydd ddim yn y DU
+pla.confirmFP16.bullet.2    = ar 6 Ebrill 2016 nid oedd gennyf unrhyw un o''r diogelwch yma:
+pla.confirmFP16.bullet.2.1  = lefel uwch o ddiogelwch
+pla.confirmFP16.bullet.2.2  = diogelwch sylfaenol
+pla.confirmFP16.bullet.2.3  = diogelwch sefydlog
+pla.confirmFP16.bullet.2.4  = diogelwch sefydlog 2014
+pla.confirmFP16.bullet.3    = er 6 Ebrill 2016 nid wyf wedi cael ''digwyddiad sy''n dod â diogelwch i ben'' (digwyddiadau penodol yw''r rhain sy''n eich gwneud yn anghymwys ar gyfer diogelwch sefydlog)
+pla.confirmFP16.para.3      = Rwy''n datgan bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
+pla.confirmFP16.help        = Help gyda''r amodau hyn
+pla.confirmFP16.hiddenPara.1 = Siaradwch â gweinyddwr eich cynllun pensiwn i gael help proffesiynol i ddeall yr amodau hyn.
+pla.confirmFP16.hiddenPara.2 = Mae gan Lawlyfr Treth Pensiwn CThEM {0}
 
-pla.confirmFP16.hiddenPara.linkText = technical guidance about fixed protection
-pla.confirmFP16.declaration = By confirming, you will automatically submit your application for fixed protection 2016.
+pla.confirmFP16.hiddenPara.linkText = arweiniad technegol ynghylch diogelwch sefydlog
+pla.confirmFP16.declaration = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am ddiogelwch sefydlog 2016 yn awtomatig.
 
 
 ## Failure Messages ##
-pla.notAuthorised.title         = Not Authorised
-pla.notAuthorised.pageHeading   = We were unable to confirm your identity
-pla.notAuthorised.paraOne       = <p>If you can''t confirm your identity and you have a query you can <a href="{0}" target="_blank">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
-pla.notAuthorised.tryAgain      = Return to the <a href="{0}" rel="external">protect your lifetime allowance</a> page to try again.
-pla.lockedOut.title             = Locked Out
-pla.lockedOut.pageHeading       = You have tried to confirm your identity too many times
-pla.lockedOut.paraOne           = You can try again in 7 days.
-pla.lockedOut.paraTwo           = <p>If you have a query you can <a href="{0}" target="_blank">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
-pla.technicalIssue.title        = Technical Issues
-pla.technicalIssue.pageHeading  = There is a technical problem
-pla.technicalIssue.paraOne      = This online service is experiencing difficulties.
-pla.technicalIssue.paraTwo      = Please try again in 5 minutes.
-pla.technicalIssue.tryAgain     = Return to the <a href="{0}" rel="external">protect your lifetime allowance</a> page to try again.
+pla.notAuthorised.title         = Heb ei awdurdodi
+pla.notAuthorised.pageHeading   = Nid oeddem yn gallu cadarnhau pwy ydych.
+pla.notAuthorised.paraOne       = <p>Os na allwch roi prawf o bwy ydych, ac mae gennych gwestiwn, gallwch <a href=ʺ{0}ʺ target=ʺ_blankʺ>gysylltu â Chyllid a Thollau EM (yn agor ffenestr newydd)</a> i gael help.</p>
+pla.notAuthorised.tryAgain      = Yn ôl i''r dudalen <a href="{0}" rel="external">diogelu''ch lwfans oes</a> i roi cynnig arall arni.
+pla.lockedOut.title             = Wedi cloi allan
+pla.lockedOut.pageHeading       = Rydych wedi ceisio rhoi prawf o bwy ydych gormod o weithiau.
+pla.lockedOut.paraOne           = Gallwch roi cynnig arall arni ar ôl 7 diwrnod.
+pla.lockedOut.paraTwo           = <p>Os oes gennych gwestiwn, gallwch <a href="{0}ʺ target="_blank">gysylltu â Chyllid a Thollau EM (yn agor ffenestr newydd)</a> i gael help.</p>
+pla.technicalIssue.title        = Problemau Technegol
+pla.technicalIssue.pageHeading  = Mae problem dechnegol wedi codi
+pla.technicalIssue.paraOne      = Mae problemau wedi codi gyda''r gwasanaeth ar-lein hwn.
+pla.technicalIssue.paraTwo      = Rhowch gynnig arall arni mewn 5 munud.
+pla.technicalIssue.tryAgain     = Yn ôl i''r dudalen <a href="{0}" rel="external">diogelu''ch lwfans oes</a> i roi cynnig arall arni.
 
 ## Technical Error ##
-pla.techError.title                         = Technical Error
-pla.techError.pageHeading                   = Sorry, there''s been a problem
-pla.techError.paraOne                       = You''ll need to start your application again, but we''ve saved the details you''ve given us so far.
-pla.techError.startAgain                    = Start again
-pla.techError.retry                         = Retry
+pla.techError.title                         = Gwall technegol
+pla.techError.pageHeading                   = Mae''n ddrwg gennym. Mae problem wedi codi.
+pla.techError.paraOne                       = Bydd angen i chi ddechrau eich cais eto. Rydym wedi cadw''r manylion a roddwyd gennych hyd yn hyn.
+pla.techError.startAgain                    = Dechrau eto
+pla.techError.retry                         = Ail-geisio
 
 ## No notification ID returned ##
-pla.noNotificationId.title                  = Check your protection
-pla.noNotificationId.paraOne                = Visit your <a id="existingProtectionsLink" href="{0}">personal tax account</a> to see the new application or amendment.
+pla.noNotificationId.title                  = Gwirio''ch diogelwch
+pla.noNotificationId.paraOne                = Ymwelwch â''ch <a id="existingProtectionsLink" href="{0}">cyfrif treth bersonol</a> i weld y cais newydd neu ddiwygiad.
 
 
 ## Pensions Taken ##
-pla.pensionsTaken.title                     = Did any of the following happen before 6 April 2016?
-pla.pensionsTaken.bullet.1                  = You got money from your pensions.
-pla.pensionsTaken.bullet.2                  = You transferred a pension to a scheme held overseas.
-pla.pensionsTaken.bullet.3                  = You turned 75 with pension savings that you hadn''t yet taken.
-pla.pensionsTaken.mandatoryErr              = Please answer this question
-pla.pensionsTaken.legend                    = Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.pensionsTaken.title                     = A ddigwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016?
+pla.pensionsTaken.bullet.1                  = Cawsoch arian o''ch pensiynau.
+pla.pensionsTaken.bullet.2                  = Trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor.
+pla.pensionsTaken.bullet.3                  = Cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny.
+pla.pensionsTaken.mandatoryErr              = Atebwch y cwestiwn hwn
+pla.pensionsTaken.legend                    = Cyn 6 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
 ## IP14 Pensions Taken ##
-pla.ip14PensionsTaken.title                 = Did any of the following happen before 6 April 2014?
-pla.ip14PensionsTaken.legend                = Before 6 April 2014, did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.ip14PensionsTaken.title                 = A ddigwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2014?
+pla.ip14PensionsTaken.legend                = Cyn 6 Ebrill 2014, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
 
 ## Pensions Taken Before ##
-pla.pensionsTakenBefore.title               = Did you get an income from any of your pensions before 6 April 2006?
-pla.pensionsTakenBefore.question            = What were these pensions worth on 5 April 2016?
-pla.pensionsTakenBefore.help                = How to work out the amount
-pla.pensionsTakenBefore.para.1              = If you did not get an income from any other pensions since 6 April 2006:
-pla.pensionsTakenBefore.step.1              = Take only the pensions from which you got an income prior to 6 April 2006.
-pla.pensionsTakenBefore.step.2              = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2016.
-pla.pensionsTakenBefore.step.3              = Multiply this figure by 25.
-pla.pensionsTakenBefore.para.2              = You'll need to do a different calculation if either of the following apply:
-pla.pensionsTakenBefore.bullet.1            = you did receive an income from other pensions since 6 April 2006.
-pla.pensionsTakenBefore.bullet.2            = you have a drawdown pension.
-pla.pensionsTakenBefore.para.3              = Find out how in this {0}
-pla.pensionsTakenBefore.helpLinkText        = technical guidance on valuing your pensions
+pla.pensionsTakenBefore.title               = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
+pla.pensionsTakenBefore.question            = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2016?
+pla.pensionsTakenBefore.help                = Sut i gyfrifo''r swm
+pla.pensionsTakenBefore.para.1              = Os na chawsoch incwm o unrhyw bensiwn arall er 6 Ebrill 2006:
+pla.pensionsTakenBefore.step.1              = Cymerwch y pensiynau y cawsoch incwm ohonynt cyn 6 Ebrill 2006 yn unig.
+pla.pensionsTakenBefore.step.2              = Cyfrifwch y swm blynyddol yr oeddech yn gallu''i gael o''r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2016.
+pla.pensionsTakenBefore.step.3              = Lluoswch y ffigur hwn â 25.
+pla.pensionsTakenBefore.para.2              = Bydd angen i chi wneud cyfrifiad gwahanol os yw''r naill neu''r llall o''r canlynol yn gymwys:
+pla.pensionsTakenBefore.bullet.1            = rydych wedi cael incwm o bensiynau eraill er 6 Ebrill 2006
+pla.pensionsTakenBefore.bullet.2            = mae gennych bensiwn a godir o''r gronfa
+pla.pensionsTakenBefore.para.3              = Darganfyddwch sut yn {0}
+pla.pensionsTakenBefore.helpLinkText        = yr arweiniad technegol hwn ar werthuso''ch pensiynau
 
 ## IP14 Pensions Taken Before ##
-pla.ip14PensionsTakenBefore.question        = What were these pensions worth on 5 April 2014?
-pla.ip14PensionsTakenBefore.step.2          = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014.
+pla.ip14PensionsTakenBefore.question        = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2014?
+pla.ip14PensionsTakenBefore.step.2          = Cyfrifwch y swm blynyddol yr oeddech yn gallu''i gael o''r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2014.
 
 ## Pensions Taken Between ##
-pla.pensionsTakenBetween.title              = Did any of these events happen between 6 April 2006 and 5 April 2016?
-pla.pensionsTakenBetween.bullet.1           = You got money from your pensions.
-pla.pensionsTakenBetween.bullet.2           = You transferred a pension to a scheme held overseas.
-pla.pensionsTakenBetween.bullet.3           = You turned 75 with pension savings which you hadn''t yet taken.
-pla.pensionsTakenBetween.para.1             = You''ll have used some of your lifetime allowance if any of these events happened.
+pla.pensionsTakenBetween.title              = A ddigwyddodd unrhyw un o''r canlynol rhwng 6 Ebrill 2006 a 5 Ebrill 2016?
+pla.pensionsTakenBetween.bullet.1           = Cawsoch arian o''ch pensiynau.
+pla.pensionsTakenBetween.bullet.2           = Trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor.
+pla.pensionsTakenBetween.bullet.3           = Cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny.
+pla.pensionsTakenBetween.para.1             = Os yw unrhyw un o''r digwyddiadau hyn wedi digwydd, byddech wedi defnyddio peth o''ch lwfans oes.
 
-pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance have you used?
-pla.pensionsTakenBetween.help               = How do I work out the value?
-pla.pensionsTakenBetween.para.2             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
-pla.pensionsTakenBetween.step.1             = Take the lifetime allowance at 5 April 2016 (£1.25m) and divide by the value of your lifetime allowance on the date the event happened.
-pla.pensionsTakenBetween.step.2             = Multiply by the value of your lifetime allowance on the date the event happened by the percentage of lifetime allowance used.
-pla.pensionsTakenBetween.step.3             = Take the result from step 1 and multiply by the result of step 2.
-pla.pensionsTakenBetween.step.4             = Repeat for each event and total the amounts together.
-pla.pensionsTakenBetween.para.3             = Read technical guidance on {0}
-pla.pensionsTakenBetween.helpLinkText       = working out how much lifetime allowance you''ve used
+pla.pensionsTakenBetween.questionTwo        = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.pensionsTakenBetween.help               = Sut wyf yn cyfrifo''r gwerth?
+pla.pensionsTakenBetween.para.2             = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi''i ddefnyddio ar gyfer diogelwch unigol 2016.
+pla.pensionsTakenBetween.step.1             = Cymerwch y lwfans oes ar 5 Ebrill 2016 (£1.25m) a rhannwch ef â gwerth eich lwfans oes ar ddyddiad y digwyddiad.
+pla.pensionsTakenBetween.step.2             = Lluoswch werth eich lwfans oes ar ddyddiad y digwyddiad â chanran y lwfans oes a ddefnyddiwyd.
+pla.pensionsTakenBetween.step.3             = Lluoswch ganlyniad cam 1 gyda chanlyniad cam 2.
+pla.pensionsTakenBetween.step.4             = Ail wnewch hyn ar gyfer pob digwyddiad ac adiwch y symiau at ei gilydd.
+pla.pensionsTakenBetween.para.3             = Darllenwch arweiniad technegol ar {0}
+pla.pensionsTakenBetween.helpLinkText       = cyfrifo faint o lwfans oes yr ydych wedi''i ddefnyddio
 
-pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.pensionsTakenBetween.legend             = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
 ## IP14 Pensions Taken Between ##
-pla.ip14PensionsTakenBetween.title          = Did any of the these events happen between 6 April 2006 and 5 April 2014?
-pla.ip14PensionsTakenBetween.step.1         = Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened.
-pla.ip14PensionsTakenBetween.para.2         = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2014.
+pla.ip14PensionsTakenBetween.title          = A ddigwyddodd unrhyw un o''r canlynol rhwng 6 Ebrill 2006 a 5 Ebrill 2014?
+pla.ip14PensionsTakenBetween.step.1         = Cymerwch y lwfans oes ar 5 Ebrill 2014 (£1.5m) a rhannwch ef â gwerth eich lwfans oes ar ddyddiad y digwyddiad.
+pla.ip14PensionsTakenBetween.para.2         = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi''i ddefnyddio ar gyfer diogelwch unigol 2014.
 
-pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.ip14PensionsTakenBetween.legend         = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
 
 ## Overseas Pensions ##
-pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
-pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on.
-pla.overseasPensions.questionTwo            = How much did you contribute?
-pla.overseasPensions.legend                 = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2016?
+pla.overseasPensions.title                  = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
+pla.overseasPensions.question               = Dim ond cyfraniadau a wnaed rhwng 6 Ebrill 2006 a 5 Ebrill 2016 y cawsoch ryddhad treth y DU arnynt, y dylech eu cynnwys.
+pla.overseasPensions.questionTwo            = Faint gwnaethoch gyfrannu?
+pla.overseasPensions.legend                 = A wnaethoch roi arian i mewn i gynllun pensiwn dramor rhwng 6 Ebrill 2006 a 5 Ebrill 2016?
 
 ## IP14 Overseas Pensions ##
-pla.ip14OverseasPensions.question           = Only include contributions you made between 6 April 2006 and 5 April 2014 that you got UK tax relief on.
-pla.ip14OverseasPensions.legend             = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2014?
+pla.ip14OverseasPensions.question           = Dim ond cyfraniadau a wnaed rhwng 6 Ebrill 2006 a 5 Ebrill 2014 y cawsoch ryddhad treth y DU arnynt, y dylech eu cynnwys.
+pla.ip14OverseasPensions.legend             = A wnaethoch roi arian i mewn i gynllun pensiwn dramor rhwng 6 Ebrill 2006 a 5 Ebrill 2014?
 
 
 ## CURRENT PENSIONS ##
-pla.currentPensions.title                   = What were your UK pensions worth on 5 April 2016?
-pla.currentPensions.hiddenLink              = How do I work out the value?
+pla.currentPensions.title                   = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016?
+pla.currentPensions.hiddenLink              = Sut wyf yn cyfrifo''r gwerth?
 
-pla.currentPensions.hiddenTextPara          = Use figures that were correct at 5 April 2016.
-pla.currentPensions.hiddenText1             = Take any pensions where your employer guarantees you a specified annual income.
-pla.currentPensions.hiddenText2             = Multiply the annual income from these pensions by 20.
-pla.currentPensions.hiddenText3             = Add the amount of any lump sum payments you''ll get on top of this annual income.
-pla.currentPensions.hiddenText4             = Add the total amount you''ve built up in your other pension pots.
-pla.currentPensions.readGuidance            = Read technical guidance on {0}
-pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
-pla.currentPensions.question                = Do not include pensions you''ve already taken or the State Pension.
+pla.currentPensions.hiddenTextPara          = Defnyddiwch ffigurau a oedd yn gywir ar 5 Ebrill 2016.
+pla.currentPensions.hiddenText1             = Cymerwch unrhyw bensiynau lle roedd eich cyflogwr yn gwarantu incwm blynyddol penodol i chi.
+pla.currentPensions.hiddenText2             = Lluoswch yr incwm blynyddol o''r pensiynau hyn ag 20.
+pla.currentPensions.hiddenText3             = Adiwch unrhyw gyfandaliadau y cewch yn ogystal â''r incwm blynyddol hwn.
+pla.currentPensions.hiddenText4             = Adiwch y cyfanswm yr ydych wedi''i gronni yn eich cronfeydd pensiwn eraill.
+pla.currentPensions.readGuidance            = Darllenwch arweiniad technegol ar {0}
+pla.currentPensions.helpLinkText            = sut i werthuso pensiynau nad ydych wedi''u cymryd hyd yn hyn?
+pla.currentPensions.question                = Peidiwch â chynnwys pensiynau yr ydych eisoes wedi''u cymryd na Phensiwn y Wladwriaeth.
 
 
 ## IP14 CURRENT PENSIONS ##
-pla.ip14CurrentPensions.title               = What were your UK pensions worth on 5 April 2014?
-pla.ip14CurrentPensions.hiddenTextPara      = Use figures that were correct at 5 April 2014.
+pla.ip14CurrentPensions.title               = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014?
+pla.ip14CurrentPensions.hiddenTextPara      = Defnyddiwch ffigurau a oedd yn gywir ar 5 Ebrill 2014.
 
 
 
 
 ## PENSION DEBITS ##
-pla.pensionDebits.title                     = Have any of your pensions been shared in a divorce since 5 April 2016?
-pla.pensionDebits.paraOne                   = This is called a pension sharing order and is issued by a court.
-pla.pensionDebits.mandatoryErr              = Please answer this question
+pla.pensionDebits.title                     = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?
+pla.pensionDebits.paraOne                   = Gelwir hynny''n orchymyn rhannu pensiwn a gyhoeddir gan lys.
+pla.pensionDebits.mandatoryErr              = Atebwch y cwestiwn hwn
 
 ## IP14 PENSION DEBITS ##
-pla.ip14PensionDebits.title                 = Have any of your pensions been shared in a divorce since 5 April 2014?
+pla.ip14PensionDebits.title                 = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?
 
 
 ## Pension Sharing Order Details ##
-pla.psoDetails.title                        = Pension sharing order
-pla.psoDetails.dateQuestionText             = Date of pension sharing order
-pla.psoDetails.dateHintText                 = For example, 18 4 2016
-pla.psoDetails.dateHintText14               = For example, 18 4 2014
-pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
-pla.psoDetails.visitPTA                     = Once you''ve completed this service, you can add a pension sharing order at any time by visiting your personal tax account.
-pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
-pla.psoDetails.removePso                    = This will remove your pension sharing order.
-pla.psoDetails.cancelRemove                 = <a href="{0}" id="{1}">Do not remove</a>
+pla.psoDetails.title                        = Gorchymyn rhannu pensiwn
+pla.psoDetails.dateQuestionText             = Dyddiad y gorchymyn rhannu pensiwn
+pla.psoDetails.dateHintText                 = Er enghraifft, 18 4 2016
+pla.psoDetails.dateHintText14               = Er enghraifft, 18 4 2014
+pla.psoDetails.psoAmountQuestion            = Swm y gorchymyn rhannu pensiwn
+pla.psoDetails.visitPTA                     = Unwaith eich bod wedi cwblhau''r gwasanaeth, gallwch ychwanegu gorchymyn rhannu pensiwn ar unrhyw adeg drwy ymweld â''ch cyfrif treth personol.
+pla.psoDetails.errorQuestion                = Nodwch rif heb comas, er enghraifft 10000.00
+pla.psoDetails.removePso                    = Bydd hyn yn dileu''ch gorchymyn rhannu pensiwn
+pla.psoDetails.cancelRemove                 = <a href="{0}" id="{1}">Peidiwch â dileu</a>
 
-pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2014 and today
-pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2016 and today
+pla.IP14PsoDetails.errorDateOutOfRange      = Nodwch ddyddiad rhwng 5 Ebrill 2014 a heddiw
+pla.IP16PsoDetails.errorDateOutOfRange      = Nodwch ddyddiad rhwng 5 Ebrill 2016 a heddiw
 
 
 ## SUMMARY ##
-pla.summary.title                                   = Submit your application
-pla.summary.pageHeading                             = Check and submit your protection details
-pla.summary.errorSummaryLabel                       = There''s a problem with your application
-pla.summary.underThresholdError.IP2016              = Your total pension savings were less than £1,000,001 on 5 April 2016. You can only apply for individual protection 2016 if your pension savings were £1,000,001 or more.
-pla.summary.pensionsHeading                         = Value of pensions
-pla.summary.change                                  = Change
-pla.summary.questions.pensionsTaken                 = Before 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.summary.hiddenLinkText.pensionsTaken            = Change your response to the question ''have you taken any of your pensions''
-pla.summary.questions.pensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
-pla.summary.hiddenLinkText.pensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
-pla.summary.questions.pensionsTakenBeforeAmt        = What''s the value of the pensions you took before 6 April 2006?
-pla.summary.hiddenLinkText.pensionsTakenBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
-pla.summary.questions.pensionsTakenBetween          = Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.summary.hiddenLinkText.pensionsTakenBetween     = Change your response to the question ''did you get money from your pensions between 6 April 2006 and 5 April 2016''
-pla.summary.questions.pensionsTakenBetweenAmt       = How much lifetime allowance have you used?
-pla.summary.hiddenLinkText.pensionsTakenBetweenAmt  = Change your response to the amount of lifetime allowance used
-pla.summary.questions.overseasPensions              = Have you put money into a pension scheme held overseas?
-pla.summary.hiddenLinkText.overseasPensions         = Change your response to the question ''Have you put money into a pension scheme held overseas?''
-pla.summary.questions.overseasPensionsAmt           = How much did you contribute?
-pla.summary.hiddenLinkText.overseasPensionsAmt      = Change your response to the amount of overseas pensions you put in between 6 April 2006 and 5 April 2016
-pla.summary.questions.currentPensionsAmt            = What were your UK pensions worth on 5 April 2016?
-pla.summary.hiddenLinkText.currentPensionsAmt       = Change your response to the value of your UK pension savings on 5 April 2016
-pla.summary.questions.totalPensionsAmt              = Total value of pensions
-pla.summary.psosHeading                             = Value of pension sharing orders
-pla.summary.questions.pensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2016?
-pla.summary.hiddenLinkText.pensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2016?''
+pla.summary.title                                   = Cyflwyno''ch cais
+pla.summary.pageHeading                             = Gwirio a chyflwyno''ch manylion diogelwch
+pla.summary.errorSummaryLabel                       = Mae problem gyda''ch cais
+pla.summary.underThresholdError.IP2016              = Roedd cyfanswm eich cynilion pensiwn yn llai na £1,000,001 ar 5 Ebrill 2016. Gallwch wneud cais am ddiogelwch unigol 2016 os oedd eich cynilion pensiwn yn £1,000,001 neu''n fwy.
+pla.summary.pensionsHeading                         = Gwerth pensiynau
+pla.summary.change                                  = Newid
+pla.summary.questions.pensionsTaken                 = Cyn 5 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.summary.hiddenLinkText.pensionsTaken            = Newidiwch eich ateb i''r cwestiwn "A ydych wedi cymryd unrhyw un o''ch pensiynau?"
+pla.summary.questions.pensionsTakenBefore           = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
+pla.summary.hiddenLinkText.pensionsTakenBefore      = Newidiwch eich ateb i''r cwestiwn "A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?"
+pla.summary.questions.pensionsTakenBeforeAmt        = Beth yw gwerth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006?
+pla.summary.hiddenLinkText.pensionsTakenBeforeAmt   = Newidiwch eich ateb i werth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006
+pla.summary.questions.pensionsTakenBetween          = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.summary.hiddenLinkText.pensionsTakenBetween     = Newidiwch eich ateb i''r cwestiwn "A gawsoch arian o''ch pensiynau rhwng 6 Ebrill 2006 a 5 Ebrill 2016?"
+pla.summary.questions.pensionsTakenBetweenAmt       = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.summary.hiddenLinkText.pensionsTakenBetweenAmt  = Newidiwch eich ateb i swm y lwfans oes a ddefnyddiwyd
+pla.summary.questions.overseasPensions              = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
+pla.summary.hiddenLinkText.overseasPensions         = Newidiwch eich ateb i''r cwestiwn "A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?"
+pla.summary.questions.overseasPensionsAmt           = Faint gwnaethoch gyfrannu?
+pla.summary.hiddenLinkText.overseasPensionsAmt      = Newidiwch eich ateb i swm y pensiynau dramor a rhoesoch i mewn rhwng 6 Ebrill 2006 a 5 Ebrill 2016
+pla.summary.questions.currentPensionsAmt            = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016?
+pla.summary.hiddenLinkText.currentPensionsAmt       = Newidiwch eich ateb i werth eich cynilion pensiwn y DU ar 5 Ebrill 2016
+pla.summary.questions.totalPensionsAmt              = Cyfanswm gwerth pensiynau
+pla.summary.psosHeading                             = Gwerth gorchmynion rhannu pensiwn
+pla.summary.questions.pensionDebits                 = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?
+pla.summary.hiddenLinkText.pensionDebits            = Newidiwch eich ateb i''r cwestiwn "A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?"
 
-pla.summary.questions.psoDetails                    = Date and amount of pension sharing order
-pla.summary.hiddenLinkText.psoDetails               = Change the details of your pension sharing order
+pla.summary.questions.psoDetails                    = Dyddiad a swm y gorchymyn rhannu pensiwn
+pla.summary.hiddenLinkText.psoDetails               = Newidiwch fanylion eich gorchymyn rhannu pensiwn
 
-pla.summary.getIP16                                 = Get individual protection 2016
-pla.summary.getIP14                                 = Get individual protection 2014
+pla.summary.getIP16                                 = Cael diogelwch unigol 2016
+pla.summary.getIP14                                 = Cael diogelwch unigol 2014
 
-pla.summary.mustAgree                               = To get this protection you must agree to these declarations.
-pla.summary.confirmation                            = I declare:
-pla.summary.confirm1                                = On 5 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
-pla.summary.confirm2                                = On 6 April 2016 I didn''t hold either of these protections:
-pla.summary.ip14Confirm1                            = On 5 April 2014 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
-pla.summary.ip14Confirm2                            = On 6 April 2014 I didn''t hold primary protection.
-pla.summary.confirmBullet1                          = primary protection
-pla.summary.confirmBullet2                          = individual protection 2014
-pla.summary.help                                    = Help with these conditions
-pla.summary.hiddenPara.1                            = Speak to your pension scheme administrator to get professional help understanding these conditions.
-pla.summary.hiddenPara.2                            = HMRC’s Pensions Tax Manual has {0}
-pla.summary.hiddenPara.linkText                     = technical guidance about individual protection 2016
-pla.summary.hiddenPara.ip14LinkText                 = technical guidance about individual protection 2014
-pla.summary.confirmation2                           = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
-pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016.
-pla.summary.ip14Declaration                         = By confirming, you will automatically submit your application for individual protection 2014.
+pla.summary.mustAgree                               = I gael y diogelwch hwn mae''n rhaid i chi gytuno ar y datganiadau hyn.
+pla.summary.confirmation                            = Rwy''n datgan:
+pla.summary.confirm1                                = Ar 5 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEM, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau nad yw yn y DU.
+pla.summary.confirm2                                = Ar 6 Ebrill 2016 nid oedd gennyf unrhyw un o''r diogelwch yma:
+pla.summary.ip14Confirm1                            = Ar 5 Ebrill 2014 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEM, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau nad yw yn y DU.
+pla.summary.ip14Confirm2                            = Ar 6 Ebrill 2014 nid oedd gennyf ddiogelwch sylfaenol.
+pla.summary.confirmBullet1                          = diogelwch sylfaenol
+pla.summary.confirmBullet2                          = diogelwch unigol 2014
+pla.summary.help                                    = Help gyda''r amodau hyn
+pla.summary.hiddenPara.1                            = Siaradwch â gweinyddwr eich cynllun pensiwn i gael help proffesiynol i ddeall yr amodau hyn.
+pla.summary.hiddenPara.2                            = Mae gan Lawlyfr Treth Pensiwn CThEM {0}
+pla.summary.hiddenPara.linkText                     = arweiniad technegol ynghylch diogelwch unigol 2016
+pla.summary.hiddenPara.ip14LinkText                 = arweiniad technegol ynghylch diogelwch unigol 2014
+pla.summary.confirmation2                           = Rwy''n datgan bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
+pla.summary.declaration                             = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am ddiogelwch unigol 2016 yn awtomatig.
+pla.summary.ip14Declaration                         = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am ddiogelwch unigol 2014 yn awtomatig.
 
-pla.summary.underThresholdError.IP2014                  = Your total pension savings were less than £1,250,001 on 5 April 2014. You can only apply for individual protection 2014 if your pension savings were £1,250,001 or more.
-pla.summary.questions.ip14PensionsTaken                 = Before 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.summary.hiddenLinkText.ip14PensionsTaken            = Change your response to the question ''have you taken any of your pensions''
-pla.summary.questions.ip14PensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
-pla.summary.hiddenLinkText.ip14PensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
-pla.summary.questions.ip14PensionsTakenBeforeAmt        = What's the value of the pensions you took before 6 April 2006?
+pla.summary.underThresholdError.IP2014                  = Roedd cyfanswm eich cynilion pensiwn yn llai na £1,250,001 ar 5 Ebrill 2014. Gallwch wneud cais am ddiogelwch unigol 2014 os oedd eich cynilion pensiwn yn £1,250,001 neu''n fwy.
+pla.summary.questions.ip14PensionsTaken                 = Cyn 5 Ebrill 2014, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.summary.hiddenLinkText.ip14PensionsTaken            = Newidiwch eich ateb i''r cwestiwn "A ydych wedi cymryd unrhyw un o''ch pensiynau?"
+pla.summary.questions.ip14PensionsTakenBefore           = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
+pla.summary.hiddenLinkText.ip14PensionsTakenBefore      = Newidiwch eich ateb i''r cwestiwn "A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?"
+pla.summary.questions.ip14PensionsTakenBeforeAmt        = Beth yw gwerth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006?
 pla.summary.hiddenLinkText.ip14PensionsTakenBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
-pla.summary.questions.ip14PensionsTakenBetween          = Between 6 April 2006 and 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.summary.hiddenLinkText.ip14PensionsTakenBetween     = Change your response to the question ''did you get money from your pensions between 6 April 2006 and 5 April 2014''
-pla.summary.questions.ip14PensionsTakenBetweenAmt       = How much lifetime allowance have you used?
-pla.summary.hiddenLinkText.ip14PensionsTakenBetweenAmt  = Change your response to the amount of lifetime allowance used
-pla.summary.questions.ip14OverseasPensions              = Have you put money into a pension scheme held overseas?
-pla.summary.hiddenLinkText.ip14OverseasPensions         = Change your response to the question ''Have you put money into a pension scheme held overseas?''
-pla.summary.questions.ip14OverseasPensionsAmt           = How much did you contribute?
-pla.summary.hiddenLinkText.ip14OverseasPensionsAmt      = Change your response to the amount of overseas pensions you put in between 6 April 2006 and 5 April 2014
-pla.summary.questions.ip14CurrentPensionsAmt            = What were your UK pensions worth on 5 April 2014?
-pla.summary.hiddenLinkText.ip14CurrentPensionsAmt       = Change your response to the value of your UK pension savings on 5 April 2014
-pla.summary.questions.ip14TotalPensionsAmt              = Total value of pensions
-pla.summary.ip14PsosHeading                             = Pension sharing orders
-pla.summary.questions.ip14PensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2014?
-pla.summary.hiddenLinkText.ip14PensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2014?''
-pla.summary.hiddenLinkText.removePsoHint                = Remove your response to the amount or date of your pension sharing order
+pla.summary.questions.ip14PensionsTakenBetween          = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.summary.hiddenLinkText.ip14PensionsTakenBetween     = Newidiwch eich ateb i''r cwestiwn "A gawsoch arian o''ch pensiynau rhwng 6 Ebrill 2006 a 5 Ebrill 2014?"
+pla.summary.questions.ip14PensionsTakenBetweenAmt       = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.summary.hiddenLinkText.ip14PensionsTakenBetweenAmt  = Newidiwch eich ateb i swm y lwfans oes a ddefnyddiwyd
+pla.summary.questions.ip14OverseasPensions              = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
+pla.summary.hiddenLinkText.ip14OverseasPensions         = Newidiwch eich ateb i''r cwestiwn "A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?"
+pla.summary.questions.ip14OverseasPensionsAmt           = Faint gwnaethoch gyfrannu?
+pla.summary.hiddenLinkText.ip14OverseasPensionsAmt      = Newidiwch eich ateb i swm y pensiynau dramor a rhoesoch i mewn rhwng 6 Ebrill 2006 a 5 Ebrill 2014
+pla.summary.questions.ip14CurrentPensionsAmt            = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014?
+pla.summary.hiddenLinkText.ip14CurrentPensionsAmt       = Newidiwch eich ateb i werth eich cynilion pensiwn y DU ar 5 Ebrill 2014
+pla.summary.questions.ip14TotalPensionsAmt              = Cyfanswm gwerth pensiynau
+pla.summary.ip14PsosHeading                             = Gorchmynion rhannu pensiwn
+pla.summary.questions.ip14PensionDebits                 = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?
+pla.summary.hiddenLinkText.ip14PensionDebits            = Newidiwch eich ateb i''r cwestiwn "A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?"
+pla.summary.hiddenLinkText.removePsoHint                = Dilëwch eich ateb i swm neu ddyddiad eich gorchymyn rhannu pensiwn
 
-pla.summary.questions.ip14PsoDetails                    = Date and amount of pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails               = Change the details of your pension sharing order
+pla.summary.questions.ip14PsoDetails                    = Dyddiad a swm y gorchymyn rhannu pensiwn
+pla.summary.hiddenLinkText.ip14PsoDetails               = Newidiwch fanylion eich gorchymyn rhannu pensiwn
 
 ## EXISTING PROTECTIONS ##
-pla.existingProtections.title                           = View your existing protections
-pla.existingProtections.pageHeading                     = Lifetime allowance protection
-pla.existingProtections.BreadcrumbPTAHome               = Account home
-pla.existingProtections.pageBreadcrumb                  = Lifetime allowance protection
-pla.existingProtections.details                         = Details
-pla.existingProtections.print                           = Print and save your details
-pla.existingProtections.noActiveProtections             = You currently have no open protections.
-pla.existingProtections.noOtherProtections              = You have no other protections.
-pla.existingProtections.protectedAmount                 = Protected lifetime allowance
-pla.existingProtections.protectionRef                   = Protection notification number
-pla.existingProtections.psaRef                          = Scheme administrator reference
-pla.existingProtections.backToHome                      = Back to account home
-pla.existingProtections.amendLinkText                   = View or change your protection details
+pla.existingProtections.title                           = Bwrw golwg ar fanylion eich diogelwch presennol
+pla.existingProtections.pageHeading                     = Diogelwch lwfans oes
+pla.existingProtections.BreadcrumbPTAHome               = Hafan y cyfrif
+pla.existingProtections.pageBreadcrumb                  = Diogelwch lwfans oes
+pla.existingProtections.details                         = Manylion
+pla.existingProtections.print                           = Argraffu a chadw''ch manylion
+pla.existingProtections.noActiveProtections             = Ar hyn o bryd nid oes gennych ddiogelwch ar agor.
+pla.existingProtections.noOtherProtections              = Nid oes gennych unrhyw ddiogelwch arall.
+pla.existingProtections.protectedAmount                 = Lwfans oes sydd wedi''i ddiogelu
+pla.existingProtections.protectionRef                   = Rhif hysbysu diogelwch
+pla.existingProtections.psaRef                          = Cyfeirnod gweinyddwr y cynllun
+pla.existingProtections.backToHome                      = Yn ôl i hafan y cyfrif
+pla.existingProtections.amendLinkText                   = Bwrw golwg ar neu newid eich manylion diogelwch
 
 
 ## PROTECTION INFORMATION ##
-pla.protection.statuses.open                            = Open
-pla.protection.statuses.dormant                         = Dormant
-pla.protection.statuses.withdrawn                       = Withdrawn
-pla.protection.statuses.expired                         = Expired
-pla.protection.statuses.unsuccessful                    = Unsuccessful
-pla.protection.statuses.rejected                        = Rejected
-pla.protection.statuses.notRecorded                     = None
-pla.protection.types.FP2016                             = Fixed protection 2016
-pla.protection.types.FP2014                             = Fixed protection 2014
-pla.protection.types.IP2016                             = Individual protection 2016
-pla.protection.types.IP2014                             = Individual protection 2014
-pla.protection.types.primary                            = Primary protection
-pla.protection.types.enhanced                           = Enhanced protection
-pla.protection.types.fixed                              = Fixed protection
-pla.protection.types.notRecorded                        = None
-pla.protection.protectionReference                      = None
+pla.protection.statuses.open                            = Agor
+pla.protection.statuses.dormant                         = Segur
+pla.protection.statuses.withdrawn                       = Wedi''i dynnu''n ôl
+pla.protection.statuses.expired                         = Wedi darfod
+pla.protection.statuses.unsuccessful                    = Aflwyddiannus
+pla.protection.statuses.rejected                        = Wedi''i wrthod
+pla.protection.statuses.notRecorded                     = Dim un
+pla.protection.types.FP2016                             = Diogelwch sefydlog 2016
+pla.protection.types.FP2014                             = Diogelwch sefydlog 2014
+pla.protection.types.IP2016                             = Diogelwch unigol 2016
+pla.protection.types.IP2014                             = Diogelwch unigol 2014
+pla.protection.types.primary                            = Prif ddiogelwch
+pla.protection.types.enhanced                           = Lefel uwch o ddiogelwch
+pla.protection.types.fixed                              = Diogelwch sefydlog
+pla.protection.types.notRecorded                        = Dim un
+pla.protection.protectionReference                      = Dim un
 
 ## Result Success ##
-pla.resultSuccess.title                 = Success
-pla.resultSuccess.allowanceSubHeading   = Your protected lifetime allowance is
-pla.resultSuccess.protectionDetails     = Your protection details
-pla.resultSuccess.detailsContent        = When you decide to take money from your pension, give these details to your pension provider:
-pla.resultSuccess.protectionRef         = Protection notification number
-pla.resultSuccess.psaRef                = Scheme administrator reference
-pla.resultSuccess.applicationDate       = Application date
-pla.resultSuccess.print                 = Print and save your details
-pla.resultSuccess.IPChangeDetails       = Changing your protection details
-pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 60 days.
-pla.resultSuccess.FPAddToPension        = If you or your employer adds to your pension, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 90 days.
-pla.resultSuccess.viewDetails           = You can view or change your protection details in your
-pla.resultSuccess.viewDetailsLinkText   = personal tax account
-pla.resultSuccess.giveFeedback          = Give us feedback
-pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
-pla.resultSuccess.exitSurvey            = Your feedback helps us improve.
+pla.resultSuccess.title                 = Wedi llwyddo
+pla.resultSuccess.allowanceSubHeading   = Eich lwfans oes sydd wedi''i ddiogelu yw
+pla.resultSuccess.protectionDetails     = Eich manylion diogelwch
+pla.resultSuccess.detailsContent        = Pan fyddwch yn penderfynu cymryd arian o''ch pensiwn, rhowch y manylion hyn i''ch darparwr pensiwn:
+pla.resultSuccess.protectionRef         = Rhif hysbysu diogelwch
+pla.resultSuccess.psaRef                = Cyfeirnod gweinyddwr y cynllun
+pla.resultSuccess.applicationDate       = Dyddiad y cais
+pla.resultSuccess.print                 = Argraffu a chadw''ch manylion
+pla.resultSuccess.IPChangeDetails       = Newid eich manylion diogelwch
+pla.resultSuccess.IPPensionSharing      = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn</a> cyn pen 60 diwrnod.
+pla.resultSuccess.FPAddToPension        = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a> cyn pen 90 diwrnod.
+pla.resultSuccess.viewDetails           = Gallwch fwrw golwg ar neu newid eich manylion diogelwch yn eich
+pla.resultSuccess.viewDetailsLinkText   = cyfrif treth personol
+pla.resultSuccess.giveFeedback          = Rhoi adborth i ni
+pla.resultSuccess.exitSurveyLinkText    = Beth oedd eich barn am y gwasanaeth hwn?
+pla.resultSuccess.exitSurvey            = Mae eich adborth yn ein helpu i wella.
 
-pla.resultSuccess.yourName              = Your full name
-pla.resultSuccess.yourNino              = Your National Insurance number
+pla.resultSuccess.yourName              = Eich enw llawn
+pla.resultSuccess.yourNino              = Eich rhif Yswiriant Gwladol
 
 ## Result Rejection ##
-pla.resultRejection.title                 = Unsuccessful
-pla.resultRejection.pageHeading           = Your application was unsuccessful
-pla.resultRejection.viewDetails           = You can view or change details of your protections in your
-pla.resultRejection.viewDetailsLinkText   = personal tax account
+pla.resultRejection.title                 = Aflwyddiannus
+pla.resultRejection.pageHeading           = Roedd eich cais yn aflwyddiannus
+pla.resultRejection.viewDetails           = Gallwch fwrw golwg ar neu newid manylion eich diogelwch yn eich
+pla.resultRejection.viewDetailsLinkText   = cyfrif treth personol
 
 ## Manual Correspondence Needed ##
-pla.mcNeeded.title                        = There is a problem accessing your account
-pla.mcNeeded.pageHeading                  = There''s a problem logging you in
-pla.mcNeeded.needToSpeakToYou             = We need to speak to you before you can log in to your account.
-pla.mcNeeded.howToFix                     = How to fix this
-pla.mcNeeded.telephone                    = Phone 0300 200 3300
-pla.mcNeeded.sayCantLogIn                 = Say ''I can''t log in''
-pla.mcNeeded.sayYes                       = Say ''Yes'' when asked if you are having problems logging in
-pla.mcNeeded.advisorHelp                  = You will hear a recorded message advising you to call another number - do not hang up and redial. Stay on the line and an advisor will hep you.
-pla.mcNeeded.tellAdvisor                                    = Tell the advisor this is an ''MCI issue''
+pla.mcNeeded.title                        = Mae problem wedi codi wrth gyrchu eich cyfrif
+pla.mcNeeded.pageHeading                  = Mae problem wedi codi wrth i chi fewngofnodi
+pla.mcNeeded.needToSpeakToYou             = Mae''n rhaid i ni siarad â chi cyn y gallwch fewngofnodi i''ch cyfrif.
+pla.mcNeeded.howToFix                     = Sut i unioni hyn
+pla.mcNeeded.telephone                    = Ffôn 0300 200 1900
+pla.mcNeeded.sayCantLogIn                 = Dywedwch ''Ni allaf fewngofnodi''
+pla.mcNeeded.sayYes                       = Dywedwch ''Ydw'' pan ofynnir i chi a ydych yn cael problem wrth fewngofnodi
+pla.mcNeeded.advisorHelp                  = Byddwch yn clywed neges sydd wedi''i recordio yn dweud wrthych ffonio rhif arall – peidiwch â rhoi''r ffôn i lawr a deialu eto. Arhoswch ar y ffôn a bydd ymgynghorydd yn eich helpu.
+pla.mcNeeded.tellAdvisor                                    = Rhowch wybod i''r ymgynghorydd bod gennych "MCI issue"
 
-pla.mcNeeded.otherContact                                   = Other ways to contact us
-pla.mcNeeded.textphone                                      = Textphone: 0300 200 3319
-pla.mcNeeded.nonUKPhone                                     = Outside UK: +44 135 535 9022
-pla.mcNeeded.linesOpen                    = Phone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday.
-pla.mcNeeded.linesClosed                  = Closed Sundays and bank holidays.
-pla.mcNeeded.linesBusy                    = Phone lines are less busy before 10am Monday to Friday.
-pla.mcNeeded.callCharges                  = Find out about call charges
+pla.mcNeeded.otherContact                                   = Dulliau eraill o gysylltu â ni
+pla.mcNeeded.textphone                                      = Ffôn testun: 0300 200 3319
+pla.mcNeeded.nonUKPhone                                     = Y tu allan i''r DU: +44 135 535 9022
+pla.mcNeeded.linesOpen                    = Yr oriau agor yw 08:00 tan 17:00, dydd Llun i ddydd Gwener.
+pla.mcNeeded.linesClosed                  = Ar gau ar ddydd Sadwrn, dydd Sul a gwyliau''r banc.
+pla.mcNeeded.linesBusy                    = Mae llinellau ffôn yn llai prysur cyn 10:00 ar ddydd Llun i ddydd Gwener.
+pla.mcNeeded.callCharges                  = Gwybodaeth am gost galwadau
 
 ## Exit Survey ##
-pla.exitSurvey.title                                    = Exit survey
-pla.exitSurvey.pageHeading                              = Before you go, please answer some questions to help us improve your experience
-pla.exitSurvey.question1                                = <p class="bold-small">Before using your tax account, were you going to phone or write to HMRC about your query?</p>
-pla.exitSurvey.hiddenQ1                                 = <p class="bold-small">After using your tax account, do you need to phone or write to HMRC?</p>
-pla.exitSurvey.question2                                = <p class="bold-small">Based on what you have done today, do you need to do anything else? You can tick more than one box.</p>
-pla.exitSurvey.question3                                = <p class="bold-small">How likely are you to recommend your tax account to your friends or family?</p>
-pla.exitSurvey.question4                                = <p class="bold-small">Overall, how do you feel about your experience using your tax account today?</p>
-pla.exitSurvey.writeFeedback                            = If you have any additional comments please use the feedback link at the top of the page.
-pla.exitSurvey.sendFeedback                             = Send feedback
+pla.exitSurvey.title                                    = Arolwg gadael
+pla.exitSurvey.pageHeading                              = Cyn i chi fynd, a fyddech cystal ag ateb rhai cwestiynau i''n helpu i wella''ch profiad o''r gwasanaeth.
+pla.exitSurvey.question1                                = <p class="bold-small">Cyn defnyddio''ch cyfrif treth, a oeddech yn mynd i ffonio neu ysgrifennu i CThEM am eich ymholiad?</p>
+pla.exitSurvey.hiddenQ1                                 = <p class="bold-small">Ar ôl defnyddio''ch cyfrif treth, a oes angen i chi ffonio neu ysgrifennu i CThEM bellach?</p>
+pla.exitSurvey.question2                                = <p class="bold-small">Ar sail yr hyn yr ydych wedi''i wneud heddiw, a oes angen i chi wneud unrhyw beth arall? Gallwch roi tic mewn mwy nag un blwch.</p>
+pla.exitSurvey.question3                                = <p class="bold-small">Pa mor debygol ydych o argymell eich cyfrif treth i''ch ffrindiau a''ch teulu?</p>
+pla.exitSurvey.question4                                = <p class="bold-small">Yn gyffredinol, sut ydych yn teimlo am eich profiad wrth ddefnyddio''ch cyfrif treth heddiw?</p>
+pla.exitSurvey.writeFeedback                            = Os oes gennych unrhyw sylwadau ychwanegol, defnyddiwch y cysylltiad adborth ar frig y dudalen.
+pla.exitSurvey.sendFeedback                             = Anfon adborth
 
 ## Printing ##
 pla.print.title                             = Argraffu''ch diogelwch sydd ar waith

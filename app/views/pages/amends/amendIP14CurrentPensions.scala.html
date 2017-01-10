@@ -37,6 +37,8 @@
 
 @main_template(title = Messages("pla.ip14CurrentPensions.title"), scriptElem=Some(scriptElement)) {
 
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), amendCurrentPensionForm)
 
     <h1 class="heading-large">@Messages("pla.ip14CurrentPensions.title")</h1>
