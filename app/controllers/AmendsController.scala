@@ -69,7 +69,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
       ))
       case _ =>
-        Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend summary page")
+        Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend summary page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
@@ -77,7 +77,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   val amendProtection = AuthorisedByAny.async { implicit user => implicit request =>
     amendmentTypeForm.bindFromRequest.fold(
       errors => {
-        Logger.error(s"Couldn't bind protection type or status to amend request for user with nino ${user.nino}")
+        Logger.warn(s"Couldn't bind protection type or status to amend request for user with nino ${user.nino}")
         Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
       },
       success => for {
@@ -92,7 +92,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
     response.status match {
       case 409 => {
-        Logger.error(s"conflict response returned for amend request for user nino ${user.nino}")
+        Logger.warn(s"conflict response returned for amend request for user nino ${user.nino}")
         Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
       case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
@@ -108,11 +108,11 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
           cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
         }
       } else {
-        Logger.error(s"No notification ID found in the AmendResponseModel for user with nino ${user.nino}")
+        Logger.warn(s"No notification ID found in the AmendResponseModel for user with nino ${user.nino}")
         Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
     }.getOrElse {
-      Logger.error(s"Unable to create Amend Response Model from PLA response for user nino: ${user.nino}")
+      Logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: ${user.nino}")
       Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
@@ -143,7 +143,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
         }
       }
     }.getOrElse {
-      Logger.error(s"Unable to retrieve amendment outcome model from keyStore for user nino :${user.nino}")
+      Logger.warn(s"Unable to retrieve amendment outcome model from keyStore for user nino :${user.nino}")
       InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     })
   }
@@ -175,7 +175,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
                 keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
                 Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
               case _ =>
-                Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend pensions taken before")
+                Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend pensions taken before")
                 InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
             }
           }
@@ -208,7 +208,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
               keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
               Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
             case _ =>
-              Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} after submiiting amend pensions takne between")
+              Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} after submiiting amend pensions takne between")
               InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
           }
         }
@@ -243,7 +243,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
                 keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
                 Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
               case _ =>
-                Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend pensions taken before")
+                Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend pensions taken before")
                 InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
             }
           }
@@ -270,7 +270,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
             Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
 
           case _ =>
-            Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend current UK pension")
+            Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend current UK pension")
             InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
@@ -283,7 +283,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
         routeFromPensionDebitsList(debits, protectionType, status)
       }.getOrElse(Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status)))))
       case _ =>
-        Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend PSO details page")
+        Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend PSO details page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
@@ -293,7 +293,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
       case Some(model) =>
           Ok(pages.amends.removePsoDebits(amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))))
       case _ =>
-        Logger.error(s"Could not retrieve Amend ProtectionModel for user with nino ${user.nino} when removing the new pension debit")
+        Logger.warn(s"Could not retrieve Amend ProtectionModel for user with nino ${user.nino} when removing the new pension debit")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
@@ -310,7 +310,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
             keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
             Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
           case None =>
-            Logger.error(s"Could not retrieve Amend Protection Model for user with nino ${user.nino} when submitting a removal of a pension debit")
+            Logger.warn(s"Could not retrieve Amend Protection Model for user with nino ${user.nino} when submitting a removal of a pension debit")
             InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
     }
@@ -323,7 +323,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
       case 0 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
       case 1 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head, protectionType, status))))
       case num => {
-        Logger.error(s"$num pension debits recorded for user nino ${user.nino.getOrElse("NO NINO")} during amend journey")
+        Logger.warn(s"$num pension debits recorded for user nino ${user.nino.getOrElse("NO NINO")} during amend journey")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
@@ -425,7 +425,7 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
           }
         )(request)
       case _ =>
-        Logger.error(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend $journey page")
+        Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} when loading the amend $journey page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
 

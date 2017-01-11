@@ -49,7 +49,7 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     keyStoreConnector.fetchAllUserData.map {
       case Some(data) => routeIP2016SummaryFromUserData(data)
       case None => {
-        Logger.error(s"unable to fetch summary IP16 data from keystore for user nino ${user.nino}")
+        Logger.warn(s"unable to fetch summary IP16 data from keystore for user nino ${user.nino}")
         InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
@@ -59,7 +59,7 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     summaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2016.summary(summaryModel))
     }.getOrElse {
-      Logger.error(s"Unable to create IP16 summary model from summary data for user nino ${user.nino}")
+      Logger.warn(s"Unable to create IP16 summary model from summary data for user nino ${user.nino}")
       InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
@@ -69,7 +69,7 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     keyStoreConnector.fetchAllUserData.map {
       case Some(data) => routeIP2014SummaryFromUserData(data)
       case None => {
-        Logger.error(s"unable to fetch summary IP14 data from keystore for user nino ${user.nino}")
+        Logger.warn(s"unable to fetch summary IP14 data from keystore for user nino ${user.nino}")
         InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
@@ -79,7 +79,7 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     summaryConstructor.createSummaryData(data).map {
       summaryModel => Ok(pages.ip2014.ip14Summary(summaryModel))
     }.getOrElse{
-      Logger.error(s"Unable to create IP14 summary model from summary data for user nino ${user.nino}")
+      Logger.warn(s"Unable to create IP14 summary model from summary data for user nino ${user.nino}")
       InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }

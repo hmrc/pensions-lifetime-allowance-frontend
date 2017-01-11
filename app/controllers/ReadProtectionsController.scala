@@ -66,7 +66,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
         }
       }
     }.recover{
-      case e: NotFoundException => Logger.error(s"Error 404 passed to currentProtections for nino: ${user.nino}")
+      case e: NotFoundException => Logger.warn(s"Error 404 passed to currentProtections for nino: ${user.nino}")
         throw new Upstream4xxResponse(e.message, 404, 500)
       case otherException: Exception => throw otherException
     }
@@ -77,7 +77,7 @@ trait ReadProtectionsController extends FrontendController with AuthorisedForPLA
       readResponseModel =>
         saveAndDisplayExistingProtections(readResponseModel)
     }.getOrElse{
-      Logger.error(s"unable to create transformed read response model from microservice response for nino: ${user.nino}")
+      Logger.warn(s"unable to create transformed read response model from microservice response for nino: ${user.nino}")
       Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
