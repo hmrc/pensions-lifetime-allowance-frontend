@@ -98,9 +98,9 @@ pla.noNotificationId.paraOne                = Ymwelwch â''ch <a id="existingPro
 
 ## Pensions Taken ##
 pla.pensionsTaken.title                     = A ddigwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016?
-pla.pensionsTaken.bullet.1                  = Cawsoch arian o''ch pensiynau.
-pla.pensionsTaken.bullet.2                  = Trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor.
-pla.pensionsTaken.bullet.3                  = Cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny.
+pla.pensionsTaken.bullet.1                  = cawsoch arian o''ch pensiynau
+pla.pensionsTaken.bullet.2                  = trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor
+pla.pensionsTaken.bullet.3                  = cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny
 pla.pensionsTaken.mandatoryErr              = Atebwch y cwestiwn hwn
 pla.pensionsTaken.legend                    = Cyn 6 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
@@ -129,9 +129,9 @@ pla.ip14PensionsTakenBefore.step.2          = Cyfrifwch y swm blynyddol yr oedde
 
 ## Pensions Taken Between ##
 pla.pensionsTakenBetween.title              = A ddigwyddodd unrhyw un o''r canlynol rhwng 6 Ebrill 2006 a 5 Ebrill 2016?
-pla.pensionsTakenBetween.bullet.1           = Cawsoch arian o''ch pensiynau.
-pla.pensionsTakenBetween.bullet.2           = Trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor.
-pla.pensionsTakenBetween.bullet.3           = Cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny.
+pla.pensionsTakenBetween.bullet.1           = cawsoch arian o''ch pensiynau
+pla.pensionsTakenBetween.bullet.2           = trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor
+pla.pensionsTakenBetween.bullet.3           = cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny
 pla.pensionsTakenBetween.para.1             = Os yw unrhyw un o''r digwyddiadau hyn wedi digwydd, byddech wedi defnyddio peth o''ch lwfans oes.
 
 pla.pensionsTakenBetween.questionTwo        = Faint o lwfans oes a ydych wedi''i ddefnyddio?
@@ -326,9 +326,9 @@ pla.resultSuccess.title                 = Wedi llwyddo
 pla.resultSuccess.allowanceSubHeading   = Eich lwfans oes sydd wedi''i ddiogelu yw
 pla.resultSuccess.protectionDetails     = Eich manylion diogelwch
 pla.resultSuccess.detailsContent        = Pan fyddwch yn penderfynu cymryd arian o''ch pensiwn, rhowch y manylion hyn i''ch darparwr pensiwn:
-pla.resultSuccess.protectionRef         = Rhif hysbysu diogelwch
-pla.resultSuccess.psaRef                = Cyfeirnod gweinyddwr y cynllun
-pla.resultSuccess.applicationDate       = Dyddiad y cais
+pla.resultSuccess.protectionRef         = rhif hysbysu diogelwch
+pla.resultSuccess.psaRef                = cyfeirnod gweinyddwr y cynllun
+pla.resultSuccess.applicationDate       = dyddiad y cais
 pla.resultSuccess.print                 = Argraffu a chadw''ch manylion
 pla.resultSuccess.IPChangeDetails       = Newid eich manylion diogelwch
 pla.resultSuccess.IPPensionSharing      = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn</a> cyn pen 60 diwrnod.
@@ -339,8 +339,8 @@ pla.resultSuccess.giveFeedback          = Rhoi adborth i ni
 pla.resultSuccess.exitSurveyLinkText    = Beth oedd eich barn am y gwasanaeth hwn?
 pla.resultSuccess.exitSurvey            = Mae eich adborth yn ein helpu i wella.
 
-pla.resultSuccess.yourName              = Eich enw llawn
-pla.resultSuccess.yourNino              = Eich rhif Yswiriant Gwladol
+pla.resultSuccess.yourName              = eich enw llawn
+pla.resultSuccess.yourNino              = eich rhif Yswiriant Gwladol
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Aflwyddiannus
