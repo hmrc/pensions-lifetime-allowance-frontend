@@ -2,7 +2,7 @@
 @import common.Links
 @import helpers.templates.helpTextAccordion
 
-@()(implicit request: Request[_], lang: Lang)
+@()(implicit request: Request[_], messages: Messages, lang: Lang)
 
 @hiddenContent = {
     <p>@Messages("pla.confirmFP16.hiddenPara.1")</p>
@@ -20,6 +20,8 @@
                 )
             )
     </p>
+
+
 }
 
 @views.html.main_template(title = Messages("pla.confirmFP16.title"), bodyClasses = None) {

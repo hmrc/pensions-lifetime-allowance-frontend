@@ -4,8 +4,7 @@
 @import play.api.data._
 @import common.Links
 
-@(pensionsTakenBeforeForm: Form[PensionsTakenBeforeModel])(implicit request: Request[_], lang: Lang)
-
+@(pensionsTakenBeforeForm: Form[PensionsTakenBeforeModel])(implicit request: Request[_], messages: Messages, lang: Lang)
 
 @helpTextAccordionContent = {
 
@@ -35,6 +34,8 @@
         ))
     </p>
 }
+
+
 
 @hiddenYesNoContent = {
 

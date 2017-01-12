@@ -4,7 +4,7 @@
 @import enums.ApplicationType
 @import utils.Constants
 
-@(res: SuccessDisplayModel)(implicit request: Request[_], lang: Lang)
+@(res: SuccessDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang)
 
 @views.html.main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None) {
 

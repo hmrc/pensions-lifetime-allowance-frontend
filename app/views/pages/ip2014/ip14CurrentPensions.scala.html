@@ -4,7 +4,8 @@
 @import play.api.data._
 @import common.Links
 
-@(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_], lang: Lang)
+@(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_], messages: Messages, lang: Lang)
+071
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>

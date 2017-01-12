@@ -1,4 +1,6 @@
-@()(implicit request: Request[_], lang: Lang)
+
+@()(implicit request: Request[_], messages: Messages, lang: Lang)
+
 
 
 @views.html.main_template(title = Messages("pla.signOut.title"), bodyClasses = None, showLogout = false) {

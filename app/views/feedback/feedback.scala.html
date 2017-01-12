@@ -17,7 +17,7 @@
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
-@(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], formPartialRetriever: FormPartialRetriever,
+@(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], messages: Messages, formPartialRetriever: FormPartialRetriever,
   partialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang)
 
 @main_template(Messages("feedback.title")) {

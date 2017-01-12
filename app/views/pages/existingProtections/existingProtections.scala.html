@@ -1,6 +1,8 @@
 @import models.ExistingProtectionsDisplayModel
 @import helpers.templates.existingProtections.{activeExistingProtection, inactiveExistingProtection}
-@(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], lang: Lang)
+
+@(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang)
+
 @import config.FrontendAppConfig
 
 @views.html.full_width_template(title = Messages("pla.existingProtections.title"), bodyClasses = None) {

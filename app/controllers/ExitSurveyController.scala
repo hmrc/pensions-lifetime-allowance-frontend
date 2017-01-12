@@ -29,6 +29,8 @@ import forms.ExitSurveyForm.exitSurveyForm
 import models._
 
 import views.html._
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object ExitSurveyController extends ExitSurveyController {
     override lazy val applicationConfig = FrontendAppConfig

@@ -16,7 +16,11 @@
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
 
+<<<<<<< HEAD
 @(partialUrl: String, redirectUrl: String)(implicit request: Request[_], cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang)
+=======
+@(partialUrl: String, redirectUrl: String)(implicit request: Request[_], messages: Messages, cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
+>>>>>>> PLA-1071
 
 @main_template(Messages("feedback.thankyou.title")) {
     @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)

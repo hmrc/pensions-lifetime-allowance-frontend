@@ -17,6 +17,8 @@
 package controllers
 
 import auth.MockConfig
+import com.kenshoo.play.metrics.PlayModule
+import config.AppConfig
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -34,6 +36,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import scala.concurrent.Future
 
 class FeedbackControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
+  override def bindModules = Seq(new PlayModule)
 
   val fakeRequest = FakeRequest("GET", "/")
 

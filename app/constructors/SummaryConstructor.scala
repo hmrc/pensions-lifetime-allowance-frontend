@@ -28,6 +28,8 @@ import common.Validation
 import common.Strings.nameString
 import utils.{CallMap, Constants}
 import uk.gov.hmrc.http.cache.client.CacheMap
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object SummaryConstructor extends SummaryConstructor {
     

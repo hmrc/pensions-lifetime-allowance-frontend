@@ -1,5 +1,6 @@
 @import models.RejectionDisplayModel
-@(res: RejectionDisplayModel)(implicit request: Request[_], lang: Lang)
+
+@(res: RejectionDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang)
 
 @views.html.main_template(title = Messages("pla.resultRejection.title"), bodyClasses = None) {
 

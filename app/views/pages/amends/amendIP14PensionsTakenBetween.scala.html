@@ -4,7 +4,7 @@
 @import play.api.data._
 @import common.Links
 
-@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_], lang: Lang)
+@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_], messages: Messages, lang: Lang)
 
 @helpTextAccordionContent = {
     <p>@Messages("pla.ip14PensionsTakenBetween.para.2")</p>

@@ -1,7 +1,7 @@
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
-@()(implicit request: Request[_], lang: Lang)
+@()(implicit request: Request[_], messages: Messages, lang: Lang)
 
 @main_template(title = Messages("pla.psoDetails.title"), scriptElem=None, bodyClasses = None) {
 
