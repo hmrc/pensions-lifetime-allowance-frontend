@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,8 @@ import testHelpers._
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import auth._
 import com.kenshoo.play.metrics.PlayModule
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     override def bindModules = Seq(new PlayModule)

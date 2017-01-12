@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package controllers
 
+import java.util.concurrent.TimeUnit
+
 import akka.util.Timeout
 import auth.{MockAuthConnector, MockConfig}
 import com.kenshoo.play.metrics.PlayModule
@@ -31,6 +33,8 @@ import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 class PrintControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   override def bindModules = Seq(new PlayModule)
@@ -69,7 +73,7 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
         status(DataItem.result) shouldBe 200
       }
       "show the print page" in {
-        implicit val timeout: Timeout = 5000
+        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.MILLISECONDS)
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("Testy Mctestface")
       }
     }

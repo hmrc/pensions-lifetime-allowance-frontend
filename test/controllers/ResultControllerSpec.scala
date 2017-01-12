@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 HM Revenue & Customs
+ * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,8 @@ import play.api.mvc.{Action, AnyContent, Result}
 import play.api.test.Helpers._
 
 import scala.concurrent.Future
-
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfter {
   override def bindModules = Seq(new PlayModule)
@@ -369,7 +370,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
      status(DataItem.result) shouldBe 500
    }
    "return \"no-cache\" in the response header" in {
-     DataItem.result.header.headers.head._2 shouldBe "no-cache"
+     DataItem.result.header.headers("Cache-Control") shouldBe "no-cache"
    }
  }
 
