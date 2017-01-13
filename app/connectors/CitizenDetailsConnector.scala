@@ -43,7 +43,7 @@ trait CitizenDetailsConnector {
       response => response.status match {
         case 200 => response.json.validate[PersonalDetailsModel].asOpt
         case _ => {
-          Logger.error(s"Unable to retrieve personal details for nino: $nino")
+          Logger.warn(s"Unable to retrieve personal details for nino: $nino")
           None
         }
       }

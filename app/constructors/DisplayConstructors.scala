@@ -147,7 +147,7 @@ trait DisplayConstructors {
 
     model.pensionDebits.flatMap { psoList =>
       if (psoList.length > 1) {
-        Logger.error("More than one PSO amendment was found in the protection model, where only one is permitted.")
+        Logger.warn("More than one PSO amendment was found in the protection model, where only one is permitted.")
         None
       } else {
         val psoAmendCall = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)

@@ -50,7 +50,7 @@ trait PrintController extends FrontendController with AuthorisedForPLA {
           protectionModel <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
         } yield routePrintView(personalDetailsModel, protectionModel, nino)
       }.getOrElse {
-        Logger.error("No associated nino for user in printView action")
+        Logger.warn("No associated nino for user in printView action")
         Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
     }
