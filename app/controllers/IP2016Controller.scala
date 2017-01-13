@@ -120,6 +120,8 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
         pensionsTakenBetweenForm.bindFromRequest.fold(
             errors => {
                 val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                println(s"\n!!!!!!!!!!!!\n\n$form\n\n!!!!!!!!!\n")
+
                 Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(form)))
             },
             success => {

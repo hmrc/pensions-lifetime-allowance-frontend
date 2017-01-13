@@ -61,7 +61,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
 
     val summaryConstructor = mockSummaryConstructor
-    when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any())).thenReturn(None)
+    when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(None)
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
     when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
@@ -73,7 +73,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
 
     val summaryConstructor = mockSummaryConstructor
-    when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any())).thenReturn(Some(tstSummaryModel))
+    when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Some(tstSummaryModel))
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
     when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
