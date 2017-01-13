@@ -212,7 +212,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendsSummary("ip2014", "dormant"))
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        when(mockDisplayConstructors.createAmendDisplayModel(Matchers.any())).thenReturn(tstAmendDisplayModel)
+        when(mockDisplayConstructors.createAmendDisplayModel(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
         status(DataItem.result) shouldBe 200
       }
       "show the amends page for an updated protection for IP2014" in {
