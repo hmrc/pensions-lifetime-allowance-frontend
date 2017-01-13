@@ -289,7 +289,7 @@ pla.summary.hiddenLinkText.ip14PsoDetails               = Newidiwch fanylion eic
 
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = Bwrw golwg ar fanylion eich diogelwch presennol
-pla.existingProtections.pageHeading                     = Diogelwch lwfans oes
+pla.existingProtections.pageHeading                     = Eich diogelwch lwfans oes
 pla.existingProtections.BreadcrumbPTAHome               = Hafan y cyfrif
 pla.existingProtections.pageBreadcrumb                  = Diogelwch lwfans oes
 pla.existingProtections.details                         = Manylion
