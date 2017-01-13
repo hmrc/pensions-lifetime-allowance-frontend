@@ -3,8 +3,12 @@
 @import helpers.templates.{helpTextAccordion,moneyInputFormat}
 @import play.api.data._
 @import common.Links
+@import controllers.PlaLanguageController
+@import play.api.Application
 
-@(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_], messages: Messages, lang: Lang)
+@(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+
+@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
@@ -36,7 +40,7 @@
 
 @main_template(title = Messages("pla.currentPensions.title"), scriptElem=Some(scriptElement)) {
 
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+    @language_selection(lc.languageMap, lc.langToCall, None)
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), currentPensionsForm)
 

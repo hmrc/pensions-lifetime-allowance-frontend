@@ -4,8 +4,12 @@
 @import play.api.i18n._
 @import enums.ApplicationType
 @import utils.Constants
+@import controllers.PlaLanguageController
+@import play.api.Application
 
-@(model: ActiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], messages: Messages, lang: Lang)
+@(model: ActiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+
+@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @scriptElement = {
 <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
@@ -13,7 +17,7 @@
 
 @views.html.main_template(title = Messages("pla.activeAmend.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
-@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+@language_selection(lc.languageMap, lc.langToCall, None)
 
 @gaModel.map{ gaModel =>
 <div @if(gaModel.current.isDefined){data-metrics = "activeAmends:@gaModel.current:amendCurrentPensions"}></div>

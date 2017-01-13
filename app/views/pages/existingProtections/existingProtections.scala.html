@@ -1,13 +1,17 @@
 @import models.ExistingProtectionsDisplayModel
 @import helpers.templates.existingProtections.{activeExistingProtection, inactiveExistingProtection}
+@import controllers.PlaLanguageController
+@import play.api.Application
 
-@(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang)
+@(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+
+@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @import config.FrontendAppConfig
 
 @views.html.full_width_template(title = Messages("pla.existingProtections.title"), bodyClasses = None) {
 
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+    @language_selection(lc.languageMap, lc.langToCall, None)
 
     <nav class="breadcrumb-nav breadcrumb-nav--slim">
         <ul class="breadcrumb-nav__list" role="breadcrumbs">

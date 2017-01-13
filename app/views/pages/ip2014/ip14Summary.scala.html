@@ -5,8 +5,12 @@
 @import play.api.data._
 @import enums.ApplicationType
 @import common.Links
+@import controllers.PlaLanguageController
+@import play.api.Application
 
-@(summary: SummaryModel)(implicit request: Request[_], messages: Messages, lang: Lang)
+@(summary: SummaryModel)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+
+@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
@@ -32,7 +36,7 @@
 
 @views.html.full_width_template(title = Messages("pla.summary.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+    @language_selection(lc.languageMap, lc.langToCall, None)
 
     @summaryDetails(summary)
 

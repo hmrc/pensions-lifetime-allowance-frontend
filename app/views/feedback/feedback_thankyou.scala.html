@@ -15,15 +15,15 @@
 *@
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import controllers.PlaLanguageController
+@import play.api.Application
 
-<<<<<<< HEAD
-@(partialUrl: String, redirectUrl: String)(implicit request: Request[_], cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang)
-=======
-@(partialUrl: String, redirectUrl: String)(implicit request: Request[_], messages: Messages, cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever)
->>>>>>> PLA-1071
+@(partialUrl: String, redirectUrl: String)(implicit request: Request[_], messages: Messages, cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang, application: Application)
+
+@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @main_template(Messages("feedback.thankyou.title")) {
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+    @language_selection(lc.languageMap, lc.langToCall, None)
 
     @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)
     <a id="back" href='@redirectUrl' role="button" tabindex="0" class="button">@Messages("pla.base.back")</a>

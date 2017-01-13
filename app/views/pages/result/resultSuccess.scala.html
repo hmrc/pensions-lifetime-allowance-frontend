@@ -3,12 +3,16 @@
 @import play.api.i18n._
 @import enums.ApplicationType
 @import utils.Constants
+@import controllers.PlaLanguageController
+@import play.api.Application
 
-@(res: SuccessDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang)
+@(res: SuccessDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+
+@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @views.html.main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None) {
 
-@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+@language_selection(lc.languageMap, lc.langToCall, None)
 	<div class="grid-row">
 		<div class="transaction-banner--complete">
 	        <span class="heading-large" id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</span>

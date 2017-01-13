@@ -16,22 +16,27 @@
 
 package controllers
 
-import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.language.LanguageController
-import play.api.i18n.Lang
-import play.api.mvc._
+//import uk.gov.hmrc.play.config.RunMode
+//import uk.gov.hmrc.play.language.LanguageController
+//import play.api.i18n.Lang
+//import play.api.mvc._
 import play.api.Play.current
 
-object PlaLanguageController extends PlaLanguageController{
+import javax.inject.Inject
 
-}
-trait PlaLanguageController extends LanguageController with RunMode {
+import play.api.Play
+import play.api.i18n.{I18nSupport, Lang, MessagesApi}
+import play.api.mvc.Call
+import uk.gov.hmrc.play.config.RunMode
+import uk.gov.hmrc.play.language.LanguageController
+
+class PlaLanguageController @Inject()(implicit val messagesApi: MessagesApi) extends LanguageController with RunMode {
 
   /** Converts a string to a URL, using the route to this controller. **/
   def langToCall(lang: String): Call = controllers.routes.PlaLanguageController.switchToLanguage(lang)
 
   /** Provides a fallback URL if there is no referer in the request header. **/
-  override protected def fallbackURL: String = current.configuration.getString(s"$env.language.fallbackUrl").getOrElse("/")
+  override protected def fallbackURL: String = Play.current.configuration.getString(s"$env.language.fallbackUrl").getOrElse("/")
 
   /** Returns a mapping between strings and the corresponding Lang object. **/
   override def languageMap: Map[String, Lang] = Map(

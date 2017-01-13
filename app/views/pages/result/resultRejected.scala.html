@@ -1,10 +1,14 @@
 @import models.RejectionDisplayModel
+@import controllers.PlaLanguageController
+@import play.api.Application
 
-@(res: RejectionDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang)
+@(res: RejectionDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+
+@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @views.html.main_template(title = Messages("pla.resultRejection.title"), bodyClasses = None) {
 
-@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+@language_selection(lc.languageMap, lc.langToCall, None)
 	<h1 class="heading-large" id="resultPageHeading">@Messages("pla.resultRejection.pageHeading")</h1>
 
 	<p id="resultOutcome">@Messages("resultCode."+res.notificationId+".heading")</p>

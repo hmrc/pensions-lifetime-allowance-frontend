@@ -1,7 +1,10 @@
 @import common.Links
+@import controllers.PlaLanguageController
+@import play.api.Application
 
-@()(implicit request: Request[_], messages: Messages, lang: Lang)
+@()(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
 
+@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 
 @scriptElement = {
@@ -10,7 +13,7 @@
 
 @views.html.main_template(title = Messages("pla.mcNeeded.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
-@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+@language_selection(lc.languageMap, lc.langToCall, None)
     <div class="grid-row pertax-error">
         <div class="column-two-thirds">
             <header class="heading-large">
