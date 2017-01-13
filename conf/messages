@@ -98,9 +98,9 @@ pla.noNotificationId.paraOne                = Visit your <a id="existingProtecti
 
 ## Pensions Taken ##
 pla.pensionsTaken.title                     = Did any of the following happen before 6 April 2016?
-pla.pensionsTaken.bullet.1                  = You got money from your pensions.
-pla.pensionsTaken.bullet.2                  = You transferred a pension to a scheme held overseas.
-pla.pensionsTaken.bullet.3                  = You turned 75 with pension savings that you hadn''t yet taken.
+pla.pensionsTaken.bullet.1                  = you got money from your pensions
+pla.pensionsTaken.bullet.2                  = you transferred a pension to a scheme held overseas
+pla.pensionsTaken.bullet.3                  = you turned 75 with pension savings that you hadn''t yet taken
 pla.pensionsTaken.mandatoryErr              = Please answer this question
 pla.pensionsTaken.legend                    = Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
@@ -118,8 +118,8 @@ pla.pensionsTakenBefore.step.1              = Take only the pensions from which 
 pla.pensionsTakenBefore.step.2              = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2016.
 pla.pensionsTakenBefore.step.3              = Multiply this figure by 25.
 pla.pensionsTakenBefore.para.2              = You'll need to do a different calculation if either of the following apply:
-pla.pensionsTakenBefore.bullet.1            = you did receive an income from other pensions since 6 April 2006.
-pla.pensionsTakenBefore.bullet.2            = you have a drawdown pension.
+pla.pensionsTakenBefore.bullet.1            = you did receive an income from other pensions since 6 April 2006
+pla.pensionsTakenBefore.bullet.2            = you have a drawdown pension
 pla.pensionsTakenBefore.para.3              = Find out how in this {0}
 pla.pensionsTakenBefore.helpLinkText        = technical guidance on valuing your pensions
 
@@ -129,9 +129,9 @@ pla.ip14PensionsTakenBefore.step.2          = Work out the annual amount you wer
 
 ## Pensions Taken Between ##
 pla.pensionsTakenBetween.title              = Did any of these events happen between 6 April 2006 and 5 April 2016?
-pla.pensionsTakenBetween.bullet.1           = You got money from your pensions.
-pla.pensionsTakenBetween.bullet.2           = You transferred a pension to a scheme held overseas.
-pla.pensionsTakenBetween.bullet.3           = You turned 75 with pension savings which you hadn''t yet taken.
+pla.pensionsTakenBetween.bullet.1           = you got money from your pensions
+pla.pensionsTakenBetween.bullet.2           = you transferred a pension to a scheme held overseas
+pla.pensionsTakenBetween.bullet.3           = you turned 75 with pension savings which you hadn''t yet taken
 pla.pensionsTakenBetween.para.1             = You''ll have used some of your lifetime allowance if any of these events happened.
 
 pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance have you used?
@@ -326,9 +326,9 @@ pla.resultSuccess.title                 = Success
 pla.resultSuccess.allowanceSubHeading   = Your protected lifetime allowance is
 pla.resultSuccess.protectionDetails     = Your protection details
 pla.resultSuccess.detailsContent        = When you decide to take money from your pension, give these details to your pension provider:
-pla.resultSuccess.protectionRef         = Protection notification number
-pla.resultSuccess.psaRef                = Scheme administrator reference
-pla.resultSuccess.applicationDate       = Application date
+pla.resultSuccess.protectionRef         = protection notification number
+pla.resultSuccess.psaRef                = scheme administrator reference
+pla.resultSuccess.applicationDate       = application date
 pla.resultSuccess.print                 = Print and save your details
 pla.resultSuccess.IPChangeDetails       = Changing your protection details
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 60 days.
@@ -339,8 +339,8 @@ pla.resultSuccess.giveFeedback          = Give us feedback
 pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
 pla.resultSuccess.exitSurvey            = Your feedback helps us improve.
 
-pla.resultSuccess.yourName              = Your full name
-pla.resultSuccess.yourNino              = Your National Insurance number
+pla.resultSuccess.yourName              = your full name
+pla.resultSuccess.yourNino              = your National Insurance number
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
