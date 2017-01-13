@@ -16,6 +16,7 @@
 
 package constructors
 
+import com.kenshoo.play.metrics.PlayModule
 import common.Display
 import enums.{ApplicationStage, ApplicationType}
 import models._
@@ -23,8 +24,11 @@ import models.amendModels.AmendProtectionModel
 import org.mockito.Matchers
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
+  override def bindModules = Seq(new PlayModule)
 
   val tstPSACheckRef = "PSA33456789"
 

@@ -55,7 +55,8 @@ object MockAuthConnector extends AuthConnector {
                    testConfidenceLevel(nino),
                    None,
                    None,
-                   None
+                   None,
+                   id
     ))
 
   private def testCredentialStrength(nino: String): CredentialStrength =

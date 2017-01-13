@@ -1,7 +1,6 @@
 @import models.ProtectionDetailsDisplayModel
-@import play.api.i18n._
 
-@(details: ProtectionDetailsDisplayModel)(implicit lang: Lang)
+@(details: ProtectionDetailsDisplayModel)(implicit messages: Messages, lang: Lang)
 
 <ul class="list list-bullet">
     <li id="yourFullName">@Messages("pla.resultSuccess.yourName")</li>

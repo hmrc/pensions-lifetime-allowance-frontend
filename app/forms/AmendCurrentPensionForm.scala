@@ -22,6 +22,8 @@ import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.{Lang, Messages}
 import utils.Constants._
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object AmendCurrentPensionForm {
   def amendCurrentPensionForm(implicit lang:Lang) = Form(

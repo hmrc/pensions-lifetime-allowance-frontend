@@ -23,9 +23,10 @@ import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
 import auth._
+import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 
 
-class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*) extends UnitSpec {
+class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*) extends UnitSpec with MicroserviceFilterSupport{
   val fakeRequest = FakeRequest("POST", "/protect-your-lifetime-allowance/" + url)
     .withSession(SessionKeys.sessionId -> s"session-$sessionId")
     .withFormUrlEncodedBody(data:_*)
@@ -33,7 +34,7 @@ class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessi
   val jsoupDoc = Jsoup.parse(bodyOf(result))
 }
 
-class AuthorisedFakeRequestToPost(controllerAction: Action[AnyContent], data: (String, String)*) extends UnitSpec {
+class AuthorisedFakeRequestToPost(controllerAction: Action[AnyContent], data: (String, String)*) extends UnitSpec with MicroserviceFilterSupport {
     val result = controllerAction(authenticatedFakeRequest().withFormUrlEncodedBody(data:_*))
     val jsoupDoc = Jsoup.parse(bodyOf(result))
   

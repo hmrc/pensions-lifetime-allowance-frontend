@@ -18,14 +18,19 @@ package controllers
 
 
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mock.MockitoSugar
 import java.util.UUID
+
 import play.api.i18n.Messages
 import testHelpers._
 import auth._
+import com.kenshoo.play.metrics.PlayModule
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 class TimeoutControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+    override def bindModules = Seq(new PlayModule)
 
     object TestTimeoutController extends TimeoutController {
     }

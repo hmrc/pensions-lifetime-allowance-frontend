@@ -17,6 +17,7 @@
 package controllers
 
 import auth.{MockAuthConnector, MockConfig}
+import com.kenshoo.play.metrics.PlayModule
 import config.FrontendAuthConnector
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.ResponseConstructors
@@ -27,7 +28,9 @@ import org.mockito.Matchers.anyString
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatest.mock.MockitoSugar
+import play.api.Play.current
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
@@ -37,8 +40,8 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-
 class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfter {
+  override def bindModules = Seq(new PlayModule)
 
   val successFP16Json = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1}""")
   val rejectionFP16Json = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
@@ -366,7 +369,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
      status(DataItem.result) shouldBe 500
    }
    "return \"no-cache\" in the response header" in {
-     DataItem.result.header.headers.head._2 shouldBe "no-cache"
+     DataItem.result.header.headers("Cache-Control") shouldBe "no-cache"
    }
  }
 
