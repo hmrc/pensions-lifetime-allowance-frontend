@@ -289,7 +289,7 @@ pla.summary.hiddenLinkText.ip14PsoDetails               = Change the details of 
 
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = View your existing protections
-pla.existingProtections.pageHeading                     = Lifetime allowance protection
+pla.existingProtections.pageHeading                     = Your lifetime allowance protection
 pla.existingProtections.BreadcrumbPTAHome               = Account home
 pla.existingProtections.pageBreadcrumb                  = Lifetime allowance protection
 pla.existingProtections.details                         = Details
