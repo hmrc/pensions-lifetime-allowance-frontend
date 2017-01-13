@@ -4,7 +4,7 @@
 @import play.api.data._
 @import common.Links
 
-@(pensionsTakenBeforeForm: Form[PensionsTakenBeforeModel])(implicit request: Request[_])
+@(pensionsTakenBeforeForm: Form[PensionsTakenBeforeModel])(implicit request: Request[_], lang: Lang)
 
 
 @helpTextAccordionContent = {
@@ -52,6 +52,7 @@
 }
 
 @main_template(title=Messages("pla.pensionsTakenBefore.title"), scriptElem=Some(scriptElement)) {
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenBeforeForm

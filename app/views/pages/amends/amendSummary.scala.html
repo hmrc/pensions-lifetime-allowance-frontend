@@ -5,9 +5,11 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import views.html.helper
 
-@(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_])
+@(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], lang:Lang)
 
 @full_width_template(title = Messages("pla.amends.title")) {
+
+@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
 
     <nav class="breadcrumb-nav breadcrumb-nav--slim">

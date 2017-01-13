@@ -6,7 +6,7 @@
 @import enums.ApplicationType
 @import common.Links
 
-@(summary: SummaryModel)(implicit request: Request[_])
+@(summary: SummaryModel)(implicit request: Request[_], lang: Lang)
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
@@ -31,6 +31,8 @@
 }
 
 @views.html.full_width_template(title = Messages("pla.summary.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
     @summaryDetails(summary)
 

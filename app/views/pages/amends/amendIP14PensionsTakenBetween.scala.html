@@ -4,7 +4,7 @@
 @import play.api.data._
 @import common.Links
 
-@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_])
+@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_], lang: Lang)
 
 @helpTextAccordionContent = {
     <p>@Messages("pla.ip14PensionsTakenBetween.para.2")</p>
@@ -50,6 +50,8 @@
 }
 
 @main_template(title=Messages("pla.pensionsTakenBetween.title"), scriptElem=Some(scriptElement)) {
+
+@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
 @govHelpers.errorSummary(
 Messages("pla.base.errorSummaryLabel"), amendPensionsTakenBetweenForm

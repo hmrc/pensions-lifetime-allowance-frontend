@@ -2,13 +2,15 @@
 @import models.amendModels.AmendsGAModel
 @import utils.Constants
 
-@(model: InactiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_])
+@(model: InactiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], lang: Lang)
 
 @scriptElement = {
 <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
 @views.html.main_template(title = Messages("pla.inactiveAmend.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+
+@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
 @gaModel.map{ gaModel =>
 <div @if(gaModel.current.isDefined){data-metrics = "inactiveAmends:@gaModel.current:amendCurrentPensions"}></div>

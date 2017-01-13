@@ -22,11 +22,11 @@ import models.amendModels.AmendPensionsTakenBetweenModel
 import utils.Constants
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 
 object AmendPensionsTakenBetweenForm {
 
-  def validateForm(form: Form[AmendPensionsTakenBetweenModel]): Form[AmendPensionsTakenBetweenModel] = {
+  def validateForm(form: Form[AmendPensionsTakenBetweenModel])(implicit lang:Lang): Form[AmendPensionsTakenBetweenModel] = {
     if(!validationNeeded(form)) form else {
       if(!validateFieldCompleted(form)) form.withError("amendedPensionsTakenBetweenAmt", Messages("pla.base.errors.errorQuestion"))
       else if(!validateMinimum(form)) form.withError("amendedPensionsTakenBetweenAmt", Messages("pla.base.errors.errorNegative"))
@@ -51,7 +51,7 @@ object AmendPensionsTakenBetweenForm {
 
   private def validateTwoDec(data: Form[AmendPensionsTakenBetweenModel]) = isMaxTwoDecimalPlaces(data("amendedPensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
 
-  val amendPensionsTakenBetweenForm = Form (
+  def amendPensionsTakenBetweenForm(implicit lang:Lang) = Form (
     mapping(
       "amendedPensionsTakenBetween" -> nonEmptyText,
       "amendedPensionsTakenBetweenAmt" -> optional(bigDecimal),

@@ -32,6 +32,8 @@ import forms.AmendmentTypeForm._
 import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import models.amendModels._
 import play.api.Logger
+import play.api.data.FormError
+import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, Result, _}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.HttpResponse
@@ -156,7 +158,10 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   val submitAmendPensionsTakenBefore = AuthorisedByAny.async {
     implicit user => implicit request =>
       amendPensionsTakenBeforeForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(pages.amends.amendPensionsTakenBefore(errors))),
+        errors => {
+          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
+          Future.successful(BadRequest(pages.amends.amendPensionsTakenBefore(form)))
+        },
         success => {
           val validatedForm = AmendPensionsTakenBeforeForm.validateForm(amendPensionsTakenBeforeForm.fill(success))
           if (validatedForm.hasErrors) {
@@ -189,7 +194,10 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
   val submitAmendPensionsTakenBetween = AuthorisedByAny.async { implicit user => implicit request =>
     amendPensionsTakenBetweenForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(pages.amends.amendPensionsTakenBetween(errors))),
+      errors => {
+        val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
+        Future.successful(BadRequest(pages.amends.amendPensionsTakenBetween(form)))
+      },
       success => {
         val validatedForm = AmendPensionsTakenBetweenForm.validateForm(amendPensionsTakenBetweenForm.fill(success))
         if (validatedForm.hasErrors) {
@@ -224,7 +232,10 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   val submitAmendOverseasPensions = AuthorisedByAny.async {
     implicit user => implicit request =>
       amendOverseasPensionsForm.bindFromRequest.fold(
-        errors => Future.successful(BadRequest(pages.amends.amendOverseasPensions(errors))),
+        errors => {
+          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
+          Future.successful(BadRequest(pages.amends.amendOverseasPensions(form)))
+        },
         success => {
           val validatedForm = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.fill(success))
           if (validatedForm.hasErrors) {
@@ -258,7 +269,10 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
   val submitAmendCurrentPension = AuthorisedByAny.async { implicit user => implicit request =>
 
     amendCurrentPensionForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(pages.amends.amendCurrentPensions(errors))),
+      errors => {
+        val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
+        Future.successful(BadRequest(pages.amends.amendCurrentPensions(form)))
+      },
       success => {
         keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
           case Some(model) =>
@@ -300,7 +314,10 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
   val submitRemovePso = AuthorisedByAny.async { implicit user => implicit request =>
     amendmentTypeForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(pages.amends.removePsoDebits(errors))),
+      errors => {
+        val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
+        Future.successful(BadRequest(pages.amends.removePsoDebits(form)))
+      },
       success => {
         keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
           case Some(model) =>
@@ -340,7 +357,10 @@ trait AmendsController extends FrontendController with AuthorisedForPLA {
 
   val submitAmendPsoDetails = AuthorisedByAny.async { implicit user => implicit request =>
     amendPsoDetailsForm.bindFromRequest.fold(
-      errors => Future.successful(BadRequest(pages.amends.amendPsoDetails(AmendPSODetailsForm.validateForm(errors)))),
+      errors => {
+        val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
+        Future.successful(BadRequest(pages.amends.amendPsoDetails(AmendPSODetailsForm.validateForm(form))))
+      },
       success => {
         val validatedForm = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.fill(success))
         if (validatedForm.hasErrors) {

@@ -29,6 +29,7 @@ pla.base.errors.errorDecimalPlaces      = The amount you''ve entered has too man
 
 ## PLAY! Error Overrides ##
 error.real                              = Enter a number without commas, for example 10000.00
+error.required                          = This field is required
 
 ## Link Text ##
 pla.links.signout                       = Sign out

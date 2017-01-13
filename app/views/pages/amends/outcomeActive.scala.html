@@ -5,13 +5,15 @@
 @import enums.ApplicationType
 @import utils.Constants
 
-@(model: ActiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_])
+@(model: ActiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], lang: Lang)
 
 @scriptElement = {
 <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
 @views.html.main_template(title = Messages("pla.activeAmend.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+
+@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
 @gaModel.map{ gaModel =>
 <div @if(gaModel.current.isDefined){data-metrics = "activeAmends:@gaModel.current:amendCurrentPensions"}></div>

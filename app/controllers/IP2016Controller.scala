@@ -16,14 +16,14 @@
 
 package controllers
 
-import auth.{PLAUser, AuthorisedForPLA}
-import config.{FrontendAppConfig,FrontendAuthConnector}
-
+import auth.{AuthorisedForPLA, PLAUser}
+import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.KeyStoreConnector
 import enums.ApplicationType
 import play.api.Logger
-import play.api.mvc._
+import play.api.i18n.{Lang, Messages}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+
 import scala.concurrent.Future
 import forms._
 import forms.PensionsTakenForm.pensionsTakenForm
@@ -34,8 +34,11 @@ import forms.CurrentPensionsForm.currentPensionsForm
 import forms.PSODetailsForm.psoDetailsForm
 import forms.PensionDebitsForm.pensionDebitsForm
 import models._
-
+import play.api.data.{Form, FormError}
+import play.api.mvc.{Action, AnyContent}
 import views.html._
+
+import scala.util.{Failure, Success, Try}
 
 object IP2016Controller extends IP2016Controller {
 
@@ -59,7 +62,10 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
 
     val submitPensionsTaken = AuthorisedByAny { implicit user => implicit request =>
         pensionsTakenForm.bindFromRequest.fold(
-            errors => BadRequest(pages.ip2016.pensionsTaken(errors)),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                BadRequest(pages.ip2016.pensionsTaken(form))
+            },
             success => {
                 keyStoreConnector.saveFormData("pensionsTaken", success)
                 success.pensionsTaken.get match {
@@ -83,7 +89,10 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     val submitPensionsTakenBefore = AuthorisedByAny.async { implicit user => implicit request =>
 
         pensionsTakenBeforeForm.bindFromRequest.fold(
-            errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(errors))),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(form)))
+            },
             success => {
                 val validatedForm = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.fill(success))
                 if(validatedForm.hasErrors) {
@@ -109,7 +118,12 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     val submitPensionsTakenBetween = AuthorisedByAny.async { implicit user => implicit request =>
 
         pensionsTakenBetweenForm.bindFromRequest.fold(
-            errors => Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(errors))),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                println(s"\n!!!!!!!!!!!!\n\n$form\n\n!!!!!!!!!\n")
+
+                Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(form)))
+            },
             success => {
                 val validatedForm = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.fill(success))
                 if(validatedForm.hasErrors) {
@@ -132,10 +146,12 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
         }
     }
 
-    val submitOverseasPensions = AuthorisedByAny.async { implicit user => implicit request =>
+    val submitOverseasPensions: Action[AnyContent] = AuthorisedByAny.async { implicit user =>implicit request =>
 
         overseasPensionsForm.bindFromRequest.fold(
-            errors => Future.successful(BadRequest(pages.ip2016.overseasPensions(errors))),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                Future.successful(BadRequest(pages.ip2016.overseasPensions(form)))},
             success => {
                 val validatedForm = OverseasPensionsForm.validateForm(overseasPensionsForm.fill(success))
                 if(validatedForm.hasErrors) {
@@ -161,7 +177,9 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     val submitCurrentPensions = AuthorisedByAny.async { implicit user => implicit request =>
 
         currentPensionsForm.bindFromRequest.fold(
-            errors => Future.successful(BadRequest(pages.ip2016.currentPensions(errors))),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                Future.successful(BadRequest(pages.ip2016.currentPensions(form)))},
             success => {
                 keyStoreConnector.saveFormData("currentPensions", success)
                 Future.successful(Redirect(routes.IP2016Controller.pensionDebits()))
@@ -180,7 +198,10 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
 
     val submitPensionDebits = AuthorisedByAny { implicit user => implicit request =>
         pensionDebitsForm.bindFromRequest.fold(
-            errors => BadRequest(pages.ip2016.pensionDebits(errors)),
+            errors => {
+                val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                BadRequest(pages.ip2016.pensionDebits(form))
+            },
             success => {
                 keyStoreConnector.saveFormData("pensionDebits", success)
                 success.pensionDebits.get match {
@@ -204,10 +225,13 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
     val submitPSODetails = AuthorisedByAny.async { implicit user => implicit request =>
 
             psoDetailsForm.bindFromRequest.fold(
-                errors => Future.successful(BadRequest(pages.ip2016.psoDetails(PSODetailsForm.validateForm(errors)))),
+                errors => {
+                    val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
+                    Future.successful(BadRequest(pages.ip2016.psoDetails(PSODetailsForm.validateForm(form))))},
                 form => {
-                    val validatedForm = PSODetailsForm.validateForm(psoDetailsForm.fill(form))
-                    if(validatedForm.hasErrors) {
+                    val validatedForm =
+                        PSODetailsForm.validateForm(psoDetailsForm.fill(form))
+                    if (validatedForm.hasErrors) {
                         Future.successful(BadRequest(pages.ip2016.psoDetails(validatedForm)))
                     } else {
                         keyStoreConnector.saveFormData(s"psoDetails", form)
@@ -219,7 +243,6 @@ trait IP2016Controller extends FrontendController with AuthorisedForPLA {
 
     val removePsoDetails = AuthorisedByAny.async {implicit user => implicit request =>
         Future(Ok(pages.ip2016.removePsoDetails()))
-
     }
 
     val submitRemovePsoDetails = AuthorisedByAny.async { implicit user => implicit request =>

@@ -23,11 +23,11 @@ import models.amendModels.AmendPSODetailsModel
 import utils.Constants
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 
 object AmendPSODetailsForm {
 
-  def validateForm(form: Form[AmendPSODetailsModel]): Form[AmendPSODetailsModel] = {
+  def validateForm(form: Form[AmendPSODetailsModel])(implicit lang:Lang): Form[AmendPSODetailsModel] = {
     val (day, month, year) = getFormDateValues(form)
     if(dateFieldsAlreadyInvalid(form)) form
     else if(!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
@@ -35,7 +35,7 @@ object AmendPSODetailsForm {
     else validateMinDate(form, day, month, year)
   }
 
-  private def validateMinDate(form: Form[AmendPSODetailsModel], day: Int, month: Int, year: Int): Form[AmendPSODetailsModel] = {
+  private def validateMinDate(form: Form[AmendPSODetailsModel], day: Int, month: Int, year: Int)(implicit lang:Lang): Form[AmendPSODetailsModel] = {
     val pType = form("protectionType").value.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("validateMinDate", "protectionType")}
     val (minDate, message) = pType.toLowerCase match {
       case "ip2016" => (Constants.minIP16PSODate, "IP16PsoDetails")
@@ -47,7 +47,7 @@ object AmendPSODetailsForm {
     else form
   }
 
-  private def formWithDateOutOfRangeError(form: Form[AmendPSODetailsModel]): Form[AmendPSODetailsModel] = {
+  private def formWithDateOutOfRangeError(form: Form[AmendPSODetailsModel])(implicit lang:Lang): Form[AmendPSODetailsModel] = {
     val pType = form("protectionType").value.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("validateMinDate", "protectionType")}
     pType.toLowerCase match {
       case "ip2016" => form.withError("psoDay", Messages(s"pla.IP16PsoDetails.errorDateOutOfRange"))
@@ -65,11 +65,11 @@ object AmendPSODetailsForm {
   }
 
   // returns true if the passed form already contains an error with the key from any of the date fields
-  private def dateFieldsAlreadyInvalid(form: Form[AmendPSODetailsModel]): Boolean = {
+  private def dateFieldsAlreadyInvalid(form: Form[AmendPSODetailsModel])(implicit lang:Lang): Boolean = {
     form.errors.map(_.key).exists(List("psoDay","psoMonth","psoYear").contains(_))
   }
 
-  val amendPsoDetailsForm = Form(
+  def amendPsoDetailsForm(implicit lang:Lang) = Form(
     mapping(
       "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),
       "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),

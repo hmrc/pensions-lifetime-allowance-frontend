@@ -20,11 +20,11 @@ import common.Validation._
 import models.amendModels.AmendCurrentPensionModel
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import utils.Constants._
 
 object AmendCurrentPensionForm {
-  val amendCurrentPensionForm = Form(
+  def amendCurrentPensionForm(implicit lang:Lang) = Form(
     mapping(
       "amendedUKPensionAmt" -> optional(bigDecimal)
         .verifying(Messages("pla.base.errors.errorQuestion"), currentPensionsAmt => currentPensionsAmt.isDefined)

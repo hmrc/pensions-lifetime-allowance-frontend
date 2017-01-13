@@ -5,7 +5,7 @@
 @import views.html.helper
 @import common.Links
 
-@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_])
+@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_], lang: Lang)
 
 @scriptElement = {
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
@@ -36,6 +36,8 @@
 }
 
 @main_template(title = Messages("pla.currentPensions.title"), scriptElem=Some(scriptElement)) {
+
+    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), amendCurrentPensionForm)
 

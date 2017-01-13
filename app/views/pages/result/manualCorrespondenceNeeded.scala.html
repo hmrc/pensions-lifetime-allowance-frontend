@@ -1,6 +1,6 @@
 @import common.Links
 
-@()(implicit request: Request[_])
+@()(implicit request: Request[_], lang: Lang)
 
 
 @scriptElement = {
@@ -9,6 +9,7 @@
 
 @views.html.main_template(title = Messages("pla.mcNeeded.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
 
+@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
     <div class="grid-row pertax-error">
         <div class="column-two-thirds">
             <header class="heading-large">

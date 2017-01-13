@@ -21,11 +21,11 @@ import common.Validation._
 import utils.Constants
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 
 object PensionsTakenBeforeForm {
 
-  def validateForm(form: Form[PensionsTakenBeforeModel]): Form[PensionsTakenBeforeModel] = {
+  def validateForm(form: Form[PensionsTakenBeforeModel])(implicit lang:Lang): Form[PensionsTakenBeforeModel] = {
     if(!validationNeeded(form)) form else {
       if(!validateFieldCompleted(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.base.errors.errorQuestion"))
       else if(!validateMinimum(form)) form.withError("pensionsTakenBeforeAmt", Messages("pla.base.errors.errorNegative"))
@@ -50,7 +50,7 @@ object PensionsTakenBeforeForm {
 
   private def validateTwoDec(data: Form[PensionsTakenBeforeModel]) = isMaxTwoDecimalPlaces(data("pensionsTakenBeforeAmt").value.getOrElse("0").toDouble)
 
-  val pensionsTakenBeforeForm = Form (
+  def pensionsTakenBeforeForm(implicit lang:Lang) = Form (
     mapping(
       "pensionsTakenBefore" -> nonEmptyText,
       "pensionsTakenBeforeAmt" -> optional(bigDecimal)
