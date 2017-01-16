@@ -294,6 +294,7 @@ pla.existingProtections.BreadcrumbPTAHome               = Account home
 pla.existingProtections.pageBreadcrumb                  = Lifetime allowance protection
 pla.existingProtections.details                         = Details
 pla.existingProtections.print                           = Print and save your details
+pla.existingProtections.applicationDate                 = Application date
 pla.existingProtections.noActiveProtections             = You currently have no open protections.
 pla.existingProtections.noOtherProtections              = You have no other protections.
 pla.existingProtections.protectedAmount                 = Protected lifetime allowance
