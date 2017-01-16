@@ -294,6 +294,7 @@ pla.existingProtections.BreadcrumbPTAHome               = Hafan y cyfrif
 pla.existingProtections.pageBreadcrumb                  = Diogelwch lwfans oes
 pla.existingProtections.details                         = Manylion
 pla.existingProtections.print                           = Argraffu a chadw''ch manylion
+pla.existingProtections.applicationDate                 = Dyddiad y cais
 pla.existingProtections.noActiveProtections             = Ar hyn o bryd nid oes gennych ddiogelwch ar agor.
 pla.existingProtections.noOtherProtections              = Nid oes gennych unrhyw ddiogelwch arall.
 pla.existingProtections.protectedAmount                 = Lwfans oes sydd wedi''i ddiogelu
