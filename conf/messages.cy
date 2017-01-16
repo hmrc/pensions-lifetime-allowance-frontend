@@ -76,7 +76,7 @@ pla.notAuthorised.paraOne       = <p>Os na allwch roi prawf o bwy ydych, ac mae 
 pla.notAuthorised.tryAgain      = Yn ôl i''r dudalen <a href="{0}" rel="external">diogelu''ch lwfans oes</a> i roi cynnig arall arni.
 pla.lockedOut.title             = Wedi cloi allan
 pla.lockedOut.pageHeading       = Rydych wedi ceisio rhoi prawf o bwy ydych gormod o weithiau.
-pla.lockedOut.paraOne           = Gallwch roi cynnig arall arni ar ôl 7 diwrnod.
+pla.lockedOut.paraOne           = Gallwch roi cynnig arall arni ar ôl 24 awr.
 pla.lockedOut.paraTwo           = <p>Os oes gennych gwestiwn, gallwch <a href="{0}ʺ target="_blank">gysylltu â Chyllid a Thollau EM (yn agor ffenestr newydd)</a> i gael help.</p>
 pla.technicalIssue.title        = Problemau Technegol
 pla.technicalIssue.pageHeading  = Mae problem dechnegol wedi codi

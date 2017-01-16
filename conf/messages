@@ -76,7 +76,7 @@ pla.notAuthorised.paraOne       = <p>If you can''t confirm your identity and you
 pla.notAuthorised.tryAgain      = Return to the <a href="{0}" rel="external">protect your lifetime allowance</a> page to try again.
 pla.lockedOut.title             = Locked Out
 pla.lockedOut.pageHeading       = You have tried to confirm your identity too many times
-pla.lockedOut.paraOne           = You can try again in 7 days.
+pla.lockedOut.paraOne           = You can try again in 24 hours.
 pla.lockedOut.paraTwo           = <p>If you have a query you can <a href="{0}" target="_blank">contact HM Revenue and Customs (opens in a new window)</a> to get help.</p>
 pla.technicalIssue.title        = Technical Issues
 pla.technicalIssue.pageHeading  = There is a technical problem
