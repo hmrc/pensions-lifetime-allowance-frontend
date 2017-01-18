@@ -54,11 +54,7 @@ pla.confirmFP16.pageHeading = Cael diogelwch sefydlog 2016 ar gyfer eich lwfans 
 pla.confirmFP16.para.1      = I gael y diogelwch hwn mae''n rhaid i chi gytuno ar y datganiadau hyn.
 pla.confirmFP16.para.2      = Rwy''n datgan:
 pla.confirmFP16.bullet.1    = ar 6 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEM, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau sydd ddim yn y DU
-pla.confirmFP16.bullet.2    = ar 6 Ebrill 2016 nid oedd gennyf unrhyw un o''r diogelwch yma:
-pla.confirmFP16.bullet.2.1  = lefel uwch o ddiogelwch
-pla.confirmFP16.bullet.2.2  = diogelwch sylfaenol
-pla.confirmFP16.bullet.2.3  = diogelwch sefydlog
-pla.confirmFP16.bullet.2.4  = diogelwch sefydlog 2014
+pla.confirmFP16.bullet.2    = ar 6 Ebrill 2016 nid oedd gennyf lefel uwch o ddiogelwch, diogelwch sylfaenol, diogelwch sefydlog , neu ddiogelwch sefydlog 2014
 pla.confirmFP16.bullet.3    = er 6 Ebrill 2016 nid wyf wedi cael ''digwyddiad sy''n dod â diogelwch i ben'' (digwyddiadau penodol yw''r rhain sy''n eich gwneud yn anghymwys ar gyfer diogelwch sefydlog)
 pla.confirmFP16.para.3      = Rwy''n datgan bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
 pla.confirmFP16.help        = Help gyda''r amodau hyn
@@ -76,7 +72,7 @@ pla.notAuthorised.paraOne       = <p>Os na allwch roi prawf o bwy ydych, ac mae 
 pla.notAuthorised.tryAgain      = Yn ôl i''r dudalen <a href="{0}" rel="external">diogelu''ch lwfans oes</a> i roi cynnig arall arni.
 pla.lockedOut.title             = Wedi cloi allan
 pla.lockedOut.pageHeading       = Rydych wedi ceisio rhoi prawf o bwy ydych gormod o weithiau.
-pla.lockedOut.paraOne           = Gallwch roi cynnig arall arni ar ôl 7 diwrnod.
+pla.lockedOut.paraOne           = Gallwch roi cynnig arall arni ar ôl 24 awr.
 pla.lockedOut.paraTwo           = <p>Os oes gennych gwestiwn, gallwch <a href="{0}ʺ target="_blank">gysylltu â Chyllid a Thollau EM (yn agor ffenestr newydd)</a> i gael help.</p>
 pla.technicalIssue.title        = Problemau Technegol
 pla.technicalIssue.pageHeading  = Mae problem dechnegol wedi codi
@@ -289,11 +285,12 @@ pla.summary.hiddenLinkText.ip14PsoDetails               = Newidiwch fanylion eic
 
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = Bwrw golwg ar fanylion eich diogelwch presennol
-pla.existingProtections.pageHeading                     = Diogelwch lwfans oes
+pla.existingProtections.pageHeading                     = Eich diogelwch lwfans oes
 pla.existingProtections.BreadcrumbPTAHome               = Hafan y cyfrif
 pla.existingProtections.pageBreadcrumb                  = Diogelwch lwfans oes
 pla.existingProtections.details                         = Manylion
 pla.existingProtections.print                           = Argraffu a chadw''ch manylion
+pla.existingProtections.applicationDate                 = Dyddiad y cais
 pla.existingProtections.noActiveProtections             = Ar hyn o bryd nid oes gennych ddiogelwch ar agor.
 pla.existingProtections.noOtherProtections              = Nid oes gennych unrhyw ddiogelwch arall.
 pla.existingProtections.protectedAmount                 = Lwfans oes sydd wedi''i ddiogelu

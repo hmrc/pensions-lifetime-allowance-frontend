@@ -35,7 +35,7 @@
                     }
 
                     @protection.certificateDate.map{ cDate =>
-                        @protectionDetails(Messages("pla.resultSuccess.applicationDate"), cDate, s"inactiveCertificateDate$protectionNum")
+                        @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, s"inactiveCertificateDate$protectionNum")
                     }
 
                     @protection.amendCall.map{ call =>
