@@ -13,7 +13,6 @@
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
-@import views.html.helpers.phaseBanner
 @import play.api.i18n._
 
 
@@ -57,7 +56,7 @@
 
 @serviceInfo = {
     @uiLayouts.serviceInfo(
-      betaBanner = phaseBanner("BETA"),
+      betaBanner = HtmlFormat.empty,
       includeGridWrapper = false,
       serviceInfoContent = Some(serviceInfoContent))
 }

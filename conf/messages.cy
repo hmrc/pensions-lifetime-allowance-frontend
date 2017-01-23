@@ -372,7 +372,6 @@ pla.exitSurvey.hiddenQ1                                 = <p class="bold-small">
 pla.exitSurvey.question2                                = <p class="bold-small">Ar sail yr hyn yr ydych wedi''i wneud heddiw, a oes angen i chi wneud unrhyw beth arall? Gallwch roi tic mewn mwy nag un blwch.</p>
 pla.exitSurvey.question3                                = <p class="bold-small">Pa mor debygol ydych o argymell eich cyfrif treth i''ch ffrindiau a''ch teulu?</p>
 pla.exitSurvey.question4                                = <p class="bold-small">Yn gyffredinol, sut ydych yn teimlo am eich profiad wrth ddefnyddio''ch cyfrif treth heddiw?</p>
-pla.exitSurvey.writeFeedback                            = Os oes gennych unrhyw sylwadau ychwanegol, defnyddiwch y cysylltiad adborth ar frig y dudalen.
 pla.exitSurvey.sendFeedback                             = Anfon adborth
 
 ## Printing ##

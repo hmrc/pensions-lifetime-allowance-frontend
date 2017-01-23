@@ -372,7 +372,6 @@ pla.exitSurvey.hiddenQ1                                 = <p class="bold-small">
 pla.exitSurvey.question2                                = <p class="bold-small">Based on what you have done today, do you need to do anything else? You can tick more than one box.</p>
 pla.exitSurvey.question3                                = <p class="bold-small">How likely are you to recommend your tax account to your friends or family?</p>
 pla.exitSurvey.question4                                = <p class="bold-small">Overall, how do you feel about your experience using your tax account today?</p>
-pla.exitSurvey.writeFeedback                            = If you have any additional comments please use the feedback link at the top of the page.
 pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##
