@@ -102,8 +102,4 @@ GET         /amend-protection/:protectionType/:status                           
 
 
 #Feedback routes
-GET         /feedback                                           controllers.FeedbackController.show
-POST        /feedback                                           controllers.FeedbackController.submit
-GET         /thankyou                                           controllers.FeedbackController.thankyou
-
 GET         /exit                                               controllers.ExitSurveyController.exitSurvey
