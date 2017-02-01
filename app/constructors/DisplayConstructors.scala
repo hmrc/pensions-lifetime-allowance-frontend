@@ -25,6 +25,8 @@ import play.api.Logger
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.Call
 import utils.{CallMap, Constants}
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object DisplayConstructors extends DisplayConstructors
 

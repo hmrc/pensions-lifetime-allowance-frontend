@@ -18,9 +18,11 @@ package controllers
 
 
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 
 import akka.util.Timeout
 import auth._
+import com.kenshoo.play.metrics.PlayModule
 import connectors.KeyStoreConnector
 import constructors.SummaryConstructor
 import enums.ApplicationType
@@ -28,7 +30,9 @@ import models.SummaryModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.Play.current
 import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.JsValue
 import testHelpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -38,6 +42,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import scala.concurrent.Future
 
 class SummaryControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+  override def bindModules = Seq(new PlayModule)
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockSummaryConstructor = mock[SummaryConstructor]
@@ -91,7 +96,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
         status(DataItem.result) shouldBe 500
       }
       "show technical error for IP16" in {
-        implicit val timeout: Timeout = 5000
+        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
       }
@@ -103,7 +108,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
         status(DataItem.result) shouldBe 500
       }
       "show technical error for IP14" in {
-        implicit val timeout: Timeout = 5000
+        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
       }
@@ -118,7 +123,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
         status(DataItem.result) shouldBe 500
       }
       "show technical error for IP16" in {
-        implicit val timeout: Timeout = 5000
+        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
       }
@@ -130,7 +135,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
         status(DataItem.result) shouldBe 500
       }
       "show technical error for IP14" in {
-        implicit val timeout: Timeout = 5000
+        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
       }

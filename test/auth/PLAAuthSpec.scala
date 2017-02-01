@@ -19,6 +19,7 @@ package auth
 
 import java.net.URLEncoder
 
+import com.kenshoo.play.metrics.PlayModule
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.http.Status
@@ -27,6 +28,8 @@ import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class PLAAuthSpec extends UnitSpec with WithFakeApplication {
+
+  override def bindModules = Seq(new PlayModule)
 
   "Government Gateway Provider" should {
     "have an account type additional parameter set to individual" in {

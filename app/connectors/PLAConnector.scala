@@ -25,7 +25,6 @@ import scala.concurrent.Future
 import config.WSHttp
 import enums.ApplicationType
 import constructors.IPApplicationConstructor
-
 import models._
 
 object PLAConnector extends PLAConnector with ServicesConfig {
@@ -84,6 +83,7 @@ trait ResponseHandler extends HttpErrorFunctions {
     response.status match {
       case 409 => response  // this is an expected response for this API, so don't throw an exception
       case 423 => response  // this is a possible response for this API that must be handled separately, so don't throw an exception
+      case 404 => throw new Upstream4xxResponse(response.body, 404, 404)  // this is a possible response for this API that must be handled separately, so don't throw an exception
       case _ => handleResponse(method, url)(response)
     }
   }

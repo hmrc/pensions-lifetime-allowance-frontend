@@ -37,6 +37,8 @@ import models._
 import play.api.data.{Form, FormError}
 import play.api.mvc.{Action, AnyContent}
 import views.html._
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 import scala.util.{Failure, Success, Try}
 

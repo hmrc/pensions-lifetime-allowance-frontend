@@ -4,12 +4,16 @@
 @import models.amendModels.AmendmentTypeModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import views.html.helper
+@import controllers.PlaLanguageController
+@import play.api.Application
 
-@(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], lang:Lang)
+@(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+
+@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @full_width_template(title = Messages("pla.amends.title")) {
 
-@language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+@language_selection(lc.languageMap, lc.langToCall, None)
 
 
     <nav class="breadcrumb-nav breadcrumb-nav--slim">

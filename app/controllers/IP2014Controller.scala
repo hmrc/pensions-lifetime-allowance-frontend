@@ -37,6 +37,8 @@ import models._
 import play.api.data.FormError
 import play.api.i18n.Messages
 import views.html._
+import play.api.i18n.Messages.Implicits._
+import play.api.Play.current
 
 object IP2014Controller extends IP2014Controller {
     val keyStoreConnector = KeyStoreConnector

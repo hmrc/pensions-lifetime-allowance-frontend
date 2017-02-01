@@ -16,12 +16,16 @@
 
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
+@import controllers.PlaLanguageController
+@import play.api.Application
 
-@(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], formPartialRetriever: FormPartialRetriever,
-  partialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang)
+@(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], messages: Messages, formPartialRetriever: FormPartialRetriever,
+  partialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang, application: Application)
+
+@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @main_template(Messages("feedback.title")) {
-    @language_selection(PlaLanguageController.languageMap, PlaLanguageController.langToCall, None)
+    @language_selection(lc.languageMap, lc.langToCall, None)
 
     @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
 }

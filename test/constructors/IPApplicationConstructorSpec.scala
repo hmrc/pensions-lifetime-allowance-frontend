@@ -16,13 +16,15 @@
 
 package constructors
 
+import com.kenshoo.play.metrics.PlayModule
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.test.{WithFakeApplication, UnitSpec}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.libs.json.{JsValue, Json}
 import models._
 import enums.ApplicationType
 
 class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
+  override def bindModules = Seq(new PlayModule)
   
   val tstId = "testUserID"
   "IP Application Constructor" should {

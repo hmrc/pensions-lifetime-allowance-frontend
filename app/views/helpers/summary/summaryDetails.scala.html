@@ -1,7 +1,7 @@
 @import play.api.data._
 @import config.FrontendAppConfig
 
-@(summary: SummaryModel)(implicit lang:Lang)
+@(summary: SummaryModel)(implicit messages: Messages, lang: Lang)
 
 @defining(summary.hasRemoveLink){ removeLinkDefined =>
 
