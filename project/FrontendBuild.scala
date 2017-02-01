@@ -20,10 +20,6 @@ object FrontendBuild extends Build with MicroService {
 
   val appName = "pensions-lifetime-allowance-frontend"
 
-//  override lazy val plugins: Seq[Plugins] = Seq(
-//    SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin
-//  )
-
   override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
 }
 

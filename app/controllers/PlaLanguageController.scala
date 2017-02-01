@@ -16,12 +16,7 @@
 
 package controllers
 
-//import uk.gov.hmrc.play.config.RunMode
-//import uk.gov.hmrc.play.language.LanguageController
-//import play.api.i18n.Lang
-//import play.api.mvc._
 import play.api.Play.current
-
 import javax.inject.Inject
 
 import play.api.Play

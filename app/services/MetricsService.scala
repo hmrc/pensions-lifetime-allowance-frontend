@@ -16,7 +16,6 @@
 
 package services
 
-//import com.kenshoo.play.metrics.MetricsRegistry
 import uk.gov.hmrc.play.graphite.MicroserviceMetrics
 
 object MetricsService extends MicroserviceMetrics{
