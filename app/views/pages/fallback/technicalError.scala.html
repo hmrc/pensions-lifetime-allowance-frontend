@@ -3,7 +3,6 @@
 
 @restartTarget = @{
     pType match {
-        case "IP2014" => controllers.routes.IP2014Controller.ip14PensionsTaken
         case "IP2016" => controllers.routes.IP2016Controller.pensionsTaken
         case "FP2016" => controllers.routes.ConfirmationController.confirmFP
         case "existingProtections" => controllers.routes.ReadProtectionsController.currentProtections

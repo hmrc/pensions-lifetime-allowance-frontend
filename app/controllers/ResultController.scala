@@ -72,17 +72,6 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
   }
 
 
-  val processIP14Application = AuthorisedByAny.async {
-    implicit user => implicit request =>
-      implicit val protectionType = ApplicationType.IP2014
-      for {
-        userData <- keyStoreConnector.fetchAllUserData
-        applicationResult <- plaConnector.applyIP14(user.nino.get, userData.get)
-        response <- routeViaMCNeededCheck(applicationResult)
-      } yield response
-  }
-
-
   private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser, protectionType: ApplicationType.Value): Future[Result] = {
     response.status match {
       case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
@@ -102,7 +91,6 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
           keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
             cacheMap => protectionType match {
               case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16())
-              case ApplicationType.IP2014 => Redirect(routes.ResultController.displayIP14())
               case ApplicationType.FP2016 => Redirect(routes.ResultController.displayFP16())
             }
         }
@@ -115,7 +103,6 @@ trait ResultController extends FrontendController with AuthorisedForPLA {
 
 
   val displayIP16 = displayResult(ApplicationType.IP2016)
-  val displayIP14 = displayResult(ApplicationType.IP2014)
   val displayFP16 = displayResult(ApplicationType.FP2016)
 
 

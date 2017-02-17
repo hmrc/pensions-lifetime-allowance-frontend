@@ -66,26 +66,6 @@ trait SummaryController extends FrontendController with AuthorisedForPLA {
     }
   }
 
-  val summaryIP14 = AuthorisedByAny.async { implicit user => implicit request =>
-    implicit val protectionType = ApplicationType.IP2014
-    keyStoreConnector.fetchAllUserData.map {
-      case Some(data) => routeIP2014SummaryFromUserData(data)
-      case None => {
-        Logger.warn(s"unable to fetch summary IP14 data from keystore for user nino ${user.nino}")
-        InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-      }
-    }
-  }
-
-  private def routeIP2014SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent], user: PLAUser) : Result = {
-    summaryConstructor.createSummaryData(data).map {
-      summaryModel => Ok(pages.ip2014.ip14Summary(summaryModel))
-    }.getOrElse{
-      Logger.warn(s"Unable to create IP14 summary model from summary data for user nino ${user.nino}")
-      InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-    }
-  }
-
   // returns true if the passed ID corresponds to a data field which requires GA monitoring
   def recordDataMetrics(rowId: String): Boolean = {
     val dataMetricsIds = List("pensionsTaken", "pensionsTakenBefore", "pensionsTakenBetween", "overseasPensions", "pensionDebits", "numberOfPSOsAmt")
