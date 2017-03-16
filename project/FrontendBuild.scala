@@ -34,7 +34,7 @@ private object AppDependencies {
   private val playUiVersion = "7.0.0"
   private val playPartialsVersion = "5.3.0"
   private val playAuthorisedFrontendVersion = "6.3.0"
-  private val playConfigVersion = "4.2.0"
+  private val playConfigVersion = "4.3.0"
   private val hmrcTestVersion = "2.1.0"
   private val scalaTestVersion = "2.2.6"
   private val scalaTestPlusVersion = "1.5.1"
