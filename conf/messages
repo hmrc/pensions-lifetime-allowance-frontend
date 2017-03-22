@@ -691,7 +691,6 @@ resultCode.43.2         =   If this happens, contact <a href="https://www.gov.uk
 resultCode.44.heading   =   You''ve added individual protection 2016
 
 ## 2014 Application Period Ended ##
-pla.withdrawn.title                         = Sorry, Applications for 2014 Protection Have Now Ended
-pla.withdrawn.pageHeading                   = Sorry, Applications for 2014 Protection Have Now Ended
-pla.withdrawn.paraOne                       = You may review current applications.
-pla.withdrawn.startAgain                    = View existing applications
+pla.withdrawn.title                         = Sorry, applications for 2014 protection have ended
+pla.withdrawn.pageHeading                   = Sorry, applications for 2014 protection have ended
+pla.withdrawn.paraOne                       = You can still <a href="{0}">view existing applications</a>.

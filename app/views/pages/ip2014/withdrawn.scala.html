@@ -3,9 +3,5 @@
 @views.html.main_template(title = Messages("pla.withdrawn.title"), bodyClasses = None) {
 <h1 class="heading-large" id="pageHeading">@Messages("pla.withdrawn.pageHeading")</h1>
 
-<p id="startAgainText">@Messages("pla.techError.paraOne")</p>
-
-<ul>
-    <li><a href=@controllers.routes.ReadProtectionsController.currentProtections id="tryAgainLink">@Messages("pla.withdrawn.startAgain")</a></li>
-</ul>
+<p id="startAgainText">@Html(Messages("pla.withdrawn.paraOne", controllers.routes.ReadProtectionsController.currentProtections))</p>
 }
