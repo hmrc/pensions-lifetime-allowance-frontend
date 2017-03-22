@@ -554,11 +554,11 @@ resultCode.5.1          =   As you already have enhanced protection in place, in
 resultCode.5.2          =   To give up enhanced protection, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.6.heading    =   You''ve added individual protection 2014
-resultCode.6.1          =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection. 
+resultCode.6.1          =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
 resultCode.6.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.7.heading    =   You''ve added individual protection 2014
-resultCode.7.1          =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014. 
+resultCode.7.1          =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
 resultCode.7.2          =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.8.heading    =   You''ve added individual protection 2014
@@ -689,3 +689,8 @@ resultCode.43.1         =   As you already have fixed protection 2016 in place, 
 resultCode.43.2         =   If this happens, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
 
 resultCode.44.heading   =   You''ve added individual protection 2016
+
+## 2014 Application Period Ended ##
+pla.withdrawn.title                         = Sorry, applications for 2014 protection have ended
+pla.withdrawn.pageHeading                   = Sorry, applications for 2014 protection have ended
+pla.withdrawn.paraOne                       = You can still <a href="{0}">view existing applications</a>.

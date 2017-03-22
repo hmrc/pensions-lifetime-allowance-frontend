@@ -101,18 +101,6 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
       }
     }
-
-    "user is applying for IP14" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerNoData.summaryIP14)
-      "return 500" in {
-        status(DataItem.result) shouldBe 500
-      }
-      "show technical error for IP14" in {
-        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
-      }
-    }
   }
 
   "Navigating to summary when there is invalid user data" when {
@@ -128,31 +116,12 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
       }
     }
-
-    "user is applying for IP14" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerInvalidData.summaryIP14)
-      "return 500" in {
-        status(DataItem.result) shouldBe 500
-      }
-      "show technical error for IP14" in {
-        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2014Controller.ip14PensionsTaken()}"
-      }
-    }
   }
 
   "Navigating to summary when user has valid data" when {
 
     "user is applying for IP16" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerValidData.summaryIP16)
-      "return 200" in {
-        status(DataItem.result) shouldBe 200
-      }
-    }
-
-    "user is applying for IP14" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerValidData.summaryIP14)
       "return 200" in {
         status(DataItem.result) shouldBe 200
       }

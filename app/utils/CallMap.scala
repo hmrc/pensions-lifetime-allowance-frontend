@@ -22,28 +22,20 @@ import play.api.mvc.Call
 object CallMap {
   private val callMap: Map[String, Call] = Map(
     "pensionsTaken"     -> controllers.routes.IP2016Controller.pensionsTaken(),
-    "ip14PensionsTaken" -> controllers.routes.IP2014Controller.ip14PensionsTaken(),
 
     "pensionsTakenBefore"     -> controllers.routes.IP2016Controller.pensionsTakenBefore(),
-    "ip14PensionsTakenBefore" -> controllers.routes.IP2014Controller.ip14PensionsTakenBefore(),
 
     "pensionsTakenBetween"     -> controllers.routes.IP2016Controller.pensionsTakenBetween(),
-    "ip14PensionsTakenBetween" -> controllers.routes.IP2014Controller.ip14PensionsTakenBetween(),
 
     "overseasPensions"     -> controllers.routes.IP2016Controller.overseasPensions(),
-    "ip14OverseasPensions" -> controllers.routes.IP2014Controller.ip14OverseasPensions(),
 
     "currentPensions"     -> controllers.routes.IP2016Controller.currentPensions(),
-    "ip14CurrentPensions" -> controllers.routes.IP2014Controller.ip14CurrentPensions(),
 
     "pensionDebits"       -> controllers.routes.IP2016Controller.pensionDebits(),
-    "ip14PensionDebits"   -> controllers.routes.IP2014Controller.ip14PensionDebits(),
 
     "psoDetails"     -> controllers.routes.IP2016Controller.psoDetails,
-    "ip14PsoDetails" -> controllers.routes.IP2014Controller.ip14PsoDetails,
 
-    "removePsoDetails" -> controllers.routes.IP2016Controller.removePsoDetails,
-    "removeIp14PsoDetails" -> controllers.routes.IP2014Controller.removeIp14PsoDetails
+    "removePsoDetails" -> controllers.routes.IP2016Controller.removePsoDetails
     )
 
   def get(name: String): Option[Call] = callMap.get(name)

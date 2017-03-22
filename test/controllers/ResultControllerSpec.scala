@@ -317,52 +317,6 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     "take the user to the result rejection page" in {GetItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
   }
 
-  "Successfully applying for IP 2014" should {
-
-    object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processIP14Application)
-    object GetItem extends AuthorisedFakeRequestTo(TestSuccessResultController.displayResult(ApplicationType.IP2014))
-
-    "return 303" in { status(DataItem.result) shouldBe 303 }
-    "redirect the user to the result success page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayIP14()}")}
-    "return 200" in {status(GetItem.result) shouldBe 200}
-    "take the user to the result success page" in {GetItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
-  }
-
-  "Unsuccessfully applying for IP 2014" should {
-
-    object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processIP14Application)
-    object GetItem extends AuthorisedFakeRequestTo(TestRejectResultController.displayResult(ApplicationType.IP2014))
-
-    "return 303" in {
-      status(DataItem.result) shouldBe 303
-    }
-    "redirect the user to the result rejection page" in {
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayIP14()}")
-    }
-    "return 200" in {
-      status(GetItem.result) shouldBe 200
-    }
-    "take the user to the result rejection page" in {GetItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
-  }
-
-  "Applying for IP14 when Manual Correspondence is needed" should {
-    object DataItem extends AuthorisedFakeRequestToPost(TestMCNeededResultController.processIP14Application)
-    "return 423 (Locked)" in { status(DataItem.result) shouldBe 423 }
-    "take the user to the MC needed page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.mcNeeded.title")}
-  }
-
-  "Applying for IP16 when Manual Correspondence is needed" should {
-    object DataItem extends AuthorisedFakeRequestToPost(TestMCNeededResultController.processIPApplication)
-    "return 423 (Locked)" in { status(DataItem.result) shouldBe 423 }
-    "take the user to the MC needed page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.mcNeeded.title")}
-  }
-
-  "Applying for FP16 when Manual Correspondence is needed" should {
-    object DataItem extends AuthorisedFakeRequestToPost(TestMCNeededResultController.processFPApplication)
-    "return 423 (Locked)" in { status(DataItem.result) shouldBe 423 }
-    "take the user to the MC needed page" in {DataItem.jsoupDoc.title shouldEqual Messages("pla.mcNeeded.title")}
-  }
-
  "Failure to create an ApplyResponse model from an application response" should {
    object DataItem extends AuthorisedFakeRequestToPost(TestIncorrectResponseModelResultController.processFPApplication)
    "return 500" in {

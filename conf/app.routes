@@ -9,32 +9,23 @@ GET         /not-authorised                                     controllers.Unau
 GET         /sign-out                                           controllers.AccountController.signOut
 
 ## Apply IP 14 ##
-GET         /apply-for-ip14-pensions-taken                      controllers.IP2014Controller.ip14PensionsTaken
-POST        /apply-for-ip14-pensions-taken                      controllers.IP2014Controller.submitIP14PensionsTaken
+GET         /apply-for-ip14-pensions-taken                      controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-pensions-taken-before               controllers.IP2014Controller.ip14PensionsTakenBefore
-POST        /apply-for-ip14-pensions-taken-before               controllers.IP2014Controller.submitIP14PensionsTakenBefore
+GET         /apply-for-ip14-pensions-taken-before               controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-pensions-taken-between              controllers.IP2014Controller.ip14PensionsTakenBetween
-POST        /apply-for-ip14-pensions-taken-between              controllers.IP2014Controller.submitIP14PensionsTakenBetween
+GET         /apply-for-ip14-pensions-taken-between              controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-overseas-pensions                   controllers.IP2014Controller.ip14OverseasPensions
-POST        /apply-for-ip14-overseas-pensions                   controllers.IP2014Controller.submitIP14OverseasPensions
+GET         /apply-for-ip14-overseas-pensions                   controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-current-pensions                    controllers.IP2014Controller.ip14CurrentPensions
-POST        /apply-for-ip14-current-pensions                    controllers.IP2014Controller.submitIP14CurrentPensions
+GET         /apply-for-ip14-current-pensions                    controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-pension-sharing-orders              controllers.IP2014Controller.ip14PensionDebits
-POST        /apply-for-ip14-pension-sharing-orders              controllers.IP2014Controller.submitIP14PensionDebits
+GET         /apply-for-ip14-pension-sharing-orders              controllers.WithdrawnController.showWithdrawn
 
-POST        /apply-for-ip14-pension-sharing-order-details       controllers.IP2014Controller.submitIP14PSODetails
-GET         /apply-for-ip14-pension-sharing-order-details       controllers.IP2014Controller.ip14PsoDetails
+GET         /apply-for-ip14-pension-sharing-order-details       controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-remove-pension-sharing-order-details    controllers.IP2014Controller.removeIp14PsoDetails
-POST        /apply-for-ip14-remove-pension-sharing-order-details    controllers.IP2014Controller.submitRemoveIp14PsoDetails
+GET         /apply-for-ip14-remove-pension-sharing-order-details    controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-submit-your-application             controllers.SummaryController.summaryIP14
-
+GET         /apply-for-ip14-submit-your-application             controllers.WithdrawnController.showWithdrawn
 
 ## Apply IP 16 ##
 GET         /apply-for-ip16-pensions-taken                      controllers.IP2016Controller.pensionsTaken
@@ -74,9 +65,6 @@ GET         /result-fp16                                        controllers.Resu
 
 POST        /result-ip16                                        controllers.ResultController.processIPApplication
 GET         /result-ip16                                        controllers.ResultController.displayIP16
-
-POST        /result-ip14                                        controllers.ResultController.processIP14Application
-GET         /result-ip14                                        controllers.ResultController.displayIP14
 
 GET         /existing-protections                               controllers.ReadProtectionsController.currentProtections
 GET         /print-protection                                   controllers.PrintController.printView
