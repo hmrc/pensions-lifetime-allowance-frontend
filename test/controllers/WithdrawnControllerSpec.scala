@@ -38,7 +38,7 @@ class WithdrawnControllerSpec extends FunSpec with OneAppPerSuite {
   describe ("Withdrawn controller") {
     it ("should show withdrawn page") {
       val result = testWithdrawnController().showWithdrawn()(fakeRequest)
-      contentAsString(result) should include ("Sorry, Applications for 2014 Protection Have Now Ended")
+      contentAsString(result) should include ("Sorry, applications for 2014 protection have ended")
     }
   }
 
@@ -49,7 +49,7 @@ class WithdrawnControllerSpec extends FunSpec with OneAppPerSuite {
         "/apply-for-ip14-submit-your-application").foreach { (path) =>
       it (s"show withdrawn page for /protect-your-lifetime-allowance$path") {
         val result = route(FakeRequest(GET, s"/protect-your-lifetime-allowance$path")).get
-        contentAsString(result) should include ("Sorry, Applications for 2014 Protection Have Now Ended")
+        contentAsString(result) should include ("Sorry, applications for 2014 protection have ended")
       }
     }
   }
