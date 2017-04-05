@@ -28,7 +28,6 @@ object AccountController extends AccountController
 
 trait AccountController extends FrontendController {
 
-
     def signOut:Action[AnyContent] = Action.async { implicit request =>
         Future.successful(Ok(pages.signOut()).withNewSession)
     }
