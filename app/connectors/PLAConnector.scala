@@ -20,7 +20,8 @@ import common.Exceptions
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json._
+import play.api.libs.json.Reads._
 import scala.concurrent.Future
 import config.WSHttp
 import enums.ApplicationType
@@ -49,11 +50,56 @@ trait PLAConnector {
     http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
   }
 
+  protected val roundDown = of[JsNumber].map { case JsNumber(n) => JsNumber(n.setScale(2, BigDecimal.RoundingMode.DOWN)) }
+  protected def getProperties(cc: AnyRef) = (Map[String, Any]() /: cc.getClass.getDeclaredFields) {(a, f) =>
+    f.setAccessible(true)
+    a + (f.getName -> f.get(cc))
+  }
+  protected def getReads(fields: List[Symbol], props: Map[String, Any]) = {
+    val t = (__ \ 'amount).json.update(roundDown)
+    fields.map{ s =>
+      props.get(s.name).flatMap{ value =>
+        value match {
+          case Some(_) =>
+            s.name match {
+              case "pensionDebits" => Some(( __ \ s ).json.update(of[JsArray].map { case JsArray(arr) => JsArray( arr.map( item => item.transform(t).get ) )}))
+              case _ => Some(( __ \ s ).json.update(roundDown))
+            }
+          case _ => None
+        }
+      }
+    }
+  }
+
+  protected def transformer(application: IPApplicationModel) = {
+    val fields = List('uncrystallisedRights, 'preADayPensionInPayment, 'postADayBenefitCrystallisationEvents, 'nonUKRights, 'pensionDebits)
+    val jsonTransformerList = getReads(fields, getProperties(application))
+    jsonTransformerList.filter(_.isDefined).foldLeft(( __ \ 'relevantAmount ).json.update(roundDown)) { (combined, reads) =>
+      combined andThen reads.get
+    }
+  }
+
+  protected def transformer(model: ProtectionModel) = {
+    val fields = List('protectedAmount, 'relevantAmount, 'postADayBenefitCrystallisationEvents, 'preADayPensionInPayment,
+                      'uncrystallisedRights, 'nonUKRights, 'pensionDebitAmount, 'pensionDebitEnteredAmount,
+                      'pensionDebitTotalAmount, 'pensionDebits)
+    val jsonTransformerList = getReads(fields, getProperties(model))
+
+    val list = jsonTransformerList.filter(_.isDefined)
+    val r: Reads[JsObject] = list.size match {
+      case 0 => (__).json.pickBranch
+      case 1 => list.head.get
+      case _ => list.drop(1).foldLeft(list.head.get) { (combined, reads) => combined andThen reads.get }
+    }
+    r
+  }
+
   def applyIP16(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     implicit val protectionType = ApplicationType.IP2016
     val application = IPApplicationConstructor.createIPApplication(userData)
     val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
-    http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+    val body = requestJson.transform(transformer(application)).get
+    http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", body)
   }
 
   def applyIP14(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
@@ -70,7 +116,9 @@ trait PLAConnector {
   def amendProtection(nino: String, protection: ProtectionModel)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val id = protection.protectionID.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino))
     val requestJson = Json.toJson[ProtectionModel](protection)
-    http.PUT[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id", requestJson)
+    val body = requestJson.transform(transformer(protection)).get
+    play.Logger.info(body.toString)
+    http.PUT[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id", body)
   }
 }
 
