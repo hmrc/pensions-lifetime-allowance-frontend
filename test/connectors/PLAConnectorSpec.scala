@@ -59,6 +59,16 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
   val validIP14CurrentPensionsTuple = "ip14CurrentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
   val negativeIP14PensionDebitsTuple =  "ip14PensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
+  val positivePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("yes")))
+  val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes", Some(BigDecimal(1000.1234567891))))
+  val negativePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("no", None))
+  val positivePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes", Some(BigDecimal(1100.1234567891))))
+  val negativePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("no", None))
+  val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010.1234567891))))
+  val validCurrentPensionsTuple2 = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001.1234567891))))
+  val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
+  val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(Some(1), Some(2), Some(2016), BigDecimal(10000.1234567891)))
+
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
   override def beforeEach() {
@@ -135,6 +145,29 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         .thenReturn(Future.successful(HttpResponse(OK)))
 
       val response = TestPLAConnector.readProtections(nino)
+      await(response).status shouldBe OK
+    }
+  }
+
+  "Calling with 10 decimal places" should {
+    import enums.ApplicationType
+    import constructors.IPApplicationConstructor
+
+    "convert json double values to 2 decimal place" in {
+      val expectedJson = Json.parse("""{"uncrystallisedRights":1001.12,"protectionType":"IP2016","postADayBenefitCrystallisationEvents":1100.12,"nonUKRights":1010.12,"relevantAmount":4111.49,"preADayPensionInPayment":1000.12,"pensionDebits":[{"startDate":"2016-02-01","amount":10000.12}]}""")
+      when(mockHttp.POST[JsValue, HttpResponse](Matchers.any(), Matchers.eq(expectedJson), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(HttpResponse(OK)))
+
+      val userData = CacheMap(tstId, Map(positivePensionsTakenTuple,
+                                        positivePensionsTakenBeforeTuple,
+                                        positivePensionsTakenBetweenTuple,
+                                        positiveOverseasPensionsTuple,
+                                        validCurrentPensionsTuple2,
+                                        positivePensionDebitsTuple,
+                                        psoDetailsTuple
+                                        ))
+
+      val response = TestPLAConnector.applyIP16(nino, userData)
       await(response).status shouldBe OK
     }
   }
