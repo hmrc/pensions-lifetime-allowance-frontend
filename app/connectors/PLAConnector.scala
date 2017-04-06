@@ -55,29 +55,43 @@ trait PLAConnector {
     f.setAccessible(true)
     a + (f.getName -> f.get(cc))
   }
-
-  protected def transformer(application: IPApplicationModel) = {
-    // could go through map or to be very cautious transform the json prior to sending
+  protected def getReads(fields: List[Symbol], props: Map[String, Any]) = {
     val t = (__ \ 'amount).json.update(roundDown)
-
-    val props = getProperties(application)
-    val fields = List('uncrystallisedRights, 'preADayPensionInPayment, 'postADayBenefitCrystallisationEvents, 'nonUKRights, 'pensionDebits)
-    val jsonTransformerList = fields.map{ s =>
-        props.get(s.name).flatMap{ value =>
-          value match {
-            case Some(_) =>
-              s.name match {
-                case "pensionDebits" => Some(( __ \ s ).json.update(of[JsArray].map { case JsArray(arr) => JsArray( arr.map( item => item.transform(t).get ) )}))
-                case _ => Some(( __ \ s ).json.update(roundDown))
-              }
-            case _ => None
-          }
+    fields.map{ s =>
+      props.get(s.name).flatMap{ value =>
+        value match {
+          case Some(_) =>
+            s.name match {
+              case "pensionDebits" => Some(( __ \ s ).json.update(of[JsArray].map { case JsArray(arr) => JsArray( arr.map( item => item.transform(t).get ) )}))
+              case _ => Some(( __ \ s ).json.update(roundDown))
+            }
+          case _ => None
         }
       }
+    }
+  }
 
-      jsonTransformerList.filter(_.isDefined).foldLeft(( __ \ 'relevantAmount ).json.update(roundDown)) { (combined, reads) =>
-        combined andThen reads.get
-      }
+  protected def transformer(application: IPApplicationModel) = {
+    val fields = List('uncrystallisedRights, 'preADayPensionInPayment, 'postADayBenefitCrystallisationEvents, 'nonUKRights, 'pensionDebits)
+    val jsonTransformerList = getReads(fields, getProperties(application))
+    jsonTransformerList.filter(_.isDefined).foldLeft(( __ \ 'relevantAmount ).json.update(roundDown)) { (combined, reads) =>
+      combined andThen reads.get
+    }
+  }
+
+  protected def transformer(model: ProtectionModel) = {
+    val fields = List('protectedAmount, 'relevantAmount, 'postADayBenefitCrystallisationEvents, 'preADayPensionInPayment,
+                      'uncrystallisedRights, 'nonUKRights, 'pensionDebitAmount, 'pensionDebitEnteredAmount,
+                      'pensionDebitTotalAmount, 'pensionDebits)
+    val jsonTransformerList = getReads(fields, getProperties(model))
+
+    val list = jsonTransformerList.filter(_.isDefined)
+    val r: Reads[JsObject] = list.size match {
+      case 0 => (__).json.pickBranch
+      case 1 => list.head.get
+      case _ => list.drop(1).foldLeft(list.head.get) { (combined, reads) => combined andThen reads.get }
+    }
+    r
   }
 
   def applyIP16(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
@@ -102,7 +116,9 @@ trait PLAConnector {
   def amendProtection(nino: String, protection: ProtectionModel)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
     val id = protection.protectionID.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino))
     val requestJson = Json.toJson[ProtectionModel](protection)
-    http.PUT[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id", requestJson)
+    val body = requestJson.transform(transformer(protection)).get
+    play.Logger.info(body.toString)
+    http.PUT[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id", body)
   }
 }
 

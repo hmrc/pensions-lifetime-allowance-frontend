@@ -153,7 +153,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
     import enums.ApplicationType
     import constructors.IPApplicationConstructor
 
-    "convert json double values to 2 decimal place" in {
+    "convert json double values to 2 decimal places for applying for ip" in {
       val expectedJson = Json.parse("""{"uncrystallisedRights":1001.12,"protectionType":"IP2016","postADayBenefitCrystallisationEvents":1100.12,"nonUKRights":1010.12,"relevantAmount":4111.49,"preADayPensionInPayment":1000.12,"pensionDebits":[{"startDate":"2016-02-01","amount":10000.12}]}""")
       when(mockHttp.POST[JsValue, HttpResponse](Matchers.any(), Matchers.eq(expectedJson), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
@@ -168,6 +168,77 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
                                         ))
 
       val response = TestPLAConnector.applyIP16(nino, userData)
+      await(response).status shouldBe OK
+    }
+
+    "convert json double values to 2 decimal places for amending ips" in {
+      val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
+                                        "protectionType":"IP2016","status":"dormant","protectedAmount":1250000.12,
+                                        "postADayBenefitCrystallisationEvents":2000.12,"preADayPensionInPayment":2000.12,
+                                        "uncrystallisedRights":100000.12,"nonUKRights":2000.12,"notificationId":12,
+                                        "protectionReference":"PSA123456"}""")
+      when(mockHttp.PUT[JsValue, HttpResponse](Matchers.any(), Matchers.eq(expectedJson))(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
+      val protectionModel = ProtectionModel(
+        psaCheckReference = Some("testPSARef"),
+        uncrystallisedRights = Some(100000.1234567891),
+        nonUKRights = Some(2000.1234567891),
+        preADayPensionInPayment = Some(2000.1234567891),
+        postADayBenefitCrystallisationEvents = Some(2000.1234567891),
+        notificationId = Some(12),
+        protectionID = Some(12345),
+        protectionType = Some("IP2016"),
+        status = Some("dormant"),
+        certificateDate = Some("2016-04-17"),
+        protectedAmount = Some(1250000.1234567891),
+        protectionReference = Some("PSA123456"))
+
+      val response = TestPLAConnector.amendProtection(nino, protectionModel)
+      await(response).status shouldBe OK
+    }
+
+    "not fail when not able to convert json double values to 2 decimal places for amending ips" in {
+      val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
+                                        "protectionType":"IP2016","status":"dormant","notificationId":12,
+                                        "protectionReference":"PSA123456"}""")
+      when(mockHttp.PUT[JsValue, HttpResponse](Matchers.any(), Matchers.eq(expectedJson))(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
+      val protectionModel = ProtectionModel(
+        psaCheckReference = Some("testPSARef"),
+        uncrystallisedRights = None,
+        nonUKRights = None,
+        preADayPensionInPayment = None,
+        postADayBenefitCrystallisationEvents = None,
+        notificationId = Some(12),
+        protectionID = Some(12345),
+        protectionType = Some("IP2016"),
+        status = Some("dormant"),
+        certificateDate = Some("2016-04-17"),
+        protectedAmount = None,
+        protectionReference = Some("PSA123456"))
+
+      val response = TestPLAConnector.amendProtection(nino, protectionModel)
+      await(response).status shouldBe OK
+    }
+
+    "be able to convert just one json double values to 2 decimal places for amending ips" in {
+      val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
+                                        "protectionType":"IP2016","status":"dormant","protectedAmount":1250000.12,"notificationId":12,
+                                        "protectionReference":"PSA123456"}""")
+      when(mockHttp.PUT[JsValue, HttpResponse](Matchers.any(), Matchers.eq(expectedJson))(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
+      val protectionModel = ProtectionModel(
+        psaCheckReference = Some("testPSARef"),
+        uncrystallisedRights = None,
+        nonUKRights = None,
+        preADayPensionInPayment = None,
+        postADayBenefitCrystallisationEvents = None,
+        notificationId = Some(12),
+        protectionID = Some(12345),
+        protectionType = Some("IP2016"),
+        status = Some("dormant"),
+        certificateDate = Some("2016-04-17"),
+        protectedAmount = Some(1250000.1234567891),
+        protectionReference = Some("PSA123456"))
+
+      val response = TestPLAConnector.amendProtection(nino, protectionModel)
       await(response).status shouldBe OK
     }
   }
