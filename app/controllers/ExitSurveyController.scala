@@ -41,7 +41,6 @@ object ExitSurveyController extends ExitSurveyController {
 trait ExitSurveyController extends FrontendController with AuthorisedForPLA{
 
     val exitSurvey = AuthorisedByAny.async { implicit user => implicit request =>
-      //  Future.successful(Ok(pages.exitSurvey.exitSurvey(exitSurveyForm)))
-      Future.successful(Ok(configuration.getString("microservice.services.feedback-survey-frontend.host").getOrElse("")))
+      Future.successful(Ok(pages.exitSurvey.exitSurvey(exitSurveyForm)))
     }
 }

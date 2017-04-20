@@ -39,10 +39,6 @@ pla.timeout.title       = Mae''r sesiwn wedi dod i ben o ganlyniad i anweithgarw
 pla.timeout.pageHeading = Rydych wedi''ch allgofnodi o ganlyniad i anweithgarwch
 pla.timeout.returnToPTA = Gallwch ddechrau eto o''r dudalen <a href="{0}" rel="external">diogelu''ch lwfans oes</a>.
 
-## Signout ##
-pla.signOut.title       = Wedi allgofnodi
-pla.signOut.pageHeading = Rydych wedi allgofnodi.
-
 ## Not Found ##
 pla.notFound.title          = Heb ddod o hyd i''r dudalen – 404
 pla.notFound.pageHeading    = Ni ellir dod o hyd i''r dudalen hon
