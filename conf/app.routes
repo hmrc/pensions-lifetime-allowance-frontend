@@ -88,6 +88,9 @@ POST        /amend-protection/submit-amendment                                  
 GET         /amend-protection/amendment-outcome                                         controllers.AmendsController.amendmentOutcome
 GET         /amend-protection/:protectionType/:status                                   controllers.AmendsController.amendsSummary(protectionType, status)
 
+#PSA Lookup routes
+GET         /psalookup                                          @controllers.LookupController.displayLookupForm
+POST        /psalookup                                          @controllers.LookupController.submitLookupRequest
 
 #Feedback routes
 GET         /exit                                               controllers.ExitSurveyController.exitSurvey
