@@ -18,11 +18,12 @@ package controllers
 
 import javax.inject.{Inject, Singleton}
 
-import connectors.PLAConnector
+import connectors.{KeyStoreConnector, PLAConnector}
 import forms.PSALookupRequestForm.pSALookupRequestForm
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Application
 import play.api.i18n.MessagesApi
+import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html._
@@ -34,20 +35,37 @@ class LookupController @Inject()(val messagesApi: MessagesApi,
                                  implicit val application: Application) extends FrontendController with play.api.i18n.I18nSupport {
 
   def displayLookupForm: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(pages.lookup.psa_lookup_form(pSALookupRequestForm)))
+    KeyStoreConnector.fetchAndGetFormData[PSALookupRequest]("psa-lookup-result").map {
+      case Some(result) => Ok(pages.lookup.psa_lookup_form(pSALookupRequestForm.fill(result)))
+      case None => Ok(pages.lookup.psa_lookup_form(pSALookupRequestForm))
+    }
   }
 
   def submitLookupRequest: Action[AnyContent] = Action.async { implicit request =>
     pSALookupRequestForm.bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(pages.lookup.psa_lookup_form(formWithErrors))),
       validFormData => {
-        Future.successful(Redirect(routes.LookupController.displayLookupResults()))
+        KeyStoreConnector.saveFormData[PSALookupRequest]("psa-lookup-request", validFormData).flatMap {
+          _ =>
+            PLAConnector.psaLookup(validFormData.pensionSchemeAdministratorCheckReference, validFormData.lifetimeAllowanceReference).flatMap {
+              result =>
+                result.status match {
+                  case OK =>
+                    KeyStoreConnector.saveData[PSALookupResult]("psa-lookup-result", Json.fromJson[PSALookupResult](result.json).get).map {
+                      _ => Redirect(routes.LookupController.displayLookupResults())
+                    }
+                }
+            }
+        }
       }
     )
   }
 
   def displayLookupResults: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(pages.lookup.psa_lookup_results(PSALookupResult("PSA12345678A", 7, 1, Some(BigDecimal.exact("1200.00"))))))
+    KeyStoreConnector.fetchAndGetFormData[PSALookupResult]("psa-lookup-result").map {
+      case Some(result) => Ok(pages.lookup.psa_lookup_results(result))
+      case None => Redirect(routes.LookupController.displayLookupForm())
+    }
   }
 
 }

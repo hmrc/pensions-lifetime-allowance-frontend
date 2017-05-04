@@ -1,5 +1,5 @@
 @import play.api.Application
-
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @(lookupForm: Form[PSALookupRequest])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
 
 @lc = @{
@@ -11,20 +11,20 @@
 
     <h1 class="heading-large"> @Messages("psa.lookup.form.title")</h1>
 
-    @helper.form(action = routes.LookupController.submitLookupRequest) {
+    @govHelpers.form(action = routes.LookupController.submitLookupRequest) {
         <fieldset class="form-field-group">
-            <label>
-                @Messages("psa.lookup.form.psaref")
-                <p class="form-field--hint">@Messages("psa.lookup.form.psaref.hint")</p>
-                <input type="text" class="input--medium input--cleared"/>
-            </label>
-            <br>
-            <br>
-            <label>
-                @Messages("psa.lookup.form.ltaref")
-                <p class="form-field--hint">@Messages("psa.lookup.form.ltaref.hint")</p>
-                <input type="text" class="input--medium input--cleared"/>
-            </label>
+            <div class="form-field">
+                <label> @Messages("psa.lookup.form.psaref")
+                    <p class="form-field--hint">@Messages("psa.lookup.form.psaref.hint")</p>
+                    <input type="text" class="input--medium input--cleared"/>
+                </label>
+            </div>
+            <div class="form-field">
+                <label> @Messages("psa.lookup.form.ltaref")
+                    <p class="form-field--hint">@Messages("psa.lookup.form.ltaref.hint")</p>
+                    <input type="text" class="input--medium input--cleared"/>
+                </label>
+            </div>
             <br>
             <button class="button" type="submit">@Messages("psa.lookup.form.button")</button>
         </fieldset>
