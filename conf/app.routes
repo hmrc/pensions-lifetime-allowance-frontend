@@ -91,6 +91,7 @@ GET         /amend-protection/:protectionType/:status                           
 #PSA Lookup routes
 GET         /psalookup                                          @controllers.LookupController.displayLookupForm
 POST        /psalookup                                          @controllers.LookupController.submitLookupRequest
+GET         /psalookup/results                                  @controllers.LookupController.displayLookupResults
 
 #Feedback routes
 GET         /exit                                               controllers.ExitSurveyController.exitSurvey

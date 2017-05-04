@@ -19,8 +19,8 @@ package controllers
 import javax.inject.{Inject, Singleton}
 
 import connectors.PLAConnector
-import forms.PSALookupRequestForm
-import models.PSALookupRequest
+import forms.PSALookupRequestForm.pSALookupRequestForm
+import models.{PSALookupRequest, PSALookupResult}
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.mvc.{Action, AnyContent}
@@ -34,11 +34,20 @@ class LookupController @Inject()(val messagesApi: MessagesApi,
                                  implicit val application: Application) extends FrontendController with play.api.i18n.I18nSupport {
 
   def displayLookupForm: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(pages.lookup.psa_lookup_form(PSALookupRequestForm.pSALookupRequestForm)))
+    Future.successful(Ok(pages.lookup.psa_lookup_form(pSALookupRequestForm)))
   }
 
   def submitLookupRequest: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(pages.lookup.psa_lookup_form(PSALookupRequestForm.pSALookupRequestForm.fill(PSALookupRequest("test", "test")))))
+    pSALookupRequestForm.bindFromRequest().fold(
+      formWithErrors => Future.successful(BadRequest(pages.lookup.psa_lookup_form(formWithErrors))),
+      validFormData => {
+        Future.successful(Redirect(routes.LookupController.displayLookupResults()))
+      }
+    )
+  }
+
+  def displayLookupResults: Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Ok(pages.lookup.psa_lookup_results(PSALookupResult("PSA12345678A", 7, 1, Some(BigDecimal.exact("1200.00"))))))
   }
 
 }

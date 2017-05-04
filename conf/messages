@@ -695,7 +695,7 @@ pla.withdrawn.title                         = Sorry, applications for 2014 prote
 pla.withdrawn.pageHeading                   = Sorry, applications for 2014 protection have ended
 pla.withdrawn.paraOne                       = You can still <a href="{0}">view existing applications</a>.
 
-## PSA Lookup messages
+## PSA Lookup form
 psa.lookup.title = PSA Lookup
 psa.lookup.form.title = PSA Lookup form
 psa.lookup.form.psaref = Pension Scheme Administrator Check Reference
@@ -703,3 +703,15 @@ psa.lookup.form.psaref.hint = Example: PSA12345678A
 psa.lookup.form.ltaref = Lifetime Allowance Reference
 psa.lookup.form.ltaref.hint = Example: IP141000000000A
 psa.lookup.form.button = Submit
+psa.lookup.form.psaref.required = PSA Ref must be entered
+psa.lookup.form.ltaref.required = LTA Ref must be entered
+
+## PSA lookup results
+psa.lookup.results.title = PSA Lookup Results
+psa.lookup.results.table.title = PSA Lookup Details
+psa.lookup.results.table.header.1 = Field
+psa.lookup.results.table.header.2 = Value
+psa.lookup.results.table.row.1 = Pension Scheme Administrator Check Reference
+psa.lookup.results.table.row.2 = LTA Type
+psa.lookup.results.table.row.3 = PSA Check Result
+psa.lookup.results.table.row.4 = Relevant Amount

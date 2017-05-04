@@ -14,19 +14,7 @@
  * limitations under the License.
  */
 
-package forms
+package models
 
-import models.PSALookupRequest
-import play.api.data.Form
-import play.api.data.Forms._
-
-object PSALookupRequestForm {
-
-  def pSALookupRequestForm: Form[PSALookupRequest] = {
-    Form(mapping(
-      "pensionSchemeAdministratorCheckReference" -> text.verifying("psa.lookup.form.psaref.required", _.nonEmpty),
-      "lifetimeAllowanceReference" -> text.verifying("psa.lookup.form.ltaref.required", _.nonEmpty)
-    )(PSALookupRequest.apply)(PSALookupRequest.unapply))
-  }
-
-}
+case class PSALookupResult(pensionSchemeAdministratorCheckReference: String, ltaType: Int,
+                           psaCheckResult: Int, relevantAmount: Option[BigDecimal])
