@@ -21,7 +21,6 @@ import sbt._
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin._
 import play.sbt.routes.RoutesKeys.routesGenerator
 
-
 trait MicroService {
 
   import uk.gov.hmrc._
@@ -34,7 +33,7 @@ trait MicroService {
 
   val appName: String
 
-  lazy val appDependencies : Seq[ModuleID] = ???
+  lazy val appDependencies : Seq[ModuleID] = Seq.empty
   lazy val plugins : Seq[Plugins] = Seq.empty
   lazy val playSettings : Seq[Setting[_]] = Seq.empty
 
