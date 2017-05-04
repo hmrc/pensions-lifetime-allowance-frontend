@@ -31,7 +31,7 @@ private object AppDependencies {
   private val loggerVersion = "3.1.0"
   private val frontendBootstrapVersion = "7.22.0"
   private val govukTemplateVersion = "5.1.0"
-  private val playUiVersion = "7.0.0"
+  private val playUiVersion = "7.2.1"
   private val playPartialsVersion = "5.3.0"
   private val playAuthorisedFrontendVersion = "6.3.0"
   private val playConfigVersion = "4.3.0"
@@ -61,7 +61,7 @@ private object AppDependencies {
 
   trait TestDependencies {
     lazy val scope: String = "test"
-    lazy val test : Seq[ModuleID] = ???
+    lazy val test : Seq[ModuleID] = Seq.empty
   }
 
   object Test {
