@@ -11,7 +11,6 @@
 
     <h1 class="heading-48 heading--underlined"> @Messages("psa.lookup.results.title")</h1>
     <br>
-
     <table>
         <thead>
             <tr>
@@ -26,19 +25,42 @@
             </tr>
             <tr>
                 <td class="font-small">@Messages("psa.lookup.results.table.row.2")</td>
-                <td class="font-small">@lookupResult.ltaType</td>
+                <td class="font-small"> @lookupResult.ltaType match {
+                    case 1 => {
+                        @Messages("psa.lookup.results.ltatype.1")
+                    }
+                    case 2 => {
+                        @Messages("psa.lookup.results.ltatype.2")
+                    }
+                    case 3 => {
+                        @Messages("psa.lookup.results.ltatype.3")
+                    }
+                    case 4 => {
+                        @Messages("psa.lookup.results.ltatype.4")
+                    }
+                    case 5 => {
+                        @Messages("psa.lookup.results.ltatype.5")
+                    }
+                    case 6 => {
+                        @Messages("psa.lookup.results.ltatype.6")
+                    }
+                    case 7 => {
+                        @Messages("psa.lookup.results.ltatype.7")
+                    }
+                } </td>
             </tr>
-            <tr>
-                <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
-                <td class="font-small">@lookupResult.psaCheckResult</td>
-            </tr>
-            @if(lookupResult.relevantAmount.isDefined) {
-                <tr>
-                    <td class="font-small">@Messages("psa.lookup.results.table.row.4")</td>
-                    <td class="font-small">@lookupResult.relevantAmount</td>
-                </tr>
+            @lookupResult.ltaType match {
+                case 2 | 3 => {
+                    @if(lookupResult.protectedAmount.isDefined) {
+                        <tr>
+                            <td class="font-small">@Messages("psa.lookup.results.table.row.4")</td>
+                            <td class="font-small">£@lookupResult.protectedAmount</td>
+                        </tr>
+                    }
+                }
+                case _ => {}
             }
         </tbody>
     </table>
-
+    <a class="back-link" href="@routes.LookupController.displayLookupForm()">@Messages("psa.lookup.results.back")</a>
 }

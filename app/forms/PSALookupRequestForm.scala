@@ -17,16 +17,45 @@
 package forms
 
 import models.PSALookupRequest
+import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
+import play.api.i18n.Messages
+import play.api.i18n.Messages.Implicits._
 
 object PSALookupRequestForm {
 
   def pSALookupRequestForm: Form[PSALookupRequest] = {
     Form(mapping(
-      "pensionSchemeAdministratorCheckReference" -> text.verifying("psa.lookup.form.psaref.required", _.nonEmpty),
-      "lifetimeAllowanceReference" -> text.verifying("psa.lookup.form.ltaref.required", _.nonEmpty)
+      "pensionSchemeAdministratorCheckReference" -> text.verifying(psaRefConstraint),
+      "lifetimeAllowanceReference" -> text.verifying(ltaRefConstraint)
     )(PSALookupRequest.apply)(PSALookupRequest.unapply))
   }
+
+  private val psaRefRegex = "^PSA[0-9]{8}[A-Z]$".r
+  private val npsRefRegex = "^(IP14|IP16|FP16)[0-9]{10}[ABCDEFGHJKLMNPRSTXYZ]$".r
+  private val tpssRefRegex = "^[1-9A][0-9]{6}[ABCDEFHXJKLMNYPQRSTZW]$".r
+
+  val psaRefConstraint: Constraint[String] = Constraint("constraints.psarefcheck")({
+    psaRef =>
+      val errors = psaRef match {
+        case "" => Seq(ValidationError(Messages("psa.lookup.form.psaref.required")))
+        case psaRefRegex() => Nil
+        case _ => Seq(ValidationError(Messages("psa.lookup.form.psaref.invalid")))
+      }
+      if (errors.isEmpty) Valid else Invalid(errors)
+  })
+
+  val ltaRefConstraint: Constraint[String] = Constraint("constraints.ltarefcheck")({
+    ltaRef =>
+      val errors = ltaRef match {
+        case "" => Seq(ValidationError(Messages("psa.lookup.form.ltaref.required")))
+        case tpssRefRegex() => Nil
+        case npsRefRegex() => Nil
+        case _ => Seq(ValidationError(Messages("psa.lookup.form.ltaref.invalid")))
+      }
+      if (errors.isEmpty) Valid else Invalid(errors)
+  })
 
 }

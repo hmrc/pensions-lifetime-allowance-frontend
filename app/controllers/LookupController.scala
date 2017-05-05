@@ -24,8 +24,9 @@ import models.{PSALookupRequest, PSALookupResult}
 import play.api.Application
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import utils.ActionWithSessionId
 import views.html._
 
 import scala.concurrent.Future
@@ -34,14 +35,18 @@ import scala.concurrent.Future
 class LookupController @Inject()(val messagesApi: MessagesApi,
                                  implicit val application: Application) extends FrontendController with play.api.i18n.I18nSupport {
 
-  def displayLookupForm: Action[AnyContent] = Action.async { implicit request =>
-    KeyStoreConnector.fetchAndGetFormData[PSALookupRequest]("psa-lookup-result").map {
-      case Some(result) => Ok(pages.lookup.psa_lookup_form(pSALookupRequestForm.fill(result)))
+  implicit val anyContentBodyParser: BodyParser[AnyContent] = parse.anyContent
+
+  def displayLookupForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+    KeyStoreConnector.fetchAndGetFormData[PSALookupRequest]("psa-lookup-request").map {
+      case Some(result) =>
+        val form = pSALookupRequestForm.fill(result)
+        Ok(pages.lookup.psa_lookup_form(form))
       case None => Ok(pages.lookup.psa_lookup_form(pSALookupRequestForm))
     }
   }
 
-  def submitLookupRequest: Action[AnyContent] = Action.async { implicit request =>
+  def submitLookupRequest: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     pSALookupRequestForm.bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(pages.lookup.psa_lookup_form(formWithErrors))),
       validFormData => {
@@ -51,7 +56,7 @@ class LookupController @Inject()(val messagesApi: MessagesApi,
               result =>
                 result.status match {
                   case OK =>
-                    KeyStoreConnector.saveData[PSALookupResult]("psa-lookup-result", Json.fromJson[PSALookupResult](result.json).get).map {
+                    KeyStoreConnector.saveFormData[PSALookupResult]("psa-lookup-result", Json.fromJson[PSALookupResult](result.json).get).map {
                       _ => Redirect(routes.LookupController.displayLookupResults())
                     }
                 }
@@ -61,11 +66,12 @@ class LookupController @Inject()(val messagesApi: MessagesApi,
     )
   }
 
-  def displayLookupResults: Action[AnyContent] = Action.async { implicit request =>
+  def displayLookupResults: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     KeyStoreConnector.fetchAndGetFormData[PSALookupResult]("psa-lookup-result").map {
       case Some(result) => Ok(pages.lookup.psa_lookup_results(result))
       case None => Redirect(routes.LookupController.displayLookupForm())
     }
   }
+
 
 }
