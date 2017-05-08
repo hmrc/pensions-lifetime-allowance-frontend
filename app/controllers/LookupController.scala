@@ -22,10 +22,12 @@ import connectors.{KeyStoreConnector, PLAConnector}
 import forms.PSALookupRequestForm.pSALookupRequestForm
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Application
+import play.api.data.FormError
 import play.api.i18n.MessagesApi
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.http.{HttpResponse, Upstream4xxResponse}
 import utils.ActionWithSessionId
 import views.html._
 
@@ -60,6 +62,8 @@ class LookupController @Inject()(val messagesApi: MessagesApi,
                       _ => Redirect(routes.LookupController.displayLookupResults())
                     }
                 }
+            }.recover {
+              case r: Upstream4xxResponse if r.upstreamResponseCode == NOT_FOUND => BadRequest(pages.lookup.psa_lookup_form(notFoundLookupForm))
             }
         }
       }
@@ -73,5 +77,12 @@ class LookupController @Inject()(val messagesApi: MessagesApi,
     }
   }
 
+  /**
+    *
+    * Creates the form errors to be displayed when a 404 is returned from DES
+    *
+    * @return
+    */
+  private val notFoundLookupForm = pSALookupRequestForm.copy(errors = Seq(FormError(" ", "psa.lookup.form.not-found")))
 
 }

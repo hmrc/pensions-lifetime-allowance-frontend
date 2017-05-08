@@ -708,6 +708,7 @@ psa.lookup.form.psaref.required = PSA Ref must be entered
 psa.lookup.form.psaref.invalid = PSA Ref must be in correct format
 psa.lookup.form.ltaref.required = LTA Ref must be entered
 psa.lookup.form.ltaref.invalid = LTA Ref must be in correct format
+psa.lookup.form.not-found = Re-enter your reference details
 
 ## PSA lookup results
 psa.lookup.results.title = PSA Lookup Results

@@ -50,11 +50,11 @@
                 } </td>
             </tr>
             @lookupResult.ltaType match {
-                case 2 | 3 => {
+                case x if 1 until 6 contains x => {
                     @if(lookupResult.protectedAmount.isDefined) {
                         <tr>
                             <td class="font-small">@Messages("psa.lookup.results.table.row.4")</td>
-                            <td class="font-small">£@lookupResult.protectedAmount</td>
+                            <td class="font-small">£@lookupResult.protectedAmount.get.formatted("%,1.2f")</td>
                         </tr>
                     }
                 }

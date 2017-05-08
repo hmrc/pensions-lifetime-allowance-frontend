@@ -33,9 +33,9 @@ object PSALookupRequestForm {
     )(PSALookupRequest.apply)(PSALookupRequest.unapply))
   }
 
-  private val psaRefRegex = "^PSA[0-9]{8}[A-Z]$".r
-  private val npsRefRegex = "^(IP14|IP16|FP16)[0-9]{10}[ABCDEFGHJKLMNPRSTXYZ]$".r
-  private val tpssRefRegex = "^[1-9A][0-9]{6}[ABCDEFHXJKLMNYPQRSTZW]$".r
+  private val psaRefRegex = """^PSA[0-9]{8}[A-Z]$""".r
+  private val npsRefRegex = """^(IP14|IP16|FP16)[0-9]{10}[ABCDEFGHJKLMNPRSTXYZ]$""".r
+  private val tpssRefRegex = """^[1-9A][0-9]{6}[ABCDEFHXJKLMNYPQRSTZW]$""".r
 
   val psaRefConstraint: Constraint[String] = Constraint("constraints.psarefcheck")({
     psaRef =>
