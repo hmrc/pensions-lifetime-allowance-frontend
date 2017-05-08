@@ -51,8 +51,8 @@ object PSALookupRequestForm {
     ltaRef =>
       val errors = ltaRef match {
         case "" => Seq(ValidationError(Messages("psa.lookup.form.ltaref.required")))
+        case npsRefRegex(_) => Nil
         case tpssRefRegex() => Nil
-        case npsRefRegex() => Nil
         case _ => Seq(ValidationError(Messages("psa.lookup.form.ltaref.invalid")))
       }
       if (errors.isEmpty) Valid else Invalid(errors)
