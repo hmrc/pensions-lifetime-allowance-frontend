@@ -23,7 +23,7 @@
                     } else {
                     <div class="form-field form-field--tall">
                     }
-                <label> @Messages("psa.lookup.form.psaref")
+                <label> <h2>@Messages("psa.lookup.form.psaref")</h2>
                     @if(lookupForm("pensionSchemeAdministratorCheckReference").hasErrors) {
                         <div class="error-notification" id="@{
                             lookupForm("pensionSchemeAdministratorCheckReference").errors.head.message
@@ -44,7 +44,7 @@
                     } else {
                     <div class="form-field">
                     }
-                <label> @Messages("psa.lookup.form.ltaref")
+                <label> <h2>@Messages("psa.lookup.form.ltaref")</h2>
                     @if(lookupForm("lifetimeAllowanceReference").hasErrors) {
                         <div class="error-notification" id="@{
                             lookupForm("lifetimeAllowanceReference").errors.head.message

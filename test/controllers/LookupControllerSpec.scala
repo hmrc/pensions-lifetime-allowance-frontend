@@ -39,7 +39,7 @@ class LookupControllerSpec extends PlayMessagesSpec with BeforeAndAfterEach with
 
   private val sessionId = SessionKeys.sessionId -> "lookup-test"
 
-  val controller = new LookupController(messagesApi, app)(mockKeyStoreConnector)
+  val controller = new LookupController(messagesApi, app)
 
   override def beforeEach() = reset(mockKeyStoreConnector, mockPLAConnector)
 
