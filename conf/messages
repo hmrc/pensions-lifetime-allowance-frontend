@@ -694,3 +694,37 @@ resultCode.44.heading   =   You''ve added individual protection 2016
 pla.withdrawn.title                         = Sorry, applications for 2014 protection have ended
 pla.withdrawn.pageHeading                   = Sorry, applications for 2014 protection have ended
 pla.withdrawn.paraOne                       = You can still <a href="{0}">view existing applications</a>.
+
+## PSA Lookup form
+psa.lookup.title = PSA Lookup
+psa.lookup.form.title = PSA Lookup form
+psa.lookup.form.psaref = Pension Scheme Administrator Check Reference
+psa.lookup.form.psaref.hint = Example: PSA12345678A
+psa.lookup.form.ltaref = Lifetime Allowance Reference
+psa.lookup.form.ltaref.hint = Example: IP141000000000A
+psa.lookup.form.button = Submit
+pla.lookup.form.error.summary = There are errors on this page
+psa.lookup.form.psaref.required = PSA Ref must be entered
+psa.lookup.form.psaref.invalid = PSA Ref must be in correct format
+psa.lookup.form.ltaref.required = LTA Ref must be entered
+psa.lookup.form.ltaref.invalid = LTA Ref must be in correct format
+psa.lookup.form.not-found = The details you entered do not have a valid protection
+
+## PSA lookup results
+psa.lookup.results.title = PSA Lookup Results
+psa.lookup.results.table.title = PSA Lookup Details
+psa.lookup.results.table.header.1 = Field
+psa.lookup.results.table.header.2 = Value
+psa.lookup.results.table.row.1 = Your Reference:
+psa.lookup.results.table.row.2 = Protection Type:
+psa.lookup.results.table.row.4 = Protected Amount:
+
+psa.lookup.results.ltatype.1 = FIXED PROTECTION 2016
+psa.lookup.results.ltatype.2 = INDIVIDUAL PROTECTION 2014
+psa.lookup.results.ltatype.3 = INDIVIDUAL PROTECTION 2016
+psa.lookup.results.ltatype.4 = PRIMARY PROTECTION
+psa.lookup.results.ltatype.5 = ENHANCED PROTECTION
+psa.lookup.results.ltatype.6 = FIXED PROTECTION
+psa.lookup.results.ltatype.7 = FIXED PROTECTION 2014
+
+psa.lookup.results.back = Back
