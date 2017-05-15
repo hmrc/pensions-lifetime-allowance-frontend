@@ -18,19 +18,17 @@ package controllers
 
 import java.util.UUID
 
+import auth.MockConfig
 import com.kenshoo.play.metrics.PlayModule
-import play.api.test.FakeRequest
 import play.api.http.Status
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.http._
-import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import testHelpers._
+import uk.gov.hmrc.play.config.RunMode
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 
-class AccountControllerSpec extends UnitSpec with WithFakeApplication{
+class AccountControllerSpec extends UnitSpec with WithFakeApplication with RunMode {
   override def bindModules = Seq(new PlayModule)
 
   val sessionId = UUID.randomUUID.toString
@@ -38,15 +36,12 @@ class AccountControllerSpec extends UnitSpec with WithFakeApplication{
 
   "navigating to signout with an existing session" should {
     object DataItem extends FakeRequestTo("/", AccountController.signOut, Some(sessionId))
-    "return 200" in {
-      status(DataItem.result) shouldBe Status.OK
+    "return 303" in {
+      status(DataItem.result) shouldBe Status.SEE_OTHER
     }
 
-    "return HTML" in {
-      contentType(DataItem.result) shouldBe Some("text/html")
-      charset(DataItem.result) shouldBe Some("utf-8")
+    "redirect to the feedback survey with the origin token PLA" in {
+      redirectLocation(DataItem.result).get shouldBe (MockConfig.feedbackSurvey)
     }
   }
-
-
 }

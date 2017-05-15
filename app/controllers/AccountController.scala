@@ -16,20 +16,21 @@
 
 package controllers
 
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import config.{AppConfig, FrontendAppConfig}
 import play.api.mvc._
+import uk.gov.hmrc.play.frontend.controller.FrontendController
+
 import scala.concurrent.Future
-import views.html._
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
 
-
-object AccountController extends AccountController
+object AccountController extends AccountController {
+  val applicationConfig: AppConfig = FrontendAppConfig
+}
 
 trait AccountController extends FrontendController {
 
+  val applicationConfig: AppConfig
 
-    def signOut:Action[AnyContent] = Action.async { implicit request =>
-        Future.successful(Ok(pages.signOut()).withNewSession)
-    }
+  def signOut: Action[AnyContent] = Action.async { implicit request =>
+    Future.successful(Redirect(applicationConfig.feedbackSurvey).withNewSession)
+  }
 }

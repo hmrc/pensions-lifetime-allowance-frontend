@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.http.logging.SessionId
 import scala.concurrent.Future
 import forms.ExitSurveyForm.exitSurveyForm
 import models._
-
+import play.api.Play.configuration
 import views.html._
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
@@ -41,6 +41,6 @@ object ExitSurveyController extends ExitSurveyController {
 trait ExitSurveyController extends FrontendController with AuthorisedForPLA{
 
     val exitSurvey = AuthorisedByAny.async { implicit user => implicit request =>
-        Future.successful(Ok(pages.exitSurvey.exitSurvey(exitSurveyForm)))
+      Future.successful(Ok(pages.exitSurvey.exitSurvey(exitSurveyForm)))
     }
 }
