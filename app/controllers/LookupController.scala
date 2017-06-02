@@ -70,7 +70,13 @@ trait LookupController extends FrontendController {
   }
 
   def displayProtectionNotificationNoForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
-    Future.successful(Ok(pages.lookup.psa_lookup_protection_notification_no_form(pSALookupProtectionNotificationNoForm)))
+    keyStoreConnector.fetchAndGetFormData[PSALookupSchemeAdministratorReferenceRequest]("pensionSchemeAdministratorCheckReference").flatMap {
+      case Some(stored) =>
+        Future.successful(Ok(pages.lookup.psa_lookup_protection_notification_no_form(pSALookupProtectionNotificationNoForm)))
+      case _ =>
+        Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
+    }
+
   }
 
   def submitProtectionNotificationNoForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
