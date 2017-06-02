@@ -26,7 +26,6 @@ import play.api.data.FormError
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc._
-import play.api.Logger
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http.Upstream4xxResponse
 import utils.ActionWithSessionId
@@ -85,7 +84,6 @@ trait LookupController extends FrontendController {
                 result.status match {
                   case OK =>
                     val resultData = Json.fromJson[PSALookupResult](result.json).get
-                    Logger.debug("MJR resultData = " + resultData)
                     if (resultData.psaCheckResult == 0) Future.successful(BadRequest(pages.lookup.psa_lookup_form(notFoundLookupForm)))
                     else keyStoreConnector.saveFormData[PSALookupResult]("psa-lookup-result", resultData).map {
                       _ => Redirect(routes.LookupController.displayLookupResults())

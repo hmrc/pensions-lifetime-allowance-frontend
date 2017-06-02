@@ -33,7 +33,7 @@ object PSALookupProtectionNotificationNoForm {
   }
 
   private val npsRefRegex = """^(?i)(IP14|IP16|FP16)[0-9]{10}[ABCDEFGHJKLMNPRSTXYZ]$""".r
-  private val tpssRefRegex = """^[1-9A][0-9]{6}[ABCDEFHXJKLMNYPQRSTZW]$""".r
+  private val tpssRefRegex = """^(?i)[1-9A][0-9]{6}[ABCDEFHXJKLMNYPQRSTZW]$""".r
 
 
   val ltaRefConstraint: Constraint[String] = Constraint("constraints.ltarefcheck")({

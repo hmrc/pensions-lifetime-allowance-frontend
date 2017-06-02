@@ -695,6 +695,7 @@ pla.withdrawn.paraOne                       = You can still <a href="{0}">view e
 psa.lookup.form.scheme-admin-ref-form.title = What''s the Scheme Administrator Reference?
 psa.lookup.form.protection-notification-no-form.title = What''s the Protection Notification Number?
 psa.lookup.form.continue.button = Continue
+psa.lookup.form.startover.button = Start over
 
 psa.lookup.title = PSA Lookup
 psa.lookup.form.title = PSA Lookup form
