@@ -692,6 +692,10 @@ pla.withdrawn.pageHeading                   = Sorry, applications for 2014 prote
 pla.withdrawn.paraOne                       = You can still <a href="{0}">view existing applications</a>.
 
 ## PSA Lookup form
+psa.lookup.form.scheme-admin-ref-form.title = What''s the Scheme Administrator Reference?
+psa.lookup.form.protection-notification-no-form.title = What''s the Protection Notification Number?
+psa.lookup.form.continue.button = Continue
+
 psa.lookup.title = PSA Lookup
 psa.lookup.form.title = PSA Lookup form
 psa.lookup.form.psaref = Pension Scheme Administrator Check Reference

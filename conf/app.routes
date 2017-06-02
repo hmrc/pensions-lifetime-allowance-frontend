@@ -89,6 +89,11 @@ GET         /amend-protection/amendment-outcome                                 
 GET         /amend-protection/:protectionType/:status                                   controllers.AmendsController.amendsSummary(protectionType, status)
 
 #PSA Lookup routes
+GET         /psalookupsar                                       controllers.LookupController.displaySchemeAdministratorReferenceForm
+POST        /psalookupsar                                       controllers.LookupController.submitSchemeAdministratorReferenceForm
+GET         /psalookuppnn                                       controllers.LookupController.displayProtectionNotificationNoForm
+POST        /psalookupppn                                       controllers.LookupController.submitProtectionNotificationNoForm
+
 GET         /psalookup                                          controllers.LookupController.displayLookupForm
 POST        /psalookup                                          controllers.LookupController.submitLookupRequest
 GET         /psalookup/results                                  controllers.LookupController.displayLookupResults
