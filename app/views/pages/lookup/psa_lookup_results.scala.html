@@ -1,7 +1,9 @@
-@import java.time.{LocalDate, LocalTime}
 @import java.time.format.DateTimeFormatter
+@import java.time.LocalDate
+@import java.time.LocalTime
 
 @import play.api.Application
+
 @(lookupResult: PSALookupResult)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
 
 @lc = @{
@@ -63,15 +65,15 @@
                     }
                     case _ => {}
                 }
+                <tr>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.5")</td>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.5.valid")</td>
+            } else {
+                <tr>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.5")</td>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.5.invalid")</td>
+                </tr>
             }
-            <tr>
-                <td class="font-small">@Messages("psa.lookup.results.table.row.5")</td>
-                <td class="font-small">@if(lookupResult.psaCheckResult == 1) {
-                    VALID
-                } else {
-                    INVALID
-                }</td>
-            </tr>
             <tr>
                 <td class="font-small">@Messages("psa.lookup.results.table.row.6")</td>
                 <td class="font-small">@LocalDate.now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))

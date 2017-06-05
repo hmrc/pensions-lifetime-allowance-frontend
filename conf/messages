@@ -718,6 +718,8 @@ psa.lookup.results.table.row.2 = PN Number:
 psa.lookup.results.table.row.3 = Protection Type:
 psa.lookup.results.table.row.4 = Protected Amount:
 psa.lookup.results.table.row.5 = Status:
+psa.lookup.results.table.row.5.valid = VALID
+psa.lookup.results.table.row.5.invalid = INVALID
 psa.lookup.results.table.row.6 = Checked on:
 
 psa.lookup.results.ltatype.1 = FIXED PROTECTION 2016
