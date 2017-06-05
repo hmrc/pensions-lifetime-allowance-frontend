@@ -1,8 +1,7 @@
-@import play.api.Application
-@import java.time.LocalDate
-@import java.time.LocalTime
-
+@import java.time.{LocalDate, LocalTime}
 @import java.time.format.DateTimeFormatter
+
+@import play.api.Application
 @(lookupResult: PSALookupResult)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
 
 @lc = @{
@@ -20,10 +19,12 @@
                 <td class="font-small">@Messages("psa.lookup.results.table.row.1")</td>
                 <td class="font-small">@lookupResult.pensionSchemeAdministratorCheckReference</td>
             </tr>
-            <tr>
-                <td class="font-small">@Messages("psa.lookup.results.table.row.2")</td>
-                <td class="font-small">@lookupResult.protectionNotificationNumber.get</td>
-            </tr>
+            @if(lookupResult.protectionNotificationNumber.isDefined) {
+                <tr>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.2")</td>
+                    <td class="font-small">@lookupResult.protectionNotificationNumber</td>
+                </tr>
+            }
             @if(lookupResult.psaCheckResult == 1) {
                 <tr>
                     <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
@@ -78,5 +79,5 @@
             </tr>
         </tbody>
     </table>
-    <a class="button" role="button" href="@routes.LookupController.displaySchemeAdministratorReferenceForm()">@Messages("psa.lookup.form.startover.button")</a>
+    <a class="button" role="button" href="@routes.LookupController.redirectToStart()">@Messages("psa.lookup.form.startover.button")</a>
 }

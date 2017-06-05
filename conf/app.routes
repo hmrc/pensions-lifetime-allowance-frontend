@@ -96,6 +96,7 @@ GET         /psalookup/psaref                                                   
 POST        /psalookup/psaref                                                             controllers.LookupController.submitSchemeAdministratorReferenceForm
 
 GET         /psalookup/results                                                            controllers.LookupController.displayLookupResults
+GET         /psalookup/results/clear                                                      controllers.LookupController.redirectToStart
 
 #Feedback routes
 GET         /exit                                                                         controllers.ExitSurveyController.exitSurvey

@@ -17,6 +17,7 @@
 package controllers
 
 import connectors.{KeyStoreConnector, PLAConnector}
+import controllers.LookupController.pnnForm
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
 import models.{PSALookupRequest, PSALookupResult}
 import org.mockito.Matchers.any
@@ -26,7 +27,7 @@ import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.data.Form
+import play.api.data.{Form, FormError}
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
@@ -57,6 +58,8 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
     val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
     val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
+
+    val notFoundLookupForm: Form[String] = pnnForm.copy(errors = Seq(FormError(" ", "psa.lookup.form.not-found")))
 
     val lookupRequestID = "psa-lookup-request"
     val lookupResultID = "psa-lookup-result"

@@ -16,15 +16,13 @@
 
 package connectors
 
-import config.{PLASessionCache, WSHttp}
+import config.PLASessionCache
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
 import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet, HttpResponse}
-import scala.concurrent.ExecutionContext.Implicits.global
+import uk.gov.hmrc.play.http.{HeaderCarrier, HttpResponse}
 
-import scala.concurrent.duration.Duration
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 object KeyStoreConnector extends KeyStoreConnector with ServicesConfig {
   override val sessionCache = PLASessionCache
@@ -51,4 +49,6 @@ trait KeyStoreConnector {
   def fetchAllUserData(implicit hc: HeaderCarrier): Future[Option[CacheMap]] = {
     sessionCache.fetch()
   }
+
+  def remove(implicit hc: HeaderCarrier): Future[HttpResponse] = sessionCache.remove()
 }
