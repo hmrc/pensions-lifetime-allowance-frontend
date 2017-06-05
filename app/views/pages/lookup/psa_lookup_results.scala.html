@@ -9,22 +9,16 @@
 @views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
     @language_selection(lc.languageMap, lc.langToCall, None)
 
-    <h1 class="heading-48 heading--underlined"> @Messages("psa.lookup.results.title")</h1>
+    <h1> @Messages("psa.lookup.results.title")</h1>
     <br>
     <table>
-        <thead>
-            <tr>
-                <th><h2>@Messages("psa.lookup.results.table.header.1")</h2></th>
-                <th><h2>@Messages("psa.lookup.results.table.header.2")</h2></th>
-            </tr>
-        </thead>
         <tbody>
             <tr>
                 <td class="font-small">@Messages("psa.lookup.results.table.row.1")</td>
                 <td class="font-small">@lookupResult.pensionSchemeAdministratorCheckReference</td>
             </tr>
             <tr>
-                <td class="font-small">@Messages("psa.lookup.results.table.row.2")</td>
+                <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
                 <td class="font-small"> @lookupResult.ltaType match {
                     case 1 => {
                         @Messages("psa.lookup.results.ltatype.1")

@@ -92,48 +92,27 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
   override def beforeEach() = reset(mockKeyStoreConnector, mockPLAConnector)
 
   "LookupController" should {
-    "return 200 with correct message on form page" in {
-      val request = FakeRequest().withSession(sessionId)
-      val result = TestController.displayLookupForm.apply(request)
-
-      status(result) mustBe Status.OK
-      contentAsString(result) must include(Messages("psa.lookup.form.title"))
-    }
-
-    "submit form with valid data and redirect to results page" in {
-      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPostData: _*)
-
-      plaConnectorReturn(HttpResponse(OK, Some(plaReturnJson)))
-      keystoreSaveCondition[PSALookupRequest](mockCacheMap)
-
-      val result = TestController.submitLookupRequest.apply(request)
-
-      status(result) mustBe Status.SEE_OTHER
-      redirectLocation(result).get mustBe routes.LookupController.displayLookupResults().url
-      verify(mockKeyStoreConnector, times(1)).saveFormData(any(), any())(any(), any())
-      verify(mockPLAConnector, times(1)).psaLookup(any(), any())(any())
-    }
-
-    "submit form with valid data but invalid protection and reload form page" in {
-      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPostData: _*)
-
-      plaConnectorReturn(HttpResponse(OK, Some(plaInvalidReturnJson)))
-
-      val result = TestController.submitLookupRequest.apply(request)
-
-      status(result) mustBe Status.BAD_REQUEST
-      contentAsString(result) must include(Messages("psa.lookup.form.not-found"))
-      verify(mockPLAConnector, times(1)).psaLookup(any(), any())(any())
-    }
-
-    "submit form with invalid data and return bad request" in {
-      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(invalidPostData: _*)
-
-      val result = TestController.submitLookupRequest.apply(request)
-
-      status(result) mustBe Status.BAD_REQUEST
-      contentAsString(result) must include(Messages("psa.lookup.form.psaref.required"))
-    }
+//    "return 200 with correct message on form page" in {
+//      val request = FakeRequest().withSession(sessionId)
+//      val result = TestController.displayLookupForm.apply(request)
+//
+//      status(result) mustBe Status.OK
+//      contentAsString(result) must include(Messages("psa.lookup.form.title"))
+//    }
+//
+//    "submit form with valid data and redirect to results page" in {
+//      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPostData: _*)
+//
+//      plaConnectorReturn(HttpResponse(OK, Some(plaReturnJson)))
+//      keystoreSaveCondition[PSALookupRequest](mockCacheMap)
+//
+//      val result = TestController.submitLookupRequest.apply(request)
+//
+//      status(result) mustBe Status.SEE_OTHER
+//      redirectLocation(result).get mustBe routes.LookupController.displayLookupResults().url
+//      verify(mockKeyStoreConnector, times(1)).saveFormData(any(), any())(any(), any())
+//      verify(mockPLAConnector, times(1)).psaLookup(any(), any())(any())
+//    }
 
     "return 200 with correct message on results page" in {
       val request = FakeRequest().withSession(sessionId)
