@@ -1,7 +1,7 @@
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
-@(lookupForm: Form[PSALookupProtectionNotificationNoRequest])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+@(pnnForm: Form[String])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
 
 @lc = @{
 Application.instanceCache[PlaLanguageController].apply(application)
@@ -12,31 +12,31 @@ Application.instanceCache[PlaLanguageController].apply(application)
 
 <h1> @Messages("psa.lookup.form.protection-notification-no-form.title")</h1>
 
-@govHelpers.errorSummary(Messages("pla.lookup.form.error.summary"), lookupForm)
+@govHelpers.errorSummary(Messages("pla.lookup.form.error.summary"), pnnForm)
 
 @govHelpers.form(action = routes.LookupController.submitProtectionNotificationNoForm) {
 
 <div class="form-group">
     <fieldset class="form-field-group">
 
-        @if(lookupForm("lifetimeAllowanceReference").hasErrors) {
+        @if(pnnForm("lifetimeAllowanceReference").hasErrors) {
         <div class="form-field form-field--error fields-aligned">
             } else {
             <div class="form-field">
                 }
                 <label>
-                    @if(lookupForm("lifetimeAllowanceReference").hasErrors) {
+                    @if(pnnForm("lifetimeAllowanceReference").hasErrors) {
                     <div class="error-notification" id="@{
-                            lookupForm("lifetimeAllowanceReference").errors.head.message
+                            pnnForm("lifetimeAllowanceReference").errors.head.message
                     }">
                     @{
-                    lookupForm("lifetimeAllowanceReference").errors.head.message
+                    pnnForm("lifetimeAllowanceReference").errors.head.message
                     }
             </div>
             }
             <p class="form-field--hint">@Messages("psa.lookup.form.ltaref.hint")</p>
             <input type="text" name="lifetimeAllowanceReference" id="lifetimeAllowanceReference"
-                   class="input--medium input--cleared caps" value="@lookupForm("lifetimeAllowanceReference").value.getOrElse("")"/>
+                   class="input--medium input--cleared caps" value="@pnnForm("lifetimeAllowanceReference").value.getOrElse("")"/>
             </label>
         </div>
     </fieldset>

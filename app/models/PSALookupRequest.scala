@@ -18,9 +18,8 @@ package models
 
 import play.api.libs.json.Json
 
-case class PSALookupRequest(var pensionSchemeAdministratorCheckReference: String, var lifetimeAllowanceReference: String) {
-  pensionSchemeAdministratorCheckReference = pensionSchemeAdministratorCheckReference.toUpperCase()
-  lifetimeAllowanceReference = lifetimeAllowanceReference.toUpperCase()
+case class PSALookupRequest(var pensionSchemeAdministratorCheckReference: String) {
+  pensionSchemeAdministratorCheckReference = pensionSchemeAdministratorCheckReference.toUpperCase
 }
 
 object PSALookupRequest {

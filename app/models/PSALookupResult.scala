@@ -19,7 +19,7 @@ package models
 import play.api.libs.json.Json
 
 case class PSALookupResult(pensionSchemeAdministratorCheckReference: String, ltaType: Int,
-                           psaCheckResult: Int, protectedAmount: Option[BigDecimal])
+                           psaCheckResult: Int, protectedAmount: Option[BigDecimal], pnnNumber: Option[String] = None)
 
 object PSALookupResult {
   implicit val format = Json.format[PSALookupResult]

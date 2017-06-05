@@ -16,7 +16,6 @@
 
 package forms
 
-import models.PSALookupProtectionNotificationNoRequest
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
@@ -26,10 +25,10 @@ import play.api.i18n.Messages.Implicits._
 
 object PSALookupProtectionNotificationNoForm {
 
-  def pSALookupProtectionNotificationNoForm: Form[PSALookupProtectionNotificationNoRequest] = {
-    Form(mapping(
+  def pnnForm: Form[String] = {
+    Form(single(
       "lifetimeAllowanceReference" -> text.verifying(ltaRefConstraint)
-    )(PSALookupProtectionNotificationNoRequest.apply)(PSALookupProtectionNotificationNoRequest.unapply))
+    ))
   }
 
   private val npsRefRegex = """^(?i)(IP14|IP16|FP16)[0-9]{10}[ABCDEFGHJKLMNPRSTXYZ]$""".r

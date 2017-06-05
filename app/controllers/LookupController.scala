@@ -17,17 +17,14 @@
 package controllers
 
 import connectors.{KeyStoreConnector, PLAConnector}
-import forms.PSALookupProtectionNotificationNoForm.pSALookupProtectionNotificationNoForm
-import forms.PSALookupRequestForm.pSALookupRequestForm
-import forms.PSALookupSchemeAdministratorReferenceForm.pSALookupSchemeAdministratorReferenceForm
-import models.{PSALookupResult, PSALookupSchemeAdministratorReferenceRequest}
+import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
+import models.{PSALookupRequest, PSALookupResult}
 import play.api.Play.current
-import play.api.data.FormError
+import play.api.data.Form
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.Upstream4xxResponse
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
@@ -36,6 +33,12 @@ import scala.concurrent.Future
 object LookupController extends LookupController {
   val keyStoreConnector = KeyStoreConnector
   val plaConnector = PLAConnector
+
+  val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
+  val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
+
+  val lookupRequestID = "psa-lookup-request"
+  val lookupResultID = "psa-lookup-result"
 }
 
 trait LookupController extends FrontendController {
@@ -45,20 +48,26 @@ trait LookupController extends FrontendController {
   val keyStoreConnector: KeyStoreConnector
   val plaConnector: PLAConnector
 
+  val psaRefForm: Form[String]
+  val pnnForm: Form[String]
+
+  val lookupRequestID: String
+  val lookupResultID: String
+
   def displaySchemeAdministratorReferenceForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
-    keyStoreConnector.fetchAndGetFormData[PSALookupSchemeAdministratorReferenceRequest]("pensionSchemeAdministratorCheckReference").flatMap {
-      case Some(stored) =>
-        Future.successful(Ok(psa_lookup_scheme_admin_ref_form(pSALookupSchemeAdministratorReferenceForm.fill(stored))))
+    keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
+      case Some(PSALookupRequest(psaRef)) =>
+        Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
       case _ =>
-        Future.successful(Ok(psa_lookup_scheme_admin_ref_form(pSALookupSchemeAdministratorReferenceForm)))
+        Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
     }
   }
 
   def submitSchemeAdministratorReferenceForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
-    pSALookupSchemeAdministratorReferenceForm.bindFromRequest().fold(
+    psaRefForm.bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
       validFormData => {
-        keyStoreConnector.saveFormData[PSALookupSchemeAdministratorReferenceRequest]("pensionSchemeAdministratorCheckReference", validFormData).map {
+        keyStoreConnector.saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData)).map {
           _ => Redirect(routes.LookupController.displayProtectionNotificationNoForm())
         }
       }
@@ -66,42 +75,40 @@ trait LookupController extends FrontendController {
   }
 
   def displayProtectionNotificationNoForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
-    keyStoreConnector.fetchAndGetFormData[PSALookupSchemeAdministratorReferenceRequest]("pensionSchemeAdministratorCheckReference").flatMap {
-      case Some(_) =>
-        Future.successful(Ok(psa_lookup_protection_notification_no_form(pSALookupProtectionNotificationNoForm)))
+    keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
+      case Some(PSALookupRequest(_)) =>
+        Future.successful(Ok(psa_lookup_protection_notification_no_form(pnnForm)))
       case _ =>
         Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
     }
   }
 
   def submitProtectionNotificationNoForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
-    pSALookupProtectionNotificationNoForm.bindFromRequest().fold(
+    pnnForm.bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(psa_lookup_protection_notification_no_form(formWithErrors))),
       validFormData => {
-        keyStoreConnector.fetchAndGetFormData[PSALookupSchemeAdministratorReferenceRequest]("pensionSchemeAdministratorCheckReference").flatMap {
-          case Some(stored) =>
-            plaConnector.psaLookup(stored.pensionSchemeAdministratorCheckReference, validFormData.lifetimeAllowanceReference).flatMap {
+        keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
+          case Some(PSALookupRequest(psaRef)) =>
+            plaConnector.psaLookup(psaRef, validFormData).flatMap {
               result =>
                 result.status match {
                   case OK =>
                     val resultData = Json.fromJson[PSALookupResult](result.json).get
-                    //if (resultData.psaCheckResult == 0) Future.successful(BadRequest(psa_lookup_form(notFoundLookupForm)))
-                    keyStoreConnector.saveFormData[PSALookupResult]("psa-lookup-result", resultData).map {
+                    val updatedResult = resultData.copy(pnnNumber = Some(validFormData))
+                    keyStoreConnector.saveFormData[PSALookupResult](lookupResultID, updatedResult).map {
                       _ => Redirect(routes.LookupController.displayLookupResults())
                     }
                 }
             }
-            //Need to add recover back in once the flow has been determined
-              //case r: Upstream4xxResponse if r.upstreamResponseCode == NOT_FOUND => BadRequest(psa_lookup_form(notFoundLookupForm))
-          case _ =>
-            throw new RuntimeException("unable to get the pensionSchemeAdministratorCheckReference from the keyStoreConnector")
+          //Need to add recover back in once the flow has been determined
+          //case r: Upstream4xxResponse if r.upstreamResponseCode == NOT_FOUND => BadRequest(psa_lookup_form(notFoundLookupForm))
         }
       }
     )
   }
 
   def displayLookupResults: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
-    keyStoreConnector.fetchAndGetFormData[PSALookupResult]("psa-lookup-result").map {
+    keyStoreConnector.fetchAndGetFormData[PSALookupResult](lookupResultID).map {
       case Some(result) => Ok(psa_lookup_results(result))
       case None => Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm())
     }
@@ -113,6 +120,6 @@ trait LookupController extends FrontendController {
     *
     * @return
     */
-  private val notFoundLookupForm = pSALookupRequestForm.copy(errors = Seq(FormError(" ", "psa.lookup.form.not-found")))
+  //private val notFoundLookupForm = pnnForm.copy(errors = Seq(FormError(" ", "psa.lookup.form.not-found")))
 
 }

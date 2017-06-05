@@ -16,7 +16,6 @@
 
 package forms
 
-import models.PSALookupSchemeAdministratorReferenceRequest
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
@@ -26,10 +25,10 @@ import play.api.i18n.Messages.Implicits._
 
 object PSALookupSchemeAdministratorReferenceForm {
 
-  def pSALookupSchemeAdministratorReferenceForm: Form[PSALookupSchemeAdministratorReferenceRequest] = {
-    Form(mapping(
+  def psaRefForm: Form[String] = {
+    Form(single(
       "pensionSchemeAdministratorCheckReference" -> text.verifying(psaRefConstraint)
-    )(PSALookupSchemeAdministratorReferenceRequest.apply)(PSALookupSchemeAdministratorReferenceRequest.unapply))
+    ))
   }
 
   private val psaRefRegex = """^(?i)PSA[0-9]{8}[A-Z]$""".r

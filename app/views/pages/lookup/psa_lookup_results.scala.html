@@ -1,5 +1,8 @@
 @import play.api.Application
+@import java.time.LocalDate
+@import java.time.LocalTime
 
+@import java.time.format.DateTimeFormatter
 @(lookupResult: PSALookupResult)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
 
 @lc = @{
@@ -18,42 +21,61 @@
                 <td class="font-small">@lookupResult.pensionSchemeAdministratorCheckReference</td>
             </tr>
             <tr>
-                <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
-                <td class="font-small"> @lookupResult.ltaType match {
-                    case 1 => {
-                        @Messages("psa.lookup.results.ltatype.1")
-                    }
-                    case 2 => {
-                        @Messages("psa.lookup.results.ltatype.2")
-                    }
-                    case 3 => {
-                        @Messages("psa.lookup.results.ltatype.3")
-                    }
-                    case 4 => {
-                        @Messages("psa.lookup.results.ltatype.4")
-                    }
-                    case 5 => {
-                        @Messages("psa.lookup.results.ltatype.5")
-                    }
-                    case 6 => {
-                        @Messages("psa.lookup.results.ltatype.6")
-                    }
-                    case 7 => {
-                        @Messages("psa.lookup.results.ltatype.7")
-                    }
-                } </td>
+                <td class="font-small">@Messages("psa.lookup.results.table.row.2")</td>
+                <td class="font-small">@lookupResult.pnnNumber.get</td>
             </tr>
-            @lookupResult.ltaType match {
-                case x if 2 until 6 contains x => {
-                    @if(lookupResult.protectedAmount.isDefined) {
-                        <tr>
-                            <td class="font-small">@Messages("psa.lookup.results.table.row.4")</td>
-                            <td class="font-small">£@lookupResult.protectedAmount.get.formatted("%,1.0f")</td>
-                        </tr>
+            @if(lookupResult.psaCheckResult == 1) {
+                <tr>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
+                    <td class="font-small"> @lookupResult.ltaType match {
+                        case 1 => {
+                            @Messages("psa.lookup.results.ltatype.1")
+                        }
+                        case 2 => {
+                            @Messages("psa.lookup.results.ltatype.2")
+                        }
+                        case 3 => {
+                            @Messages("psa.lookup.results.ltatype.3")
+                        }
+                        case 4 => {
+                            @Messages("psa.lookup.results.ltatype.4")
+                        }
+                        case 5 => {
+                            @Messages("psa.lookup.results.ltatype.5")
+                        }
+                        case 6 => {
+                            @Messages("psa.lookup.results.ltatype.6")
+                        }
+                        case 7 => {
+                            @Messages("psa.lookup.results.ltatype.7")
+                        }
+                    } </td>
+                </tr>
+                @lookupResult.ltaType match {
+                    case x if 2 until 6 contains x => {
+                        @if(lookupResult.protectedAmount.isDefined) {
+                            <tr>
+                                <td class="font-small">@Messages("psa.lookup.results.table.row.4")</td>
+                                <td class="font-small">£@lookupResult.protectedAmount.get.formatted("%,1.0f")</td>
+                            </tr>
+                        }
                     }
+                    case _ => {}
                 }
-                case _ => {}
             }
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.results.table.row.5")</td>
+                <td class="font-small">@if(lookupResult.psaCheckResult == 1) {
+                    VALID
+                } else {
+                    INVALID
+                }</td>
+            </tr>
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.results.table.row.6")</td>
+                <td class="font-small">@LocalDate.now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                    at @LocalTime.now.format(DateTimeFormatter.ofPattern("HH:mm:ss")) </td>
+            </tr>
         </tbody>
     </table>
     <a class="button" role="button" href="@routes.LookupController.displaySchemeAdministratorReferenceForm()">@Messages("psa.lookup.form.startover.button")</a>
