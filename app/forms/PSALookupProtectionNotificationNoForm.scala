@@ -38,10 +38,10 @@ object PSALookupProtectionNotificationNoForm {
   val ltaRefConstraint: Constraint[String] = Constraint("constraints.ltarefcheck")({
     ltaRef =>
       val errors = ltaRef match {
-        case "" => Seq(ValidationError(Messages("psa.lookup.form.ltaref.required")))
+        case "" => Seq(ValidationError(Messages("psa.lookup.form.pnn.required")))
         case npsRefRegex(_) => Nil
         case tpssRefRegex() => Nil
-        case _ => Seq(ValidationError(Messages("psa.lookup.form.ltaref.invalid")))
+        case _ => Seq(ValidationError(Messages("psa.lookup.form.pnn.invalid")))
       }
       if (errors.isEmpty) Valid else Invalid(errors)
   })

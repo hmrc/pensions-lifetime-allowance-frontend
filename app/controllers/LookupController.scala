@@ -94,12 +94,13 @@ trait LookupController extends FrontendController {
                 result.status match {
                   case OK =>
                     val resultData = Json.fromJson[PSALookupResult](result.json).get
-                    val updatedResult = resultData.copy(pnnNumber = Some(validFormData))
+                    val updatedResult = resultData.copy(protectionNotificationNumber = Some(validFormData))
                     keyStoreConnector.saveFormData[PSALookupResult](lookupResultID, updatedResult).map {
                       _ => Redirect(routes.LookupController.displayLookupResults())
                     }
                 }
             }
+          case _ => throw new RuntimeException("unable to get the lookup request from the keyStoreConnector")
           //Need to add recover back in once the flow has been determined
           //case r: Upstream4xxResponse if r.upstreamResponseCode == NOT_FOUND => BadRequest(psa_lookup_form(notFoundLookupForm))
         }

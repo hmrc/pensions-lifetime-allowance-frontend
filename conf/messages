@@ -698,15 +698,14 @@ psa.lookup.form.continue.button = Continue
 psa.lookup.form.startover.button = Start over
 
 psa.lookup.title = PSA Lookup
-psa.lookup.form.title = PSA Lookup form
 psa.lookup.form.psaref.hint = Example: PSA12345678A
-psa.lookup.form.ltaref.hint = Example: IP141000000000A
+psa.lookup.form.pnn.hint = Example: IP141000000000A
 psa.lookup.form.button = Submit
 pla.lookup.form.error.summary = Something you''ve entered isn''t valid
 psa.lookup.form.psaref.required = Enter a Scheme Administrator Reference
 psa.lookup.form.psaref.invalid = The Scheme Administrator Reference you entered isn''t correct
-psa.lookup.form.ltaref.required = Enter a Protection Notification Number
-psa.lookup.form.ltaref.invalid = The Protection Notification Number you entered isn''t correct
+psa.lookup.form.pnn.required = Enter a Protection Notification Number
+psa.lookup.form.pnn.invalid = The Protection Notification Number you entered isn''t correct
 psa.lookup.form.not-found = The details you entered do not have a valid protection
 
 ## PSA lookup results

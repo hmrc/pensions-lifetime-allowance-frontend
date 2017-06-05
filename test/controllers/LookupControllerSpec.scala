@@ -17,14 +17,16 @@
 package controllers
 
 import connectors.{KeyStoreConnector, PLAConnector}
+import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
 import models.{PSALookupRequest, PSALookupResult}
 import org.mockito.Matchers.any
-import org.mockito.Mockito.{reset, times, verify, when}
+import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
+import play.api.data.Form
 import play.api.http.Status
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
@@ -52,16 +54,28 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
   object TestController extends LookupController {
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
     override val plaConnector: PLAConnector = mockPLAConnector
+
+    val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
+    val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
+
+    val lookupRequestID = "psa-lookup-request"
+    val lookupResultID = "psa-lookup-result"
   }
 
-  private val validPostData = Seq(
-    "pensionSchemeAdministratorCheckReference" -> "PSA12345678A",
-    "lifetimeAllowanceReference" -> "IP161000000000A"
+  private val validPSARefForm = Seq(
+    "pensionSchemeAdministratorCheckReference" -> "PSA12345678A"
   )
 
-  private val invalidPostData = Seq(
-    "pensionSchemeAdministratorCheckReference" -> "",
-    "lifetimeAllowanceReference" -> "IP161000000000A"
+  private val invalidPSARefForm = Seq(
+    "pensionSchemeAdministratorCheckReference" -> ""
+  )
+
+  private val validPNNForm = Seq(
+    "lifetimeAllowanceReference" -> "IP141000000000A"
+  )
+
+  private val invalidPNNForm = Seq(
+    "lifetimeAllowanceReference" -> ""
   )
 
   private val plaReturnJson = Json.parse(
@@ -69,7 +83,8 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
       |  "pensionSchemeAdministratorCheckReference": "PSA12345678A",
       |  "ltaType": 5,
       |  "psaCheckResult": 1,
-      |  "protectedAmount": 25000
+      |  "protectedAmount": 25000,
+      |  "protectionNotificationNumber": "IP14000000000A"
       |}""".stripMargin)
 
   private val plaInvalidReturnJson = Json.parse(
@@ -77,14 +92,16 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
       |  "pensionSchemeAdministratorCheckReference": "PSA12345678A",
       |  "ltaType": 5,
       |  "psaCheckResult": 0,
-      |  "protectedAmount": 25000
+      |  "protectedAmount": 25000,
+      |  "protectionNotificationNumber": "IP14000000000A"
       |}""".stripMargin)
 
   private val cacheData: Map[String, JsValue] = Map(
     "pensionSchemeAdministratorCheckReference" -> JsString(""),
     "ltaType" -> JsNumber(5),
     "psaCheckResult" -> JsNumber(1),
-    "protectedAmount" -> JsNumber(25000)
+    "protectedAmount" -> JsNumber(25000),
+    "protectionNotificationNumber" -> JsString("IP14000000000A")
   )
 
   private val mockCacheMap = CacheMap("psa-lookup-result", cacheData)
@@ -92,27 +109,82 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
   override def beforeEach() = reset(mockKeyStoreConnector, mockPLAConnector)
 
   "LookupController" should {
-//    "return 200 with correct message on form page" in {
-//      val request = FakeRequest().withSession(sessionId)
-//      val result = TestController.displayLookupForm.apply(request)
-//
-//      status(result) mustBe Status.OK
-//      contentAsString(result) must include(Messages("psa.lookup.form.title"))
-//    }
-//
-//    "submit form with valid data and redirect to results page" in {
-//      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPostData: _*)
-//
-//      plaConnectorReturn(HttpResponse(OK, Some(plaReturnJson)))
-//      keystoreSaveCondition[PSALookupRequest](mockCacheMap)
-//
-//      val result = TestController.submitLookupRequest.apply(request)
-//
-//      status(result) mustBe Status.SEE_OTHER
-//      redirectLocation(result).get mustBe routes.LookupController.displayLookupResults().url
-//      verify(mockKeyStoreConnector, times(1)).saveFormData(any(), any())(any(), any())
-//      verify(mockPLAConnector, times(1)).psaLookup(any(), any())(any())
-//    }
+    "return 200 with correct message on psaRef form" in {
+      keystoreFetchCondition[PSALookupRequest](None)
+
+      val request = FakeRequest().withSession(sessionId)
+      val result = TestController.displaySchemeAdministratorReferenceForm.apply(request)
+
+      status(result) mustBe OK
+      contentAsString(result) must include(Messages("psa.lookup.form.psaref.hint"))
+    }
+
+    "submit psaRef form with valid data and redirect to pnn form" in {
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPSARefForm: _*)
+
+      keystoreSaveCondition[PSALookupRequest](mockCacheMap)
+
+      val result = TestController.submitSchemeAdministratorReferenceForm.apply(request)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).get mustBe routes.LookupController.displayProtectionNotificationNoForm().url
+    }
+
+    "display errors when invalid data entered for psaRef form" in {
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(invalidPSARefForm: _*)
+
+      keystoreSaveCondition[PSALookupRequest](mockCacheMap)
+
+      val result = TestController.submitSchemeAdministratorReferenceForm.apply(request)
+
+      status(result) mustBe BAD_REQUEST
+      contentAsString(result) must include(Messages("psa.lookup.form.psaref.required"))
+    }
+
+    "return 200 with correct message on pnn form" in {
+      keystoreFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSAREF")))
+
+      val request = FakeRequest().withSession(sessionId)
+      val result = TestController.displayProtectionNotificationNoForm.apply(request)
+
+      status(result) mustBe OK
+      contentAsString(result) must include(Messages("psa.lookup.form.pnn.hint"))
+    }
+
+    "redirect when no data entered on first page for pnn form" in {
+      keystoreFetchCondition[PSALookupRequest](None)
+
+      val request = FakeRequest().withSession(sessionId)
+      val result = TestController.displayProtectionNotificationNoForm.apply(request)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).get mustBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+    }
+
+    "submit pnn form with valid data and redirect to results page" in {
+      keystoreFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSA REF")))
+      plaConnectorReturn(HttpResponse(OK, Some(plaReturnJson)))
+
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*)
+
+      keystoreSaveCondition[PSALookupResult](mockCacheMap)
+
+      val result = TestController.submitProtectionNotificationNoForm.apply(request)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).get mustBe routes.LookupController.displayLookupResults().url
+    }
+
+    "display errors when invalid data entered for pnn form" in {
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(invalidPNNForm: _*)
+
+      keystoreSaveCondition[PSALookupRequest](mockCacheMap)
+
+      val result = TestController.submitProtectionNotificationNoForm.apply(request)
+
+      status(result) mustBe BAD_REQUEST
+      contentAsString(result) must include(Messages("psa.lookup.form.pnn.required"))
+    }
 
     "return 200 with correct message on results page" in {
       val request = FakeRequest().withSession(sessionId)
@@ -120,8 +192,18 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.displayLookupResults.apply(request)
 
-      status(result) mustBe Status.OK
+      status(result) mustBe OK
       contentAsString(result) must include(Messages("psa.lookup.results.title"))
+    }
+
+    "redirect when no result data is stored on results page" in {
+      val request = FakeRequest().withSession(sessionId)
+      keystoreFetchCondition[PSALookupResult](None)
+
+      val result = TestController.displayLookupResults.apply(request)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).get mustBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
     }
   }
 
