@@ -1,97 +1,102 @@
 # microservice specific routes
 
-GET         /assets/*file                                       controllers.Assets.at(path="/public", file)
-GET         /language/:lang                                     @controllers.PlaLanguageController.switchToLanguage(lang: String)
+GET         /assets/*file                                                                 controllers.Assets.at(path="/public", file)
+GET         /language/:lang                                                               @controllers.PlaLanguageController.switchToLanguage(lang: String)
 
 ## Auth ##
-GET         /timeout                                            controllers.TimeoutController.timeout
-GET         /not-authorised                                     controllers.UnauthorisedController.showNotAuthorised(journeyId: Option[String])
-GET         /sign-out                                           controllers.AccountController.signOut
+GET         /timeout                                                                      controllers.TimeoutController.timeout
+GET         /not-authorised                                                               controllers.UnauthorisedController.showNotAuthorised(journeyId: Option[String])
+GET         /sign-out                                                                     controllers.AccountController.signOut
 
 ## Apply IP 14 ##
-GET         /apply-for-ip14-pensions-taken                      controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-pensions-taken                                                controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-pensions-taken-before               controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-pensions-taken-before                                         controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-pensions-taken-between              controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-pensions-taken-between                                        controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-overseas-pensions                   controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-overseas-pensions                                             controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-current-pensions                    controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-current-pensions                                              controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-pension-sharing-orders              controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-pension-sharing-orders                                        controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-pension-sharing-order-details       controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-pension-sharing-order-details                                 controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-remove-pension-sharing-order-details    controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-remove-pension-sharing-order-details                          controllers.WithdrawnController.showWithdrawn
 
-GET         /apply-for-ip14-submit-your-application             controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-submit-your-application                                       controllers.WithdrawnController.showWithdrawn
 
 ## Apply IP 16 ##
-GET         /apply-for-ip16-pensions-taken                      controllers.IP2016Controller.pensionsTaken
-POST        /apply-for-ip16-pensions-taken                      controllers.IP2016Controller.submitPensionsTaken
+GET         /apply-for-ip16-pensions-taken                                                controllers.IP2016Controller.pensionsTaken
+POST        /apply-for-ip16-pensions-taken                                                controllers.IP2016Controller.submitPensionsTaken
 
-GET         /apply-for-ip16-pensions-taken-before               controllers.IP2016Controller.pensionsTakenBefore
-POST        /apply-for-ip16-pensions-taken-before               controllers.IP2016Controller.submitPensionsTakenBefore
+GET         /apply-for-ip16-pensions-taken-before                                         controllers.IP2016Controller.pensionsTakenBefore
+POST        /apply-for-ip16-pensions-taken-before                                         controllers.IP2016Controller.submitPensionsTakenBefore
 
-GET         /apply-for-ip16-pensions-taken-between              controllers.IP2016Controller.pensionsTakenBetween
-POST        /apply-for-ip16-pensions-taken-between              controllers.IP2016Controller.submitPensionsTakenBetween
+GET         /apply-for-ip16-pensions-taken-between                                        controllers.IP2016Controller.pensionsTakenBetween
+POST        /apply-for-ip16-pensions-taken-between                                        controllers.IP2016Controller.submitPensionsTakenBetween
 
-GET         /apply-for-ip16-overseas-pensions                   controllers.IP2016Controller.overseasPensions
-POST        /apply-for-ip16-overseas-pensions                   controllers.IP2016Controller.submitOverseasPensions
+GET         /apply-for-ip16-overseas-pensions                                             controllers.IP2016Controller.overseasPensions
+POST        /apply-for-ip16-overseas-pensions                                             controllers.IP2016Controller.submitOverseasPensions
 
-GET         /apply-for-ip16-current-pensions                    controllers.IP2016Controller.currentPensions
-POST        /apply-for-ip16-current-pensions                    controllers.IP2016Controller.submitCurrentPensions
+GET         /apply-for-ip16-current-pensions                                              controllers.IP2016Controller.currentPensions
+POST        /apply-for-ip16-current-pensions                                              controllers.IP2016Controller.submitCurrentPensions
 
-GET         /apply-for-ip16-pension-sharing-orders              controllers.IP2016Controller.pensionDebits
-POST        /apply-for-ip16-pension-sharing-orders              controllers.IP2016Controller.submitPensionDebits
+GET         /apply-for-ip16-pension-sharing-orders                                        controllers.IP2016Controller.pensionDebits
+POST        /apply-for-ip16-pension-sharing-orders                                        controllers.IP2016Controller.submitPensionDebits
 
-POST        /apply-for-ip16-pension-sharing-order-details       controllers.IP2016Controller.submitPSODetails
-GET         /apply-for-ip16-pension-sharing-order-details/      controllers.IP2016Controller.psoDetails
+POST        /apply-for-ip16-pension-sharing-order-details                                 controllers.IP2016Controller.submitPSODetails
+GET         /apply-for-ip16-pension-sharing-order-details/                                controllers.IP2016Controller.psoDetails
 
-GET         /apply-for-ip16-remove-pension-sharing-order-details    controllers.IP2016Controller.removePsoDetails
-POST        /apply-for-ip16-remove-pension-sharing-order-details    controllers.IP2016Controller.submitRemovePsoDetails
+GET         /apply-for-ip16-remove-pension-sharing-order-details                          controllers.IP2016Controller.removePsoDetails
+POST        /apply-for-ip16-remove-pension-sharing-order-details                          controllers.IP2016Controller.submitRemovePsoDetails
 
-GET         /apply-for-ip16-submit-your-application             controllers.SummaryController.summaryIP16
+GET         /apply-for-ip16-submit-your-application                                       controllers.SummaryController.summaryIP16
 
 
 ## Confirmation ##
-GET         /apply-for-fp16                                     controllers.ConfirmationController.confirmFP
+GET         /apply-for-fp16                                                               controllers.ConfirmationController.confirmFP
 
 
 ## Result ##
-POST        /result-fp16                                        controllers.ResultController.processFPApplication
-GET         /result-fp16                                        controllers.ResultController.displayFP16
+POST        /result-fp16                                                                  controllers.ResultController.processFPApplication
+GET         /result-fp16                                                                  controllers.ResultController.displayFP16
 
-POST        /result-ip16                                        controllers.ResultController.processIPApplication
-GET         /result-ip16                                        controllers.ResultController.displayIP16
+POST        /result-ip16                                                                  controllers.ResultController.processIPApplication
+GET         /result-ip16                                                                  controllers.ResultController.displayIP16
 
-GET         /existing-protections                               controllers.ReadProtectionsController.currentProtections
-GET         /print-protection                                   controllers.PrintController.printView
+GET         /existing-protections                                                         controllers.ReadProtectionsController.currentProtections
+GET         /print-protection                                                             controllers.PrintController.printView
 
 ## Amends ##
-GET         /amend-protection/pensions-taken-before/:protectionType/:status             controllers.AmendsController.amendPensionsTakenBefore(protectionType, status)
-POST        /amend-protection/pensions-taken-before                                     controllers.AmendsController.submitAmendPensionsTakenBefore
-GET         /amend-protection/pensions-taken-between/:protectionType/:status            controllers.AmendsController.amendPensionsTakenBetween(protectionType, status)
-POST        /amend-protection/pensions-taken-between                                    controllers.AmendsController.submitAmendPensionsTakenBetween
-GET         /amend-protection/overseas-pensions/:protectionType/:status                 controllers.AmendsController.amendOverseasPensions(protectionType, status)
-POST        /amend-protection/overseas-pensions                                         controllers.AmendsController.submitAmendOverseasPensions
-GET         /amend-protection/current-pensions/:protectionType/:status                  controllers.AmendsController.amendCurrentPensions(protectionType, status)
-POST        /amend-protection/current-pensions                                          controllers.AmendsController.submitAmendCurrentPension
-GET         /amend-protection/pension-sharing-order/:protectionType/:status             controllers.AmendsController.amendPsoDetails(protectionType, status)
-POST        /amend-protection/pension-sharing-order                                     controllers.AmendsController.submitAmendPsoDetails
-GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status      controllers.AmendsController.removePso(protectionType, status)
-POST        /amend-protection/pension-sharing-order/remove                              controllers.AmendsController.submitRemovePso
+GET         /amend-protection/pensions-taken-before/:protectionType/:status               controllers.AmendsController.amendPensionsTakenBefore(protectionType, status)
+POST        /amend-protection/pensions-taken-before                                       controllers.AmendsController.submitAmendPensionsTakenBefore
+GET         /amend-protection/pensions-taken-between/:protectionType/:status              controllers.AmendsController.amendPensionsTakenBetween(protectionType, status)
+POST        /amend-protection/pensions-taken-between                                      controllers.AmendsController.submitAmendPensionsTakenBetween
+GET         /amend-protection/overseas-pensions/:protectionType/:status                   controllers.AmendsController.amendOverseasPensions(protectionType, status)
+POST        /amend-protection/overseas-pensions                                           controllers.AmendsController.submitAmendOverseasPensions
+GET         /amend-protection/current-pensions/:protectionType/:status                    controllers.AmendsController.amendCurrentPensions(protectionType, status)
+POST        /amend-protection/current-pensions                                            controllers.AmendsController.submitAmendCurrentPension
+GET         /amend-protection/pension-sharing-order/:protectionType/:status               controllers.AmendsController.amendPsoDetails(protectionType, status)
+POST        /amend-protection/pension-sharing-order                                       controllers.AmendsController.submitAmendPsoDetails
+GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status        controllers.AmendsController.removePso(protectionType, status)
+POST        /amend-protection/pension-sharing-order/remove                                controllers.AmendsController.submitRemovePso
 
-POST        /amend-protection/submit-amendment                                          controllers.AmendsController.amendProtection
+POST        /amend-protection/submit-amendment                                            controllers.AmendsController.amendProtection
 
-GET         /amend-protection/amendment-outcome                                         controllers.AmendsController.amendmentOutcome
-GET         /amend-protection/:protectionType/:status                                   controllers.AmendsController.amendsSummary(protectionType, status)
+GET         /amend-protection/amendment-outcome                                           controllers.AmendsController.amendmentOutcome
+GET         /amend-protection/:protectionType/:status                                     controllers.AmendsController.amendsSummary(protectionType, status)
 
 #PSA Lookup routes
-GET         /psalookup                                          controllers.LookupController.displayLookupForm
-POST        /psalookup                                          controllers.LookupController.submitLookupRequest
-GET         /psalookup/results                                  controllers.LookupController.displayLookupResults
+GET         /psalookup/pnn                                                                controllers.LookupController.displayProtectionNotificationNoForm
+POST        /psalookup/pnn                                                                controllers.LookupController.submitProtectionNotificationNoForm
+
+GET         /psalookup/psaref                                                             controllers.LookupController.displaySchemeAdministratorReferenceForm
+POST        /psalookup/psaref                                                             controllers.LookupController.submitSchemeAdministratorReferenceForm
+
+GET         /psalookup/results                                                            controllers.LookupController.displayLookupResults
+GET         /psalookup/results/clear                                                      controllers.LookupController.redirectToStart
 
 #Feedback routes
-GET         /exit                                               controllers.ExitSurveyController.exitSurvey
+GET         /exit                                                                         controllers.ExitSurveyController.exitSurvey

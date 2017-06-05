@@ -18,7 +18,9 @@ package models
 
 import play.api.libs.json.Json
 
-case class PSALookupRequest(pensionSchemeAdministratorCheckReference: String, lifetimeAllowanceReference: String)
+case class PSALookupRequest(var pensionSchemeAdministratorCheckReference: String) {
+  pensionSchemeAdministratorCheckReference = pensionSchemeAdministratorCheckReference.toUpperCase
+}
 
 object PSALookupRequest {
   implicit val format = Json.format[PSALookupRequest]
