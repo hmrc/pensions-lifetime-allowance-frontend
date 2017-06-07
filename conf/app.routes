@@ -97,6 +97,7 @@ POST        /psalookup/psaref                                                   
 
 GET         /psalookup/results                                                            controllers.LookupController.displayLookupResults
 GET         /psalookup/results/clear                                                      controllers.LookupController.redirectToStart
+GET         /psalookup/results/print                                                      controllers.LookupController.printPDF
 
 #Feedback routes
 GET         /exit                                                                         controllers.ExitSurveyController.exitSurvey

@@ -731,3 +731,9 @@ psa.lookup.results.ltatype.6 = FIXED PROTECTION
 psa.lookup.results.ltatype.7 = FIXED PROTECTION 2014
 
 psa.lookup.results.back = Back
+
+psa.lookup.results.title.print.1 = Results of lifetime allowance
+psa.lookup.results.title.print.2 = protection check
+psa.lookup.results.copyright.print = © Crown Copyright
+psa.lookup.results.header.gov.uk = GOV.UK
+psa.lookup.results.logo.text.print = HM Revenue & Customs
