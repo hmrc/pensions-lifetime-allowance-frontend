@@ -17,7 +17,7 @@
 package controllers
 
 import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalTime}
+import java.time.{LocalDate, LocalTime, ZoneId}
 
 import connectors.{KeyStoreConnector, PLAConnector, PdfGeneratorConnector}
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
@@ -141,6 +141,6 @@ trait LookupController extends FrontendController {
       }
   }
 
-  def buildTimestamp: String = s"${LocalDate.now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))} at ${LocalTime.now.format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
+  def buildTimestamp: String = s"${LocalDate.now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))} at ${LocalTime.now(ZoneId.of("Europe/London")).format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
 
 }
