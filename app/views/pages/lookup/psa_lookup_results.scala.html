@@ -1,10 +1,6 @@
-@import java.time.format.DateTimeFormatter
-@import java.time.LocalDate
-@import java.time.LocalTime
-
 @import play.api.Application
 
-@(lookupResult: PSALookupResult)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
@@ -76,10 +72,15 @@
             }
             <tr>
                 <td class="font-small">@Messages("psa.lookup.results.table.row.6")</td>
-                <td class="font-small">@LocalDate.now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-                    at @LocalTime.now.format(DateTimeFormatter.ofPattern("HH:mm:ss")) </td>
+                <td class="font-small">@timestamp</td>
             </tr>
         </tbody>
     </table>
-    <a class="button" role="button" href="@routes.LookupController.redirectToStart()">@Messages("psa.lookup.form.startover.button")</a>
+
+    <div>
+        <a class="button button--secondary" role="button" href="@routes.LookupController.printPDF()">Save as PDF</a>
+        <br>
+        <br>
+        <a class="button button--get-started" role="button" href="@routes.LookupController.redirectToStart()">@Messages("psa.lookup.form.startover.button")</a>
+    </div>
 }

@@ -16,7 +16,10 @@
 
 package controllers
 
-import connectors.{KeyStoreConnector, PLAConnector}
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalTime}
+
+import connectors.{KeyStoreConnector, PLAConnector, PdfGeneratorConnector}
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Play.current
@@ -34,6 +37,7 @@ import scala.concurrent.Future
 object LookupController extends LookupController {
   val keyStoreConnector = KeyStoreConnector
   val plaConnector = PLAConnector
+  val pdfGeneratorConnector: PdfGeneratorConnector = PdfGeneratorConnector
 
   val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
   val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
@@ -42,6 +46,7 @@ object LookupController extends LookupController {
 
   val lookupRequestID = "psa-lookup-request"
   val lookupResultID = "psa-lookup-result"
+
 }
 
 trait LookupController extends FrontendController {
@@ -50,6 +55,7 @@ trait LookupController extends FrontendController {
 
   val keyStoreConnector: KeyStoreConnector
   val plaConnector: PLAConnector
+  val pdfGeneratorConnector: PdfGeneratorConnector
 
   val psaRefForm: Form[String]
   val pnnForm: Form[String]
@@ -111,17 +117,30 @@ trait LookupController extends FrontendController {
 
   def displayLookupResults: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     keyStoreConnector.fetchAndGetFormData[PSALookupResult](lookupResultID).map {
-      case Some(result) => Ok(psa_lookup_results(result))
+      case Some(result) => Ok(psa_lookup_results(result, buildTimestamp))
       case None => Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm())
     }
   }
 
   def redirectToStart: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
-    keyStoreConnector.remove.map {
-      result => result.status match {
-        case NO_CONTENT => Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm())
-      }
+    keyStoreConnector.remove.map { _ => Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm())
     }
   }
+
+  def printPDF: Action[AnyContent] = ActionWithSessionId.async {
+    implicit request =>
+      keyStoreConnector.fetchAndGetFormData[PSALookupResult](lookupResultID).flatMap {
+        case Some(result) =>
+          val printPage = psa_lookup_print(result, buildTimestamp).toString
+          pdfGeneratorConnector.generatePdf(printPage).map {
+            response =>
+              Ok(response.bodyAsBytes.toArray).as("application/pdf")
+                .withHeaders("Content-Disposition" ->
+                  s"attachment; filename=lookup-result-${result.protectionNotificationNumber.getOrElse("")}.pdf")
+          }
+      }
+  }
+
+  def buildTimestamp: String = s"${LocalDate.now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))} at ${LocalTime.now.format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
 
 }

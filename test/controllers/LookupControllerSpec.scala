@@ -16,7 +16,7 @@
 
 package controllers
 
-import connectors.{KeyStoreConnector, PLAConnector}
+import connectors.{KeyStoreConnector, PLAConnector, PdfGeneratorConnector}
 import controllers.LookupController.pnnForm
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
 import models.{PSALookupRequest, PSALookupResult}
@@ -49,12 +49,14 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
   private val mockKeyStoreConnector = mock[KeyStoreConnector]
   private val mockPLAConnector = mock[PLAConnector]
+  private val mockPDFConnector = mock[PdfGeneratorConnector]
 
   private val sessionId = SessionKeys.sessionId -> "lookup-test"
 
   object TestController extends LookupController {
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
     override val plaConnector: PLAConnector = mockPLAConnector
+    override val pdfGeneratorConnector: PdfGeneratorConnector = mockPDFConnector
 
     val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
     val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
