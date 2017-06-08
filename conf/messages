@@ -731,6 +731,7 @@ psa.lookup.results.ltatype.6 = FIXED PROTECTION
 psa.lookup.results.ltatype.7 = FIXED PROTECTION 2014
 
 psa.lookup.results.back = Back
+psa.lookup.results.save = Save a PDF
 
 psa.lookup.results.title.print.1 = Results of lifetime allowance
 psa.lookup.results.title.print.2 = protection check
