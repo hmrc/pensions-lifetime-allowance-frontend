@@ -1,0 +1,5 @@
+@(url: String)(implicit messages: play.api.i18n.Messages)
+ga('send', {
+    hitType: 'pageview',
+    page: @url
+    });
