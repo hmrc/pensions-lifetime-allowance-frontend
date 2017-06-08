@@ -6,6 +6,10 @@
     Application.instanceCache[PlaLanguageController].apply(application)
 }
 
+@scriptElement = {
+    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/psaLookup.js")'></script>
+}
+
 @views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
     @language_selection(lc.languageMap, lc.langToCall, None)
 
