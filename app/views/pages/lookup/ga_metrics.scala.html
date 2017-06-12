@@ -1,0 +1,18 @@
+@(protectionStatus: Int)(implicit messages: play.api.i18n.Messages)
+@import config.FrontendAppConfig._
+
+@metric = {
+    @protectionStatus match {
+        case 0 => {
+            @invalidStatusMetric
+        }
+        case 1 => {
+            @validStatusMetric
+        }
+        case _ => {
+            @notFoundStatusMetric
+        }
+    }
+}.mkString
+
+    ga('set', @metric, '1');

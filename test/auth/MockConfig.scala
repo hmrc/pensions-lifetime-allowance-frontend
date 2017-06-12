@@ -42,4 +42,7 @@ object MockConfig extends AppConfig {
   override val ggSignInUrl: String = "/gg/sign-in"
   override val ptaFrontendUrl: String = ""
   override val feedbackSurvey: String = "http://localhost:9514/feedback-survey/?origin=PLA"
+  override val validStatusMetric: String = ""
+  override val invalidStatusMetric: String = ""
+  override val notFoundStatusMetric: String = ""
 }
