@@ -1,4 +1,5 @@
 @import play.api.Application
+@import config.FrontendAppConfig._
 
 @(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
 
@@ -6,7 +7,15 @@
     Application.instanceCache[PlaLanguageController].apply(application)
 }
 
-@gaCode = {Seq(@gaTrackingCode(request.uri), @ga_metrics(lookupResult.psaCheckResult))}
+@gaCode = {
+@if(lookupResult.psaCheckResult == 0) {
+    Seq(ga_metrics(request.uri, invalidStatusMetric)
+} else {
+    Seq(ga_metrics(request.uri, validStatusMetric)
+}
+}
+
+
 
 @views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
     @language_selection(lc.languageMap, lc.langToCall, None)

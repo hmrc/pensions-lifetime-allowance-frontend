@@ -1,5 +1,6 @@
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import config.FrontendAppConfig._
 
 @(psaRefForm: Form[String])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
 
@@ -7,7 +8,13 @@
     Application.instanceCache[PlaLanguageController].apply(application)
 }
 
-@gaCode = {@gaTrackingCode(request.uri)}
+@gaCode = {
+@if(psaRefForm.errors.contains(FormError(" ", "psa.lookup.form.not-found"))) {
+   Seq(ga_metric(request.uri, notFoundStatusMetric))
+} else {
+    Seq(gaTrackingCode(request.uri))
+}
+}
 
 @views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
     @language_selection(lc.languageMap, lc.langToCall, None)

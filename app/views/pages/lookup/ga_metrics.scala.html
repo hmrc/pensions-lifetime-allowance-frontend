@@ -1,18 +1,7 @@
-@(protectionStatus: Int)(implicit messages: play.api.i18n.Messages)
-@import config.FrontendAppConfig._
+@(url: String, metric: String)(implicit messages: play.api.i18n.Messages)
 
-@metric = {
-    @protectionStatus match {
-        case 0 => {
-            @invalidStatusMetric
-        }
-        case 1 => {
-            @validStatusMetric
-        }
-        case _ => {
-            @notFoundStatusMetric
-        }
-    }
-}.mkString
-
-    ga('set', @metric, '1');
+ga('send', {
+    hitType: 'pageview',
+    page: @url,
+    @metric: 1
+});
