@@ -17,6 +17,7 @@
 package config
 
 import com.typesafe.config.Config
+import controllers.BaseController
 import net.ceedubs.ficus.Ficus._
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
@@ -32,7 +33,7 @@ import uk.gov.hmrc.play.http.logging.filters.FrontendLoggingFilter
 import utils.SessionIdFilter
 
 object FrontendGlobal
-  extends DefaultFrontendGlobal {
+  extends DefaultFrontendGlobal with BaseController{
 
   override val auditConnector = FrontendAuditConnector
   override val loggingFilter = LoggingFilter

@@ -38,7 +38,7 @@ object ExitSurveyController extends ExitSurveyController {
     override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 }
 
-trait ExitSurveyController extends FrontendController with AuthorisedForPLA{
+trait ExitSurveyController extends BaseController with AuthorisedForPLA{
 
     val exitSurvey = AuthorisedByAny.async { implicit user => implicit request =>
       Future.successful(Ok(pages.exitSurvey.exitSurvey(exitSurveyForm)))

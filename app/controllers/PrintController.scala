@@ -38,7 +38,7 @@ object PrintController extends PrintController {
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ip14StartUrl
 }
 
-trait PrintController extends FrontendController with AuthorisedForPLA {
+trait PrintController extends BaseController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
   val citizenDetailsConnector: CitizenDetailsConnector

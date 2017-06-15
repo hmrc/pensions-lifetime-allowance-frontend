@@ -16,22 +16,8 @@
 
 package controllers
 
-import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
-import scala.concurrent.Future
-import models._
 
-import views.html._
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
-
-object TimeoutController extends TimeoutController {
-}
-
-trait TimeoutController extends BaseController {
-
-  val timeout = Action.async { implicit request =>
-    Future.successful(Ok(views.html.pages.timeout()))
-  }
+trait BaseController extends FrontendController {
+  implicit val context = config.PlaContextImpl
 }

@@ -1,5 +1,5 @@
 
-@(pType: String)(implicit request: Request[_], messages: Messages, lang: Lang)
+@(pType: String)(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext)
 
 @restartTarget = @{
     pType match {

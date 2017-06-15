@@ -5,7 +5,7 @@
 @import controllers.PlaLanguageController
 @import play.api.Application
 
-@(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+@(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 

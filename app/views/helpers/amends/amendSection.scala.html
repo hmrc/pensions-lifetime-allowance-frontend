@@ -1,6 +1,6 @@
 @import models.AmendDisplaySectionModel
 
-@(model: AmendDisplaySectionModel, protectionType: String)(implicit messages: Messages, lang: Lang)
+@(model: AmendDisplaySectionModel, protectionType: String)(implicit messages: Messages, lang: Lang, context: config.PlaContext)
 
 
 @model.rows.headOption.map { firstRow =>

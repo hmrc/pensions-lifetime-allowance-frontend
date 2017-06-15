@@ -45,7 +45,7 @@ object ResultController extends ResultController with ServicesConfig {
   override val responseConstructors = ResponseConstructors
 }
 
-trait ResultController extends FrontendController with AuthorisedForPLA {
+trait ResultController extends BaseController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
   val plaConnector: PLAConnector

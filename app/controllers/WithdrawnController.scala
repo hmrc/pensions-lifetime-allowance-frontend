@@ -27,7 +27,7 @@ import play.api.Play.current
 
 object WithdrawnController extends WithdrawnController
 
-trait WithdrawnController extends FrontendController {
+trait WithdrawnController extends BaseController {
   def showWithdrawn(): Action[AnyContent] = ActionWithMdc.async { implicit request =>
     Future.successful(Ok(views.html.pages.ip2014.withdrawn()))
   }

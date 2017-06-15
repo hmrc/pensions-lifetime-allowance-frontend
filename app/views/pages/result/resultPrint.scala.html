@@ -1,7 +1,7 @@
 @import models.PrintDisplayModel
 @import play.api.i18n._
 
-@(model: PrintDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang)
+@(model: PrintDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext)
 
 <!DOCTYPE html>
 <html lang="en">

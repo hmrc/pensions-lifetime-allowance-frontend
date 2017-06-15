@@ -20,7 +20,7 @@
 @import play.api.Application
 
 @(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], messages: Messages, formPartialRetriever: FormPartialRetriever,
-  partialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang, application: Application)
+  partialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang, application: Application, context: config.PlaContext)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 

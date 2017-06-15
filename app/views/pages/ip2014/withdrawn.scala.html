@@ -1,4 +1,4 @@
-@()(implicit request: Request[_], messages: Messages, lang: Lang)
+@()(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext)
 
 @views.html.main_template(title = Messages("pla.withdrawn.title"), bodyClasses = None) {
 <h1 class="heading-large" id="pageHeading">@Messages("pla.withdrawn.pageHeading")</h1>

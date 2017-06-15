@@ -16,6 +16,7 @@
 
 package auth
 
+import controllers.BaseController
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 import scala.concurrent.Future
@@ -29,7 +30,7 @@ object AuthTestController extends AuthTestController {
   override lazy val postSignInRedirectUrl = applicationConfig.confirmFPUrl
 }
 
-trait AuthTestController extends FrontendController with AuthorisedForPLA {
+trait AuthTestController extends BaseController with AuthorisedForPLA {
 
   val authorisedAsyncAction = AuthorisedByAny.async {
     implicit user =>  implicit request => Future.successful(Ok(views.html.pages.confirmation.confirmFP()))

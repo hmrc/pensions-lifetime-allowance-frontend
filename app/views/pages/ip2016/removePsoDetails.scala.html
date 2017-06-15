@@ -2,7 +2,7 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
 
-@()(implicit request: Request[_], messages: Messages, lang: Lang)
+@()(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext)
 
 @main_template(title = Messages("pla.psoDetails.title"), scriptElem=None, bodyClasses = None) {
 

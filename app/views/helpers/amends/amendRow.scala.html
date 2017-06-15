@@ -1,7 +1,7 @@
 @import models.AmendDisplayRowModel
 @import controllers.PlaLanguageController
 
-@(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean)(implicit messages: Messages)
+@(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean)(implicit messages: Messages, context: config.PlaContext)
 
 
 <tr>

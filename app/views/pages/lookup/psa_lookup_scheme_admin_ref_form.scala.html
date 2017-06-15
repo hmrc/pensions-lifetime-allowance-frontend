@@ -1,7 +1,7 @@
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
-@(psaRefForm: Form[String])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+@(psaRefForm: Form[String])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)

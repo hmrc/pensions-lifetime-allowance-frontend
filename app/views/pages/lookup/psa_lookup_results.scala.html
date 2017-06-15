@@ -1,6 +1,6 @@
 @import play.api.Application
 
-@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)

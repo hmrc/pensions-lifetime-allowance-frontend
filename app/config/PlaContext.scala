@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package controllers
+package config
 
-import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
+import uk.gov.hmrc.play.http.HeaderCarrier
 import scala.concurrent.Future
-import models._
 
-import views.html._
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
-
-object TimeoutController extends TimeoutController {
+trait PlaContext {
+  def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String]
 }
 
-trait TimeoutController extends BaseController {
-
-  val timeout = Action.async { implicit request =>
-    Future.successful(Ok(views.html.pages.timeout()))
-  }
+case object PlaContextImpl extends PlaContext {
+  override def getPageHelpPartial()(implicit hc: HeaderCarrier): Future[String] = ContactFrontendConnector.getHelpPartial
 }

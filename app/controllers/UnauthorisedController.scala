@@ -29,7 +29,7 @@ object UnauthorisedController extends UnauthorisedController {
 	override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
 }
 
-trait UnauthorisedController extends FrontendController {
+trait UnauthorisedController extends BaseController {
 
   val identityVerificationConnector: IdentityVerificationConnector
 
