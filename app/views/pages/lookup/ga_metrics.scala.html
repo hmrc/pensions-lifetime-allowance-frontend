@@ -1,7 +1,8 @@
 @(url: String, metric: String)(implicit messages: play.api.i18n.Messages)
 
+ga('set', '@metric', 1 );
+
 ga('send', {
     hitType: 'pageview',
-    page: @url,
-    @metric: 1
+    page: @url
 });
