@@ -55,7 +55,7 @@ object AmendsController extends AmendsController {
   override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 }
 
-trait AmendsController extends FrontendController with AuthorisedForPLA {
+trait AmendsController extends BaseController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
   val displayConstructors: DisplayConstructors

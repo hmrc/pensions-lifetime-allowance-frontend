@@ -49,7 +49,7 @@ object LookupController extends LookupController {
 
 }
 
-trait LookupController extends FrontendController {
+trait LookupController extends BaseController {
 
   implicit val anyContentBodyParser: BodyParser[AnyContent] = parse.anyContent
 

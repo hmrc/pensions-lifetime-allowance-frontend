@@ -41,7 +41,7 @@ object SummaryController extends SummaryController {
   // $COVERAGE-ON$
 }
 
-trait SummaryController extends FrontendController with AuthorisedForPLA {
+trait SummaryController extends BaseController with AuthorisedForPLA {
 
   val keyStoreConnector : KeyStoreConnector
   val summaryConstructor: SummaryConstructor

@@ -36,7 +36,7 @@ object ConfirmationController extends ConfirmationController {
   override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
 }
 
-trait ConfirmationController extends FrontendController with AuthorisedForPLA {
+trait ConfirmationController extends BaseController with AuthorisedForPLA {
 
   val confirmFP = AuthorisedByAny.async {
     implicit user => implicit request => Future.successful(Ok(confirmation.confirmFP()))

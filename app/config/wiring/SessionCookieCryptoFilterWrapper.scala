@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package controllers
+package config.wiring
 
-import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
-import scala.concurrent.Future
-import models._
+import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 
-import views.html._
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
-
-object TimeoutController extends TimeoutController {
-}
-
-trait TimeoutController extends BaseController {
-
-  val timeout = Action.async { implicit request =>
-    Future.successful(Ok(views.html.pages.timeout()))
+trait SessionCookieCryptoFilterWrapper {
+  def encryptCookieString(cookie: String) : String = {
+    SessionCookieCryptoFilter.encrypt(cookie)
   }
 }

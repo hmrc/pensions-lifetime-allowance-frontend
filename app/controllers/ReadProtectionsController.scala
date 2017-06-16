@@ -49,7 +49,7 @@ object ReadProtectionsController extends ReadProtectionsController with Services
   override val responseConstructors = ResponseConstructors
 }
 
-trait ReadProtectionsController extends FrontendController with AuthorisedForPLA {
+trait ReadProtectionsController extends BaseController with AuthorisedForPLA {
 
   val keyStoreConnector: KeyStoreConnector
   val plaConnector : PLAConnector

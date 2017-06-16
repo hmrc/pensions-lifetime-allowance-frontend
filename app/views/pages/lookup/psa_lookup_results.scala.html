@@ -1,7 +1,7 @@
 @import play.api.Application
 @import config.FrontendAppConfig._
 
-@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application)
+@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)

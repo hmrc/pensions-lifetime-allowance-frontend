@@ -14,24 +14,13 @@
  * limitations under the License.
  */
 
-package controllers
+package config.wiring
 
-import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
-import scala.concurrent.Future
-import models._
+import uk.gov.hmrc.play.audit.http.HttpAuditing
+import uk.gov.hmrc.play.config.{AppName, RunMode}
+import uk.gov.hmrc.play.http.ws.{WSGet, WSPut, WSPost, WSDelete}
 
-import views.html._
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
-
-object TimeoutController extends TimeoutController {
-}
-
-trait TimeoutController extends BaseController {
-
-  val timeout = Action.async { implicit request =>
-    Future.successful(Ok(views.html.pages.timeout()))
-  }
+object WSHttp extends WSGet with WSPut with WSPost with WSDelete with AppName with HttpAuditing with RunMode {
+  override val auditConnector = config.FrontendAuditConnector
+  override val hooks = Seq(AuditingHook)
 }

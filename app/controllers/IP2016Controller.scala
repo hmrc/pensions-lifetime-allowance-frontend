@@ -50,7 +50,7 @@ object IP2016Controller extends IP2016Controller {
     override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 }
 
-trait IP2016Controller extends FrontendController with AuthorisedForPLA {
+trait IP2016Controller extends BaseController with AuthorisedForPLA {
 
     val keyStoreConnector: KeyStoreConnector
 
