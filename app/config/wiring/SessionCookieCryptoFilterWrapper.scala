@@ -1,4 +1,4 @@
-@*
+/*
  * Copyright 2017 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,15 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *@
+ */
 
-@import uk.gov.hmrc.play.http.HeaderCarrier
-@import scala.concurrent.Await
-@import scala.concurrent.duration._
-@import config.{PlaContext}
+package config.wiring
 
-@(supportLinkEnabled: Boolean)(implicit request: Request[_], context: PlaContext, messages : Messages)
+import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
 
-@if(supportLinkEnabled) {
-    @Html(Await.result(context.getPageHelpPartial()(HeaderCarrier.fromHeadersAndSession(request.headers)), 5 seconds))
+trait SessionCookieCryptoFilterWrapper {
+  def encryptCookieString(cookie: String) : String = {
+    SessionCookieCryptoFilter.encrypt(cookie)
+  }
 }

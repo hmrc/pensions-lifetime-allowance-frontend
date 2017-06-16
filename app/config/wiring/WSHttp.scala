@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package config
+package config.wiring
 
-import play.api.i18n.Messages
+import uk.gov.hmrc.play.audit.http.HttpAuditing
+import uk.gov.hmrc.play.config.{AppName, RunMode}
+import uk.gov.hmrc.play.http.ws.{WSGet, WSPut, WSPost, WSDelete}
 
-import uk.gov.hmrc.play.config.ServicesConfig
-
-trait PlaContext {
-  def getPageHelpPartial()(messages: Messages): String
-}
-
-case object PlaContextImpl extends PlaContext with ServicesConfig{
-  override def getPageHelpPartial()(messages: Messages): String = s"${baseUrl("contact-frontend")}/contact/problem_reports"
+object WSHttp extends WSGet with WSPut with WSPost with WSDelete with AppName with HttpAuditing with RunMode {
+  override val auditConnector = config.FrontendAuditConnector
+  override val hooks = Seq(AuditingHook)
 }

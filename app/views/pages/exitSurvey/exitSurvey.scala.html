@@ -3,7 +3,7 @@
 @import helpers.templates.{formHiddenYesNoRadioExitSurvey,exitSurveyInputRadio,checkbox}
 @import play.api.data._
 
-@(exitSurveyForm: Form[ExitSurveyModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext)
+@(exitSurveyForm: Form[ExitSurveyModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @hiddenYesNoContent = {
 

@@ -16,8 +16,11 @@
 
 package controllers
 
+import config.wiring.PlaFormPartialRetriever
 import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 trait BaseController extends FrontendController {
   implicit val context = config.PlaContextImpl
+  implicit val partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = PlaFormPartialRetriever
 }

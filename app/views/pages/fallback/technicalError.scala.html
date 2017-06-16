@@ -1,5 +1,5 @@
 
-@(pType: String)(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext)
+@(pType: String)(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @restartTarget = @{
     pType match {

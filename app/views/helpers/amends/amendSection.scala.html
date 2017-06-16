@@ -1,6 +1,6 @@
 @import models.AmendDisplaySectionModel
 
-@(model: AmendDisplaySectionModel, protectionType: String)(implicit messages: Messages, lang: Lang, context: config.PlaContext)
+@(model: AmendDisplaySectionModel, protectionType: String)(implicit messages: Messages, lang: Lang, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 
 @model.rows.headOption.map { firstRow =>

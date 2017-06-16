@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package config
+package config.wiring
 
-import play.api.i18n.Messages
+import uk.gov.hmrc.play.http.HttpGet
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-import uk.gov.hmrc.play.config.ServicesConfig
-
-trait PlaContext {
-  def getPageHelpPartial()(messages: Messages): String
-}
-
-case object PlaContextImpl extends PlaContext with ServicesConfig{
-  override def getPageHelpPartial()(messages: Messages): String = s"${baseUrl("contact-frontend")}/contact/problem_reports"
+object PlaFormPartialRetriever extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
+  override def httpGet: HttpGet = WSHttp
+  override val crypto = encryptCookieString _
 }

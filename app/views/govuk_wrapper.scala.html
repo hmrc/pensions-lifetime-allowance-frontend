@@ -10,7 +10,7 @@
   scriptElem: Option[Html] = None,
   showLogout: Boolean = true,
   gaCode: Seq[String] = Seq.empty
-  )(implicit request: Request[_], messages: Messages, context: config.PlaContext)
+  )(implicit request: Request[_], messages: Messages, context: config.PlaContext, FormPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import layouts.{govuk_template => hmrcGovUkTemplate}
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
@@ -75,7 +75,7 @@
 }
 
 @getHelpForm = {
-@includes.report_problem(true)
+      @FormPartialRetriever.getPartialContent(context.getPageHelpPartial()(messages))
 }
 
 @content = {

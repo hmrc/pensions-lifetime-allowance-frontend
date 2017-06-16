@@ -4,7 +4,7 @@
   bodyClasses: Option[String] = None,
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
-  showLogout: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, context: config.PlaContext)
+  showLogout: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @import uk.gov.hmrc.play.views.html.layouts
 
