@@ -9,9 +9,9 @@
 
 @gaCode = {
 @if(lookupResult.psaCheckResult == 0) {
-    Seq(ga_metrics(request.uri, invalidStatusMetric)
+    @ga_metrics(request.uri, invalidStatusMetric)
 } else {
-    Seq(ga_metrics(request.uri, validStatusMetric)
+    @ga_metrics(request.uri, validStatusMetric)
 }
 }
 
