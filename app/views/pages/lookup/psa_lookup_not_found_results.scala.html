@@ -12,7 +12,6 @@
     @language_selection(lc.languageMap, lc.langToCall, None)
 
     <h1>@Messages("psa.lookup.not-found.results.title")</h1>
-    <h2>@Messages("psa.lookup.not-found.results.title.2")</h2>
 
     <table>
         <tbody>
@@ -27,6 +26,14 @@
         </tbody>
     </table>
     <p>@Messages("psa.lookup.not-found.results.detail")</p>
+
+    <p>@Messages("psa.lookup.not-found.results.possible-causes")</p>
+    <ul class="bullets">
+        <li>@Messages("psa.lookup.not-found.results.possible-causes.bullet1")</li>
+        <li>@Messages("psa.lookup.not-found.results.possible-causes.bullet2")</li>
+    </ul>
+    <p>@Messages("psa.lookup.not-found.results.suggested-resolution")</p>
+
     <br>
 
     <a class="button" href=@routes.LookupController.redirectToStart()>@Messages("psa.lookup.not-found.results.table.try-again")</a>
