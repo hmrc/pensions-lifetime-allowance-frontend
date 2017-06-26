@@ -22,8 +22,12 @@
             </tr>
             <tr>
                 <td class="font-small">@Messages("psa.lookup.not-found.results.table.row.2")</td>
-                <td class="font-small">@lookupRequest.pensionSchemeAdministratorCheckReference</td>
+                <td class="font-small">@lookupRequest.lifetimeAllowanceReference.get</td>
             </tr>
         </tbody>
     </table>
+    <p>@Messages("psa.lookup.not-found.results.detail")</p>
+    <br>
+
+    <a class="button" href=@routes.LookupController.redirectToStart()>@Messages("psa.lookup.not-found.results.table.try-again")</a>
 }

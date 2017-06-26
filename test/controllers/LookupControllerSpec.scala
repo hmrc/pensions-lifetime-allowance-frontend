@@ -61,8 +61,6 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
     val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
     val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
 
-    val notFoundLookupForm: Form[String] = pnnForm.copy(errors = Seq(FormError(" ", "psa.lookup.form.not-found")))
-
     val lookupRequestID = "psa-lookup-request"
     val lookupResultID = "psa-lookup-result"
   }

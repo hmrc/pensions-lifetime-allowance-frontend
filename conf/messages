@@ -692,8 +692,8 @@ pla.withdrawn.pageHeading                   = Sorry, applications for 2014 prote
 pla.withdrawn.paraOne                       = You can still <a href="{0}">view existing applications</a>.
 
 ## PSA Lookup form
-psa.lookup.form.scheme-admin-ref-form.title = What''s the Scheme Administrator Reference?
-psa.lookup.form.protection-notification-no-form.title = What''s the Protection Notification Number?
+psa.lookup.form.scheme-admin-ref-form.title = Enter the Scheme Administrator Reference
+psa.lookup.form.protection-notification-no-form.title = Enter the Protection Notification Number
 psa.lookup.form.continue.button = Continue
 psa.lookup.form.startover.button = Start over
 
@@ -714,8 +714,8 @@ psa.lookup.results.title = Results of lifetime allowance protection check
 psa.lookup.results.table.title = PSA Lookup Details
 psa.lookup.results.table.header.1 = Field
 psa.lookup.results.table.header.2 = Value
-psa.lookup.results.table.row.1 = PSA Reference:
-psa.lookup.results.table.row.2 = PN Number:
+psa.lookup.results.table.row.1 = Scheme Administrator Reference:
+psa.lookup.results.table.row.2 = Protection Notification Number:
 psa.lookup.results.table.row.3 = Protection Type:
 psa.lookup.results.table.row.4 = Protected Amount:
 psa.lookup.results.table.row.5 = Status:
@@ -739,7 +739,9 @@ psa.lookup.results.copyright.print = © Crown Copyright
 psa.lookup.results.header.gov.uk = GOV.UK
 psa.lookup.results.logo.text.print = HM Revenue & Customs
 
-psa.lookup.not-found.results.title = These references don't match
+psa.lookup.not-found.results.title = These references don''t match
 psa.lookup.not-found.results.title.2 = You entered:
-psa.lookup.not-found.results.table.row.1 = PSA Reference:
-psa.lookup.not-found.results.table.row.2 = PNN:
+psa.lookup.not-found.results.table.row.1 = Scheme Administrator Reference:
+psa.lookup.not-found.results.table.row.2 = Protection Notification Number:
+psa.lookup.not-found.results.detail = These references don''t match an existing protection certificate
+psa.lookup.not-found.results.table.try-again = Try again

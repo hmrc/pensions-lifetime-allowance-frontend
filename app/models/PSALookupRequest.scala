@@ -24,6 +24,6 @@ abstract case class PSALookupRequest(pensionSchemeAdministratorCheckReference: S
 object PSALookupRequest {
   implicit val format = Json.format[PSALookupRequest]
 
-  def apply(_i: String, _o: Option[String] = None): PSALookupRequest =
-    new PSALookupRequest(_i.toUpperCase, _o.map(_.toUpperCase)) {}
+  def apply(pensionSchemeAdministratorCheckReference: String, lifetimeAllowanceReference: Option[String] = None): PSALookupRequest =
+    new PSALookupRequest(pensionSchemeAdministratorCheckReference.toUpperCase, lifetimeAllowanceReference.map(_.toUpperCase)) {}
 }
