@@ -89,12 +89,13 @@ GET         /amend-protection/amendment-outcome                                 
 GET         /amend-protection/:protectionType/:status                                     controllers.AmendsController.amendsSummary(protectionType, status)
 
 #PSA Lookup routes
-GET         /psalookup/pnn                                                                controllers.LookupController.displayProtectionNotificationNoForm
-POST        /psalookup/pnn                                                                controllers.LookupController.submitProtectionNotificationNoForm
+GET         /psalookup/protection-notification-number                                     controllers.LookupController.displayProtectionNotificationNoForm
+POST        /psalookup/protection-notification-number                                     controllers.LookupController.submitProtectionNotificationNoForm
 
-GET         /psalookup/psaref                                                             controllers.LookupController.displaySchemeAdministratorReferenceForm
-POST        /psalookup/psaref                                                             controllers.LookupController.submitSchemeAdministratorReferenceForm
+GET         /psalookup/scheme-administrator-reference                                     controllers.LookupController.displaySchemeAdministratorReferenceForm
+POST        /psalookup/scheme-administrator-reference                                     controllers.LookupController.submitSchemeAdministratorReferenceForm
 
+GET         /psalookup/not-found-results                                                  controllers.LookupController.displayNotFoundResults
 GET         /psalookup/results                                                            controllers.LookupController.displayLookupResults
 GET         /psalookup/results/clear                                                      controllers.LookupController.redirectToStart
 GET         /psalookup/results/print                                                      controllers.LookupController.printPDF

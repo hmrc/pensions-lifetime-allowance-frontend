@@ -61,8 +61,6 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
     val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
     val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
 
-    val notFoundLookupForm: Form[String] = pnnForm.copy(errors = Seq(FormError(" ", "psa.lookup.form.not-found")))
-
     val lookupRequestID = "psa-lookup-request"
     val lookupResultID = "psa-lookup-result"
   }
@@ -100,6 +98,13 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
       |  "protectedAmount": 25000,
       |  "protectionNotificationNumber": "IP14000000000A"
       |}""".stripMargin)
+
+  private val psaRequestJson = Json.parse(
+    """{
+      | "pensionSchemeAdministratorCheckReference": "PSA12345678A",
+      | "lifetimeAllowanceReference": "IP14000000000A"
+      | }""".stripMargin
+  )
 
   private val cacheData: Map[String, JsValue] = Map(
     "pensionSchemeAdministratorCheckReference" -> JsString(""),
@@ -204,6 +209,26 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
     "redirect when no result data is stored on results page" in {
       val request = FakeRequest().withSession(sessionId)
       keystoreFetchCondition[PSALookupResult](None)
+
+      val result = TestController.displayLookupResults.apply(request)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).get mustBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+    }
+
+    "return 200 with correct message on not found results page" in {
+      val request = FakeRequest().withSession(sessionId)
+      keystoreFetchCondition[PSALookupRequest](Some(Json.fromJson[PSALookupRequest](psaRequestJson).get))
+
+      val result = TestController.displayNotFoundResults.apply(request)
+
+      status(result) mustBe OK
+      contentAsString(result) must include(Messages("psa.lookup.not-found.results.table.try-again"))
+    }
+
+    "redirect when no result data is stored on not found results page" in {
+      val request = FakeRequest().withSession(sessionId)
+      keystoreFetchCondition[PSALookupRequest](None)
 
       val result = TestController.displayLookupResults.apply(request)
 
