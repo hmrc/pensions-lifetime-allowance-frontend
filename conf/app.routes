@@ -95,6 +95,7 @@ POST        /psalookup/pnn                                                      
 GET         /psalookup/psaref                                                             controllers.LookupController.displaySchemeAdministratorReferenceForm
 POST        /psalookup/psaref                                                             controllers.LookupController.submitSchemeAdministratorReferenceForm
 
+GET         /psalookup/not-found-results                                                  controllers.LookupController.displayNotFoundResults
 GET         /psalookup/results                                                            controllers.LookupController.displayLookupResults
 GET         /psalookup/results/clear                                                      controllers.LookupController.redirectToStart
 GET         /psalookup/results/print                                                      controllers.LookupController.printPDF

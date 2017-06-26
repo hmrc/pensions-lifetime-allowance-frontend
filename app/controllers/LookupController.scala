@@ -67,7 +67,7 @@ trait LookupController extends BaseController {
 
   def displaySchemeAdministratorReferenceForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-      case Some(PSALookupRequest(psaRef)) => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
+      case Some(PSALookupRequest(psaRef, _)) => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
       case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
     }
   }
@@ -95,24 +95,29 @@ trait LookupController extends BaseController {
       formWithErrors => Future.successful(BadRequest(psa_lookup_protection_notification_no_form(formWithErrors))),
       validFormData => {
         keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-          case Some(PSALookupRequest(psaRef)) =>
+          case Some(PSALookupRequest(psaRef, _)) =>
             val pnn = validFormData.toUpperCase
             plaConnector.psaLookup(psaRef, pnn).flatMap {
               result =>
-                result.status match {
-                  case OK =>
-                    val resultData = Json.fromJson[PSALookupResult](result.json).get
-                    val updatedResult = resultData.copy(protectionNotificationNumber = Some(pnn))
-                    keyStoreConnector.saveFormData[PSALookupResult](lookupResultID, updatedResult).map {
-                      _ => Redirect(routes.LookupController.displayLookupResults())
-                    }
+                val resultData = Json.fromJson[PSALookupResult](result.json).get
+                val updatedResult = resultData.copy(protectionNotificationNumber = Some(pnn))
+                keyStoreConnector.saveFormData[PSALookupResult](lookupResultID, updatedResult).map {
+                  _ => Redirect(routes.LookupController.displayLookupResults())
                 }
             }.recover {
-              case r: Upstream4xxResponse if r.upstreamResponseCode == NOT_FOUND => BadRequest(psa_lookup_protection_notification_no_form(notFoundLookupForm))
+              case r: Upstream4xxResponse if r.upstreamResponseCode == NOT_FOUND =>
+                val fullResult = PSALookupRequest(psaRef, Some(pnn))
+                keyStoreConnector.saveFormData[PSALookupRequest](lookupRequestID, fullResult).map[Result] {
+                  _ => Redirect(routes.LookupController.displayLookupResults())
+                }
             }
         }
       }
     )
+  }
+
+  def displayNotFoundResults: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+    Future.successful(Ok(psa_lookup_not_found_results(PSALookupRequest(""))))
   }
 
   def displayLookupResults: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
