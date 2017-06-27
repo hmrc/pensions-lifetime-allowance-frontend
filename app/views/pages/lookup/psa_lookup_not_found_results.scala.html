@@ -7,7 +7,6 @@
     Application.instanceCache[PlaLanguageController].apply(application)
 }
 
-
 @views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
     @language_selection(lc.languageMap, lc.langToCall, None)
 
