@@ -8,16 +8,7 @@
     Application.instanceCache[PlaLanguageController].apply(application)
 }
 
-@gaCode = {
-@if(psaRefForm.errors.contains(FormError(" ", "psa.lookup.form.not-found"))) {
-   Seq(ga_metric(request.uri, notFoundStatusMetric))
-} else {
-    Seq(gaTrackingCode(request.uri))
-}
-}
-
-@views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false,
-    gaCode = Seq(gaCode.body)) {
+@views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
     @language_selection(lc.languageMap, lc.langToCall, None)
 
     <h1> @Messages("psa.lookup.form.scheme-admin-ref-form.title")</h1>
