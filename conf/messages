@@ -723,13 +723,13 @@ psa.lookup.results.table.row.5.valid = This protection is valid
 psa.lookup.results.table.row.5.invalid = This protection is no longer valid
 psa.lookup.results.table.row.6 = Checked on:
 
-psa.lookup.results.ltatype.1 = FIXED PROTECTION 2016
-psa.lookup.results.ltatype.2 = INDIVIDUAL PROTECTION 2014
-psa.lookup.results.ltatype.3 = INDIVIDUAL PROTECTION 2016
-psa.lookup.results.ltatype.4 = PRIMARY PROTECTION
-psa.lookup.results.ltatype.5 = ENHANCED PROTECTION
-psa.lookup.results.ltatype.6 = FIXED PROTECTION
-psa.lookup.results.ltatype.7 = FIXED PROTECTION 2014
+psa.lookup.results.ltatype.1 = Fixed protection 2016
+psa.lookup.results.ltatype.2 = Individual protection 2014
+psa.lookup.results.ltatype.3 = Individual protection 2016
+psa.lookup.results.ltatype.4 = Primary protection
+psa.lookup.results.ltatype.5 = Enhanced protection
+psa.lookup.results.ltatype.6 = Fixed protection
+psa.lookup.results.ltatype.7 = Fixed protection 2014
 
 psa.lookup.results.save = Get a copy of these results
 
