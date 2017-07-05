@@ -98,7 +98,9 @@ POST        /psalookup/scheme-administrator-reference                           
 GET         /psalookup/not-found-results                                                  controllers.LookupController.displayNotFoundResults
 GET         /psalookup/results                                                            controllers.LookupController.displayLookupResults
 GET         /psalookup/results/clear                                                      controllers.LookupController.redirectToStart
-GET         /psalookup/results/print                                                      controllers.LookupController.printPDF
+GET         /psalookup/results/print                                                      controllers.LookupController.printResultsPDF
+GET         /psalookup/not-found/print                                                    controllers.LookupController.printNotFoundPDF
+
 
 #Feedback routes
 GET         /exit                                                                         controllers.ExitSurveyController.exitSurvey
