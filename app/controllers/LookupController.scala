@@ -22,6 +22,7 @@ import java.time.{LocalDate, LocalTime, ZoneId}
 import connectors.{KeyStoreConnector, PLAConnector, PdfGeneratorConnector}
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
 import models.{PSALookupRequest, PSALookupResult}
+import play.api.Logger
 import play.api.Play.current
 import play.api.data.Form
 import play.api.i18n.Messages.Implicits._
@@ -127,11 +128,12 @@ trait LookupController extends BaseController {
     }
   }
 
-  def printPDF: Action[AnyContent] = ActionWithSessionId.async {
+  def printResultsPDF: Action[AnyContent] = ActionWithSessionId.async {
     implicit request =>
       keyStoreConnector.fetchAndGetFormData[PSALookupResult](lookupResultID).flatMap {
         case Some(result) =>
-          val printPage = psa_lookup_print(result, buildTimestamp).toString
+          val printPage = psa_lookup_results_print(result, buildTimestamp).toString
+          Logger.debug("MJR " + printPage)
           pdfGeneratorConnector.generatePdf(printPage).map {
             response =>
               Ok(response.bodyAsBytes.toArray).as("application/pdf")
@@ -140,6 +142,22 @@ trait LookupController extends BaseController {
           }
       }
   }
+
+  def printNotFoundPDF: Action[AnyContent] = ActionWithSessionId.async {
+    implicit request =>
+      keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
+        case Some(req@PSALookupRequest(_, Some(_))) =>
+          val printPage = psa_lookup_not_found_print(req, buildTimestamp).toString
+
+          pdfGeneratorConnector.generatePdf(printPage).map {
+            response =>
+              Ok(response.bodyAsBytes.toArray).as("application/pdf")
+                .withHeaders("Content-Disposition" ->
+                  "attachment; filename=lookup-not-found.pdf")
+          }
+      }
+  }
+
 
   def buildTimestamp: String = s"${LocalDate.now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))} at ${LocalTime.now(ZoneId.of("Europe/London")).format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
 

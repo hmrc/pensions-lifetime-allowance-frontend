@@ -34,6 +34,8 @@
     <p>@Messages("psa.lookup.not-found.results.suggested-resolution")</p>
 
     <br>
-
-    <a class="button" href=@routes.LookupController.redirectToStart()>@Messages("psa.lookup.not-found.results.table.try-again")</a>
+    <a class="button button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.LookupController.printNotFoundPDF()">@Messages("psa.lookup.results.save")</a>
+    <p>
+        <a class="button" href=@routes.LookupController.redirectToStart()>@Messages("psa.lookup.not-found.results.table.try-again")</a>
+    </p>
 }
