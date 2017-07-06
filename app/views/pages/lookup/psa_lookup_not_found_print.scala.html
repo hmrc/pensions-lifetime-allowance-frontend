@@ -31,9 +31,7 @@
 
     <div>
         <article id="content-body">
-            <h1 id="table-title"> @Messages("psa.lookup.results.title.print.1")
-                <br>
-                @Messages("psa.lookup.results.title.print.2")</h1>
+            <h1 id="table-title">@Messages("psa.lookup.not-found.results.title")</h1>
             <br>
             <table>
                 <tbody>
@@ -42,11 +40,20 @@
                         <td>@lookupRequest.pensionSchemeAdministratorCheckReference</td>
                     </tr>
                     <tr>
-                        <td>@Messages("psa.lookup.results.table.row.1")</td>
+                        <td>@Messages("psa.lookup.results.table.row.2")</td>
                         <td>@lookupRequest.lifetimeAllowanceReference.get</td>
                     </tr>
                 </tbody>
             </table>
+            <p>@Messages("psa.lookup.not-found.results.detail")</p>
+
+            <p>@Messages("psa.lookup.not-found.results.possible-causes")</p>
+            <ul class="bullets">
+                <li>@Messages("psa.lookup.not-found.results.possible-causes.bullet1")</li>
+                <li>@Messages("psa.lookup.not-found.results.possible-causes.bullet2")</li>
+            </ul>
+            <p>@Messages("psa.lookup.not-found.results.suggested-resolution")</p>
+
         </article>
     </div>
 </main>
