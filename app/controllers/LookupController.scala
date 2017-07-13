@@ -111,7 +111,7 @@ trait LookupController extends BaseController {
 
   def displayNotFoundResults: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-      case Some(req@PSALookupRequest(_, Some(_))) => Future.successful(Ok(psa_lookup_not_found_results(req)))
+      case Some(req@PSALookupRequest(_, Some(_))) => Future.successful(Ok(psa_lookup_not_found_results(req, buildTimestamp)))
       case _ => Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
     }
   }
