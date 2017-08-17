@@ -89,7 +89,7 @@ GET         /amend-protection/amendment-outcome                                 
 GET         /amend-protection/:protectionType/:status                                     controllers.AmendsController.amendsSummary(protectionType, status)
 
 ## Withdraw protection ##
-GET         /withdraw-protection/summary                                                  controllers.AmendsController.withdrawSummary
+GET         /withdraw-protection/summary                                                  controllers.WithdrawProtectionController.withdrawSummary
 
 #PSA Lookup routes
 GET         /psalookup/protection-notification-number                                     controllers.LookupController.displayProtectionNotificationNoForm

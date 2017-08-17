@@ -1516,24 +1516,4 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "choosing cancel on the remove page" should {}
   }
 
-  "In AmendsController calling the withdrawSummary action" when {
-    "there is no stored protection model" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.withdrawSummary)
-      "return 500" in {
-        keystoreFetchCondition[ProtectionModel](None)
-        status(DataItem.result) shouldBe 500
-      }
-      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
-    }
-
-    "there is a stored protection model" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.withdrawSummary)
-      "return 200" in {
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockDisplayConstructors.createWithdrawSummaryTable(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
-        status(DataItem.result) shouldBe 200
-        DataItem.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.pageBreadcrumb"))
-      }
-    }
-  }
 }
