@@ -460,4 +460,15 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
     val overseasPension = Value
   }
 
+  /** Withdraw protections journey **/
+  def withdrawSummary: Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+    keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
+      case Some(currentProtection) =>
+        Ok(views.html.pages.withdraw.withdrawSummary(displayConstructors.createWithdrawSummaryTable(currentProtection)))
+      case _ =>
+        Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
+  }
+
 }

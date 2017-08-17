@@ -294,6 +294,7 @@ pla.existingProtections.protectionRef                   = Protection notificatio
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
 pla.existingProtections.amendLinkText                   = View or change your protection details
+pla.existingProtections.withdrawLinkText                = Withdraw your open protection
 
 
 ## PROTECTION INFORMATION ##
@@ -750,3 +751,11 @@ psa.lookup.not-found.results.possible-causes.bullet1 = been given the wrong info
 psa.lookup.not-found.results.possible-causes.bullet2 = entered one of the numbers incorrectly
 psa.lookup.not-found.results.suggested-resolution = Check the information you''ve been given and try again.
 psa.lookup.not-found.results.table.try-again = Try again
+
+## Withdraw ##
+pla.withdraw.title=Protection summary
+pla.withdraw.pageBreadcrumb=View your protection details
+pla.withdraw.heading.IP2016=Your individual protection 2016 details
+pla.withdraw.heading.IP2014=Your individual protection 2014 details
+pla.withdraw.summary.heading=Value of pensions
+pla.withdraw.totalValueOfPensions=Total value of pensions
