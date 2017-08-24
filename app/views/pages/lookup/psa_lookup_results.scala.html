@@ -36,7 +36,8 @@
             @if(lookupResult.psaCheckResult == 1) {
                 <tr>
                     <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
-                    <td class="font-small"> @lookupResult.ltaType match {
+                    <td class="font-small"><a href="@routes.LookupController.displayProtectionTypeGuidance()">
+                    @lookupResult.ltaType match {
                         case 1 => {
                             @Messages("psa.lookup.results.ltatype.1")
                         }
@@ -58,7 +59,7 @@
                         case 7 => {
                             @Messages("psa.lookup.results.ltatype.7")
                         }
-                    } </td>
+                    } </a></td>
                 </tr>
                 @lookupResult.ltaType match {
                     case x if 2 until 4 contains x => {

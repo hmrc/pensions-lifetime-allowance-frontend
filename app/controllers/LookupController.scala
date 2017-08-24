@@ -123,6 +123,10 @@ trait LookupController extends BaseController {
     }
   }
 
+  def displayProtectionTypeGuidance: Action[AnyContent] = ActionWithSessionId { implicit request =>
+    Ok(pla_protection_guidance())
+  }
+
   def redirectToStart: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     keyStoreConnector.remove.map { _ => Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm())
     }
