@@ -41,7 +41,7 @@ private object AppDependencies {
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "6.2.0"
 
-  private val mongoCachingVersion = "3.2.0"
+  private val mongoCachingVersion = "4.1.0"
   private val playLanguageVersion = "3.0.0"
 
   val compile = Seq(

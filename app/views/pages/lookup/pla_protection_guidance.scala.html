@@ -9,7 +9,6 @@
 
 @views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false,
     gaCode = Seq()) {
-    @language_selection(lc.languageMap, lc.langToCall, None)
 
     <h1> @Messages("psa.lookup.protection-guidance.title")</h1>
     <br>
