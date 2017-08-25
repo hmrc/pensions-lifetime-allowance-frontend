@@ -235,6 +235,17 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
       status(result) mustBe SEE_OTHER
       redirectLocation(result).get mustBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
     }
+
+    "return 200 with correct message on protection type guidance page" in {
+
+      val request = FakeRequest().withSession(sessionId)
+      val result = TestController.displayProtectionTypeGuidance.apply(request)
+
+      status(result) mustBe OK
+      contentAsString(result) must include(Messages("psa.lookup.protection-guidance.title"))
+      contentAsString(result) must include(Messages("psa.lookup.protection-guidance.protection-type-primary-label"))
+    }
+
   }
 
   def keystoreFetchCondition[T](data: Option[T]): Unit = when(mockKeyStoreConnector.fetchAndGetFormData[T](any())(any(), any()))

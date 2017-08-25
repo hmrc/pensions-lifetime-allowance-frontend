@@ -100,7 +100,7 @@ GET         /psalookup/results                                                  
 GET         /psalookup/results/clear                                                      controllers.LookupController.redirectToStart
 GET         /psalookup/results/print                                                      controllers.LookupController.printResultsPDF
 GET         /psalookup/not-found/print                                                    controllers.LookupController.printNotFoundPDF
-
+GET         /psalookup/protection-guidance                                                controllers.LookupController.displayProtectionTypeGuidance
 
 #Feedback routes
 GET         /exit                                                                         controllers.ExitSurveyController.exitSurvey
