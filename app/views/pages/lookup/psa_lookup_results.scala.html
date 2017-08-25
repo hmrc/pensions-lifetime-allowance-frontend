@@ -17,7 +17,6 @@
 
 @views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false,
     gaCode = Seq(metrics.body)) {
-    @language_selection(lc.languageMap, lc.langToCall, None)
 
     <h1> @Messages("psa.lookup.results.title")</h1>
     <br>
