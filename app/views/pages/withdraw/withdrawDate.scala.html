@@ -1,0 +1,36 @@
+@import controllers.PlaLanguageController
+@import helpers.templates.formInlineDateInput
+@import play.api.Application
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+
+@(withdrawDateForm: Form[(Int, Int, Int)])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@lc = @{
+    Application.instanceCache[PlaLanguageController].apply(application)
+}
+
+@scriptElement = {
+    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
+
+@views.html.main_template(title = Messages("pla.psoDetails.title"), scriptElem = Some(scriptElement), bodyClasses = None) {
+
+    @language_selection(lc.languageMap, lc.langToCall, None)
+
+    @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), withdrawDateForm)
+
+    <h1 class="heading-large">@Messages("pla.psoDetails.title")</h1>
+
+    @govHelpers.form(action = routes.AmendsController.submitAmendPsoDetails) {
+
+        <div class="inline form-group">
+
+        @formInlineDateInput(withdrawDateForm, "pso", Messages("pla.psoDetails.dateQuestionText"), Some(Messages("pla.psoDetails.dateHintText")))
+
+        </div>
+
+        <button class="button" type="submit" id="continue-button"> @Messages("pla.base.add") </button>
+
+    }
+
+}

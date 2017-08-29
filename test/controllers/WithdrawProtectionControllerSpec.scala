@@ -42,6 +42,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 
 import scala.concurrent.Future
+
 class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   override def bindModules = Seq(new PlayModule)
@@ -77,38 +78,28 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
   val tstPensionContributionNoPsoDisplaySections = Seq(
 
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2014", "active")), None, "No")
-    )
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2014", "active")), None, "No"))
     ),
     AmendDisplaySectionModel("PensionsTakenBetween", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2014", "active")), None, "No")
-    )
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2014", "active")), None, "No"))
     ),
     AmendDisplaySectionModel("OverseasPensions", Seq(
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2014", "active")), None, "Yes"),
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2014", "active")), None, "£100,000")
-    )
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2014", "active")), None, "£100,000"))
     ),
     AmendDisplaySectionModel("CurrentPensions", Seq(
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2014", "active")), None, "£1,000,000")
-    )
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2014", "active")), None, "£1,000,000"))
     ),
     AmendDisplaySectionModel("CurrentPsos", Seq(
-      AmendDisplayRowModel("YesNo", None, None, "No")
-    )
-    )
+      AmendDisplayRowModel("YesNo", None, None, "No")))
   )
 
-  val tstAmendDisplayModel = AmendDisplayModel(
-    protectionType = "IP2014",
-    amended = true,
-    pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
-    psoAdded = false,
-    psoSections = Seq(),
-    totalAmount = "£1,100,000"
+  val tstAmendDisplayModel = AmendDisplayModel("IP2014", amended = true,
+    tstPensionContributionNoPsoDisplaySections,
+    psoAdded = false, Seq(), "£1,100,000"
   )
 
-  "In AmendsController calling the withdrawSummary action" when {
+  "In WithdrawProtectionController calling the withdrawSummary action" when {
 
     import testHelpers.AuthorisedFakeRequestTo
 
@@ -132,6 +123,35 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         when(mockDisplayConstructors.createWithdrawSummaryTable(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
+        status(DataItem.result) shouldBe 200
+        DataItem.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.pageBreadcrumb"))
+      }
+    }
+  }
+
+  "In WithdrawProtectionController calling the withdrawDate action" when {
+
+    import testHelpers.AuthorisedFakeRequestTo
+
+    "there is no stored protection model" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
+
+      "return 500" in {
+        keystoreFetchCondition[ProtectionModel](None)
+        status(DataItem.result) shouldBe 500
+      }
+      "have the correct cache control" in {
+        DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      }
+    }
+
+    "there is a stored protection model" should {
+
+      object DataItem extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawDateInput)
+
+      "return 200" in {
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         status(DataItem.result) shouldBe 200
         DataItem.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.pageBreadcrumb"))
       }

@@ -21,6 +21,7 @@ import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
+import forms.WithdrawDateForm
 import models.ProtectionModel
 import play.api.Logger
 import play.api.Play.current
@@ -50,6 +51,17 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
           Ok(views.html.pages.withdraw.withdrawSummary(displayConstructors.createWithdrawSummaryTable(currentProtection)))
         case _ =>
           Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
+          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+      }
+  }
+
+  def withdrawDateInput: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+    implicit request =>
+      keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
+        case Some(_) =>
+          Ok(views.html.pages.withdraw.withdrawDate(WithdrawDateForm.withdrawDate))
+        case _ =>
+          Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw date page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
   }
