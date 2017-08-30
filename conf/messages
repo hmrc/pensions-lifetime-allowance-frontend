@@ -728,7 +728,7 @@ psa.lookup.results.ltatype.2 = Individual protection 2014
 psa.lookup.results.ltatype.3 = Individual protection 2016
 psa.lookup.results.ltatype.4 = Primary protection
 psa.lookup.results.ltatype.5 = Enhanced protection
-psa.lookup.results.ltatype.6 = Fixed protection
+psa.lookup.results.ltatype.6 = Fixed protection 2012
 psa.lookup.results.ltatype.7 = Fixed protection 2014
 
 psa.lookup.results.save = Download a PDF of these results
