@@ -122,10 +122,6 @@ trait PLAConnector {
     play.Logger.info(body.toString)
     http.PUT[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id", body)
   }
-
-  def psaLookup(psaRef: String, ltaRef: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
-    http.GET[HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/psalookup/$psaRef/$ltaRef")
-  }
 }
 
 object ResponseHandler extends ResponseHandler {
