@@ -729,7 +729,7 @@ psa.lookup.results.ltatype.2 = Individual protection 2014
 psa.lookup.results.ltatype.3 = Individual protection 2016
 psa.lookup.results.ltatype.4 = Primary protection
 psa.lookup.results.ltatype.5 = Enhanced protection
-psa.lookup.results.ltatype.6 = Fixed protection
+psa.lookup.results.ltatype.6 = Fixed protection 2012
 psa.lookup.results.ltatype.7 = Fixed protection 2014
 
 psa.lookup.results.save = Download a PDF of these results
@@ -751,6 +751,28 @@ psa.lookup.not-found.results.possible-causes.bullet1 = been given the wrong info
 psa.lookup.not-found.results.possible-causes.bullet2 = entered one of the numbers incorrectly
 psa.lookup.not-found.results.suggested-resolution = Check the information you''ve been given and try again.
 psa.lookup.not-found.results.table.try-again = Try again
+
+psa.lookup.protection-guidance.title = Check the value of a protection type
+psa.lookup.protection-guidance.table-heading-left = Protection type
+psa.lookup.protection-guidance.table-heading-right = Protected amount
+psa.lookup.protection-guidance.protection-type-enhanced-label = Enhanced
+psa.lookup.protection-guidance.protection-type-enhanced-value = £1,500,000
+psa.lookup.protection-guidance.protection-type-fixed12-label = Fixed 2012
+psa.lookup.protection-guidance.protection-type-fixed12-value = £1,800,000
+psa.lookup.protection-guidance.protection-type-fixed14-label = Fixed 2014
+psa.lookup.protection-guidance.protection-type-fixed14-value = £1,500,000
+psa.lookup.protection-guidance.protection-type-fixed16-label = Fixed 2016
+psa.lookup.protection-guidance.protection-type-fixed16-value = £1,250,000
+psa.lookup.protection-guidance.protection-type-individual14-label = Individual 2014
+psa.lookup.protection-guidance.protection-type-individual14-value-line1 = The lower of: 
+psa.lookup.protection-guidance.protection-type-individual14-value-line2 = the value of the pension at 5 April 2014
+psa.lookup.protection-guidance.protection-type-individual14-value-line3 = £1,500,000
+psa.lookup.protection-guidance.protection-type-individual16-label = Individual 2016
+psa.lookup.protection-guidance.protection-type-individual16-value-line1 = The lower of:
+psa.lookup.protection-guidance.protection-type-individual16-value-line2 = the value of the pension at 5 April 2016
+psa.lookup.protection-guidance.protection-type-individual16-value-line3 = £1,250,000
+psa.lookup.protection-guidance.protection-type-primary-label = Primary
+psa.lookup.protection-guidance.protection-type-primary-value = £1,500,000
 
 ## Withdraw ##
 pla.withdraw.title=Protection summary

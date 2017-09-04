@@ -41,6 +41,7 @@ private object AppDependencies {
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "6.2.0"
 
+  private val mongoCachingVersion = "4.1.0"
   private val playLanguageVersion = "3.0.0"
 
   val compile = Seq(
@@ -54,6 +55,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
+    "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
     "uk.gov.hmrc" %% "play-language" % playLanguageVersion
   )
 

@@ -1,0 +1,65 @@
+@import play.api.Application
+
+@()(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@lc = @{
+    Application.instanceCache[PlaLanguageController].apply(application)
+}
+
+
+@views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false,
+    gaCode = Seq()) {
+
+    <h1> @Messages("psa.lookup.protection-guidance.title")</h1>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <th class="font-small"><strong>@Messages("psa.lookup.protection-guidance.table-heading-left")</strong></th>
+                <th class="font-small"><strong>@Messages("psa.lookup.protection-guidance.table-heading-right")</strong></th>
+            </tr>
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-enhanced-label")</td>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-enhanced-value")</td>
+            </tr>
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-fixed12-label")</td>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-fixed12-value")</td>
+            </tr>
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-fixed14-label")</td>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-fixed14-value")</td>
+            </tr>
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-fixed16-label")</td>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-fixed16-value")</td>
+            </tr>
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-individual14-label")</td>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-individual14-value-line1")
+                    <ul class="bullets">
+                        <li class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-individual14-value-line2")</li>
+                        <li class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-individual14-value-line3")</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-individual16-label")</td>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-individual16-value-line1")
+                    <ul class="bullets">
+                        <li class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-individual16-value-line2")</li>
+                        <li class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-individual16-value-line3")</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-primary-label")</td>
+                <td class="font-small">@Messages("psa.lookup.protection-guidance.protection-type-primary-value")</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <a class="back-link" href="@routes.LookupController.displayLookupResults()">@Messages("psa.lookup.form.pnn.back")</a>
+    </div>
+}
