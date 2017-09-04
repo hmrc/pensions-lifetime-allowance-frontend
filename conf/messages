@@ -780,6 +780,7 @@ pla.withdraw.pageBreadcrumb=View your protection details
 pla.withdraw.heading.IP2016=Your individual protection 2016 details
 pla.withdraw.heading.IP2014=Your individual protection 2014 details
 pla.withdraw.summary.heading=Value of pensions
+pla.withdraw.summary.continue=Continue
 pla.withdraw.totalValueOfPensions=Total value of pensions
 pla.withdraw.date-input.title=Enter withdrawal date
 pla.withdraw.date-input.form-title=Date of protection withdrawal
