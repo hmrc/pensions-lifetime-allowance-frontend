@@ -16,30 +16,21 @@
 
 package controllers
 
-import java.time.LocalDate
-import java.util.UUID
-
 import auth.{MockAuthConnector, MockConfig}
 import com.kenshoo.play.metrics.PlayModule
 import connectors.{KeyStoreConnector, PLAConnector}
-import constructors.{DisplayConstructors, ResponseConstructors}
-import enums.ApplicationType
+import constructors.DisplayConstructors
 import models._
-import models.amendModels.{AmendProtectionModel, AmendsGAModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.Play.current
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
-import play.api.libs.json.Json
-import play.api.test.FakeRequest
-import play.api.test.Helpers._
-import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
-import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.http.HttpResponse
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
+import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import play.api.test.Helpers._
 
 import scala.concurrent.Future
 
@@ -71,7 +62,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
     protectionID = Some(12345),
     protectionType = Some("IP2016"),
     status = Some("dormant"),
-    certificateDate = Some("2016-04-17"),
+    certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456"))
 
@@ -101,59 +92,91 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
 
   "In WithdrawProtectionController calling the withdrawSummary action" when {
 
-    import testHelpers.AuthorisedFakeRequestTo
-
     "there is no stored protection model" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
+      object UserRequest extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
 
       "return 500" in {
         keystoreFetchCondition[ProtectionModel](None)
-        status(DataItem.result) shouldBe 500
+        status(UserRequest.result) shouldBe INTERNAL_SERVER_ERROR
       }
       "have the correct cache control" in {
-        DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+        UserRequest.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
       }
     }
 
     "there is a stored protection model" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
+      object UserRequest extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
 
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         when(mockDisplayConstructors.createWithdrawSummaryTable(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
-        status(DataItem.result) shouldBe 200
-        DataItem.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.pageBreadcrumb"))
+        status(UserRequest.result) shouldBe OK
+        UserRequest.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.pageBreadcrumb"))
       }
     }
   }
 
-  "In WithdrawProtectionController calling the withdrawDate action" when {
-
-    import testHelpers.AuthorisedFakeRequestTo
+  "In WithdrawProtectionController calling the withdrawDateInput action" when {
 
     "there is no stored protection model" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
+      object UserRequest extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
 
       "return 500" in {
         keystoreFetchCondition[ProtectionModel](None)
-        status(DataItem.result) shouldBe 500
+        status(UserRequest.result) shouldBe INTERNAL_SERVER_ERROR
       }
       "have the correct cache control" in {
-        DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+        UserRequest.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
       }
     }
 
     "there is a stored protection model" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawDateInput)
+      object UserRequest extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawDateInput)
 
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(DataItem.result) shouldBe 200
-        DataItem.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.pageBreadcrumb"))
+        status(UserRequest.result) shouldBe OK
+        UserRequest.jsoupDoc.body().getElementsByTag("h1").text should include(Messages("pla.withdraw.date-input.title"))
+      }
+    }
+  }
+
+  "In withdrawProtectionController calling the submitWithdrawDateInput action" when {
+    "there is a stored protection model" should {
+      object UserRequest extends AuthorisedFakeRequestToPost(TestWithdrawController.submitWithdrawDateInput,
+        ("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017"))
+
+      "return 303 Redirect" in {
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+        status(UserRequest.result) shouldBe SEE_OTHER
+      }
+
+      object InvalidDayRequest extends AuthorisedFakeRequestToPost(TestWithdrawController.submitWithdrawDateInput,
+        ("withdrawDay", "20000"), ("withdrawMonth", "10"), ("withdrawYear", "2017"))
+      "return 400 Bad Request" in {
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+        status(InvalidDayRequest.result) shouldBe BAD_REQUEST
+        InvalidDayRequest.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.date-input.form.day-too-high"))
+      }
+
+      object InvalidMultipleErrorRequest extends AuthorisedFakeRequestToPost(TestWithdrawController.submitWithdrawDateInput,
+        ("withdrawDay", "20000"), ("withdrawMonth", "70000"), ("withdrawYear", "2010000007"))
+      "return 400 Bad Request with single error" in {
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+        status(InvalidDayRequest.result) shouldBe BAD_REQUEST
+        InvalidMultipleErrorRequest.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.date-input-form.date-invalid"))
+      }
+
+      object BadRequestDateInPast extends AuthorisedFakeRequestToPost(TestWithdrawController.submitWithdrawDateInput,
+        ("withdrawDay", "20"), ("withdrawMonth", "1"), ("withdrawYear", "2012"))
+      "return 400 Bad Request with date in past error" in {
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+        status(InvalidDayRequest.result) shouldBe BAD_REQUEST
+        BadRequestDateInPast.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.date-input.form.date-before-start-date"))
       }
     }
   }

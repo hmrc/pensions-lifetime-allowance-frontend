@@ -16,15 +16,19 @@
 
 package controllers
 
+import java.time.LocalDateTime
+
 import auth.AuthorisedForPLA
 import config.{FrontendAppConfig, FrontendAuthConnector}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
-import forms.WithdrawDateForm
+import forms.WithdrawDateForm._
 import models.ProtectionModel
 import play.api.Logger
 import play.api.Play.current
+import play.api.data.{Form, FormError}
+import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 
@@ -59,11 +63,33 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
     implicit request =>
       keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
         case Some(_) =>
-          Ok(views.html.pages.withdraw.withdrawDate(WithdrawDateForm.withdrawDate))
+          Ok(views.html.pages.withdraw.withdrawDate(withdrawDateForm))
         case _ =>
-          Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw date page")
+          Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
   }
 
+  def submitWithdrawDateInput: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+    implicit request =>
+      keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
+        case Some(protection) => validateWithdrawDate(withdrawDateForm.bindFromRequest(),
+          LocalDateTime.parse(protection.certificateDate.get)).fold(
+          formWithErrors => BadRequest(views.html.pages.withdraw.withdrawDate(buildInvalidForm(formWithErrors))),
+          _ => Redirect(routes.WithdrawProtectionController.withdrawSummary())
+        )
+        case _ => Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw date input page")
+          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+      }
+  }
+
+  private def buildInvalidForm(errorForm: Form[(Option[Int], Option[Int], Option[Int])]): Form[(Option[Int], Option[Int], Option[Int])] = {
+    if (errorForm.errors.size > 1) {
+      val formFields: Seq[String] = errorForm.errors map (field => field.key)
+      val formFieldsWithErrors: Seq[FormError] = formFields map (key => FormError(key, ""))
+      val finalErrors: Seq[FormError] = formFieldsWithErrors ++ Seq(FormError("", Messages("pla.withdraw.date-input-form.date-invalid")))
+      withdrawDateForm.copy(errors = finalErrors, data = errorForm.data)
+    }
+    else errorForm
+  }
 }

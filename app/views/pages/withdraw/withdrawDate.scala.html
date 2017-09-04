@@ -3,7 +3,7 @@
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
-@(withdrawDateForm: Form[(Int, Int, Int)])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(withdrawDateForm: Form[(Option[Int], Option[Int], Option[Int])])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
@@ -13,23 +13,54 @@
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@views.html.main_template(title = Messages("pla.psoDetails.title"), scriptElem = Some(scriptElement), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.withdraw.date-input.title"), scriptElem = Some(scriptElement), bodyClasses = None) {
 
     @language_selection(lc.languageMap, lc.langToCall, None)
 
+    <h1 class="heading-large">@Messages("pla.withdraw.date-input.title")</h1>
+
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), withdrawDateForm)
 
-    <h1 class="heading-large">@Messages("pla.psoDetails.title")</h1>
-
-    @govHelpers.form(action = routes.AmendsController.submitAmendPsoDetails) {
+    @govHelpers.form(action = routes.WithdrawProtectionController.submitWithdrawDateInput()) {
 
         <div class="inline form-group">
 
-        @formInlineDateInput(withdrawDateForm, "pso", Messages("pla.psoDetails.dateQuestionText"), Some(Messages("pla.psoDetails.dateHintText")))
+            <div class="form-group">
+
+                <fieldset class="form-group form-date @if(withdrawDateForm.hasErrors) {form-field--error}" id="pso-fieldset">
+
+                    <span class="form-hint">@Messages("pla.withdraw.date-input.form-hint")</span>
+
+                    <label for="withdrawDay" class="form-group form-group-day">
+                        <span>@Messages("pla.withdraw.date-input.form-day")</span>
+
+                        <input type="number" class="input--xxsmall input--no-spinner @if(withdrawDateForm("withdrawDay").hasErrors) {error-field}"
+                        name="withdrawDay" id="withdrawDay" value="@withdrawDateForm("withdrawDay").value">
+
+                    </label>
+
+                    <label for="withdrawMonth" class="form-group form-group-month">
+
+                        <span>@Messages("pla.withdraw.date-input.form-month")</span>
+
+                        <input type="number" class="input--xxsmall input--no-spinner @if(withdrawDateForm("withdrawMonth").hasErrors) {error-field}"
+                        name="withdrawMonth" id="withdrawMonth" value="@withdrawDateForm("withdrawMonth").value">
+                    </label>
+
+                    <label for="withdrawYear" class="form-group form-group-year">
+                        <span>@Messages("pla.withdraw.date-input.form-year")</span>
+
+                        <input type="number" class="input--small input--no-spinner @if(withdrawDateForm("withdrawYear").hasErrors) {error-field}"
+                        name="withdrawYear" id="withdrawYear" value="@withdrawDateForm("withdrawYear").value">
+                    </label>
+
+                </fieldset>
+
+            </div>
 
         </div>
 
-        <button class="button" type="submit" id="continue-button"> @Messages("pla.base.add") </button>
+        <button class="button" type="submit" id="continue-button"> @Messages("pla.withdraw.date-input.form.submit") </button>
 
     }
 

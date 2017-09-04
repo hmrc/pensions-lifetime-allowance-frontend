@@ -16,6 +16,8 @@
 
 package forms
 
+import java.time.{LocalDate, LocalDateTime}
+
 import common.Dates.futureDate
 import common.Validation.isValidDate
 import forms.AmendPSODetailsForm.validateMinDate
@@ -28,30 +30,59 @@ import play.api.i18n.{Lang, Messages}
 
 object WithdrawDateForm {
 
-  def withdrawDate(implicit lang: Lang): Form[(Int, Int, Int)] = Form(
+  def withdrawDateForm(implicit lang: Lang): Form[(Option[Int], Option[Int], Option[Int])] = Form(
     tuple(
-      "withdrawDay" -> number.verifying(withdrawDayConstraint),
-      "withdrawMonth" -> number,
-      "withdrawYear" -> number
+      "withdrawDay" -> optional(number).verifying(withdrawDayConstraint),
+      "withdrawMonth" -> optional(number).verifying(withdrawMonthConstraint),
+      "withdrawYear" -> optional(number).verifying(withdrawYearConstraint)
     )
   )
 
-  val withdrawDayConstraint: Constraint[Int] = Constraint("")({
+  val withdrawDayConstraint: Constraint[Option[Int]] = Constraint {
     day =>
       val errors = day match {
-        case a if a < 0 => Seq(ValidationError(Messages("date too low")))
-        case b if b > 31 => Seq(ValidationError(Messages("date too high")))
-        case _ => Seq()
+        case None => Seq(ValidationError(Messages("pla.withdraw.date-input.form.day-empty")))
+        case Some(a) if a <= 0 => Seq(ValidationError(Messages("pla.withdraw.date-input.form.day-too-low")))
+        case Some(b) if b > 31 => Seq(ValidationError(Messages("pla.withdraw.date-input.form.day-too-high")))
+        case _ => Nil
       }
       if (errors.isEmpty) Valid else Invalid(errors)
-  })
+  }
 
-//  def validateForm(form: Form[(Int, Int, Int)])(implicit lang: Lang): Form[(Int, Int, Int)] = {
-//    val day = form.get._1
-//    val month = form.get._2
-//    val year = form.get._3
-//    if (!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
-//    else if (futureDate(day, month, year)) form.withError("withdrawDay", Messages(""))
-//    else validateMinDate(form, day, month, year)
-//  }
+  val withdrawMonthConstraint: Constraint[Option[Int]] = Constraint {
+    day =>
+      val errors = day match {
+        case None => Seq(ValidationError(Messages("pla.withdraw.date-input.form.month-empty")))
+        case Some(a) if a <= 0 => Seq(ValidationError(Messages("pla.withdraw.date-input.form.month-too-low")))
+        case Some(b) if b > 12 => Seq(ValidationError(Messages("pla.withdraw.date-input.form.month-too-high")))
+        case _ => Nil
+      }
+      if (errors.isEmpty) Valid else Invalid(errors)
+  }
+
+  val withdrawYearConstraint: Constraint[Option[Int]] = Constraint {
+    day =>
+      val errors = day match {
+        case None => Seq(ValidationError(Messages("pla.withdraw.date-input.form.year-empty")))
+        case Some(a) if a > LocalDate.now().getYear => Seq(ValidationError(Messages("pla.withdraw.date-input.form.year-too-high")))
+        case _ => Nil
+      }
+      if (errors.isEmpty) Valid else Invalid(errors)
+  }
+
+  def validateWithdrawDate(form: Form[(Option[Int], Option[Int], Option[Int])],
+                           protectionStartDate: LocalDateTime)(implicit lang: Lang): Form[(Option[Int], Option[Int], Option[Int])] = {
+    if (form.hasErrors) form else {
+      val day = form.get._1.get
+      val month = form.get._2.get
+      val year = form.get._3.get
+      if (!isValidDate(day, month, year)) form.withError("", Messages("pla.base.errors.invalidDate"))
+      else if (LocalDate.of(year, month, day) isAfter LocalDate.now) form.withError("", Messages("pla.withdraw.date-input.form.date-in-future"))
+      else if (LocalDate.of(year, month, day) isBefore protectionStartDate.toLocalDate)
+        form.withError("", Messages("pla.withdraw.date-input.form.date-before-start-date"))
+      else form
+    }
+  }
+
+
 }
