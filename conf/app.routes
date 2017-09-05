@@ -91,7 +91,8 @@ GET         /amend-protection/:protectionType/:status                           
 ## Withdraw protection ##
 GET         /withdraw-protection/summary                                                  controllers.WithdrawProtectionController.withdrawSummary
 GET         /withdraw-protection/date-input                                               controllers.WithdrawProtectionController.withdrawDateInput
-POST         /withdraw-protection/date-input                                               controllers.WithdrawProtectionController.submitWithdrawDateInput
+POST        /withdraw-protection/date-input                                               controllers.WithdrawProtectionController.submitWithdrawDateInput
+GET         /withdraw-protection/confirmation                                             controllers.WithdrawProtectionController.displayWithdrawConfirmation
 
 #PSA Lookup routes
 GET         /psalookup/protection-notification-number                                     controllers.LookupController.displayProtectionNotificationNoForm

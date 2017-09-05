@@ -32,6 +32,8 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent}
 
+import scala.concurrent.Future
+
 object WithdrawProtectionController extends WithdrawProtectionController {
   val keyStoreConnector = KeyStoreConnector
   val displayConstructors = DisplayConstructors
@@ -76,11 +78,16 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
         case Some(protection) => validateWithdrawDate(withdrawDateForm.bindFromRequest(),
           LocalDateTime.parse(protection.certificateDate.get)).fold(
           formWithErrors => BadRequest(views.html.pages.withdraw.withdrawDate(buildInvalidForm(formWithErrors))),
-          _ => Redirect(routes.WithdrawProtectionController.withdrawSummary())
+          _ => Redirect(routes.WithdrawProtectionController.displayWithdrawConfirmation())
         )
         case _ => Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw date input page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
+  }
+
+  def displayWithdrawConfirmation: Action[AnyContent] = AuthorisedByAny.async {implicit user =>
+    implicit request =>
+    Future successful Ok(views.html.pages.withdraw.withdrawConfirmation())
   }
 
   private def buildInvalidForm(errorForm: Form[(Option[Int], Option[Int], Option[Int])]): Form[(Option[Int], Option[Int], Option[Int])] = {

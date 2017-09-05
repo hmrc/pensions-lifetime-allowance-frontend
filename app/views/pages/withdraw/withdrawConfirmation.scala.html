@@ -1,0 +1,33 @@
+@import config.FrontendAppConfig
+@import controllers.PlaLanguageController
+@import helpers.amends.amendSection
+@import play.api.Application
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+
+@()(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@lc = @{
+    Application.instanceCache[PlaLanguageController].apply(application)
+}
+
+@views.html.main_template(title = Messages("pla.withdraw.confirm.title")) {
+
+    @language_selection(lc.languageMap, lc.langToCall, None)
+
+
+
+    <div class="grid-row">
+        <div class="transaction-banner--complete">
+            <span class="heading-large" id="amendmentOutcome">@Messages("pla.withdraw.confirm.title")</span>
+        </div>
+
+        <h2>@Messages("pla.withdraw.confirm.info-heading")</h2>
+
+        <p>@Html(Messages("pla.withdraw.confirm.info-text", routes.ReadProtectionsController.currentProtections()))</p>
+
+        <h2>@Messages("pla.withdraw.confirm.feedback-heading")</h2>
+
+        <p>@Html(Messages("pla.withdraw.confirm.feedback-text", routes.ExitSurveyController.exitSurvey()))</p>
+
+    </div>
+}

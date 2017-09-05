@@ -800,3 +800,8 @@ pla.withdraw.date-input.form.date-in-future=Date cannot be in the future
 pla.withdraw.date-input.form.date-before-start-date=Date must be after protection start date
 pla.withdraw.date-input-form.date-invalid=Enter a valid date
 pla.withdraw.date-input.form.submit=Submit
+pla.withdraw.confirm.title=You''ve withdrawn individual protection 2016
+pla.withdraw.confirm.info-heading=You can apply for another protection at any time
+pla.withdraw.confirm.info-text=You can view any other protections you may have in your <a href="{0}">personal tax account</a>
+pla.withdraw.confirm.feedback-heading=Give us feedback
+pla.withdraw.confirm.feedback-text=<a href="{0}">What did you think of this service?</a> Your feedback helps us improve.
