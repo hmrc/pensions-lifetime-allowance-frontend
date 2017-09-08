@@ -18,7 +18,7 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
 
-@()(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@()(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @main_template(title = Messages("pla.psoDetails.title"), scriptElem=None, bodyClasses = None) {
 

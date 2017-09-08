@@ -43,6 +43,7 @@ private object AppDependencies {
   private val mongoCachingVersion = "5.3.0"
   private val playLanguageVersion = "3.4.0"
   private val authClientVersion = "2.4.0"
+  private val localTemplateRendererVersion = "0.10.0"
 
   val compile = Seq(
     ws,
@@ -51,7 +52,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
     "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
     "uk.gov.hmrc" %% "play-language" % playLanguageVersion,
-    "uk.gov.hmrc" %% "auth-client" % authClientVersion
+    "uk.gov.hmrc" %% "auth-client" % authClientVersion,
+    "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion
   )
 
   trait TestDependencies {

@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@(pType: String)(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(pType: String)(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @restartTarget = @{
     pType match {

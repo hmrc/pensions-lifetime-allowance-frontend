@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package controllers
+package testHelpers
 
-import config.LocalTemplateRenderer
-import config.wiring.PlaFormPartialRetriever
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.renderer.TemplateRenderer
+import play.twirl.api.Html
 
-trait BaseController extends FrontendController {
-  implicit val context = config.PlaContextImpl
-  implicit val partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = PlaFormPartialRetriever
 
-  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
+object MockTemplateRenderer extends TemplateRenderer {
+  override def connection = ???
+  override def templateServiceBaseUrl = ???
+  override def refreshAfter = ???
+
+  override def renderDefaultTemplate = (content: Html, extraArgs: Map[String, Any]) => {
+    Html("<title>" + extraArgs("pageTitle") + "</title>"+ "<sidebar>"+extraArgs("sidebar")+"</sidebar>" + "<navLinks>"+extraArgs("navLinks")+"</navLinks>"+ "<mainContentHeader>"+extraArgs("mainContentHeader")+"</mainContentHeader>"+ content)
+  }
 }
+
+
