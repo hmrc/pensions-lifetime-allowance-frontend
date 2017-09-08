@@ -5,7 +5,7 @@
 @import controllers.PlaLanguageController
 @import play.api.Application
 
-@(amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
