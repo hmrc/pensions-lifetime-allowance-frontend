@@ -28,8 +28,6 @@
 
 
 
-@serviceInfoContent = {}
-
 @sidebar = {
     @if(sidebarLinks.isDefined) {
         @layouts.sidebar(sidebarLinks.get, Some("sidebar"))
@@ -44,7 +42,6 @@
                sidebar = sidebar,
                contentHeader = contentHeader,
                mainContent = mainContent,
-               serviceInfoContent = serviceInfoContent,
                scriptElem = scriptElem,
                showLogout = showLogout
 )

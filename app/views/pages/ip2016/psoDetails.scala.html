@@ -27,11 +27,7 @@
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
-}
-
-@views.html.main_template(title = Messages("pla.psoDetails.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.psoDetails.title"), bodyClasses = None) {
     @language_selection(lc.languageMap, lc.langToCall, None)
 
     @govHelpers.errorSummary(

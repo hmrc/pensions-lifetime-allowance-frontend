@@ -27,9 +27,6 @@
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
-}
 
 @helpTextAccordionContent = {
     <p>@Messages("pla.ip14CurrentPensions.hiddenTextPara")</p>
@@ -55,7 +52,7 @@
     </p>
 }
 
-@main_template(title = Messages("pla.ip14CurrentPensions.title"), scriptElem=Some(scriptElement)) {
+@main_template(title = Messages("pla.ip14CurrentPensions.title")) {
 
     @language_selection(lc.languageMap, lc.langToCall, None)
 

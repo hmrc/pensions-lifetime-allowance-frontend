@@ -35,11 +35,8 @@
     )
 }
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/exitSurvey.js")'></script>
-}
 
-@views.html.full_width_template(Messages("pla.exitSurvey.title"), scriptElem=Some(scriptElement)) {
+@views.html.full_width_template(Messages("pla.exitSurvey.title")) {
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), exitSurveyForm)
 
