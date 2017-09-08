@@ -6,13 +6,11 @@
   bodyClasses: Option[String] = None,
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
-  showLogout: Boolean = true,
-  gaCode: Seq[String] = Seq.empty)(mainContent: Html)(implicit request : Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
+  showLogout: Boolean = true
+  )(mainContent: Html)(implicit request : Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @import uk.gov.hmrc.play.views.html.layouts
 
-
-@serviceInfoContent = {}
 
 @sidebar = {
     @if(sidebarLinks.isDefined) {
@@ -27,10 +25,8 @@
                bodyClasses = bodyClasses,
                sidebar = sidebar,
                contentHeader = contentHeader,
-               mainContent = layouts.article(mainContent),
-               serviceInfoContent = serviceInfoContent,
+               mainContent = mainContent,
                scriptElem = scriptElem,
-               showLogout = showLogout,
-               gaCode = gaCode
+               showLogout = showLogout
 )
 

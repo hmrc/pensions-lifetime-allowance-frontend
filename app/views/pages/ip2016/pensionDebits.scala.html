@@ -10,11 +10,8 @@
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
-}
 
-@full_width_template(Messages("pla.pensionDebits.title"), scriptElem=Some(scriptElement)) {
+@full_width_template(Messages("pla.pensionDebits.title")) {
 
 
     @language_selection(lc.languageMap, lc.langToCall, None)

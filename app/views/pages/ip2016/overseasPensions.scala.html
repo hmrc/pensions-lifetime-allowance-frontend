@@ -19,11 +19,8 @@
     )
 }
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
-}
 
-@main_template(title=Messages("pla.overseasPensions.title"), scriptElem=Some(scriptElement)) {
+@main_template(title=Messages("pla.overseasPensions.title")) {
 
     @language_selection(lc.languageMap, lc.langToCall, None)
 
