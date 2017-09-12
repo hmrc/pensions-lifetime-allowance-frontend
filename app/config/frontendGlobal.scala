@@ -21,7 +21,7 @@ import controllers.BaseController
 import net.ceedubs.ficus.Ficus._
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import play.api.mvc.Request
+import play.api.mvc.{EssentialFilter, Request}
 import play.api.{Application, Configuration, Play}
 import play.twirl.api.Html
 import uk.gov.hmrc.crypto.ApplicationCrypto
@@ -30,6 +30,7 @@ import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
 import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import uk.gov.hmrc.play.http.logging.filters.FrontendLoggingFilter
+import utils.SessionIdFilter
 
 object FrontendGlobal
   extends DefaultFrontendGlobal with BaseController{
@@ -42,6 +43,8 @@ object FrontendGlobal
     super.onStart(app)
     ApplicationCrypto.verifyConfiguration()
   }
+
+  override def filters: Seq[EssentialFilter] = super.filters ++ Seq(SessionIdFilter)
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
     views.html.error_template(pageTitle, heading, message)

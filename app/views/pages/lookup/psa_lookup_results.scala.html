@@ -1,0 +1,96 @@
+@import play.api.Application
+@import config.FrontendAppConfig._
+
+@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@lc = @{
+    Application.instanceCache[PlaLanguageController].apply(application)
+}
+
+@metrics = {
+@if(lookupResult.psaCheckResult == 0) {
+    @ga_metrics(invalidStatusMetric)
+} else {
+    @ga_metrics(validStatusMetric)
+}
+}
+
+@views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false,
+    gaCode = Seq(metrics.body)) {
+
+    <h1> @Messages("psa.lookup.results.title")</h1>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.results.table.row.1")</td>
+                <td class="font-small">@lookupResult.pensionSchemeAdministratorCheckReference</td>
+            </tr>
+            @if(lookupResult.protectionNotificationNumber.isDefined) {
+                <tr>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.2")</td>
+                    <td class="font-small">@lookupResult.protectionNotificationNumber</td>
+                </tr>
+            }
+            @if(lookupResult.psaCheckResult == 1) {
+                <tr>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
+                    <td class="font-small"><a href="@routes.LookupController.displayProtectionTypeGuidance()">
+                    @lookupResult.ltaType match {
+                        case 1 => {
+                            @Messages("psa.lookup.results.ltatype.1")
+                        }
+                        case 2 => {
+                            @Messages("psa.lookup.results.ltatype.2")
+                        }
+                        case 3 => {
+                            @Messages("psa.lookup.results.ltatype.3")
+                        }
+                        case 4 => {
+                            @Messages("psa.lookup.results.ltatype.4")
+                        }
+                        case 5 => {
+                            @Messages("psa.lookup.results.ltatype.5")
+                        }
+                        case 6 => {
+                            @Messages("psa.lookup.results.ltatype.6")
+                        }
+                        case 7 => {
+                            @Messages("psa.lookup.results.ltatype.7")
+                        }
+                    } </a></td>
+                </tr>
+                @lookupResult.ltaType match {
+                    case x if 2 until 4 contains x => {
+                        @if(lookupResult.protectedAmount.isDefined) {
+                            <tr>
+                                <td class="font-small">@Messages("psa.lookup.results.table.row.4")</td>
+                                <td class="font-small">£@lookupResult.protectedAmount.get.formatted("%,1.0f")</td>
+                            </tr>
+                        }
+                    }
+                    case _ => {}
+                }
+                <tr>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.5")</td>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.5.valid")</td>
+            } else {
+                <tr>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.5")</td>
+                    <td class="font-small">@Messages("psa.lookup.results.table.row.5.invalid")</td>
+                </tr>
+            }
+            <tr>
+                <td class="font-small">@Messages("psa.lookup.results.table.row.6")</td>
+                <td class="font-small">@timestamp</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <a class="button button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.LookupController.printResultsPDF()">@Messages("psa.lookup.results.save")</a>
+        <p>
+        <a class="button button--get-started" role="button" onclick="ga('send', 'event', 'ResultsPage', 'click', 'Check another certificate')" href="@routes.LookupController.redirectToStart()">@Messages("psa.lookup.results.check-another")</a>
+        </p>
+    </div>
+}

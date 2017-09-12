@@ -43,6 +43,9 @@ trait AppConfig {
   val ggSignInUrl: String
   val ptaFrontendUrl: String
   val feedbackSurvey: String
+  val validStatusMetric: String
+  val invalidStatusMetric: String
+  val notFoundStatusMetric: String
 }
 
 object FrontendAppConfig extends AppConfig with ServicesConfig {
@@ -79,4 +82,7 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
 
   override val feedbackSurvey: String = configuration.getString(s"feedback-survey-frontend.url").getOrElse("")
 
+  override val validStatusMetric: String = configuration.getString("valid-protection-status").getOrElse("")
+  override val invalidStatusMetric: String = configuration.getString("invalid-protection-status").getOrElse("")
+  override val notFoundStatusMetric: String = configuration.getString("not-found-protection-status").getOrElse("")
 }
