@@ -1,0 +1,46 @@
+@import play.api.Application
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import config.FrontendAppConfig._
+
+@(psaRefForm: Form[String])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@lc = @{
+    Application.instanceCache[PlaLanguageController].apply(application)
+}
+
+@views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
+
+    <h1> @Messages("psa.lookup.form.scheme-admin-ref-form.title")</h1>
+
+    @govHelpers.errorSummary(Messages("pla.lookup.form.error.summary"), psaRefForm)
+
+    @govHelpers.form(action = routes.LookupController.submitSchemeAdministratorReferenceForm) {
+
+        <div class="form-group">
+            <fieldset class="form-field-group">
+
+                @if(psaRefForm("pensionSchemeAdministratorCheckReference").hasErrors) {
+                    <div class="form-field form-field--error fields-aligned">
+                    } else {
+                    <div class="form-field">
+                    }
+                <label>
+                    @if(psaRefForm("pensionSchemeAdministratorCheckReference").hasErrors) {
+                        <div class="error-notification" id="@{
+                            psaRefForm("pensionSchemeAdministratorCheckReference").errors.head.message
+                        }">
+                        @{
+                            psaRefForm("pensionSchemeAdministratorCheckReference").errors.head.message
+                        }
+                        </div>
+                    }
+                    <p class="form-field--hint">@Messages("psa.lookup.form.psaref.hint")</p>
+                    <input type="text" name="pensionSchemeAdministratorCheckReference" id="pensionSchemeAdministratorCheckReference"
+                    class="input--medium input--cleared caps" value="@psaRefForm("pensionSchemeAdministratorCheckReference").value.getOrElse("")"/>
+                </label>
+            </div>
+            </fieldset>
+        </div>
+        <button class="button" type="submit">@Messages("psa.lookup.form.continue.button")</button>
+    }
+}

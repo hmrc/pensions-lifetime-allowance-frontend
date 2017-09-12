@@ -88,5 +88,19 @@ POST        /amend-protection/submit-amendment                                  
 GET         /amend-protection/amendment-outcome                                           controllers.AmendsController.amendmentOutcome
 GET         /amend-protection/:protectionType/:status                                     controllers.AmendsController.amendsSummary(protectionType, status)
 
+#PSA Lookup routes
+GET         /psalookup/protection-notification-number                                     controllers.LookupController.displayProtectionNotificationNoForm
+POST        /psalookup/protection-notification-number                                     controllers.LookupController.submitProtectionNotificationNoForm
+
+GET         /psalookup/scheme-administrator-reference                                     controllers.LookupController.displaySchemeAdministratorReferenceForm
+POST        /psalookup/scheme-administrator-reference                                     controllers.LookupController.submitSchemeAdministratorReferenceForm
+
+GET         /psalookup/not-found-results                                                  controllers.LookupController.displayNotFoundResults
+GET         /psalookup/results                                                            controllers.LookupController.displayLookupResults
+GET         /psalookup/results/clear                                                      controllers.LookupController.redirectToStart
+GET         /psalookup/results/print                                                      controllers.LookupController.printResultsPDF
+GET         /psalookup/not-found/print                                                    controllers.LookupController.printNotFoundPDF
+GET         /psalookup/protection-guidance                                                controllers.LookupController.displayProtectionTypeGuidance
+
 #Feedback routes
 GET         /exit                                                                         controllers.ExitSurveyController.exitSurvey

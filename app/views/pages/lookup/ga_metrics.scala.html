@@ -1,0 +1,5 @@
+@(metric: String)(implicit messages: play.api.i18n.Messages)
+
+ga('send', 'event', 'Status', 'result', {
+'@metric': 1
+});
