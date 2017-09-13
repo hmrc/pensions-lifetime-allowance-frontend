@@ -21,7 +21,7 @@ import java.util.UUID
 
 import auth._
 import com.kenshoo.play.metrics.PlayModule
-import config.FrontendAuthConnector
+import config.{FrontendAuthConnector, LocalTemplateRenderer}
 import connectors.KeyStoreConnector
 import models._
 import org.mockito.Matchers
@@ -34,6 +34,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
@@ -47,6 +48,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         override lazy val authConnector = MockAuthConnector
         override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
         override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
+        override implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
     }
 
     val sessionId = UUID.randomUUID.toString
