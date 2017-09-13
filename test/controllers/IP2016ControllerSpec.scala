@@ -24,7 +24,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import akka.stream.ActorMaterializer
 import auth._
 import com.kenshoo.play.metrics.PlayModule
-import config.AuthClientConnector
+import config.{AuthClientConnector, LocalTemplateRenderer}
 import connectors.KeyStoreConnector
 import models._
 import org.jsoup.Jsoup
@@ -45,6 +45,7 @@ import testHelpers._
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
@@ -67,10 +68,9 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         override lazy val authConnector = mockAuthConnector
         override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
         override lazy val postSignInRedirectUrl = "IP2016"
-
         override def config: Configuration = mock[Configuration]
-
         override def env: Environment = mock[Environment]
+        override implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
     }
 
     val sessionId = UUID.randomUUID.toString

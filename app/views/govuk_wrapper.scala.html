@@ -76,15 +76,14 @@ if(str.trim=="") false else str
     uiLayouts.article(mainContent, false, bodyClasses)
 }
 
-@mainContentHeader = {
-   @if(contentHeader.isDefined) {
+@mainContentHeader = @{
         contentHeader
-    }
 }
 
 @getHelpForm = {
       @FormPartialRetriever.getPartialContent(context.getPageHelpPartial()(messages))
 }
+
 
 
 @{
@@ -108,11 +107,10 @@ templateRenderer.renderDefaultTemplate(article, Map[String, Any](
 "getHelpForm" -> getHelpForm,
 
 "navTitle" -> navTitle,
-"navLinks" -> None,
-"hasNavLinks" -> None,
+"navLinks" -> links,
+"hasNavLinks" -> true,
 "sidebar" -> sidebar,
 
-"optimizelyBaseUrl" -> "//cdn.optimizely.com/",
 "optimizelyProjectId" -> "8421961441"
 )
 )
