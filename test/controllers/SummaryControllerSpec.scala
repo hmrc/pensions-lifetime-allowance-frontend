@@ -45,6 +45,7 @@ import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
@@ -64,10 +65,9 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     lazy val appConfig = MockConfig
     override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
-
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
-
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     val summaryConstructor = mockSummaryConstructor
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
@@ -78,10 +78,9 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     lazy val appConfig = MockConfig
     override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
-
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
-
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     val summaryConstructor = mockSummaryConstructor
     when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(None)
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -93,10 +92,9 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     lazy val appConfig = MockConfig
     override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
-
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
-
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     val summaryConstructor = mockSummaryConstructor
     when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Some(tstSummaryModel))
     implicit val hc: HeaderCarrier = HeaderCarrier()

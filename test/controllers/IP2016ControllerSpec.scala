@@ -70,7 +70,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         override lazy val postSignInRedirectUrl = "IP2016"
         override def config: Configuration = mock[Configuration]
         override def env: Environment = mock[Environment]
-        override implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
+        override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
 
     val sessionId = UUID.randomUUID.toString

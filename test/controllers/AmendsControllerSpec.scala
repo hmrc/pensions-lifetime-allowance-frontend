@@ -47,6 +47,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HttpResponse
@@ -76,10 +77,9 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
     override val plaConnector: PLAConnector = mockPLAConnector
     override val responseConstructors: ResponseConstructors = mockResponseConstructors
-
     override def config: Configuration = mock[Configuration]
-
     override def env: Environment = mock[Environment]
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   }
 
   val sessionId = UUID.randomUUID.toString
