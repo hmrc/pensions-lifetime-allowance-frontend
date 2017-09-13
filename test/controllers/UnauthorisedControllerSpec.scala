@@ -27,6 +27,7 @@ import connectors.IdentityVerificationConnector
 import testHelpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class UnauthorisedControllerSpec extends UnitSpec with OneAppPerSuite {
 
@@ -34,6 +35,7 @@ class UnauthorisedControllerSpec extends UnitSpec with OneAppPerSuite {
 
   def testUnauthorisedController(identityVerificationEnabled: Boolean = true): UnauthorisedController = new UnauthorisedController {
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   }
 
   "GET /not-authorised" should {

@@ -34,12 +34,13 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
+import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost, MockTemplateRenderer}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.HttpResponse
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
@@ -62,6 +63,8 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
     override val plaConnector: PLAConnector = mockPLAConnector
     override val responseConstructors: ResponseConstructors = mockResponseConstructors
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+
   }
 
   val sessionId = UUID.randomUUID.toString

@@ -21,7 +21,7 @@ import java.util.UUID
 
 import auth._
 import com.kenshoo.play.metrics.PlayModule
-import config.{FrontendAuthConnector, LocalTemplateRenderer}
+import config.FrontendAuthConnector
 import connectors.KeyStoreConnector
 import models._
 import org.mockito.Matchers
@@ -48,7 +48,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         override lazy val authConnector = MockAuthConnector
         override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
         override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
-        override implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
+        override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
 
     val sessionId = UUID.randomUUID.toString

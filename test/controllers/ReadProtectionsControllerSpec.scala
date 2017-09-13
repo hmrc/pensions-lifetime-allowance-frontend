@@ -27,11 +27,12 @@ import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.http.HeaderNames.CACHE_CONTROL
-import testHelpers.AuthorisedFakeRequestTo
+import testHelpers.{AuthorisedFakeRequestTo, MockTemplateRenderer}
 import uk.gov.hmrc.play.http.HttpResponse
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   override def bindModules = Seq(new PlayModule)
@@ -54,6 +55,7 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
     override val plaConnector = mock[PLAConnector]
     override val displayConstructors = mock[DisplayConstructors]
     override val responseConstructors = mock[ResponseConstructors]
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   }
 
   object TestReadProtectionsControllerUpstreamError extends BaseTestReadProtectionsController {
