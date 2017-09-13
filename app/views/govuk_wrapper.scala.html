@@ -9,7 +9,8 @@
   mainContent: Html = HtmlFormat.empty,
   scriptElem: Option[Html] = None,
   showLogout: Boolean = true,
-  gaDimensions: Option[Map[String, Any]] = None
+  gaDimensions: Option[Map[String, Any]] = None,
+  articleEnabled: Boolean = true
   )(implicit request: Request[_], messages: Messages, context: config.PlaContext, FormPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
@@ -57,7 +58,12 @@ if(str.trim=="") false else str
 }
 
 @article = @{
-    uiLayouts.article(mainContent, false, bodyClasses)
+
+    if(articleEnabled) {
+            uiLayouts.article(mainContent, false, bodyClasses)
+    } else {
+            mainContent
+    }
 }
 
 @mainContentHeader = @{
