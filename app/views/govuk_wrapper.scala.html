@@ -90,7 +90,14 @@ if(str.trim=="") false else str
       @FormPartialRetriever.getPartialContent(context.getPageHelpPartial()(messages))
 }
 
-
+@isWelsh = @{
+    if(messages.lang.code == "cy"){
+      true
+    }
+    else {
+      false
+    }
+}
 
 @{
 templateRenderer.renderDefaultTemplate(article, Map[String, Any](
@@ -117,7 +124,8 @@ templateRenderer.renderDefaultTemplate(article, Map[String, Any](
 "hasNavLinks" -> true,
 "sidebar" -> sidebar,
 
-"optimizelyProjectId" -> "8421961441"
+"optimizelyProjectId" -> "8421961441",
+"isWelsh" -> isWelsh
 )
 )
 }
