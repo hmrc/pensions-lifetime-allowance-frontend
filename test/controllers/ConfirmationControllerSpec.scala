@@ -37,6 +37,7 @@ import play.api.test.FakeRequest
 import testHelpers._
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
@@ -50,9 +51,9 @@ class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with 
         lazy val appConfig = MockConfig
         override lazy val authConnector = mockAuthConnector
         lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
-
         override def config: Configuration = mock[Configuration]
         override def env: Environment = mock[Environment]
+        override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
 
     val sessionId = UUID.randomUUID.toString
