@@ -35,7 +35,9 @@ import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import testHelpers.MockTemplateRenderer
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{ HeaderCarrier, HttpResponse, SessionKeys }
@@ -58,6 +60,7 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
     val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
     val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     val lookupRequestID = "psa-lookup-request"
     val lookupResultID = "psa-lookup-result"
