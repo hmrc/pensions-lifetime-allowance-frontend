@@ -10,7 +10,8 @@
   scriptElem: Option[Html] = None,
   showLogout: Boolean = true,
   gaDimensions: Option[Map[String, Any]] = None,
-  articleEnabled: Boolean = true
+  articleEnabled: Boolean = true,
+  gaCode: Seq[String] = Seq.empty
   )(implicit request: Request[_], messages: Messages, context: config.PlaContext, FormPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
