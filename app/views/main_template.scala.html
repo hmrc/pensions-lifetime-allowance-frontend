@@ -7,7 +7,8 @@
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
   showLogout: Boolean = true,
-  gaCode: Seq[String] = Seq.empty
+  gaCode: Seq[String] = Seq.empty,
+  gaDimensions: Option[Map[String, Any]] = None
   )(mainContent: Html)(implicit request : Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @import uk.gov.hmrc.play.views.html.layouts
@@ -29,6 +30,7 @@
                mainContent = mainContent,
                scriptElem = scriptElem,
                showLogout = showLogout,
-               gaCode = gaCode
+               gaCode = gaCode,
+               gaDimensions = gaDimensions
 )
 
