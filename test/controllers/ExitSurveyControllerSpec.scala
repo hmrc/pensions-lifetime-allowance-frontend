@@ -30,6 +30,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     override def bindModules = Seq(new PlayModule)
@@ -41,6 +42,7 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
         override lazy val applicationConfig = MockConfig
         override lazy val authConnector = MockAuthConnector
         override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
+        override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
 
     "ExitSurveyController should be correctly initialised" in {

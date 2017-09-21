@@ -18,7 +18,7 @@
 @import controllers.PlaLanguageController
 @import play.api.Application
 
-@(partialUrl: String, redirectUrl: String)(implicit request: Request[_], messages: Messages, cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(partialUrl: String, redirectUrl: String)(implicit request: Request[_], messages: Messages, cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 

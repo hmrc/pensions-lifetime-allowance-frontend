@@ -3,7 +3,7 @@
 @import helpers.templates.{formHiddenYesNoRadioExitSurvey,exitSurveyInputRadio,checkbox}
 @import play.api.data._
 
-@(exitSurveyForm: Form[ExitSurveyModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(exitSurveyForm: Form[ExitSurveyModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @hiddenYesNoContent = {
 
@@ -19,11 +19,8 @@
     )
 }
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/exitSurvey.js")'></script>
-}
 
-@views.html.full_width_template(Messages("pla.exitSurvey.title"), scriptElem=Some(scriptElement)) {
+@views.html.full_width_template(Messages("pla.exitSurvey.title")) {
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), exitSurveyForm)
 

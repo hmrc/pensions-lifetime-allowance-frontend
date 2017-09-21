@@ -30,7 +30,6 @@ private object AppDependencies {
   private val playHealthVersion = "2.1.0"
   private val loggerVersion = "3.1.0"
   private val frontendBootstrapVersion = "7.22.0"
-  private val govukTemplateVersion = "5.1.0"
   private val playUiVersion = "7.2.1"
   private val playPartialsVersion = "5.3.0"
   private val playAuthorisedFrontendVersion = "6.3.0"
@@ -43,6 +42,7 @@ private object AppDependencies {
 
   private val mongoCachingVersion = "4.1.0"
   private val playLanguageVersion = "3.0.0"
+  private val localTemplateRendererVersion = "0.10.0"
 
   val compile = Seq(
     ws,
@@ -51,12 +51,12 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
     "uk.gov.hmrc" %% "logback-json-logger" % loggerVersion,
-    "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
     "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
-    "uk.gov.hmrc" %% "play-language" % playLanguageVersion
+    "uk.gov.hmrc" %% "play-language" % playLanguageVersion,
+    "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion
   )
 
   trait TestDependencies {

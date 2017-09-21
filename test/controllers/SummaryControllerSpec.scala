@@ -38,6 +38,7 @@ import testHelpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
@@ -53,6 +54,8 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+
 
     val summaryConstructor = mockSummaryConstructor
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -64,6 +67,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     val summaryConstructor = mockSummaryConstructor
     when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(None)
@@ -76,6 +80,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     val summaryConstructor = mockSummaryConstructor
     when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Some(tstSummaryModel))

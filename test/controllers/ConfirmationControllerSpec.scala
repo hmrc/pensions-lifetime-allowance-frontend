@@ -29,6 +29,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import testHelpers._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     override def bindModules = Seq(new PlayModule)
@@ -37,6 +38,7 @@ class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with 
         override lazy val applicationConfig = MockConfig
         override lazy val authConnector = MockAuthConnector
         override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+        override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
 
     val sessionId = UUID.randomUUID.toString

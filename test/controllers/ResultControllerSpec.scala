@@ -33,10 +33,11 @@ import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
-import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
+import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost, MockTemplateRenderer}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
@@ -154,6 +155,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -179,6 +181,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -204,6 +207,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
@@ -228,6 +232,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
@@ -246,6 +251,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     override lazy val applicationConfig = MockConfig
     override lazy val authConnector = MockAuthConnector
     override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]

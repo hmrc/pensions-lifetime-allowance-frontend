@@ -21,6 +21,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mock.MockitoSugar
 import java.util.UUID
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import play.api.i18n.Messages
 import testHelpers._
@@ -33,6 +34,7 @@ class TimeoutControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     override def bindModules = Seq(new PlayModule)
 
     object TestTimeoutController extends TimeoutController {
+        override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
 
     "Calling the .timeout action" when {

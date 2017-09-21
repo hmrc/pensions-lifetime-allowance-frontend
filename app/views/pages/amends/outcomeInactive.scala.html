@@ -4,15 +4,12 @@
 @import controllers.PlaLanguageController
 @import play.api.Application
 
-@(model: InactiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(model: InactiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
-@scriptElement = {
-<script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
-}
 
-@views.html.main_template(title = Messages("pla.inactiveAmend.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.inactiveAmend.title"), bodyClasses = None) {
 
 @language_selection(lc.languageMap, lc.langToCall, None)
 

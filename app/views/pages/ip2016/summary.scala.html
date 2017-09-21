@@ -8,13 +8,10 @@
 @import controllers.PlaLanguageController
 @import play.api.Application
 
-@(summary: SummaryModel)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(summary: SummaryModel)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
-}
 
 @hiddenContent = {
     <p>@Messages("pla.summary.hiddenPara.1")</p>
@@ -34,7 +31,7 @@
     </p>
 }
 
-@views.html.full_width_template(title = Messages("pla.summary.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
+@views.html.full_width_template(title = Messages("pla.summary.title"), bodyClasses = None) {
 
     @language_selection(lc.languageMap, lc.langToCall, None)
 

@@ -28,12 +28,16 @@ import testHelpers._
 import org.scalatest._
 import org.scalatest.Matchers._
 import uk.gov.hmrc.time.DateTimeUtils._
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-class WithdrawnControllerSpec extends FunSpec with OneAppPerSuite {
+class WithdrawnControllerSpec extends FunSpec with OneAppPerSuite with BaseController {
 
   val fakeRequest = FakeRequest("GET", "/")
+  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
-  def testWithdrawnController(): WithdrawnController = new WithdrawnController {}
+  def testWithdrawnController(): WithdrawnController = new WithdrawnController {
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+  }
 
   describe ("Withdrawn controller") {
     it ("should show withdrawn page") {
@@ -48,7 +52,8 @@ class WithdrawnControllerSpec extends FunSpec with OneAppPerSuite {
         "/apply-for-ip14-pension-sharing-order-details", "/apply-for-ip14-remove-pension-sharing-order-details",
         "/apply-for-ip14-submit-your-application").foreach { (path) =>
       it (s"show withdrawn page for /protect-your-lifetime-allowance$path") {
-        val result = route(FakeRequest(GET, s"/protect-your-lifetime-allowance$path")).get
+
+        val result = testWithdrawnController().showWithdrawn()(FakeRequest(GET, s"/protect-your-lifetime-allowance$path"))
         contentAsString(result) should include ("Sorry, applications for 2014 protection have ended")
       }
     }

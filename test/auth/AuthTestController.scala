@@ -22,6 +22,8 @@ import uk.gov.hmrc.play.frontend.controller.FrontendController
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import testHelpers.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 object AuthTestController extends AuthTestController {
 
@@ -31,6 +33,7 @@ object AuthTestController extends AuthTestController {
 }
 
 trait AuthTestController extends BaseController with AuthorisedForPLA {
+  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
   val authorisedAsyncAction = AuthorisedByAny.async {
     implicit user =>  implicit request => Future.successful(Ok(views.html.pages.confirmation.confirmFP()))
