@@ -95,7 +95,7 @@ package object auth {
         ggSession.oid
       )
 
-      val tooWeakCredentialsAuthContext = AuthContext(
+      val weakCredentialsAuthContext = AuthContext(
         authority = tooWeakCredentialsAuthority,
         governmentGatewayToken = Some(ggSession.governmentGatewayToken),
         nameFromSession = Some(ggSession.name)

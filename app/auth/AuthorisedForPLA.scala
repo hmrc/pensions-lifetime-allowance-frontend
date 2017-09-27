@@ -40,8 +40,7 @@ trait AuthorisedForPLA extends Actions {
   lazy val visibilityPredicate = new PLACompositePageVisibilityPredicate(
     postSignInRedirectUrl,
     applicationConfig.notAuthorisedRedirectUrl,
-    applicationConfig.ivUpliftUrl,
-    applicationConfig.twoFactorUrl)
+    applicationConfig.ivUpliftUrl)
 
   class AuthorisedBy(regime: TaxRegime) {
     val authedBy: AuthenticatedBy = AuthorisedFor(regime, visibilityPredicate)

@@ -109,41 +109,13 @@ class PLAAuthSpec extends UnitSpec with WithFakeApplication {
     }
   }
 
-  "Calling PLAStrongCredentialPredicate with an auth context that has weak credentials" should {
-    "result in the page being blocked with a redirect to 2FA" in {
-
-      val predicate = new PLAStrongCredentialPredicate(twoFactorURI)
-      val authContext = ggUser.tooWeakCredentialsAuthContext
-
-      val result = predicate(authContext, fakeRequest)
-
-      val pageVisibility = await(result)
-      pageVisibility.isVisible shouldBe false
-    }
-  }
-
-  "Calling PLAStrongCredentialPredicate with an auth context that has strong credentials" should {
-    "result in page is visible" in {
-
-      val predicate = new PLAStrongCredentialPredicate(twoFactorURI)
-      val authContext = ggUser.allowedAuthContext
-
-      val result = predicate(authContext, fakeRequest)
-
-      val pageVisibility = await(result)
-      pageVisibility.isVisible shouldBe true
-      val nonVisibleResult = await(pageVisibility.nonVisibleResult)
-    }
-  }
-
   "Calling PLACompositePageVisibilityPredicate with an auth context that has strong credentials and CL200 confidence" should {
     "result in page is visible" in {
 
       val predicate = new PLACompositePageVisibilityPredicate(
         mockConfig.confirmFPUrl,
         mockConfig.notAuthorisedRedirectUrl,
-        mockConfig.ivUpliftUrl,
-        mockConfig.twoFactorUrl)
+        mockConfig.ivUpliftUrl)
 
       val authContext = ggUser.allowedAuthContext
 
@@ -155,31 +127,29 @@ class PLAAuthSpec extends UnitSpec with WithFakeApplication {
   }
 
   "Calling PLACompositePageVisibilityPredicate with an auth context that has weak credentials and CL200 confidence" should {
-    "result in page is not visible" in {
+    "result in page visible" in {
 
       val predicate = new PLACompositePageVisibilityPredicate(
         mockConfig.confirmFPUrl,
         mockConfig.notAuthorisedRedirectUrl,
-        mockConfig.ivUpliftUrl,
-        mockConfig.twoFactorUrl)
+        mockConfig.ivUpliftUrl)
 
-      val authContext = ggUser.tooWeakCredentialsAuthContext
+      val authContext = ggUser.weakCredentialsAuthContext
 
       val result = predicate(authContext, fakeRequest)
 
       val pageVisibility = await(result)
-      pageVisibility.isVisible shouldBe false
+      pageVisibility.isVisible shouldBe true
     }
   }
 
-  "Calling PLACompositePageVisibilityPredicate with an auth context that has string credentials and CL50 confidence" should {
+  "Calling PLACompositePageVisibilityPredicate with an auth context that has strong credentials and CL50 confidence" should {
     "result in page is not visible" in {
 
       val predicate = new PLACompositePageVisibilityPredicate(
         mockConfig.confirmFPUrl,
         mockConfig.notAuthorisedRedirectUrl,
-        mockConfig.ivUpliftUrl,
-        mockConfig.twoFactorUrl)
+        mockConfig.ivUpliftUrl)
 
       val authContext = ggUser.needsUpliftAuthContext
       val result = predicate(authContext, fakeRequest)
@@ -230,24 +200,19 @@ class PLAAuthSpec extends UnitSpec with WithFakeApplication {
   }
 
   "Calling authenticated action with a login session with weak credentials" should {
-    "result in a redirect status" in {
-      val result = AuthTestController.authorisedAsyncAction(weakCredentialsFakeRequest((AuthenticationProviderIds.GovernmentGatewayId)))
-      status(result) shouldBe Status.SEE_OTHER
-    }
-    "redirect to 2FA service" in {
-      val result = AuthTestController.authorisedAsyncAction(weakCredentialsFakeRequest((AuthenticationProviderIds.GovernmentGatewayId)))
-      val redirectUri = redirectLocation(result)
-      redirectUri shouldBe Some(twoFactorURI.toString)
+    "result in an OK status" in {
+      val result = AuthTestController.authorisedAsyncAction(weakCredentialsFakeRequest(AuthenticationProviderIds.GovernmentGatewayId))
+      status(result) shouldBe Status.OK
     }
   }
 
   "Calling authenticated action with a login session with lower confidence" should {
     "result in a redirect status" in {
-      val result = AuthTestController.authorisedAsyncAction(lowConfidenceFakeRequest((AuthenticationProviderIds.GovernmentGatewayId)))
+      val result = AuthTestController.authorisedAsyncAction(lowConfidenceFakeRequest(AuthenticationProviderIds.GovernmentGatewayId))
       status(result) shouldBe Status.SEE_OTHER
     }
     "redirect to IV uplift service" in {
-      val result = AuthTestController.authorisedAsyncAction(lowConfidenceFakeRequest((AuthenticationProviderIds.GovernmentGatewayId)))
+      val result = AuthTestController.authorisedAsyncAction(lowConfidenceFakeRequest(AuthenticationProviderIds.GovernmentGatewayId))
       val redirectUri = redirectLocation(result)
       redirectUri shouldBe Some(ivUpliftURI.toString)
     }
