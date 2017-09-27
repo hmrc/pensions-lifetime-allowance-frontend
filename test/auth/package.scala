@@ -37,11 +37,6 @@ package object auth {
         s"failureURL=${URLEncoder.encode(mockConfig.notAuthorisedRedirectUrl, "UTF-8")}" +
         s"&confidenceLevel=200")
 
-    val twoFactorURI: URI =
-      new URI(s"${mockConfig.twoFactorUrl}?" +
-        s"continue=${URLEncoder.encode(mockConfig.confirmFPUrl, "UTF-8")}&" +
-        s"failure=${URLEncoder.encode(mockConfig.notAuthorisedRedirectUrl, "UTF-8")}")
-
     object ggSession {
       val userId = "/auth/oid/1234567890"
       val oid = "1234567890"

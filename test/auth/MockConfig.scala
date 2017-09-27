@@ -38,7 +38,6 @@ object MockConfig extends AppConfig {
   override val notAuthorisedRedirectUrl: String = "/pla/not-authorised"
   override val verifySignIn = "/verify/login"
   override val ivUpliftUrl: String = "/iv/uplift"
-  override val twoFactorUrl: String = "/two-step-verification/register/"
   override val ggSignInUrl: String = "/gg/sign-in"
   override val ptaFrontendUrl: String = ""
   override val feedbackSurvey: String = "http://localhost:9514/feedback-survey/?origin=PLA"
