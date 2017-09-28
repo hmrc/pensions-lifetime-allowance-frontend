@@ -34,7 +34,7 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
+import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost, KeystoreTestHelper}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http.HttpResponse
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -43,7 +43,7 @@ import play.api.Play.current
 
 import scala.concurrent.Future
 
-class AmendsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class AmendsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with KeystoreTestHelper{
   override def bindModules = Seq(new PlayModule)
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
@@ -415,10 +415,12 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendCurrentPension, ("amendedUKPensionAmt", "100000"), ("protectionType", "ip2016"), ("status", "dormant"))
       "return 303" in {
-        keystoreFetchCondition[AmendProtectionModel](Some(testIP16DormantModel))
-        status(DataItem.result) shouldBe 303
+
       }
       "redirect to Amends Summary page" in {
+        keystoreSaveCondition[AmendProtectionModel](mockKeyStoreConnector)
+        keystoreFetchCondition[AmendProtectionModel](Some(testIP16DormantModel))
+        status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
       }
     }
@@ -563,11 +565,11 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
         ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
-      "return 303" in {
+
+      "redirect to Amends Summary Page" in {
+        keystoreSaveCondition[PensionsTakenBeforeModel](mockKeyStoreConnector)
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
-      }
-      "redirect to Amends Summary Page" in {
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
       }
     }

@@ -62,17 +62,18 @@ trait IP2016Controller extends BaseController with AuthorisedForPLA {
         }
     }
 
-    val submitPensionsTaken = AuthorisedByAny { implicit user => implicit request =>
+    val submitPensionsTaken = AuthorisedByAny.async { implicit user => implicit request =>
         pensionsTakenForm.bindFromRequest.fold(
             errors => {
                 val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
-                BadRequest(pages.ip2016.pensionsTaken(form))
+                Future.successful(BadRequest(pages.ip2016.pensionsTaken(form)))
             },
             success => {
-                keyStoreConnector.saveFormData("pensionsTaken", success)
-                success.pensionsTaken.get match {
-                    case "yes"  => Redirect(routes.IP2016Controller.pensionsTakenBefore())
-                    case "no"   => Redirect(routes.IP2016Controller.overseasPensions())
+                keyStoreConnector.saveFormData("pensionsTaken", success).map{
+                    _ => success.pensionsTaken.get match {
+                        case "yes"  => Redirect(routes.IP2016Controller.pensionsTakenBefore())
+                        case "no"   => Redirect(routes.IP2016Controller.overseasPensions())
+                    }
                 }
             }
         )
@@ -100,8 +101,9 @@ trait IP2016Controller extends BaseController with AuthorisedForPLA {
                 if(validatedForm.hasErrors) {
                     Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(validatedForm)))
                 } else {
-                    keyStoreConnector.saveFormData("pensionsTakenBefore", success)
-                    Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween()))
+                    keyStoreConnector.saveFormData("pensionsTakenBefore", success).flatMap{
+                        _=> Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween()))}
+
                 }
             }
         )
@@ -129,8 +131,8 @@ trait IP2016Controller extends BaseController with AuthorisedForPLA {
                 if(validatedForm.hasErrors) {
                     Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(validatedForm)))
                 } else {
-                    keyStoreConnector.saveFormData("pensionsTakenBetween", success)
-                    Future.successful(Redirect(routes.IP2016Controller.overseasPensions()))
+                    keyStoreConnector.saveFormData("pensionsTakenBetween", success).flatMap{
+                        _=> Future.successful(Redirect(routes.IP2016Controller.overseasPensions()))}
                 }
             }
         )
@@ -157,8 +159,8 @@ trait IP2016Controller extends BaseController with AuthorisedForPLA {
                 if(validatedForm.hasErrors) {
                     Future.successful(BadRequest(pages.ip2016.overseasPensions(validatedForm)))
                 } else {
-                    keyStoreConnector.saveFormData("overseasPensions", success)
-                    Future.successful(Redirect(routes.IP2016Controller.currentPensions()))
+                    keyStoreConnector.saveFormData("overseasPensions", success).flatMap{
+                        _=> Future.successful(Redirect(routes.IP2016Controller.currentPensions()))}
                 }
             }
         )
@@ -181,8 +183,8 @@ trait IP2016Controller extends BaseController with AuthorisedForPLA {
                 val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
                 Future.successful(BadRequest(pages.ip2016.currentPensions(form)))},
             success => {
-                keyStoreConnector.saveFormData("currentPensions", success)
-                Future.successful(Redirect(routes.IP2016Controller.pensionDebits()))
+                keyStoreConnector.saveFormData("currentPensions", success).flatMap{
+                    _=> Future.successful(Redirect(routes.IP2016Controller.pensionDebits()))}
             }
         )
     }
@@ -196,23 +198,23 @@ trait IP2016Controller extends BaseController with AuthorisedForPLA {
         }
     }
 
-    val submitPensionDebits = AuthorisedByAny { implicit user => implicit request =>
+    val submitPensionDebits = AuthorisedByAny.async { implicit user => implicit request =>
         pensionDebitsForm.bindFromRequest.fold(
             errors => {
                 val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message))})
-                BadRequest(pages.ip2016.pensionDebits(form))
+                Future.successful(BadRequest(pages.ip2016.pensionDebits(form)))
             },
             success => {
-                keyStoreConnector.saveFormData("pensionDebits", success)
-                success.pensionDebits.get match {
-                    case "yes"  => Redirect(routes.IP2016Controller.psoDetails())
-                    case "no"   =>
+                keyStoreConnector.saveFormData("pensionDebits", success).map{
+                    _ => success.pensionDebits.get match {
+                    case "yes" => Redirect (routes.IP2016Controller.psoDetails () )
+                    case "no" => Redirect (routes.SummaryController.summaryIP16 () )
 
-                        Redirect(routes.SummaryController.summaryIP16())
+                    }
                 }
             }
         )
-    }
+}
 
     //PENSION SHARING ORDER DETAILS
     val psoDetails = AuthorisedByAny.async { implicit user => implicit request =>
@@ -234,8 +236,8 @@ trait IP2016Controller extends BaseController with AuthorisedForPLA {
                     if (validatedForm.hasErrors) {
                         Future.successful(BadRequest(pages.ip2016.psoDetails(validatedForm)))
                     } else {
-                        keyStoreConnector.saveFormData(s"psoDetails", form)
-                        Future.successful(Redirect(routes.SummaryController.summaryIP16()))
+                        keyStoreConnector.saveFormData(s"psoDetails", form).flatMap{
+                            _=> Future.successful(Redirect(routes.SummaryController.summaryIP16()))}
                     }
                 }
             )

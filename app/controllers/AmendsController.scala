@@ -169,7 +169,7 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
           if (validatedForm.hasErrors) {
             Future.successful(BadRequest(pages.amends.amendPensionsTakenBefore(validatedForm)))
           } else {
-            keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
+            keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
               case Some(model) =>
                 val updatedAmount = success.amendedPensionsTakenBefore match {
                   case "yes" => success.amendedPensionsTakenBeforeAmt.get.toDouble
@@ -179,11 +179,13 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
                 val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                 val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
-                Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+                keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel).map{
+                  _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+                }
+
               case _ =>
                 Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend pensions taken before")
-                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
           }
         }
@@ -205,7 +207,7 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
         if (validatedForm.hasErrors) {
           Future.successful(BadRequest(pages.amends.amendPensionsTakenBetween(validatedForm)))
         } else {
-          keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
+          keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
             case Some(model) =>
               val updatedAmount = success.amendedPensionsTakenBetween match {
                 case "yes" => success.amendedPensionsTakenBetweenAmt.get.toDouble
@@ -215,11 +217,13 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
               val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
               val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-              keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
-              Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+              keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel).map{
+                _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+              }
+
             case _ =>
               Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} after submiiting amend pensions takne between")
-              InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+              Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
           }
         }
       }
@@ -243,7 +247,7 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
           if (validatedForm.hasErrors) {
             Future.successful(BadRequest(pages.amends.amendOverseasPensions(validatedForm)))
           } else {
-            keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
+            keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
               case Some(model) =>
                 val updatedAmount = success.amendedOverseasPensions match {
                   case "yes" => success.amendedOverseasPensionsAmt.get.toDouble
@@ -253,11 +257,13 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
                 val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                 val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
-                Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+                keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel).map{
+                  _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+                }
+
               case _ =>
                 Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend pensions taken before")
-                InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
           }
         }
@@ -276,18 +282,20 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
         Future.successful(BadRequest(pages.amends.amendCurrentPensions(form)))
       },
       success => {
-        keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
+        keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
           case Some(model) =>
             val updated= model.updatedProtection.copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
             val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
             val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-            keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
-            Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+            keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel).map{
+              _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+            }
+
 
           case _ =>
             Logger.warn(s"Could not retrieve amend protection model for user with nino ${user.nino} after submitting amend current UK pension")
-            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+            Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
         }
       }
     )
@@ -321,16 +329,18 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
         Future.successful(BadRequest(pages.amends.removePsoDebits(form)))
       },
       success => {
-        keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).map {
+        keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
           case Some(model) =>
             val updated = model.updatedProtection.copy(pensionDebits = None)
             val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
             val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
-            keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel)
-            Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+            keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel).map{
+              _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+            }
+
           case None =>
             Logger.warn(s"Could not retrieve Amend Protection Model for user with nino ${user.nino} when submitting a removal of a pension debit")
-            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+            Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
         }
     }
     )
