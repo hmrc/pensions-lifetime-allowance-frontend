@@ -24,7 +24,7 @@ import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.WithdrawDateForm._
-import models.ProtectionModel
+import models.{ProtectionModel, WithdrawalRequest}
 import play.api.Logger
 import play.api.Play.current
 import play.api.data.{Form, FormError}
@@ -61,6 +61,17 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
       }
   }
 
+  def withdrawImplications: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+    implicit request =>
+    keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
+      case Some(_) =>
+        Ok(views.html.pages.withdraw.withdrawImplications(withdrawDateForm))
+      case _ =>
+        Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
+  }
+
   def withdrawDateInput: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
     implicit request =>
       keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
@@ -72,15 +83,50 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
       }
   }
 
+//  def submitWithdrawDateInput: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+//    implicit request =>
+//      keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
+//        case Some(protection) => validateWithdrawDate(withdrawDateForm.bindFromRequest(),
+//          LocalDateTime.parse(protection.certificateDate.get)).fold(
+//          formWithErrors => BadRequest(views.html.pages.withdraw.withdrawDate(buildInvalidForm(formWithErrors))),
+//          _ => Redirect(routes.WithdrawProtectionController.displayWithdrawConfirmation())
+//        )
+//        case _ => Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw date input page")
+//          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+//      }
+//  }
+
   def submitWithdrawDateInput: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
     implicit request =>
       keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
         case Some(protection) => validateWithdrawDate(withdrawDateForm.bindFromRequest(),
           LocalDateTime.parse(protection.certificateDate.get)).fold(
           formWithErrors => BadRequest(views.html.pages.withdraw.withdrawDate(buildInvalidForm(formWithErrors))),
-          _ => Redirect(routes.WithdrawProtectionController.displayWithdrawConfirmation())
+          _ => Redirect(routes.WithdrawProtectionController.displayConfirmWithdrawal())
         )
         case _ => Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw date input page")
+          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+      }
+  }
+
+//  def submitWithdrawDateInput: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+//    implicit request =>
+//      withdrawaldateForm.bindFromRequest().fold(
+//        formWithErrors => Future.successful(BadRequest(withdrawaldateForm(formWithErrors)))
+//      )
+//      keyStoreConnector.saveFormData[WithdrawalRequest(withdrawaldate) {
+//        _ => Redirect(routes.WithdrawProtectionController.displayConfirmWithdrawal)
+//      }
+//  }
+
+
+  def displayConfirmWithdrawal: Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+    implicit request =>
+      keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
+        case Some(_) =>
+          Ok(views.html.pages.withdraw.withdrawConfirm(withdrawDateForm))
+        case _ =>
+          Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
   }

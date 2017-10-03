@@ -1,3 +1,4 @@
+@import config.FrontendAppConfig
 @import controllers.PlaLanguageController
 @import helpers.templates.formInlineDateInput
 @import play.api.Application
@@ -17,6 +18,35 @@
 
     @language_selection(lc.languageMap, lc.langToCall, None)
 
+    <nav class="breadcrumb-nav breadcrumb-nav--slim">
+        <ul class="breadcrumb-nav__list" role="breadcrumbs">
+            <li class="breadcrumb-nav__item">
+                <a href="@{
+                    FrontendAppConfig.ptaFrontendUrl
+                }" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
+            </li>
+            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
+            <li class="breadcrumb-nav__item">
+                <a href="@{
+                    controllers.routes.ReadProtectionsController.currentProtections
+                }" id="existing-protections-breadcrumb-link">@Messages("pla.existingProtections.pageBreadcrumb")</a>
+            </li>
+            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
+            <li class="breadcrumb-nav__item">
+                <a href="@{
+                    controllers.routes.WithdrawProtectionController.withdrawSummary
+                }" id="existing-protections-breadcrumb-link">@Messages("pla.withdraw.pageBreadcrumb")</a>
+            </li>
+            <li class="breadcrumb-nav__item">
+                <a href="@{
+                    controllers.routes.WithdrawProtectionController.withdrawImplications()
+                }" id="existing-protections-breadcrumb-link">@Messages("pla.withdraw.implications.breadcrumb")</a>
+            </li>
+            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
+            <li class="breadcrumb-nav__item">@Messages("pla.withdraw.date-input.breadcrumb")</li>
+        </ul>
+    </nav>
+
     <h1 class="heading-large">@Messages("pla.withdraw.date-input.title")</h1>
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), withdrawDateForm)
@@ -30,6 +60,7 @@
                 <fieldset class="form-group form-date @if(withdrawDateForm.hasErrors) {form-field--error}" id="pso-fieldset">
 
                     <span class="form-hint">@Messages("pla.withdraw.date-input.form-hint")</span>
+                    <span class="error-notification">Enter a valid date</span>
 
                     <label for="withdrawDay" class="form-group form-group-day">
                         <span>@Messages("pla.withdraw.date-input.form-day")</span>
@@ -58,10 +89,11 @@
 
             </div>
 
+            <button class="button" type="submit" id="submit"> @Messages("pla.withdraw.date-input.form.submit") </button>
+
         </div>
 
-        <button class="button" type="submit" id="submit"> @Messages("pla.withdraw.date-input.form.submit") </button>
+        <a class="back-link" href=@routes.WithdrawProtectionController.withdrawImplications>Back</a>
 
     }
-
 }
