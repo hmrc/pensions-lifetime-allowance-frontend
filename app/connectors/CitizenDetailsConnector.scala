@@ -25,6 +25,7 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import play.api.Logger
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet }
 
 object CitizenDetailsConnector extends CitizenDetailsConnector with ServicesConfig {
   override val serviceUrl = baseUrl("citizen-details")

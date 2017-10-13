@@ -18,7 +18,7 @@ package testHelpers
 
 import connectors.IdentityVerificationConnector
 import services.MetricsService
-import uk.gov.hmrc.play.http.HttpGet
+import uk.gov.hmrc.http.HttpGet
 
 object MockIdentityVerificationConnector extends IdentityVerificationConnector {
   override val serviceUrl: String = ""

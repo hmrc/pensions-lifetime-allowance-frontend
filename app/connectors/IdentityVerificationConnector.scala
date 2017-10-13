@@ -21,11 +21,11 @@ import play.api.libs.json.{JsPath, Json}
 import config.WSHttp
 import enums.IdentityVerificationResult.IdentityVerificationResult
 import services.MetricsService
-import uk.gov.hmrc.play.http.{HttpResponse, HttpGet, HeaderCarrier}
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpResponse }
 
 object IdentityVerificationConnector extends IdentityVerificationConnector with ServicesConfig {
   override val serviceUrl = baseUrl("identity-verification")

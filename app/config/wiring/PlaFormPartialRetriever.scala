@@ -16,10 +16,11 @@
 
 package config.wiring
 
-import uk.gov.hmrc.play.http.HttpGet
+import config.WSHttp
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.http.HttpGet
 
 object PlaFormPartialRetriever extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
-  override def httpGet: HttpGet = WSHttp
+  override def httpGet: HttpGet with WSHttp = new HttpGet with WSHttp
   override val crypto = encryptCookieString _
 }

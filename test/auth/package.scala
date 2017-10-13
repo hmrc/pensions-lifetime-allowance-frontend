@@ -23,6 +23,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{ConfidenceLevel, CredentialStrength}
 import uk.gov.hmrc.play.frontend.auth.connectors.{domain, AuthConnector}
+import uk.gov.hmrc.http.SessionKeys
 
 package object auth {
 
@@ -117,7 +118,6 @@ package object auth {
     }
 
   import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-  import uk.gov.hmrc.play.http.SessionKeys
   import uk.gov.hmrc.time.DateTimeUtils
   import java.util.UUID
 
