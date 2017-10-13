@@ -36,12 +36,12 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost, KeystoreTestHelper}
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.http.HttpResponse
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HttpResponse
 
 class AmendsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with KeystoreTestHelper{
   override def bindModules = Seq(new PlayModule)

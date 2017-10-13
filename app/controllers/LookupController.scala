@@ -28,11 +28,11 @@ import play.api.data.Form
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc._
-import uk.gov.hmrc.play.http.Upstream4xxResponse
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.Upstream4xxResponse
 
 object LookupController extends LookupController {
   val keyStoreConnector = KeyStoreConnector

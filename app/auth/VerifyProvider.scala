@@ -20,9 +20,9 @@ import play.api.mvc.Results.Redirect
 import play.api.mvc._
 import config.FrontendAppConfig
 import uk.gov.hmrc.play.frontend.auth.Verify
-import uk.gov.hmrc.play.http.SessionKeys
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.SessionKeys
 
 class VerifyProvider(postSignInRedirectUrl: String, verifySignInUri: String) extends Verify {
   override def redirectToLogin(implicit request: Request[_]): Future[FailureResult] = {

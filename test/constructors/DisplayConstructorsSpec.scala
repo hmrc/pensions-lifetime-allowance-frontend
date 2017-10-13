@@ -30,9 +30,9 @@ import play.api.Play.current
 class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
   override def bindModules = Seq(new PlayModule)
 
-  val tstPSACheckRef = "PSA33456789"
+  lazy val tstPSACheckRef = "PSA33456789"
 
-  val tstProtection = ProtectionModel(
+  lazy val tstProtection = ProtectionModel(
     psaCheckReference = Some("psaRef"),
     protectionID = Some(100001),
     protectionType = Some("IP2016"),
@@ -44,7 +44,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     nonUKRights = Some(100000.0),
     uncrystallisedRights = Some(1000000.34)
   )
-  val tstWithPsoProtection = ProtectionModel(
+  lazy val tstWithPsoProtection = ProtectionModel(
     psaCheckReference = Some("psaRef"),
     protectionID = Some(100001),
     protectionType = Some("IP2016"),
@@ -58,10 +58,10 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     uncrystallisedRights = Some(1000000.34)
   )
 
-  val tstNoPsoAmendProtectionModel = AmendProtectionModel(tstProtection, tstProtection)
-  val tstWithPsoAmendProtectionModel = AmendProtectionModel(tstWithPsoProtection, tstWithPsoProtection)
+  lazy val tstNoPsoAmendProtectionModel = AmendProtectionModel(tstProtection, tstProtection)
+  lazy val tstWithPsoAmendProtectionModel = AmendProtectionModel(tstWithPsoProtection, tstWithPsoProtection)
 
-  val tstPensionContributionNoPsoDisplaySections = Seq(
+  lazy val tstPensionContributionNoPsoDisplaySections = Seq(
 
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
@@ -85,7 +85,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     )
     )
   )
-  val tstPensionContributionPsoDisplaySections = Seq(
+  lazy val tstPensionContributionPsoDisplaySections = Seq(
 
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
@@ -111,9 +111,9 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     )
   )
 
-  val tstNoPsoDisplaySections = Seq()
+  lazy val tstNoPsoDisplaySections = Seq()
 
-  val tstPsoDisplaySections = Seq(
+  lazy val tstPsoDisplaySections = Seq(
     AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString, Seq(
       AmendDisplayRowModel("YesNo", None, None, "Yes"),
       AmendDisplayRowModel("Amt", None, None, "£1,000")
@@ -123,7 +123,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
   "Existing Protections Constructor" should {
 
     "Create an ExistingProtectionsDisplayModel" in {
-      val tstProtectionModelOpen = ProtectionModel(
+      lazy val tstProtectionModelOpen = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -132,7 +132,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456")
       )
-      val tstExistingProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
+      lazy val tstExistingProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "open",
         amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "open")),
@@ -141,7 +141,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"))
 
-      val tstProtectionModelDormant = ProtectionModel(
+      lazy val tstProtectionModelDormant = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -150,7 +150,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstExistingProtectionDisplayModelDormant = ExistingProtectionDisplayModel(
+      lazy val tstExistingProtectionDisplayModelDormant = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "dormant",
         amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "dormant")),
@@ -158,14 +158,14 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
         certificateDate = None)
-      val tstTransformedReadResponseModel = TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
-      val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(Some(tstExistingProtectionDisplayModelOpen), List(tstExistingProtectionDisplayModelDormant))
+      lazy val tstTransformedReadResponseModel = TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
+      lazy val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(Some(tstExistingProtectionDisplayModelOpen), List(tstExistingProtectionDisplayModelDormant))
 
       DisplayConstructors.createExistingProtectionsDisplayModel(tstTransformedReadResponseModel) shouldBe tstExistingProtectionsDisplayModel
     }
 
     "Correctly order existing protections with the same status" in {
-      val tstProtectionModelOpen = ProtectionModel(
+      lazy val tstProtectionModelOpen = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -174,7 +174,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456")
       )
-      val tstProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "open",
         amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "open")),
@@ -183,7 +183,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"))
 
-      val tstProtectionModelDormant7 = ProtectionModel(
+      lazy val tstProtectionModelDormant7 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("FP2014"),
@@ -192,7 +192,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant7 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant7 = ExistingProtectionDisplayModel(
         protectionType = "FP2014",
         status = "dormant",
         amendCall = None,
@@ -201,7 +201,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant6 = ProtectionModel(
+      lazy val tstProtectionModelDormant6 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Fixed"),
@@ -210,7 +210,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant6 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant6 = ExistingProtectionDisplayModel(
         protectionType = "fixed",
         status = "dormant",
         amendCall = None,
@@ -219,7 +219,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant5 = ProtectionModel(
+      lazy val tstProtectionModelDormant5 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Enhanced"),
@@ -228,7 +228,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant5 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant5 = ExistingProtectionDisplayModel(
         protectionType = "enhanced",
         status = "dormant",
         amendCall = None,
@@ -237,7 +237,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant4 = ProtectionModel(
+      lazy val tstProtectionModelDormant4 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Primary"),
@@ -246,7 +246,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant4 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant4 = ExistingProtectionDisplayModel(
         protectionType = "primary",
         status = "dormant",
         amendCall = None,
@@ -255,7 +255,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant3 = ProtectionModel(
+      lazy val tstProtectionModelDormant3 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2016"),
@@ -264,7 +264,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant3 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant3 = ExistingProtectionDisplayModel(
         protectionType = "IP2016",
         status = "dormant",
         amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2016", "dormant")),
@@ -273,7 +273,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant2 = ProtectionModel(
+      lazy val tstProtectionModelDormant2 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("FP2016"),
@@ -282,7 +282,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant2 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant2 = ExistingProtectionDisplayModel(
         protectionType = "FP2016",
         status = "dormant",
         amendCall = None,
@@ -291,7 +291,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant1 = ProtectionModel(
+      lazy val tstProtectionModelDormant1 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -300,7 +300,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "dormant",
         amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "dormant")),
@@ -309,7 +309,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstExistingProtectionModel = TransformedReadResponseModel(Some(tstProtectionModelOpen), List(
+      lazy val tstExistingProtectionModel = TransformedReadResponseModel(Some(tstProtectionModelOpen), List(
         tstProtectionModelDormant3,
         tstProtectionModelDormant7,
         tstProtectionModelDormant2,
@@ -319,7 +319,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
         tstProtectionModelDormant4))
 
-      val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(Some(tstProtectionDisplayModelOpen), List(
+      lazy val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(Some(tstProtectionDisplayModelOpen), List(
         tstProtectionDisplayModelDormant1,
         tstProtectionDisplayModelDormant2,
         tstProtectionDisplayModelDormant3,
@@ -333,7 +333,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
     "Correctly order existing protections with a variety of statuses" in {
 
-      val tstProtectionModelDormant8 = ProtectionModel(
+      lazy val tstProtectionModelDormant8 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("FP2014"),
@@ -342,7 +342,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant8 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant8 = ExistingProtectionDisplayModel(
         protectionType = "FP2014",
         status = "expired",
         amendCall = None,
@@ -351,7 +351,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant7 = ProtectionModel(
+      lazy val tstProtectionModelDormant7 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("FP2016"),
@@ -360,7 +360,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant7 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant7 = ExistingProtectionDisplayModel(
         protectionType = "FP2016",
         status = "expired",
         amendCall = None,
@@ -369,7 +369,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant6 = ProtectionModel(
+      lazy val tstProtectionModelDormant6 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -378,7 +378,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant6 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant6 = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "rejected",
         amendCall = None,
@@ -387,7 +387,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant5 = ProtectionModel(
+      lazy val tstProtectionModelDormant5 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -396,7 +396,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant5 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant5 = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "unsuccessful",
         amendCall = None,
@@ -405,7 +405,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant4 = ProtectionModel(
+      lazy val tstProtectionModelDormant4 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Primary"),
@@ -414,7 +414,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant4 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant4 = ExistingProtectionDisplayModel(
         protectionType = "primary",
         status = "withdrawn",
         amendCall = None,
@@ -423,7 +423,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant3 = ProtectionModel(
+      lazy val tstProtectionModelDormant3 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2016"),
@@ -432,7 +432,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant3 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant3 = ExistingProtectionDisplayModel(
         protectionType = "IP2016",
         status = "withdrawn",
         amendCall = None,
@@ -441,7 +441,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant2 = ProtectionModel(
+      lazy val tstProtectionModelDormant2 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Fixed"),
@@ -450,7 +450,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant2 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant2 = ExistingProtectionDisplayModel(
         protectionType = "fixed",
         status = "dormant",
         amendCall = None,
@@ -459,7 +459,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstProtectionModelDormant1 = ProtectionModel(
+      lazy val tstProtectionModelDormant1 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("Enhanced"),
@@ -468,7 +468,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         protectionReference = None
       )
-      val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
+      lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
         protectionType = "enhanced",
         status = "dormant",
         amendCall = None,
@@ -477,7 +477,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = None,
         certificateDate = None)
 
-      val tstExistingProtectionModel = TransformedReadResponseModel(None, List(
+      lazy val tstExistingProtectionModel = TransformedReadResponseModel(None, List(
         tstProtectionModelDormant3,
         tstProtectionModelDormant7,
         tstProtectionModelDormant2,
@@ -487,7 +487,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         tstProtectionModelDormant5,
         tstProtectionModelDormant4))
 
-      val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(None, List(
+      lazy val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(None, List(
         tstProtectionDisplayModelDormant1,
         tstProtectionDisplayModelDormant2,
         tstProtectionDisplayModelDormant3,
@@ -506,9 +506,9 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     "create a Print Display model" in {
 
       //Fake Input Values
-      val tstPerson = Person("McTestface", "Testy")
-      val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
-      val tstProtectionModel = ProtectionModel (
+      lazy val tstPerson = Person("McTestface", "Testy")
+      lazy val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
+      lazy val tstProtectionModel = ProtectionModel (
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
         protectionType = Some("IP2014"),
@@ -517,10 +517,10 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456")
       )
-      val tstNino = "testNino"
+      lazy val tstNino = "testNino"
 
       //Expected Result
-      val tstResultPrintDisplayModel = PrintDisplayModel(
+      lazy val tstResultPrintDisplayModel = PrintDisplayModel(
         firstName = "Testy",
         surname = "Mctestface",
         nino = "testNino",
@@ -539,25 +539,25 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
   "modelsDiffer" should {
 
     "return false for the same model" in {
-      val tstModel = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000))
+      lazy val tstModel = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000))
       DisplayConstructors.modelsDiffer(tstModel, tstModel) shouldBe false
     }
 
     "return false for two models with the same properties" in {
-      val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000), preADayPensionInPayment = Some(23412.87))
-      val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), preADayPensionInPayment = Some(23412.87), protectionID = Some(10000))
+      lazy val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000), preADayPensionInPayment = Some(23412.87))
+      lazy val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), preADayPensionInPayment = Some(23412.87), protectionID = Some(10000))
       DisplayConstructors.modelsDiffer(tstModel1, tstModel2) shouldBe false
     }
 
     "return true for two models with different properties" in {
-      val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(100001), preADayPensionInPayment = Some(23412.87))
-      val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000),  preADayPensionInPayment = Some(23412.87))
+      lazy val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(100001), preADayPensionInPayment = Some(23412.87))
+      lazy val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000),  preADayPensionInPayment = Some(23412.87))
       DisplayConstructors.modelsDiffer(tstModel1, tstModel2) shouldBe true
     }
 
     "return true for two models with different number of properties" in {
-      val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(100001), preADayPensionInPayment = Some(23412.87), version = Some(4))
-      val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000),  preADayPensionInPayment = Some(23412.87))
+      lazy val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(100001), preADayPensionInPayment = Some(23412.87), version = Some(4))
+      lazy val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000),  preADayPensionInPayment = Some(23412.87))
       DisplayConstructors.modelsDiffer(tstModel1, tstModel2) shouldBe true
     }
 
@@ -599,7 +599,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     }
 
     "return no current PSO's when amountOption is 0" in {
-      val tstNoPsoAmountProtection = ProtectionModel(
+      lazy val tstNoPsoAmountProtection = ProtectionModel(
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
         protectionType = Some("IP2016"),
@@ -612,7 +612,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         nonUKRights = Some(100000.0),
         uncrystallisedRights = Some(1000000.34))
 
-      val amendModel = AmendProtectionModel(tstNoPsoAmountProtection, tstNoPsoAmountProtection)
+      lazy val amendModel = AmendProtectionModel(tstNoPsoAmountProtection, tstNoPsoAmountProtection)
 
       DisplayConstructors.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
@@ -626,7 +626,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
     "correctly produce a display section for any current PSO's" in {
 
-      val tstNewPsoAmountProtection = ProtectionModel(
+      lazy val tstNewPsoAmountProtection = ProtectionModel(
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
         protectionType = Some("IP2016"),
@@ -640,9 +640,9 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         nonUKRights = Some(100000.0),
         uncrystallisedRights = Some(1000000.34)      )
 
-      val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
+      lazy val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
 
-      val tstPsoAddedSection = Seq(
+      lazy val tstPsoAddedSection = Seq(
         AmendDisplaySectionModel("pensionDebits",
           Seq(
             AmendDisplayRowModel("CurrentPsos-psoDetails",
@@ -665,7 +665,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
     "should not create a display section for current PSO's if there is more than one pension debit in the model" in {
 
-      val tstNewPsoAmountProtection = ProtectionModel(
+      lazy val tstNewPsoAmountProtection = ProtectionModel(
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
         protectionType = Some("IP2016"),
@@ -679,7 +679,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         nonUKRights = Some(100000.0),
         uncrystallisedRights = Some(1000000.34)      )
 
-      val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
+      lazy val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
 
       DisplayConstructors.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
@@ -695,7 +695,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
   "createActiveAmendResponseModel" should {
     "correctly transform an AmendResponseModel into an ActiveAmendResultDisplayModel" in {
-      val tstAmendResponseModel = AmendResponseModel(ProtectionModel(
+      lazy val tstAmendResponseModel = AmendResponseModel(ProtectionModel(
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100003),
         protectionType = Some("IP2014"),
@@ -705,7 +705,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         notificationId = Some(33)
       ))
 
-      val tstActiveAmendResultDisplayModel = ActiveAmendResultDisplayModel(
+      lazy val tstActiveAmendResultDisplayModel = ActiveAmendResultDisplayModel(
         protectionType = ApplicationType.IP2014,
         notificationId = "33",
         protectedAmount = "£1,350,000.45",
@@ -722,12 +722,12 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
   "createInactiveAmendResponseModel" should {
     "correctly transform an AmendResponseModel into an InActiveAmendResultDisplayModel" in {
-      val tstAmendsResponseModel = AmendResponseModel(ProtectionModel(
+      lazy val tstAmendsResponseModel = AmendResponseModel(ProtectionModel(
         psaCheckReference = None,
         protectionID = None,
         notificationId = Some(30)
       ))
-      val tstInactiveAmendsResultDisplayModel = InactiveAmendResultDisplayModel(
+      lazy val tstInactiveAmendsResultDisplayModel = InactiveAmendResultDisplayModel(
         notificationId = "30",
         additionalInfo = Seq("1","2")
       )

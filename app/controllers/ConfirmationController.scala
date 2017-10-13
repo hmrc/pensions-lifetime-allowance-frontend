@@ -22,7 +22,6 @@ import config.{FrontendAppConfig,FrontendAuthConnector}
 import connectors.KeyStoreConnector
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
 import scala.concurrent.Future
 import models._
 

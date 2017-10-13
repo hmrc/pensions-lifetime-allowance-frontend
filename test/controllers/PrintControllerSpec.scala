@@ -29,12 +29,12 @@ import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.i18n.Messages
 import testHelpers.AuthorisedFakeRequestTo
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.http.HeaderCarrier
 
 class PrintControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   override def bindModules = Seq(new PlayModule)

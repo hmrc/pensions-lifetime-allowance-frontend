@@ -19,11 +19,11 @@ package testHelpers
 
 import play.api.mvc.{AnyContent, Action}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
 import auth._
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
+import uk.gov.hmrc.http.SessionKeys
+import uk.gov.hmrc.play.frontend.filters.MicroserviceFilterSupport
 
 
 class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*) extends UnitSpec with MicroserviceFilterSupport{

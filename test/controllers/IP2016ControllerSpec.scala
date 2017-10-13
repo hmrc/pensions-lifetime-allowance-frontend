@@ -35,10 +35,10 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
 class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with BeforeAndAfterEach with KeystoreTestHelper {
     override def bindModules = Seq(new PlayModule)

@@ -36,7 +36,6 @@ import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, Result, _}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.HttpResponse
 import utils.Constants
 import views.html.pages
 import views.html.pages.result.manualCorrespondenceNeeded
@@ -44,6 +43,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HttpResponse
 
 object AmendsController extends AmendsController {
   val keyStoreConnector = KeyStoreConnector
