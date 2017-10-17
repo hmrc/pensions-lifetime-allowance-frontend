@@ -20,11 +20,11 @@ import java.util.UUID
 
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
-import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
-import uk.gov.hmrc.play.http.{HeaderNames, SessionKeys}
 import utils.SessionIdSupport._
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderNames, SessionKeys }
+import uk.gov.hmrc.play.frontend.filters.MicroserviceFilterSupport
 
 /*
  * These utils provide session-id that is required by http-caching-client / keystore.

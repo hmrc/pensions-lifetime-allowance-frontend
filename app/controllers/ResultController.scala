@@ -33,6 +33,7 @@ import views.html.pages.result._
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.http.HttpResponse
 
 
 object ResultController extends ResultController with ServicesConfig {

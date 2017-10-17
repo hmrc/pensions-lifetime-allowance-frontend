@@ -36,6 +36,7 @@ import views.html._
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.http.{ HttpResponse, NotFoundException, Upstream4xxResponse }
 
 
 object ReadProtectionsController extends ReadProtectionsController with ServicesConfig {

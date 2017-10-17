@@ -19,11 +19,12 @@ package auth
 import play.api.mvc.{Action, AnyContent, Request, Result}
 import config.AppConfig
 import uk.gov.hmrc.play.frontend.auth._
-import uk.gov.hmrc.play.frontend.auth.connectors.domain.{ConfidenceLevel, Accounts}
+import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, ConfidenceLevel}
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.L500
-import uk.gov.hmrc.play.http.HeaderCarrier
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.HeaderCarrierConverter
 
 trait AuthorisedForPLA extends Actions {
 
@@ -35,13 +36,12 @@ trait AuthorisedForPLA extends Actions {
   private type AsyncPlayRequest = Request[AnyContent] => Future[Result]
   private type AsyncUserRequest = PLAUser => AsyncPlayRequest
 
-  implicit private def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrier.fromHeadersAndSession(request.headers, Some(request.session))
+  implicit private def hc(implicit request: Request[_]): HeaderCarrier = HeaderCarrierConverter.fromHeadersAndSession(request.headers, Some(request.session))
 
   lazy val visibilityPredicate = new PLACompositePageVisibilityPredicate(
     postSignInRedirectUrl,
     applicationConfig.notAuthorisedRedirectUrl,
-    applicationConfig.ivUpliftUrl,
-    applicationConfig.twoFactorUrl)
+    applicationConfig.ivUpliftUrl)
 
   class AuthorisedBy(regime: TaxRegime) {
     val authedBy: AuthenticatedBy = AuthorisedFor(regime, visibilityPredicate)

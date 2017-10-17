@@ -26,6 +26,7 @@ import connectors.KeyStoreConnector
 import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mock.MockitoSugar
 import play.api.Play.current
 import play.api.i18n.Messages
@@ -33,15 +34,22 @@ import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
 
-class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with BeforeAndAfterEach with KeystoreTestHelper {
     override def bindModules = Seq(new PlayModule)
 
     val mockKeyStoreConnector = mock[KeyStoreConnector]
 
+    override def beforeEach = {
+        reset(mockKeyStoreConnector)
+    }
+
+    implicit val hc=new HeaderCarrier()
     object TestIP2016Controller extends IP2016Controller {
         override lazy val applicationConfig = MockConfig
         override lazy val authConnector = MockAuthConnector
@@ -137,17 +145,22 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "Submitting Pensions Taken data" when {
 
         "Submitting 'yes' in pensionsTakenForm" should {
-
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTaken, ("pensionsTaken", "yes"))
-            "return 303" in {status(DataItem.result) shouldBe 303}
-            "redirect to pensions taken before" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBefore()}") }
+            "redirect to pensions taken before" in {
+                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                status(DataItem.result) shouldBe 303
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBefore()}")
+            }
         }
 
         "Submitting 'no' in pensionsTakenForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTaken, ("pensionsTaken", "no"))
-            "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect to overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions()}") }
+            "redirect to overseas pensions" in {
+              keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+              status(DataItem.result) shouldBe 303
+             redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions()}")
+            }
         }
 
         "Submitting pensionsTakenForm with no data" should {
@@ -222,8 +235,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "amount is set as '1'" should {
 
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "1"))
-                "return 303" in {status(DataItem.result) shouldBe 303}
-                "redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween()}") }
+                "redirect to pensions taken between" in {
+                    keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                    status(DataItem.result) shouldBe 303
+                    redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween()}") }
             }
 
             "no amount is set" should {
@@ -266,8 +281,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "Submitting 'no' in pensionsTakenBeforeForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "no"))
-            "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect to pensions taken between" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween()}") }
+            "redirect to pensions taken between" in {
+                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                status(DataItem.result) shouldBe 303
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween()}") }
         }
 
         "Submitting pensionsTakenBeforeForm with no data" should {
@@ -341,8 +358,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "amount is set as '1'" should {
 
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "1"))
-                "return 303" in {status(DataItem.result) shouldBe 303}
-                "redirect to overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}") }
+                "redirect to overseas pensions" in {
+                    keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                    status(DataItem.result) shouldBe 303
+                    redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}") }
             }
 
             "no amount is set" should {
@@ -385,8 +404,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "Submitting 'no' in pensionsTakenBetweenForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "no"))
-            "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect to overseas pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions()}") }
+            "redirect to overseas pensions" in {
+                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                status(DataItem.result) shouldBe 303
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions()}") }
         }
 
         "Submitting pensionsTakenBetweenForm with no data" should {
@@ -462,15 +483,19 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "Submitting 'no' in overseasPensionsForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "no"), ("overseasPensionsAmt", "") )
-            "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect to Current Pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.currentPensions()}") }
+            "redirect to Current Pensions" in {
+                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                status(DataItem.result) shouldBe 303
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.currentPensions()}") }
         }
 
         "Submitting 'yes', '£100,000' in overseasPensionForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "100000") )
-            "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect to Current Pensions" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.currentPensions()}") }
+            "redirect to Current Pensions" in {
+                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                status(DataItem.result) shouldBe 303
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.currentPensions()}") }
         }
 
         "Submitting overseasPensionsForm with no data" should {
@@ -578,8 +603,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "amount is set as '100,000'" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitCurrentPensions, ("currentPensionsAmt", "100000") )
-            "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect to Pension Debits page" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionDebits()}") }
+            "redirect to Pension Debits page" in {
+                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                status(DataItem.result) shouldBe 303
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionDebits()}") }
         }
 
         "no amount is set" should {
@@ -674,17 +701,21 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "Submitting Pensions Debits data" when {
 
         "Submitting 'yes' in pensionDebitsForm" should {
-
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionDebits, ("pensionDebits", "yes"))
-            "return 303" in {status(DataItem.result) shouldBe 303}
-            "redirect to number of pension sharing orders" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.psoDetails()}") }
+            "redirect to number of pension sharing orders" in {
+                keystoreSaveCondition[PensionDebitsModel](mockKeyStoreConnector)
+                status(DataItem.result) shouldBe 303
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.psoDetails()}")
+            }
         }
 
         "Submitting 'no' in pensionDebitsForm" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionDebits, ("pensionDebits", "no"))
-            "return 303" in { status(DataItem.result) shouldBe 303 }
-            "redirect to summary" in { redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}") }
+            "redirect to summary" in {
+                keystoreSaveCondition[PensionDebitsModel](mockKeyStoreConnector)
+                status(DataItem.result) shouldBe 303
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}") }
         }
 
         "Submitting pensionDebitsForm with no data" should {
@@ -762,11 +793,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 ("psoYear", "2016"),
                 ("psoAmt", "100000")
             )
-            "return 303" in {
-                status(DataItem.result) shouldBe 303
-            }
 
             "redirect to the summary page with a valid PSO" in {
+                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                status(DataItem.result) shouldBe 303
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}")
             }
         }
@@ -781,11 +811,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 ("psoYear", todaysDate.getYear.toString),
                 ("psoAmt", "1000000")
             )
-            "return 303" in {
-                status(DataItem.result) shouldBe 303
-            }
 
             "redirect to the psoDetails controller action with a psoNum of 4" in {
+                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                status(DataItem.result) shouldBe 303
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}")
             }
         }

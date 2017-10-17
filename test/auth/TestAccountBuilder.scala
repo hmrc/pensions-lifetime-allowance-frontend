@@ -19,10 +19,10 @@ package auth
 import play.api.http.Status
 import play.api.libs.json.Json
 import uk.gov.hmrc.domain.Generator
-import uk.gov.hmrc.play.http.HttpResponse
 
 import scala.io.Source
 import scala.util.Random
+import uk.gov.hmrc.http.HttpResponse
 
 object TestAccountBuilder {
   def randomNino: String = new Generator(new Random()).nextNino.nino.replaceFirst("MA", "AA")

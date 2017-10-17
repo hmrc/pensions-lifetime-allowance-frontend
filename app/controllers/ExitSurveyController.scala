@@ -22,8 +22,6 @@ import config.{FrontendAppConfig,FrontendAuthConnector}
 import java.util.UUID
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http.SessionKeys
-import uk.gov.hmrc.play.http.logging.SessionId
 import scala.concurrent.Future
 import forms.ExitSurveyForm.exitSurveyForm
 import models._

@@ -21,8 +21,8 @@ import org.scalatestplus.play.OneAppPerSuite
 import connectors.IdentityVerificationConnector.JsonValidationException
 import testHelpers.MockIdentityVerificationConnector
 import enums.IdentityVerificationResult
-import uk.gov.hmrc.play.http.HeaderCarrier
 import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.http.HeaderCarrier
 
 class IdentityVerificationConnectorSpec extends UnitSpec with OneAppPerSuite with ScalaFutures {
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()

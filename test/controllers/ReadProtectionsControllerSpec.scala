@@ -28,10 +28,10 @@ import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.http.HeaderNames.CACHE_CONTROL
 import testHelpers.AuthorisedFakeRequestTo
-import uk.gov.hmrc.play.http.HttpResponse
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.http.HttpResponse
 
 class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   override def bindModules = Seq(new PlayModule)

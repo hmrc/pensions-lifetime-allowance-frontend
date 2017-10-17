@@ -26,7 +26,9 @@ import scala.concurrent.Future
 import config.WSHttp
 import enums.ApplicationType
 import constructors.IPApplicationConstructor
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import models._
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpErrorFunctions, HttpGet, HttpPost, HttpPut, HttpReads, HttpResponse, Upstream4xxResponse }
 
 object PLAConnector extends PLAConnector with ServicesConfig {
 

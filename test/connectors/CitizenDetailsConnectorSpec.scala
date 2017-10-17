@@ -25,12 +25,10 @@ import org.scalatest.mock.MockitoSugar
 import org.scalatestplus.play.OneServerPerSuite
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.http.{HttpResponse, HeaderCarrier}
-import uk.gov.hmrc.play.http.ws.WSHttp
-import uk.gov.hmrc.play.http.ws.WSHttp
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.{ HeaderCarrier, HttpResponse }
 
 class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with OneServerPerSuite {
 
@@ -58,7 +56,7 @@ class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with Before
 
   "Calling getPersonDetails with valid response" should {
     "return a defined Option on PersonalDetailsModel" in {
-      when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK, Some(Json.toJson(tstDetails)))))
 
       val response = TestCitizenDetailsConnector.getPersonDetails("tstNino")
@@ -68,7 +66,7 @@ class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with Before
 
   "Calling getPersonDetails with invalid response" should {
     "return an undefined Option on PersonalDetailsModel" in {
-      when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK, Some(Json.toJson("""name:NoName""")))))
 
       val response = TestCitizenDetailsConnector.getPersonDetails("tstNino")
@@ -78,7 +76,7 @@ class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with Before
 
   "Calling getPersonDetails with error response" should {
     "return an undefined Option on PersonalDetailsModel" in {
-      when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR)))
 
       val response = TestCitizenDetailsConnector.getPersonDetails("tstNino")

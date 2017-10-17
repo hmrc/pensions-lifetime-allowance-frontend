@@ -23,6 +23,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.play.frontend.auth.AuthContext
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{ConfidenceLevel, CredentialStrength}
 import uk.gov.hmrc.play.frontend.auth.connectors.{domain, AuthConnector}
+import uk.gov.hmrc.http.SessionKeys
 
 package object auth {
 
@@ -36,11 +37,6 @@ package object auth {
         s"completionURL=${URLEncoder.encode(mockConfig.confirmFPUrl, "UTF-8")}&" +
         s"failureURL=${URLEncoder.encode(mockConfig.notAuthorisedRedirectUrl, "UTF-8")}" +
         s"&confidenceLevel=200")
-
-    val twoFactorURI: URI =
-      new URI(s"${mockConfig.twoFactorUrl}?" +
-        s"continue=${URLEncoder.encode(mockConfig.confirmFPUrl, "UTF-8")}&" +
-        s"failure=${URLEncoder.encode(mockConfig.notAuthorisedRedirectUrl, "UTF-8")}")
 
     object ggSession {
       val userId = "/auth/oid/1234567890"
@@ -95,7 +91,7 @@ package object auth {
         ggSession.oid
       )
 
-      val tooWeakCredentialsAuthContext = AuthContext(
+      val weakCredentialsAuthContext = AuthContext(
         authority = tooWeakCredentialsAuthority,
         governmentGatewayToken = Some(ggSession.governmentGatewayToken),
         nameFromSession = Some(ggSession.name)
@@ -122,7 +118,6 @@ package object auth {
     }
 
   import uk.gov.hmrc.play.frontend.auth.AuthenticationProviderIds
-  import uk.gov.hmrc.play.http.SessionKeys
   import uk.gov.hmrc.time.DateTimeUtils
   import java.util.UUID
 

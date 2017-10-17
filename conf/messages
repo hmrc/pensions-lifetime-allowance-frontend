@@ -763,7 +763,7 @@ psa.lookup.protection-guidance.title = Check the value of a protection type
 psa.lookup.protection-guidance.table-heading-left = Protection type
 psa.lookup.protection-guidance.table-heading-right = Protected amount
 psa.lookup.protection-guidance.protection-type-enhanced-label = Enhanced
-psa.lookup.protection-guidance.protection-type-enhanced-value = £1,500,000
+psa.lookup.protection-guidance.protection-type-enhanced-value = £1,500,000 or above
 psa.lookup.protection-guidance.protection-type-fixed12-label = Fixed 2012
 psa.lookup.protection-guidance.protection-type-fixed12-value = £1,800,000
 psa.lookup.protection-guidance.protection-type-fixed14-label = Fixed 2014
@@ -779,7 +779,6 @@ psa.lookup.protection-guidance.protection-type-individual16-value-line1 = The lo
 psa.lookup.protection-guidance.protection-type-individual16-value-line2 = the value of the pension at 5 April 2016
 psa.lookup.protection-guidance.protection-type-individual16-value-line3 = £1,250,000
 psa.lookup.protection-guidance.protection-type-primary-label = Primary
-psa.lookup.protection-guidance.protection-type-primary-value = £1,500,000
 
 ## Withdraw ##
 pla.withdraw.title=Protection summary
@@ -849,3 +848,6 @@ pla.withdraw.confirmation.message                     = Your {0} has been remove
 pla.withdraw.confirmation.contact.you.if.needed       = We may need to contact you to confirm the information you’ve given us.
 pla.withdraw.confirmation.check.details               = You can check the details of your pension in your <a href="{0}">personal tax account</a>.
 pla.existingProtections.withdrawnDate                 = Withdrawn date
+
+psa.lookup.protection-guidance.protection-type-primary-value = £1,500,000 or above
+

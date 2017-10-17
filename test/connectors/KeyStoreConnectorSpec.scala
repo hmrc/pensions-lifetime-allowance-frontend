@@ -24,11 +24,11 @@ import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
-import uk.gov.hmrc.play.http.{HeaderCarrier, HttpGet}
-import uk.gov.hmrc.play.http.logging.SessionId
 import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.Future
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.logging.SessionId
 
 class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar {
 
@@ -45,7 +45,7 @@ class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar {
 
     "fetch and get from keystore" in {
       val testModel = PensionsTakenModel(Some("No"))
-      when(mockSessionCache.fetchAndGetEntry[PensionsTakenModel](Matchers.anyString())(Matchers.any(), Matchers.any()))
+      when(mockSessionCache.fetchAndGetEntry[PensionsTakenModel](Matchers.anyString())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(Option(testModel)))
 
       lazy val result = TestKeyStoreConnector.fetchAndGetFormData[PensionsTakenModel]("willAddToPension")
@@ -55,7 +55,7 @@ class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar {
     "save data to keystore" in {
       val testModel = PensionsTakenModel(Some("No"))
       val returnedCacheMap = CacheMap("haveAddedToPension", Map("data" -> Json.toJson(testModel)))
-      when(mockSessionCache.cache[PensionsTakenModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockSessionCache.cache[PensionsTakenModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(returnedCacheMap))
 
       lazy val result = TestKeyStoreConnector.saveFormData("haveAddedToPension", testModel)

@@ -20,11 +20,11 @@ package testHelpers
 import akka.actor.ActorSystem
 import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.http.SessionKeys
 import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
 import auth._
 import akka.stream.{ActorMaterializer, Materializer}
+import uk.gov.hmrc.http.SessionKeys
 
 class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: Option[String], data: (String, String)*) extends UnitSpec {
   implicit val system = ActorSystem("test")
