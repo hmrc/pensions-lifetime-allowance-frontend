@@ -37,7 +37,8 @@ case class ProtectionModel (
                              pensionDebitTotalAmount: Option[Double] = None,
                              pensionDebits: Option[List[PensionDebitModel]] = None,
                              notificationId: Option[Int] = None,
-                             protectionReference: Option[String] = None
+                             protectionReference: Option[String] = None ,
+                             withdrawnDate: Option[String] = None
                              )
 
 object ProtectionModel {

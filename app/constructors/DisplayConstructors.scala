@@ -115,6 +115,9 @@ trait DisplayConstructors {
       _.stripPrefix(""""""").stripSuffix(""""""")
     }
 
+    val withdrawnDate = model.withdrawnDate.map { wDate =>
+      Display.dateDisplayString(Dates.constructDateFromAPIString(wDate))
+    }
     val amendCall = Helpers.createAmendCallIfRequired(model)
 
     ExistingProtectionDisplayModel(
@@ -124,7 +127,8 @@ trait DisplayConstructors {
       strippedPsaRef,
       protectionReference,
       protectedAmount,
-      certificateDate)
+      certificateDate,
+      withdrawnDate)
   }
 
   // AMENDS

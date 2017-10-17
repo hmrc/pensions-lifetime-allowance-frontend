@@ -1,0 +1,8 @@
+@import play.api.Application
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+
+@(protectionType: String, status: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+<div class="alert alert--success" role="alert">
+    <p class="alert__message">@Messages("pla.withdraw.implication.info", Messages(s"pla.withdraw.protection.${protectionType}.label"))</p>
+</div>

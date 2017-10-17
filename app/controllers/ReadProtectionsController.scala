@@ -90,6 +90,7 @@ trait ReadProtectionsController extends BaseController with AuthorisedForPLA {
     for {
       stepOne <- saveActiveProtection(model.activeProtection)
       stepTwo <- saveAmendableProtections(model)
+      stepThree <- saveNonAmendableProtections(model)
     } yield Ok(pages.existingProtections.existingProtections(displayModel))
 
   }
@@ -112,6 +113,18 @@ trait ReadProtectionsController extends BaseController with AuthorisedForPLA {
 
   def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]): Future[CacheMap] = {
     keyStoreConnector.saveData[AmendProtectionModel](Strings.keyStoreProtectionName(protection), AmendProtectionModel(protection, protection))
+  }
+
+  def saveNonAmendableProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Future[Seq[CacheMap]] = {
+    Future.sequence(getNonAmendableProtections(model).map(x => saveNonAmendableProtection(x)))
+  }
+
+  def getNonAmendableProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] = {
+    model.inactiveProtections.filter(!Helpers.protectionIsAmendable(_)) ++ model.activeProtection.filter(!Helpers.protectionIsAmendable(_))
+  }
+
+  def saveNonAmendableProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]): Future[CacheMap] = {
+    keyStoreConnector.saveData[ProtectionModel](Strings.keyStoreNonAmendableProtectionName(protection), protection)
   }
 
 }

@@ -4,7 +4,7 @@
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
-@(withdrawDateForm: Any)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(withdrawDateForm: Any,protectionType: String, status: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
@@ -14,50 +14,28 @@
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@views.html.main_template(title = Messages("pla.withdraw.date-input.title"), scriptElem = Some(scriptElement), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.withdraw.protection.title", Messages(s"pla.withdraw.protection.${protectionType}.label")), scriptElem = Some(scriptElement), bodyClasses = None) {
 
     @language_selection(lc.languageMap, lc.langToCall, None)
 
-    <nav class="breadcrumb-nav breadcrumb-nav--slim">
-        <ul class="breadcrumb-nav__list" role="breadcrumbs">
-            <li class="breadcrumb-nav__item">
-                <a href="@{
-                    FrontendAppConfig.ptaFrontendUrl
-                }" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
-            </li>
-            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-            <li class="breadcrumb-nav__item">
-                <a href="@{
-                    controllers.routes.ReadProtectionsController.currentProtections
-                }" id="existing-protections-breadcrumb-link">@Messages("pla.existingProtections.pageBreadcrumb")</a>
-            </li>
-            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-            <li class="breadcrumb-nav__item">
-                <a href="@{
-                    controllers.routes.WithdrawProtectionController.withdrawSummary
-                }" id="existing-protections-breadcrumb-link">@Messages("pla.withdraw.pageBreadcrumb")</a>
-            </li>
-            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-            <li class="breadcrumb-nav__item">@Messages("pla.withdraw.implications.breadcrumb")</li>
-        </ul>
-    </nav>
 
-    <h1 class="heading-large">@Messages("pla.withdraw.implications.title")</h1>
+    <a class="back-link" style="margin-bottom: 0px" href=@routes.ReadProtectionsController.currentProtections()>Back</a>
+    <h1 class="heading-large">@Messages("pla.withdraw.protection.title",Messages(s"pla.withdraw.protection.${protectionType}.label"))</h1>
 
-    <div class="alert alert--success" role="alert">
-        <p class="alert__message">Are you sure you really want to do this?!?!</p>
-        <p> These are the implications if you want to withdraw your protection</p>
+    @withdrawImplicationMessage(protectionType, status)
+
+    <div class="grid">
+        <p> @Messages("pla.withdraw.protection.if.info", Messages(s"pla.withdraw.protection.${protectionType}.label"))</p>
         <ul class="bullets">
-            <li>point number one</li>
-            <li>point number two</li>
-            <li>point number three</li>
+            <li>@Messages("pla.withdraw.protection.if.info.1", Messages(s"pla.withdraw.protection.${protectionType}.label"))</li>
+            <li>@Messages("pla.withdraw.protection.if.info.2", Messages(s"pla.withdraw.protection.${protectionType}.label"))</li>
         </ul>
 
     </div>
 
-    <a id="continue-button" class="button" role="button" type="submit" href=@routes.WithdrawProtectionController.withdrawDateInput()>@Messages("pla.withdraw.implications.submit")</a>
+    <a id="continue-button" class="button bold" role="button" type="submit" href=@routes.WithdrawProtectionController.withdrawDateInput()>@Messages("pla.withdraw.protection.continue.title")</a>
     <br />
     <br />
-    <a class="back-link" href=@routes.ReadProtectionsController.currentProtections()>Cancel</a>
+
 
 }

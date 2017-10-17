@@ -18,6 +18,7 @@ package forms
 
 import java.time.{LocalDate, LocalDateTime}
 
+import common.Dates
 import common.Dates.futureDate
 import common.Validation.isValidDate
 import forms.AmendPSODetailsForm.validateMinDate
@@ -84,5 +85,8 @@ object WithdrawDateForm {
     }
   }
 
+  def getWithdrawDate(form: Form[(Option[Int], Option[Int], Option[Int])]) : String = {
+    Dates.apiDateFormat(form.get._1.get,form.get._2.get,form.get._3.get)
+  }
 
 }

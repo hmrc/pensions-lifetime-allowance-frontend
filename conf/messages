@@ -12,7 +12,7 @@ pla.base.remove                 = Remove
 pla.base.add                    = Add
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
-pla.base.errorSummaryLabel      = There are errors on this page.
+pla.base.errorSummaryLabel      = There are errors on this page
 pla.base.errors.invalidDate     = Enter a date in the correct format eg 14 6 2016
 pla.base.errors.yearEmpty       = Enter a year
 pla.base.errors.monthEmpty      = Enter a month
@@ -434,6 +434,13 @@ pla.amends.pageBreadcrumb                                   = Change your protec
 pla.amends.declaration                                      = The information that I have provided is true and complete to the best of my knowledge and belief.
 pla.amends.submit                                           = Submit your changes
 
+pla.views.pageBreadcrumb                                   = View your protection details
+pla.views.heading.FP2016                                   = Your Fixed protection 2016 details
+pla.views.heading.primary                                  = Your Primary protection details
+pla.views.heading.enhanced                                 = Your Enhanced protection details
+pla.views.heading.fixed                                    = Your Fixed protection details
+pla.views.heading.FP2014                                   = Your Fixed protection 2014 details
+
 pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.amends.CurrentPsos.IP2016.Amt                           = Value of pension sharing orders
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Date and amount of pension sharing order
@@ -783,10 +790,10 @@ pla.withdraw.summary.heading=Value of pensions
 pla.withdraw.summary.continue=Continue
 pla.withdraw.totalValueOfPensions=Total value of pensions
 pla.withdraw.implications.breadcrumb=Withdrawal implications
-pla.withdraw.implications.title=Withdrawal implications
+
 pla.withdraw.implications.submit=Accept and continue
 pla.withdraw.date-input.breadcrumb=Enter withdrawal date
-pla.withdraw.date-input.title=Enter withdrawal date
+pla.withdraw.date-input.title=Enter the withdrawal date
 pla.withdraw.date-input.form-title=Date of protection withdrawal
 pla.withdraw.date-input.form-hint=Example: 18 4 2016
 pla.withdraw.date-input.form-day=Day
@@ -809,3 +816,36 @@ pla.withdraw.confirm.info-heading=You can apply for another protection at any ti
 pla.withdraw.confirm.info-text=You can view any other protections you may have in your <a href="{0}">personal tax account</a>
 pla.withdraw.confirm.feedback-heading=Give us feedback
 pla.withdraw.confirm.feedback-text=<a href="{0}">What did you think of this service?</a> Your feedback helps us improve.
+
+
+pla.withdraw.protection.breadcrumb              = Withdraw Protection
+pla.withdraw.protection.start.title             = Start
+pla.withdraw.protection.continue.title          = Continue
+pla.withdraw.protection.IP2016.label            = Individual protection 2016
+pla.withdraw.protection.IP2014.label            = Individual protection 2014
+pla.withdraw.protection.FP2016.label            = Fixed protection 2016
+pla.withdraw.protection.FP2014.label            = Fixed protection 2014
+pla.withdraw.protection.primary.label           = Primary protection
+pla.withdraw.protection.enhanced.label          = Enhanced protection
+pla.withdraw.protection.fixed.label             = Fixed protection
+pla.withdraw.check-your-answers.info-heading    = Check your answers
+pla.withdraw.what-happens.info-heading          = What happens if you withdraw
+pla.withdraw.date.title                         = Withdrawal date
+
+pla.withdraw.implication.info                         = Once you withdraw, you will no longer have {0}. This might mean you have to pay a higher rate of tax on your pension.
+pla.withdraw.protection.if.info                       = Use this service to withdraw from your {0} if:
+pla.withdraw.protection.if.info.1                     = you no longer want to have {0}
+pla.withdraw.protection.if.info.2                     = you are no longer eligible to have {0}
+pla.withdraw.protection.title                         = Withdraw from {0}
+
+
+pla.withdraw.date-input.form.continue                 = Continue
+pla.withdraw.protection.what-happens.info.1           = Without any protection your pension will not be protected from {0} and will be taxed when you start using it.
+pla.withdraw.protection.what-happens.info.2           = You may be able to apply for a new protection in the future, but it might cover less than the amount you are covered for now.
+pla.withdraw.protection.what-happens.info.3           = If you have a dormant protection it will protect your pension from its application date. This might mean that your pension is unprotected between {0} and the application date of the dormant protection.
+pla.withdraw.protection.what-happens.info.4           = You might be asked to provide evidence that your protection was valid and eligible to be withdrawn on {0}.
+pla.withdraw.protection.what-happens.info.5           = You will not be able to cancel or amend this request once you submit.
+pla.withdraw.confirmation.message                     = Your {0} has been removed
+pla.withdraw.confirmation.contact.you.if.needed       = We may need to contact you to confirm the information you’ve given us.
+pla.withdraw.confirmation.check.details               = You can check the details of your pension in your <a href="{0}">personal tax account</a>.
+pla.existingProtections.withdrawnDate                 = Withdrawn date

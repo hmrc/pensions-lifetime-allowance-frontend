@@ -38,10 +38,6 @@
                         @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, "activeCertificateDate")
                     }
 
-                    @if(protection.status == "open") {
-                        <a href="@routes.WithdrawProtectionController.withdrawSummary()">@Messages("pla.existingProtections.withdrawLinkText")</a>
-                    }
-                    <br>
 
                     @protection.amendCall.map{ call =>
                         <a href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>

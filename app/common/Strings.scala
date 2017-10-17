@@ -36,7 +36,15 @@ object Strings {
   }
 
   def keyStoreProtectionName(protection: ProtectionModel): String = {
-    statusString(protection.status)+protectionTypeString(protection.protectionType)+"Amendment"
+    statusString(protection.status) + protectionTypeString(protection.protectionType) + "Amendment"
+  }
+
+  def keyStoreNonAmendableProtectionName(protection: ProtectionModel): String = {
+    statusString(protection.status).toLowerCase + protectionTypeString(protection.protectionType).toUpperCase
+  }
+
+  def keyStoreNonAmendFetchString(protectionType: String, status: String): String = {
+    status.toLowerCase + protectionType.toUpperCase
   }
 
   def keyStoreAmendFetchString(protectionType: String, status: String): String = {

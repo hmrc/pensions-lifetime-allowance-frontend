@@ -4,7 +4,7 @@
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
-@(withdrawDateForm: Any)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(withdrawDate: String,protectionType: String, status: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
@@ -14,58 +14,30 @@
     <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
 }
 
-@views.html.main_template(title = Messages("pla.withdraw.date-input.title"), scriptElem = Some(scriptElement), bodyClasses = None) {
+@views.html.main_template(title = Messages("pla.withdraw.what-happens.info-heading"), scriptElem = Some(scriptElement), bodyClasses = None) {
 
     @language_selection(lc.languageMap, lc.langToCall, None)
 
-    @govHelpers.form(action = routes.WithdrawProtectionController.submitWithdrawDateInput()) {
+    @govHelpers.form(action = routes.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)) {
 
-        <nav class="breadcrumb-nav breadcrumb-nav--slim">
-            <ul class="breadcrumb-nav__list" role="breadcrumbs">
-                <li class="breadcrumb-nav__item">
-                    <a href="@{
-                        FrontendAppConfig.ptaFrontendUrl
-                    }" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
-                </li>
-                <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-                <li class="breadcrumb-nav__item">
-                    <a href="@{
-                        controllers.routes.ReadProtectionsController.currentProtections
-                    }" id="existing-protections-breadcrumb-link">@Messages("pla.existingProtections.pageBreadcrumb")</a>
-                </li>
-                <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-                <li class="breadcrumb-nav__item">
-                    <a href="@{
-                        controllers.routes.WithdrawProtectionController.withdrawSummary
-                    }" id="existing-protections-breadcrumb-link">@Messages("pla.withdraw.pageBreadcrumb")</a>
-                </li>
-                <li class="breadcrumb-nav__item">
-                    <a href="@{
-                        controllers.routes.WithdrawProtectionController.withdrawDateInput()
-                    }" id="existing-protections-breadcrumb-link">@Messages("pla.withdraw.pageBreadcrumb")</a>
-                </li>
-                <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-                <li class="breadcrumb-nav__item">Confirm Withdrawal</li>
-            </ul>
-        </nav>
 
-        <h1 class="heading-large">Confirm Withdrawal</h1>
+        <a class="back-link" style="margin-bottom: 0px" href=@routes.WithdrawProtectionController.withdrawDateInput()>Back</a>
 
-        <div class="alert alert--success" role="alert">
-            <p class="alert__message">Are you sure you really sure you want to do this?!?!</p>
-            <p> I repeat, these are the implications if you want to withdraw your protection</p>
-            <ul class="bullets">
-                <li>dwdw number one</li>
-                <li>point number two</li>
-                <li>point number three</li>
-            </ul>
+
+        <h1 class="heading-large">@Messages(s"pla.withdraw.what-happens.info-heading")</h1>
+
+        <div class="grid">
+            <p>@Messages("pla.withdraw.protection.what-happens.info.1",withdrawDate)</p>
+            <p>@Messages("pla.withdraw.protection.what-happens.info.2",Messages(s"pla.withdraw.protection.${protectionType}.label"),Messages(s"pla.withdraw.protection.${protectionType}.label"))</p>
+            <p>@Messages("pla.withdraw.protection.what-happens.info.3",withdrawDate)</p>
+            <p>@Messages("pla.withdraw.protection.what-happens.info.4",withdrawDate)</p>
+            <p>@Messages("pla.withdraw.protection.what-happens.info.5")</p>
         </div>
 
 
-        <button class="button" type="submit" id="submit"> Confirm </button>
-        <br />
-        <br />
 
-        <a class="back-link" href=@routes.ReadProtectionsController.currentProtections()>Back</a>
+        <button class="button" type="submit" id="submit"> Accept and continue</button>
+        <br />
+        <br />
     }
 }

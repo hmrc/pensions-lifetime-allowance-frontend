@@ -4,7 +4,7 @@
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
-@(withdrawDateForm: Form[(Option[Int], Option[Int], Option[Int])])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(withdrawDateForm: Form[(Option[Int], Option[Int], Option[Int])],protectionType: String, status: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
@@ -18,34 +18,8 @@
 
     @language_selection(lc.languageMap, lc.langToCall, None)
 
-    <nav class="breadcrumb-nav breadcrumb-nav--slim">
-        <ul class="breadcrumb-nav__list" role="breadcrumbs">
-            <li class="breadcrumb-nav__item">
-                <a href="@{
-                    FrontendAppConfig.ptaFrontendUrl
-                }" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
-            </li>
-            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-            <li class="breadcrumb-nav__item">
-                <a href="@{
-                    controllers.routes.ReadProtectionsController.currentProtections
-                }" id="existing-protections-breadcrumb-link">@Messages("pla.existingProtections.pageBreadcrumb")</a>
-            </li>
-            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-            <li class="breadcrumb-nav__item">
-                <a href="@{
-                    controllers.routes.WithdrawProtectionController.withdrawSummary
-                }" id="existing-protections-breadcrumb-link">@Messages("pla.withdraw.pageBreadcrumb")</a>
-            </li>
-            <li class="breadcrumb-nav__item">
-                <a href="@{
-                    controllers.routes.WithdrawProtectionController.withdrawImplications()
-                }" id="existing-protections-breadcrumb-link">@Messages("pla.withdraw.implications.breadcrumb")</a>
-            </li>
-            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-            <li class="breadcrumb-nav__item">@Messages("pla.withdraw.date-input.breadcrumb")</li>
-        </ul>
-    </nav>
+    <a class="back-link" style="margin-bottom: 0px" href=@routes.WithdrawProtectionController.withdrawImplications()>Back</a>
+
 
     <h1 class="heading-large">@Messages("pla.withdraw.date-input.title")</h1>
 
@@ -89,11 +63,10 @@
 
             </div>
 
-            <button class="button" type="submit" id="submit"> @Messages("pla.withdraw.date-input.form.submit") </button>
+            <button class="button" type="submit" id="submit"> @Messages("pla.withdraw.date-input.form.continue") </button>
 
         </div>
 
-        <a class="back-link" href=@routes.WithdrawProtectionController.withdrawImplications>Back</a>
 
     }
 }

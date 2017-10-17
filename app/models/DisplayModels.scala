@@ -47,7 +47,8 @@ case class ExistingProtectionDisplayModel(
                                    psaCheckReference: Option[String],
                                    protectionReference: String,
                                    protectedAmount: Option[String],
-                                   certificateDate: Option[String]
+                                   certificateDate: Option[String],
+                                   withdrawnDate:Option[String] =None
                                    )
 
 
