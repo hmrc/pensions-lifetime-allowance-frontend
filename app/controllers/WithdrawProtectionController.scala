@@ -64,7 +64,7 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
         case Some(currentProtection) =>
           Ok(views.html.pages.withdraw.withdrawSummary(displayConstructors.createWithdrawSummaryTable(currentProtection)))
         case _ =>
-          Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
+          Logger.error(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
   }
@@ -77,7 +77,7 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
           Strings.protectionTypeString(currentProtection.protectionType),
           Strings.statusString(currentProtection.status)))
       case _ =>
-        Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
+        Logger.error(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
@@ -90,7 +90,7 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
             Strings.protectionTypeString(currentProtection.protectionType),
             Strings.statusString(currentProtection.status)))
         case _ =>
-          Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
+          Logger.error(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw summary page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
   }
@@ -108,7 +108,7 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
             getWithdrawDate(withdrawDateForm.bindFromRequest()),Strings.protectionTypeString(protection.protectionType),
             Strings.statusString(protection.status)))
         )
-        case _ => Logger.warn(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw date input page")
+        case _ => Logger.error(s"Could not retrieve protection data for user with nino ${user.nino} when loading the withdraw date input page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
   }
@@ -131,7 +131,7 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
         views.html.pages.withdraw.withdrawConfirmation(
           Strings.protectionTypeString(protectionType))))
       case _ => {
-        Logger.warn(s"conflict response returned for withdrawal request for user nino ${user.nino}")
+        Logger.error(s"conflict response returned for withdrawal request for user nino ${user.nino}")
         Future.successful(InternalServerError(
           views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString))
           .withHeaders(CACHE_CONTROL -> "no-cache"))

@@ -87,7 +87,7 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
 
         )
       case _ =>
-        Logger.warn(s"Could not retrieve view protection model for user with nino ${user.nino} when loading the view summary page")
+        Logger.error(s"Could not retrieve view protection model for user with nino ${user.nino} when loading the view summary page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
