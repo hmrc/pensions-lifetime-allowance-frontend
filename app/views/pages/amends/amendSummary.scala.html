@@ -80,6 +80,10 @@
 
     </table>
 
+    @if(status == "open") {
+        <a href="@routes.WithdrawProtectionController.withdrawImplications()">@Messages("pla.existingProtections.withdrawLinkText")</a><br>
+    }
+
     @if(!model.psoAdded){
         <div class="form-group">
             <a href="@routes.AmendsController.amendPsoDetails(model.protectionType.toLowerCase(), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>

@@ -1517,4 +1517,5 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "choosing cancel on the remove page" should {}
   }
+
 }

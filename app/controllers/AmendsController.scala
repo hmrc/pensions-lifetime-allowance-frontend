@@ -78,6 +78,20 @@ trait AmendsController extends BaseController with AuthorisedForPLA {
     }
   }
 
+  def viewSummary(protectionType: String, status: String): Action[AnyContent] = AuthorisedByAny.async { implicit user => implicit request =>
+    keyStoreConnector.fetchAndGetFormData[ProtectionModel](Strings.keyStoreNonAmendFetchString(protectionType, status)).map {
+      case Some(currentProtection) =>
+        Ok(views.html.pages.amends.viewSummary(displayConstructors.createExistingProtectionDisplayModel(currentProtection),
+          status,
+          protectionType)
+
+        )
+      case _ =>
+        Logger.error(s"Could not retrieve view protection model for user with nino ${user.nino} when loading the view summary page")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
+  }
+
   val amendProtection = AuthorisedByAny.async { implicit user => implicit request =>
     amendmentTypeForm.bindFromRequest.fold(
       errors => {

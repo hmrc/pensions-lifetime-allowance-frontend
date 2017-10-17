@@ -1,0 +1,36 @@
+@import config.FrontendAppConfig
+@import controllers.PlaLanguageController
+@import helpers.amends.amendSection
+@import play.api.Application
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+
+@(protectionType: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@lc = @{
+    Application.instanceCache[PlaLanguageController].apply(application)
+}
+
+@views.html.main_template(title = Messages("pla.withdraw.confirmation.message", Messages(s"pla.withdraw.protection.${protectionType}.label"))) {
+
+    @language_selection(lc.languageMap, lc.langToCall, None)
+
+
+
+    <div class="grid-row">
+        <div class="transaction-banner--complete">
+            <span class="heading-large" id="amendmentOutcome">@Messages("pla.withdraw.confirmation.message", Messages(s"pla.withdraw.protection.${protectionType}.label"))</span>
+        </div>
+
+
+        <div class="grid">
+            <p>@Html(Messages("pla.withdraw.confirmation.check.details",  routes.ReadProtectionsController.currentProtections()))</p>
+            <p>@Messages("pla.withdraw.confirmation.contact.you.if.needed")</p>
+        </div>
+
+
+        <h2>@Messages("pla.withdraw.confirm.feedback-heading")</h2>
+
+        <p>@Html(Messages("pla.withdraw.confirm.feedback-text", routes.ExitSurveyController.exitSurvey()))</p>
+
+    </div>
+}

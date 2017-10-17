@@ -38,6 +38,10 @@
                         @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, s"inactiveCertificateDate$protectionNum")
                     }
 
+                    @protection.withdrawnDate.map{ wDate =>
+                        @protectionDetails(Messages("pla.existingProtections.withdrawnDate"), wDate, s"inactiveWithdrawnDate$protectionNum")
+                    }
+
                     @protection.amendCall.map{ call =>
                         <a href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>
                     }

@@ -1,0 +1,66 @@
+@import config.FrontendAppConfig
+@import controllers.PlaLanguageController
+@import helpers.amends.amendSection
+@import play.api.Application
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+
+@(protection: AmendDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@lc = @{
+    Application.instanceCache[PlaLanguageController].apply(application)
+}
+
+@full_width_template(title = Messages("pla.withdraw.title")) {
+
+    @language_selection(lc.languageMap, lc.langToCall, None)
+
+    <nav class="breadcrumb-nav breadcrumb-nav--slim">
+        <ul class="breadcrumb-nav__list" role="breadcrumbs">
+            <li class="breadcrumb-nav__item">
+                <a href="@{
+                    FrontendAppConfig.ptaFrontendUrl
+                }" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
+            </li>
+            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
+            <li class="breadcrumb-nav__item">
+                <a href="@{
+                    controllers.routes.ReadProtectionsController.currentProtections
+                }" id="existing-protections-breadcrumb-link">@Messages("pla.existingProtections.pageBreadcrumb")</a>
+            </li>
+            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
+            <li class="breadcrumb-nav__item">@Messages("pla.withdraw.pageBreadcrumb")</li>
+        </ul>
+    </nav>
+
+    <h1 class="heading-large" id="page-heading">
+    @Messages(s"pla.withdraw.heading.${protection.protectionType}")
+    </h1>
+
+    <table >
+        <thead>
+            <tr>
+                <th colspan="4">
+                    <h2>@Messages("pla.withdraw.summary.heading")</h2>
+                </th>
+            </tr>
+        </thead>
+
+        @protection.pensionContributionSections.map { section =>
+            @amendSection(section, protection.protectionType)
+        }
+
+        <tr class="grey-background">
+            <td class="total-font summary-text" id="total-message">@Messages("pla.withdraw.totalValueOfPensions")</td>
+            <td class="total-font summary-data" id="total-amount">@protection.totalAmount</td>
+            <td colspan="2"></td>
+        </tr>
+
+    </table>
+    
+    <a id="continue-button" class="button" role="button" type="submit" href=@routes.WithdrawProtectionController.withdrawImplications()>
+    @Messages("pla.withdraw.summary.continue")
+    </a>
+
+    <br>
+
+}

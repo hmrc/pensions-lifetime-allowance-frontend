@@ -22,6 +22,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.libs.json.{JsValue, Json}
 import models._
 import enums.ApplicationType
+import utils.CallMap
 
 class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
   override def bindModules = Seq(new PlayModule)
@@ -31,7 +32,7 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
 
     val positivePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("yes")))
     val negativePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
-    val negativePensionsTakenSummaryRow = SummaryRowModel("pensionsTaken", Some(controllers.routes.IP2016Controller.pensionsTaken()), None, false, "No")
+    val negativePensionsTakenSummaryRow = SummaryRowModel("pensionsTaken", CallMap.get("pensionsTaken"), None, false, "No")
     val positivePensionsTakenSummaryRow = SummaryRowModel("pensionsTaken", Some(controllers.routes.IP2016Controller.pensionsTaken()), None,  false, "Yes")
 
     val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes", Some(BigDecimal(1001000))))

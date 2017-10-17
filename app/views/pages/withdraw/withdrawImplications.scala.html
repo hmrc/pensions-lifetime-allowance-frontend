@@ -1,0 +1,41 @@
+@import config.FrontendAppConfig
+@import controllers.PlaLanguageController
+@import helpers.templates.formInlineDateInput
+@import play.api.Application
+@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+
+@(withdrawDateForm: Any,protectionType: String, status: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+
+@lc = @{
+    Application.instanceCache[PlaLanguageController].apply(application)
+}
+
+@scriptElement = {
+    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+}
+
+@views.html.main_template(title = Messages("pla.withdraw.protection.title", Messages(s"pla.withdraw.protection.${protectionType}.label")), scriptElem = Some(scriptElement), bodyClasses = None) {
+
+    @language_selection(lc.languageMap, lc.langToCall, None)
+
+
+    <a class="back-link" style="margin-bottom: 0px" href=@routes.ReadProtectionsController.currentProtections()>Back</a>
+    <h1 class="heading-large">@Messages("pla.withdraw.protection.title",Messages(s"pla.withdraw.protection.${protectionType}.label"))</h1>
+
+    @withdrawImplicationMessage(protectionType, status)
+
+    <div class="grid">
+        <p> @Messages("pla.withdraw.protection.if.info", Messages(s"pla.withdraw.protection.${protectionType}.label"))</p>
+        <ul class="bullets">
+            <li>@Messages("pla.withdraw.protection.if.info.1", Messages(s"pla.withdraw.protection.${protectionType}.label"))</li>
+            <li>@Messages("pla.withdraw.protection.if.info.2", Messages(s"pla.withdraw.protection.${protectionType}.label"))</li>
+        </ul>
+
+    </div>
+
+    <a id="continue-button" class="button bold" role="button" type="submit" href=@routes.WithdrawProtectionController.withdrawDateInput()>@Messages("pla.withdraw.protection.continue.title")</a>
+    <br />
+    <br />
+
+
+}
