@@ -150,9 +150,9 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
       object UserRequest extends AuthorisedFakeRequestToPost(TestWithdrawController.submitWithdrawDateInput,
         ("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017"))
 
-      "return 303 Redirect" in {
+      "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(UserRequest.result) shouldBe SEE_OTHER
+        status(UserRequest.result) shouldBe OK
       }
 
       object InvalidDayRequest extends AuthorisedFakeRequestToPost(TestWithdrawController.submitWithdrawDateInput,

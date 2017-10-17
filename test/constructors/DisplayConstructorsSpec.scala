@@ -172,7 +172,8 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Open"),
         certificateDate = Some("2016-04-17"),
         protectedAmount = Some(1250000),
-        protectionReference = Some("PSA123456")
+        protectionReference = Some("PSA123456"),
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
@@ -181,7 +182,8 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
-        certificateDate = Some("17 April 2016"))
+        certificateDate = Some("17 April 2016"),
+        withdrawnDate =None)
 
       val tstProtectionModelDormant7 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -190,16 +192,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Dormant"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant7 = ExistingProtectionDisplayModel(
         protectionType = "FP2014",
         status = "dormant",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("fp2014", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant6 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -208,16 +212,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Dormant"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant6 = ExistingProtectionDisplayModel(
         protectionType = "fixed",
         status = "dormant",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("fixed", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant5 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -226,16 +232,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Dormant"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant5 = ExistingProtectionDisplayModel(
         protectionType = "enhanced",
         status = "dormant",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("enhanced", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant4 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -244,16 +252,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Dormant"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant4 = ExistingProtectionDisplayModel(
         protectionType = "primary",
         status = "dormant",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("primary", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant3 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -262,7 +272,8 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Dormant"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant3 = ExistingProtectionDisplayModel(
         protectionType = "IP2016",
@@ -271,7 +282,8 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant2 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -280,16 +292,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Dormant"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant2 = ExistingProtectionDisplayModel(
         protectionType = "FP2016",
         status = "dormant",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("fp2016", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant1 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -298,7 +312,8 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Dormant"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
@@ -307,7 +322,8 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstExistingProtectionModel = TransformedReadResponseModel(Some(tstProtectionModelOpen), List(
         tstProtectionModelDormant3,
@@ -340,16 +356,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Expired"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant8 = ExistingProtectionDisplayModel(
         protectionType = "FP2014",
         status = "expired",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("fp2014", "expired")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant7 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -358,16 +376,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Expired"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant7 = ExistingProtectionDisplayModel(
         protectionType = "FP2016",
         status = "expired",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("fp2016", "expired")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant6 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -376,16 +396,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Rejected"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant6 = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "rejected",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("ip2014", "rejected")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant5 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -394,16 +416,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Unsuccessful"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant5 = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
         status = "unsuccessful",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("ip2014", "unsuccessful")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant4 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -412,16 +436,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Withdrawn"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant4 = ExistingProtectionDisplayModel(
         protectionType = "primary",
         status = "withdrawn",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("primary", "withdrawn")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant3 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -430,16 +456,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Withdrawn"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant3 = ExistingProtectionDisplayModel(
         protectionType = "IP2016",
         status = "withdrawn",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("ip2016", "withdrawn")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant2 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -448,16 +476,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Dormant"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant2 = ExistingProtectionDisplayModel(
         protectionType = "fixed",
         status = "dormant",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("fixed", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstProtectionModelDormant1 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -466,16 +496,18 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         status = Some("Dormant"),
         certificateDate = None,
         protectedAmount = None,
-        protectionReference = None
+        protectionReference = None,
+        withdrawnDate =None
       )
       val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
         protectionType = "enhanced",
         status = "dormant",
-        amendCall = None,
+        amendCall = Some(controllers.routes.AmendsController.viewSummary("enhanced", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
-        certificateDate = None)
+        certificateDate = None,
+        withdrawnDate =None)
 
       val tstExistingProtectionModel = TransformedReadResponseModel(None, List(
         tstProtectionModelDormant3,
