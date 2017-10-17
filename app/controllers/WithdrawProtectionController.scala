@@ -33,7 +33,7 @@ import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.play.http.{HttpResponse, NotFoundException, Upstream4xxResponse}
+import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import views.html.pages
 import views.html.pages.result.manualCorrespondenceNeeded
