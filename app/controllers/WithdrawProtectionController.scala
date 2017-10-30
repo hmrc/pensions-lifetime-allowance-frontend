@@ -127,7 +127,8 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
   private def routeToWithdrawConfirmation(protectionType: Option[String] , response: HttpResponse)
                                    (implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
     response.status match {
-      case OK => Future.successful(Ok(
+      case OK => keyStoreConnector.remove
+        Future.successful(Ok(
         views.html.pages.withdraw.withdrawConfirmation(
           Strings.protectionTypeString(protectionType))))
       case _ => {

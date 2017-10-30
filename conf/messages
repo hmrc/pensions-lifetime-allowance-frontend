@@ -440,6 +440,8 @@ pla.views.heading.primary                                  = Your Primary protec
 pla.views.heading.enhanced                                 = Your Enhanced protection details
 pla.views.heading.fixed                                    = Your Fixed protection details
 pla.views.heading.FP2014                                   = Your Fixed protection 2014 details
+pla.views.heading.IP2014                                   = Your Individual protection 2014 details
+pla.views.heading.IP2016                                   = Your Individual protection 2016 details
 
 pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.amends.CurrentPsos.IP2016.Amt                           = Value of pension sharing orders
