@@ -93,17 +93,6 @@ class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
       assert(validatedForm.errors.contains(FormError("withdrawMonth",
         List(Messages("pla.withdraw.date-input.form.month-too-high")))))
     }
-    "return errors when year greater than today's year provided" in {
-      val postData = Json.obj(
-        "withdrawDay" -> "20",
-        "withdrawMonth" -> "10",
-        "withdrawYear" -> "50000"
-      )
-      val validatedForm = form.bind(postData)
-      assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("withdrawYear",
-        List(Messages("pla.withdraw.date-input.form.year-too-high")))))
-    }
     "return errors when day lower than 1 provided" in {
       val postData = Json.obj(
         "withdrawDay" -> "0",
