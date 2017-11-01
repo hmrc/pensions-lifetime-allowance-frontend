@@ -91,7 +91,6 @@ trait ReadProtectionsController extends BaseController with AuthorisedForPLA {
     for {
       stepOne <- saveActiveProtection(model.activeProtection)
       stepTwo <- saveAmendableProtections(model)
-      stepThree <- saveNonAmendableProtections(model)
     } yield Ok(pages.existingProtections.existingProtections(displayModel))
 
   }

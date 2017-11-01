@@ -65,7 +65,6 @@ object WithdrawDateForm {
     day =>
       val errors = day match {
         case None => Seq(ValidationError(Messages("pla.withdraw.date-input.form.year-empty")))
-        case Some(a) if a > LocalDate.now().getYear => Seq(ValidationError(Messages("pla.withdraw.date-input.form.year-too-high")))
         case _ => Nil
       }
       if (errors.isEmpty) Valid else Invalid(errors)

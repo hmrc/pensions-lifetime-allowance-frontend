@@ -127,9 +127,7 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
   private def routeToWithdrawConfirmation(protectionType: Option[String] , response: HttpResponse)
                                    (implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
     response.status match {
-      case OK => Future.successful(Ok(
-        views.html.pages.withdraw.withdrawConfirmation(
-          Strings.protectionTypeString(protectionType))))
+      case OK => Future.successful(Redirect(routes.WithdrawProtectionController.showWithdrawConfirmation(Strings.protectionTypeString(protectionType))))
       case _ => {
         Logger.error(s"conflict response returned for withdrawal request for user nino ${user.nino}")
         Future.successful(InternalServerError(
@@ -140,6 +138,10 @@ trait WithdrawProtectionController extends BaseController with AuthorisedForPLA 
   }
 
 
+  def showWithdrawConfirmation(protectionType: String) : Action[AnyContent] = AuthorisedByAny.async { implicit user =>
+    implicit request =>  keyStoreConnector.remove
+        Future.successful(Ok(views.html.pages.withdraw.withdrawConfirmation(protectionType)))
+  }
 
 
 

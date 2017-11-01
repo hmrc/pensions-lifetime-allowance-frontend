@@ -34,7 +34,7 @@
                 <fieldset class="form-group form-date @if(withdrawDateForm.hasErrors) {form-field--error}" id="pso-fieldset">
 
                     <span class="form-hint">@Messages("pla.withdraw.date-input.form-hint")</span>
-                    <span class="error-notification">Enter a valid date</span>
+                    @withdrawDateForm.errors.map { error => <span class="error-notification">@Messages(error.message, error.args: _*)</span> }
 
                     <label for="withdrawDay" class="form-group form-group-day">
                         <span>@Messages("pla.withdraw.date-input.form-day")</span>

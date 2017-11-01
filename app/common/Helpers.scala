@@ -32,7 +32,7 @@ object Helpers {
     val status = protection.status.map(_.toLowerCase).getOrElse("none")
     val protectionType = protection.protectionType.map(_.toLowerCase).getOrElse("none")
     if (protectionIsAmendable(protection)) Some(controllers.routes.AmendsController.amendsSummary(protectionType, status))
-    else Some(controllers.routes.AmendsController.viewSummary(protectionType, status))
+    else None
   }
 
   def createPsoRemoveCall(protection: ProtectionModel): Option[Call] = {

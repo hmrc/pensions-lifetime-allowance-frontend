@@ -91,12 +91,12 @@ GET         /amend-protection/:protectionType/:status                           
 GET         /view-protection/:protectionType/:status                                     controllers.AmendsController.viewSummary(protectionType, status)
 
 ## Withdraw protection ##
-GET         /withdraw-protection/summary                                                  controllers.WithdrawProtectionController.withdrawSummary
+#GET         /withdraw-protection/summary                                                  controllers.WithdrawProtectionController.withdrawSummary
 GET         /withdraw-protection/implications                                             controllers.WithdrawProtectionController.withdrawImplications
 GET         /withdraw-protection/date-input                                               controllers.WithdrawProtectionController.withdrawDateInput
 POST        /withdraw-protection/date-input                                               controllers.WithdrawProtectionController.submitWithdrawDateInput
 GET         /withdraw-protection/confirmation/:withdrawDate                               controllers.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)
-
+GET         /withdraw-protection/withdraw-confirmation/:protectionType                    controllers.WithdrawProtectionController.showWithdrawConfirmation(protectionType)
 #PSA Lookup routes
 GET         /psalookup/protection-notification-number                                     controllers.LookupController.displayProtectionNotificationNoForm
 POST        /psalookup/protection-notification-number                                     controllers.LookupController.submitProtectionNotificationNoForm
