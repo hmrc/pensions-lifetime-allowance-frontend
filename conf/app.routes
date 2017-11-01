@@ -96,7 +96,7 @@ GET         /withdraw-protection/implications                                   
 GET         /withdraw-protection/date-input                                               controllers.WithdrawProtectionController.withdrawDateInput
 POST        /withdraw-protection/date-input                                               controllers.WithdrawProtectionController.submitWithdrawDateInput
 GET         /withdraw-protection/confirmation/:withdrawDate                               controllers.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)
-
+GET         /withdraw-protection/showWithdrawConfirmation/:protectionType                 controllers.WithdrawProtectionController.showWithdrawConfirmation(protectionType)
 #PSA Lookup routes
 GET         /psalookup/protection-notification-number                                     controllers.LookupController.displayProtectionNotificationNoForm
 POST        /psalookup/protection-notification-number                                     controllers.LookupController.submitProtectionNotificationNoForm
