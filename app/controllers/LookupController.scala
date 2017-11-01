@@ -144,6 +144,9 @@ trait LookupController extends BaseController {
                 .withHeaders("Content-Disposition" ->
                   s"attachment; filename=lookup-result-${result.protectionNotificationNumber.getOrElse("")}.pdf")
           }
+        case None =>
+          Logger.warn("[LookupController]: Unable to print ResultsPDF. Redirected to displaySchemeAdministratorReferenceForm")
+          Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
       }
   }
 
@@ -159,6 +162,9 @@ trait LookupController extends BaseController {
                 .withHeaders("Content-Disposition" ->
                   "attachment; filename=lookup-not-found.pdf")
           }
+        case None =>
+          Logger.warn("[LookupController]: Unable to print NotFound PDF. Redirected to displaySchemeAdministratorReferenceForm")
+          Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
       }
   }
 
