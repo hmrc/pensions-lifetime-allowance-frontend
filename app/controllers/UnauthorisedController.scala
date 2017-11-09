@@ -41,7 +41,7 @@ trait UnauthorisedController extends BaseController {
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
       identityVerificationResult map {
         case IdentityVerificationResult.TechnicalIssue =>
-          Logger.warn("Technical Issue relating to Indentity verification, user directed to technical issue page")
+          Logger.warn("Technical Issue relating to Identity verification, user directed to technical issue page")
           InternalServerError(technicalIssue())
         case IdentityVerificationResult.LockedOut => Unauthorized(lockedOut())
         case IdentityVerificationResult.Timeout =>
