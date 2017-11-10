@@ -18,12 +18,15 @@ package controllers
 
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
+
 import scala.concurrent.Future
 import views.html.pages.ivFailure._
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
+import play.api.Logger
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.http.NotFoundException
 
 object UnauthorisedController extends UnauthorisedController {
 	override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
@@ -34,24 +37,25 @@ trait UnauthorisedController extends BaseController {
   val identityVerificationConnector: IdentityVerificationConnector
 
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = UnauthorisedAction.async { implicit request =>
-    val result = journeyId map { id =>
+    val result: Future[Result] = journeyId map { id =>
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
       identityVerificationResult map {
-        case IdentityVerificationResult.FailedMatching => unauthorised()
-        case IdentityVerificationResult.InsufficientEvidence => unauthorised()
-        case IdentityVerificationResult.TechnicalIssue => technicalIssue()
-        case IdentityVerificationResult.LockedOut => lockedOut()
-        case IdentityVerificationResult.Timeout => views.html.pages.timeout()
-        case IdentityVerificationResult.Incomplete => unauthorised()
-        case IdentityVerificationResult.PreconditionFailed => unauthorised()
-        case IdentityVerificationResult.UserAborted => unauthorised()
-        case IdentityVerificationResult.FailedIV => unauthorised()
-        case IdentityVerificationResult.UnknownOutcome => unauthorised()
+        case IdentityVerificationResult.TechnicalIssue =>
+          Logger.warn("Technical Issue relating to Identity verification, user directed to technical issue page")
+          InternalServerError(technicalIssue())
+        case IdentityVerificationResult.LockedOut => Unauthorized(lockedOut())
+        case IdentityVerificationResult.Timeout =>
+          InternalServerError(views.html.pages.timeout())
+        case _ =>
+          Logger.info("Unauthorised identity verification, returned to unauthorised page")
+          Unauthorized(unauthorised())
+      } recover {
+        case e : NotFoundException =>
+          Logger.warn("Could not find unauthorised journey ID")
+          Unauthorized(unauthorised())
       }
-    } getOrElse Future.successful(unauthorised()) // 2FA returns no journeyId
+    } getOrElse Future.successful(Unauthorized(unauthorised()))
 
-    result.map {
-      Ok(_).withNewSession
-    }
+    result.map(_.withNewSession)
   }
 }
