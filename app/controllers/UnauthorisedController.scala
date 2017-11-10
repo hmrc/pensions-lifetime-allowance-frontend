@@ -51,10 +51,10 @@ trait UnauthorisedController extends BaseController {
           Unauthorized(unauthorised())
       } recover {
         case e : NotFoundException =>
-          Logger.warn("Unauthorised identity verification, returned to unauthorised page")
+          Logger.warn("Could not find unauthorised journey ID")
           Unauthorized(unauthorised())
       }
-    } getOrElse Future.successful(Unauthorized(unauthorised())) // 2FA returns no journeyId
+    } getOrElse Future.successful(Unauthorized(unauthorised()))
 
     result.map(_.withNewSession)
   }
