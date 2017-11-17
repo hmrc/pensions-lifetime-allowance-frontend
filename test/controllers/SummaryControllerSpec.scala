@@ -30,11 +30,14 @@ import models.SummaryModel
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.{Configuration, Environment}
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.JsValue
 import testHelpers._
+import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
@@ -46,13 +49,18 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockSummaryConstructor = mock[SummaryConstructor]
+  val mockPlayAuthConnector = mock[PlayAuthConnector]
+
 
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
 
   object TestSummaryControllerNoData extends SummaryController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockPlayAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
+
+    override def config: Configuration = mock[Configuration]
+    override def env: Environment = mock[Environment]
 
     val summaryConstructor = mockSummaryConstructor
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -61,9 +69,12 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   }
 
   object TestSummaryControllerInvalidData extends SummaryController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockPlayAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
+
+    override def config: Configuration = mock[Configuration]
+    override def env: Environment = mock[Environment]
 
     val summaryConstructor = mockSummaryConstructor
     when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(None)
@@ -73,9 +84,12 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   }
 
   object TestSummaryControllerValidData extends SummaryController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockPlayAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
+
+    override def config: Configuration = mock[Configuration]
+    override def env: Environment = mock[Environment]
 
     val summaryConstructor = mockSummaryConstructor
     when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Some(tstSummaryModel))
@@ -88,11 +102,17 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
 
+  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A) = {
+    when(mockPlayAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(returnValue))
+  }
+
   "Navigating to summary when there is no user data" when {
 
     "user is applying for IP16" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerNoData.summaryIP16)
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(DataItem.result) shouldBe 500
       }
       "show technical error for IP16" in {
@@ -123,6 +143,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     "user is applying for IP16" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerValidData.summaryIP16)
       "return 200" in {
+
         status(DataItem.result) shouldBe 200
       }
     }

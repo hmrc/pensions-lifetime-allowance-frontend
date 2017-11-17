@@ -24,6 +24,7 @@ import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel, 
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.http.HeaderNames.CACHE_CONTROL
@@ -31,7 +32,11 @@ import testHelpers.AuthorisedFakeRequestTo
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.http.HttpResponse
+
+import scala.concurrent.Future
 
 class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   override def bindModules = Seq(new PlayModule)
@@ -44,16 +49,26 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
   val testTransformedReadResponseModel = TransformedReadResponseModel(None, Seq.empty)
   val testExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(None, Seq.empty)
 
+  val mockPlayAuthConnector = mock[PlayAuthConnector]
+
 
   trait BaseTestReadProtectionsController extends ReadProtectionsController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "urlUnimportant"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockPlayAuthConnector
+    lazy val postSignInRedirectUrl = "urlUnimportant"
+
+    override def config: Configuration = mock[Configuration]
+    override def env: Environment = mock[Environment]
 
     override val keyStoreConnector = mock[KeyStoreConnector]
     override val plaConnector = mock[PLAConnector]
     override val displayConstructors = mock[DisplayConstructors]
     override val responseConstructors = mock[ResponseConstructors]
+  }
+
+  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A) = {
+    when(mockPlayAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(returnValue))
   }
 
   object TestReadProtectionsControllerUpstreamError extends BaseTestReadProtectionsController {
@@ -79,7 +94,9 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
 
     "receiving an upstream error" should {
       object DataItem extends AuthorisedFakeRequestTo(TestReadProtectionsControllerUpstreamError.currentProtections)
-      "return 500" in {status(DataItem.result) shouldBe 500}
+      "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        status(DataItem.result) shouldBe 500}
       "show the technical error page for existing protections" in {
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
@@ -99,7 +116,10 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
 
     "receiving incorrect json in the PLA response" should {
       object DataItem extends AuthorisedFakeRequestTo(TestReadProtectionsControllerIncorrectResponseJson.currentProtections)
-      "return 500" in {status(DataItem.result) shouldBe 500}
+      "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        status(DataItem.result) shouldBe 500
+      }
       "show the technical error page for existing protections" in {
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
@@ -110,9 +130,11 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
     "receiving a correct response from PLA" should {
       object DataItem extends AuthorisedFakeRequestTo(TestReadProtectionsControllerSuccess.currentProtections)
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(DataItem.result) shouldBe 200
       }
       "show the existing protections page" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.existingProtections.pageHeading")
       }
     }

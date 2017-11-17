@@ -29,16 +29,19 @@ import models.amendModels.{AmendProtectionModel, AmendsGAModel}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.{Configuration, Environment}
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost, KeystoreTestHelper}
+import testHelpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HttpResponse
@@ -50,18 +53,24 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   val mockDisplayConstructors = mock[DisplayConstructors]
   val mockPLAConnector = mock[PLAConnector]
   val mockResponseConstructors = mock[ResponseConstructors]
+  val mockPlayAuthConnector = mock[PlayAuthConnector]
+
 
   val testIP16DormantModel = AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, protectionType = Some("IP2016"), status = Some("dormant"), relevantAmount = Some(100000), uncrystallisedRights = Some(100000)))
 
-  object TestAmendsController extends AmendsController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
+  object TestAmendsController extends AmendsController  {
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockPlayAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
 
     override val displayConstructors: DisplayConstructors = mockDisplayConstructors
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
     override val plaConnector: PLAConnector = mockPLAConnector
     override val responseConstructors: ResponseConstructors = mockResponseConstructors
+
+    override def config: Configuration = mock[Configuration]
+
+    override def env: Environment = mock[Environment]
   }
 
   val sessionId = UUID.randomUUID.toString
@@ -197,11 +206,22 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       .thenReturn(Future.successful(data))
   }
 
+  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A) = {
+    when(mockPlayAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(returnValue))
+  }
+
+  def mockAuthConnector(future: Future[Unit]) = {
+    when(mockPlayAuthConnector.authorise[Unit](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(future)
+  }
+
 
   "In AmendsController calling the amendsSummary action" when {
     "there is no stored amends model" should {
       object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendsSummary("ip2016", "open"))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(DataItem.result) shouldBe 500
       }
@@ -703,7 +723,6 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendOverseasPensions("ip2016", "dormant"))
       "return 200" in {
-
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 200
       }

@@ -16,29 +16,34 @@
 
 package controllers
 
-import auth.AuthorisedForPLA
-import config.{FrontendAppConfig,FrontendAuthConnector}
-
-import connectors.KeyStoreConnector
+import auth.AuthFunction
+import config.{AuthClientConnector, FrontendAppConfig}
 import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import scala.concurrent.Future
-import models._
 
+import scala.concurrent.Future
+import play.api.{Configuration, Environment, Play}
 import views.html.pages._
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.auth.core.AuthConnector
 
 object ConfirmationController extends ConfirmationController {
-  override lazy val applicationConfig = FrontendAppConfig
-  override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
+  lazy val appConfig = FrontendAppConfig
+  override lazy val authConnector: AuthConnector = AuthClientConnector
+  lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
+
+  override def config: Configuration = Play.current.configuration
+
+  override def env: Environment = Play.current.injector.instanceOf[Environment]
 }
 
-trait ConfirmationController extends BaseController with AuthorisedForPLA {
+trait ConfirmationController extends BaseController with AuthFunction {
 
-  val confirmFP = AuthorisedByAny.async {
-    implicit user => implicit request => Future.successful(Ok(confirmation.confirmFP()))
+  val confirmFP = Action.async {
+    implicit request =>
+      genericAuthWithoutNino("FP2016") {
+        Future.successful(Ok(confirmation.confirmFP()))
+      }
   }
 
 }

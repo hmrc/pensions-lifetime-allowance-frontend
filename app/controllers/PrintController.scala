@@ -16,37 +16,47 @@
 
 package controllers
 
-import auth.AuthorisedForPLA
+import auth.AuthFunction
 import constructors.DisplayConstructors
-import config.{FrontendAuthConnector, FrontendAppConfig}
+import config.{AppConfig, AuthClientConnector, FrontendAppConfig}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
-import models.{ProtectionModel, PersonalDetailsModel}
-import play.api.Logger
+import models.{PersonalDetailsModel, ProtectionModel}
+import play.api.{Configuration, Environment, Logger, Play}
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import play.api.mvc._
+
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.play.frontend.config.AuthRedirects
+
 
 
 object PrintController extends PrintController {
   val keyStoreConnector = KeyStoreConnector
   val citizenDetailsConnector = CitizenDetailsConnector
   val displayConstructors = DisplayConstructors
-  override lazy val applicationConfig = FrontendAppConfig
-  override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.ip14StartUrl
+  lazy val appConfig = FrontendAppConfig
+  override lazy val authConnector: AuthConnector = AuthClientConnector
+  lazy val postSignInRedirectUrl = FrontendAppConfig.ip14StartUrl
+
+  override def config: Configuration = Play.current.configuration
+  override def env: Environment = Play.current.injector.instanceOf[Environment]
 }
 
-trait PrintController extends BaseController with AuthorisedForPLA {
+trait PrintController extends BaseController with AuthRedirects  with AuthorisedFunctions {
 
   val keyStoreConnector: KeyStoreConnector
   val citizenDetailsConnector: CitizenDetailsConnector
   val displayConstructors: DisplayConstructors
+  val appConfig: AppConfig
 
-  val printView = AuthorisedByAny.async { implicit user => implicit request =>
 
-      user.nino.map { nino =>
+  val printView = Action.async { implicit request =>
+    authorised(Enrolment("HMRC-NI")).retrieve(Retrievals.nino) { externalId =>
+      externalId.map { nino =>
         for {
           personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
           protectionModel <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
@@ -55,7 +65,20 @@ trait PrintController extends BaseController with AuthorisedForPLA {
         Logger.warn("No associated nino for user in printView action")
         Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
+    }.recoverWith {
+      case e: NoActiveSession => Future.successful(toGGLogin(appConfig.ipStartUrl))
+      case e: InsufficientEnrolments => Future.successful(Redirect(s"$personalIVUrl?" +
+        s"origin=${config.getString("appName")}" +
+        s"&confidenceLevel=200" +
+        s"&completionURL=${appConfig.ipStartUrl}" +
+        s"&failureURL=${appConfig.notAuthorisedRedirectUrl}"))
+      case e: InsufficientConfidenceLevel => Future.successful(Redirect(s"$personalIVUrl?" +
+        s"origin=${config.getString("appname")}" +
+        s"&confidenceLevel=200" +
+        s"&completionURL=${appConfig.ipStartUrl}" +
+        s"&failureURL=${appConfig.notAuthorisedRedirectUrl}"))
     }
+  }
 
 
   private def routePrintView(personalDetailsModel: Option[PersonalDetailsModel], protectionModel: Option[ProtectionModel], nino: String)(implicit request: Request[AnyContent]): Result = {

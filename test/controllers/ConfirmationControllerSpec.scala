@@ -21,22 +21,33 @@ import java.util.UUID
 
 import auth._
 import com.kenshoo.play.metrics.PlayModule
-import config.FrontendAuthConnector
+import config.AuthClientConnector
+import org.mockito.Matchers
+import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.{Configuration, Environment}
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import testHelpers._
+import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
+import scala.concurrent.Future
 
 class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     override def bindModules = Seq(new PlayModule)
 
+    val mockPlayAuthConnector = mock[PlayAuthConnector]
+
     object TestConfirmationController extends ConfirmationController {
-        override lazy val applicationConfig = MockConfig
-        override lazy val authConnector = MockAuthConnector
-        override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+        lazy val appConfig = MockConfig
+        override lazy val authConnector = mockPlayAuthConnector
+        lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+
+        override def config: Configuration = mock[Configuration]
+        override def env: Environment = mock[Environment]
     }
 
     val sessionId = UUID.randomUUID.toString
@@ -45,8 +56,13 @@ class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with 
     val mockUsername = "mockuser"
     val mockUserId = "/auth/oid/" + mockUsername
 
+    def mockAuthConnector(future: Future[Unit]) = {
+        when(mockPlayAuthConnector.authorise[Unit](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+          .thenReturn(future)
+    }
+
     "ConfirmationController should be correctly initialised" in {
-        ConfirmationController.authConnector shouldBe FrontendAuthConnector
+        ConfirmationController.authConnector shouldBe AuthClientConnector
     }
 
     "Calling the .confirmFP action" when {
@@ -54,10 +70,12 @@ class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with 
         "navigated to " should {
             object DataItem extends AuthorisedFakeRequestTo(TestConfirmationController.confirmFP)
             "return a 200" in {
+                mockAuthConnector(Future.successful({}))
                 status(DataItem.result) shouldBe 200
             }
 
             "take user to the Confirm FP page" in {
+                mockAuthConnector(Future.successful({}))
                 DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.confirmFP16.pageHeading")
             }
         }

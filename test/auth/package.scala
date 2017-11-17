@@ -28,7 +28,6 @@ import uk.gov.hmrc.http.SessionKeys
 package object auth {
 
     val mockConfig: AppConfig = MockConfig
-    val mockAuthConnector: AuthConnector = MockAuthConnector
 
     val nino = "AB124512C"
 
@@ -133,6 +132,7 @@ package object auth {
       SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
       SessionKeys.lastRequestTimestamp -> DateTimeUtils.now.getMillis.toString,
       SessionKeys.token -> "ANYOLDTOKEN",
+
       SessionKeys.authProvider -> provider
   )
 

@@ -16,19 +16,22 @@
 
 package auth
 
+import config.WSHttp
+import uk.gov.hmrc.http.CoreGet
+import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.play.frontend.auth.connectors.AuthConnector
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.ConfidenceLevel.{L50, L500}
 import uk.gov.hmrc.play.frontend.auth.connectors.domain.{Accounts, Authority, CredentialStrength, PayeAccount}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, UserId}
+import uk.gov.hmrc.http.{CorePost, HeaderCarrier, HttpGet, UserId}
+import uk.gov.hmrc.play.config.ServicesConfig
 
-object MockAuthConnector extends AuthConnector {
+object MockAuthConnector extends PlayAuthConnector with ServicesConfig {
   override val serviceUrl: String = ""
-  override def http: HttpGet = ???
+  override def http: CoreGet with CorePost = WSHttp
 
   val mockUserId = userID("mockuser")
 
@@ -64,7 +67,4 @@ object MockAuthConnector extends AuthConnector {
 
   private def testConfidenceLevel(nino: String) : ConfidenceLevel =
     if (nino == TestAccountBuilder.lowConfidenceNino) L50 else L500
-
-  override def currentAuthority(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[Option[Authority]] =
-    Future(payeAuthority(hc.userId.getOrElse(mockUserId).value, usernameToNino(hc.userId.getOrElse(mockUserId))))
 }

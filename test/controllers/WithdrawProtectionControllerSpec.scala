@@ -24,6 +24,7 @@ import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
+import play.api.{Configuration, Environment}
 import play.api.Play.current
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
@@ -31,6 +32,8 @@ import play.api.i18n.Messages.Implicits._
 import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 
 import scala.concurrent.Future
 
@@ -41,15 +44,20 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockDisplayConstructors = mock[DisplayConstructors]
   val mockPLAConnector = mock[PLAConnector]
+  val mockPlayAuthConnector = mock[PlayAuthConnector]
 
   object TestWithdrawController extends WithdrawProtectionController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockPlayAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
 
     override val displayConstructors: DisplayConstructors = mockDisplayConstructors
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
     override val plaConnector: PLAConnector = mockPLAConnector
+
+    override def config: Configuration = mock[Configuration]
+
+    override def env: Environment = mock[Environment]
   }
 
   val ip2016Protection = ProtectionModel(
@@ -90,6 +98,11 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
     psoAdded = false, Seq(), "£1,100,000"
   )
 
+  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A) = {
+    when(mockPlayAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
+      .thenReturn(Future.successful(returnValue))
+  }
+
   "In WithdrawProtectionController calling the withdrawSummary action" when {
 
     "there is no stored protection model" should {
@@ -97,6 +110,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
       object UserRequest extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
 
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[ProtectionModel](None)
         status(UserRequest.result) shouldBe INTERNAL_SERVER_ERROR
       }

@@ -16,64 +16,74 @@
 
 package controllers
 
-import auth.{AuthorisedForPLA, PLAUser}
+import auth.AuthFunction
 import common.Exceptions
-import config.{FrontendAppConfig, FrontendAuthConnector}
+import config.{AuthClientConnector, FrontendAppConfig}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.{ApplicationOutcome, ApplicationType}
 import models._
-import play.api.Logger
+import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc._
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.http._
 import utils.Constants
 import views.html.pages.result._
+
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
 import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.play.frontend.config.AuthRedirects
 
 
-object ResultController extends ResultController with ServicesConfig {
+object ResultController extends ResultController {
   override val keyStoreConnector = KeyStoreConnector
-  override lazy val applicationConfig = FrontendAppConfig
-  override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
+  lazy val appConfig = FrontendAppConfig
+  override lazy val authConnector: AuthConnector = AuthClientConnector
+  lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
 
   override val plaConnector = PLAConnector
   override val responseConstructors = ResponseConstructors
+
+  override def config: Configuration = Play.current.configuration
+  override def env: Environment = Play.current.injector.instanceOf[Environment]
 }
 
-trait ResultController extends BaseController with AuthorisedForPLA {
+trait ResultController extends BaseController with AuthFunction {
 
   val keyStoreConnector: KeyStoreConnector
   val plaConnector: PLAConnector
   val responseConstructors: ResponseConstructors
 
 
-  val processFPApplication = AuthorisedByAny.async {
-    implicit user => implicit request =>
+  val processFPApplication = Action.async { implicit request =>
+    genericAuthWithNino("FP2016") { nino =>
       implicit val protectionType = ApplicationType.FP2016
-      plaConnector.applyFP16(user.nino.get).flatMap(
+      plaConnector.applyFP16(nino).flatMap(
         response => routeViaMCNeededCheck(response)
       )
+    }
   }
 
 
-  val processIPApplication = AuthorisedByAny.async {
-    implicit user => implicit request =>
-      implicit val protectionType = ApplicationType.IP2016
-      for {
-        userData <- keyStoreConnector.fetchAllUserData
-        applicationResult <- plaConnector.applyIP16(user.nino.get, userData.get)
-        response <- routeViaMCNeededCheck(applicationResult)
-      } yield response
+  val processIPApplication = Action.async {
+    implicit request =>
+      genericAuthWithNino("IP2016") { nino =>
+        implicit val protectionType = ApplicationType.IP2016
+        for {
+          userData <- keyStoreConnector.fetchAllUserData
+          applicationResult <- plaConnector.applyIP16(nino, userData.get)
+          response <- routeViaMCNeededCheck(applicationResult)
+        } yield response
+      }
   }
 
 
-  private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser, protectionType: ApplicationType.Value): Future[Result] = {
+  private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
     response.status match {
       case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
       case _ => saveAndRedirectToDisplay(response)
@@ -81,24 +91,26 @@ trait ResultController extends BaseController with AuthorisedForPLA {
   }
 
 
-  private def saveAndRedirectToDisplay(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser, protectionType: ApplicationType.Value): Future[Result] = {
-
-    responseConstructors.createApplyResponseModelFromJson(response.json).map {
-      model =>
-        if(model.protection.notificationId.isEmpty) {
-          Logger.warn(s"No notification ID found in the ApplyResponseModel for user with nino ${user.nino}")
-          Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
-        } else {
-          keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
-            cacheMap => protectionType match {
-              case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16())
-              case ApplicationType.FP2016 => Redirect(routes.ResultController.displayFP16())
+  private def saveAndRedirectToDisplay(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
+    genericAuthWithNino("existingProtections") { nino =>
+      responseConstructors.createApplyResponseModelFromJson(response.json).map {
+        model =>
+          if (model.protection.notificationId.isEmpty) {
+            Logger.warn(s"No notification ID found in the ApplyResponseModel for user with nino $nino")
+            Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+          } else {
+            keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
+              cacheMap =>
+                protectionType match {
+                  case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16())
+                  case ApplicationType.FP2016 => Redirect(routes.ResultController.displayFP16())
+                }
             }
-        }
+          }
+      }.getOrElse {
+        Logger.warn(s"Unable to create ApplyResponseModel from application response for ${protectionType.toString} for user nino: ${nino.orElse("No NINO recorded")}")
+        Future.successful(InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
-    }.getOrElse {
-      Logger.warn(s"Unable to create ApplyResponseModel from application response for ${protectionType.toString} for user nino: ${user.nino.getOrElse("No NINO recorded")}")
-      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
 
@@ -107,34 +119,36 @@ trait ResultController extends BaseController with AuthorisedForPLA {
   val displayFP16 = displayResult(ApplicationType.FP2016)
 
 
-  def displayResult(implicit protectionType: ApplicationType.Value): Action[AnyContent] = AuthorisedByAny.async {
+  def displayResult(implicit protectionType: ApplicationType.Value): Action[AnyContent] = Action.async {
+    implicit request =>
+      genericAuthWithNino("existingProtections") { nino =>
+        val errorResponse = InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+        keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
+          case Some(model) =>
+            val notificationId = model.protection.notificationId.getOrElse {
+              throw new Exceptions.OptionNotDefinedException("applicationOutcome", "notificationId", protectionType.toString)
+            }
 
-    implicit user => implicit request =>
-      val errorResponse = InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-      keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
-        case Some(model) =>
-          val notificationId = model.protection.notificationId.getOrElse{throw new Exceptions.OptionNotDefinedException("applicationOutcome", "notificationId", protectionType.toString)}
+            applicationOutcome(notificationId) match {
 
-          applicationOutcome(notificationId) match {
+              case ApplicationOutcome.Successful =>
+                keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
+                val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
+                Ok(resultSuccess(displayModel))
 
-            case ApplicationOutcome.Successful =>
-              keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
-              val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
-              Ok(resultSuccess(displayModel))
+              case ApplicationOutcome.SuccessfulInactive =>
+                val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
+                Ok(resultSuccessInactive(displayModel))
 
-            case ApplicationOutcome.SuccessfulInactive =>
-              val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
-              Ok(resultSuccessInactive(displayModel))
-
-            case ApplicationOutcome.Rejected =>
-              val displayModel = DisplayConstructors.createRejectionDisplayModel(model)
-              Ok(resultRejected(displayModel))
-          }
-        case _ =>
-          Logger.warn(s"Could not retrieve ApplyResponseModel from keystore for user with nino: ${user.nino}")
-          errorResponse
+              case ApplicationOutcome.Rejected =>
+                val displayModel = DisplayConstructors.createRejectionDisplayModel(model)
+                Ok(resultRejected(displayModel))
+            }
+          case _ =>
+            Logger.warn(s"Could not retrieve ApplyResponseModel from keystore for user with nino: $nino")
+            errorResponse
+        }
       }
-
   }
 
 

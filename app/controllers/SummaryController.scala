@@ -16,11 +16,11 @@
 
 package controllers
 
-import auth.{PLAUser, AuthorisedForPLA}
-import config.{FrontendAppConfig,FrontendAuthConnector}
+import auth.AuthFunction
+import config.{AuthClientConnector, FrontendAppConfig}
 import enums.ApplicationType
-import play.api.Logger
-import play.api.mvc.{Result, AnyContent, Request}
+import play.api.{Configuration, Environment, Logger, Play}
+import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import connectors.KeyStoreConnector
@@ -28,43 +28,51 @@ import views.html._
 import constructors.SummaryConstructor
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
+import uk.gov.hmrc.play.frontend.config.AuthRedirects
 
 
 object SummaryController extends SummaryController {
   // $COVERAGE-OFF$
-  override lazy val applicationConfig = FrontendAppConfig
-  override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
+  lazy val appConfig = FrontendAppConfig
+  override lazy val authConnector: AuthConnector = AuthClientConnector
+  lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 
   val keyStoreConnector = KeyStoreConnector
   val summaryConstructor = SummaryConstructor
+
+  override def config: Configuration = Play.current.configuration
+  override def env: Environment = Play.current.injector.instanceOf[Environment]
   // $COVERAGE-ON$
 }
 
-trait SummaryController extends BaseController with AuthorisedForPLA {
+trait SummaryController extends BaseController with AuthFunction {
 
   val keyStoreConnector : KeyStoreConnector
   val summaryConstructor: SummaryConstructor
 
-  val summaryIP16 = AuthorisedByAny.async { implicit user => implicit request =>
-    implicit val protectionType = ApplicationType.IP2016
-    keyStoreConnector.fetchAllUserData.map {
-      case Some(data) => routeIP2016SummaryFromUserData(data)
-      case None => {
-        Logger.warn(s"unable to fetch summary IP16 data from keystore for user nino ${user.nino}")
-        InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+  val summaryIP16 = Action.async { implicit request =>
+    genericAuthWithNino("IP2016") { nino =>
+      implicit val protectionType = ApplicationType.IP2016
+      keyStoreConnector.fetchAllUserData.map {
+        case Some(data) => routeIP2016SummaryFromUserData(data)
+        case None => {
+          Logger.warn(s"unable to fetch summary IP16 data from keystore for user nino $nino")
+          InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+        }
       }
     }
   }
 
-  private def routeIP2016SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent], user: PLAUser) : Result = {
-    summaryConstructor.createSummaryData(data).map {
-      summaryModel => Ok(pages.ip2016.summary(summaryModel))
-    }.getOrElse {
-      Logger.warn(s"Unable to create IP16 summary model from summary data for user nino ${user.nino}")
-      InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+  private def routeIP2016SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
+      summaryConstructor.createSummaryData(data).map {
+        summaryModel => Ok(pages.ip2016.summary(summaryModel))
+      }.getOrElse {
+        Logger.warn(s"Unable to create IP16 summary model from summary data for user nino ${Retrievals.nino}")
+        InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+      }
     }
-  }
 
   // returns true if the passed ID corresponds to a data field which requires GA monitoring
   def recordDataMetrics(rowId: String): Boolean = {

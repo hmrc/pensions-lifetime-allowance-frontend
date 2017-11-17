@@ -20,42 +20,50 @@ import java.util.UUID
 
 import auth._
 import com.kenshoo.play.metrics.PlayModule
-import config.FrontendAuthConnector
+import config.AuthClientConnector
 import models._
+import org.mockito.Matchers
+import org.mockito.Mockito.when
 import org.scalatest.mock.MockitoSugar
+import play.api.{Configuration, Environment}
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
+import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
+import scala.concurrent.Future
 
 class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     override def bindModules = Seq(new PlayModule)
 
+    val mockPlayAuthConnector = mock[PlayAuthConnector]
 
     val sessionId = UUID.randomUUID.toString
     val fakeRequest = FakeRequest("GET", "/protect-your-lifetime-allowance/")
     object TestExitSurveyController extends ExitSurveyController {
-        override lazy val applicationConfig = MockConfig
-        override lazy val authConnector = MockAuthConnector
-        override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
+        lazy val appConfig = MockConfig
+        override lazy val authConnector = mockPlayAuthConnector
+        lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
+
+        override def config: Configuration = mock[Configuration]
+        override def env: Environment = mock[Environment]
+    }
+
+    def mockAuthConnector(future: Future[Unit]) = {
+        when(mockPlayAuthConnector.authorise[Unit](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+          .thenReturn(future)
     }
 
     "ExitSurveyController should be correctly initialised" in {
-        ExitSurveyController.authConnector shouldBe FrontendAuthConnector
+        ExitSurveyController.authConnector shouldBe AuthClientConnector
     }
 
     "Calling the .exitSurvey action" when {
-
-        "visited directly with no session ID" should {
-            object DataItem extends FakeRequestTo("exit", TestExitSurveyController.exitSurvey, None)
-
-            "return 303" in {
-                status(DataItem.result) shouldBe 303
-            }
-        }
 
         "not supplied with a pre-existing stored model" should {
             object DataItem extends AuthorisedFakeRequestTo(TestExitSurveyController.exitSurvey)
