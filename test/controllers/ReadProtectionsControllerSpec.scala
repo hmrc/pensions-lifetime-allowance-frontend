@@ -16,11 +16,14 @@
 
 package controllers
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import auth.{MockAuthConnector, MockConfig}
 import com.kenshoo.play.metrics.PlayModule
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel, TransformedReadResponseModel}
+import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -32,6 +35,7 @@ import testHelpers.AuthorisedFakeRequestTo
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.http.HttpResponse
@@ -50,6 +54,8 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
   val testExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(None, Seq.empty)
 
   val mockPlayAuthConnector = mock[PlayAuthConnector]
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
 
 
   trait BaseTestReadProtectionsController extends ReadProtectionsController {
@@ -65,6 +71,8 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
     override val displayConstructors = mock[DisplayConstructors]
     override val responseConstructors = mock[ResponseConstructors]
   }
+
+  val fakeRequest = FakeRequest()
 
   def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A) = {
     when(mockPlayAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
@@ -93,49 +101,56 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
   "Calling the currentProtections Action" when {
 
     "receiving an upstream error" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestReadProtectionsControllerUpstreamError.currentProtections)
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      lazy val result = await(TestReadProtectionsControllerUpstreamError.currentProtections(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+
       "return 500" in {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        status(DataItem.result) shouldBe 500}
+        status(result) shouldBe 500}
       "show the technical error page for existing protections" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
-      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+      "have the correct cache control" in {result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
     }
 
     "receiving an MC needed response" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestReadProtectionsControllerMCNeeded.currentProtections)
+
+      lazy val result = await(TestReadProtectionsControllerMCNeeded.currentProtections(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+
       "return 423" in {
-        status(DataItem.result) shouldBe 423
+        status(result) shouldBe 423
       }
       "show the MC Needed page" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.mcNeeded.pageHeading")
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.mcNeeded.pageHeading")
       }
     }
 
     "receiving incorrect json in the PLA response" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestReadProtectionsControllerIncorrectResponseJson.currentProtections)
+      lazy val result = await(TestReadProtectionsControllerIncorrectResponseJson.currentProtections(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
       "show the technical error page for existing protections" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
-      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+      "have the correct cache control" in {result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
     }
 
     "receiving a correct response from PLA" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestReadProtectionsControllerSuccess.currentProtections)
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      lazy val result = await(TestReadProtectionsControllerSuccess.currentProtections(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
       "show the existing protections page" in {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.existingProtections.pageHeading")
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.existingProtections.pageHeading")
       }
     }
 

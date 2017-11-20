@@ -19,6 +19,8 @@ package controllers
 import java.time.LocalDate
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import auth.{MockAuthConnector, MockConfig}
 import com.kenshoo.play.metrics.PlayModule
 import connectors.{KeyStoreConnector, PLAConnector}
@@ -26,6 +28,7 @@ import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import models._
 import models.amendModels.{AmendProtectionModel, AmendsGAModel}
+import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -54,6 +57,8 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   val mockPLAConnector = mock[PLAConnector]
   val mockResponseConstructors = mock[ResponseConstructors]
   val mockPlayAuthConnector = mock[PlayAuthConnector]
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
 
 
   val testIP16DormantModel = AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, protectionType = Some("IP2016"), status = Some("dormant"), relevantAmount = Some(100000), uncrystallisedRights = Some(100000)))
@@ -219,28 +224,32 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "In AmendsController calling the amendsSummary action" when {
     "there is no stored amends model" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendsSummary("ip2016", "open"))
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      keystoreFetchCondition[AmendProtectionModel](None)
+      lazy val result = await(TestAmendsController.amendsSummary("ip2016", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](None)
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
       "show the technical error page for existing protections" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
-      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+      "have the correct cache control" in {
+        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      }
     }
 
     "there is a stored, updated amends model" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendsSummary("ip2014", "dormant"))
+      lazy val result = await(TestAmendsController.amendsSummary("ip2014", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         when(mockDisplayConstructors.createAmendDisplayModel(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
       "show the amends page for an updated protection for IP2014" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amends.heading.IP2014.changed")
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amends.heading.IP2014.changed")
       }
     }
   }
@@ -338,43 +347,46 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "Calling the amendmentOutcome action" when {
     "there is no outcome object stored in keystore" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
+      lazy val result = await(TestAmendsController.amendmentOutcome()(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
         keystoreFetchCondition[AmendResponseModel](None)
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
       "show the technical error page for existing protections" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
-      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+      "have the correct cache control" in {result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
     }
 
     "there is an active protection outcome in keystore" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
+      lazy val result = await(TestAmendsController.amendmentOutcome()(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         when(mockKeyStoreConnector.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
         when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(Some("updatedValue"),Some("changedToYes"),Some("changedToNo"),None,Some("addedPSO")))))
         when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "show the active amendment result page" in {
-        DataItem.jsoupDoc.body.getElementById("amendmentOutcome").text shouldEqual Messages("amendResultCode.33.heading")
+        jsoupDoc.body.getElementById("amendmentOutcome").text shouldEqual Messages("amendResultCode.33.heading")
       }
     }
 
     "there is an inactive protection outcome in keystore" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendmentOutcome())
+      lazy val result = await(TestAmendsController.amendmentOutcome()(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         when(mockKeyStoreConnector.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
         when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(None,Some("changedToNo"),Some("changedToYes"),None,None))))
         when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstInactiveAmendResponseDisplayModel)
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "show the inactive amendment result page" in {
-        DataItem.jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
+        jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
       }
     }
 
@@ -384,47 +396,50 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "not supplied with a stored model" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendCurrentPensions("ip2016", "open"))
+      lazy val result = await(TestAmendsController.amendCurrentPensions("ip2016", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
     }
 
     "supplied with a stored test model (£100000, IP2016, dormant)" should {
       val testModel = new AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, uncrystallisedRights = Some(100000)))
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendCurrentPensions("ip2016", "dormant"))
+      lazy val result = await(TestAmendsController.amendCurrentPensions("ip2016", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testModel))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "take the user to the amend ip16 current pensions page" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testModel))
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
       }
 
       "return some HTML that" should {
 
         "contain some text and use the character set utf-8" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testModel))
-          contentType(DataItem.result) shouldBe Some("text/html")
-          charset(DataItem.result) shouldBe Some("utf-8")
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
         }
 
         "have the value 100000 completed in the amount input by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testModel))
-          DataItem.jsoupDoc.body.getElementById("amendedUKPensionAmt").attr("value") shouldBe "100000"
+          jsoupDoc.body.getElementById("amendedUKPensionAmt").attr("value") shouldBe "100000"
         }
       }
     }
 
     "supplied with a stored test model (£100000, IP2014, dormant)" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendCurrentPensions("ip2014", "dormant"))
+      lazy val result = await(TestAmendsController.amendCurrentPensions("ip2016", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
     }
   }
@@ -468,60 +483,63 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "not supplied with a stored model" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBefore("ip2016", "open"))
+      lazy val result = await(TestAmendsController.amendPensionsTakenBefore("ip2016", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
     }
     "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBefore("ip2016", "dormant"))
-
+      lazy val result = await(TestAmendsController.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "have the value of the check box set as 'No' by default" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-        DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBefore-no").attr("checked") shouldBe "checked"
+        jsoupDoc.body.getElementById("amendedPensionsTakenBefore-no").attr("checked") shouldBe "checked"
       }
     }
 
     "supplied with the stored test model for (dormant, IP2016, preADay = £2000)" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBefore("ip2016", "dormant"))
+      lazy val result = await(TestAmendsController.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
 
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "should take the user to the pensions taken before page" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.title")
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.title")
       }
 
       "return some HTML that" should {
 
         "contain some text and use the character set utf-8" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          contentType(DataItem.result) shouldBe Some("text/html")
-          charset(DataItem.result) shouldBe Some("utf-8")
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
         }
 
         "have the value of the check box set as 'Yes' by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBefore-yes").attr("checked") shouldBe "checked"
+          jsoupDoc.body.getElementById("amendedPensionsTakenBefore-yes").attr("checked") shouldBe "checked"
         }
 
         "have the value of the input field set to 2000 by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBeforeAmt").attr("value") shouldBe "2000"
+          jsoupDoc.body.getElementById("amendedPensionsTakenBeforeAmt").attr("value") shouldBe "2000"
         }
       }
     }
 
     "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBefore("ip2014", "dormant"))
+      lazy val result = await(TestAmendsController.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
     }
   }
@@ -529,9 +547,10 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   "Submitting Amend IP16 Pensions Taken Before data" when {
 
     "the data is invalid" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore)
+  lazy val result = await(TestAmendsController.submitAmendPensionsTakenBefore(fakeRequest))
+  lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 400" in {
-        status(DataItem.result) shouldBe 400
+        status(result) shouldBe 400
       }
     }
 
@@ -571,7 +590,6 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
         ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
 
-
       "redirect to Amends Summary Page" in {
         keystoreSaveCondition[PensionsTakenBeforeModel](mockKeyStoreConnector)
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -584,60 +602,64 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   "In AmendsController calling the .amendPensionsTakenBetween action" when {
     "not supplied with a stored model" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBetween("ip2016", "open"))
+      lazy val result = await(TestAmendsController.amendPensionsTakenBetween("ip2016", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
     }
     "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBetween("ip2016", "dormant"))
+      lazy val result = await(TestAmendsController.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "have the value of the check box set as 'No' by default" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-        DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBetween-no").attr("checked") shouldBe "checked"
+        jsoupDoc.body.getElementById("amendedPensionsTakenBetween-no").attr("checked") shouldBe "checked"
       }
     }
 
     "supplied with the stored test model for (dormant, IP2016, preADay = £2000)" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBetween("ip2016", "dormant"))
+      lazy val result = await(TestAmendsController.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
 
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "should take the user to the pensions taken before page" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.title")
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.title")
       }
 
       "return some HTML that" should {
 
         "contain some text and use the character set utf-8" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          contentType(DataItem.result) shouldBe Some("text/html")
-          charset(DataItem.result) shouldBe Some("utf-8")
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
         }
 
         "have the value of the check box set as 'Yes' by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBetween-yes").attr("checked") shouldBe "checked"
+          jsoupDoc.body.getElementById("amendedPensionsTakenBetween-yes").attr("checked") shouldBe "checked"
         }
 
         "have the value of the input field set to 2000 by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          DataItem.jsoupDoc.body.getElementById("amendedPensionsTakenBetweenAmt").attr("value") shouldBe "2000"
+          jsoupDoc.body.getElementById("amendedPensionsTakenBetweenAmt").attr("value") shouldBe "2000"
         }
       }
     }
 
     "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPensionsTakenBetween("ip2014", "dormant"))
+      lazy val result = await(TestAmendsController.amendPensionsTakenBetween("ip2014", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
     }
 
@@ -704,59 +726,63 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "not supplied with a stored model" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendOverseasPensions("ip2016", "open"))
+      lazy val result = await(TestAmendsController.amendOverseasPensions("ip2016", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
     }
     "supplied with the stored test model for (dormant, IP2016, nonUKRights = £0.0)" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendOverseasPensions("ip2016", "dormant"))
+      lazy val result = await(TestAmendsController.amendOverseasPensions("ip2016", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "have the value of the check box set as 'No' by default" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-        DataItem.jsoupDoc.body.getElementById("amendedOverseasPensions-no").attr("checked") shouldBe "checked"
+        jsoupDoc.body.getElementById("amendedOverseasPensions-no").attr("checked") shouldBe "checked"
       }
     }
 
     "supplied with the stored test model for (dormant, IP2016, nonUKRights = £2000)" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendOverseasPensions("ip2016", "dormant"))
+      lazy val result = await(TestAmendsController.amendOverseasPensions("ip2016", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "should take the user to the overseas pensions page" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.title")
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.title")
       }
 
       "return some HTML that" should {
 
         "contain some text and use the character set utf-8" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          contentType(DataItem.result) shouldBe Some("text/html")
-          charset(DataItem.result) shouldBe Some("utf-8")
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
         }
 
         "have the value of the check box set as 'Yes' by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          DataItem.jsoupDoc.body.getElementById("amendedOverseasPensions-yes").attr("checked") shouldBe "checked"
+          jsoupDoc.body.getElementById("amendedOverseasPensions-yes").attr("checked") shouldBe "checked"
         }
 
         "have the value of the input field set to 2000 by default" in {
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          DataItem.jsoupDoc.body.getElementById("amendedOverseasPensionsAmt").attr("value") shouldBe "2000"
+          jsoupDoc.body.getElementById("amendedOverseasPensionsAmt").attr("value") shouldBe "2000"
         }
       }
     }
 
     "supplied with the stored test model for (dormant, IP2014, nonUKRights = £2000)" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendOverseasPensions("ip2014", "dormant"))
+      lazy val result = await(TestAmendsController.amendOverseasPensions("ip2014", "dormant")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
     }
   }
@@ -765,9 +791,10 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   "Submitting Amend IP16 Overseas Pensions data" when {
 
     "there is an error reading the form" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions)
+      lazy val result = await(TestAmendsController.submitAmendOverseasPensions(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 400" in {
-        status(DataItem.result) shouldBe 400
+        status(result) shouldBe 400
       }
     }
 
@@ -848,50 +875,53 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "there is no amendment model fetched from keystore" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2014", "open"))
+      lazy val result = await(TestAmendsController.amendPsoDetails("ip2014", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
       "show the technical error page for existing protections" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
-      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+      "have the correct cache control" in {result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
     }
 
     "there is no PSO list stored in the AmendProtectionModel" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2014", "open"))
+      lazy val result = await(TestAmendsController.amendPsoDetails("ip2014", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionNoPsoList, testProtectionNoPsoList)))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "show the amend PSO details page with no data completed" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-        DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
-        DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
-        DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+        jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
+        jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
+        jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
       }
     }
 
     "there is an empty PSO list stored in the AmendProtectionModel" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2016", "open"))
+      lazy val result = await(TestAmendsController.amendPsoDetails("ip2016", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionEmptyPsoList, testProtectionEmptyPsoList)))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "show the amend PSO details page with no data completed" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-        DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
-        DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
-        DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+        jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
+        jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
+        jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
       }
     }
 
@@ -915,17 +945,18 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
     "there is a PSO list of more then one PSO stored in the AmendProtectionModel" should {
 
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2016", "open"))
+      lazy val result = await(TestAmendsController.amendPsoDetails("ip2016", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionMultiplePsoList, testProtectionMultiplePsoList)))
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
       "show the technical error page for existing protections" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
-      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+      "have the correct cache control" in {result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
     }
   }
 
@@ -1013,39 +1044,41 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     )
 
     "there is no amend protection model fetched from keystore" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.removePso("ip2016", "open"))
+      lazy val result = await(TestAmendsController.removePso("ip2016", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 500" in {
         keystoreFetchCondition[AmendProtectionModel](None)
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
       "show the technical error page for existing protections" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
-      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+      "have the correct cache control" in {result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
     }
 
     "a valid amend protection model is fetched from keystore" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.removePso("ip2016", "open"))
+      lazy val result = await(TestAmendsController.removePso("ip2016", "open")(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 200" in {
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
 
       "show the remove pso page with correct details" in {
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-        DataItem.jsoupDoc.body.getElementById("protectionType").`val`() shouldEqual "ip2016"
-        DataItem.jsoupDoc.body.getElementById("status").`val`() shouldEqual "open"
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+        jsoupDoc.body.getElementById("protectionType").`val`() shouldEqual "ip2016"
+        jsoupDoc.body.getElementById("status").`val`() shouldEqual "open"
       }
     }
 
     "choosing remove on the remove page" should {
-
+      lazy val result = await(TestAmendsController.submitRemovePso(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 400 if the hidden form details were incorrect" in {
-        object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitRemovePso)
-        status(DataItem.result) shouldEqual 400
+        status(result) shouldEqual 400
       }
 
       "return 500 if the an amend protection model could not be retrieved from keystore" in {

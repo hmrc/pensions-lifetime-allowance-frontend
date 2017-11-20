@@ -20,6 +20,8 @@ package controllers
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import auth._
 import com.kenshoo.play.metrics.PlayModule
@@ -27,6 +29,7 @@ import connectors.KeyStoreConnector
 import constructors.SummaryConstructor
 import enums.ApplicationType
 import models.SummaryModel
+import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -50,7 +53,8 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockSummaryConstructor = mock[SummaryConstructor]
   val mockPlayAuthConnector = mock[PlayAuthConnector]
-
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
 
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
 
@@ -110,15 +114,16 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   "Navigating to summary when there is no user data" when {
 
     "user is applying for IP16" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerNoData.summaryIP16)
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      lazy val result = await(TestSummaryControllerNoData.summaryIP16(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
       "show technical error for IP16" in {
         implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
       }
     }
   }
@@ -126,14 +131,15 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   "Navigating to summary when there is invalid user data" when {
 
     "user is applying for IP16" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerInvalidData.summaryIP16)
+      lazy val result = await(TestSummaryControllerInvalidData.summaryIP16(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
-        status(DataItem.result) shouldBe 500
+        status(result) shouldBe 500
       }
       "show technical error for IP16" in {
         implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.SECONDS)
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.IP2016Controller.pensionsTaken()}"
       }
     }
   }
@@ -141,10 +147,10 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   "Navigating to summary when user has valid data" when {
 
     "user is applying for IP16" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestSummaryControllerValidData.summaryIP16)
+      lazy val result = await(TestSummaryControllerValidData.summaryIP16(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
-
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
     }
   }

@@ -22,7 +22,7 @@ import play.api.mvc.Results._
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
 import testHelpers.KeystoreTestHelper
-import uk.gov.hmrc.auth.core.{AuthorisationException, InsufficientConfidenceLevel, PlayAuthConnector}
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Matchers
 import org.mockito.Mockito._
@@ -45,6 +45,10 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
     override def env: Environment = mock[Environment]
 
     override def personalIVUrl = "http://www.test.com"
+
+    override def ggLoginUrl = "http://www.test.com"
+
+    override def origin = "origin"
   }
 
   def mockAuthConnector[T](future: Future[T]) = {
@@ -62,16 +66,37 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         status(result) shouldBe 200
         bodyOf(result) shouldBe "Test body"
       }
+    }
 
-      "return internal server error" in {
+    "failing auth validation" should {
+
+      "redirect to IV uplift page on an insufficient confidence level exception" in {
         mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
         val result = TestAuthFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest)
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some("http://www.test.com?origin=null&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
       }
 
-    }
+      "return a 500 on an unexpected authorisation exception" in {
+        mockAuthConnector(Future.failed(new InternalError("")))
+        val result = TestAuthFunction.genericAuthWithoutNino("IP2016")(Ok("Test body"))(fakeRequest)
+        status(result) shouldBe 500
+      }
 
+      "redirect to IV uplift page on an insufficient enrolments exception" in {
+        mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
+        val result = TestAuthFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest)
+        status(result) shouldBe 303
+        redirectLocation(result) shouldBe Some("http://www.test.com?origin=null&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+      }
+
+      "redirect to gg login page on an no active session exception" in {
+        mockAuthConnector(Future.failed(new SessionRecordNotFound))
+        val result = TestAuthFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest)
+        status(result) shouldBe 303
+        redirectLocation(result) shouldBe Some("http://www.test.com?continue=%2Fpla%2Fapply-for-ip16-pensions-taken&origin=origin")
+      }
+    }
   }
 
   "In AuthFunction calling the genericAuthWithNino action" when {
@@ -84,12 +109,34 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         status(result) shouldBe 200
         bodyOf(result) shouldBe "AA000001A"
       }
+    }
+    "failing auth validation" should {
 
-      "return internal server error" in {
+      "redirect to IV uplift page on an insufficient confidence level exception" in {
         mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
         val result = await(TestAuthFunction.genericAuthWithNino("IP2016")(body)(fakeRequest))
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some("http://www.test.com?origin=null&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+      }
+
+      "return a 500 on an unexpected authorisation exception" in {
+        mockAuthConnector(Future.failed(new InternalError("")))
+        val result = await(TestAuthFunction.genericAuthWithNino("IP2016")(body)(fakeRequest))
+        status(result) shouldBe 500
+      }
+
+      "redirect to IV uplift page on an insufficient enrolments exception" in {
+        mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
+        val result = await(TestAuthFunction.genericAuthWithNino("IP2016")(body)(fakeRequest))
+        status(result) shouldBe 303
+        redirectLocation(result) shouldBe Some("http://www.test.com?origin=null&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+      }
+
+      "redirect to gg login page on an no active session exception" in {
+        mockAuthConnector(Future.failed(new SessionRecordNotFound))
+        val result = await(TestAuthFunction.genericAuthWithNino("IP2016")(body)(fakeRequest))
+        status(result) shouldBe 303
+        redirectLocation(result) shouldBe Some("http://www.test.com?continue=%2Fpla%2Fapply-for-ip16-pensions-taken&origin=origin")
       }
     }
   }

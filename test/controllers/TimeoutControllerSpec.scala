@@ -22,15 +22,21 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mock.MockitoSugar
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import play.api.i18n.Messages
 import testHelpers._
 import auth._
 import com.kenshoo.play.metrics.PlayModule
+import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 
 class TimeoutControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
     override def bindModules = Seq(new PlayModule)
+
+    implicit val system = ActorSystem()
+    implicit val materializer = ActorMaterializer()
 
     object TestTimeoutController extends TimeoutController {
     }
@@ -38,13 +44,14 @@ class TimeoutControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     "Calling the .timeout action" when {
 
         "navigated to " should {
-            object DataItem extends AuthorisedFakeRequestTo(TestTimeoutController.timeout)
+            lazy val result = await(TestTimeoutController.timeout(fakeRequest))
+            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             "return a 200" in {
-                status(DataItem.result) shouldBe 200
+                status(result) shouldBe 200
             }
 
             "take user to the Timeout page" in {
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.timeout.pageHeading")
+                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.timeout.pageHeading")
             }
         }
     }

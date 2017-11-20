@@ -18,10 +18,13 @@ package controllers
 
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import auth._
 import com.kenshoo.play.metrics.PlayModule
 import config.AuthClientConnector
 import models._
+import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito.when
 import org.scalatest.mock.MockitoSugar
@@ -42,6 +45,8 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
     override def bindModules = Seq(new PlayModule)
 
     val mockPlayAuthConnector = mock[PlayAuthConnector]
+    implicit val system = ActorSystem()
+    implicit val materializer = ActorMaterializer()
 
     val sessionId = UUID.randomUUID.toString
     val fakeRequest = FakeRequest("GET", "/protect-your-lifetime-allowance/")
@@ -66,32 +71,34 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
     "Calling the .exitSurvey action" when {
 
         "not supplied with a pre-existing stored model" should {
-            object DataItem extends AuthorisedFakeRequestTo(TestExitSurveyController.exitSurvey)
+            lazy val result = await(TestExitSurveyController.exitSurvey(fakeRequest))
+            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             "return a 200" in {
-                status(DataItem.result) shouldBe 200
+                status(result) shouldBe 200
             }
 
             "take user to the exit survey page" in {
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.exitSurvey.pageHeading")
+                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.exitSurvey.pageHeading")
             }
         }
 
         "supplied with a pre-existing stored model" should {
-            object DataItem extends AuthorisedFakeRequestTo(TestExitSurveyController.exitSurvey)
+            lazy val result = await(TestExitSurveyController.exitSurvey(fakeRequest))
+            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             val testModel = new ExitSurveyModel(Some("no"), Some("no"),Some("no"),Some("no"),Some("no"))
             "return a 200" in {
-                status(DataItem.result) shouldBe 200
+                status(result) shouldBe 200
             }
 
             "take user to the pension savings page" in {
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.exitSurvey.pageHeading")
+                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.exitSurvey.pageHeading")
             }
 
             "return some HTML that" should {
 
                 "contain some text and use the character set utf-8" in {
-                    contentType(DataItem.result) shouldBe Some("text/html")
-                    charset(DataItem.result) shouldBe Some("utf-8")
+                    contentType(result) shouldBe Some("text/html")
+                    charset(result) shouldBe Some("utf-8")
                 }
             }
         }

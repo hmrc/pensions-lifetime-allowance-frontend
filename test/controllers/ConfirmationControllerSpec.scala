@@ -19,9 +19,12 @@ package controllers
 
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import auth._
 import com.kenshoo.play.metrics.PlayModule
 import config.AuthClientConnector
+import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -40,6 +43,8 @@ class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with 
     override def bindModules = Seq(new PlayModule)
 
     val mockPlayAuthConnector = mock[PlayAuthConnector]
+    implicit val system = ActorSystem()
+    implicit val materializer = ActorMaterializer()
 
     object TestConfirmationController extends ConfirmationController {
         lazy val appConfig = MockConfig
@@ -68,15 +73,15 @@ class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with 
     "Calling the .confirmFP action" when {
 
         "navigated to " should {
-            object DataItem extends AuthorisedFakeRequestTo(TestConfirmationController.confirmFP)
+            mockAuthConnector(Future.successful({}))
+            lazy val result = await(TestConfirmationController.confirmFP(fakeRequest))
+            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             "return a 200" in {
-                mockAuthConnector(Future.successful({}))
-                status(DataItem.result) shouldBe 200
+                status(result) shouldBe 200
             }
 
             "take user to the Confirm FP page" in {
-                mockAuthConnector(Future.successful({}))
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.confirmFP16.pageHeading")
+                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.confirmFP16.pageHeading")
             }
         }
     }

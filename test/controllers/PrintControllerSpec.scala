@@ -18,12 +18,15 @@ package controllers
 
 import java.util.concurrent.TimeUnit
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import auth.{MockAuthConnector, MockConfig}
 import com.kenshoo.play.metrics.PlayModule
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import constructors.DisplayConstructors
 import models._
+import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.mock.MockitoSugar
@@ -35,6 +38,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -46,6 +50,9 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
   val mockCitizenDetailsConnector = mock[CitizenDetailsConnector]
   val mockDisplayConstructors = mock[DisplayConstructors]
   val mockPlayAuthConnector = mock[PlayAuthConnector]
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
+  val fakeRequest = FakeRequest()
 
   val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
   val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111))
@@ -80,14 +87,15 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
 
 
     "Valid data is provided" should {
-      object DataItem extends AuthorisedFakeRequestTo(TestPrintControllerValidDetails.printView)
+      lazy val result = await(TestPrintControllerValidDetails.printView(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        status(DataItem.result) shouldBe 200
+        status(result) shouldBe 200
       }
       "show the print page" in {
         implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.MILLISECONDS)
-        DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("Testy Mctestface")
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("Testy Mctestface")
       }
     }
   }
