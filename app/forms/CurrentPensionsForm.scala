@@ -30,10 +30,10 @@ object CurrentPensionsForm {
   def currentPensionsForm(implicit lang: Lang) = Form(
     mapping(
       "currentPensionsAmt" -> optional(bigDecimal)
-        .verifying(Messages("pla.base.errors.errorQuestion"), currentPensionsAmt => currentPensionsAmt.isDefined)
-        .verifying(Messages("pla.base.errors.errorNegative"), currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
-        .verifying(Messages("pla.base.errors.errorDecimalPlaces"), currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))
-        .verifying(Messages("pla.base.errors.errorMaximum"), currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency))
+        .verifying("pla.base.errors.errorQuestion", currentPensionsAmt => currentPensionsAmt.isDefined)
+        .verifying("pla.base.errors.errorNegative", currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
+        .verifying("pla.base.errors.errorDecimalPlaces", currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))
+        .verifying("pla.base.errors.errorMaximum", currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency))
     )(CurrentPensionsModel.apply)(CurrentPensionsModel.unapply)
   )
 }

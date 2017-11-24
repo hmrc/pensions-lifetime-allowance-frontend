@@ -25,6 +25,7 @@ pla.base.errors.errorQuestion           = Enter an amount in the correct format 
 pla.base.errors.errorNegative           = Enter an amount that''s £0 or more
 pla.base.errors.errorMaximum            = Enter an amount less than £99,999,999,999,999.98
 pla.base.errors.errorDecimalPlaces      = The amount you''ve entered has too many decimal places
+pla.base.errors.mandatoryError          = Please answer this question
 
 
 ## PLAY! Error Overrides ##

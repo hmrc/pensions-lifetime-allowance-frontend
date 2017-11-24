@@ -66,7 +66,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
   val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010.1234567891))))
   val validCurrentPensionsTuple2 = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001.1234567891))))
   val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
-  val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(Some(1), Some(2), Some(2016), BigDecimal(10000.1234567891)))
+  val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(1, 2, 2016, BigDecimal(10000.1234567891)))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 

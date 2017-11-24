@@ -38,10 +38,10 @@ object AmendOverseasPensionsForm {
 
   def validateForm(form: Form[AmendOverseasPensionsModel])(implicit lang:Lang): Form[AmendOverseasPensionsModel] = {
     if(!validationNeeded(form)) form else {
-      if(!validateFieldCompleted(form)) form.withError("amendedOverseasPensionsAmt", Messages("pla.base.errors.errorQuestion"))
-      else if(!validateMinimum(form)) form.withError("amendedOverseasPensionsAmt", Messages("pla.base.errors.errorNegative"))
-      else if(!validateMaximum(form)) form.withError("amendedOverseasPensionsAmt", Messages("pla.base.errors.errorMaximum"))
-      else if(!validateTwoDec(form)) form.withError("amendedOverseasPensionsAmt", Messages("pla.base.errors.errorDecimalPlaces"))
+      if(!validateFieldCompleted(form)) form.withError("amendedOverseasPensionsAmt", "pla.base.errors.errorQuestion")
+      else if(!validateMinimum(form)) form.withError("amendedOverseasPensionsAmt", "pla.base.errors.errorNegative")
+      else if(!validateMaximum(form)) form.withError("amendedOverseasPensionsAmt", "pla.base.errors.errorMaximum")
+      else if(!validateTwoDec(form)) form.withError("amendedOverseasPensionsAmt", "pla.base.errors.errorDecimalPlaces")
       else form
     }
   }

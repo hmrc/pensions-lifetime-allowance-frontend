@@ -515,6 +515,15 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
+    "the data is invalidated by additional validation" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "-1"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+    }
+
     "the model can't be fetched from keyStore" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
         ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
@@ -525,9 +534,22 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "the data is valid" should {
+    "the data is valid with a no" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
         ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+
+      "redirect to Amends Summary Page" in {
+        keystoreSaveCondition[PensionsTakenBeforeModel](mockKeyStoreConnector)
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 303
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      }
+    }
+
+    "the data is valid with a yes" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
 
 
       "redirect to Amends Summary Page" in {
@@ -613,7 +635,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "the data is valid" should {
+    "the data is valid with a no response" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
         ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
@@ -626,15 +648,34 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
+    "the data is valid with a yes response" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+      "redirect to Amends Summary Page" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      }
+    }
+
     "the data is invalid" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetweenAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+    }
+
+    "the data is invalid on additional validation" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
         ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
         status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
       }
     }
   }
@@ -721,9 +762,22 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "the data is valid" should {
+    "the data is valid with a no response" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
         ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 303" in {
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        status(DataItem.result) shouldBe 303
+      }
+      "redirect to Amends Summary Page" in {
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      }
+    }
+
+    "the data is valid with a yes response" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -906,6 +960,20 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
         ("psoDay", ""),
+        ("psoMonth", "1"),
+        ("psoYear", "2015"),
+        ("psoAmt", "100000"),
+        ("protectionType", "ip2014"),
+        ("status", "open"),
+        ("existingPSO", "true")
+      )
+      "return 400" in { status(DataItem.result) shouldBe 400 }
+    }
+
+    "submitting data which fails additional validation" should {
+
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
+        ("psoDay", "36"),
         ("psoMonth", "1"),
         ("psoYear", "2015"),
         ("psoAmt", "100000"),

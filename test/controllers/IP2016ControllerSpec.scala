@@ -240,6 +240,12 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
             "invalid data is submitted" should {
 
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", ""), ("pensionsTakenBeforeAmt", ""))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+            }
+
+            "invalid data is submitted that fails additional validation" should {
+
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", ""))
                 "return 400" in {status(DataItem.result) shouldBe 400}
             }
@@ -315,6 +321,12 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             }
 
             "submitting invalid data" should {
+
+                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", ""), ("pensionsTakenBetweenAmt", ""))
+                "return 400" in {status(DataItem.result) shouldBe 400}
+            }
+
+            "submitting invalid data that fails additional validation" should {
 
                 object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", ""))
                 "return 400" in {status(DataItem.result) shouldBe 400}
@@ -396,6 +408,12 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "Submitting invalid data" should {
 
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", ""), ("overseasPensionsAmt", "") )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+        }
+
+        "Submitting invalid data that fails additional validation" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "") )
             "return 400" in { status(DataItem.result) shouldBe 400 }
         }
     }
@@ -569,7 +587,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         }
 
         "supplied with a stored test model" should {
-            val testModel = PSODetailsModel(Some(1), Some(8), Some(2016), BigDecimal(1234))
+            val testModel = PSODetailsModel(1, 8, 2016, BigDecimal(1234))
             object DataItem extends AuthorisedFakeRequestTo(TestIP2016Controller.psoDetails)
 
             "return 200" in {
@@ -625,6 +643,19 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
                 
                 ("psoDay", ""),
+                ("psoMonth", "1"),
+                ("psoYear", "2015"),
+                ("psoAmt", "100000")
+            )
+            "return 400" in { status(DataItem.result) shouldBe 400 }
+
+        }
+
+        "submitting an invalid set of PSO details that fails additional validation" should {
+
+            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
+
+                ("psoDay", "35"),
                 ("psoMonth", "1"),
                 ("psoYear", "2015"),
                 ("psoAmt", "100000")

@@ -26,7 +26,7 @@ import play.api.Play.current
 object PensionsTakenForm {
   def pensionsTakenForm(implicit lang: Lang) = Form(
     mapping(
-      "pensionsTaken" -> optional(text).verifying(Messages("pla.pensionsTaken.mandatoryErr"), {_.isDefined})
+      "pensionsTaken" -> optional(text).verifying("pla.base.errors.mandatoryError", {_.isDefined})
     )(PensionsTakenModel.apply)(PensionsTakenModel.unapply)
   )
 }

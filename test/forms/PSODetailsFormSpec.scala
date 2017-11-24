@@ -33,7 +33,7 @@ class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPer
     "return a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = PSODetailsModel(Some(1), Some(2), Some(2017), 0.01)
+        val model = PSODetailsModel(1, 2, 2017, 0.01)
         val result = PSODetailsForm.validateForm(psoDetailsForm.fill(model))
 
         result.data shouldBe validMap
@@ -42,14 +42,14 @@ class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPer
       "provided with a valid map with a value for psoAmt which has two decimal places" in {
         val result = PSODetailsForm.validateForm(psoDetailsForm.bind(validMap))
 
-        result.value shouldBe Some(PSODetailsModel(Some(1), Some(2), Some(2017), 0.01))
+        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, 0.01))
       }
 
       "provided with a valid map with a value for psoAmt which is zero" in {
         val map = validMap.updated("psoAmt", "0")
         val result = PSODetailsForm.validateForm(psoDetailsForm.bind(map))
 
-        result.value shouldBe Some(PSODetailsModel(Some(1), Some(2), Some(2017), 0))
+        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, 0))
       }
 
       "provided with a valid map with a value for psoAmt which is the maximum value" in {
@@ -58,7 +58,7 @@ class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPer
         }.toString)
         val result = PSODetailsForm.validateForm(psoDetailsForm.bind(map))
 
-        result.value shouldBe Some(PSODetailsModel(Some(1), Some(2), Some(2017), Constants.npsMaxCurrency - 1))
+        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, Constants.npsMaxCurrency - 1))
       }
     }
 

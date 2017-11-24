@@ -46,7 +46,7 @@ class IPApplicationConstructorSpec extends UnitSpec with WithFakeApplication {
     val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
     val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
-    val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(Some(1), Some(2), Some(2016), BigDecimal(10000)))
+    val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(1, 2, 2016, BigDecimal(10000)))
 
 
     "Create an application object" when {

@@ -19,18 +19,18 @@ package testHelpers
 trait CommonMessages {
   val errorRequired = "error.required"
   val errorReal ="error.real"
-  val errorMissingAmount = "Enter an amount in the correct format eg £500000"
-  val errorNegative = "Enter an amount that's £0 or more"
-  val errorDecimal = "The amount you've entered has too many decimal places"
-  val errorMaximum = "Enter an amount less than £99,999,999,999,999.98"
-  val errorMissingDay = "Enter a day"
-  val errorMissingMonth = "Enter a month"
-  val errorMissingYear = "Enter a year"
-  val errorDate = "Enter a date in the correct format eg 14 6 2016"
-  val errorQuestion = "Please answer this question"
+  val errorMissingAmount = "pla.base.errors.errorQuestion"
+  val errorNegative = "pla.base.errors.errorNegative"
+  val errorDecimal = "pla.base.errors.errorDecimalPlaces"
+  val errorMaximum = "pla.base.errors.errorMaximum"
+  val errorMissingDay = "pla.base.errors.dayEmpty"
+  val errorMissingMonth = "pla.base.errors.monthEmpty"
+  val errorMissingYear = "pla.base.errors.yearEmpty"
+  val errorDate = "pla.base.errors.invalidDate"
+  val errorQuestion = "pla.base.errors.mandatoryError"
 }
 
 trait PSODetailsMessages extends CommonMessages {
-  val errorAmendPsoDetailsMissingAmount = "Enter a number without commas, for example 10000.00"
-  val errorDateRange = "Enter a date between 5 April 2016 and today"
+  val errorAmendPsoDetailsMissingAmount = "pla.psoDetails.errorQuestion"
+  val errorDateRange = "pla.IP16PsoDetails.errorDateOutOfRange"
 }

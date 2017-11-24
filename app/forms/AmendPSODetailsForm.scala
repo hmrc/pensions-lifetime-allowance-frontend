@@ -32,7 +32,7 @@ object AmendPSODetailsForm {
   def validateForm(form: Form[AmendPSODetailsModel])(implicit lang:Lang): Form[AmendPSODetailsModel] = {
     val (day, month, year) = getFormDateValues(form)
     if(dateFieldsAlreadyInvalid(form)) form
-    else if(!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
+    else if(!isValidDate(day, month, year)) form.withError("psoDay", "pla.base.errors.invalidDate")
     else if(futureDate(day, month, year)) formWithDateOutOfRangeError(form)
     else validateMinDate(form, day, month, year)
   }
@@ -45,15 +45,15 @@ object AmendPSODetailsForm {
       case other => {throw new Exceptions.RequiredValueNotDefinedException("validateMinDate", other)}
     }
 
-    if(dateBefore(day, month, year, minDate)) form.withError("psoDay", Messages(s"pla.$message.errorDateOutOfRange"))
+    if(dateBefore(day, month, year, minDate)) form.withError("psoDay", s"pla.$message.errorDateOutOfRange")
     else form
   }
 
   private def formWithDateOutOfRangeError(form: Form[AmendPSODetailsModel])(implicit lang:Lang): Form[AmendPSODetailsModel] = {
     val pType = form("protectionType").value.getOrElse{throw new Exceptions.RequiredValueNotDefinedException("validateMinDate", "protectionType")}
     pType.toLowerCase match {
-      case "ip2016" => form.withError("psoDay", Messages(s"pla.IP16PsoDetails.errorDateOutOfRange"))
-      case "ip2014" => form.withError("psoDay", Messages(s"pla.IP14PsoDetails.errorDateOutOfRange"))
+      case "ip2016" => form.withError("psoDay", "pla.IP16PsoDetails.errorDateOutOfRange")
+      case "ip2014" => form.withError("psoDay", "pla.IP14PsoDetails.errorDateOutOfRange")
     }
   }
 
@@ -73,14 +73,14 @@ object AmendPSODetailsForm {
 
   def amendPsoDetailsForm(implicit lang:Lang) = Form(
     mapping(
-      "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),
-      "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),
-      "psoYear"   -> optional(number).verifying(Messages("pla.base.errors.yearEmpty"), {_.isDefined}),
+      "psoDay"    -> optional(number).verifying("pla.base.errors.dayEmpty", {_.isDefined}),
+      "psoMonth"  -> optional(number).verifying("pla.base.errors.monthEmpty", {_.isDefined}),
+      "psoYear"   -> optional(number).verifying("pla.base.errors.yearEmpty", {_.isDefined}),
       "psoAmt"    -> optional(bigDecimal)
-        .verifying(Messages("pla.base.errors.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
-        .verifying(Messages("pla.base.errors.errorNegative"), psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying(Messages("pla.base.errors.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying(Messages("pla.psoDetails.errorQuestion"), _.isDefined),
+        .verifying("pla.base.errors.errorMaximum", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
+        .verifying("pla.base.errors.errorNegative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying("pla.base.errors.errorDecimalPlaces", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying("pla.psoDetails.errorQuestion", _.isDefined),
 
       "protectionType" -> text,
       "status"         -> text,
