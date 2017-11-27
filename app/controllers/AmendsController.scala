@@ -75,7 +75,6 @@ trait AmendsController extends BaseController with AuthFunction {
             displayConstructors.createAmendDisplayModel(amendModel),
             status,
             amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))
-
           ))
         case _ =>
           Logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend summary page")
@@ -150,15 +149,16 @@ trait AmendsController extends BaseController with AuthFunction {
   }
 
   def amendmentOutcome = Action.async { implicit request =>
+    genericAuthWithNino("existingProtections") { nino =>
       for {
         modelAR <- keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
         modelGA <- keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
-        result <- amendmentOutcomeResult(modelAR, modelGA)
+        result <- amendmentOutcomeResult(modelAR, modelGA, nino)
       } yield result
+    }
   }
 
-  def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel])(implicit request:Request[AnyContent]):Future[Result] = {
-    genericAuthWithNino("existingProtections") { nino =>
+  def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel], nino: String)(implicit request:Request[AnyContent]):Future[Result] = {
       if (modelGA.isEmpty) {
         Logger.warn(s"Unable to retrieve amendsGAModel from keyStore for user nino :$nino")
       }
@@ -179,7 +179,6 @@ trait AmendsController extends BaseController with AuthFunction {
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       })
     }
-  }
 
   def amendPensionsTakenBefore(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
       amendRoute(AmendJourney.pensionTakenBefore, protectionType, status).apply(request)
@@ -337,12 +336,16 @@ trait AmendsController extends BaseController with AuthFunction {
     }
   }
 
-  def amendPsoDetails(protectionType: String, status: String) = Action.async { implicit request =>
+  def amendPsoDetails(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     genericAuthWithNino("existingProtections") { nino =>
       keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
-        case Some(amendProtectionModel) => amendProtectionModel.updatedProtection.pensionDebits.map { debits =>
-          routeFromPensionDebitsList(debits, protectionType, status)
-        }.getOrElse(Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status)))))
+        case Some(amendProtectionModel) =>
+          amendProtectionModel.updatedProtection.pensionDebits match {
+            case Some(debits) =>
+              routeFromPensionDebitsList(debits, protectionType, status, nino)
+            case None =>
+              Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
+          }
         case _ =>
           Logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend PSO details page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
@@ -350,7 +353,7 @@ trait AmendsController extends BaseController with AuthFunction {
     }
   }
 
-  def removePso(protectionType: String, status: String) = Action.async { implicit request =>
+  def removePso(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     genericAuthWithNino("existingProtections") { nino =>
       keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
         case Some(model) =>
@@ -389,16 +392,16 @@ trait AmendsController extends BaseController with AuthFunction {
     }
   }
 
-  def routeFromPensionDebitsList(debits: Seq[PensionDebitModel], protectionType: String, status: String)(implicit request: Request[AnyContent]): Result = {
+  def routeFromPensionDebitsList(debits: Seq[PensionDebitModel], protectionType: String, status: String, nino: String)(implicit request: Request[AnyContent]): Result = {
       debits.length match {
         case 0 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
         case 1 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head, protectionType, status))))
         case num => {
-          Logger.warn(s"$num pension debits recorded for user nino ${Retrievals.nino.toString.orElse("NO NINO")} during amend journey")
+          Logger.warn(s"$num pension debits recorded for user nino $nino during amend journey")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+        }
       }
     }
-  }
 
   def createAmendPsoDetailsModel(psoDetails: PensionDebitModel, protectionType: String, status: String): AmendPSODetailsModel = {
     val (day, month, year) = Dates.extractDMYFromAPIDateString(psoDetails.startDate)
@@ -474,7 +477,8 @@ trait AmendsController extends BaseController with AuthFunction {
   }
 
   private def amendRoute(journey: AmendJourney.Value, protectionType: String, status: String) = Action.async { implicit request =>
-      import AmendJourney._
+    import AmendJourney._
+    genericAuthWithNino("existingProtections") { nino =>
 
       keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
 
@@ -502,9 +506,10 @@ trait AmendsController extends BaseController with AuthFunction {
             }
           )(request)
         case _ =>
-          Logger.warn(s"Could not retrieve amend protection model for user with nino ${Retrievals.nino.toString} when loading the amend $journey page")
+          Logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend $journey page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
+    }
   }
 
   private object AmendJourney extends Enumeration {

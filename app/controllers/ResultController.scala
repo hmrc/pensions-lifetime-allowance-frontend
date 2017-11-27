@@ -84,33 +84,33 @@ trait ResultController extends BaseController with AuthFunction {
 
 
   private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
-    response.status match {
-      case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
-      case _ => saveAndRedirectToDisplay(response)
+    genericAuthWithNino("existingProtections") { nino =>
+      response.status match {
+        case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
+        case _ => saveAndRedirectToDisplay(response, nino)
+      }
     }
   }
 
 
-  private def saveAndRedirectToDisplay(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
-    genericAuthWithNino("existingProtections") { nino =>
-      responseConstructors.createApplyResponseModelFromJson(response.json).map {
-        model =>
-          if (model.protection.notificationId.isEmpty) {
-            Logger.warn(s"No notification ID found in the ApplyResponseModel for user with nino $nino")
-            Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
-          } else {
-            keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
-              cacheMap =>
-                protectionType match {
-                  case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16())
-                  case ApplicationType.FP2016 => Redirect(routes.ResultController.displayFP16())
-                }
-            }
+  private def saveAndRedirectToDisplay(response: HttpResponse, nino: String)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
+    responseConstructors.createApplyResponseModelFromJson(response.json).map {
+      model =>
+        if (model.protection.notificationId.isEmpty) {
+          Logger.warn(s"No notification ID found in the ApplyResponseModel for user with nino $nino")
+          Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+        } else {
+          keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
+            cacheMap =>
+              protectionType match {
+                case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16())
+                case ApplicationType.FP2016 => Redirect(routes.ResultController.displayFP16())
+              }
           }
-      }.getOrElse {
-        Logger.warn(s"Unable to create ApplyResponseModel from application response for ${protectionType.toString} for user nino: ${nino.orElse("No NINO recorded")}")
-        Future.successful(InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-      }
+        }
+    }.getOrElse {
+      Logger.warn(s"Unable to create ApplyResponseModel from application response for ${protectionType.toString} for user nino: $nino")
+      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
 

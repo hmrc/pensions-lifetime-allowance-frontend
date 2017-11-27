@@ -21,7 +21,7 @@ import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import auth.{MockAuthConnector, MockConfig}
+import auth.MockConfig
 import com.kenshoo.play.metrics.PlayModule
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
@@ -31,6 +31,8 @@ import models.amendModels.{AmendProtectionModel, AmendsGAModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import _root_.mock.AuthMock
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.http.HeaderNames.CACHE_CONTROL
@@ -49,23 +51,25 @@ import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HttpResponse
 
-class AmendsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with KeystoreTestHelper{
+class AmendsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach with AuthMock {
   override def bindModules = Seq(new PlayModule)
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockDisplayConstructors = mock[DisplayConstructors]
   val mockPLAConnector = mock[PLAConnector]
   val mockResponseConstructors = mock[ResponseConstructors]
-  val mockPlayAuthConnector = mock[PlayAuthConnector]
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
 
+  override def beforeEach() {
+    reset(mockAuthConnector)
+  }
 
   val testIP16DormantModel = AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, protectionType = Some("IP2016"), status = Some("dormant"), relevantAmount = Some(100000), uncrystallisedRights = Some(100000)))
 
   object TestAmendsController extends AmendsController  {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
 
     override val displayConstructors: DisplayConstructors = mockDisplayConstructors
@@ -211,24 +215,15 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       .thenReturn(Future.successful(data))
   }
 
-  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A) = {
-    when(mockPlayAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(returnValue))
-  }
-
-  def mockAuthConnector(future: Future[Unit]) = {
-    when(mockPlayAuthConnector.authorise[Unit](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(future)
-  }
 
 
   "In AmendsController calling the amendsSummary action" when {
     "there is no stored amends model" should {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](None)
       lazy val result = await(TestAmendsController.amendsSummary("ip2016", "open")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        keystoreFetchCondition[AmendProtectionModel](None)
         status(result) shouldBe 500
       }
       "show the technical error page for existing protections" in {
@@ -244,6 +239,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendsSummary("ip2014", "dormant")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         when(mockDisplayConstructors.createAmendDisplayModel(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
         status(result) shouldBe 200
@@ -258,9 +254,13 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "the hidden fields in the amendment summary page have not been populated correctly" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionTypez", "stuff"))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         status(DataItem.result) shouldBe 500
       }
       "show the technical error page for existing protections" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
@@ -270,6 +270,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "the microservice returns a conflict response" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         when(mockKeyStoreConnector.saveData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
         when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(409)))
@@ -279,12 +280,14 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
-      "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
+      "have the correct cache control" in {
+        DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
     }
 
     "the microservice returns a manual correspondence needed response" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
       "return a Locked response" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any())).thenReturn(Future.successful(HttpResponse(423)))
         status(DataItem.result) shouldBe 423
@@ -298,6 +301,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "the microservice returns an invalid json response" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any()))
           .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
@@ -314,6 +318,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "the microservice returns a response with no notificationId" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any()))
           .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
@@ -330,6 +335,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "the microservice returns a valid response" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
       "return 303" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         when(mockPLAConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any()))
           .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
@@ -350,7 +356,9 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendmentOutcome()(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendResponseModel](None)
+        keystoreFetchCondition[AmendsGAModel](None)
         status(result) shouldBe 500
       }
       "show the technical error page for existing protections" in {
@@ -364,6 +372,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendmentOutcome()(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         when(mockKeyStoreConnector.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
         when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(Some("updatedValue"),Some("changedToYes"),Some("changedToNo"),None,Some("addedPSO")))))
         when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
@@ -379,6 +388,8 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendmentOutcome()(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
         when(mockKeyStoreConnector.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
         when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(None,Some("changedToNo"),Some("changedToYes"),None,None))))
         when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstInactiveAmendResponseDisplayModel)
@@ -399,6 +410,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendCurrentPensions("ip2016", "open")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(result) shouldBe 500
       }
@@ -410,6 +422,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testModel))
         status(result) shouldBe 200
       }
@@ -422,12 +435,14 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "return some HTML that" should {
 
         "contain some text and use the character set utf-8" in {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testModel))
           contentType(result) shouldBe Some("text/html")
           charset(result) shouldBe Some("utf-8")
         }
 
         "have the value 100000 completed in the amount input by default" in {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testModel))
           jsoupDoc.body.getElementById("amendedUKPensionAmt").attr("value") shouldBe "100000"
         }
@@ -438,6 +453,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendCurrentPensions("ip2016", "dormant")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         status(result) shouldBe 200
       }
@@ -453,6 +469,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       }
       "redirect to Amends Summary page" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreSaveCondition[AmendProtectionModel](mockKeyStoreConnector)
         keystoreFetchCondition[AmendProtectionModel](Some(testIP16DormantModel))
         status(DataItem.result) shouldBe 303
@@ -464,6 +481,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendCurrentPension, ("amendedUKPensionAmt", ""))
       "return 400" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(DataItem.result) shouldBe 400
       }
     }
@@ -472,6 +490,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendCurrentPension, ("amendedUKPensionAmt", "1000000"), ("protectionType", "IP2016"), ("status", "dormant"))
 
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(DataItem.result) shouldBe 500
       }
@@ -486,6 +505,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendPensionsTakenBefore("ip2016", "open")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(result) shouldBe 500
       }
@@ -494,6 +514,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "have the value of the check box set as 'No' by default" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
         jsoupDoc.body.getElementById("amendedPensionsTakenBefore-no").attr("checked") shouldBe "checked"
       }
@@ -504,7 +525,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
-
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(result) shouldBe 200
       }
@@ -538,6 +559,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         status(result) shouldBe 200
       }
@@ -550,6 +572,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   lazy val result = await(TestAmendsController.submitAmendPensionsTakenBefore(fakeRequest))
   lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 400" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(result) shouldBe 400
       }
     }
@@ -559,6 +582,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "-1"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(DataItem.result) shouldBe 400
       }
     }
@@ -568,6 +592,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(DataItem.result) shouldBe 500
       }
@@ -605,6 +630,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendPensionsTakenBetween("ip2016", "open")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(result) shouldBe 500
       }
@@ -614,6 +640,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "have the value of the check box set as 'No' by default" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
         jsoupDoc.body.getElementById("amendedPensionsTakenBetween-no").attr("checked") shouldBe "checked"
       }
@@ -624,7 +651,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
-
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(result) shouldBe 200
       }
@@ -658,6 +685,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendPensionsTakenBetween("ip2014", "dormant")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         status(result) shouldBe 200
       }
@@ -672,6 +700,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(DataItem.result) shouldBe 500
       }
@@ -682,6 +711,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 303" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
       }
@@ -695,6 +725,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 303" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
       }
@@ -708,6 +739,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedPensionsTakenBetweenAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(DataItem.result) shouldBe 400
       }
     }
@@ -717,6 +749,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(DataItem.result) shouldBe 400
       }
     }
@@ -729,6 +762,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendOverseasPensions("ip2016", "open")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(result) shouldBe 500
       }
@@ -738,6 +772,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "have the value of the check box set as 'No' by default" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
         jsoupDoc.body.getElementById("amendedOverseasPensions-no").attr("checked") shouldBe "checked"
       }
@@ -748,6 +783,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendOverseasPensions("ip2016", "dormant")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(result) shouldBe 200
       }
@@ -781,6 +817,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.amendOverseasPensions("ip2014", "dormant")(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         status(result) shouldBe 200
       }
@@ -794,6 +831,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.submitAmendOverseasPensions(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 400" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(result) shouldBe 400
       }
     }
@@ -803,6 +841,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(DataItem.result) shouldBe 500
       }
@@ -813,6 +852,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 303" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
       }
@@ -826,6 +866,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 303" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
       }
@@ -839,6 +880,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(DataItem.result) shouldBe 400
       }
       "fail with the correct error message" in {
@@ -879,6 +921,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(result) shouldBe 500
       }
@@ -895,6 +938,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionNoPsoList, testProtectionNoPsoList)))
         status(result) shouldBe 200
       }
@@ -913,6 +957,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionEmptyPsoList, testProtectionEmptyPsoList)))
         status(result) shouldBe 200
       }
@@ -930,6 +975,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       object DataItem extends AuthorisedFakeRequestTo(TestAmendsController.amendPsoDetails("ip2016", "open"))
 
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
         status(DataItem.result) shouldBe 200
       }
@@ -949,6 +995,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionMultiplePsoList, testProtectionMultiplePsoList)))
         status(result) shouldBe 500
       }
@@ -975,6 +1022,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       )
 
       "return 303" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         status(DataItem.result) shouldBe 303
       }
@@ -997,6 +1045,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       )
 
       "return 303" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
       }
@@ -1017,7 +1066,9 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("status", "open"),
         ("existingPSO", "true")
       )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
+      "return 400" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        status(DataItem.result) shouldBe 400 }
     }
 
     "submitting data which fails additional validation" should {
@@ -1031,7 +1082,9 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("status", "open"),
         ("existingPSO", "true")
       )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
+      "return 400" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        status(DataItem.result) shouldBe 400 }
     }
   }
 
@@ -1048,6 +1101,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 500" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(result) shouldBe 500
       }
@@ -1063,6 +1117,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 200" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
         status(result) shouldBe 200
       }
@@ -1078,6 +1133,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val result = await(TestAmendsController.submitRemovePso(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 400 if the hidden form details were incorrect" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(result) shouldEqual 400
       }
 
@@ -1086,7 +1142,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
           ("protectionType", "ip2016"),
           ("status", "open")
         )
-
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
         status(DataItem.result) shouldEqual 500
       }
@@ -1114,6 +1170,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
 
       "return 303" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
       }

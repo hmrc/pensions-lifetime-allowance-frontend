@@ -23,6 +23,7 @@ import akka.stream.ActorMaterializer
 import auth._
 import com.kenshoo.play.metrics.PlayModule
 import config.AuthClientConnector
+import mock.AuthMock
 import models._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
@@ -41,10 +42,9 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
     override def bindModules = Seq(new PlayModule)
 
-    val mockPlayAuthConnector = mock[PlayAuthConnector]
     implicit val system = ActorSystem()
     implicit val materializer = ActorMaterializer()
 
@@ -52,16 +52,11 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
     val fakeRequest = FakeRequest("GET", "/protect-your-lifetime-allowance/")
     object TestExitSurveyController extends ExitSurveyController {
         lazy val appConfig = MockConfig
-        override lazy val authConnector = mockPlayAuthConnector
+        override lazy val authConnector = mockAuthConnector
         lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
 
         override def config: Configuration = mock[Configuration]
         override def env: Environment = mock[Environment]
-    }
-
-    def mockAuthConnector(future: Future[Unit]) = {
-        when(mockPlayAuthConnector.authorise[Unit](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
-          .thenReturn(future)
     }
 
     "ExitSurveyController should be correctly initialised" in {
@@ -71,6 +66,7 @@ class ExitSurveyControllerSpec extends UnitSpec with WithFakeApplication with Mo
     "Calling the .exitSurvey action" when {
 
         "not supplied with a pre-existing stored model" should {
+            mockAuthConnector(Future.successful({}))
             lazy val result = await(TestExitSurveyController.exitSurvey(fakeRequest))
             lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             "return a 200" in {

@@ -32,6 +32,8 @@ import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
 import uk.gov.hmrc.play.frontend.config.AuthRedirects
 
+import scala.concurrent.Future
+
 
 object SummaryController extends SummaryController {
   // $COVERAGE-OFF$
@@ -53,10 +55,10 @@ trait SummaryController extends BaseController with AuthFunction {
   val summaryConstructor: SummaryConstructor
 
   val summaryIP16 = Action.async { implicit request =>
+    implicit val protectionType = ApplicationType.IP2016
     genericAuthWithNino("IP2016") { nino =>
-      implicit val protectionType = ApplicationType.IP2016
       keyStoreConnector.fetchAllUserData.map {
-        case Some(data) => routeIP2016SummaryFromUserData(data)
+        case Some(data) => routeIP2016SummaryFromUserData(data, nino)
         case None => {
           Logger.warn(s"unable to fetch summary IP16 data from keystore for user nino $nino")
           InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
@@ -65,11 +67,11 @@ trait SummaryController extends BaseController with AuthFunction {
     }
   }
 
-  private def routeIP2016SummaryFromUserData(data: CacheMap)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
+  private def routeIP2016SummaryFromUserData(data: CacheMap, nino: String)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
       summaryConstructor.createSummaryData(data).map {
         summaryModel => Ok(pages.ip2016.summary(summaryModel))
       }.getOrElse {
-        Logger.warn(s"Unable to create IP16 summary model from summary data for user nino ${Retrievals.nino}")
+        Logger.warn(s"Unable to create IP16 summary model from summary data for user nino $nino")
         InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }

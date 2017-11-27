@@ -32,12 +32,14 @@ import models.SummaryModel
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import _root_.mock.AuthMock
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.JsValue
+import play.api.test.FakeRequest
 import testHelpers._
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
@@ -47,20 +49,20 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 
-class SummaryControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class SummaryControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
   override def bindModules = Seq(new PlayModule)
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockSummaryConstructor = mock[SummaryConstructor]
-  val mockPlayAuthConnector = mock[PlayAuthConnector]
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
+  val fakeRequest = FakeRequest()
 
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
 
   object TestSummaryControllerNoData extends SummaryController {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
 
     override def config: Configuration = mock[Configuration]
@@ -74,7 +76,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
 
   object TestSummaryControllerInvalidData extends SummaryController {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
 
     override def config: Configuration = mock[Configuration]
@@ -89,7 +91,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
 
   object TestSummaryControllerValidData extends SummaryController {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/summary"
 
     override def config: Configuration = mock[Configuration]
@@ -105,11 +107,6 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
   val sessionId = UUID.randomUUID.toString
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
-
-  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A) = {
-    when(mockPlayAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(returnValue))
-  }
 
   "Navigating to summary when there is no user data" when {
 

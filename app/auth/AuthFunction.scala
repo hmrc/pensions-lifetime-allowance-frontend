@@ -42,7 +42,7 @@ trait AuthFunction extends BaseController with AuthRedirects  with AuthorisedFun
 
   class MissingNinoException extends Exception("Nino not returned by authorised call")
 
-  def genericAuthWithoutNino(pType: String)(body: Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
+  def genericAuthWithoutNino(pType: String)(body: => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
     authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200) {
       body
     }.recoverWith(authErrorHandling(pType))

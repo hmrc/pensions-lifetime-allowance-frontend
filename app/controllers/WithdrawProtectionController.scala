@@ -154,8 +154,11 @@ trait WithdrawProtectionController extends BaseController with AuthFunction {
 
   def showWithdrawConfirmation(protectionType: String): Action[AnyContent] = Action.async {
     implicit request =>
-      keyStoreConnector.remove
-      Future.successful(Ok(views.html.pages.withdraw.withdrawConfirmation(protectionType)))
+      genericAuthWithoutNino("existingProtections") {
+        keyStoreConnector.remove.map {
+          _ => Ok(views.html.pages.withdraw.withdrawConfirmation(protectionType))
+        }
+      }
   }
 
 

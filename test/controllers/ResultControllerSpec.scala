@@ -18,7 +18,7 @@ package controllers
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import auth.{MockAuthConnector, MockConfig}
+import auth.MockConfig
 import com.kenshoo.play.metrics.PlayModule
 import config.AuthClientConnector
 import connectors.{KeyStoreConnector, PLAConnector}
@@ -29,6 +29,7 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Matchers.anyString
 import org.mockito.Mockito._
+import _root_.mock.AuthMock
 import org.scalatest.BeforeAndAfter
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
@@ -48,7 +49,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfter {
+class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfter with AuthMock {
   override def bindModules = Seq(new PlayModule)
 
   implicit val system = ActorSystem()
@@ -160,12 +161,10 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockResponseConstructors = mock[ResponseConstructors]
-  val mockPlayAuthConnector = mock[PlayAuthConnector]
-
 
   object TestSuccessResultController extends ResultController {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
 
     override def config: Configuration = mock[Configuration]
@@ -193,7 +192,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   object TestInactiveSuccessResultController extends ResultController {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
 
     override def config: Configuration = mock[Configuration]
@@ -221,7 +220,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   object TestRejectResultController extends ResultController {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
 
     override def config: Configuration = mock[Configuration]
@@ -248,7 +247,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   object TestMCNeededResultController extends ResultController {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
 
     override def config: Configuration = mock[Configuration]
@@ -269,7 +268,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   object TestIncorrectResponseModelResultController extends ResultController {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
 
     override def config: Configuration = mock[Configuration]
@@ -289,10 +288,6 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   }
 
-  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A) = {
-    when(mockPlayAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(returnValue))
-  }
 
   ///////////////////////////////////////////////
   // Initial Setup
@@ -307,19 +302,19 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
 
   "Successfully applying for FP" should {
-
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     lazy val DataItemresult = await(TestSuccessResultController.processFPApplication(fakeRequest))
     lazy val GetItemResult = await(TestSuccessResultController.displayResult(ApplicationType.FP2016)(fakeRequest))
     lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
 
     "return 303" in {
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       status(DataItemresult) shouldBe 303
     }
     "redirect to the result success page" in {
       redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayFP16()}")
     }
     "return 200" in {
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       status(GetItemResult) shouldBe 200
     }
     "take the user to the result success page" in {

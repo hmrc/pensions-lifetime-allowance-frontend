@@ -26,17 +26,22 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.mvc.Result
 import play.api.test.Helpers._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar with KeystoreTestHelper {
+class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach {
 
   val mockPlayAuthConnector = mock[PlayAuthConnector]
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
+
+  override def beforeEach() {
+    reset(mockPlayAuthConnector)
+  }
 
   object TestAuthFunction extends AuthFunction  {
     lazy val appConfig = MockConfig
@@ -46,7 +51,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
 
     override def personalIVUrl = "http://www.test.com"
 
-    override def ggLoginUrl = "http://www.test.com"
+    override def ggLoginUrl = "http://www.gglogin.com"
 
     override def origin = "origin"
   }
@@ -94,7 +99,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         mockAuthConnector(Future.failed(new SessionRecordNotFound))
         val result = TestAuthFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest)
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?continue=%2Fpla%2Fapply-for-ip16-pensions-taken&origin=origin")
+        redirectLocation(result) shouldBe Some("http://www.gglogin.com?continue=%2Fpla%2Fapply-for-ip16-pensions-taken&origin=origin")
       }
     }
   }
@@ -136,7 +141,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         mockAuthConnector(Future.failed(new SessionRecordNotFound))
         val result = await(TestAuthFunction.genericAuthWithNino("IP2016")(body)(fakeRequest))
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?continue=%2Fpla%2Fapply-for-ip16-pensions-taken&origin=origin")
+        redirectLocation(result) shouldBe Some("http://www.gglogin.com?continue=%2Fpla%2Fapply-for-ip16-pensions-taken&origin=origin")
       }
     }
   }

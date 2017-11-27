@@ -46,7 +46,7 @@ object PrintController extends PrintController {
   override def env: Environment = Play.current.injector.instanceOf[Environment]
 }
 
-trait PrintController extends BaseController with AuthRedirects  with AuthorisedFunctions {
+trait PrintController extends BaseController with AuthFunction {
 
   val keyStoreConnector: KeyStoreConnector
   val citizenDetailsConnector: CitizenDetailsConnector
@@ -55,28 +55,11 @@ trait PrintController extends BaseController with AuthRedirects  with Authorised
 
 
   val printView = Action.async { implicit request =>
-    authorised(Enrolment("HMRC-NI")).retrieve(Retrievals.nino) { externalId =>
-      externalId.map { nino =>
-        for {
-          personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
-          protectionModel <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
-        } yield routePrintView(personalDetailsModel, protectionModel, nino)
-      }.getOrElse {
-        Logger.warn("No associated nino for user in printView action")
-        Future.successful(InternalServerError(views.html.pages.fallback.technicalError("existingProtections")).withHeaders(CACHE_CONTROL -> "no-cache"))
-      }
-    }.recoverWith {
-      case e: NoActiveSession => Future.successful(toGGLogin(appConfig.ipStartUrl))
-      case e: InsufficientEnrolments => Future.successful(Redirect(s"$personalIVUrl?" +
-        s"origin=${config.getString("appName")}" +
-        s"&confidenceLevel=200" +
-        s"&completionURL=${appConfig.ipStartUrl}" +
-        s"&failureURL=${appConfig.notAuthorisedRedirectUrl}"))
-      case e: InsufficientConfidenceLevel => Future.successful(Redirect(s"$personalIVUrl?" +
-        s"origin=${config.getString("appname")}" +
-        s"&confidenceLevel=200" +
-        s"&completionURL=${appConfig.ipStartUrl}" +
-        s"&failureURL=${appConfig.notAuthorisedRedirectUrl}"))
+    genericAuthWithNino("existingProtections") { nino =>
+      for {
+        personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
+        protectionModel <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
+      } yield routePrintView(personalDetailsModel, protectionModel, nino)
     }
   }
 

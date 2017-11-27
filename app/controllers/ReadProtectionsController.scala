@@ -68,7 +68,7 @@ trait ReadProtectionsController extends BaseController with AuthFunction {
       genericAuthWithNino("existingProtections") { nino =>
         plaConnector.readProtections(nino).flatMap { response =>
           response.status match {
-            case 200 => redirectFromSuccess(response)
+            case 200 => redirectFromSuccess(response, nino)
             case 423 => Future.successful(Locked(pages.result.manualCorrespondenceNeeded()))
             case num => {
               Logger.error(s"unexpected status $num passed to currentProtections for nino: $nino")
@@ -83,15 +83,13 @@ trait ReadProtectionsController extends BaseController with AuthFunction {
       }
   }
 
-  def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent]): Future[Result] = {
-    genericAuthWithNino("existingProtections") { nino =>
-      responseConstructors.createTransformedReadResponseModelFromJson(Json.parse(response.body)).map {
-        readResponseModel =>
-          saveAndDisplayExistingProtections(readResponseModel)
-      }.getOrElse {
-        Logger.warn(s"unable to create transformed read response model from microservice response for nino: $nino")
-        Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-      }
+  def redirectFromSuccess(response: HttpResponse, nino: String)(implicit request: Request[AnyContent]): Future[Result] = {
+    responseConstructors.createTransformedReadResponseModelFromJson(Json.parse(response.body)).map {
+      readResponseModel =>
+        saveAndDisplayExistingProtections(readResponseModel)
+    }.getOrElse {
+      Logger.warn(s"unable to create transformed read response model from microservice response for nino: $nino")
+      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
 

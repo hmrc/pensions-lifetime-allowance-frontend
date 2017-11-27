@@ -27,6 +27,7 @@ import config.AuthClientConnector
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import _root_.mock.AuthMock
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.Play.current
@@ -39,16 +40,15 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
     override def bindModules = Seq(new PlayModule)
 
-    val mockPlayAuthConnector = mock[PlayAuthConnector]
     implicit val system = ActorSystem()
     implicit val materializer = ActorMaterializer()
 
     object TestConfirmationController extends ConfirmationController {
         lazy val appConfig = MockConfig
-        override lazy val authConnector = mockPlayAuthConnector
+        override lazy val authConnector = mockAuthConnector
         lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
 
         override def config: Configuration = mock[Configuration]
@@ -61,10 +61,6 @@ class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with 
     val mockUsername = "mockuser"
     val mockUserId = "/auth/oid/" + mockUsername
 
-    def mockAuthConnector(future: Future[Unit]) = {
-        when(mockPlayAuthConnector.authorise[Unit](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
-          .thenReturn(future)
-    }
 
     "ConfirmationController should be correctly initialised" in {
         ConfirmationController.authConnector shouldBe AuthClientConnector

@@ -18,7 +18,7 @@ package controllers
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import auth.{MockAuthConnector, MockConfig}
+import auth.MockConfig
 import com.kenshoo.play.metrics.PlayModule
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
@@ -26,6 +26,7 @@ import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel, 
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import _root_.mock.AuthMock
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
@@ -42,7 +43,7 @@ import uk.gov.hmrc.http.HttpResponse
 
 import scala.concurrent.Future
 
-class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
   override def bindModules = Seq(new PlayModule)
 
 
@@ -53,14 +54,13 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
   val testTransformedReadResponseModel = TransformedReadResponseModel(None, Seq.empty)
   val testExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(None, Seq.empty)
 
-  val mockPlayAuthConnector = mock[PlayAuthConnector]
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
 
 
   trait BaseTestReadProtectionsController extends ReadProtectionsController {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "urlUnimportant"
 
     override def config: Configuration = mock[Configuration]
@@ -73,11 +73,6 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
   }
 
   val fakeRequest = FakeRequest()
-
-  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A) = {
-    when(mockPlayAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(returnValue))
-  }
 
   object TestReadProtectionsControllerUpstreamError extends BaseTestReadProtectionsController {
     when(plaConnector.readProtections(Matchers.any())(Matchers.any())).thenReturn(testUpstreamErrorResponse)

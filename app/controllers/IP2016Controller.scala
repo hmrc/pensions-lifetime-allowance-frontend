@@ -288,8 +288,9 @@ trait IP2016Controller extends BaseController with AuthFunction {
     val submitRemovePsoDetails = Action.async { implicit request =>
         genericAuthWithoutNino("IP2016") {
             val updatedModel = PensionDebitsModel(Some("no"))
-            keyStoreConnector.saveData[PensionDebitsModel]("pensionDebits", updatedModel)
-            Future(Redirect(routes.SummaryController.summaryIP16()))
+            keyStoreConnector.saveData[PensionDebitsModel]("pensionDebits", updatedModel).map {
+                _ => Redirect(routes.SummaryController.summaryIP16())
+            }
         }
     }
 

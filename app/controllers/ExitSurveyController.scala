@@ -48,7 +48,9 @@ object ExitSurveyController extends ExitSurveyController {
 trait ExitSurveyController extends BaseController with AuthFunction {
 
     val exitSurvey = Action.async { implicit request =>
+        genericAuthWithoutNino("existingProtections") {
             Future.successful(Ok(pages.exitSurvey.exitSurvey(exitSurveyForm)))
 
+        }
     }
 }

@@ -20,6 +20,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 import akka.actor.ActorSystem
+import scala.concurrent.ExecutionContext.Implicits.global
 import akka.stream.ActorMaterializer
 import auth._
 import com.kenshoo.play.metrics.PlayModule
@@ -29,14 +30,17 @@ import models._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import _root_.mock.AuthMock
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import play.api.libs.json.JsValue
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import org.mockito.Matchers.anyString
 import testHelpers._
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -49,19 +53,18 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     override def bindModules = Seq(new PlayModule)
 
     val mockKeyStoreConnector = mock[KeyStoreConnector]
-    val mockPlayAuthConnector = mock[PlayAuthConnector]
     implicit val system = ActorSystem()
     implicit val materializer = ActorMaterializer()
 
     override def beforeEach = {
         reset(mockKeyStoreConnector)
-        reset(mockPlayAuthConnector)
+        reset(mockAuthConnector)
     }
 
     implicit val hc=new HeaderCarrier()
     object TestIP2016Controller extends IP2016Controller {
         override lazy val appConfig = MockConfig
-        override lazy val authConnector = mockPlayAuthConnector
+        override lazy val authConnector = mockAuthConnector
         override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
 
         override def config: Configuration = mock[Configuration]
@@ -80,24 +83,15 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         .thenReturn(Future.successful(data))
     }
 
-//    def psoNumKeystoreSetup(data: Option[NumberOfPSOsModel]) = {
-//        when(mockKeyStoreConnector.fetchAndGetFormData[NumberOfPSOsModel](Matchers.eq("numberOfPSOs"))(Matchers.any(), Matchers.any()))
-//          .thenReturn(Future.successful(data))
-//    }
 
     def psoDetailsKeystoreSetup(data: Option[PSODetailsModel]) = {
         when(mockKeyStoreConnector.fetchAndGetFormData[PSODetailsModel](Matchers.eq(s"psoDetails"))(Matchers.any(), Matchers.any()))
           .thenReturn(Future.successful(data))
     }
 
-    def pensionDebitsKeystoreSetup(data: Option[PensionDebitsModel]) = {
-        when(mockKeyStoreConnector.fetchAndGetFormData[PensionDebitsModel](Matchers.eq("pensionDebits"))(Matchers.any(), Matchers.any()))
-          .thenReturn(Future.successful(data))
-    }
-
-    def mockAuthConnector(future: Future[Unit]) = {
-        when(mockPlayAuthConnector.authorise[Unit](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
-          .thenReturn(future)
+    def pensionsDebitsSaveData(data: Option[PensionDebitsModel]) = {
+        when(mockKeyStoreConnector.saveData(anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+      .thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
     }
 
 
@@ -787,7 +781,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             }
 
             "take the user to the remove PSO page" in {
-                mockAuthConnector(Future.successful({}))
                 jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
             }
         }
@@ -798,9 +791,11 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "not supplied with a stored model" should {
             lazy val result = await(TestIP2016Controller.submitRemovePsoDetails(fakeRequest))
             lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+            val testModel = new PensionDebitsModel(Some("yes"))
 
             "return 303" in {
                 mockAuthConnector(Future.successful({}))
+                pensionsDebitsSaveData(Some(testModel))
                 status(result) shouldBe 303
             }
 

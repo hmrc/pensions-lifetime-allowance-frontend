@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
-import auth.{MockAuthConnector, MockConfig}
+import auth.MockConfig
 import com.kenshoo.play.metrics.PlayModule
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import constructors.DisplayConstructors
@@ -29,6 +29,7 @@ import models._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import _root_.mock.AuthMock
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
@@ -43,13 +44,12 @@ import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.http.HeaderCarrier
 
-class PrintControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class PrintControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
   override def bindModules = Seq(new PlayModule)
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockCitizenDetailsConnector = mock[CitizenDetailsConnector]
   val mockDisplayConstructors = mock[DisplayConstructors]
-  val mockPlayAuthConnector = mock[PlayAuthConnector]
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   val fakeRequest = FakeRequest()
@@ -63,7 +63,7 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
     val citizenDetailsConnector = mockCitizenDetailsConnector
     val displayConstructors = mockDisplayConstructors
     lazy val applicationConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "postSignInUrl"
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -78,10 +78,6 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
     when(displayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(testPrintDisplayModel)
   }
 
-  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A) = {
-    when(mockPlayAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
-      .thenReturn(Future.successful(returnValue))
-  }
 
   "Navigating to print protection" when {
 
