@@ -29,10 +29,10 @@ object PensionsTakenBetweenForm {
 
   def validateForm(form: Form[PensionsTakenBetweenModel])(implicit lang: Lang): Form[PensionsTakenBetweenModel] = {
     if(!validationNeeded(form)) form else {
-      if(!validateFieldCompleted(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.base.errors.errorQuestion"))
-      else if(!validateMinimum(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.base.errors.errorNegative"))
-      else if(!validateMaximum(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.base.errors.errorMaximum"))
-      else if(!validateTwoDec(form)) form.withError("pensionsTakenBetweenAmt", Messages("pla.base.errors.errorDecimalPlaces"))
+      if(!validateFieldCompleted(form)) form.withError("pensionsTakenBetweenAmt", "pla.base.errors.errorQuestion")
+      else if(!validateMinimum(form)) form.withError("pensionsTakenBetweenAmt", "pla.base.errors.errorNegative")
+      else if(!validateMaximum(form)) form.withError("pensionsTakenBetweenAmt", "pla.base.errors.errorMaximum")
+      else if(!validateTwoDec(form)) form.withError("pensionsTakenBetweenAmt", "pla.base.errors.errorDecimalPlaces")
       else form
     }
   }

@@ -25,6 +25,7 @@ pla.base.errors.errorQuestion           = Nodwch swm yn y fformat cywir h.y. £5
 pla.base.errors.errorNegative           = Nodwch swm sy''n £0 neu''n fwy
 pla.base.errors.errorMaximum            = Nodwch swm sy''n llai na £99,999,999,999,999.98
 pla.base.errors.errorDecimalPlaces      = Mae gan y swm yr ydych wedi''i nodi ormod o lefydd degol
+pla.base.errors.mandatoryError          = Atebwch y cwestiwn hwn
 
 
 ## PLAY! Error Overrides ##

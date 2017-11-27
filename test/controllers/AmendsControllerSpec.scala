@@ -411,7 +411,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "Submitting Amend IP16 Current Pensions data" when {
 
-    "amount is set as '100,000'" should {
+    "the data is valid" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendCurrentPension, ("amendedUKPensionAmt", "100000"), ("protectionType", "ip2016"), ("status", "dormant"))
       "return 303" in {
@@ -425,47 +425,11 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "no amount is set" should {
+    "the data is invalid" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendCurrentPension, ("amendedUKPensionAmt", ""))
       "return 400" in {
         status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
-      }
-    }
-
-    "amount is set as '5.001'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendCurrentPension, ("amendedUKPensionAmt", "5.001"))
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorDecimalPlaces"))
-      }
-    }
-
-    "amount is set as '-25'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendCurrentPension, ("amendedUKPensionAmt", "-25"))
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorNegative"))
-      }
-    }
-
-    "amount is set as '99999999999999.99'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendCurrentPension, ("amendedUKPensionAmt", "99999999999999.99"))
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorMaximum"))
       }
     }
 
@@ -544,8 +508,17 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "Submitting Amend IP16 Pensions Taken Before data" when {
 
-    "there is an error reading the form" should {
+    "the data is invalid" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore)
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+    }
+
+    "the data is invalidated by additional validation" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "-1"), ("protectionType", "ip2016"), ("status", "dormant"))
+
       "return 400" in {
         status(DataItem.result) shouldBe 400
       }
@@ -561,7 +534,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "'Have you taken pensions before 2006?' is checked to 'No'" should {
+    "the data is valid with a no" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
         ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
@@ -574,115 +547,16 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "'Have you taken pensions before 2006?' is set to 'yes', and value set to 2000" should {
+    "the data is valid with a yes" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "2000"), ("protectionType", "ip2016"), ("status", "dormant"))
-      "return 303" in {
+        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+
+      "redirect to Amends Summary Page" in {
+        keystoreSaveCondition[PensionsTakenBeforeModel](mockKeyStoreConnector)
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
-      }
-
-      "redirect to Amends Summary Page" in {
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
-      }
-
-    }
-
-    "no amount is set" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
-      }
-    }
-
-    "amount is set as '5.001'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "5.001"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorDecimalPlaces"))
-      }
-    }
-
-    "amount is set as '-25'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "-25"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorNegative"))
-      }
-    }
-
-    "amount is set as '99999999999999.99'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "99999999999999.99"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorMaximum"))
-      }
-    }
-  }
-
-  "Submitting Amend IP14 Pensions Taken Before data" when {
-
-    "there is an error reading the form" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore)
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-    }
-
-    "the model can't be fetched from keyStore" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
-
-      "return 500" in {
-        keystoreFetchCondition[AmendProtectionModel](None)
-        status(DataItem.result) shouldBe 500
-      }
-    }
-
-    "'Have you taken pensions before 2006?' is checked to 'No'" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
-
-      "return 303" in {
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        status(DataItem.result) shouldBe 303
-      }
-
-      "redirect to Amends Summary Page" in {
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
-      }
-    }
-
-    "'Have you taken pensions before 2006?' is set to 'yes', and value set to 2000" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "2000"), ("protectionType", "ip2014"), ("status", "dormant"))
-      "return 303" in {
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        status(DataItem.result) shouldBe 303
-      }
-
-      "redirect to Amends Summary Page" in {
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
       }
     }
   }
@@ -751,13 +625,6 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "Submitting Amend IP16 Pensions Taken Between data" when {
 
-    "there is an error reading the form" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween)
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-    }
-
     "the model can't be fetched from keyStore" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
         ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
@@ -768,7 +635,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "'Have you taken pensions before 2006?' is checked to 'No'" should {
+    "the data is valid with a no response" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
         ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
@@ -781,115 +648,34 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "'Before 5 April 1016, did you ...?' is set to 'yes', and value set to 2000" should {
+    "the data is valid with a yes response" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "2000"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
+
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
       }
-
       "redirect to Amends Summary Page" in {
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
       }
-
     }
 
-    "no amount is set" should {
+    "the data is invalid" should {
+      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetweenAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      "return 400" in {
+        status(DataItem.result) shouldBe 400
+      }
+    }
+
+    "the data is invalid on additional validation" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
         ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "return 400" in {
         status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
-      }
-    }
-
-    "amount is set as '5.001'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "5.001"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorDecimalPlaces"))
-      }
-    }
-
-    "amount is set as '-25'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "-25"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorNegative"))
-      }
-    }
-
-    "amount is set as '99999999999999.99'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "99999999999999.99"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorMaximum"))
-      }
-    }
-  }
-
-  "Submitting Amend IP14 Pensions Taken Between data" when {
-
-    "there is an error reading the form" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween)
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-    }
-
-    "the model can't be fetched from keyStore" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
-
-      "return 500" in {
-        keystoreFetchCondition[AmendProtectionModel](None)
-        status(DataItem.result) shouldBe 500
-      }
-    }
-
-    "'Have you taken pensions before 2006?' is checked to 'No'" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2014"), ("status", "dormant"))
-
-      "return 303" in {
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        status(DataItem.result) shouldBe 303
-      }
-
-      "redirect to Amends Summary Page" in {
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
-      }
-    }
-
-    "'Have you taken pensions before 2006?' is set to 'yes', and value set to 2000" should {
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "2000"), ("protectionType", "ip2014"), ("status", "dormant"))
-      "return 303" in {
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        status(DataItem.result) shouldBe 303
-      }
-
-      "redirect to Amends Summary Page" in {
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
       }
     }
   }
@@ -976,7 +762,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "'Have you put money in an overseas pension?' is checked to 'No'" should {
+    "the data is valid with a no response" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
         ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
@@ -989,21 +775,20 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "'Have you put money in an overseas pension?' is checked to 'Yes', and value set to 2000" should {
+    "the data is valid with a yes response" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
-        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "2000"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
+
       "return 303" in {
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
       }
-
       "redirect to Amends Summary Page" in {
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
       }
-
     }
 
-    "no amount is set" should {
+    "the data is invalid" should {
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
         ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
 
@@ -1012,45 +797,6 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
       "fail with the correct error message" in {
         DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
-      }
-    }
-
-    "amount is set as '5.001'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
-        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "5.001"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorDecimalPlaces"))
-      }
-    }
-
-    "amount is set as '-25'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
-        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "-25"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorNegative"))
-      }
-    }
-
-    "amount is set as '99999999999999.99'" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendOverseasPensions,
-        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "99999999999999.99"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      "return 400" in {
-        status(DataItem.result) shouldBe 400
-      }
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorMaximum"))
       }
     }
   }
@@ -1166,7 +912,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
   "Submitting Amend PSOs data" when {
 
-    "submitting a valid IP14 PSO's details on first valid day" should {
+    "submitting valid data for IP14" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
         ("psoDay", "6"),
@@ -1188,7 +934,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "submitting a valid IP16 PSO's details on first valid day" should {
+    "submitting valid data for IP16" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
         ("psoDay", "6"),
@@ -1210,7 +956,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
     }
 
-    "submitting an invalid set of PSO details - missing day" should {
+    "submitting invalid data" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
         ("psoDay", ""),
@@ -1222,17 +968,13 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("existingPSO", "true")
       )
       "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.dayEmpty"))
-      }
     }
 
-    "submitting an invalid set of PSO details - missing month" should {
+    "submitting data which fails additional validation" should {
 
       object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", "1"),
-        ("psoMonth", ""),
+        ("psoDay", "36"),
+        ("psoMonth", "1"),
         ("psoYear", "2015"),
         ("psoAmt", "100000"),
         ("protectionType", "ip2014"),
@@ -1240,192 +982,6 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("existingPSO", "true")
       )
       "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.monthEmpty"))
-      }
-    }
-
-    "submitting an invalid set of PSO details - missing year" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", "1"),
-        ("psoMonth", "1"),
-        ("psoYear", ""),
-        ("psoAmt", "100000"),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
-      )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.yearEmpty"))
-      }
-    }
-
-    "submitting an invalid set of PSO details - invalid date" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", "29"),
-        ("psoMonth", "2"),
-        ("psoYear", "2015"),
-        ("psoAmt", "100000"),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
-      )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.invalidDate"))
-      }
-    }
-
-    "submitting an invalid set of PSO details - date before 6 April 2014 for ip14" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", "5"),
-        ("psoMonth", "4"),
-        ("psoYear", "2014"),
-        ("psoAmt", "1000"),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
-      )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP14PsoDetails.errorDateOutOfRange"))
-      }
-    }
-
-    "submitting an invalid set of PSO details - date before 6 April 2016 for ip16" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", "5"),
-        ("psoMonth", "4"),
-        ("psoYear", "2016"),
-        ("psoAmt", "1000"),
-        ("protectionType", "ip2016"),
-        ("status", "open"),
-        ("existingPSO", "true")
-      )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
-      }
-    }
-
-    "submitting an invalid set of PSO details - date in future for IP2016" should {
-
-      val tomorrow = LocalDate.now.plusDays(1)
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", tomorrow.getDayOfMonth.toString),
-        ("psoMonth", tomorrow.getMonthValue.toString),
-        ("psoYear", tomorrow.getYear.toString),
-        ("psoAmt", "1000"),
-        ("protectionType", "ip2016"),
-        ("status", "open"),
-        ("existingPSO", "true")
-      )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
-      }
-    }
-
-    "submitting an invalid set of PSO details - date in future for IP2014" should {
-
-      val tomorrow = LocalDate.now.plusDays(1)
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", tomorrow.getDayOfMonth.toString),
-        ("psoMonth", tomorrow.getMonthValue.toString),
-        ("psoYear", tomorrow.getYear.toString),
-        ("psoAmt", "1000"),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
-      )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.IP14PsoDetails.errorDateOutOfRange"))
-      }
-    }
-
-    "submitting an invalid set of PSO details - missing PSO amount" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", "1"),
-        ("psoMonth", "1"),
-        ("psoYear", "2015"),
-        ("psoAmt", ""),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
-      )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("error.real"))
-      }
-    }
-
-    "submitting an invalid set of PSO details - amount negative" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", "1"),
-        ("psoMonth", "1"),
-        ("psoYear", "2015"),
-        ("psoAmt", "-1"),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
-      )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorNegative"))
-      }
-    }
-
-    "submitting an invalid set of PSO details - amount too many decimal places" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", "1"),
-        ("psoMonth", "1"),
-        ("psoYear", "2015"),
-        ("psoAmt", "0.001"),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
-      )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorDecimalPlaces"))
-      }
-    }
-
-    "submitting an invalid set of PSO details - amount too large" should {
-
-      object DataItem extends AuthorisedFakeRequestToPost(TestAmendsController.submitAmendPsoDetails,
-        ("psoDay", "1"),
-        ("psoMonth", "1"),
-        ("psoYear", "2015"),
-        ("psoAmt", "999999999999999"),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
-      )
-      "return 400" in { status(DataItem.result) shouldBe 400 }
-
-      "fail with the correct error message" in {
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include (Messages("pla.base.errors.errorMaximum"))
-      }
     }
   }
 

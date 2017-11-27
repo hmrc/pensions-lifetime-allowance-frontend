@@ -18,24 +18,8 @@ package models
 
 import play.api.libs.json._
 
-trait PSODetailsBaseModel {
-  def psoDay: Int
-  def psoMonth: Int
-  def psoYear: Int
-  def psoAmt: BigDecimal
-}
-
-class PSODetailsModel (val psoDay: Int, val psoMonth: Int, val psoYear: Int, val psoAmt: BigDecimal) extends PSODetailsBaseModel {
-}
+case class PSODetailsModel (psoDay: Int, psoMonth: Int, psoYear: Int, psoAmt: BigDecimal)
 
 object PSODetailsModel {
   implicit val format = Json.format[PSODetailsModel]
-
-  def apply(psoDay: Option[Int], psoMonth: Option[Int], psoYear: Option[Int], psoAmt: BigDecimal) =
-    new PSODetailsModel(psoDay.getOrElse(0), psoMonth.getOrElse(0), psoYear.getOrElse(0), psoAmt
-  )
-
-  def unapply(details: PSODetailsModel): Option[(Option[Int], Option[Int], Option[Int], BigDecimal)] =
-    Some((Some(details.psoDay), Some(details.psoMonth), Some(details.psoYear), details.psoAmt))
-
 }

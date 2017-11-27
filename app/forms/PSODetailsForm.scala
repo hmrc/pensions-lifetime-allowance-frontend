@@ -26,14 +26,14 @@ import play.api.i18n.{Lang, Messages}
 import play.api.i18n.Messages.Implicits._
 import utils.Constants
 
-object PSODetailsForm {
+object PSODetailsForm extends CommonBinders {
 
   def validateForm(form: Form[PSODetailsModel])(implicit lang:Lang): Form[PSODetailsModel] = {
     val (day, month, year) = getFormDateValues(form)
     if(dateFieldsAlreadyInvalid(form)) form
-    else if(!isValidDate(day, month, year)) form.withError("psoDay", Messages("pla.base.errors.invalidDate"))
-    else if(dateBefore(day, month, year, Constants.minIP16PSODate)) form.withError("psoDay", Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
-    else if(futureDate(day, month, year)) form.withError("psoDay", Messages("pla.IP16PsoDetails.errorDateOutOfRange"))
+    else if(!isValidDate(day, month, year)) form.withError("psoDay", "pla.base.errors.invalidDate")
+    else if(dateBefore(day, month, year, Constants.minIP16PSODate)) form.withError("psoDay", "pla.IP16PsoDetails.errorDateOutOfRange")
+    else if(futureDate(day, month, year)) form.withError("psoDay", "pla.IP16PsoDetails.errorDateOutOfRange")
     else form
   }
 
@@ -51,15 +51,15 @@ object PSODetailsForm {
     form.errors.map(_.key).exists(List("psoDay","psoMonth","psoYear").contains(_))
   }
 
-  def psoDetailsForm(implicit lang: Lang) = Form(
+  def psoDetailsForm(implicit lang: Lang): Form[PSODetailsModel] = Form(
   mapping(
-    "psoDay"    -> optional(number).verifying(Messages("pla.base.errors.dayEmpty"), {_.isDefined}),
-    "psoMonth"  -> optional(number).verifying(Messages("pla.base.errors.monthEmpty"), {_.isDefined}),
-    "psoYear"   -> optional(number).verifying(Messages("pla.base.errors.yearEmpty"), {_.isDefined}),
+    "psoDay"    -> intWithCustomError("dayEmpty"),
+    "psoMonth"  -> intWithCustomError("monthEmpty"),
+    "psoYear"   -> intWithCustomError("yearEmpty"),
     "psoAmt"    -> bigDecimal
-      .verifying(Messages("pla.base.errors.errorMaximum"), psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
-      .verifying(Messages("pla.base.errors.errorNegative"), psoAmt => isPositive(psoAmt.toDouble))
-      .verifying(Messages("pla.base.errors.errorDecimalPlaces"), psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
+      .verifying("pla.base.errors.errorMaximum", psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
+      .verifying("pla.base.errors.errorNegative", psoAmt => isPositive(psoAmt.toDouble))
+      .verifying("pla.base.errors.errorDecimalPlaces", psoAmt => isMaxTwoDecimalPlaces(psoAmt.toDouble))
 
     )(PSODetailsModel.apply)(PSODetailsModel.unapply)
   )
