@@ -19,21 +19,22 @@ package forms
 import play.api.data.{FormError, Forms, Mapping}
 import play.api.data.format.Formatter
 
-import scala.util.{Success, Try}
+import scala.util.{Failure, Success, Try}
 
 trait CommonBinders {
+
+  private val EMPTY_STRING = ""
 
   private def intFormatter(errorLabel: String) = new Formatter[Int] {
 
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Int] = {
-      data.get(key).map {
-        str =>
-          Try(str.toInt) match {
-            case Success(result) => Right(result)
-            case _ => Left(Seq(FormError(key, "error.real")))
-          }
-      }.getOrElse(
-        Left(Seq(FormError(key, s"pla.base.errors.$errorLabel"))))
+      data.getOrElse(key, EMPTY_STRING) match {
+        case EMPTY_STRING => Left(Seq(FormError(key, s"pla.base.errors.$errorLabel")))
+        case str => Try(str.toInt) match {
+          case Success(result) => Right(result)
+          case Failure(_) => Left(Seq(FormError(key, "error.real")))
+        }
+      }
     }
 
     override def unbind(key: String, value: Int): Map[String, String] = Map(key -> value.toString)
