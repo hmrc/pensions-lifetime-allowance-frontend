@@ -119,6 +119,54 @@ class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPer
         result.errors.size shouldBe 1
         result.error("psoAmt").get.message shouldBe errorMaximum
       }
+
+      "provided with an empty string for psoDay" in {
+        val map = validMap.updated("psoDay","")
+        val result = psoDetailsForm.bind(map)
+
+        result.errors.size shouldBe 1
+        result.error("psoDay").get.message shouldBe errorMissingDay
+      }
+
+      "provided with an empty string for psoMonth" in {
+        val map = validMap.updated("psoMonth","")
+        val result = psoDetailsForm.bind(map)
+
+        result.errors.size shouldBe 1
+        result.error("psoMonth").get.message shouldBe errorMissingMonth
+      }
+
+      "provided with an empty string for psoYear" in {
+        val map = validMap.updated("psoYear","")
+        val result = psoDetailsForm.bind(map)
+
+        result.errors.size shouldBe 1
+        result.error("psoYear").get.message shouldBe errorMissingYear
+      }
+
+      "provided with a non integer equivalent string for psoDay" in {
+        val map = validMap.updated("psoDay","a")
+        val result = psoDetailsForm.bind(map)
+
+        result.errors.size shouldBe 1
+        result.error("psoDay").get.message shouldBe errorReal
+      }
+
+      "provided with a non integer equivalent string for psoMonth" in {
+        val map = validMap.updated("psoMonth","b")
+        val result = psoDetailsForm.bind(map)
+
+        result.errors.size shouldBe 1
+        result.error("psoMonth").get.message shouldBe errorReal
+      }
+
+      "provided with a non integer equivalent string for psoYear" in {
+        val map = validMap.updated("psoYear","c")
+        val result = psoDetailsForm.bind(map)
+
+        result.errors.size shouldBe 1
+        result.error("psoYear").get.message shouldBe errorReal
+      }
     }
 
     "use additional validation to invalidate a form" which {
