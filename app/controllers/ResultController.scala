@@ -64,7 +64,7 @@ trait ResultController extends BaseController with AuthFunction {
     genericAuthWithNino("FP2016") { nino =>
       implicit val protectionType = ApplicationType.FP2016
       plaConnector.applyFP16(nino).flatMap(
-        response => routeViaMCNeededCheck(response)
+        response => routeViaMCNeededCheck(response, nino)
       )
     }
   }
@@ -77,18 +77,16 @@ trait ResultController extends BaseController with AuthFunction {
         for {
           userData <- keyStoreConnector.fetchAllUserData
           applicationResult <- plaConnector.applyIP16(nino, userData.get)
-          response <- routeViaMCNeededCheck(applicationResult)
+          response <- routeViaMCNeededCheck(applicationResult, nino)
         } yield response
       }
   }
 
 
-  private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
-    genericAuthWithNino("existingProtections") { nino =>
-      response.status match {
-        case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
-        case _ => saveAndRedirectToDisplay(response, nino)
-      }
+  private def routeViaMCNeededCheck(response: HttpResponse, nino: String)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
+    response.status match {
+      case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
+      case _ => saveAndRedirectToDisplay(response, nino)
     }
   }
 

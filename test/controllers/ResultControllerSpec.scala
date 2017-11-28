@@ -29,7 +29,7 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Matchers.anyString
 import org.mockito.Mockito._
-import _root_.mock.AuthMock
+import mocks.AuthMock
 import org.scalatest.BeforeAndAfter
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}

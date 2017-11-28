@@ -26,6 +26,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import mocks.AuthMock
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.mvc.Result
@@ -33,7 +34,7 @@ import play.api.test.Helpers._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach {
+class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach with AuthMock {
 
   val mockPlayAuthConnector = mock[PlayAuthConnector]
   implicit val system = ActorSystem()
@@ -45,7 +46,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
 
   object TestAuthFunction extends AuthFunction  {
     lazy val appConfig = MockConfig
-    override lazy val authConnector = mockPlayAuthConnector
+    override lazy val authConnector = mockAuthConnector
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
 
@@ -54,11 +55,6 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
     override def ggLoginUrl = "http://www.gglogin.com"
 
     override def origin = "origin"
-  }
-
-  def mockAuthConnector[T](future: Future[T]) = {
-    when(mockPlayAuthConnector.authorise[T](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
-      .thenReturn(future)
   }
 
 

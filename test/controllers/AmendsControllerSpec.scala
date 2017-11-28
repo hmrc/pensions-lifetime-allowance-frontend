@@ -31,7 +31,7 @@ import models.amendModels.{AmendProtectionModel, AmendsGAModel}
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
-import _root_.mock.AuthMock
+import mocks.AuthMock
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
@@ -604,6 +604,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
 
       "redirect to Amends Summary Page" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreSaveCondition[PensionsTakenBeforeModel](mockKeyStoreConnector)
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
@@ -616,6 +617,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
 
       "redirect to Amends Summary Page" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreSaveCondition[PensionsTakenBeforeModel](mockKeyStoreConnector)
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303

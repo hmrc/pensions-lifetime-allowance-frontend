@@ -131,14 +131,13 @@ trait WithdrawProtectionController extends BaseController with AuthFunction {
         for {
           protectionAmendment <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
           response <- plaConnector.amendProtection(nino, protectionAmendment.get.copy(withdrawnDate = Some(withdrawDate), status = Some("Withdrawn")))
-          result <- routeToWithdrawConfirmation(protectionAmendment.get.protectionType, response)
+          result <- routeToWithdrawConfirmation(protectionAmendment.get.protectionType, response, nino)
         } yield result
       }
   }
 
-  private def routeToWithdrawConfirmation(protectionType: Option[String], response: HttpResponse)
+  private def routeToWithdrawConfirmation(protectionType: Option[String], response: HttpResponse, nino: String)
                                          (implicit request: Request[AnyContent]): Future[Result] = {
-    genericAuthWithNino("existingProtections") { nino =>
     response.status match {
       case OK => Future.successful(Redirect(routes.WithdrawProtectionController.showWithdrawConfirmation(Strings.protectionTypeString(protectionType))))
       case _ => {
@@ -147,7 +146,6 @@ trait WithdrawProtectionController extends BaseController with AuthFunction {
           views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString))
           .withHeaders(CACHE_CONTROL -> "no-cache"))
       }
-    }
     }
   }
 

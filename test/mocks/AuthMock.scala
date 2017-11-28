@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package mock
+package mocks
 
 import org.mockito.Matchers
 import org.mockito.Mockito.when
@@ -25,7 +25,7 @@ import uk.gov.hmrc.auth.core.retrieve.Retrieval
 
 import scala.concurrent.Future
 
-trait AuthMock {
+trait AuthMock extends MockitoSugar{
   this: MockitoSugar =>
 
   val mockAuthConnector = mock[PlayAuthConnector]

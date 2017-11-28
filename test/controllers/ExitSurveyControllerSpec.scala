@@ -23,7 +23,7 @@ import akka.stream.ActorMaterializer
 import auth._
 import com.kenshoo.play.metrics.PlayModule
 import config.AuthClientConnector
-import mock.AuthMock
+import mocks.AuthMock
 import models._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
