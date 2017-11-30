@@ -110,41 +110,37 @@ trait AmendsController extends BaseController with AuthFunction {
           protectionAmendment <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
           saveAmendsGA <- keyStoreConnector.saveData[AmendsGAModel]("AmendsGA", AmendsGAConstructor.identifyAmendsChanges(protectionAmendment.get.updatedProtection, protectionAmendment.get.originalProtection))
           response <- plaConnector.amendProtection(nino, protectionAmendment.get.updatedProtection)
-          result <- routeViaMCNeededCheck(response)
+          result <- routeViaMCNeededCheck(response, nino)
         } yield result
       )
     }
   }
 
-  private def routeViaMCNeededCheck(response: HttpResponse)(implicit request: Request[AnyContent]): Future[Result] = {
-    genericAuthWithNino("existingProtections") { nino =>
-      response.status match {
-        case 409 => {
-          Logger.warn(s"conflict response returned for amend request for user nino $nino")
-          Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-        }
-        case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
-        case _ => saveAndRedirectToDisplay(response)
+  private def routeViaMCNeededCheck(response: HttpResponse, nino: String)(implicit request: Request[AnyContent]): Future[Result] = {
+    response.status match {
+      case 409 => {
+        Logger.warn(s"conflict response returned for amend request for user nino $nino")
+        Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
+      case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
+      case _ => saveAndRedirectToDisplay(response, nino)
     }
   }
 
-  def saveAndRedirectToDisplay(response: HttpResponse)(implicit request: Request[AnyContent]): Future[Result] = {
-    genericAuthWithNino("existingProtections") { nino =>
-      responseConstructors.createAmendResponseModelFromJson(response.json).map {
-        model =>
-          if (model.protection.notificationId.isDefined) {
-            keyStoreConnector.saveData[AmendResponseModel]("amendResponseModel", model).map {
-              cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
-            }
-          } else {
-            Logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
-            Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+  def saveAndRedirectToDisplay(response: HttpResponse, nino: String)(implicit request: Request[AnyContent]): Future[Result] = {
+    responseConstructors.createAmendResponseModelFromJson(response.json).map {
+      model =>
+        if (model.protection.notificationId.isDefined) {
+          keyStoreConnector.saveData[AmendResponseModel]("amendResponseModel", model).map {
+            cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
           }
-      }.getOrElse {
-        Logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
-        Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-      }
+        } else {
+          Logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
+          Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+        }
+    }.getOrElse {
+      Logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
+      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
 
@@ -181,7 +177,9 @@ trait AmendsController extends BaseController with AuthFunction {
     }
 
   def amendPensionsTakenBefore(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-      amendRoute(AmendJourney.pensionTakenBefore, protectionType, status).apply(request)
+    genericAuthWithNino("existingProtections") { nino =>
+      amendRoute(AmendJourney.pensionTakenBefore, protectionType, status, nino).apply(request)
+    }
   }
 
   val submitAmendPensionsTakenBefore = Action.async {
@@ -222,7 +220,9 @@ trait AmendsController extends BaseController with AuthFunction {
   }
 
   def amendPensionsTakenBetween(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-      amendRoute(AmendJourney.pensionTakenBetween, protectionType, status).apply(request)
+    genericAuthWithNino("existingProtections") { nino =>
+      amendRoute(AmendJourney.pensionTakenBetween, protectionType, status, nino).apply(request)
+    }
   }
 
   val submitAmendPensionsTakenBetween = Action.async { implicit request =>
@@ -252,7 +252,7 @@ trait AmendsController extends BaseController with AuthFunction {
                 }
 
               case _ =>
-                Logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submiiting amend pensions takne between")
+                Logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken between")
                 Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
           }
@@ -263,7 +263,9 @@ trait AmendsController extends BaseController with AuthFunction {
   }
 
   def amendOverseasPensions(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-      amendRoute(AmendJourney.overseasPension, protectionType, status).apply(request)
+    genericAuthWithNino("existingProtections") { nino =>
+      amendRoute(AmendJourney.overseasPension, protectionType, status, nino).apply(request)
+    }
   }
 
   val submitAmendOverseasPensions = Action.async {
@@ -304,7 +306,9 @@ trait AmendsController extends BaseController with AuthFunction {
   }
 
   def amendCurrentPensions(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-      amendRoute(AmendJourney.currentPension, protectionType, status).apply(request)
+    genericAuthWithNino("existingProtections") { nino =>
+      amendRoute(AmendJourney.currentPension, protectionType, status, nino).apply(request)
+    }
   }
 
   val submitAmendCurrentPension = Action.async { implicit request =>
@@ -476,39 +480,37 @@ trait AmendsController extends BaseController with AuthFunction {
     }
   }
 
-  private def amendRoute(journey: AmendJourney.Value, protectionType: String, status: String) = Action.async { implicit request =>
+  private def amendRoute(journey: AmendJourney.Value, protectionType: String, status: String, nino: String) = Action.async { implicit request =>
     import AmendJourney._
-    genericAuthWithNino("existingProtections") { nino =>
 
-      keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
+    keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
 
-        case Some(data) =>
-          getRouteUsingModel(
-            journey match {
-              case `currentPension` =>
-                AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.getOrElse[Double](0))), protectionType, status)
-              case `pensionTakenBefore` =>
-                val yesNoValue = if (data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0) > 0) "yes" else "no"
-                AmendPensionsTakenBeforeModel(yesNoValue,
-                  Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0))),
-                  protectionType,
-                  status)
-              case `pensionTakenBetween` =>
-                val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes" else "no"
-                AmendPensionsTakenBetweenModel(
-                  yesNoValue,
-                  Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0))),
-                  protectionType,
-                  status)
-              case `overseasPension` =>
-                val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
-                AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))), protectionType, status)
-            }
-          )(request)
-        case _ =>
-          Logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend $journey page")
-          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-      }
+      case Some(data) =>
+        getRouteUsingModel(
+          journey match {
+            case `currentPension` =>
+              AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.getOrElse[Double](0))), protectionType, status)
+            case `pensionTakenBefore` =>
+              val yesNoValue = if (data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0) > 0) "yes" else "no"
+              AmendPensionsTakenBeforeModel(yesNoValue,
+                Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0))),
+                protectionType,
+                status)
+            case `pensionTakenBetween` =>
+              val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes" else "no"
+              AmendPensionsTakenBetweenModel(
+                yesNoValue,
+                Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0))),
+                protectionType,
+                status)
+            case `overseasPension` =>
+              val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
+              AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))), protectionType, status)
+          }
+        )(request)
+      case _ =>
+        Logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend $journey page")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
 
