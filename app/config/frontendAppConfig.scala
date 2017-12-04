@@ -45,6 +45,7 @@ trait AppConfig {
   val validStatusMetric: String
   val invalidStatusMetric: String
   val notFoundStatusMetric: String
+  val appName : String
 }
 
 object FrontendAppConfig extends AppConfig with ServicesConfig {
@@ -83,4 +84,6 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
   override val validStatusMetric: String = configuration.getString("valid-protection-status").getOrElse("")
   override val invalidStatusMetric: String = configuration.getString("invalid-protection-status").getOrElse("")
   override val notFoundStatusMetric: String = configuration.getString("not-found-protection-status").getOrElse("")
+
+  override lazy val appName: String = loadConfig("appName")
 }

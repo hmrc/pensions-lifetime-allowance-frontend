@@ -75,7 +75,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
         val result = TestAuthFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest)
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=null&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
       }
 
       "return a 500 on an unexpected authorisation exception" in {
@@ -88,7 +88,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
         val result = TestAuthFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest)
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=null&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
       }
 
       "redirect to gg login page on an no active session exception" in {
@@ -117,7 +117,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
         val result = await(TestAuthFunction.genericAuthWithNino("IP2016")(body)(fakeRequest))
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=null&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
       }
 
       "return a 500 on an unexpected authorisation exception" in {
@@ -130,7 +130,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
         val result = await(TestAuthFunction.genericAuthWithNino("IP2016")(body)(fakeRequest))
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=null&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
       }
 
       "redirect to gg login page on an no active session exception" in {

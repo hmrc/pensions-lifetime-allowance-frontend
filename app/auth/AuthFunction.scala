@@ -38,7 +38,11 @@ trait AuthFunction extends BaseController with AuthRedirects  with AuthorisedFun
   val confidenceLevel : String = "&confidenceLevel=200"
   val completionURL : String = "&completionURL="
   val failureURL : String = "&failureURL="
-  val appName : String = "appName"
+  private lazy val IVUpliftURL : String = s"$personalIVUrl?" +
+    s"$originString${appConfig.appName}" +
+    s"$confidenceLevel" +
+    s"$completionURL${appConfig.ipStartUrl}" +
+    s"$failureURL${appConfig.notAuthorisedRedirectUrl}"
 
   class MissingNinoException extends Exception("Nino not returned by authorised call")
 
@@ -55,18 +59,13 @@ trait AuthFunction extends BaseController with AuthRedirects  with AuthorisedFun
   }
 
   def authErrorHandling(pType: String)(implicit request: Request[AnyContent]):PartialFunction[Throwable, Future[Result]] = {
-    case e: NoActiveSession => Future.successful(toGGLogin(appConfig.ipStartUrl))
-    case e: InsufficientEnrolments => Future.successful(Redirect(s"$personalIVUrl?" +
-      s"$originString${config.getString(appName)}" +
-      s"$confidenceLevel" +
-      s"$completionURL${appConfig.ipStartUrl}" +
-      s"$failureURL${appConfig.notAuthorisedRedirectUrl}"))
-    case e: InsufficientConfidenceLevel => Future.successful(Redirect(s"$personalIVUrl?" +
-      s"$originString${config.getString(appName)}" +
-      s"$confidenceLevel" +
-      s"$completionURL${appConfig.ipStartUrl}" +
-      s"$failureURL${appConfig.notAuthorisedRedirectUrl}"))
-    case e: AuthorisationException => Future.successful(InternalServerError(views.html.pages.fallback.technicalError(pType)))
+    case _: NoActiveSession => Future.successful(toGGLogin(appConfig.ipStartUrl))
+    case _: InsufficientEnrolments => Future.successful(Redirect(IVUpliftURL))
+    case _: InsufficientConfidenceLevel => Future.successful(Redirect(IVUpliftURL))
+    case e: AuthorisationException => {
+      Logger.error("Unexpected auth exception ", e)
+      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(pType)))
+    }
   }
 
 }
