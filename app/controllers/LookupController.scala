@@ -137,7 +137,6 @@ trait LookupController extends BaseController {
       keyStoreConnector.fetchAndGetFormData[PSALookupResult](lookupResultID).flatMap {
         case Some(result) =>
           val printPage = psa_lookup_results_print(result, buildTimestamp).toString
-          Logger.debug("MJR " + printPage)
           pdfGeneratorConnector.generatePdf(printPage).map {
             response =>
               Ok(response.bodyAsBytes.toArray).as("application/pdf")
