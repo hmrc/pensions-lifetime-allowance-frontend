@@ -49,22 +49,22 @@ trait AuthFunction extends BaseController with AuthRedirects  with AuthorisedFun
   def genericAuthWithoutNino(pType: String)(body: => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
     authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200) {
       body
-    }.recoverWith(authErrorHandling(pType))
+    }.recover(authErrorHandling(pType))
   }
 
   def genericAuthWithNino(pType: String)(body: String => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
       authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200).retrieve(Retrievals.nino) { nino =>
       body(nino.getOrElse(throw new MissingNinoException))
-    }.recoverWith(authErrorHandling(pType))
+    }.recover(authErrorHandling(pType))
   }
 
-  def authErrorHandling(pType: String)(implicit request: Request[AnyContent]):PartialFunction[Throwable, Future[Result]] = {
-    case _: NoActiveSession => Future.successful(toGGLogin(appConfig.ipStartUrl))
-    case _: InsufficientEnrolments => Future.successful(Redirect(IVUpliftURL))
-    case _: InsufficientConfidenceLevel => Future.successful(Redirect(IVUpliftURL))
+  def authErrorHandling(pType: String)(implicit request: Request[AnyContent]):PartialFunction[Throwable, Result] = {
+    case _: NoActiveSession => toGGLogin(appConfig.ipStartUrl)
+    case _: InsufficientEnrolments => Redirect(IVUpliftURL)
+    case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL)
     case e: AuthorisationException => {
       Logger.error("Unexpected auth exception ", e)
-      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(pType)))
+      InternalServerError(views.html.pages.fallback.technicalError(pType))
     }
   }
 
