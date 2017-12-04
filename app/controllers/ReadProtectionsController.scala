@@ -16,13 +16,13 @@
 
 package controllers
 
+import auth.AuthFunction
 import common.{Helpers, Strings}
 import models._
 import enums.ApplicationType
-import auth.{AuthorisedForPLA, PLAUser}
-import config.{FrontendAppConfig, FrontendAuthConnector}
+import config.{AuthClientConnector, FrontendAppConfig}
 import models.amendModels.AmendProtectionModel
-import play.api.Logger
+import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.FrontendController
 import uk.gov.hmrc.play.config.ServicesConfig
@@ -36,63 +36,70 @@ import views.html._
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import uk.gov.hmrc.http.{ HttpResponse, NotFoundException, Upstream4xxResponse }
+import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
+import uk.gov.hmrc.http.{HttpResponse, NotFoundException, Upstream4xxResponse}
+import uk.gov.hmrc.play.frontend.config.AuthRedirects
+import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 
 
-object ReadProtectionsController extends ReadProtectionsController with ServicesConfig {
-  override lazy val applicationConfig = FrontendAppConfig
-  override lazy val authConnector = FrontendAuthConnector
-  override lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
+object ReadProtectionsController extends ReadProtectionsController {
+  lazy val appConfig = FrontendAppConfig
+  override lazy val authConnector: AuthConnector = AuthClientConnector
+  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
   override val keyStoreConnector = KeyStoreConnector
   override val plaConnector = PLAConnector
   override val displayConstructors = DisplayConstructors
   override val responseConstructors = ResponseConstructors
+
+  override def config: Configuration = Play.current.configuration
+  override def env: Environment = Play.current.injector.instanceOf[Environment]
 }
 
-trait ReadProtectionsController extends BaseController with AuthorisedForPLA {
+trait ReadProtectionsController extends BaseController with AuthFunction {
 
   val keyStoreConnector: KeyStoreConnector
   val plaConnector : PLAConnector
   val displayConstructors : DisplayConstructors
   val responseConstructors : ResponseConstructors
 
-  val currentProtections = AuthorisedByAny.async {
-    implicit user =>  implicit request =>
-    plaConnector.readProtections(user.nino.get).flatMap { response =>
-      response.status match {
-        case 200 => redirectFromSuccess(response)
-        case 423 => Future.successful(Locked(pages.result.manualCorrespondenceNeeded()))
-        case num => {
-          Logger.error(s"unexpected status $num passed to currentProtections for nino: ${user.nino}")
-          Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+  val currentProtections = Action.async {
+    implicit request =>
+      genericAuthWithNino("existingProtections") { nino =>
+        plaConnector.readProtections(nino).flatMap { response =>
+          response.status match {
+            case 200 => redirectFromSuccess(response, nino)
+            case 423 => Future.successful(Locked(pages.result.manualCorrespondenceNeeded()))
+            case num => {
+              Logger.error(s"unexpected status $num passed to currentProtections for nino: $nino")
+              Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+            }
+          }
+        }.recover {
+          case e: NotFoundException => Logger.warn(s"Error 404 passed to currentProtections for nino: $nino")
+            throw new Upstream4xxResponse(e.message, 404, 500)
+          case otherException: Exception => throw otherException
         }
       }
-    }.recover{
-      case e: NotFoundException => Logger.warn(s"Error 404 passed to currentProtections for nino: ${user.nino}")
-        throw new Upstream4xxResponse(e.message, 404, 500)
-      case otherException: Exception => throw otherException
-    }
   }
 
-  def redirectFromSuccess(response: HttpResponse)(implicit request: Request[AnyContent], user: PLAUser): Future[Result] = {
+  def redirectFromSuccess(response: HttpResponse, nino: String)(implicit request: Request[AnyContent]): Future[Result] = {
     responseConstructors.createTransformedReadResponseModelFromJson(Json.parse(response.body)).map {
       readResponseModel =>
         saveAndDisplayExistingProtections(readResponseModel)
-    }.getOrElse{
-      Logger.warn(s"unable to create transformed read response model from microservice response for nino: ${user.nino}")
+    }.getOrElse {
+      Logger.warn(s"unable to create transformed read response model from microservice response for nino: $nino")
       Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
 
   def saveAndDisplayExistingProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Future[Result] = {
 
-    val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
-    for {
-      stepOne <- saveActiveProtection(model.activeProtection)
-      stepTwo <- saveAmendableProtections(model)
-    } yield Ok(pages.existingProtections.existingProtections(displayModel))
-
+      val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
+      for {
+        stepOne <- saveActiveProtection(model.activeProtection)
+        stepTwo <- saveAmendableProtections(model)
+      } yield Ok(pages.existingProtections.existingProtections(displayModel))
   }
 
   def saveActiveProtection(activeModel: Option[ProtectionModel])(implicit request: Request[AnyContent]): Future[Boolean] = {

@@ -16,40 +16,54 @@
 
 package controllers
 
-import auth.{MockAuthConnector, MockConfig}
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import auth.MockConfig
 import com.kenshoo.play.metrics.PlayModule
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import models._
+import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
+import mocks.AuthMock
 import org.scalatest.mock.MockitoSugar
+import play.api.{Configuration, Environment}
 import play.api.Play.current
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import play.api.test.FakeRequest
 import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 
 import scala.concurrent.Future
 
-class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
 
   override def bindModules = Seq(new PlayModule)
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockDisplayConstructors = mock[DisplayConstructors]
   val mockPLAConnector = mock[PLAConnector]
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
 
   object TestWithdrawController extends WithdrawProtectionController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
 
     override val displayConstructors: DisplayConstructors = mockDisplayConstructors
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
     override val plaConnector: PLAConnector = mockPLAConnector
+
+    override def config: Configuration = mock[Configuration]
+
+    override def env: Environment = mock[Environment]
   }
 
   val ip2016Protection = ProtectionModel(
@@ -90,30 +104,34 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
     psoAdded = false, Seq(), "£1,100,000"
   )
 
+  val fakeRequest = FakeRequest()
+
+
   "In WithdrawProtectionController calling the withdrawSummary action" when {
 
     "there is no stored protection model" should {
-
-      object UserRequest extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      keystoreFetchCondition[ProtectionModel](None)
+      lazy val result = await(TestWithdrawController.withdrawSummary(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 500" in {
-        keystoreFetchCondition[ProtectionModel](None)
-        status(UserRequest.result) shouldBe INTERNAL_SERVER_ERROR
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
       "have the correct cache control" in {
-        UserRequest.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
       }
     }
 
     "there is a stored protection model" should {
 
-      object UserRequest extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
-
+      lazy val result = await(TestWithdrawController.withdrawSummary(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         when(mockDisplayConstructors.createWithdrawSummaryTable(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
-        status(UserRequest.result) shouldBe OK
-        UserRequest.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.pageBreadcrumb"))
+        status(result) shouldBe OK
+        jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.pageBreadcrumb"))
       }
     }
   }
@@ -121,26 +139,26 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
   "In WithdrawProtectionController calling the withdrawDateInput action" when {
 
     "there is no stored protection model" should {
-
-      object UserRequest extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawSummary)
-
+      keystoreFetchCondition[ProtectionModel](None)
+      lazy val result = await(TestWithdrawController.withdrawSummary(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 500" in {
         keystoreFetchCondition[ProtectionModel](None)
-        status(UserRequest.result) shouldBe INTERNAL_SERVER_ERROR
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
       "have the correct cache control" in {
-        UserRequest.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
       }
     }
 
     "there is a stored protection model" should {
 
-      object UserRequest extends AuthorisedFakeRequestTo(TestWithdrawController.withdrawDateInput)
-
+      lazy val result = await(TestWithdrawController.withdrawDateInput(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(UserRequest.result) shouldBe OK
-        UserRequest.jsoupDoc.body().getElementsByTag("h1").text should include(Messages("pla.withdraw.date-input.title"))
+        status(result) shouldBe OK
+        jsoupDoc.body().getElementsByTag("h1").text should include(Messages("pla.withdraw.date-input.title"))
       }
     }
   }

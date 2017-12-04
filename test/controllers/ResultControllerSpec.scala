@@ -16,33 +16,45 @@
 
 package controllers
 
-import auth.{MockAuthConnector, MockConfig}
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import auth.MockConfig
 import com.kenshoo.play.metrics.PlayModule
-import config.FrontendAuthConnector
+import config.AuthClientConnector
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.ResponseConstructors
 import enums.{ApplicationOutcome, ApplicationType}
 import models.{ApplyResponseModel, ProtectionModel}
+import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Matchers.anyString
 import org.mockito.Mockito._
+import mocks.AuthMock
 import org.scalatest.BeforeAndAfter
 import org.scalatest.mock.MockitoSugar
+import play.api.{Configuration, Environment}
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.{JsValue, Json}
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
+import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfter {
+class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfter with AuthMock {
   override def bindModules = Seq(new PlayModule)
+
+  implicit val system = ActorSystem()
+  implicit val materializer = ActorMaterializer()
+  val fakeRequest = FakeRequest()
 
   val successFP16Json = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1}""")
   val rejectionFP16Json = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
@@ -150,11 +162,13 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockResponseConstructors = mock[ResponseConstructors]
 
-
   object TestSuccessResultController extends ResultController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+
+    override def config: Configuration = mock[Configuration]
+    override def env: Environment = mock[Environment]
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -177,9 +191,12 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   }
 
   object TestInactiveSuccessResultController extends ResultController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+
+    override def config: Configuration = mock[Configuration]
+    override def env: Environment = mock[Environment]
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -202,9 +219,12 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   }
 
   object TestRejectResultController extends ResultController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+
+    override def config: Configuration = mock[Configuration]
+    override def env: Environment = mock[Environment]
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
@@ -226,9 +246,12 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   }
 
   object TestMCNeededResultController extends ResultController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+
+    override def config: Configuration = mock[Configuration]
+    override def env: Environment = mock[Environment]
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
@@ -244,9 +267,12 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   }
 
   object TestIncorrectResponseModelResultController extends ResultController {
-    override lazy val applicationConfig = MockConfig
-    override lazy val authConnector = MockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+    lazy val appConfig = MockConfig
+    override lazy val authConnector = mockAuthConnector
+    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+
+    override def config: Configuration = mock[Configuration]
+    override def env: Environment = mock[Environment]
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
@@ -262,11 +288,12 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
   }
 
+
   ///////////////////////////////////////////////
   // Initial Setup
   ///////////////////////////////////////////////
   "ResultController should be correctly initialised" in {
-    ResultController.authConnector shouldBe FrontendAuthConnector
+    ResultController.authConnector shouldBe AuthClientConnector
   }
 
   //////////////////////////////////////////////
@@ -275,74 +302,97 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
 
   "Successfully applying for FP" should {
+    lazy val DataItemresult = await(TestSuccessResultController.processFPApplication(fakeRequest))
+    lazy val GetItemResult = await(TestSuccessResultController.displayResult(ApplicationType.FP2016)(fakeRequest))
+    lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
 
-    object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processFPApplication)
-    object GetItem extends AuthorisedFakeRequestTo(TestSuccessResultController.displayResult(ApplicationType.FP2016))
-
-    "return 303" in {status(DataItem.result) shouldBe 303}
-    "redirect to the result success page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayFP16()}")}
-    "return 200" in {status(GetItem.result) shouldBe 200}
-    "take the user to the result success page" in {GetItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
+    "return 303" in {
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      status(DataItemresult) shouldBe 303
+    }
+    "redirect to the result success page" in {
+      redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayFP16()}")
+    }
+    "return 200" in {
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      status(GetItemResult) shouldBe 200
+    }
+    "take the user to the result success page" in {
+      jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")
+    }
   }
 
   "Unsuccessfully applying for FP" should {
 
-    object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processFPApplication)
-    object GetItem extends AuthorisedFakeRequestTo(TestRejectResultController.displayResult(ApplicationType.FP2016))
+    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    lazy val DataItemresult = await(TestRejectResultController.processFPApplication(fakeRequest))
+    lazy val GetItemResult = await(TestRejectResultController.displayResult(ApplicationType.FP2016)(fakeRequest))
+    lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
 
-    "return 303" in { status(DataItem.result) shouldBe 303 }
-    "redirect the user to the result rejection page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayFP16()}")}
-    "return 200" in {status(GetItem.result) shouldBe 200}
-    "take the user to the result rejection page" in {GetItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
+    "return 303" in { status(DataItemresult) shouldBe 303 }
+    "redirect the user to the result rejection page" in {redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayFP16()}")}
+    "return 200" in {status(GetItemResult) shouldBe 200}
+    "take the user to the result rejection page" in {jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
   }
 
   "Successfully applying for IP 2016" should {
 
-    object DataItem extends AuthorisedFakeRequestToPost(TestSuccessResultController.processIPApplication)
-    object GetItem extends AuthorisedFakeRequestTo(TestSuccessResultController.displayResult(ApplicationType.IP2016))
+    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    lazy val DataItemresult = await(TestSuccessResultController.processIPApplication(fakeRequest))
+    lazy val GetItemResult = await(TestSuccessResultController.displayResult(ApplicationType.IP2016)(fakeRequest))
+    lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
 
-    "return 303" in { status(DataItem.result) shouldBe 303 }
-    "redirect the user to the result success page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayIP16()}")}
-    "return 200" in {status(GetItem.result) shouldBe 200}
-    "take the user to the result success page" in {GetItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
+    "return 303" in { status(DataItemresult) shouldBe 303 }
+    "redirect the user to the result success page" in {redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16()}")}
+    "return 200" in {status(GetItemResult) shouldBe 200}
+    "take the user to the result success page" in {jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")}
   }
 
   "Unsuccessfully applying for IP 2016" should {
 
-    object DataItem extends AuthorisedFakeRequestToPost(TestRejectResultController.processIPApplication)
-    object GetItem extends AuthorisedFakeRequestTo(TestRejectResultController.displayResult(ApplicationType.IP2016))
+    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    lazy val DataItemresult = await(TestRejectResultController.processIPApplication(fakeRequest))
+    lazy val GetItemResult = await(TestRejectResultController.displayResult(ApplicationType.IP2016)(fakeRequest))
+    lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
 
-    "return 303" in { status(DataItem.result) shouldBe 303 }
-    "redirect the user to the result rejection page" in {redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayIP16()}")}
-    "return 200" in {status(GetItem.result) shouldBe 200}
-    "take the user to the result rejection page" in {GetItem.jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
+    "return 303" in { status(DataItemresult) shouldBe 303 }
+    "redirect the user to the result rejection page" in {redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16()}")}
+    "return 200" in {status(GetItemResult) shouldBe 200}
+    "take the user to the result rejection page" in {jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")}
   }
 
  "Failure to create an ApplyResponse model from an application response" should {
-   object DataItem extends AuthorisedFakeRequestToPost(TestIncorrectResponseModelResultController.processFPApplication)
+
+   mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+   lazy val result = await(TestIncorrectResponseModelResultController.processFPApplication(fakeRequest))
+   lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+
    "return 500" in {
-     status(DataItem.result) shouldBe 500
+     status(result) shouldBe 500
    }
    "return \"no-cache\" in the response header" in {
-     DataItem.result.header.headers("Cache-Control") shouldBe "no-cache"
+     result.header.headers("Cache-Control") shouldBe "no-cache"
    }
  }
 
   "Applying for inactive IP2016 protection" should {
-    object DataItem extends AuthorisedFakeRequestToPost(TestInactiveSuccessResultController.processIPApplication)
-    object GetItem extends AuthorisedFakeRequestTo(TestInactiveSuccessResultController.displayResult(ApplicationType.IP2016))
+
+    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    lazy val DataItemresult = await(TestInactiveSuccessResultController.processIPApplication(fakeRequest))
+    lazy val GetItemResult = await(TestInactiveSuccessResultController.displayResult(ApplicationType.IP2016)(fakeRequest))
+    lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
 
     "return 303" in {
-      status(DataItem.result) shouldBe 303
+      status(DataItemresult) shouldBe 303
     }
     "redirect the user to the result inactive success page" in {
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.ResultController.displayIP16()}")
+      redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16()}")
     }
     "return 200" in {
-      status(GetItem.result) shouldBe 200
+      status(GetItemResult) shouldBe 200
     }
     "take the user to the result inactive success page" in {
-      GetItem.jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")
+      jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")
     }
   }
 

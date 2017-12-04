@@ -19,24 +19,40 @@ package controllers
 
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import auth._
 import com.kenshoo.play.metrics.PlayModule
-import config.FrontendAuthConnector
+import config.AuthClientConnector
+import org.jsoup.Jsoup
+import org.mockito.Matchers
+import org.mockito.Mockito._
+import mocks.AuthMock
 import org.scalatest.mock.MockitoSugar
+import play.api.{Configuration, Environment}
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
 import testHelpers._
+import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+import scala.concurrent.Future
+
+class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
     override def bindModules = Seq(new PlayModule)
 
+    implicit val system = ActorSystem()
+    implicit val materializer = ActorMaterializer()
+
     object TestConfirmationController extends ConfirmationController {
-        override lazy val applicationConfig = MockConfig
-        override lazy val authConnector = MockAuthConnector
-        override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+        lazy val appConfig = MockConfig
+        override lazy val authConnector = mockAuthConnector
+        lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+
+        override def config: Configuration = mock[Configuration]
+        override def env: Environment = mock[Environment]
     }
 
     val sessionId = UUID.randomUUID.toString
@@ -45,20 +61,23 @@ class ConfirmationControllerSpec extends UnitSpec with WithFakeApplication with 
     val mockUsername = "mockuser"
     val mockUserId = "/auth/oid/" + mockUsername
 
+
     "ConfirmationController should be correctly initialised" in {
-        ConfirmationController.authConnector shouldBe FrontendAuthConnector
+        ConfirmationController.authConnector shouldBe AuthClientConnector
     }
 
     "Calling the .confirmFP action" when {
 
         "navigated to " should {
-            object DataItem extends AuthorisedFakeRequestTo(TestConfirmationController.confirmFP)
+            mockAuthConnector(Future.successful({}))
+            lazy val result = await(TestConfirmationController.confirmFP(fakeRequest))
+            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             "return a 200" in {
-                status(DataItem.result) shouldBe 200
+                status(result) shouldBe 200
             }
 
             "take user to the Confirm FP page" in {
-                DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.confirmFP16.pageHeading")
+                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.confirmFP16.pageHeading")
             }
         }
     }
