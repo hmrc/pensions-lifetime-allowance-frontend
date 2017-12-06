@@ -88,7 +88,7 @@ class UnauthorisedControllerSpec extends UnitSpec with OneAppPerSuite {
     "show timeout template for Timeout journey" in {
       val result = testUnauthorisedController().showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
       contentAsString(result) should include ("signed out due to inactivity")
-      status(result) shouldBe INTERNAL_SERVER_ERROR
+      status(result) shouldBe UNAUTHORIZED
     }
 
     "show 2FA failure page when no journey ID specified" in {
