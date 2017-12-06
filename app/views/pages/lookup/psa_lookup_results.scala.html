@@ -88,7 +88,7 @@
     </table>
 
     <div>
-        <a class="button button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.LookupController.printResultsPDF()">@Messages("psa.lookup.results.save")</a>
+        <a class="button button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printResultsPDF()">@Messages("psa.lookup.results.save")</a>
         <p>
         <a class="button button--get-started" role="button" onclick="ga('send', 'event', 'ResultsPage', 'click', 'Check another certificate')" href="@routes.LookupController.redirectToStart()">@Messages("psa.lookup.results.check-another")</a>
         </p>
