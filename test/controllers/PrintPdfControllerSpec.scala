@@ -36,13 +36,9 @@ import scala.concurrent.Future
 
 
 class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite{
-
-  implicit override lazy val app: Application = new GuiceApplicationBuilder().
-    disable[com.kenshoo.play.metrics.PlayModule].build()
+  implicit override lazy val app: Application = new GuiceApplicationBuilder().disable[com.kenshoo.play.metrics.PlayModule].build()
   implicit val hc = HeaderCarrier()
-
   lazy val ws: WSClient = app.injector.instanceOf[WSClient]
-
 
   private val mockKeyStoreConnector = mock[KeyStoreConnector]
   private val mockPdfGeneratorConnector = mock[PdfGeneratorConnector]
@@ -51,7 +47,7 @@ class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
   object TestController extends PrintPdfController {
     override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
     override val pdfGeneratorConnector: PdfGeneratorConnector = mockPdfGeneratorConnector
-    override def createPdfResult(response: WSResponse): Result = Ok("its a me, peedeeef")
+    override def createPdfResult(response: WSResponse): Result = Ok("Misc.Text")
 
     val lookupRequestID = "psa-lookup-request"
     val lookupResultID = "psa-lookup-result"
@@ -77,7 +73,7 @@ class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
         )
 
         val request = FakeRequest().withSession(sessionId)
-        val response : Future[WSResponse] = ws.url("http://somewhereovertherainbow.com").get()
+        val response : Future[WSResponse] = ws.url("http://testsite.com").get()
 
         keystoreFetchCondition[PSALookupResult](Option(testPsaLookupResult))
         when(mockPdfGeneratorConnector.generatePdf(any())).thenReturn(response)
@@ -121,7 +117,7 @@ class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       )
 
       val request = FakeRequest().withSession(sessionId)
-      val response : Future[WSResponse] = ws.url("http://somewhereovertherainbow.com").get()
+      val response : Future[WSResponse] = ws.url("http://testsite.com").get()
 
       keystoreFetchCondition[PSALookupRequest](Option(testPsaLookupRequest))
       when(mockPdfGeneratorConnector.generatePdf(any())).thenReturn(response)
