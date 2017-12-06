@@ -22,17 +22,13 @@ import enums.ApplicationType
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.frontend.controller.FrontendController
 import connectors.KeyStoreConnector
 import views.html._
 import constructors.SummaryConstructor
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
-import uk.gov.hmrc.play.frontend.config.AuthRedirects
+import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.Future
 
 
 object SummaryController extends SummaryController {

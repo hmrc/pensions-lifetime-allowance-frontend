@@ -41,7 +41,6 @@ import views.html.pages.result.manualCorrespondenceNeeded
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HttpResponse
@@ -53,7 +52,7 @@ object AmendsController extends AmendsController {
   val plaConnector = PLAConnector
   lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
+  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
   override def config: Configuration = Play.current.configuration
   override def env: Environment = Play.current.injector.instanceOf[Environment]

@@ -66,6 +66,7 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         override lazy val appConfig = MockConfig
         override lazy val authConnector = mockAuthConnector
         override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
+        override lazy val postSignInRedirectUrl = "IP2016"
 
         override def config: Configuration = mock[Configuration]
 
