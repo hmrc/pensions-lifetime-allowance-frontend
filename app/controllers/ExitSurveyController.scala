@@ -17,28 +17,22 @@
 package controllers
 
 import config.{AuthClientConnector, FrontendAppConfig}
-import java.util.UUID
 
 import auth.AuthFunction
 import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
 
 import scala.concurrent.Future
 import forms.ExitSurveyForm.exitSurveyForm
-import models._
 import play.api.{Configuration, Environment, Play}
-import play.api.Play.configuration
 import views.html._
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
-import uk.gov.hmrc.play.frontend.config.AuthRedirects
+import uk.gov.hmrc.auth.core.AuthConnector
 
 object ExitSurveyController extends ExitSurveyController {
     lazy val appConfig = FrontendAppConfig
     override lazy val authConnector: AuthConnector = AuthClientConnector
-    lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
+    lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
     override def config: Configuration = Play.current.configuration
 

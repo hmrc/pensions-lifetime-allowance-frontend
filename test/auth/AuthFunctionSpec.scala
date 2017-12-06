@@ -49,6 +49,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
     override lazy val authConnector = mockAuthConnector
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
+    override val postSignInRedirectUrl = "http://www.pla-frontend.gov.uk/ip16-start-page"
 
     override def personalIVUrl = "http://www.test.com"
 
@@ -75,7 +76,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
         val result = TestAuthFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest)
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=/pla/not-authorised")
       }
 
       "return a 500 on an unexpected authorisation exception" in {
@@ -88,14 +89,14 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
         val result = TestAuthFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest)
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=/pla/not-authorised")
       }
 
       "redirect to gg login page on an no active session exception" in {
         mockAuthConnector(Future.failed(new SessionRecordNotFound))
         val result = TestAuthFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest)
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.gglogin.com?continue=%2Fpla%2Fapply-for-ip16-pensions-taken&origin=origin")
+        redirectLocation(result) shouldBe Some("http://www.gglogin.com?continue=http%3A%2F%2Fwww.pla-frontend.gov.uk%2Fip16-start-page&origin=origin")
       }
     }
   }
@@ -117,7 +118,7 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
         val result = await(TestAuthFunction.genericAuthWithNino("IP2016")(body)(fakeRequest))
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=/pla/not-authorised")
       }
 
       "return a 500 on an unexpected authorisation exception" in {
@@ -130,14 +131,14 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
         mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
         val result = await(TestAuthFunction.genericAuthWithNino("IP2016")(body)(fakeRequest))
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=/pla/apply-for-ip16-pensions-taken&failureURL=/pla/not-authorised")
+        redirectLocation(result) shouldBe Some("http://www.test.com?origin=&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=/pla/not-authorised")
       }
 
       "redirect to gg login page on an no active session exception" in {
         mockAuthConnector(Future.failed(new SessionRecordNotFound))
         val result = await(TestAuthFunction.genericAuthWithNino("IP2016")(body)(fakeRequest))
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.gglogin.com?continue=%2Fpla%2Fapply-for-ip16-pensions-taken&origin=origin")
+        redirectLocation(result) shouldBe Some("http://www.gglogin.com?continue=http%3A%2F%2Fwww.pla-frontend.gov.uk%2Fip16-start-page&origin=origin")
       }
     }
   }

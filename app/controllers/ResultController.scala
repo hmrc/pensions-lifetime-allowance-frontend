@@ -25,26 +25,21 @@ import enums.{ApplicationOutcome, ApplicationType}
 import models._
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc._
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.http._
 import utils.Constants
 import views.html.pages.result._
 
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.frontend.config.AuthRedirects
 
 
 object ResultController extends ResultController {
   override val keyStoreConnector = KeyStoreConnector
   lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
+  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
   override val plaConnector = PLAConnector
   override val responseConstructors = ResponseConstructors

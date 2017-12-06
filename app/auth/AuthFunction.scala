@@ -32,6 +32,8 @@ import scala.concurrent.Future
 
 trait AuthFunction extends BaseController with AuthRedirects  with AuthorisedFunctions{
 
+  val postSignInRedirectUrl: String
+
   val appConfig : AppConfig
   val enrolmentKey : String = "HMRC-NI"
   val originString : String = "origin="
@@ -41,7 +43,7 @@ trait AuthFunction extends BaseController with AuthRedirects  with AuthorisedFun
   private lazy val IVUpliftURL : String = s"$personalIVUrl?" +
     s"$originString${appConfig.appName}" +
     s"$confidenceLevel" +
-    s"$completionURL${appConfig.ipStartUrl}" +
+    s"$completionURL$postSignInRedirectUrl" +
     s"$failureURL${appConfig.notAuthorisedRedirectUrl}"
 
   class MissingNinoException extends Exception("Nino not returned by authorised call")
@@ -53,14 +55,14 @@ trait AuthFunction extends BaseController with AuthRedirects  with AuthorisedFun
   }
 
   def genericAuthWithNino(pType: String)(body: String => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
-      authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200).retrieve(Retrievals.nino) { nino =>
+    authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200).retrieve(Retrievals.nino) { nino =>
       body(nino.getOrElse(throw new MissingNinoException))
     }.recover(authErrorHandling(pType))
   }
 
   def authErrorHandling(pType: String)(implicit request: Request[AnyContent]):PartialFunction[Throwable, Result] = {
-    case _: NoActiveSession => toGGLogin(appConfig.ipStartUrl)
-    case _: InsufficientEnrolments => Redirect(IVUpliftURL)
+    case _: NoActiveSession =>             toGGLogin(postSignInRedirectUrl)
+    case _: InsufficientEnrolments =>      Redirect(IVUpliftURL)
     case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL)
     case e: AuthorisationException => {
       Logger.error("Unexpected auth exception ", e)

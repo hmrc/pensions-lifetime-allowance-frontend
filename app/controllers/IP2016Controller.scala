@@ -19,10 +19,8 @@ package controllers
 import auth.AuthFunction
 import config.{AppConfig, AuthClientConnector, FrontendAppConfig}
 import connectors.KeyStoreConnector
-import enums.ApplicationType
-import play.api.{Configuration, Environment, Logger, Play}
-import play.api.i18n.{Lang, Messages}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import play.api.{Configuration, Environment, Play}
+import play.api.i18n.Messages
 
 import scala.concurrent.Future
 import forms._
@@ -34,21 +32,19 @@ import forms.CurrentPensionsForm.currentPensionsForm
 import forms.PSODetailsForm.psoDetailsForm
 import forms.PensionDebitsForm.pensionDebitsForm
 import models._
-import play.api.data.{Form, FormError}
-import play.api.mvc.{Action, AnyContent, Request, Result}
+import play.api.data.FormError
+import play.api.mvc.{Action, AnyContent}
 import views.html._
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.play.frontend.config.AuthRedirects
-
-import scala.util.{Failure, Success, Try}
 
 object IP2016Controller extends IP2016Controller {
 
     val keyStoreConnector = KeyStoreConnector
     override lazy val appConfig = FrontendAppConfig
     override lazy val authConnector: AuthConnector = AuthClientConnector
+    lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 
     override def config: Configuration = Play.current.configuration
     override def env: Environment = Play.current.injector.instanceOf[Environment]

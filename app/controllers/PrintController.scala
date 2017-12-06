@@ -21,16 +21,12 @@ import constructors.DisplayConstructors
 import config.{AppConfig, AuthClientConnector, FrontendAppConfig}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import models.{PersonalDetailsModel, ProtectionModel}
-import play.api.{Configuration, Environment, Logger, Play}
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import play.api.{Configuration, Environment, Play}
 import play.api.mvc._
 
-import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.play.frontend.config.AuthRedirects
 
 
 
@@ -40,7 +36,7 @@ object PrintController extends PrintController {
   val displayConstructors = DisplayConstructors
   lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.ip14StartUrl
+  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
   override def config: Configuration = Play.current.configuration
   override def env: Environment = Play.current.injector.instanceOf[Environment]
