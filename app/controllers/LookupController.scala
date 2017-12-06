@@ -37,7 +37,6 @@ import uk.gov.hmrc.http.Upstream4xxResponse
 object LookupController extends LookupController {
   val keyStoreConnector = KeyStoreConnector
   val plaConnector = PLAConnector
-  val pdfGeneratorConnector: PdfGeneratorConnector = PdfGeneratorConnector
 
   val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
   val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
@@ -50,7 +49,6 @@ trait LookupController extends BaseController {
 
   val keyStoreConnector: KeyStoreConnector
   val plaConnector: PLAConnector
-  val pdfGeneratorConnector: PdfGeneratorConnector
 
   val psaRefForm: Form[String]
   val pnnForm: Form[String]
@@ -131,42 +129,6 @@ trait LookupController extends BaseController {
     keyStoreConnector.remove.map { _ => Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm())
     }
   }
-
-  def printResultsPDF: Action[AnyContent] = ActionWithSessionId.async {
-    implicit request =>
-      keyStoreConnector.fetchAndGetFormData[PSALookupResult](lookupResultID).flatMap {
-        case Some(result) =>
-          val printPage = psa_lookup_results_print(result, buildTimestamp).toString
-          pdfGeneratorConnector.generatePdf(printPage).map {
-            response =>
-              Ok(response.bodyAsBytes.toArray).as("application/pdf")
-                .withHeaders("Content-Disposition" ->
-                  s"attachment; filename=lookup-result-${result.protectionNotificationNumber.getOrElse("")}.pdf")
-          }
-        case None =>
-          Logger.warn("[LookupController]: Unable to print ResultsPDF. Redirected to displaySchemeAdministratorReferenceForm")
-          Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
-      }
-  }
-
-  def printNotFoundPDF: Action[AnyContent] = ActionWithSessionId.async {
-    implicit request =>
-      keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-        case Some(req@PSALookupRequest(_, Some(_))) =>
-          val printPage = psa_lookup_not_found_print(req, buildTimestamp).toString
-
-          pdfGeneratorConnector.generatePdf(printPage).map {
-            response =>
-              Ok(response.bodyAsBytes.toArray).as("application/pdf")
-                .withHeaders("Content-Disposition" ->
-                  "attachment; filename=lookup-not-found.pdf")
-          }
-        case None =>
-          Logger.warn("[LookupController]: Unable to print NotFound PDF. Redirected to displaySchemeAdministratorReferenceForm")
-          Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
-      }
-  }
-
 
   def buildTimestamp: String = s"${LocalDate.now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))} at ${LocalTime.now(ZoneId.of("Europe/London")).format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
 
