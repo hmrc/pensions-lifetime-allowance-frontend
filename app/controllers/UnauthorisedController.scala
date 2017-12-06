@@ -45,7 +45,8 @@ trait UnauthorisedController extends BaseController {
           InternalServerError(technicalIssue())
         case IdentityVerificationResult.LockedOut => Unauthorized(lockedOut())
         case IdentityVerificationResult.Timeout =>
-          InternalServerError(views.html.pages.timeout())
+          Logger.warn("Session has timed out")
+          Unauthorized(views.html.pages.timeout())
         case _ =>
           Logger.info("Unauthorised identity verification, returned to unauthorised page")
           Unauthorized(unauthorised())
