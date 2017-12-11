@@ -24,14 +24,12 @@ import models._
 import views.html._
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import testHelpers.MockTemplateRenderer
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 object TimeoutController extends TimeoutController {
 }
 
 trait TimeoutController extends BaseController {
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
   val timeout = Action.async { implicit request =>
     Future.successful(Ok(views.html.pages.timeout()))

@@ -25,6 +25,7 @@
   mainContent: Html = HtmlFormat.empty,
   scriptElem: Option[Html] = None,
   showLogout: Boolean = true,
+  gaCode: Seq[String] = Seq.empty,
   gaDimensions: Option[Map[String, Any]] = None,
   articleEnabled: Boolean = true
   )(implicit request: Request[_], messages: Messages, context: config.PlaContext, FormPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
@@ -101,31 +102,31 @@ if(str.trim=="") false else str
 
 @{
 templateRenderer.renderDefaultTemplate(article, Map[String, Any](
-"pageTitle" -> title,
-"linkElems" -> linkElems,
-"scriptElems" -> scriptElement,
-"mainClass" -> mainClass,
+    "pageTitle" -> title,
+    "linkElems" -> linkElems,
+    "scriptElems" -> scriptElement,
+    "mainClass" -> mainClass,
 
-"mainContentHeader" -> mainContentHeader,
+    "mainContentHeader" -> mainContentHeader,
 
-"googleAnalytics" -> googleAnalytics,
-"ssoUrl" -> None,
+    "googleAnalytics" -> googleAnalytics,
+    "ssoUrl" -> None,
 
-"betaBanner" -> betaHeaderEnable,
-"feedbackIdentifier" -> "PLA",
-"includeHMRCBranding" -> true,
+    "betaBanner" -> betaHeaderEnable,
+    "feedbackIdentifier" -> "PLA",
+    "includeHMRCBranding" -> true,
 
-"showLastLogInStatus" ->  false,
+    "showLastLogInStatus" ->  false,
 
-"getHelpForm" -> getHelpForm,
+    "getHelpForm" -> getHelpForm,
 
-"navTitle" -> navTitle,
-"navLinks" -> links,
-"hasNavLinks" -> true,
-"sidebar" -> sidebar,
+    "navTitle" -> navTitle,
+    "navLinks" -> links,
+    "hasNavLinks" -> true,
+    "sidebar" -> sidebar,
 
-"optimizelyProjectId" -> "8421961441",
-"isWelsh" -> isWelsh
+    "optimizelyProjectId" -> "8421961441",
+    "isWelsh" -> isWelsh
 )
 )
 }

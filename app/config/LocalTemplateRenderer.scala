@@ -16,14 +16,23 @@
 
 package config
 
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.ws.WSGet
 import uk.gov.hmrc.renderer.TemplateRenderer
-
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
+
 object LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
-  override val connection: WSGet = WSHttp
   override lazy val templateServiceBaseUrl = baseUrl("frontend-template-provider")
   override val refreshAfter: Duration = 10 minutes
+
+  private implicit val hc = HeaderCarrier()
+
+  override def fetchTemplate(path: String): Future[String] =  {
+    WSHttp.GET(path).map(_.body)
+  }
+
 }

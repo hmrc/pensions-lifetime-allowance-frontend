@@ -34,11 +34,12 @@ import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
-import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
+import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost, MockTemplateRenderer}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
@@ -64,6 +65,8 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
     override def config: Configuration = mock[Configuration]
 
     override def env: Environment = mock[Environment]
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+
   }
 
   val ip2016Protection = ProtectionModel(
