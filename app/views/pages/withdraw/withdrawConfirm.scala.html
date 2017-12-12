@@ -32,8 +32,6 @@
 
 @views.html.main_template(title = Messages("pla.withdraw.what-happens.info-heading"), scriptElem = Some(scriptElement), bodyClasses = None) {
 
-    @language_selection(lc.languageMap, lc.langToCall, None)
-
     @govHelpers.form(action = routes.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)) {
 
 

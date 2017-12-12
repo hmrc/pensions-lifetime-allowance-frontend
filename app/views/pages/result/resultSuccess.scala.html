@@ -28,7 +28,6 @@
 
 @views.html.main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None) {
 
-@language_selection(lc.languageMap, lc.langToCall, None)
 	<div class="grid-row">
 		<div class="transaction-banner--complete">
 	        <span class="heading-large" id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</span>

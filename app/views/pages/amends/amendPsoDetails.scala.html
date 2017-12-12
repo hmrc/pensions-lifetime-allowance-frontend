@@ -27,8 +27,6 @@
 
 @views.html.main_template(title = Messages("pla.psoDetails.title"), bodyClasses = None) {
 
-@language_selection(lc.languageMap, lc.langToCall, None)
-
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), psoDetailsForm)
 
     <h1 class="heading-large">@Messages("pla.psoDetails.title")</h1>

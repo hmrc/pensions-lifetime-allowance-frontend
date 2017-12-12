@@ -28,8 +28,6 @@
 
 @views.html.main_template(title = Messages("pla.pensionsTaken.title"), bodyClasses = None) {
 
-    @language_selection(lc.languageMap, lc.langToCall, None)
-
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenForm
     )

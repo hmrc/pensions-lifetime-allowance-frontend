@@ -53,8 +53,6 @@
 
 @main_template(title = Messages("pla.currentPensions.title")) {
 
-    @language_selection(lc.languageMap, lc.langToCall, None)
-
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), currentPensionsForm)
 
     <h1 class="heading-large">@Messages("pla.currentPensions.title")</h1>

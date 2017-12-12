@@ -24,7 +24,6 @@
 
 @views.html.main_template(title = Messages("pla.resultRejection.title"), bodyClasses = None) {
 
-@language_selection(lc.languageMap, lc.langToCall, None)
 	<h1 class="heading-large" id="resultPageHeading">@Messages("pla.resultRejection.pageHeading")</h1>
 
 	<p id="resultOutcome">@Messages("resultCode."+res.notificationId+".heading")</p>

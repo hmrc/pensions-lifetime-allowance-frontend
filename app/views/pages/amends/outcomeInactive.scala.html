@@ -27,8 +27,6 @@
 
 @views.html.main_template(title = Messages("pla.inactiveAmend.title"), bodyClasses = None) {
 
-@language_selection(lc.languageMap, lc.langToCall, None)
-
 @gaModel.map{ gaModel =>
 <div @if(gaModel.current.isDefined){data-metrics = "inactiveAmends:@gaModel.current:amendCurrentPensions"}></div>
 <div @if(gaModel.before.isDefined){data-metrics = "inactiveAmends:@gaModel.before:amendPTBefore"}></div>
