@@ -29,20 +29,20 @@ private object AppDependencies {
 
   private val playHealthVersion = "2.1.0"
   private val loggerVersion = "3.1.0"
-  private val frontendBootstrapVersion = "8.7.0"
+  private val frontendBootstrapVersion = "8.14.0"
   private val govukTemplateVersion = "5.10.0"
   private val playUiVersion = "7.7.0"
   private val playPartialsVersion = "6.1.0"
   private val playAuthorisedFrontendVersion = "7.0.0"
   private val playConfigVersion = "5.0.0"
-  private val hmrcTestVersion = "2.4.0"
+  private val hmrcTestVersion = "3.0.0"
   private val scalaTestVersion = "2.2.6"
   private val scalaTestPlusVersion = "2.0.0"
   private val pegdownVersion = "1.6.0"
-  private val cachingClientVersion = "7.0.0"
-  private val mongoCachingVersion = "5.0.0"
+  private val cachingClientVersion = "7.1.0"
+  private val mongoCachingVersion = "5.3.0"
   private val playLanguageVersion = "3.4.0"
-  private val authClientVersion = "2.3.0"
+  private val authClientVersion = "2.4.0"
 
   val compile = Seq(
     ws,
