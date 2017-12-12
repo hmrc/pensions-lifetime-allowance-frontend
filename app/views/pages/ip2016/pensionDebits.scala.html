@@ -22,18 +22,13 @@
 @import play.api.Application
 
 
-@(pensionDebitsForm: Form[PensionDebitsModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(pensionDebitsForm: Form[PensionDebitsModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
-}
 
-@full_width_template(Messages("pla.pensionDebits.title"), scriptElem=Some(scriptElement)) {
+@full_width_template(Messages("pla.pensionDebits.title")) {
 
-
-    @language_selection(lc.languageMap, lc.langToCall, None)
 
 
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), pensionDebitsForm)

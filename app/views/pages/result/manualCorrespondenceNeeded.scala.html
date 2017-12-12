@@ -18,18 +18,13 @@
 @import controllers.PlaLanguageController
 @import play.api.Application
 
-@()(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@()(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
-}
+@views.html.main_template(title = Messages("pla.mcNeeded.title"), bodyClasses = None) {
 
-@views.html.main_template(title = Messages("pla.mcNeeded.title"), scriptElem=Some(scriptElement), bodyClasses = None) {
-
-@language_selection(lc.languageMap, lc.langToCall, None)
     <div class="grid-row pertax-error">
         <div class="column-two-thirds">
             <header class="heading-large">

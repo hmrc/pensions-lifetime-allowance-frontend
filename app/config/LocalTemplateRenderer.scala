@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package controllers
+package config
 
-import config.LocalTemplateRenderer
-import config.wiring.PlaFormPartialRetriever
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.http.ws.WSGet
 import uk.gov.hmrc.renderer.TemplateRenderer
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration._
 
-trait BaseController extends FrontendController {
-  implicit val context = config.PlaContextImpl
-  implicit val partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = PlaFormPartialRetriever
 
-  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
+object LocalTemplateRenderer extends TemplateRenderer with ServicesConfig {
+  override lazy val templateServiceBaseUrl = baseUrl("frontend-template-provider")
+  override val refreshAfter: Duration = 10 minutes
+
+  private implicit val hc = HeaderCarrier()
+
+  override def fetchTemplate(path: String): Future[String] =  {
+    WSHttp.GET(path).map(_.body)
+  }
+
 }

@@ -40,6 +40,8 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
 import uk.gov.hmrc.http.HttpResponse
+import testHelpers.MockTemplateRenderer
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
@@ -70,6 +72,7 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
     override val plaConnector = mock[PLAConnector]
     override val displayConstructors = mock[DisplayConstructors]
     override val responseConstructors = mock[ResponseConstructors]
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
   }
 
   val fakeRequest = FakeRequest()

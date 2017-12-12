@@ -21,7 +21,7 @@ import akka.stream.ActorMaterializer
 import play.api.mvc.Results._
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
-import testHelpers.KeystoreTestHelper
+import testHelpers.{KeystoreTestHelper, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Matchers
@@ -31,6 +31,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.play.OneAppPerSuite
 import play.api.mvc.Result
 import play.api.test.Helpers._
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -56,6 +57,8 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
     override def ggLoginUrl = "http://www.gglogin.com"
 
     override def origin = "origin"
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+
   }
 
 

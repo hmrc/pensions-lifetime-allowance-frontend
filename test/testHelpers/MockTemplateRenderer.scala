@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package controllers
+package testHelpers
 
-import config.LocalTemplateRenderer
-import config.wiring.PlaFormPartialRetriever
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import play.api.i18n.Messages
 import uk.gov.hmrc.renderer.TemplateRenderer
+import play.twirl.api.Html
+import scala.concurrent.duration._
 
-trait BaseController extends FrontendController {
-  implicit val context = config.PlaContextImpl
-  implicit val partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = PlaFormPartialRetriever
+import scala.concurrent.Future
 
-  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
+
+object MockTemplateRenderer extends TemplateRenderer {
+  override lazy val templateServiceBaseUrl = "http://example.com/template/mustache"
+  override val refreshAfter = 10 minutes
+  override def fetchTemplate(path: String): Future[String] = ???
+
+  override def renderDefaultTemplate(content: Html, extraArgs: Map[String, Any])(implicit messages: Messages) = {
+    Html("<title>" + extraArgs("pageTitle") + "</title>" + content)
+  }
 }
+
+

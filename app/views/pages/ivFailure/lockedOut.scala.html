@@ -18,12 +18,11 @@
 @import controllers.PlaLanguageController
 @import play.api.Application
 
-@()(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@()(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @views.html.main_template(title = Messages("pla.lockedOut.title"), bodyClasses = None, showLogout = false) {
-    @language_selection(lc.languageMap, lc.langToCall, None)
 
 <h1 class="heading-large">@Messages("pla.lockedOut.pageHeading")</h1>
 

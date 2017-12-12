@@ -20,15 +20,13 @@
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 
-@(protectionType: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(protectionType: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
 }
 
 @views.html.main_template(title = Messages("pla.withdraw.confirmation.message", Messages(s"pla.withdraw.protection.${protectionType}.label"))) {
-
-    @language_selection(lc.languageMap, lc.langToCall, None)
 
 
 

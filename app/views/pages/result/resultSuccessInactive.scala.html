@@ -20,13 +20,12 @@
 @import controllers.PlaLanguageController
 @import play.api.Application
 
-@(res: SuccessDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(res: SuccessDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 @views.html.main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None) {
 
-@language_selection(lc.languageMap, lc.langToCall, None)
     <h1 id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</h1>
 
     @for(infoNum <- res.additionalInfo) {

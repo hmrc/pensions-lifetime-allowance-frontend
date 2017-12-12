@@ -42,9 +42,11 @@ import play.api.test.Helpers._
 import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost}
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
+import testHelpers.MockTemplateRenderer
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -166,10 +168,9 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     lazy val appConfig = MockConfig
     override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
-
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
-
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     override val plaConnector = mock[PLAConnector]
@@ -194,9 +195,9 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     lazy val appConfig = MockConfig
     override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
-
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -222,9 +223,9 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     lazy val appConfig = MockConfig
     override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
-
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
@@ -249,9 +250,9 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     lazy val appConfig = MockConfig
     override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
-
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
@@ -270,9 +271,9 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     lazy val appConfig = MockConfig
     override lazy val authConnector = mockAuthConnector
     lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
-
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
+    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]

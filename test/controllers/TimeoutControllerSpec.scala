@@ -21,6 +21,7 @@ import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mock.MockitoSugar
 import java.util.UUID
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
@@ -39,6 +40,7 @@ class TimeoutControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     implicit val materializer = ActorMaterializer()
 
     object TestTimeoutController extends TimeoutController {
+        override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
 
     "Calling the .timeout action" when {

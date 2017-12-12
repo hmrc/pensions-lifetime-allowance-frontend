@@ -24,6 +24,7 @@ import models._
 import views.html._
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 object TimeoutController extends TimeoutController {
 }

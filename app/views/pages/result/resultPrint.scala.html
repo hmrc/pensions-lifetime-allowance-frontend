@@ -17,7 +17,7 @@
 @import models.PrintDisplayModel
 @import play.api.i18n._
 
-@(model: PrintDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(model: PrintDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
 <!DOCTYPE html>
 <html lang="en">
