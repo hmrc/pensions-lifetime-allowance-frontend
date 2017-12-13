@@ -51,7 +51,7 @@
             @if(lookupResult.psaCheckResult == 1) {
                 <tr>
                     <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
-                    <td class="font-small"><a href="@routes.LookupController.displayProtectionTypeGuidance()">
+                    <td id="ProtectionTypeValue" class="font-small"><a href="@routes.LookupController.displayProtectionTypeGuidance()">
                     @lookupResult.ltaType match {
                         case 1 => {
                             @Messages("psa.lookup.results.ltatype.1")
