@@ -16,12 +16,14 @@
 
 package controllers
 
+import java.time.LocalDateTime
+
 import play.api.mvc._
 import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
 
 import scala.concurrent.Future
 import views.html.pages.ivFailure._
-import connectors.IdentityVerificationConnector
+import connectors.{IdentityVerificationConnector, KeyStoreConnector}
 import enums.IdentityVerificationResult
 import play.api.Logger
 import play.api.i18n.Messages.Implicits._
@@ -30,26 +32,35 @@ import uk.gov.hmrc.http.NotFoundException
 
 object UnauthorisedController extends UnauthorisedController {
 	override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
+  override val keystoreConnector: KeyStoreConnector = KeyStoreConnector
 }
 
 trait UnauthorisedController extends BaseController {
 
   val identityVerificationConnector: IdentityVerificationConnector
+  val keystoreConnector: KeyStoreConnector
+  val issuesKey = "technical-issues-timestamp"
 
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = UnauthorisedAction.async { implicit request =>
     val result: Future[Result] = journeyId map { id =>
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
-      identityVerificationResult map {
+      identityVerificationResult.flatMap {
         case IdentityVerificationResult.TechnicalIssue =>
           Logger.warn("Technical Issue relating to Identity verification, user directed to technical issue page")
-          InternalServerError(technicalIssue())
-        case IdentityVerificationResult.LockedOut => Unauthorized(lockedOut())
+          keystoreConnector.fetchAndGetFormData[LocalDateTime](issuesKey).flatMap {
+            case Some(data) if data.isAfter(LocalDateTime.now().minusHours(1)) => Future.successful(Ok(technicalIssue()))
+            case _ =>
+              keystoreConnector.saveData(issuesKey, LocalDateTime.now()).map { map =>
+                InternalServerError(technicalIssue())
+              }
+          }
+        case IdentityVerificationResult.LockedOut => Future.successful(Unauthorized(lockedOut()))
         case IdentityVerificationResult.Timeout =>
           Logger.info("User session timed out during IV uplift")
-          Unauthorized(views.html.pages.timeout())
+          Future.successful(Unauthorized(views.html.pages.timeout()))
         case _ =>
           Logger.info("Unauthorised identity verification, returned to unauthorised page")
-          Unauthorized(unauthorised())
+          Future.successful(Unauthorized(unauthorised()))
       } recover {
         case e : NotFoundException =>
           Logger.warn("Could not find unauthorised journey ID")
@@ -57,6 +68,6 @@ trait UnauthorisedController extends BaseController {
       }
     } getOrElse Future.successful(Unauthorized(unauthorised()))
 
-    result.map(_.withNewSession)
+    result
   }
 }
