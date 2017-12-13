@@ -50,7 +50,7 @@ trait UnauthorisedController extends BaseController {
           keystoreConnector.fetchAndGetFormData[LocalDateTime](issuesKey).flatMap {
             case Some(data) if data.isAfter(LocalDateTime.now().minusHours(1)) => Future.successful(Ok(technicalIssue()))
             case _ =>
-              keystoreConnector.saveData(issuesKey, LocalDateTime.now()).map { map =>
+              keystoreConnector.saveFormData(issuesKey, LocalDateTime.now()).map { map =>
                 InternalServerError(technicalIssue())
               }
           }

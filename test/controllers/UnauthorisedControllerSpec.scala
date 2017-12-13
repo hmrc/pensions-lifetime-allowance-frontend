@@ -16,6 +16,7 @@
 
 package controllers
 
+import java.time.{LocalDate, LocalDateTime}
 import java.util.UUID
 
 import org.scalatestplus.play.OneAppPerSuite
@@ -23,19 +24,39 @@ import play.api.http._
 import play.api.i18n.Messages
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import connectors.IdentityVerificationConnector
+import connectors.{IdentityVerificationConnector, KeyStoreConnector}
+import org.mockito.Matchers
+import org.scalatest.mockito.MockitoSugar
 import testHelpers._
 import uk.gov.hmrc.play.test.UnitSpec
 import uk.gov.hmrc.time.DateTimeUtils._
 import uk.gov.hmrc.renderer.TemplateRenderer
+import org.mockito.Mockito._
+import play.api.libs.json.Format
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.cache.client.CacheMap
 
-class UnauthorisedControllerSpec extends UnitSpec with OneAppPerSuite {
+import scala.concurrent.Future
+
+class UnauthorisedControllerSpec extends UnitSpec with OneAppPerSuite with MockitoSugar {
 
   val fakeRequest = FakeRequest("GET", "/")
+  val mockKeystoreConnector = mock[KeyStoreConnector]
+  implicit val hc = mock[HeaderCarrier]
 
   def testUnauthorisedController(identityVerificationEnabled: Boolean = true): UnauthorisedController = new UnauthorisedController {
     override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
     override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+    override val keystoreConnector: KeyStoreConnector = mockKeystoreConnector
+  }
+
+  def setupKeystoreMocks(data: Option[LocalDateTime]): Unit = {
+    when(mockKeystoreConnector
+      .fetchAndGetFormData[LocalDateTime](Matchers.eq("technical-issues-timestamp"))(Matchers.any[HeaderCarrier], Matchers.any[Format[LocalDateTime]]))
+      .thenReturn(Future.successful(data))
+    when(mockKeystoreConnector
+      .saveFormData(Matchers.eq("technical-issues-timestamp"), Matchers.any[LocalDateTime])(Matchers.any[HeaderCarrier], Matchers.any[Format[LocalDateTime]]))
+      .thenReturn(Future.successful(mock[CacheMap]))
   }
 
   "GET /not-authorised" should {
@@ -75,10 +96,28 @@ class UnauthorisedControllerSpec extends UnitSpec with OneAppPerSuite {
       status(result) shouldBe UNAUTHORIZED
     }
 
-    "show technical_issue template for TechnicalIssue journey" in {
-      val result = testUnauthorisedController().showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
-      contentAsString(result) should include ("There is a technical problem")
-      status(result) shouldBe INTERNAL_SERVER_ERROR
+    "show technical_issue template for TechnicalIssue journey" which {
+
+      "returns an INTERNAL_SERVER_ERROR on the first attempt" in {
+        setupKeystoreMocks(None)
+        val result = testUnauthorisedController().showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
+        contentAsString(result) should include("There is a technical problem")
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+
+      "returns an OK on a second attempt within an hour" in {
+        setupKeystoreMocks(Some(LocalDateTime.now().minusMinutes(59)))
+        val result = testUnauthorisedController().showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
+        contentAsString(result) should include("There is a technical problem")
+        status(result) shouldBe OK
+      }
+
+      "returns an INTERNAL_SERVER_ERROR after an hour" in {
+        setupKeystoreMocks(Some(LocalDateTime.now().minusMinutes(60)))
+        val result = testUnauthorisedController().showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
+        contentAsString(result) should include("There is a technical problem")
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
     }
 
     "show locked_out template for LockedOut journey" in {
