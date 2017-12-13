@@ -40,18 +40,18 @@
         <tbody>
             <tr>
                 <td class="font-small">@Messages("psa.lookup.results.table.row.1")</td>
-                <td class="font-small">@lookupResult.pensionSchemeAdministratorCheckReference</td>
+                <td id="scheme-administrator-reference-value" class="font-small">@lookupResult.pensionSchemeAdministratorCheckReference</td>
             </tr>
             @if(lookupResult.protectionNotificationNumber.isDefined) {
                 <tr>
                     <td class="font-small">@Messages("psa.lookup.results.table.row.2")</td>
-                    <td class="font-small">@lookupResult.protectionNotificationNumber</td>
+                    <td id="protection-notification-number-value" class="font-small">@lookupResult.protectionNotificationNumber</td>
                 </tr>
             }
             @if(lookupResult.psaCheckResult == 1) {
                 <tr>
                     <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
-                    <td class="font-small"><a href="@routes.LookupController.displayProtectionTypeGuidance()">
+                    <td id="protection-type-value" class="font-small"><a href="@routes.LookupController.displayProtectionTypeGuidance()">
                     @lookupResult.ltaType match {
                         case 1 => {
                             @Messages("psa.lookup.results.ltatype.1")
@@ -81,7 +81,7 @@
                         @if(lookupResult.protectedAmount.isDefined) {
                             <tr>
                                 <td class="font-small">@Messages("psa.lookup.results.table.row.4")</td>
-                                <td class="font-small">£@lookupResult.protectedAmount.get.formatted("%,1.0f")</td>
+                                <td id="protected-amount-value" class="font-small">£@lookupResult.protectedAmount.get.formatted("%,1.0f")</td>
                             </tr>
                         }
                     }
@@ -89,16 +89,16 @@
                 }
                 <tr>
                     <td class="font-small">@Messages("psa.lookup.results.table.row.5")</td>
-                    <td class="font-small">@Messages("psa.lookup.results.table.row.5.valid")</td>
+                    <td id="protection-status-valid" class="font-small">@Messages("psa.lookup.results.table.row.5.valid")</td>
             } else {
                 <tr>
                     <td class="font-small">@Messages("psa.lookup.results.table.row.5")</td>
-                    <td class="font-small">@Messages("psa.lookup.results.table.row.5.invalid")</td>
+                    <td id="protection-status-invalid" class="font-small">@Messages("psa.lookup.results.table.row.5.invalid")</td>
                 </tr>
             }
             <tr>
                 <td class="font-small">@Messages("psa.lookup.results.table.row.6")</td>
-                <td class="font-small">@timestamp</td>
+                <td id="checked-on-value" class="font-small">@timestamp</td>
             </tr>
         </tbody>
     </table>
