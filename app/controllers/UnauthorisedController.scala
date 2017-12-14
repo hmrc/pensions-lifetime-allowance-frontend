@@ -16,22 +16,20 @@
 
 package controllers
 
-import java.time.LocalDateTime
-
-import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.{FrontendController, UnauthorisedAction}
-
-import scala.concurrent.Future
-import views.html.pages.ivFailure._
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
 import enums.IdentityVerificationResult
 import play.api.Logger
-import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
+import play.api.mvc._
 import uk.gov.hmrc.http.NotFoundException
+import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import views.html.pages.ivFailure._
+
+import scala.concurrent.Future
 
 object UnauthorisedController extends UnauthorisedController {
-	override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
+  override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
   override val keystoreConnector: KeyStoreConnector = KeyStoreConnector
 }
 
@@ -39,7 +37,7 @@ trait UnauthorisedController extends BaseController {
 
   val identityVerificationConnector: IdentityVerificationConnector
   val keystoreConnector: KeyStoreConnector
-  val issuesKey = "technical-issues-timestamp"
+  val issuesKey = "previous-technical-issues"
 
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = UnauthorisedAction.async { implicit request =>
     val result: Future[Result] = journeyId map { id =>
@@ -47,10 +45,10 @@ trait UnauthorisedController extends BaseController {
       identityVerificationResult.flatMap {
         case IdentityVerificationResult.TechnicalIssue =>
           Logger.warn("Technical Issue relating to Identity verification, user directed to technical issue page")
-          keystoreConnector.fetchAndGetFormData[LocalDateTime](issuesKey).flatMap {
-            case Some(data) if data.isAfter(LocalDateTime.now().minusHours(1)) => Future.successful(Ok(technicalIssue()))
+          keystoreConnector.fetchAndGetFormData[Boolean](issuesKey).flatMap {
+            case Some(true) => Future.successful(Ok(technicalIssue()))
             case _ =>
-              keystoreConnector.saveFormData(issuesKey, LocalDateTime.now()).map { map =>
+              keystoreConnector.saveFormData(issuesKey, true).map { map =>
                 InternalServerError(technicalIssue())
               }
           }
@@ -62,7 +60,7 @@ trait UnauthorisedController extends BaseController {
           Logger.info("Unauthorised identity verification, returned to unauthorised page")
           Future.successful(Unauthorized(unauthorised()))
       } recover {
-        case e : NotFoundException =>
+        case e: NotFoundException =>
           Logger.warn("Could not find unauthorised journey ID")
           Unauthorized(unauthorised())
       }
