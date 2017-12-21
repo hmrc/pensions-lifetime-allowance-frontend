@@ -100,6 +100,10 @@ if(str.trim=="") false else str
     }
 }
 
+@assetsUrl = @{
+    context.assetsUrl
+}
+
 @{
 templateRenderer.renderDefaultTemplate(article, Map[String, Any](
     "pageTitle" -> title,
@@ -133,7 +137,8 @@ templateRenderer.renderDefaultTemplate(article, Map[String, Any](
     "cyUrl" -> "/protect-your-lifetime-allowance/language/cymraeg",
 
     "optimizelyProjectId" -> "8421961441",
-    "isWelsh" -> isWelsh
+    "isWelsh" -> isWelsh,
+    "assetsPath" -> assetsUrl
 )
 )
 }

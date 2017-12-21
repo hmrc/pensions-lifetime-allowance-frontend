@@ -22,8 +22,11 @@ import uk.gov.hmrc.play.config.ServicesConfig
 
 trait PlaContext {
   def getPageHelpPartial()(messages: Messages): String
+  def assetsUrl: String
 }
 
 case object PlaContextImpl extends PlaContext with ServicesConfig{
   override def getPageHelpPartial()(messages: Messages): String = s"${baseUrl("contact-frontend")}/contact/problem_reports"
+
+  override def assetsUrl: String = s"${getString("assets.url")}${getString("assets.version")}/"
 }
