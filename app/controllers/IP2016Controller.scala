@@ -106,14 +106,8 @@ trait IP2016Controller extends BaseController with AuthFunction {
                     Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(form)))
                 },
                 success => {
-                    val validatedForm = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.fill(success))
-                    if (validatedForm.hasErrors) {
-                        Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(validatedForm)))
-                    } else {
                         keyStoreConnector.saveFormData("pensionsTakenBefore", success).flatMap {
                             _ => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween()))
-                        }
-
                     }
                 }
             )
@@ -139,13 +133,8 @@ trait IP2016Controller extends BaseController with AuthFunction {
                     Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(form)))
                 },
                 success => {
-                    val validatedForm = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.fill(success))
-                    if (validatedForm.hasErrors) {
-                        Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(validatedForm)))
-                    } else {
                         keyStoreConnector.saveFormData("pensionsTakenBetween", success).flatMap {
                             _ => Future.successful(Redirect(routes.IP2016Controller.overseasPensions()))
-                        }
                     }
                 }
             )
@@ -171,13 +160,8 @@ trait IP2016Controller extends BaseController with AuthFunction {
                     Future.successful(BadRequest(pages.ip2016.overseasPensions(form)))
                 },
                 success => {
-                    val validatedForm = OverseasPensionsForm.validateForm(overseasPensionsForm.fill(success))
-                    if (validatedForm.hasErrors) {
-                        Future.successful(BadRequest(pages.ip2016.overseasPensions(validatedForm)))
-                    } else {
                         keyStoreConnector.saveFormData("overseasPensions", success).flatMap {
                             _ => Future.successful(Redirect(routes.IP2016Controller.currentPensions()))
-                        }
                     }
                 }
             )
@@ -258,17 +242,11 @@ trait IP2016Controller extends BaseController with AuthFunction {
             psoDetailsForm.bindFromRequest.fold(
                 errors => {
                     val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-                    Future.successful(BadRequest(pages.ip2016.psoDetails(PSODetailsForm.validateForm(form))))
+                    Future.successful(BadRequest(pages.ip2016.psoDetails(form)))
                 },
                 form => {
-                    val validatedForm =
-                        PSODetailsForm.validateForm(psoDetailsForm.fill(form))
-                    if (validatedForm.hasErrors) {
-                        Future.successful(BadRequest(pages.ip2016.psoDetails(validatedForm)))
-                    } else {
                         keyStoreConnector.saveFormData(s"psoDetails", form).flatMap {
                             _ => Future.successful(Redirect(routes.SummaryController.summaryIP16()))
-                        }
                     }
                 }
             )

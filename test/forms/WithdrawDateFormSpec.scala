@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,23 +19,21 @@ package forms
 import org.scalatestplus.play.PlaySpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
+import WithdrawDateForm.withdrawDateForm
+import testHelpers.CommonMessages
 
 
-class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
+class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite with CommonMessages{
 
-  private val form = WithdrawDateForm.withdrawDateForm
-
-  "Withdraw date form" must {
+  "Withdraw date form" should {
     "return no errors with valid date" in {
       val postData = Json.obj(
         "withdrawDay" -> "20",
         "withdrawMonth" -> "2",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData)
       assert(validatedForm.errors.isEmpty)
     }
     "return errors when no day provided" in {
@@ -44,10 +42,10 @@ class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "withdrawMonth" -> "2",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawDay",
-        List(Messages("pla.withdraw.date-input.form.day-empty")))))
+        List(errorEmptyDay))))
     }
     "return errors when no month provided" in {
       val postData = Json.obj(
@@ -55,10 +53,10 @@ class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "withdrawMonth" -> "",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawMonth",
-        List(Messages("pla.withdraw.date-input.form.month-empty")))))
+        List(errorEmptyMonth))))
     }
     "return errors when no year provided" in {
       val postData = Json.obj(
@@ -66,10 +64,10 @@ class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "withdrawMonth" -> "2",
         "withdrawYear" -> ""
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawYear",
-        List(Messages("pla.withdraw.date-input.form.year-empty")))))
+        List(errorEmptyYear))))
     }
     "return errors when day greater than 31 provided" in {
       val postData = Json.obj(
@@ -77,10 +75,10 @@ class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "withdrawMonth" -> "2",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawDay",
-        List(Messages("pla.withdraw.date-input.form.day-too-high")))))
+        List(errorHighDay))))
     }
     "return errors when month greater than 12 provided" in {
       val postData = Json.obj(
@@ -88,10 +86,10 @@ class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "withdrawMonth" -> "62",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawMonth",
-        List(Messages("pla.withdraw.date-input.form.month-too-high")))))
+        List(errorHighMonth))))
     }
     "return errors when day lower than 1 provided" in {
       val postData = Json.obj(
@@ -99,10 +97,10 @@ class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "withdrawMonth" -> "2",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawDay",
-        List(Messages("pla.withdraw.date-input.form.day-too-low")))))
+        List(errorLowDay))))
     }
     "return errors when month lower than 1 provided" in {
       val postData = Json.obj(
@@ -110,10 +108,10 @@ class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite {
         "withdrawMonth" -> "0",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawMonth",
-        List(Messages("pla.withdraw.date-input.form.month-too-low")))))
+        List(errorLowMonth))))
     }
   }
 }

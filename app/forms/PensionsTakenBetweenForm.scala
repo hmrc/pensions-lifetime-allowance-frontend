@@ -25,38 +25,12 @@ import play.api.i18n.{Lang, Messages}
 import play.api.i18n.Messages.Implicits._
 import utils.Constants
 
-object PensionsTakenBetweenForm {
-
-  def validateForm(form: Form[PensionsTakenBetweenModel])(implicit lang: Lang): Form[PensionsTakenBetweenModel] = {
-    if(!validationNeeded(form)) form else {
-      if(!validateFieldCompleted(form)) form.withError("pensionsTakenBetweenAmt", "pla.base.errors.errorQuestion")
-      else if(!validateMinimum(form)) form.withError("pensionsTakenBetweenAmt", "pla.base.errors.errorNegative")
-      else if(!validateMaximum(form)) form.withError("pensionsTakenBetweenAmt", "pla.base.errors.errorMaximum")
-      else if(!validateTwoDec(form)) form.withError("pensionsTakenBetweenAmt", "pla.base.errors.errorDecimalPlaces")
-      else form
-    }
-  }
-
-  private def validationNeeded(data: Form[PensionsTakenBetweenModel]): Boolean = {
-    data("pensionsTakenBetween").value.get match {
-      case "yes" => true
-      case "no" => false
-    }
-  }
-
-  private def validateFieldCompleted(data: Form[PensionsTakenBetweenModel]) = data("pensionsTakenBetweenAmt").value.isDefined
-
-  private def validateMinimum(data: Form[PensionsTakenBetweenModel]) = isPositive(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
-
-  private def validateMaximum(data: Form[PensionsTakenBetweenModel]) = isLessThanDouble(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble, Constants.npsMaxCurrency)
-
-  private def validateTwoDec(data: Form[PensionsTakenBetweenModel]) = isMaxTwoDecimalPlaces(data("pensionsTakenBetweenAmt").value.getOrElse("0").toDouble)
-
+object PensionsTakenBetweenForm extends CommonBinders{
 
   def pensionsTakenBetweenForm(implicit lang:Lang) = Form (
     mapping(
       "pensionsTakenBetween" -> nonEmptyText,
-      "pensionsTakenBetweenAmt" -> optional(bigDecimal)
+      "pensionsTakenBetweenAmt" -> yesNoOptionalBigDecimal
     )(PensionsTakenBetweenModel.apply)(PensionsTakenBetweenModel.unapply)
   )
 }

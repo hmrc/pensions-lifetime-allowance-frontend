@@ -190,10 +190,6 @@ trait AmendsController extends BaseController with AuthFunction {
             Future.successful(BadRequest(pages.amends.amendPensionsTakenBefore(form)))
           },
           success => {
-            val validatedForm = AmendPensionsTakenBeforeForm.validateForm(amendPensionsTakenBeforeForm.fill(success))
-            if (validatedForm.hasErrors) {
-              Future.successful(BadRequest(pages.amends.amendPensionsTakenBefore(validatedForm)))
-            } else {
               keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
                 case Some(model) =>
                   val updatedAmount = success.amendedPensionsTakenBefore match {
@@ -211,7 +207,7 @@ trait AmendsController extends BaseController with AuthFunction {
                 case _ =>
                   Logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before")
                   Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-              }
+
             }
           }
         )
@@ -232,7 +228,7 @@ trait AmendsController extends BaseController with AuthFunction {
           Future.successful(BadRequest(pages.amends.amendPensionsTakenBetween(form)))
         },
         success => {
-          val validatedForm = AmendPensionsTakenBetweenForm.validateForm(amendPensionsTakenBetweenForm.fill(success))
+          val validatedForm = amendPensionsTakenBetweenForm.fill(success)
           if (validatedForm.hasErrors) {
             Future.successful(BadRequest(pages.amends.amendPensionsTakenBetween(validatedForm)))
           } else {
@@ -276,7 +272,7 @@ trait AmendsController extends BaseController with AuthFunction {
             Future.successful(BadRequest(pages.amends.amendOverseasPensions(form)))
           },
           success => {
-            val validatedForm = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.fill(success))
+            val validatedForm = amendOverseasPensionsForm.fill(success)
             if (validatedForm.hasErrors) {
               Future.successful(BadRequest(pages.amends.amendOverseasPensions(validatedForm)))
             } else {
@@ -420,10 +416,10 @@ trait AmendsController extends BaseController with AuthFunction {
       amendPsoDetailsForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-          Future.successful(BadRequest(pages.amends.amendPsoDetails(AmendPSODetailsForm.validateForm(form))))
+          Future.successful(BadRequest(pages.amends.amendPsoDetails(form)))
         },
         success => {
-          val validatedForm = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.fill(success))
+          val validatedForm = AmendPSODetailsForm.amendPsoDetailsForm.fill(success)
           if (validatedForm.hasErrors) {
             Future.successful(BadRequest(pages.amends.amendPsoDetails(validatedForm)))
           } else {

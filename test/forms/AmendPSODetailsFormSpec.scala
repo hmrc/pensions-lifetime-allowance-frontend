@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.scalatestplus.play.OneAppPerSuite
 import testHelpers.PSODetailsMessages
 import uk.gov.hmrc.play.test.UnitSpec
 import utils.Constants
+import common.Exceptions
 
 class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPerSuite {
 
@@ -41,7 +42,7 @@ class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneA
 
       "provided with a valid model" in {
         val model = AmendPSODetailsModel(Some(1), Some(5), Some(2016), Some(0.0), "ip2016", "status", existingPSO = true)
-        val result = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.fill(model))
+        val result = AmendPSODetailsForm.amendPsoDetailsForm.fill(model)
 
         result.data shouldBe validMap
       }
@@ -55,7 +56,7 @@ class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneA
           "protectionType" -> "ip2014",
           "status" -> "anotherStatus",
           "existingPSO" -> "false")
-        val result = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.bind(map))
+        val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
         result.value shouldBe Some(
           AmendPSODetailsModel(Some(2), Some(6), Some(2017), Some(0.0), "ip2014", "anotherStatus", existingPSO = false))
@@ -63,7 +64,7 @@ class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneA
 
       "provided with a valid map and an amount below the maximum" in {
         val map = validMap.updated("psoAmt", {Constants.npsMaxCurrency - 0.01}.toString)
-        val result = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.bind(map))
+        val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
         result.value shouldBe Some(
           AmendPSODetailsModel(Some(1), Some(5), Some(2016), Some(Constants.npsMaxCurrency - 0.01), "ip2016", "status", existingPSO = true))
@@ -71,7 +72,7 @@ class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneA
 
       "provided with a valid map and an amount with two decimal places" in {
         val map = validMap.updated("psoAmt", "0.01")
-        val result = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.bind(map))
+        val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
         result.value shouldBe Some(
           AmendPSODetailsModel(Some(1), Some(5), Some(2016), Some(0.01), "ip2016", "status", existingPSO = true))
@@ -116,10 +117,13 @@ class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneA
 
         "not provided with a value for protectionType" in {
           val map = validMap - "protectionType"
-          val result = amendPsoDetailsForm.bind(map)
+          //val result = amendPsoDetailsForm.bind(map)
 
-          result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequired
+          //result.errors.size shouldBe 1
+          //result.error("protectionType").get.message shouldBe errorRequired
+
+          the[Exceptions.RequiredNotFoundProtectionTypeException] thrownBy amendPsoDetailsForm.bind(map) should have message
+            "Value not found for protection type in [protectionFormatter]"
         }
 
         "not provided with a value for status" in {
@@ -162,7 +166,7 @@ class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneA
 
         "provided with an invalid date" in {
           val map = validMap.updated("psoDay", "50")
-          val result = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.bind(map))
+          val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoDay").get.message shouldBe errorDate
@@ -174,7 +178,7 @@ class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneA
             .updated("psoDay", date.getDayOfMonth.toString)
             .updated("psoMonth", date.getMonthValue.toString)
             .updated("psoYear", date.getYear.toString)
-          val result = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.bind(map))
+          val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoDay").get.message shouldBe errorDateRange
@@ -186,7 +190,7 @@ class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneA
             .updated("psoDay", date.getDayOfMonth.toString)
             .updated("psoMonth", date.getMonthValue.toString)
             .updated("psoYear", date.getYear.toString)
-          val result = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.bind(map))
+          val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoDay").get.message shouldBe errorDateRange
@@ -198,7 +202,7 @@ class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneA
             .updated("psoDay", date.getDayOfMonth.toString)
             .updated("psoMonth", date.getMonthValue.toString)
             .updated("psoYear", date.getYear.toString)
-          val result = AmendPSODetailsForm.validateForm(amendPsoDetailsForm.bind(map))
+          val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoDay").get.message shouldBe errorDateRange

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,14 +32,14 @@ class AmendOverseasPensionsFormSpec extends UnitSpec with CommonMessages with On
 
       "provided with a valid model" in {
         val model = AmendOverseasPensionsModel("yes", Some(1000.0), "type", "status")
-        val result = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.fill(model))
+        val result = amendOverseasPensionsForm.fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid map with no amount" in {
         val map = Map("amendedOverseasPensions" -> "no", "protectionType" -> "anotherType", "status" -> "anotherStatus")
-        val result = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.bind(map))
+        val result = amendOverseasPensionsForm.bind(map)
 
         result.value shouldBe Some(AmendOverseasPensionsModel("no", None, "anotherType", "anotherStatus"))
       }
@@ -48,21 +48,21 @@ class AmendOverseasPensionsFormSpec extends UnitSpec with CommonMessages with On
         val map = validMap.updated("amendedOverseasPensionsAmt", {
           Constants.npsMaxCurrency - 1
         }.toString)
-        val result = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.bind(map))
+        val result = amendOverseasPensionsForm.bind(map)
 
         result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(Constants.npsMaxCurrency - 1), "type", "status"))
       }
 
       "provided with a valid map with a zero amount" in {
         val map = validMap.updated("amendedOverseasPensionsAmt", "0")
-        val result = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.bind(map))
+        val result = amendOverseasPensionsForm.bind(map)
 
         result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(0), "type", "status"))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map = validMap.updated("amendedOverseasPensionsAmt", "0.01")
-        val result = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.bind(map))
+        val result = amendOverseasPensionsForm.bind(map)
 
         result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(0.01), "type", "status"))
       }
@@ -112,7 +112,7 @@ class AmendOverseasPensionsFormSpec extends UnitSpec with CommonMessages with On
 
         "provided an answer of yes for amendedOverseasPensions with no value for amendedOverseasPensionsAmt" in {
           val map = validMap - "amendedOverseasPensionsAmt"
-          val result = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.bind(map))
+          val result = amendOverseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("amendedOverseasPensionsAmt").get.message shouldBe errorMissingAmount
@@ -120,7 +120,7 @@ class AmendOverseasPensionsFormSpec extends UnitSpec with CommonMessages with On
 
         "provided an answer of yes for amendedOverseasPensions with a value for amendedOverseasPensionsAmt larger than the maximum" in {
           val map = validMap.updated("amendedOverseasPensionsAmt", Constants.npsMaxCurrency.toString)
-          val result = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.bind(map))
+          val result = amendOverseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("amendedOverseasPensionsAmt").get.message shouldBe errorMaximum
@@ -128,7 +128,7 @@ class AmendOverseasPensionsFormSpec extends UnitSpec with CommonMessages with On
 
         "provided an answer of yes for amendedOverseasPensions with a value for amendedOverseasPensionsAmt that is negative" in {
           val map = validMap.updated("amendedOverseasPensionsAmt", "-0.01")
-          val result = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.bind(map))
+          val result = amendOverseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("amendedOverseasPensionsAmt").get.message shouldBe errorNegative
@@ -136,7 +136,7 @@ class AmendOverseasPensionsFormSpec extends UnitSpec with CommonMessages with On
 
         "provided an answer of yes for amendedOverseasPensions with a value for amendedOverseasPensionsAmt that has more than two decimal places" in {
           val map = validMap.updated("amendedOverseasPensionsAmt", "0.001")
-          val result = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.bind(map))
+          val result = amendOverseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("amendedOverseasPensionsAmt").get.message shouldBe errorDecimal
@@ -147,7 +147,7 @@ class AmendOverseasPensionsFormSpec extends UnitSpec with CommonMessages with On
         val map = validMap
           .updated("amendedOverseasPensions", "no")
           .updated("amendedOverseasPensionsAmt", "-0.001")
-        val result = AmendOverseasPensionsForm.validateForm(amendOverseasPensionsForm.bind(map))
+        val result = amendOverseasPensionsForm.bind(map)
 
         result.errors.size shouldBe 0
       }
