@@ -228,10 +228,6 @@ trait AmendsController extends BaseController with AuthFunction {
           Future.successful(BadRequest(pages.amends.amendPensionsTakenBetween(form)))
         },
         success => {
-          val validatedForm = amendPensionsTakenBetweenForm.fill(success)
-          if (validatedForm.hasErrors) {
-            Future.successful(BadRequest(pages.amends.amendPensionsTakenBetween(validatedForm)))
-          } else {
             keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
               case Some(model) =>
                 val updatedAmount = success.amendedPensionsTakenBetween match {
@@ -250,7 +246,6 @@ trait AmendsController extends BaseController with AuthFunction {
                 Logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken between")
                 Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
-          }
         }
       )
 
@@ -272,10 +267,6 @@ trait AmendsController extends BaseController with AuthFunction {
             Future.successful(BadRequest(pages.amends.amendOverseasPensions(form)))
           },
           success => {
-            val validatedForm = amendOverseasPensionsForm.fill(success)
-            if (validatedForm.hasErrors) {
-              Future.successful(BadRequest(pages.amends.amendOverseasPensions(validatedForm)))
-            } else {
               keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
                 case Some(model) =>
                   val updatedAmount = success.amendedOverseasPensions match {
@@ -294,7 +285,6 @@ trait AmendsController extends BaseController with AuthFunction {
                   Logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before")
                   Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
               }
-            }
           }
         )
       }
@@ -419,16 +409,11 @@ trait AmendsController extends BaseController with AuthFunction {
           Future.successful(BadRequest(pages.amends.amendPsoDetails(form)))
         },
         success => {
-          val validatedForm = AmendPSODetailsForm.amendPsoDetailsForm.fill(success)
-          if (validatedForm.hasErrors) {
-            Future.successful(BadRequest(pages.amends.amendPsoDetails(validatedForm)))
-          } else {
             val details = createPsoDetailsList(success)
             for {
               amendModel <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
               storedModel <- updateAndSaveAmendModelWithPso(details, amendModel, Strings.keyStoreAmendFetchString(success.protectionType, success.status))
             } yield Redirect(routes.AmendsController.amendsSummary(success.protectionType.toLowerCase, success.status.toLowerCase))
-          }
         }
       )
     }

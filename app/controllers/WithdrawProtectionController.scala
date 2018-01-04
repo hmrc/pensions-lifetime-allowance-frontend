@@ -46,7 +46,7 @@ object WithdrawProtectionController extends WithdrawProtectionController {
   val plaConnector = PLAConnector
   lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
+  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
   override def config: Configuration = Play.current.configuration
 

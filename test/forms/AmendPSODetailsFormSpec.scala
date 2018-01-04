@@ -117,10 +117,6 @@ class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneA
 
         "not provided with a value for protectionType" in {
           val map = validMap - "protectionType"
-          //val result = amendPsoDetailsForm.bind(map)
-
-          //result.errors.size shouldBe 1
-          //result.error("protectionType").get.message shouldBe errorRequired
 
           the[Exceptions.RequiredNotFoundProtectionTypeException] thrownBy amendPsoDetailsForm.bind(map) should have message
             "Value not found for protection type in [protectionFormatter]"

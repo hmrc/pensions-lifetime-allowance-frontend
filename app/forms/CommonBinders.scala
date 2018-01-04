@@ -79,11 +79,9 @@ trait CommonBinders {
 
   implicit val optionalBigDecimalFormatter = new Formatter[Option[BigDecimal]] {
     def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[BigDecimal]] =
-      checkPreviousKey(key, data).map(value =>
-        if(value){
+        if(ifAmtIsRequired(key, data)){
           data.get(key).map(validateNumber(key, _)).getOrElse(Left(Seq(FormError(key, "pla.base.errors.errorQuestion", Nil))))
         } else Right(None)
-      ).getOrElse(Right(None))
 
     def unbind(key: String, value: Option[BigDecimal]): Map[String, String] = {
       value match {
@@ -235,10 +233,8 @@ trait CommonBinders {
     }
   }
 
-  private def checkPreviousKey(key: String, data: Map[String, String]): Option[Boolean] ={
-    data.get(key.take(key.length - 3)) map {
-      case "yes" => true
-      case _ => false
-    }
+  private def ifAmtIsRequired(key: String, data: Map[String, String]): Boolean ={
+   val yesNoValue = data.getOrElse(key.take(key.length - 3), false)
+    if (yesNoValue.equals("yes")) true else false
   }
 }
