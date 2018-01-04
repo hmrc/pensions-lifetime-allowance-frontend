@@ -35,6 +35,7 @@ trait CommonMessages {
   val errorLowMonth = "pla.withdraw.date-input.form.month-too-low"
   val errorHighDay = "pla.withdraw.date-input.form.day-too-high"
   val errorHighMonth = "pla.withdraw.date-input.form.month-too-high"
+  val errorFutureDate = "pla.withdraw.date-input.form.date-in-future"
 }
 
 trait PSODetailsMessages extends CommonMessages {

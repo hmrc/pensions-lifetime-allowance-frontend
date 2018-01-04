@@ -93,7 +93,7 @@ trait CommonBinders {
   val yesNoOptionalBigDecimal: Mapping[Option[BigDecimal]] = Forms.of[Option[BigDecimal]](optionalBigDecimalFormatter)
   
   //############Withdrawal Date###################
-  private def withdrawDateValidationFormatter(errorLabel: String) = new Formatter[Option[Int]] {
+  private[forms] def withdrawDateValidationFormatter(errorLabel: String) = new Formatter[Option[Int]] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[Int]] = {
       data.getOrElse(key, EMPTY_STRING) match {
         case EMPTY_STRING => Left(Seq(FormError(key,s"pla.withdraw.date-input.form.$errorLabel-empty", Nil )))
@@ -111,7 +111,7 @@ trait CommonBinders {
   }
   def withdrawDatePartialFormatter(errorLabel: String): Mapping[Option[Int]] = Forms.of[Option[Int]](withdrawDateValidationFormatter(errorLabel))
 
-  private def withdrawDateStringToIntFormatter = new Formatter[Option[Int]] {
+  private[forms] def withdrawDateStringToIntFormatter = new Formatter[Option[Int]] {
     override def bind(key: String, data: Map[String, String]) = {
 
       val groupedIntsWithCustomErrors: Either[Seq[FormError], (Int, Int, Int)] = for {
@@ -234,7 +234,6 @@ trait CommonBinders {
   }
 
   private def ifAmtIsRequired(key: String, data: Map[String, String]): Boolean ={
-   val yesNoValue = data.getOrElse(key.take(key.length - 3), false)
-    if (yesNoValue.equals("yes")) true else false
+    data.getOrElse(key.take(key.length - 3), "no").equals("yes")
   }
 }

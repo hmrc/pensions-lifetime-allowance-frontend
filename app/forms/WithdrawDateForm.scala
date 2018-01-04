@@ -22,12 +22,10 @@ import common.Dates
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{Lang, Messages}
 
 object WithdrawDateForm extends CommonBinders{
 
-  def withdrawDateForm(implicit lang: Lang): Form[(Option[Int], Option[Int], Option[Int])] = Form(
+  def withdrawDateForm: Form[(Option[Int], Option[Int], Option[Int])] = Form(
     tuple(
       "withdrawDay" -> withdrawDateFormatter,
       "withdrawMonth" -> withdrawDatePartialFormatter("month"),
@@ -36,13 +34,13 @@ object WithdrawDateForm extends CommonBinders{
   )
 
   def validateWithdrawDate(form: Form[(Option[Int], Option[Int], Option[Int])],
-                           protectionStartDate: LocalDateTime)(implicit lang: Lang): Form[(Option[Int], Option[Int], Option[Int])] = {
+                           protectionStartDate: LocalDateTime): Form[(Option[Int], Option[Int], Option[Int])] = {
     if (form.hasErrors) form else {
       val day = form.get._1.get
       val month = form.get._2.get
       val year = form.get._3.get
       if (LocalDate.of(year, month, day) isBefore protectionStartDate.toLocalDate)
-        form.withError("", Messages("pla.withdraw.date-input.form.date-before-start-date"))
+        form.withError("", "pla.withdraw.date-input.form.date-before-start-date")
       else form
     }
   }
