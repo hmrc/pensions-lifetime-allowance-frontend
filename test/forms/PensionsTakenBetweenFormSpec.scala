@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,28 +39,28 @@ class PensionsTakenBetweenFormSpec extends UnitSpec with CommonMessages with One
 
       "provided with a valid map with no amount" in {
         val map = Map("pensionsTakenBetween" -> "no")
-        val result = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.bind(map))
+        val result = pensionsTakenBetweenForm.bind(map)
 
         result.value shouldBe Some(PensionsTakenBetweenModel("no", None))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map = validMap.updated("pensionsTakenBetweenAmt", "0.01")
-        val result = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.bind(map))
+        val result = pensionsTakenBetweenForm.bind(map)
 
         result.value shouldBe Some(PensionsTakenBetweenModel("yes", Some(0.01)))
       }
 
       "provided with a valid map with an amount above the maximum" in {
         val map = validMap.updated("pensionsTakenBetweenAmt", {Constants.npsMaxCurrency - 1}.toString)
-        val result = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.bind(map))
+        val result = pensionsTakenBetweenForm.bind(map)
 
         result.value shouldBe Some(PensionsTakenBetweenModel("yes", Some(Constants.npsMaxCurrency - 1)))
       }
 
       "provided with a valid map with a zero amount" in {
         val map = validMap.updated("pensionsTakenBetweenAmt", "0")
-        val result = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.bind(map))
+        val result = pensionsTakenBetweenForm.bind(map)
 
         result.value shouldBe Some(PensionsTakenBetweenModel("yes", Some(0)))
       }
@@ -93,7 +93,7 @@ class PensionsTakenBetweenFormSpec extends UnitSpec with CommonMessages with One
 
           "not provided with an amount with a yes answer" in {
             val map = validMap - "pensionsTakenBetweenAmt"
-            val result = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.bind(map))
+            val result = pensionsTakenBetweenForm.bind(map)
 
             result.errors.size shouldBe 1
             result.error("pensionsTakenBetweenAmt").get.message shouldBe errorMissingAmount
@@ -101,7 +101,7 @@ class PensionsTakenBetweenFormSpec extends UnitSpec with CommonMessages with One
 
           "provided with an amount greater than the maximum" in {
             val map = validMap.updated("pensionsTakenBetweenAmt", Constants.npsMaxCurrency.toString)
-            val result = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.bind(map))
+            val result = pensionsTakenBetweenForm.bind(map)
 
             result.errors.size shouldBe 1
             result.error("pensionsTakenBetweenAmt").get.message shouldBe errorMaximum
@@ -109,7 +109,7 @@ class PensionsTakenBetweenFormSpec extends UnitSpec with CommonMessages with One
 
           "provided with an amount with over two decimal places" in {
             val map = validMap.updated("pensionsTakenBetweenAmt", "0.001")
-            val result = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.bind(map))
+            val result = pensionsTakenBetweenForm.bind(map)
 
             result.errors.size shouldBe 1
             result.error("pensionsTakenBetweenAmt").get.message shouldBe errorDecimal
@@ -117,7 +117,7 @@ class PensionsTakenBetweenFormSpec extends UnitSpec with CommonMessages with One
 
           "provided with a negative amount" in {
             val map = validMap.updated("pensionsTakenBetweenAmt", "-0.01")
-            val result = PensionsTakenBetweenForm.validateForm(pensionsTakenBetweenForm.bind(map))
+            val result = pensionsTakenBetweenForm.bind(map)
 
             result.errors.size shouldBe 1
             result.error("pensionsTakenBetweenAmt").get.message shouldBe errorNegative

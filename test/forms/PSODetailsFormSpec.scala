@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,20 +34,20 @@ class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPer
 
       "provided with a valid model" in {
         val model = PSODetailsModel(1, 2, 2017, 0.01)
-        val result = PSODetailsForm.validateForm(psoDetailsForm.fill(model))
+        val result = psoDetailsForm.fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid map with a value for psoAmt which has two decimal places" in {
-        val result = PSODetailsForm.validateForm(psoDetailsForm.bind(validMap))
+        val result = psoDetailsForm.bind(validMap)
 
         result.value shouldBe Some(PSODetailsModel(1, 2, 2017, 0.01))
       }
 
       "provided with a valid map with a value for psoAmt which is zero" in {
         val map = validMap.updated("psoAmt", "0")
-        val result = PSODetailsForm.validateForm(psoDetailsForm.bind(map))
+        val result = psoDetailsForm.bind(map)
 
         result.value shouldBe Some(PSODetailsModel(1, 2, 2017, 0))
       }
@@ -56,7 +56,7 @@ class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPer
         val map = validMap.updated("psoAmt", {
           Constants.npsMaxCurrency - 1
         }.toString)
-        val result = PSODetailsForm.validateForm(psoDetailsForm.bind(map))
+        val result = psoDetailsForm.bind(map)
 
         result.value shouldBe Some(PSODetailsModel(1, 2, 2017, Constants.npsMaxCurrency - 1))
       }
@@ -175,7 +175,7 @@ class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPer
 
         "provided with an invalid date" in {
           val map = validMap.updated("psoDay", "50")
-          val result = PSODetailsForm.validateForm(psoDetailsForm.bind(map))
+          val result = psoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoDay").get.message shouldBe errorDate
@@ -187,7 +187,7 @@ class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPer
             .updated("psoDay", date.getDayOfMonth.toString)
             .updated("psoMonth", date.getMonthValue.toString)
             .updated("psoYear", date.getYear.toString)
-          val result = PSODetailsForm.validateForm(psoDetailsForm.bind(map))
+          val result = psoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoDay").get.message shouldBe errorDateRange
@@ -199,7 +199,7 @@ class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPer
             .updated("psoDay", date.getDayOfMonth.toString)
             .updated("psoMonth", date.getMonthValue.toString)
             .updated("psoYear", date.getYear.toString)
-          val result = PSODetailsForm.validateForm(psoDetailsForm.bind(map))
+          val result = psoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoDay").get.message shouldBe errorDateRange
@@ -211,7 +211,7 @@ class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPer
             .updated("psoDay", date.getDayOfMonth.toString)
             .updated("psoMonth", date.getMonthValue.toString)
             .updated("psoYear", date.getYear.toString)
-          val result = PSODetailsForm.validateForm(psoDetailsForm.bind(map))
+          val result = psoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoDay").get.message shouldBe errorDateRange

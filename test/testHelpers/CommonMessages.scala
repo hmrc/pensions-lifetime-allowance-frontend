@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,14 @@ trait CommonMessages {
   val errorMissingYear = "pla.base.errors.yearEmpty"
   val errorDate = "pla.base.errors.invalidDate"
   val errorQuestion = "pla.base.errors.mandatoryError"
+  val errorEmptyDay = "pla.withdraw.date-input.form.day-empty"
+  val errorEmptyMonth = "pla.withdraw.date-input.form.month-empty"
+  val errorEmptyYear = "pla.withdraw.date-input.form.year-empty"
+  val errorLowDay = "pla.withdraw.date-input.form.day-too-low"
+  val errorLowMonth = "pla.withdraw.date-input.form.month-too-low"
+  val errorHighDay = "pla.withdraw.date-input.form.day-too-high"
+  val errorHighMonth = "pla.withdraw.date-input.form.month-too-high"
+  val errorFutureDate = "pla.withdraw.date-input.form.date-in-future"
 }
 
 trait PSODetailsMessages extends CommonMessages {

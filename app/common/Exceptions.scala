@@ -33,4 +33,8 @@ trait Exceptions {
     s"Value not found for $optionName in $functionName with nino: $nino"
   )
 
+  class RequiredNotFoundProtectionTypeException(val functionName: String) extends Exception(
+    s"Value not found for protection type in $functionName"
+  )
+
 }

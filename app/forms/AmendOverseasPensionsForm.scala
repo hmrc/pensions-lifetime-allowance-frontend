@@ -16,49 +16,19 @@
 
 package forms
 
-import common.Validation._
 import models.amendModels.AmendOverseasPensionsModel
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{Lang, Messages}
-import utils.Constants
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
+import play.api.i18n.Lang
 
-object AmendOverseasPensionsForm {
+object AmendOverseasPensionsForm extends CommonBinders{
 
   def amendOverseasPensionsForm(implicit lang:Lang) = Form (
     mapping(
       "amendedOverseasPensions" -> nonEmptyText,
-      "amendedOverseasPensionsAmt" -> optional(bigDecimal),
+      "amendedOverseasPensionsAmt" -> yesNoOptionalBigDecimal,
       "protectionType" -> text,
       "status" -> text
     )(AmendOverseasPensionsModel.apply)(AmendOverseasPensionsModel.unapply)
   )
-
-  def validateForm(form: Form[AmendOverseasPensionsModel])(implicit lang:Lang): Form[AmendOverseasPensionsModel] = {
-    if(!validationNeeded(form)) form else {
-      if(!validateFieldCompleted(form)) form.withError("amendedOverseasPensionsAmt", "pla.base.errors.errorQuestion")
-      else if(!validateMinimum(form)) form.withError("amendedOverseasPensionsAmt", "pla.base.errors.errorNegative")
-      else if(!validateMaximum(form)) form.withError("amendedOverseasPensionsAmt", "pla.base.errors.errorMaximum")
-      else if(!validateTwoDec(form)) form.withError("amendedOverseasPensionsAmt", "pla.base.errors.errorDecimalPlaces")
-      else form
-    }
-  }
-
-  private def validationNeeded(data: Form[AmendOverseasPensionsModel]): Boolean = {
-    data("amendedOverseasPensions").value.get match {
-      case "yes" => true
-      case "no" => false
-    }
-  }
-
-  private def validateFieldCompleted(data: Form[AmendOverseasPensionsModel]) = data("amendedOverseasPensionsAmt").value.isDefined
-
-  private def validateMinimum(data: Form[AmendOverseasPensionsModel]) = isPositive(data("amendedOverseasPensionsAmt").value.getOrElse("0").toDouble)
-
-  private def validateMaximum(data: Form[AmendOverseasPensionsModel]) = isLessThanDouble(data("amendedOverseasPensionsAmt").value.getOrElse("0").toDouble, Constants.npsMaxCurrency)
-
-  private def validateTwoDec(data: Form[AmendOverseasPensionsModel]) = isMaxTwoDecimalPlaces(data("amendedOverseasPensionsAmt").value.getOrElse("0").toDouble)
-
 }

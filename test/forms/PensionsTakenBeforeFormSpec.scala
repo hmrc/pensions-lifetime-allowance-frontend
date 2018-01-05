@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,28 +39,28 @@ class PensionsTakenBeforeFormSpec extends UnitSpec with CommonMessages with OneA
 
       "provided with a valid map with no amount" in {
         val map = Map("pensionsTakenBefore" -> "no")
-        val result = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.bind(map))
+        val result = pensionsTakenBeforeForm.bind(map)
 
         result.value shouldBe Some(PensionsTakenBeforeModel("no", None))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map = validMap.updated("pensionsTakenBeforeAmt", "0.01")
-        val result = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.bind(map))
+        val result = pensionsTakenBeforeForm.bind(map)
 
         result.value shouldBe Some(PensionsTakenBeforeModel("yes", Some(0.01)))
       }
 
       "provided with a valid map with an amount above the maximum" in {
         val map = validMap.updated("pensionsTakenBeforeAmt", {Constants.npsMaxCurrency - 1}.toString)
-        val result = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.bind(map))
+        val result = pensionsTakenBeforeForm.bind(map)
 
         result.value shouldBe Some(PensionsTakenBeforeModel("yes", Some(Constants.npsMaxCurrency - 1)))
       }
 
       "provided with a valid map with a zero amount" in {
         val map = validMap.updated("pensionsTakenBeforeAmt", "0")
-        val result = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.bind(map))
+        val result = pensionsTakenBeforeForm.bind(map)
 
         result.value shouldBe Some(PensionsTakenBeforeModel("yes", Some(0)))
       }
@@ -93,7 +93,7 @@ class PensionsTakenBeforeFormSpec extends UnitSpec with CommonMessages with OneA
 
           "not provided with an amount with a yes answer" in {
             val map = validMap - "pensionsTakenBeforeAmt"
-            val result = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.bind(map))
+            val result = pensionsTakenBeforeForm.bind(map)
 
             result.errors.size shouldBe 1
             result.error("pensionsTakenBeforeAmt").get.message shouldBe errorMissingAmount
@@ -101,7 +101,7 @@ class PensionsTakenBeforeFormSpec extends UnitSpec with CommonMessages with OneA
 
           "provided with an amount greater than the maximum" in {
             val map = validMap.updated("pensionsTakenBeforeAmt", Constants.npsMaxCurrency.toString)
-            val result = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.bind(map))
+            val result = pensionsTakenBeforeForm.bind(map)
 
             result.errors.size shouldBe 1
             result.error("pensionsTakenBeforeAmt").get.message shouldBe errorMaximum
@@ -109,7 +109,7 @@ class PensionsTakenBeforeFormSpec extends UnitSpec with CommonMessages with OneA
 
           "provided with an amount with over two decimal places" in {
             val map = validMap.updated("pensionsTakenBeforeAmt", "0.001")
-            val result = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.bind(map))
+            val result = pensionsTakenBeforeForm.bind(map)
 
             result.errors.size shouldBe 1
             result.error("pensionsTakenBeforeAmt").get.message shouldBe errorDecimal
@@ -117,7 +117,7 @@ class PensionsTakenBeforeFormSpec extends UnitSpec with CommonMessages with OneA
 
           "provided with a negative amount" in {
             val map = validMap.updated("pensionsTakenBeforeAmt", "-0.01")
-            val result = PensionsTakenBeforeForm.validateForm(pensionsTakenBeforeForm.bind(map))
+            val result = pensionsTakenBeforeForm.bind(map)
 
             result.errors.size shouldBe 1
             result.error("pensionsTakenBeforeAmt").get.message shouldBe errorNegative
