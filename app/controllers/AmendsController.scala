@@ -121,7 +121,9 @@ trait AmendsController extends BaseController with AuthFunction {
         Logger.warn(s"conflict response returned for amend request for user nino $nino")
         Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
-      case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
+      case 423 =>
+        Logger.info(s"locked reponse returned for amend request for user nino $nino")
+        Future.successful(Locked(manualCorrespondenceNeeded()))
       case _ => saveAndRedirectToDisplay(response, nino)
     }
   }
