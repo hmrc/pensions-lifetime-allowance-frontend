@@ -18,12 +18,12 @@ package forms
 
 import models.CurrentPensionsModel
 import org.scalatestplus.play.OneAppPerSuite
-import testHelpers.CommonMessages
+import testHelpers.CommonErrorMessages
 import uk.gov.hmrc.play.test.UnitSpec
 import CurrentPensionsForm._
 import utils.Constants
 
-class CurrentPensionsFormSpec extends UnitSpec with OneAppPerSuite with CommonMessages{
+class CurrentPensionsFormSpec extends UnitSpec with OneAppPerSuite with CommonErrorMessages{
 
   "The CurrentPensionsForm" should {
 

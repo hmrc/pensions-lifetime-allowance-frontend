@@ -20,10 +20,10 @@ import models.PensionsTakenBeforeModel
 import uk.gov.hmrc.play.test.UnitSpec
 import PensionsTakenBeforeForm._
 import org.scalatestplus.play.OneAppPerSuite
-import testHelpers.CommonMessages
+import testHelpers.CommonErrorMessages
 import utils.Constants
 
-class PensionsTakenBeforeFormSpec extends UnitSpec with CommonMessages with OneAppPerSuite {
+class PensionsTakenBeforeFormSpec extends UnitSpec with CommonErrorMessages with OneAppPerSuite {
 
   "The PensionsTakenBeforeForm" should {
     val validMap = Map("pensionsTakenBefore" -> "yes", "pensionsTakenBeforeAmt" -> "1")

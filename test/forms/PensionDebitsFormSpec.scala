@@ -19,10 +19,10 @@ package forms
 import forms.PensionDebitsForm._
 import models.PensionDebitsModel
 import org.scalatestplus.play.OneAppPerSuite
-import testHelpers.CommonMessages
+import testHelpers.CommonErrorMessages
 import uk.gov.hmrc.play.test.UnitSpec
 
-class PensionDebitsFormSpec extends UnitSpec with OneAppPerSuite with CommonMessages {
+class PensionDebitsFormSpec extends UnitSpec with OneAppPerSuite with CommonErrorMessages {
 
   "The PensionDebitsForm" should {
 

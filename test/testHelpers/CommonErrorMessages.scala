@@ -16,8 +16,8 @@
 
 package testHelpers
 
-trait CommonMessages {
-  val errorRequired = "error.required"
+trait CommonErrorMessages {
+val errorRequired = "error.required"
   val errorReal ="error.real"
   val errorMissingAmount = "pla.base.errors.errorQuestion"
   val errorNegative = "pla.base.errors.errorNegative"
@@ -38,7 +38,7 @@ trait CommonMessages {
   val errorFutureDate = "pla.withdraw.date-input.form.date-in-future"
 }
 
-trait PSODetailsMessages extends CommonMessages {
+trait PSODetailsMessages extends CommonErrorMessages {
   val errorAmendPsoDetailsMissingAmount = "pla.psoDetails.errorQuestion"
   val errorDateRange = "pla.IP16PsoDetails.errorDateOutOfRange"
 }
