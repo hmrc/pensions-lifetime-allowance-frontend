@@ -20,9 +20,9 @@ import org.scalatestplus.play.OneAppPerSuite
 import uk.gov.hmrc.play.test.UnitSpec
 import PensionsTakenForm._
 import models.PensionsTakenModel
-import testHelpers.CommonMessages
+import testHelpers.CommonErrorMessages
 
-class PensionsTakenFormSpec extends UnitSpec with OneAppPerSuite with CommonMessages {
+class PensionsTakenFormSpec extends UnitSpec with OneAppPerSuite with CommonErrorMessages {
 
   "The PensionsTakenForm" should {
 

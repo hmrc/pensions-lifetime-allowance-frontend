@@ -17,13 +17,13 @@
 package forms
 
 import models.amendModels.AmendOverseasPensionsModel
-import testHelpers.CommonMessages
+import testHelpers.CommonErrorMessages
 import uk.gov.hmrc.play.test.UnitSpec
 import AmendOverseasPensionsForm._
 import org.scalatestplus.play.OneAppPerSuite
 import utils.Constants
 
-class AmendOverseasPensionsFormSpec extends UnitSpec with CommonMessages with OneAppPerSuite {
+class AmendOverseasPensionsFormSpec extends UnitSpec with CommonErrorMessages with OneAppPerSuite {
 
   "The AmendOverseasPensionsForm" should {
     val validMap = Map("amendedOverseasPensions" -> "yes", "amendedOverseasPensionsAmt" -> "1000.0", "protectionType" -> "type", "status" -> "status")

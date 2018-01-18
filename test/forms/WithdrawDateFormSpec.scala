@@ -21,10 +21,10 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.libs.json.Json
 import WithdrawDateForm.withdrawDateForm
-import testHelpers.CommonMessages
+import testHelpers.CommonErrorMessages
 
 
-class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite with CommonMessages{
+class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite with CommonErrorMessages{
 
   "Withdraw date form" should {
     "return no errors with valid date" in {

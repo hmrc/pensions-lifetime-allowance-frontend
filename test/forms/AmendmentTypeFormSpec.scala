@@ -18,10 +18,10 @@ package forms
 
 import AmendmentTypeForm._
 import models.amendModels.AmendmentTypeModel
-import testHelpers.CommonMessages
+import testHelpers.CommonErrorMessages
 import uk.gov.hmrc.play.test.UnitSpec
 
-class AmendmentTypeFormSpec extends UnitSpec with CommonMessages {
+class AmendmentTypeFormSpec extends UnitSpec with CommonErrorMessages {
 
   "The AmendmentTypeForm" should {
     val validMap =  Map("protectionType" -> "type", "status" -> "status")
