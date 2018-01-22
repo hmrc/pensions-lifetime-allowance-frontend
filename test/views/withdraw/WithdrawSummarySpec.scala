@@ -111,7 +111,7 @@ class WithdrawSummarySpec extends CommonViewSpecHelper with WithdrawSummarySpecM
       }
 
       "have a summary-link href" in {
-        doc.select("td.summary-link > a").attr("href") shouldBe plaWithdrawSummaryLink
+        doc.select("td.summary-link > a").attr("href") should include(plaWithdrawSummaryLink)
 
       }
 
