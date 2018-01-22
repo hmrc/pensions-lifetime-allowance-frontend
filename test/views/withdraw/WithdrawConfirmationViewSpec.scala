@@ -16,11 +16,8 @@
 
 package views.withdraw
 
-import controllers.routes
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits.applicationMessages
-import play.api.i18n.Messages
-import play.twirl.api.Html
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmationSpecMessages
 import views.html.pages.withdraw.{withdrawConfirmation => views}
@@ -68,6 +65,11 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
 
     "feedback link " in {
       doc.select("div.grid-row > p a").text() shouldBe plaWithdrawConfirmFeedbackLink
+    }
+
+    "feedback link href" in {
+      doc.select("div.grid-row > p a").attr("href") shouldBe plaWithdrawConfirmFeedbackUrl
+
     }
 
   }

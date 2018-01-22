@@ -19,25 +19,23 @@ package views.withdraw
 import config.FrontendAppConfig
 import controllers.routes
 import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
-import models.amendModels.AmendProtectionModel
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawSummarySpecMessages
-import uk.gov.hmrc.play.test.UnitSpec
 import views.html.pages.withdraw.{withdrawSummary => views}
 
-class WithdrawSummarySpec extends CommonViewSpecHelper with WithdrawSummarySpecMessages  {
+class WithdrawSummarySpec extends CommonViewSpecHelper with WithdrawSummarySpecMessages {
 
   "Withdraw Summary view" which {
 
     "has been provided data" should {
 
-      val tstPensionContributionNoPsoDisplaySections = Seq(
+      lazy val tstPensionContributionNoPsoDisplaySections = Seq(
         AmendDisplaySectionModel("PensionsTakenBefore", Seq(
           AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2014", "active")), None, "No"))
         ))
-      val model = AmendDisplayModel("IP2014", amended = true, tstPensionContributionNoPsoDisplaySections, psoAdded = false, Seq(), "£1,100,000")
+      lazy val model = AmendDisplayModel("IP2014", amended = true, tstPensionContributionNoPsoDisplaySections, psoAdded = false, Seq(), "£1,100,000")
       lazy val view = views(model)
       lazy val doc = Jsoup.parse(view.body)
 
@@ -127,7 +125,7 @@ class WithdrawSummarySpec extends CommonViewSpecHelper with WithdrawSummarySpecM
   "has no provided data" should {
 
     val tstPensionContributionNoPsoDisplaySections = Seq(
-      )
+    )
     val model = AmendDisplayModel("IP2014", amended = true, tstPensionContributionNoPsoDisplaySections, psoAdded = false, Seq(), "£1,100,000")
     lazy val view = views(model)
     lazy val doc = Jsoup.parse(view.body)

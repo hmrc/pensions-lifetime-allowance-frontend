@@ -25,5 +25,6 @@ trait WithdrawConfirmationSpecMessages {
   val plaWithdrawConfirmFeedbackHeading                                  = "Give us feedback"
   val plaWithdrawConfirmFeedbackText                                     = "What did you think of this service? Your feedback helps us improve."
   val plaWithdrawConfirmFeedbackLink                                     = "What did you think of this service?"
+  val plaWithdrawConfirmFeedbackUrl                                      = "/protect-your-lifetime-allowance/exit"
 
 }

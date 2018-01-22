@@ -19,7 +19,7 @@ package views.withdraw
 import controllers.routes
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
-import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmSpecMessages
 import views.html.pages.withdraw.{withdrawConfirm => views}
 

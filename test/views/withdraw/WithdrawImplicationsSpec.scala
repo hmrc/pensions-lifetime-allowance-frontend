@@ -22,7 +22,6 @@ import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawImplicationsSpecMessages
-import uk.gov.hmrc.play.test.UnitSpec
 import views.html.pages.withdraw.{withdrawImplications => views}
 
 class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplicationsSpecMessages {
@@ -54,15 +53,14 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
       "have a heading label" in {
         doc.select("div.grid > p").text() shouldBe plaWithdrawProtectionIfInfo(plaWithdrawProtectionIP2014label)
       }
-      s"has first paragraph of ${"pla.withdraw.protection.if.info.1"}" in{
+      s"has first paragraph of ${"pla.withdraw.protection.if.info.1"}" in {
         doc.select("li").get(0).text() shouldBe plaWithdrawProtectionIfInfo1(plaWithdrawProtectionIP2014label)
       }
 
-      s"has second paragraph of ${"pla.withdraw.protection.if.info.1"}" in{
+      s"has second paragraph of ${"pla.withdraw.protection.if.info.1"}" in {
         doc.select("li").get(1).text() shouldBe plaWithdrawProtectionIfInfo2(plaWithdrawProtectionIP2014label)
       }
     }
-
 
 
     "have a continue button that" should {

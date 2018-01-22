@@ -22,7 +22,6 @@ trait WithdrawDateSpecMessages extends CommonMessages {
 
   val plaWithdrawDateInputTitle             = "Enter the withdrawal date"
   val plaWithdrawDateInputFormHint          = "Example: 18 4 2016"
-  //val plaBaseErrorSummaryLabel              = "There are errors on this page"
   val plaWithdrawDateInputFormDay           = "Day"
   val plaWithdrawDateInputFormMonth         = "Month"
   val plaWithdrawDateInputFormYear          = "Year"
