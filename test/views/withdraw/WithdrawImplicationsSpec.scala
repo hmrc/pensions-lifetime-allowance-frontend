@@ -16,35 +16,26 @@
 
 package views.withdraw
 
-import config.wiring.PlaFormPartialRetriever
+import controllers.routes
 import forms.WithdrawDateForm
 import org.jsoup.Jsoup
-import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
-import testHelpers.{MockTemplateRenderer, PlaTestContext}
-import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.ViewSpecHelpers.withdraw.WithdrawImplicationsSpecMessages
+import uk.gov.hmrc.play.test.UnitSpec
 import views.html.pages.withdraw.{withdrawImplications => views}
 
-class WithdrawImplicationsSpec extends UnitSpec with WithFakeApplication {
+class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplicationsSpecMessages {
 
-  lazy val fakeRequest = FakeRequest()
-  lazy val fakeRequestWithSession = fakeRequest.withSession((SessionKeys.sessionId, ""))
 
-  def fakeRequestToPOSTWithSession (input: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] =
-    fakeRequestWithSession.withFormUrlEncodedBody(input: _*)
-
-  "Withdraw Confirm view" when {
-    val protectionType = "ip14"
+  "Withdraw Implication view" when {
+    val protectionType = "IP2014"
     val status = "dormant"
-    lazy val view = views(WithdrawDateForm, protectionType, status)(fakeRequest, applicationMessages, Lang.defaultLang, fakeApplication, PlaTestContext, PlaFormPartialRetriever, MockTemplateRenderer)
+    lazy val view = views(WithdrawDateForm, protectionType, status)
     lazy val doc = Jsoup.parse(view.body)
 
     s"have a title ${"pla.withdraw.protection.title"}" in {
-      doc.title() shouldBe Messages("pla.withdraw.protection.title", s"pla.withdraw.protection.$protectionType.label")
+      doc.title() shouldBe plaWithdrawProtectionTitle(plaWithdrawProtectionIP2014label)
     }
 
     s"have a back link with text back " in {
@@ -52,18 +43,42 @@ class WithdrawImplicationsSpec extends UnitSpec with WithFakeApplication {
     }
 
     s"have a back link with href" in {
-      doc.select("a.back-link").attr("href") shouldBe "/protect-your-lifetime-allowance/existing-protections"
+      doc.select("a.back-link").attr("href") shouldBe routes.ReadProtectionsController.currentProtections().url
     }
 
     s"have the question of the page ${"pla.withdraw.protection.title"}" in {
-      doc.select("h1.heading-large").text shouldEqual Messages("pla.withdraw.protection.title", s"pla.withdraw.protection.$protectionType.label")
+      doc.select("h1.heading-large").text shouldEqual plaWithdrawProtectionTitle(plaWithdrawProtectionIP2014label)
     }
 
-    "have a grid that" should {
+    "have a div tag that" should {
       "have a heading label" in {
-        doc.select("div.grid > p").text() shouldBe Messages("pla.withdraw.protection.if.info", s"pla.withdraw.protection.$protectionType.label")
+        doc.select("div.grid > p").text() shouldBe plaWithdrawProtectionIfInfo(plaWithdrawProtectionIP2014label)
+      }
+      s"has first paragraph of ${"pla.withdraw.protection.if.info.1"}" in{
+        doc.select("li").get(0).text() shouldBe plaWithdrawProtectionIfInfo1(plaWithdrawProtectionIP2014label)
       }
 
+      s"has second paragraph of ${"pla.withdraw.protection.if.info.1"}" in{
+        doc.select("li").get(1).text() shouldBe plaWithdrawProtectionIfInfo2(plaWithdrawProtectionIP2014label)
+      }
+    }
+
+
+
+    "have a continue button that" should {
+      lazy val button = doc.getElementById("continue-button")
+
+      s"have text of ${"pla.withdraw.protection.continue.title"}" in {
+        button.text() shouldBe plaWithdrawProtectionContinueTitle
+      }
+
+      s"have a href" in {
+        button.attr("href") shouldBe routes.WithdrawProtectionController.withdrawDateInput().url
+      }
+
+      "have a class of button bold" in {
+        button.className() shouldBe "button bold"
+      }
 
     }
 

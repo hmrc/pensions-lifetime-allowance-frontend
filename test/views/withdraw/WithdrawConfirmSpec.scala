@@ -16,54 +16,42 @@
 
 package views.withdraw
 
-import config.wiring.PlaFormPartialRetriever
+import controllers.routes
 import org.jsoup.Jsoup
-import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{Lang, Messages}
-import play.api.mvc.AnyContentAsFormUrlEncoded
-import play.api.test.FakeRequest
-import play.twirl.api.Html
-import testHelpers.{MockTemplateRenderer, PlaTestContext}
-import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
+import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmSpecMessages
 import views.html.pages.withdraw.{withdrawConfirm => views}
 
-class WithdrawConfirmSpec extends UnitSpec with WithFakeApplication {
-
-  lazy val fakeRequest = FakeRequest()
-  lazy val fakeRequestWithSession = fakeRequest.withSession((SessionKeys.sessionId, ""))
-
-  def fakeRequestToPOSTWithSession (input: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] =
-    fakeRequestWithSession.withFormUrlEncodedBody(input: _*)
+class WithdrawConfirmSpec extends CommonViewSpecHelper with WithdrawConfirmSpecMessages {
 
   "Withdraw Confirm view" when {
     lazy val withdrawDate = "16/01/2018"
-    lazy val view = views(withdrawDate, "ip14", "dormant")(fakeRequest, applicationMessages, Lang.defaultLang, fakeApplication, PlaTestContext, PlaFormPartialRetriever, MockTemplateRenderer)
+    lazy val view = views(withdrawDate, "ip14", "dormant")
     lazy val doc = Jsoup.parse(view.body)
 
     s"have a title ${"pla.withdraw.what-happens.info-heading"}" in {
-      doc.title() shouldBe Messages("pla.withdraw.what-happens.info-heading")
+      doc.title() shouldBe plaWithdrawWhatHappensInfoHeading
     }
 
     s"have a question of ${"pla.withdraw.what-happens.info-heading"}" in {
-      doc.select("h1.heading-large").text() shouldBe Messages("pla.withdraw.what-happens.info-heading")
+      doc.select("h1.heading-large").text() shouldBe plaWithdrawWhatHappensInfoHeading
     }
 
-    s"have a back link with text back " in {
+    s"have a back link with text 'back' " in {
       doc.select("a").text() shouldBe "Back"
     }
 
     s"have the question of the page ${"pla.withdraw.what-happens.info-heading"}" in {
-      doc.select("h1").text shouldEqual Messages("pla.withdraw.what-happens.info-heading")
+      doc.select("h1").text shouldEqual plaWithdrawWhatHappensInfoHeading
     }
 
-    "have a form tag" in {
+    "have a govhelper form" in {
       doc.select("form").size() shouldBe 1
     }
 
     "have a form action of 'getAction'" in {
-      doc.select("form").attr("action") shouldBe "/protect-your-lifetime-allowance/withdraw-protection/confirmation/16%2F01%2F2018"
+      doc.select("form").attr("action") shouldBe routes.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate).url
     }
 
     "have a form method of 'GET'" in {
@@ -73,8 +61,8 @@ class WithdrawConfirmSpec extends UnitSpec with WithFakeApplication {
     "have a submit button that" should {
       lazy val submitButton = doc.select("button")
 
-      s"have the button text of '${"pla.withdraw.implications.submit"}'" in {
-        submitButton.text shouldBe Messages("pla.withdraw.implications.submit")
+      s"have the button text of '$plaWithdrawImplicationsSubmit'" in {
+        submitButton.text shouldBe plaWithdrawImplicationsSubmit
       }
 
       "be of type submit" in {
@@ -86,7 +74,7 @@ class WithdrawConfirmSpec extends UnitSpec with WithFakeApplication {
       }
     }
 
-    "have a grid that" should {
+    "have a div tag that" should {
       lazy val grid = doc.select("div.grid")
 
       "have the class 'grid'" in {
@@ -94,30 +82,29 @@ class WithdrawConfirmSpec extends UnitSpec with WithFakeApplication {
       }
 
       s"has the first paragraph of ${"pla.withdraw.protection.what-happens.info.1"}" in {
-        grid.select("p").get(0).text shouldBe Html(Messages("pla.withdraw.protection.what-happens.info.1", withdrawDate)).toString().replaceAll("<br>", "")
+        grid.select("p").get(0).text shouldBe plaWithdrawProtectionWhatHappensInfo1(withdrawDate)
       }
 
-      s"has the second paragraph of ${"pla.withdraw.protection.what-happens.info.2"}" in {
-        grid.select("p").get(1).text shouldBe Messages("pla.withdraw.protection.what-happens.info.2")
+      s"has the second paragraph of $plaWithdrawProtectionWhatHappensInfo2" in {
+        grid.select("p").get(1).text shouldBe plaWithdrawProtectionWhatHappensInfo2
       }
 
       s"has the third paragraph of ${"pla.withdraw.protection.what-happens.info.3"}" in {
-        grid.select("p").get(2).text shouldBe Messages("pla.withdraw.protection.what-happens.info.3", withdrawDate)
+        grid.select("p").get(2).text shouldBe plaWithdrawProtectionWhatHappensInfo3(withdrawDate)
       }
 
-      s"has the fourth paragraph of ${"pla.withdraw.protection.what-happens.info.3"}" in {
-        grid.select("p").get(3).text shouldBe Messages("pla.withdraw.protection.what-happens.info.4", withdrawDate)
+      s"has the fourth paragraph of ${"pla.withdraw.protection.what-happens.info.4"}" in {
+        grid.select("p").get(3).text shouldBe plaWithdrawProtectionWhatHappensInfo4(withdrawDate)
       }
 
-      s"has the fifth paragraph of ${"pla.withdraw.protection.what-happens.info.3"}" in {
-        grid.select("p").get(4).text shouldBe Messages("pla.withdraw.protection.what-happens.info.5")
+      s"has the fifth paragraph of $plaWithdrawProtectionWhatHappensInfo5" in {
+        grid.select("p").get(4).text shouldBe plaWithdrawProtectionWhatHappensInfo5
       }
 
     }
 
+
   }
-
-
 
 
 }

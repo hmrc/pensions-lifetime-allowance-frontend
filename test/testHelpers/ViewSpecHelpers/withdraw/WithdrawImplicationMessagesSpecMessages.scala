@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package testHelpers
+package testHelpers.ViewSpecHelpers.withdraw
 
-import config.PlaContext
-import config.PlaContextImpl.{baseUrl, getString}
-import play.api.i18n.Messages
+trait WithdrawImplicationMessagesSpecMessages {
 
-case object PlaTestContext extends PlaContext {
-
-  override def getPageHelpPartial()(messages: Messages): String = s"${baseUrl("contact-frontend")}/contact/problem_reports"
-
-  override def assetsUrl: String = s"${getString("assets.url")}${getString("assets.version")}/"
+  def plaWithdrawImplicationInfo(protectionType: String)                   = s"Once you withdraw, you will no longer have $protectionType. This might mean you have to pay a higher rate of tax on your pension."
+  val plaWithdrawProtectionIP2014label                                     = "Individual protection 2014"
 
 }

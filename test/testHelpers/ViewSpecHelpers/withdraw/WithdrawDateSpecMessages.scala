@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package testHelpers
+package testHelpers.ViewSpecHelpers.withdraw
 
-import config.PlaContext
-import config.PlaContextImpl.{baseUrl, getString}
-import play.api.i18n.Messages
+trait WithdrawDateSpecMessages {
 
-case object PlaTestContext extends PlaContext {
-
-  override def getPageHelpPartial()(messages: Messages): String = s"${baseUrl("contact-frontend")}/contact/problem_reports"
-
-  override def assetsUrl: String = s"${getString("assets.url")}${getString("assets.version")}/"
+  val plaWithdrawDateInputTitle             = "Enter the withdrawal date"
+  val plaWithdrawDateInputFormHint          = "Example: 18 4 2016"
+  val plaBaseErrorSummaryLabel              = "There are errors on this page"
+  val plaWithdrawDateInputFormDay           = "Day"
+  val plaWithdrawDateInputFormMonth         = "Month"
+  val plaWithdrawDateInputFormYear          = "Year"
+  val plaWithdrawDateInputFormContinue      = "Continue"
 
 }
