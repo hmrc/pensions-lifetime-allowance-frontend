@@ -22,11 +22,11 @@ import play.api.i18n.Messages.Implicits.applicationMessages
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmationSpecMessage
+import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmationSpecMessages
 import views.html.pages.withdraw.{withdrawConfirmation => views}
 
 
-class WithdrawConfirmation extends CommonViewSpecHelper with WithdrawConfirmationSpecMessage {
+class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawConfirmationSpecMessages {
 
 
   "Withdraw Confirmation view" when {
@@ -44,10 +44,6 @@ class WithdrawConfirmation extends CommonViewSpecHelper with WithdrawConfirmatio
 
     "have a div tag that" should {
       lazy val grid = doc.select("div.grid-row > div.grid")
-
-      "have the class 'grid'" in {
-        grid.hasClass("grid") shouldBe true
-      }
 
       s"has the first paragraph of ${"pla.withdraw.confirmation.check.details"}" in {
         grid.select("p").get(0).text shouldBe plaWithdrawConfirmationCheckDetails
@@ -68,6 +64,10 @@ class WithdrawConfirmation extends CommonViewSpecHelper with WithdrawConfirmatio
 
     s"feedback message of ${"pla.withdraw.confirm.feedback-text"}" in {
       doc.select("div.grid-row > p").text shouldBe plaWithdrawConfirmFeedbackText
+    }
+
+    "feedback link " in {
+      doc.select("div.grid-row > p a").text() shouldBe plaWithdrawConfirmFeedbackLink
     }
 
   }

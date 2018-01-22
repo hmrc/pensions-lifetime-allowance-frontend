@@ -23,10 +23,10 @@ import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmSpecMessages
 import views.html.pages.withdraw.{withdrawConfirm => views}
 
-class WithdrawConfirmSpec extends CommonViewSpecHelper with WithdrawConfirmSpecMessages {
+class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmSpecMessages {
 
   "Withdraw Confirm view" when {
-    lazy val withdrawDate = "16/01/2018"
+    val withdrawDate = "16/01/2018"
     lazy val view = views(withdrawDate, "ip14", "dormant")
     lazy val doc = Jsoup.parse(view.body)
 
@@ -39,15 +39,11 @@ class WithdrawConfirmSpec extends CommonViewSpecHelper with WithdrawConfirmSpecM
     }
 
     s"have a back link with text 'back' " in {
-      doc.select("a").text() shouldBe "Back"
+      doc.select("a").text() shouldBe plaBaseBack
     }
 
-    s"have the question of the page ${"pla.withdraw.what-happens.info-heading"}" in {
-      doc.select("h1").text shouldEqual plaWithdrawWhatHappensInfoHeading
-    }
-
-    "have a govhelper form" in {
-      doc.select("form").size() shouldBe 1
+    "have a back with href" in {
+      doc.select("a").attr("href") shouldBe routes.WithdrawProtectionController.withdrawDateInput().url
     }
 
     "have a form action of 'getAction'" in {
@@ -68,18 +64,10 @@ class WithdrawConfirmSpec extends CommonViewSpecHelper with WithdrawConfirmSpecM
       "be of type submit" in {
         submitButton.attr("type") shouldBe "submit"
       }
-
-      "have the class 'button'" in {
-        submitButton.hasClass("button") shouldBe true
-      }
     }
 
     "have a div tag that" should {
       lazy val grid = doc.select("div.grid")
-
-      "have the class 'grid'" in {
-        grid.hasClass("grid") shouldBe true
-      }
 
       s"has the first paragraph of ${"pla.withdraw.protection.what-happens.info.1"}" in {
         grid.select("p").get(0).text shouldBe plaWithdrawProtectionWhatHappensInfo1(withdrawDate)

@@ -25,5 +25,8 @@ trait WithdrawSummarySpecMessages {
   val plaWithdrawHeadingIP2014                                = "Your individual protection 2014 details"
   val plaWithdrawSummaryHeading                               = "Value of pensions"
   val plaWithdrawTotalValueOfPensions                         = "Total value of pensions"
+  val plaWithdrawSummaryText                                  = "Did you get an income from any of your pensions before 6 April 2006?"
+  val plaWithdrawSummaryLinkText                              = "Change Change whether you received an income from any of your pensions before 6 April 2006"
+  val plaWithdrawSummaryLink                                  = "/amend-protection/pensions-taken-before/ip2014/active"
 
 }

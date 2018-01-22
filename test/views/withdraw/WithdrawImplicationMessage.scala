@@ -31,15 +31,27 @@ import views.html.pages.withdraw.{withdrawImplicationMessage => views}
 
 class WithdrawImplicationMessage extends CommonViewSpecHelper with WithdrawImplicationMessagesSpecMessages {
 
-  "Withdraw Implication Message view" when {
-    lazy val protectionType = "IP2014"
-    lazy val view = views(protectionType, "dormant")
-    lazy val doc = Jsoup.parse(view.body)
+  "Withdraw Implication Message view" which {
 
-    s"have a alert of ${"pla.withdraw.implication.info"}" in {
-      doc.select("div").text() shouldBe plaWithdrawImplicationInfo(plaWithdrawProtectionIP2014label)
+    "is given the protection type IP2014" should {
+      val protectionType = "IP2014"
+      lazy val view = views(protectionType, "dormant")
+      lazy val doc = Jsoup.parse(view.body)
+
+      s"have a alert of ${"pla.withdraw.implication.info"}" in {
+        doc.select("div").text() shouldBe plaWithdrawImplicationInfo(plaWithdrawProtectionIP2014label)
+      }
     }
 
+    "is given the protection type IP2016" should {
+      val protectionType = "IP2016"
+      lazy val view = views(protectionType, "dormant")
+      lazy val doc = Jsoup.parse(view.body)
+
+      s"have a alert of ${"pla.withdraw.implication.info"}" in {
+        doc.select("div").text() shouldBe plaWithdrawImplicationInfo(plaWithdrawProtectionIP2016label)
+      }
+    }
   }
 
 }

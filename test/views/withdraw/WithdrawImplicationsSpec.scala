@@ -76,10 +76,6 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
         button.attr("href") shouldBe routes.WithdrawProtectionController.withdrawDateInput().url
       }
 
-      "have a class of button bold" in {
-        button.className() shouldBe "button bold"
-      }
-
     }
 
   }

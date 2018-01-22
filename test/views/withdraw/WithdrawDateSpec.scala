@@ -21,7 +21,7 @@ import forms.WithdrawDateForm._
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawDateSpecMessages
 import views.html.pages.withdraw.{withdrawDate => views}
 
@@ -48,7 +48,7 @@ class WithdrawDateSpec extends CommonViewSpecHelper with WithdrawDateSpecMessage
     }
 
     s"have a back link with text back " in {
-      doc.select("a.back-link").text() shouldBe "Back"
+      doc.select("a.back-link").text() shouldBe plaBaseBack
     }
 
     s"have a back link with href" in {
@@ -83,18 +83,18 @@ class WithdrawDateSpec extends CommonViewSpecHelper with WithdrawDateSpecMessage
       doc.select("label > span").get(2).text() shouldBe plaWithdrawDateInputFormYear
     }
 
-    "display an error summary message for the day2" in {
+    "not display an error summary message for the day" in {
       doc.body().select("fieldset.form-field--error").size() shouldBe 0
     }
-    "display an error notification message for the day2" in {
+    "not display an error notification message for the day" in {
       doc.body().select("div.error-summary--show").size() shouldBe 0
     }
 
     "have a submit button that" should {
       lazy val button = doc.getElementById("submit")
 
-      s"have text of $plaWithdrawDateInputFormContinue" in {
-        button.text() shouldBe plaWithdrawDateInputFormContinue
+      s"have text of $plaBaseContinue" in {
+        button.text() shouldBe plaBaseContinue
       }
 
       "be of type submit" in {

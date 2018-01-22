@@ -24,7 +24,7 @@ import uk.gov.hmrc.play.frontend.filters.MicroserviceFilterSupport
 import uk.gov.hmrc.play.test.UnitSpec
 import utils.PlaTestContext
 
-trait CommonViewSpecHelper extends UnitSpec with MicroserviceFilterSupport with GuiceOneAppPerSuite with CommonErrorMessages{
+trait CommonViewSpecHelper extends UnitSpec with MicroserviceFilterSupport with GuiceOneAppPerSuite with CommonMessages{
 
   //TODO
   //mock logger
