@@ -16,9 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.IP16
 
-import testHelpers.ViewSpecHelpers.CommonMessages
-
-trait SummaryViewMessages extends CommonMessages{
+trait SummaryViewMessages{
   val plaSummaryTitle                                   = "Submit your application"
   val plaSummaryPageHeading                             = "Check and submit your protection details"
   val plaSummaryErrorSummaryLabel                       = "There's a problem with your application"

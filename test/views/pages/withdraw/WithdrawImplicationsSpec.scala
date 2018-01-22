@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.withdraw
+package views.pages.withdraw
 
 import controllers.routes
 import forms.WithdrawDateForm

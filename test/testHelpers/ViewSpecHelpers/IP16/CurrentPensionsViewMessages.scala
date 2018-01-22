@@ -16,9 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.IP16
 
-import testHelpers.ViewSpecHelpers.CommonMessages
-
-trait CurrentPensionsViewMessages extends CommonMessages{
+trait CurrentPensionsViewMessages{
   val plaCurrentPensionsTitle = "What were your UK pensions worth on 5 April 2016?"
   val plaCurrentPensionsQuestion = "Do not include pensions you've already taken or the State Pension."
   val plaCurrentPensionsHiddenLink = "How do I work out the value?"

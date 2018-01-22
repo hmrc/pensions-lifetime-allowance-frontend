@@ -16,9 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.IP16
 
-import testHelpers.ViewSpecHelpers.CommonMessages
-
-trait OverseasPensionsViewMessages extends CommonMessages{
+trait OverseasPensionsViewMessages {
   val plaOverseasPensionsTitle = "Have you put money into a pension scheme held overseas?"
   val plaOverseasPensionsQuestion = "Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on."
   val plaOverseasPensionsQuestionTwo = "How much did you contribute?"

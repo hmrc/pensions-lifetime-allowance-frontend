@@ -16,9 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.IP16
 
-import testHelpers.ViewSpecHelpers.CommonMessages
-
-trait PensionsTakenBetweenViewMessages extends CommonMessages{
+trait PensionsTakenBetweenViewMessages {
   val plaPensionsTakenBetweenTitle = "Did any of these events happen between 6 April 2006 and 5 April 2016?"
   val plaPensionsTakenBetweenBulletOne = "you got money from your pensions"
   val plaPensionsTakenBetweenBulletTwo = "you transferred a pension to a scheme held overseas"

@@ -16,9 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.IP16
 
-import testHelpers.ViewSpecHelpers.CommonMessages
-
-trait PsoDetailsViewMessages extends CommonMessages {
+trait PsoDetailsViewMessages {
   val plaPsoDetailsTitle = "Pension sharing order"
   val plaPsoDetailsDateQuestionText = "Date of pension sharing order"
   val plaPsoDetailsPsoAmountQuestion = "Amount of pension sharing order"

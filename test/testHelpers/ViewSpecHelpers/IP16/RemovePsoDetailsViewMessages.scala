@@ -16,9 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.IP16
 
-import testHelpers.ViewSpecHelpers.CommonMessages
-
-trait RemovePsoDetailsViewMessages extends CommonMessages{
+trait RemovePsoDetailsViewMessages{
   val plaPsoDetailsTitle = "Pension sharing order"
   val plaPsoDetailsRemovePso = "This will remove your pension sharing order."
   val plaPsoDetailsCancelRemove = "Do not remove"

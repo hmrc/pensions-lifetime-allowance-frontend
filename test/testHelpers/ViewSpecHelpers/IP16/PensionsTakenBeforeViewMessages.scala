@@ -16,9 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.IP16
 
-import testHelpers.ViewSpecHelpers.CommonMessages
-
-trait PensionsTakenBeforeViewMessages extends CommonMessages{
+trait PensionsTakenBeforeViewMessages {
   val plaPensionsTakenBeforeTitle = "Did you get an income from any of your pensions before 6 April 2006?"
   val plaPensionsTakenBeforeQuestion = "What were these pensions worth on 5 April 2016?"
   val plaPensionsTakenBeforeHelp = "How to work out the amount"
