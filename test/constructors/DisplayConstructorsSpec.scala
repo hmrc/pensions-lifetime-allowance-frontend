@@ -563,7 +563,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016")
       )
-      DisplayConstructors.createPrintDisplayModel(Some(tstPersonalDetailsModel),Some(tstProtectionModel),tstNino) shouldBe tstResultPrintDisplayModel
+      DisplayConstructors.createPrintDisplayModel(Some(tstPersonalDetailsModel),tstProtectionModel,tstNino) shouldBe tstResultPrintDisplayModel
 
     }
   }

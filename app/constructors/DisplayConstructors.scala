@@ -32,13 +32,12 @@ object DisplayConstructors extends DisplayConstructors
 trait DisplayConstructors {
 
   // PRINT PAGE
-  def createPrintDisplayModel(personalDetailsModelOpt: Option[PersonalDetailsModel], protectionModelOpt: Option[ProtectionModel], nino: String): PrintDisplayModel = {
+  def createPrintDisplayModel(personalDetailsModelOpt: Option[PersonalDetailsModel],
+                              protectionModel: ProtectionModel,
+                              nino: String): PrintDisplayModel = {
 
     val personalDetailsModel = personalDetailsModelOpt.getOrElse {
       throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")
-    }
-    val protectionModel = protectionModelOpt.getOrElse {
-      throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "protectionModel")
     }
 
     val firstName = personalDetailsModel.person.firstName.toLowerCase.capitalize

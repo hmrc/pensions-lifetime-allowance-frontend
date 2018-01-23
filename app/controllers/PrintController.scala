@@ -20,16 +20,14 @@ import auth.AuthFunction
 import constructors.DisplayConstructors
 import config.{AppConfig, AuthClientConnector, FrontendAppConfig}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
-import models.{PersonalDetailsModel, ProtectionModel}
-import play.api.{Configuration, Environment, Play}
+import models.{ExistingProtectionsDisplayModel, PersonalDetailsModel, ProtectionModel}
+import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc._
-
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core._
 
-
-
+// $COVERAGE-OFF$
 object PrintController extends PrintController {
   val keyStoreConnector = KeyStoreConnector
   val citizenDetailsConnector = CitizenDetailsConnector
@@ -39,9 +37,10 @@ object PrintController extends PrintController {
   lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
   override def config: Configuration = Play.current.configuration
+
   override def env: Environment = Play.current.injector.instanceOf[Environment]
 }
-
+// $COVERAGE-ON$
 trait PrintController extends BaseController with AuthFunction {
 
   val keyStoreConnector: KeyStoreConnector
@@ -60,12 +59,16 @@ trait PrintController extends BaseController with AuthFunction {
   }
 
 
-  private def routePrintView(personalDetailsModel: Option[PersonalDetailsModel], protectionModel: Option[ProtectionModel], nino: String)(implicit request: Request[AnyContent]): Result = {
-    val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, protectionModel, nino)
-      Ok(views.html.pages.result.resultPrint(displayModel))
+  private def routePrintView(personalDetailsModel: Option[PersonalDetailsModel],
+                             protectionModel: Option[ProtectionModel],
+                             nino: String)(implicit request: Request[AnyContent]): Result = {
+    protectionModel match {
+      case Some(model) =>
+        val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
+        Ok(views.html.pages.result.resultPrint(displayModel))
+      case _ =>
+        Logger.warn(s"Forced redirect to PrintView for $nino")
+        Redirect(routes.ReadProtectionsController.currentProtections())
+    }
   }
-
-
-
-
 }

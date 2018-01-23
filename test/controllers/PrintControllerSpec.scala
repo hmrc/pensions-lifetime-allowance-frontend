@@ -68,6 +68,7 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     override def config: Configuration = mock[Configuration]
+
     override def env: Environment = mock[Environment]
   }
 
@@ -78,6 +79,12 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
     when(displayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(testPrintDisplayModel)
   }
 
+  object TestPrintControllerInValidDetails extends BaseTestPrintController {
+    override lazy val appConfig = MockConfig
+    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(Some(testPersonalDetails)))
+    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(None)
+    when(displayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(testPrintDisplayModel)
+  }
 
   "Navigating to print protection" when {
 
@@ -94,6 +101,15 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
         jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("Testy Mctestface")
       }
     }
-  }
 
+    "InValid data is provided" should {
+      lazy val result = await(TestPrintControllerInValidDetails.printView(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      "return " in {
+        status(result) shouldBe 303
+      }
+    }
+  }
 }
+
+
