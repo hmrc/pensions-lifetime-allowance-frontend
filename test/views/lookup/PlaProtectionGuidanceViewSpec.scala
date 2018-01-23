@@ -19,10 +19,10 @@ package views.lookup
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.lookup.ProtectionGuidanceMessages
+import testHelpers.ViewSpecHelpers.lookup.ProtectionGuidanceSpecMessages
 import views.html.pages.lookup.pla_protection_guidance
 
-class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with ProtectionGuidanceMessages {
+class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with ProtectionGuidanceSpecMessages {
 
   "The PLA Protection Guidance View" should {
     lazy val view = pla_protection_guidance()

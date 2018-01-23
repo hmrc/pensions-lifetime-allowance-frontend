@@ -16,9 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.lookup
 
-import testHelpers.ViewSpecHelpers.CommonMessages
-
-trait ProtectionGuidanceMessages {
+trait ProtectionGuidanceSpecMessages {
   val title = "Check the value of a protection type"
   val tableHeadingLeft = "Protection type"
   val tableHeadingRight = "Protected amount"
