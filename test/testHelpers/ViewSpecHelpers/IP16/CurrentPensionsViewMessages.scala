@@ -20,6 +20,7 @@ trait CurrentPensionsViewMessages{
   val plaCurrentPensionsTitle = "What were your UK pensions worth on 5 April 2016?"
   val plaCurrentPensionsQuestion = "Do not include pensions you've already taken or the State Pension."
   val plaCurrentPensionsHiddenLink = "How do I work out the value?"
+  val plaCurrentPensionsLegendText = "What were your UK pensions worth on 5 April 2016?"
   val plaHiddenMenuItemOne = "Take any pensions where your employer guarantees you a specified annual income."
   val plaHiddenMenuItemTwo = "Multiply the annual income from these pensions by 20."
   val plaHiddenMenuItemThree = "Add the amount of any lump sum payments you'll get on top of this annual income."

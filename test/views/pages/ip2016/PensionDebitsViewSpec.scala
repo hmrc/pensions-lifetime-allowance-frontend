@@ -42,7 +42,6 @@ class PensionDebitsViewSpec extends CommonViewSpecHelper with PensionDebitsViewM
 
     "have the correct and properly formatted header"in{
       doc.select("h1").text shouldBe plaPensionDebitsTitle
-      doc.select("h1").hasClass("heading-large") shouldBe true
     }
 
     "have some introductory text" in{
@@ -51,15 +50,19 @@ class PensionDebitsViewSpec extends CommonViewSpecHelper with PensionDebitsViewM
 
     "have a pair of yes/no buttons" in{
       doc.select("[for=pensionDebits-yes]").text shouldBe plaBaseYes
+      doc.select("input#pensionDebits-yes").attr("type") shouldBe "radio"
       doc.select("[for=pensionDebits-no]").text shouldBe plaBaseNo
+      doc.select("input#pensionDebits-no").attr("type") shouldBe "radio"
     }
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionDebits().url
+      form.select("legend.visually-hidden").text() shouldBe plaPensionsDebitLegendText
     }
     "have a continue button" in{
       doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
@@ -68,6 +71,9 @@ class PensionDebitsViewSpec extends CommonViewSpecHelper with PensionDebitsViewM
       errorDoc.select("span.error-notification").text shouldBe plaBaseErrorsMandatoryError
     }
 
+    "not have errors on valid pages" in{
+      pensionsForm.hasErrors shouldBe false
+      doc.select("span.error-notification").text shouldBe ""
+    }
   }
-
 }

@@ -27,6 +27,7 @@ import utils.PlaTestContext
 trait CommonViewSpecHelper extends UnitSpec with MicroserviceFilterSupport with GuiceOneAppPerSuite with CommonMessages{
 
   //TODO
+
   //mock logger
 
   implicit lazy val fakeRequest = FakeRequest()

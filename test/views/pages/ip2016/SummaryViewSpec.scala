@@ -41,6 +41,11 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages{
     val currentPensionsSummaryRow = SummaryRowModel("currentPensionsAmt", Some(controllers.routes.IP2016Controller.currentPensions()), None, false, "£1,001")
     val positivePensionDebitsSummaryRow = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits()), None,  false, "Yes")
 
+    val positivePensionsTakenSummaryRowTwo = SummaryRowModel("pensionsTaken", Some(controllers.routes.IP2016Controller.pensionsTaken()), None,  false, "No")
+    val positiveOverseasPensionsSummaryRowTwo = SummaryRowModel("overseasPensions", Some(controllers.routes.IP2016Controller.overseasPensions()), None,  false, "No")
+    val currentPensionsSummaryRowTwo = SummaryRowModel("currentPensionsAmt", Some(controllers.routes.IP2016Controller.currentPensions()), None, false, "£123,456")
+    val positivePensionDebitsSummaryRowTwo = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits()), None,  false, "No")
+
 
     val model = SummaryModel( ApplicationType.IP2016, false,
       List(
@@ -64,6 +69,26 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages{
           psoDetailsSummaryRow))
       )
     )
+
+    val modelTwo = SummaryModel( ApplicationType.IP2016, false,
+      List(
+        SummarySectionModel(List(
+          positivePensionsTakenSummaryRowTwo)),
+        SummarySectionModel(List(
+          positiveOverseasPensionsSummaryRowTwo, positiveOverseasPensionsAmtSummaryRow)),
+        SummarySectionModel(List(
+          currentPensionsSummaryRowTwo)),
+        SummarySectionModel(List(
+          totalPensionsAmountSummaryRow("£123,456")))
+      ),
+      List(
+        SummarySectionModel(List(
+          positivePensionDebitsSummaryRowTwo)),
+        SummarySectionModel(List(
+          psoDetailsSummaryRow))
+      )
+    )
+
     val errorModel = SummaryModel(
       protectionType = ApplicationType.IP2016,
       invalidRelevantAmount = false,
@@ -73,6 +98,9 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages{
 
     lazy val view = views(model)
     lazy val doc = Jsoup.parse(view.body)
+
+    lazy val viewTwo = views(modelTwo)
+    lazy val docTwo = Jsoup.parse(viewTwo.body)
 
     lazy val errorView = views(errorModel)
     lazy val errorDoc = Jsoup.parse(errorView.body)
@@ -84,7 +112,6 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages{
 
     "have the correct and properly formatted header"in{
       doc.select("h1").first().text shouldBe plaSummaryPageHeading
-      doc.select("h1").hasClass("heading-large") shouldBe true
     }
 
     "have a properly structured table" when{
@@ -115,6 +142,16 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages{
         doc.select("span.visuallyhidden").eq(7).text shouldBe plaSummaryHiddenLinkTextCurrentPensionsAmt
         doc.select("span.visuallyhidden").eq(8).text shouldBe plaSummaryHiddenLinkTextPensionDebits
         doc.select("span.visuallyhidden").eq(10).text shouldBe plaSummaryHiddenLinkTextPsoDetails
+      }
+
+      "that works with different values" in{
+        docTwo.select("span#pensionsTakenQuestionText.small").text shouldBe plaSummaryQuestionsPensionsTaken
+        docTwo.select("span#pensionsTakenDisplayValue0.medium").text shouldBe plaBaseNo
+        docTwo.select("a#pensionsTakenChangeLink.bold-xsmall").text shouldBe plaBaseChange
+        docTwo.select("td#total-message.total-font.summary-text").text shouldBe plaSummaryQuestionsTotalPensionsAmt
+        docTwo.select("td#totalPensionsAmtDisplayValue0").text shouldBe "£123,456"
+        docTwo.select("span#pensionDebitsQuestionText.small").text shouldBe plaSummaryQuestionsPensionDebits
+        docTwo.select("span#pensionDebitsDisplayValue0.medium").text shouldBe plaBaseNo
       }
     }
 
@@ -156,6 +193,7 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages{
 
     "have a continue button" in{
       doc.select("button").text shouldBe plaConfirmButton
+      doc.select("button").attr("type") shouldBe "submit"
     }
 
     "have the right error messages" in{

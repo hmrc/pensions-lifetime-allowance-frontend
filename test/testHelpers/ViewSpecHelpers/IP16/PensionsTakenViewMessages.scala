@@ -21,4 +21,5 @@ trait PensionsTakenViewMessages {
   val plaPensionsTakenBulletOne = "you got money from your pensions"
   val plaPensionsTakenBulletTwo = "you transferred a pension to a scheme held overseas"
   val plaPensionsTakenBulletThree = "you turned 75 with pension savings that you hadn't yet taken"
+  val plaPensionsTakenLegendText = "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?"
 }

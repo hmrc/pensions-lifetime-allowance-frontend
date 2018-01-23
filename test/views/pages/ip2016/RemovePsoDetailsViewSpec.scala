@@ -39,7 +39,6 @@ class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetail
 
     "have the correct and properly formatted header"in{
       doc.select("h1").text shouldBe plaPsoDetailsTitle
-      doc.select("h1").hasClass("heading-large") shouldBe true
     }
 
     "have a valid form" in{
@@ -54,6 +53,7 @@ class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetail
 
     "have a remove button" in{
       doc.select("button").text shouldBe plaBaseRemove
+      doc.select("button").attr("type") shouldBe "submit"
     }
   }
 }

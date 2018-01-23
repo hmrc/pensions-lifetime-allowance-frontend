@@ -26,12 +26,12 @@ import testHelpers.ViewSpecHelpers.IP16.CurrentPensionsViewMessages
 class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsViewMessages{
 
   "the CurrentPensionsView" should{
-    val model = CurrentPensionsForm.currentPensionsForm.bind(Map("currentPensionsAmt" -> "12000"))
-    lazy val view = views(model)
+    val currentPensionsForm = CurrentPensionsForm.currentPensionsForm.bind(Map("currentPensionsAmt" -> "12000"))
+    lazy val view = views(currentPensionsForm)
     lazy val doc = Jsoup.parse(view.body)
 
-    val errorModel = CurrentPensionsForm.currentPensionsForm.bind(Map("currentPensionsAmt" -> "a"))
-    lazy val errorView = views(errorModel)
+    val errorForm = CurrentPensionsForm.currentPensionsForm.bind(Map("currentPensionsAmt" -> "a"))
+    lazy val errorView = views(errorForm)
     lazy val errorDoc = Jsoup.parse(errorView.body)
     lazy val form = doc.select("form")
 
@@ -41,7 +41,6 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
 
     "have the correct and properly formatted header"in{
       doc.select("h1").text shouldBe plaCurrentPensionsTitle
-      doc.select("h1").hasClass("heading-large") shouldBe true
     }
 
     "have some introductory text" in{
@@ -58,13 +57,14 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
 
     "have a help link redirecting to the right location" in{
       doc.select("p").eq(3).text shouldBe plaHelpLinkCompleteMessage
-      doc.getElementsByTag("a").text shouldBe plaHelpLink
-      doc.getElementsByTag("a").attr("href") shouldBe plaHelpLinkExternalReference
+      doc.select("a").text shouldBe plaHelpLink
+      doc.select("a").attr("href") shouldBe plaHelpLinkExternalReference
     }
 
-    "have a valid text box" in{
+    "has a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitCurrentPensions().url
+      form.select("legend.visually-hidden").text() shouldBe plaCurrentPensionsLegendText
     }
 
     "have a £ symbol present" in{
@@ -73,12 +73,19 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
 
     "have a continue button" in{
       doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorDoc.select("h2").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.getElementById("currentPensionsAmt-error-summary").text shouldBe errorReal
-      errorDoc.getElementById("currentPensionsAmt-error-message").text shouldBe errorReal
+      errorDoc.select("a#currentPensionsAmt-error-summary").text shouldBe errorReal
+      errorDoc.select("span#currentPensionsAmt-error-message.error-notification").text shouldBe errorReal
+    }
+
+    "not have errors on valid pages" in{
+      currentPensionsForm.hasErrors shouldBe false
+      doc.select("a#currentPensionsAmt-error-summary").text shouldBe ""
+      doc.select("span#currentPensionsAmt-error-message.error-notification").text shouldBe ""
     }
   }
 

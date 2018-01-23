@@ -42,7 +42,6 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
 
     "have the correct and properly formatted header"in{
       doc.select("h1").text shouldBe plaPensionsTakenBeforeTitle
-      doc.select("h1").hasClass("heading-large") shouldBe true
     }
 
     "have the right explanatory messages" in{
@@ -66,9 +65,10 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
       doc.getElementsByTag("a").attr("href") shouldBe plaPensionsTakenBeforeHelpLinkLocation
     }
 
-    "have a valid text box" in{
+    "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTakenBefore().url
+      form.select("legend.visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
     }
 
     "have a £ symbol present" in{
@@ -77,17 +77,25 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
 
     "have a pair of yes/no buttons" in{
       doc.select("[for=pensionsTakenBefore-yes]").text shouldBe plaBaseYes
+      doc.select("input#pensionsTakenBefore-yes").attr("type") shouldBe "radio"
       doc.select("[for=pensionsTakenBefore-no]").text shouldBe plaBaseNo
+      doc.select("input#pensionsTakenBefore-no").attr("type") shouldBe "radio"
     }
 
     "have a continue button" in{
       doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select("span.error-notification").text shouldBe errorRequired
+    }
+
+    "not have errors on valid pages" in{
+      pensionsForm.hasErrors shouldBe false
+      doc.select("span.error-notification").text shouldBe ""
     }
   }
 }

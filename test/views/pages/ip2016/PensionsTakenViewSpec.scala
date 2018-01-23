@@ -41,12 +41,13 @@ class PensionsTakenViewSpec extends CommonViewSpecHelper with PensionsTakenViewM
 
     "have the correct and properly formatted header"in{
       doc.select("h1").text shouldBe plaPensionsTakenTitle
-      doc.select("h1").hasClass("heading-large") shouldBe true
     }
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTaken().url
+      form.select("legend.visually-hidden").text() shouldBe plaPensionsTakenLegendText
+
     }
 
     "have some introductory text" in{
@@ -57,17 +58,25 @@ class PensionsTakenViewSpec extends CommonViewSpecHelper with PensionsTakenViewM
 
     "have a pair of yes/no buttons" in{
       doc.select("[for=pensionsTaken-yes]").text shouldBe plaBaseYes
+      doc.select("input#pensionsTaken-yes").attr("type") shouldBe "radio"
       doc.select("[for=pensionsTaken-no]").text shouldBe plaBaseNo
+      doc.select("input#pensionsTaken-no").attr("type") shouldBe "radio"
     }
 
     "have a continue button" in{
       doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select("span.error-notification").text shouldBe plaBaseErrorsMandatoryError
+    }
+
+    "not have errors on valid pages" in{
+      pensionsForm.hasErrors shouldBe false
+      doc.select("span.error-notification").text shouldBe ""
     }
   }
 }

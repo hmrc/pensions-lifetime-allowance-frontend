@@ -41,7 +41,6 @@ class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPension
 
     "have the correct and properly formatted header"in{
       doc.select("h1").text shouldBe plaOverseasPensionsTitle
-      doc.select("h1").hasClass("heading-large") shouldBe true
     }
 
     "have some introductory text" in{
@@ -54,12 +53,15 @@ class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPension
 
     "have a pair of yes/no buttons" in{
       doc.select("[for=overseasPensions-yes]").text shouldBe plaBaseYes
+      doc.select("input#overseasPensions-yes").attr("type") shouldBe "radio"
       doc.select("[for=overseasPensions-no]").text shouldBe plaBaseNo
+      doc.select("input#overseasPensions-no").attr("type") shouldBe "radio"
     }
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitOverseasPensions().url
+      form.select("legend.visually-hidden").text() shouldBe plaOverseasPensionsLegendText
     }
 
     "have a £ symbol present" in{
@@ -68,6 +70,7 @@ class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPension
 
     "have a continue button" in{
       doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
@@ -75,5 +78,11 @@ class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPension
       errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select("span.error-notification").text shouldBe errorRequired
     }
+
+    "not have errors on valid pages" in{
+      oPensionsForm.hasErrors shouldBe false
+      doc.select("span.error-notification").text shouldBe ""
+    }
+
   }
 }

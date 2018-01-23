@@ -29,7 +29,7 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
     val pensionsForm = PSODetailsForm.psoDetailsForm.bind(Map(
       "psoDay" -> "1",
       "psoMonth" -> "2",
-      "psoYes" -> "2017",
+      "psoYear" -> "2017",
       "psoAmt" -> "12345"))
 
     lazy val view = views(pensionsForm)
@@ -47,10 +47,9 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
 
     "have the correct and properly formatted header"in{
       doc.select("h1").text shouldBe plaPsoDetailsTitle
-      doc.select("h1").hasClass("heading-large") shouldBe true
     }
 
-    "have the right subheadings" in{
+    "have the right headers for the PSO date and PSO amount" in{
       doc.select("h2").eq(1).text shouldBe plaPsoDetailsDateQuestionText
       doc.select("h2").eq(2).text shouldBe plaPsoDetailsPsoAmountQuestion
     }
@@ -80,6 +79,7 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
 
     "have a continue button" in{
       doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
@@ -89,6 +89,14 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
       errorDoc.select("span.error-notification").eq(1).text shouldBe plaBaseErrorsMonthEmpty
       errorDoc.select("span.error-notification").eq(2).text shouldBe plaBaseErrorsYearEmpty
       errorDoc.select("span.error-notification").eq(3).text shouldBe errorRequired
+    }
+
+    "not have errors on valid pages" in{
+      pensionsForm.hasErrors shouldBe false
+      doc.select("span.error-notification").eq(0).text shouldBe ""
+      doc.select("span.error-notification").eq(1).text shouldBe ""
+      doc.select("span.error-notification").eq(2).text shouldBe ""
+      doc.select("span.error-notification").eq(3).text shouldBe ""
     }
   }
 }

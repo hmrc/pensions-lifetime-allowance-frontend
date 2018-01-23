@@ -42,7 +42,6 @@ class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTak
 
     "have the correct and properly formatted header"in{
       doc.select("h1").text shouldBe plaPensionsTakenBetweenTitle
-      doc.select("h1").hasClass("heading-large") shouldBe true
     }
 
     "have the right sub-headers and summary text" in{
@@ -70,13 +69,14 @@ class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTak
     }
 
     "have a help link redirecting to the right location" in{
-      doc.getElementsByTag("a").text shouldBe plaPensionsTakenBetweenHelpLinkText
-      doc.getElementsByTag("a").attr("href") shouldBe plaPensionsTakenBetweenHelpLinkLocation
+      doc.select("a").text shouldBe plaPensionsTakenBetweenHelpLinkText
+      doc.select("a").attr("href") shouldBe plaPensionsTakenBetweenHelpLinkLocation
     }
 
-    "have a valid text box" in{
+    "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTakenBetween().url
+      form.select("legend.visually-hidden").text() shouldBe plaPensionsTakenBetweenLegendText
     }
 
     "have a £ symbol present" in{
@@ -85,17 +85,25 @@ class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTak
 
     "have a pair of yes/no buttons" in{
       doc.select("[for=pensionsTakenBetween-yes]").text shouldBe plaBaseYes
+      doc.select("input#pensionsTakenBetween-yes").attr("type") shouldBe "radio"
       doc.select("[for=pensionsTakenBetween-no]").text shouldBe plaBaseNo
+      doc.select("input#pensionsTakenBetween-no").attr("type") shouldBe "radio"
     }
 
     "have a continue button" in{
       doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select("span.error-notification").text shouldBe errorRequired
+    }
+
+    "not have errors on valid pages" in{
+      pensionsForm.hasErrors shouldBe false
+      doc.select("span.error-notification").text shouldBe ""
     }
   }
 }
