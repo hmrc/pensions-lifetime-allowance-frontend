@@ -17,7 +17,9 @@
 package testHelpers.ViewSpecHelpers.lookup
 
 trait PsaLookupResultsSpecMessages {
-
+  val logoText = "GOV.UK"
+  val hmrcText = "HM Revenue & Customs"
+  val copyrightText = "© Crown Copyright"
   val titleText = "PSA Lookup"
   val headingText = "Results of lifetime allowance protection check"
   val schemeAdministratorRowTitleText = "Scheme Administrator Reference:"
