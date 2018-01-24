@@ -33,15 +33,13 @@ import mocks.AuthMock
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
-import testHelpers.AuthorisedFakeRequestTo
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
+import play.api.test.Helpers._
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
+import uk.gov.hmrc.auth.core.retrieve.{Retrievals}
 import uk.gov.hmrc.http.HeaderCarrier
 
 class PrintControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
@@ -105,8 +103,9 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
     "InValid data is provided" should {
       lazy val result = await(TestPrintControllerInValidDetails.printView(fakeRequest))
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
-      "return " in {
+      "return a 303 redirect" in {
         status(result) shouldBe 303
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.url)
       }
     }
   }
