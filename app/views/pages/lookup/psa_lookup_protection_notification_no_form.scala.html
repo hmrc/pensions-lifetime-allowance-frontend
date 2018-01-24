@@ -27,7 +27,9 @@
 
     <h1> @Messages("psa.lookup.form.protection-notification-no-form.title")</h1>
 
-    @govHelpers.errorSummary(Messages("pla.lookup.form.error.summary"), pnnForm)
+    @if(pnnForm("lifetimeAllowanceReference").hasErrors) {
+        @govHelpers.errorSummary(Messages("pla.lookup.form.error.summary"), pnnForm)
+    }
 
     @govHelpers.form(action = routes.LookupController.submitProtectionNotificationNoForm) {
 
