@@ -27,8 +27,9 @@
 @views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
 
     <h1> @Messages("psa.lookup.form.scheme-admin-ref-form.title")</h1>
-
-    @govHelpers.errorSummary(Messages("pla.lookup.form.error.summary"), psaRefForm)
+    @if(psaRefForm("pensionSchemeAdministratorCheckReference").hasErrors) {
+        @govHelpers.errorSummary(Messages("pla.lookup.form.error.summary"), psaRefForm)
+    }
 
     @govHelpers.form(action = routes.LookupController.submitSchemeAdministratorReferenceForm) {
 
