@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.withdraw
+package views.pages.withdraw
 
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits.applicationMessages
