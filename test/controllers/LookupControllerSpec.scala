@@ -40,7 +40,7 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpResponse, SessionKeys }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys, Upstream4xxResponse}
 
 class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with MockitoSugar with GuiceOneAppPerSuite {
 
@@ -186,6 +186,22 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
       redirectLocation(result).get mustBe routes.LookupController.displayLookupResults().url
     }
 
+    "submit pnn form with valid data and redirect when a NOT FOUND is returned" in {
+      keystoreFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSA REF")))
+      plaConnectorReturn(HttpResponse(OK, Some(plaReturnJson)))
+
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*)
+
+      when(mockPLAConnector.psaLookup(any(), any())(any()))
+        .thenReturn(Future.failed(Upstream4xxResponse("message", NOT_FOUND, NOT_FOUND)))
+      keystoreSaveCondition[PSALookupResult](mockCacheMap)
+
+      val result = TestController.submitProtectionNotificationNoForm.apply(request)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result).get mustBe routes.LookupController.displayNotFoundResults().url
+    }
+
     "display errors when invalid data entered for pnn form" in {
       val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(invalidPNNForm: _*)
 
@@ -195,6 +211,17 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       status(result) mustBe BAD_REQUEST
       contentAsString(result) must include(Messages("psa.lookup.form.pnn.required"))
+    }
+
+    "redirect to the administrator reference form when PSA request data not found on submission" in {
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*)
+
+      keystoreFetchCondition[PSALookupRequest](None)
+
+      val result = TestController.submitProtectionNotificationNoForm.apply(request)
+
+      status(result) mustBe SEE_OTHER
+      redirectLocation(result) mustBe Some(routes.LookupController.displaySchemeAdministratorReferenceForm().url)
     }
 
     "return 200 with correct message on results page" in {
