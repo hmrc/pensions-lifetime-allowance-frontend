@@ -104,6 +104,10 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
         doc.select("div.error-summary").size() shouldBe 1
       }
 
+      "should have error summary text" in {
+        doc.select("h2").text() shouldBe errorSummaryText
+      }
+
       "have error notifications" in {
         doc.select("fieldset div.error-notification").size() shouldBe 1
       }

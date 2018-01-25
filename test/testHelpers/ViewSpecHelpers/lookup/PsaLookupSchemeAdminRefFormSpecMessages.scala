@@ -20,4 +20,5 @@ trait PsaLookupSchemeAdminRefFormSpecMessages {
   val titleText = "PSA Lookup"
   val headingText = "Enter the Scheme Administrator Reference"
   val hintText = "Example: PSA12345678A"
+  val errorSummaryText = "Something you've entered isn't valid"
 }

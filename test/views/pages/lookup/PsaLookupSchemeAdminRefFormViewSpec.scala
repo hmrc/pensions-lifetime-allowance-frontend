@@ -89,6 +89,10 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
         doc.select("div.error-summary").size() shouldBe 1
       }
 
+      "should have error summary text" in {
+        doc.select("h2").text() shouldBe errorSummaryText
+      }
+
       "have a fieldset with error classes" in {
         doc.select("fieldset div.form-field--error").size() shouldBe 1
         doc.select("fieldset div.error-notification").size() shouldBe 1
