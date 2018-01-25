@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package views.lookup
+package views.pages.lookup
 
-import forms.PSALookupSchemeAdministratorReferenceForm
+import forms.PSALookupProtectionNotificationNoForm
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import play.api.i18n.Messages.Implicits._
-import testHelpers.ViewSpecHelpers.lookup.PsaLookupSchemeAdminRefFormSpecMessages
-import views.html.pages.lookup.psa_lookup_scheme_admin_ref_form
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.ViewSpecHelpers.lookup.PsaLookupProtectionNotificationNoFormSpecMessages
+import views.html.pages.lookup.psa_lookup_protection_notification_no_form
 
-class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaLookupSchemeAdminRefFormSpecMessages {
 
-  "The Psa Lookup Scheme Admin Ref form view" when {
+class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper with PsaLookupProtectionNotificationNoFormSpecMessages {
 
-    "provided with no errors" should {
-      lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm.bind(Map("pensionSchemeAdministratorCheckReference" -> "PSA12345678A"))
-      lazy val view = psa_lookup_scheme_admin_ref_form(form)
+  "The Psa Lookup Protection Notification No Form view" when {
+
+    "provided with a form without errors" should {
+      lazy val form = PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "IP141000000000A"))
+      lazy val view = psa_lookup_protection_notification_no_form(form)
       lazy val doc = Jsoup.parse(view.body)
 
       "have the correct title" in {
@@ -40,23 +41,26 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
         doc.select("h1").text() shouldBe headingText
       }
 
-      "have no error summary" in {
+      "not have an error summary" in {
         doc.select("div.error-summary").size() shouldBe 0
       }
 
       "have a form" which {
 
-        "has the correct action" in {
-          doc.select("form").attr("action") shouldBe controllers.routes.LookupController.submitSchemeAdministratorReferenceForm().url
-        }
-
         "has the correct method" in {
           doc.select("form").attr("method") shouldBe "POST"
         }
+
+        "has the correct action" in {
+          doc.select("form").attr("action") shouldBe controllers.routes.LookupController.submitProtectionNotificationNoForm().url
+        }
       }
 
-      "have a fieldset with no error classes" in {
-        doc.select("fieldset div.form-field--error").size() shouldBe 0
+      "have a fieldset with a div without error classes" in {
+        doc.select("fieldset div").first().attr("class") shouldBe "form-field"
+      }
+
+      "not have error notifications" in {
         doc.select("fieldset div.error-notification").size() shouldBe 0
       }
 
@@ -65,32 +69,42 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       }
 
       "have a text input with the data pre-populated" in {
-        doc.select("input[type=text]").attr("value") shouldBe "PSA12345678A"
+        doc.select("input[type=text]").attr("value") shouldBe "IP141000000000A"
       }
 
       "have a button" which {
 
         "has the correct text" in {
-          doc.select("button").text() shouldBe plaBaseContinue
+          doc.select("button").text() shouldBe buttonText
         }
 
         "has the correct type" in {
           doc.select("button").attr("type") shouldBe "submit"
         }
       }
+
+      "have a back-link" which {
+
+        "has the correct text" in {
+          doc.select("a.back-link").text() shouldBe plaBaseBack
+        }
+
+        "has the correct destination" in {
+          doc.select("a.back-link").attr("href") shouldBe controllers.routes.LookupController.displaySchemeAdministratorReferenceForm().url
+        }
+      }
     }
 
-    "provided with errors" should {
-      lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm.bind(Map("pensionSchemeAdministratorCheckReference" -> "A"))
-      lazy val view = psa_lookup_scheme_admin_ref_form(form)
+    "provided with a form with errors" should {
+      lazy val form = PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "A"))
+      lazy val view = psa_lookup_protection_notification_no_form(form)
       lazy val doc = Jsoup.parse(view.body)
 
       "have an error summary" in {
         doc.select("div.error-summary").size() shouldBe 1
       }
 
-      "have a fieldset with error classes" in {
-        doc.select("fieldset div.form-field--error").size() shouldBe 1
+      "have error notifications" in {
         doc.select("fieldset div.error-notification").size() shouldBe 1
       }
 
@@ -100,16 +114,15 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
     }
 
     "provided with an empty form" should {
-      lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm
-      lazy val view = psa_lookup_scheme_admin_ref_form(form)
+      lazy val form = PSALookupProtectionNotificationNoForm.pnnForm
+      lazy val view = psa_lookup_protection_notification_no_form(form)
       lazy val doc = Jsoup.parse(view.body)
 
-      "have no error summary" in {
+      "not have an error summary" in {
         doc.select("div.error-summary").size() shouldBe 0
       }
 
-      "have a fieldset with no error classes" in {
-        doc.select("fieldset div.form-field--error").size() shouldBe 0
+      "not have error notifications" in {
         doc.select("fieldset div.error-notification").size() shouldBe 0
       }
 
@@ -118,4 +131,5 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       }
     }
   }
+
 }

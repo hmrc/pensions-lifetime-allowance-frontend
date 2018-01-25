@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.lookup
+package views.pages.lookup
 
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._

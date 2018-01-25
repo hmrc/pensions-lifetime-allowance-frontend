@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.lookup
+package views.pages.lookup
 
 import models.PSALookupRequest
 import org.jsoup.Jsoup
