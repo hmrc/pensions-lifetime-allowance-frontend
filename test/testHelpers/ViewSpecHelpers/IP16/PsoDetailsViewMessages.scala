@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.lookup
+package testHelpers.ViewSpecHelpers.IP16
 
-trait PsaLookupSchemeAdminRefFormSpecMessages {
-  val titleText = "PSA Lookup"
-  val headingText = "Enter the Scheme Administrator Reference"
-  val hintText = "Example: PSA12345678A"
-  val errorSummaryText = "Something you've entered isn't valid"
+trait PsoDetailsViewMessages {
+  val plaPsoDetailsTitle = "Pension sharing order"
+  val plaPsoDetailsDateQuestionText = "Date of pension sharing order"
+  val plaPsoDetailsPsoAmountQuestion = "Amount of pension sharing order"
+  val plaPsoDetailsDateHintText = "For example, 18 4 2016 "
+  val plaPsoDetailsVisitPTA = "Once you've completed this service, you can add a pension sharing order at any time by visiting your personal tax account."
 }

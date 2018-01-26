@@ -33,15 +33,13 @@ import mocks.AuthMock
 import org.scalatest.mock.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
-import testHelpers.AuthorisedFakeRequestTo
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
+import play.api.test.Helpers._
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
+import uk.gov.hmrc.auth.core.retrieve.{Retrievals}
 import uk.gov.hmrc.http.HeaderCarrier
 
 class PrintControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
@@ -68,6 +66,7 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     override def config: Configuration = mock[Configuration]
+
     override def env: Environment = mock[Environment]
   }
 
@@ -78,6 +77,12 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
     when(displayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(testPrintDisplayModel)
   }
 
+  object TestPrintControllerInValidDetails extends BaseTestPrintController {
+    override lazy val appConfig = MockConfig
+    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(Some(testPersonalDetails)))
+    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(None)
+    when(displayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(testPrintDisplayModel)
+  }
 
   "Navigating to print protection" when {
 
@@ -94,6 +99,16 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
         jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("Testy Mctestface")
       }
     }
-  }
 
+    "InValid data is provided" should {
+      lazy val result = await(TestPrintControllerInValidDetails.printView(fakeRequest))
+      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      "return a 303 redirect" in {
+        status(result) shouldBe 303
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.url)
+      }
+    }
+  }
 }
+
+

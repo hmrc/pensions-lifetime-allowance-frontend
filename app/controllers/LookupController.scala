@@ -102,6 +102,8 @@ trait LookupController extends BaseController {
                   _ => Redirect(routes.LookupController.displayNotFoundResults())
                 }
             }
+          case _ =>
+            Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
         }
       }
     )

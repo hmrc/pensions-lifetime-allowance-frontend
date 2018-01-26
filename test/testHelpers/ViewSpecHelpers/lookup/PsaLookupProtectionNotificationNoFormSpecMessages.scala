@@ -22,4 +22,5 @@ trait PsaLookupProtectionNotificationNoFormSpecMessages {
   val headingText = "Enter the Protection Notification Number"
   val hintText = "Example: IP141000000000A"
   val buttonText = "Submit"
+  val errorSummaryText = "Something you've entered isn't valid"
 }

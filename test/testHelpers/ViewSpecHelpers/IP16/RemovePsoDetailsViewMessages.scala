@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.lookup
+package testHelpers.ViewSpecHelpers.IP16
 
-trait PsaLookupSchemeAdminRefFormSpecMessages {
-  val titleText = "PSA Lookup"
-  val headingText = "Enter the Scheme Administrator Reference"
-  val hintText = "Example: PSA12345678A"
-  val errorSummaryText = "Something you've entered isn't valid"
+trait RemovePsoDetailsViewMessages{
+  val plaPsoDetailsTitle = "Pension sharing order"
+  val plaPsoDetailsRemovePso = "This will remove your pension sharing order."
+  val plaPsoDetailsCancelRemove = "Do not remove"
+  val plaPsoDetailsCancellationLink = "/protect-your-lifetime-allowance/apply-for-ip16-submit-your-application"
 }

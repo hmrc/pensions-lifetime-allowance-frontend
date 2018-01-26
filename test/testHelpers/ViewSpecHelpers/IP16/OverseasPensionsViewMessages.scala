@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.lookup
+package testHelpers.ViewSpecHelpers.IP16
 
-trait PsaLookupSchemeAdminRefFormSpecMessages {
-  val titleText = "PSA Lookup"
-  val headingText = "Enter the Scheme Administrator Reference"
-  val hintText = "Example: PSA12345678A"
-  val errorSummaryText = "Something you've entered isn't valid"
+trait OverseasPensionsViewMessages {
+  val plaOverseasPensionsTitle = "Have you put money into a pension scheme held overseas?"
+  val plaOverseasPensionsQuestion = "Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on."
+  val plaOverseasPensionsQuestionTwo = "How much did you contribute?"
+  val plaOverseasPensionsLegendText = "Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2016?"
 }

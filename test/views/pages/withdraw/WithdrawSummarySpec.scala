@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.withdraw
+package views.pages.withdraw
 
 import config.FrontendAppConfig
 import controllers.routes
