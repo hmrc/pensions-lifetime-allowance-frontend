@@ -30,7 +30,7 @@ class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages
   "The Result Rejected Page" should {
 
     lazy val protectionmodel = ProtectionDetailsDisplayModel(Some(""), "", Some(""))
-    lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", false, Some(protectionmodel), Seq(""))
+    lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", false, Some(protectionmodel), Seq("1", "2"))
     implicit lazy val view = views(testmodel)
     implicit lazy val doc = Jsoup.parse(view.body)
 
@@ -43,7 +43,7 @@ class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages
       lazy val h1Tag = doc.select("h1")
 
       "have the heading text" in {
-        //h1Tag.text shouldBe Messages(s"$resultCode."+res.notificationId+".heading")
+        h1Tag.text shouldBe "You've added fixed protection 2016"
       }
 
       "have the correct Id" in {
@@ -54,11 +54,11 @@ class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages
     "have a result code paragraph which" should {
 
       "have the text" in {
-//        doc.select("p").get(0).text shouldBe Messages(s"$resultCode."+res.notificationId+".$infoNum")
+        doc.body.select("p").get(0).text  shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."//Messages(s"$resultCode."+res.notificationId+".$infoNum")
       }
 
       "have the correct Id" in {
-//        doc.select("p").get(0).attr("id") shouldBe s"additionalInfo$infoNum"
+        doc.body.select("p").get(0).attr("id") shouldBe "additionalInfo1"
       }
     }
 
@@ -75,33 +75,33 @@ class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages
     "have a IP Pension sharing paragraph which" should {
 
       "have the text" in {
-        doc.select("p").get(1).text shouldBe plaResultSuccessIPPensionSharing
+        doc.select("p").get(2).text shouldBe plaResultSuccessIPPensionSharing
       }
 
       "have the correct Id" in {
-        doc.select("p").get(1).attr("id") shouldBe "ipPensionSharing"
+        doc.select("p").get(2).attr("id") shouldBe "ipPensionSharing"
       }
     }
 
-
-    "have a FP Add To Pension paragraph which" should {
-
-      "have the text" in {
-        doc.select("p").get(3).text shouldBe plaResultSuccessFPAddToPension
-      }
-
-      "have the correct Id" in {
-        doc.select("p").get(3).attr("id") shouldBe "fpAddToPension"
-      }
-
-    }
+      /*If Application Type = FP2016 ...*/
+//
+//    "have a FP Add To Pension paragraph which" should {
+//
+//      "have the text" in {
+//        doc.select("p").get(1).text shouldBe plaResultSuccessFPAddToPension
+//      }
+//
+//      "have the correct Id" in {
+//        doc.select("p").get(1).attr("id") shouldBe "fpAddToPension"
+//      }
+//    }
 
     "have a Existing Protections paragraph which" should {
 
-      lazy val detailsLink = doc.select("p a").get(1)
+      lazy val detailsLink = doc.select("p a").get(2)
 
       "have the text" in {
-        doc.select("p").get(2).text shouldBe plaResultRejectionViewDetails
+        doc.select("p").get(3).text shouldBe s"$plaResultRejectionViewDetails $plaResultRejectionViewDetailsLinkText."
       }
 
       "have the link text" in {
@@ -113,7 +113,7 @@ class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages
       }
 
       "have the link destination" in {
-        detailsLink.attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections
+        detailsLink.attr("href") shouldBe "/protect-your-lifetime-allowance/existing-protections"
       }
 
     }
@@ -130,10 +130,10 @@ class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages
 
     "have a Exit Survey paragraph which" should {
 
-      lazy val exitLink = doc.select("p a").get(2)
+      lazy val exitLink = doc.select("p a").get(3)
 
       "have the text" in {
-        doc.select("p").get(3).text shouldBe s"$plaResultSuccessExitSurveyLinkText $plaResultSuccessExitSurvey"
+        doc.select("p").get(4).text shouldBe s"$plaResultSuccessExitSurveyLinkText $plaResultSuccessExitSurvey"
       }
 
       "have the link text" in {
@@ -141,7 +141,7 @@ class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages
       }
 
       "have the link destination" in {
-        exitLink.attr("href") shouldBe controllers.routes.ExitSurveyController.exitSurvey
+        exitLink.attr("href") shouldBe "/protect-your-lifetime-allowance/exit"
       }
 
     }

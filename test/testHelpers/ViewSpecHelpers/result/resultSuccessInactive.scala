@@ -20,14 +20,14 @@ trait resultSuccessInactive {
 
   val  plaResultSuccessTitle                 = "Success"
   val  plaResultSuccessIPChangeDetails       = "Changing your protection details"
-  val  plaResultSuccessIPPensionSharing      = "If your pension gets shared in a divorce or civil partnership split, contact <a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries'>HMRC Pension Schemes Services</a> within 60 days."
-  val  plaResultSuccessFPAddToPension        = "If you or your employer adds to your pension, contact <a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries'>HMRC Pension Schemes Services</a> within 90 days."
+  val  plaResultSuccessIPPensionSharing      = "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
+  val  plaResultSuccessFPAddToPension        = "If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days."
   val  plaResultRejectionViewDetails         = "You can view or change details of your protections in your"
   val  plaResultRejectionViewDetailsLinkText = "personal tax account"
   val  plaResultSuccessGiveFeedback          = "Give us feedback"
   val  plaResultSuccessExitSurveyLinkText    = "What did you think of this service?"
   val  plaResultSuccessExitSurvey            = "Your feedback helps us improve."
 
-
+  val  pensionSchemesLink                    = "<a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries'>"
 
 }

@@ -34,6 +34,7 @@ trait resultSuccess {
   val plaResultSuccessGiveFeedback          = "Give us feedback"
   val plaResultSuccessExitSurveyLinkText    = "What did you think of this service?"
   val plaResultSuccessExitSurvey            = "Your feedback helps us improve"
+  val plaResultSuccessExitSurveyCombined    = "What did you think of this service? Your feedback helps us improve."
   val plaResultSuccessYourName              = "your full name"
   val plaResultSuccessYourNino              = "your National Insurance number"
 

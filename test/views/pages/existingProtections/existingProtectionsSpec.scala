@@ -86,24 +86,24 @@ class existingProtectionsSpec extends CommonViewSpecHelper with existingProtecti
         h1Tag.hasClass("heading-xlarge") shouldBe true
       }
     }
-
-    "have a protections list which" should {
-
-      "have the id" in {
-        doc.select("div").get(2).attr("id") shouldBe "listProtections"
-      }
-
-      "have the message" in {
-        doc.select("div").get(2).text shouldBe plaExistingProtectionsNoActiveProtections
-      }
-    }
-
-    "have another protections list which" should {
-
-      "have the message" in {
-        doc.select("div").get(3).text shouldBe plaExistingProtectionsNoOtherProtections
-      }
-    }
+      /*If No previous protections exist ...*/
+//    "have a protections list which" should {
+//
+//      "have the id" in {
+//        doc.select("div").get(2).attr("id") shouldBe "listProtections"
+//      }
+//
+//      "have the message" in {
+//        doc.select("div").get(2).text shouldBe plaExistingProtectionsNoActiveProtections
+//      }
+//    }
+//
+//    "have another protections list which" should {
+//
+//      "have the message" in {
+//        doc.select("div").get(3).text shouldBe plaExistingProtectionsNoOtherProtections
+//      }
+//    }
 
     "have a back to home link which" should {
 

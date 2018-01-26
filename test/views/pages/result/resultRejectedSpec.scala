@@ -31,7 +31,7 @@ class resultRejectedSpec extends CommonViewSpecHelper with resultRejected with C
 
   "The Result Rejected Page" should {
 
-    lazy val model = RejectionDisplayModel("24", Seq(""), ApplicationType.IP2016)
+    lazy val model = RejectionDisplayModel("24", Seq("1", "2"), ApplicationType.IP2016)
     lazy val view = views(model)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -59,22 +59,22 @@ class resultRejectedSpec extends CommonViewSpecHelper with resultRejected with C
     "have the result outcome paragraph which" should {
 
       "contain the text" in {
-        //doc.select("p").get(0).text shouldBe Messages(s"$resultCode.'+res.notificationId+'.heading")
+        doc.select("p").get(0).text shouldBe "You've added fixed protection 2016"
       }
 
       "have the correct Id" in {
-        //doc.select("p").get(0) shouldBe "resultOutcome"
+        doc.select("p").get(0).attr("id") shouldBe "resultOutcome"
       }
     }
 
     "have the additional info paragraph which" should {
 
       "contain the text" in {
-        //doc.select("p").get(1).text shouldBe Messages(s"$resultCode.' + res.notificationId+ '." + infoNum)
+        doc.select("p").get(1).text shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."
       }
 
       "have the correct Id" in {
-        //doc.select("p").get(1) shouldBe Messages(s"additionalInfo$infoNum")
+        doc.select("p").get(1).attr("id") shouldBe "additionalInfo1"
       }
     }
 
@@ -82,27 +82,27 @@ class resultRejectedSpec extends CommonViewSpecHelper with resultRejected with C
 
       lazy val h2Tag0 = doc.select("h2").get(0)
 
-      s"have the heading text $plaResultRejectionPageHeading" in {
-        h2Tag0.text shouldBe plaResultRejectionPageHeading
+      s"have the heading text $plaResultSuccessIPChangeDetails" in {
+        h2Tag0.text shouldBe plaResultSuccessIPChangeDetails
       }
     }
 
     "have a rejection details paragraph which" should {
 
       s"contain the message $plaResultRejectionViewDetails" in {
-        doc.select("p").get(2).text shouldBe plaResultRejectionViewDetails
+        doc.select("p").get(3).text shouldBe s"$plaResultRejectionViewDetails $plaResultRejectionViewDetailsLinkText."
       }
 
       "have a link Id" in {
-        doc.select("p a").get(0).attr("Id") shouldBe "existingProtectionsLink"
+        doc.select("p a").get(1).attr("Id") shouldBe "existingProtectionsLink"
       }
 
       "harbour a link with the destination $" in {
-        doc.select("p a").get(0).attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections
+        doc.select("p a").get(1).attr("href") shouldBe "/protect-your-lifetime-allowance/existing-protections"
       }
 
       "have link text" in {
-        doc.select("p a").get(0).text shouldBe plaResultRejectionViewDetailsLinkText
+        doc.select("p a").get(1).text shouldBe plaResultRejectionViewDetailsLinkText
       }
     }
 
@@ -118,15 +118,15 @@ class resultRejectedSpec extends CommonViewSpecHelper with resultRejected with C
     "have an exit survey paragraph which" should {
 
       s"contain the message of $plaResultSuccessExitSurvey" in {
-        doc.select("p").get(3) shouldBe plaResultSuccessExitSurvey
+        doc.select("p").get(4).text shouldBe s"$plaResultSuccessExitSurveyLinkText $plaResultSuccessExitSurvey."
       }
 
       "harbour a link with the destination $" in {
-        doc.select("p a").get(1).attr("href") shouldBe controllers.routes.ExitSurveyController.exitSurvey
+        doc.select("p a").get(2).attr("href") shouldBe "/protect-your-lifetime-allowance/exit"
       }
 
       "have link text" in {
-        doc.select("p a").get(1).text shouldBe plaResultSuccessExitSurveyLinkText
+        doc.select("p a").get(2).text shouldBe plaResultSuccessExitSurveyLinkText
       }
     }
   }

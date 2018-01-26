@@ -30,7 +30,7 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
   "The Result Success page" should {
 
     lazy val protectionmodel = ProtectionDetailsDisplayModel(Some(""), "", Some(""))
-    lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", false, Some(protectionmodel), Seq(""))
+    lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", false, Some(protectionmodel), Seq("1", "2"))
     lazy val view = views(testmodel)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -40,40 +40,40 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
 
     "have a results section which" should {
 
-      //      "have a heading with the text" in {
-      //        doc.select("div div span").text shouldBe Messages(s"resultCode.${res.notificationId}.heading")
-      //      }
+            "have a heading with the text" in {
+              doc.select("div div span").text shouldBe "You've added fixed protection 2016 100.00"//Messages(s"resultCode.${res.notificationId}.heading")
+            }
 
       "have a paragraph with the text" in {
         doc.select("p").get(0).text shouldBe plaResultSuccessAllowanceSubHeading
       }
 
             "have the correct paragraph id + class" in {
-              doc.select("div div span p").attr("id") shouldBe "resultAllowanceText"
-              doc.select("div div span p").hasClass("medium") shouldBe true
+              doc.body.select("div div span p").attr("id") shouldBe "resultAllowanceText"
+              doc.body.select("div div span p").hasClass("medium") shouldBe true
             }
 
             "have a span of protected amount" in {
-//              doc.select("div div span span").text shouldBe res.protectedAmount
+              doc.select("div div span span").text shouldBe "100.00"//res.protectedAmount
             }
 
             "have the correct id + class" in {
-              doc.select("div div span span").attr("id") shouldBe "protectedAmount"
-              doc.select("div div span span").hasClass("bold-medium") shouldBe true
+              doc.body.select("div div span span").attr("id") shouldBe "protectedAmount"
+              doc.body.select("div div span span").hasClass("bold-medium") shouldBe true
             }
           }
-      //
-      //    "has a result paragraph with code which" should {
-      //
-      //      "have the text" in {
-      //        doc.select("div div span p").text shouldBe Messages(s"$resultCode." + res.notificationId + ".$infoNum")
-      //      }
-      //
-      //      "have the Id" in {
-      //        doc.select("div div span p").attr("id") shouldBe s"additionalInfo$infoNum"
-      //      }
-      //
-      //    }
+
+          "has a result paragraph with code which" should {
+
+            "have the text" in {
+              doc.select("div div span p").text shouldBe ""
+            }
+
+            "have the Id" in {
+              doc.select("div div span p").attr("id") shouldBe "additionalInfo1"//s"additionalInfo$infoNum"
+            }
+
+          }
 
       "has a sub-heading with paragraph which" should {
 
@@ -86,13 +86,13 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
         }
       }
 
-      "has a print page link which" should {
+      "have a print page link which" should {
 
-        val printLink = doc.select("p a").get(0)
-        val linkPara = doc.select("p").get(3)
+        lazy val printLink = doc.select("p a").get(1)
+        lazy val linkPara = doc.body.select("p").get(3)
 
         "have the paragraph class" in {
-          linkPara.getClass shouldBe "print-link"
+          linkPara.attr("class") shouldBe "print-link"
         }
 
         s"have the link text $plaResultSuccessPrint($plaBaseNewWindow)" in {
@@ -121,37 +121,38 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
       "have a IP Pension sharing paragraph which" should {
 
         "have the text" in {
-          doc.select("p").get(4).text shouldBe plaResultSuccessIPPensionSharing
+          doc.body.select("p").get(4).text shouldBe plaResultSuccessIPPensionSharing
         }
 
         "have the correct Id" in {
-          doc.select("p").get(4).attr("id") shouldBe "ipPensionSharing"
+          doc.body.select("p").get(4).attr("id") shouldBe "ipPensionSharing"
         }
       }
 
+        /*If Application Type = FP2016 ...*/
 
-      "have a FP Add To Pension paragraph which" should {
-
-        "have the text" in {
-          doc.select("p").get(5).text shouldBe plaResultSuccessFPAddToPension
-        }
-
-        "have the correct Id" in {
-          doc.select("p").get(5).attr("id") shouldBe "fpAddToPension"
-        }
-
-      }
+//      "have a FP Add To Pension paragraph which" should {
+//
+//        "have the text" in {
+//          doc.select("p").get(4).text shouldBe plaResultSuccessFPAddToPension
+//        }
+//
+//        "have the correct Id" in {
+//          doc.select("p").get(4).attr("id") shouldBe "fpAddToPension"
+//        }
+//
+//      }
 
       "has a paragraph which" should {
 
-        val detailsLink = doc.select("p a").get(1)
+        lazy val detailsLink = doc.select("p a").get(1)
 
         s"have the paragraph text $plaResultSuccessViewDetails" in {
-          doc.select("p").get(6).text shouldBe plaResultSuccessViewDetails
+          doc.select("p").get(5).text shouldBe plaResultSuccessViewDetails
         }
 
         "have the destination" in {
-          detailsLink.attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections
+          detailsLink.attr("href") shouldBe "/protect-your-lifetime-allowance/existing-protections"
         }
 
         "have the link id" in {
@@ -175,7 +176,7 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
         lazy val exitLink = doc.select("p a").get(2)
 
         "have the text" in {
-          doc.select("p").get(7).text shouldBe plaResultSuccessExitSurvey
+          doc.body.select("p").get(5).text shouldBe plaResultSuccessExitSurveyCombined
         }
 
         "have the link text" in {
@@ -183,7 +184,7 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
         }
 
         "have the link destination" in {
-          exitLink.attr("href") shouldBe controllers.routes.ExitSurveyController.exitSurvey
+          exitLink.attr("href") shouldBe "/protect-your-lifetime-allowance/exit"
         }
 
       }

@@ -29,19 +29,13 @@ class resultPrintSpec extends CommonViewSpecHelper with resultPrint with CommonM
 
   "The Print Result Page" should {
 
-    implicit lazy val model = PrintDisplayModel("Jim", "Davis", "nino", "IP2016", "active", "PSA33456789", Messages("pla.protection.protectionReference"), Some("100.00"), Some(""))
+    implicit lazy val model = PrintDisplayModel("Jim", "Davis", "nino", "IP2016", "active", "PSA33456789", Messages("pla.protection.protectionReference"), Some("100.00"), Some("23/02/2015"))
     implicit lazy val view = views(model)
     implicit lazy val doc = Jsoup.parse(view.body)
 
     "have the correct title" in {
       doc.title() shouldBe plaPrintTitle
     }
-
-//    <header>
-//      <p class="header">
-//        @Messages("pla.print.hmrc")
-//      </p>
-//    </header>
 
     "have a primary heading which" should {
 
@@ -109,13 +103,13 @@ class resultPrintSpec extends CommonViewSpecHelper with resultPrint with CommonM
         tableHeading.get(9).attr("id") shouldBe "psaRef"
       }
 
-//      "contain the following table information" in {
-//        tableHeading.get(1).text shouldBe @{cDate}
-//        tableHeading.get(3).text shouldBe @Messages(s"pla.protection.types.${model.protectionType}")
-//        tableHeading.get(5).text shouldBe @{amt}
-//        tableHeading.get(7).text shouldBe @{model.protectionReference}
-//        tableHeading.get(9).text shouldBe @{model.psaCheckReference}
-//      }
+      "contain the following table information" in {
+        tableHeading.get(1).text shouldBe "23/02/2015"
+        tableHeading.get(3).text shouldBe "Individual protection 2016"
+        tableHeading.get(5).text shouldBe "100.00"
+        tableHeading.get(7).text shouldBe Messages("pla.protection.protectionReference")
+        tableHeading.get(9).text shouldBe "PSA33456789"
+      }
     }
 
     "have an sections paragraph which" should {
@@ -146,58 +140,3 @@ class resultPrintSpec extends CommonViewSpecHelper with resultPrint with CommonM
 
   }
 }
-
-//<body onload="window.print()">
-//<div>
-//<div class="personalInfo">
-//<h1 id="userName">
-//@{model.firstName} @{model.surname}
-//</h1>
-//<p id="userNino">
-//@{Messages("pla.print.nino")} @{model.nino}
-//</p>
-//</div>
-//
-//<div>
-//<h2>
-//@Messages("pla.print.protectionDetails")
-//<hr noshade/>
-//</h2>
-//
-//<table class="table">
-//<tbody>
-//@model.certificateDate.map { cDate =>
-//<tr>
-//<td>@Messages("pla.print.applicationDate")</td>
-//<td id="applicationDate">@{cDate}</td>
-//</tr>
-//}
-//<tr>
-//<td>@Messages("pla.print.protectionType")</td>
-//<td id="protectionType">@Messages(s"pla.protection.types.${model.protectionType}")</td>
-//</tr>
-//@model.protectedAmount.map { amt =>
-//<tr>
-//<td>@Messages("pla.print.pla")</td>
-//<td id="protectedAmount">@{amt}</td>
-//</tr>
-//}
-//<tr>
-//<td>@Messages("pla.print.protectionNotificationNumber")</td>
-//<td id="protectionRef">@{model.protectionReference}</td>
-//</tr>
-//<tr>
-//<td>@Messages("pla.print.schemeAdministratorReference")</td>
-//<td id="psaRef">@{model.psaCheckReference}</td>
-//</tr>
-//</tbody>
-//</table>
-//</div>
-//
-//<div>
-//<p class="faint">@Messages("pla.print.giveToPensionProvider")</p>
-//@if(model.protectionType == "IP2014" || model.protectionType == "IP2016" || model.protectionType == "FP2016") {
-//<p class="faint" id="contactHMRC">@Messages(s"pla.print.${model.protectionType}.contactHMRC")</p>
-//}
-//</div>
-//</div>
