@@ -16,7 +16,6 @@
 
 package views.pages.result
 
-import enums.ApplicationType
 import play.api.i18n.Messages.Implicits._
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
@@ -137,6 +136,5 @@ class resultPrintSpec extends CommonViewSpecHelper with resultPrint with CommonM
         p3.text shouldBe plaPrintIP2016ContactHMRC
       }
     }
-
   }
 }

@@ -26,7 +26,6 @@ import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
 import testHelpers.ViewSpecHelpers.existingProtections.existingProtections
 import views.html.pages.existingProtections.{existingProtections => views}
 
-
 class existingProtectionsSpec extends CommonViewSpecHelper with existingProtections with CommonMessages {
 
   "The Existing Protections page" should {
@@ -123,51 +122,5 @@ class existingProtectionsSpec extends CommonViewSpecHelper with existingProtecti
     }
   }
 }
-
-    //    <nav class="breadcrumb-nav breadcrumb-nav--slim">
-    //      <ul class="breadcrumb-nav__list" role="breadcrumbs">
-    //        <li class="breadcrumb-nav__item">
-    //          <a href="@{FrontendAppConfig.ptaFrontendUrl}" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
-    //        </li>
-    //        <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-    //        <li class="breadcrumb-nav__item">@Messages("pla.existingProtections.pageBreadcrumb")</li>
-    //      </ul>
-    //    </nav>
-    //
-    //      <div class="grid grid-2-3">
-    //        <h1 class="heading-xlarge">@Messages("pla.existingProtections.pageHeading")</h1>
-    //      </div>
-    //
-    //      <div class="grid-wrapper"></div>
-    //
-    //      <div id="listProtections">
-    //        @if(protections.activeProtection.isEmpty) {
-    //        <p>@Messages("pla.existingProtections.noActiveProtections")</p>
-    //        } else {
-    //    @protections.activeProtection.map { protection =>
-    //      <div class="protection-detail">
-    //        @activeExistingProtection(protection, "active", 1)
-    //      </div>
-    //    }
-    //    <span class="inline-space"></span>
-    //
-    //    }
-    //
-    //    @if(protections.otherProtections.size == 0) {
-    //    <p>@Messages("pla.existingProtections.noOtherProtections")</p>
-    //    } else {
-    //    @for((protection, index) <- protections.otherProtections.zipWithIndex) {
-    //      <section>
-    //        @inactiveExistingProtection(protection, "other", index + 1)
-    //      </section>
-    //    }
-    //    <span class="inline-space"></span>
-    //
-    //    }
-    //    </div>
-    //
-    //    <section>
-    //      <a href="@{FrontendAppConfig.ptaFrontendUrl}" id="account-home-text-link">@Messages("pla.existingProtections.backToHome")</a>
-    //    </section>
 
 

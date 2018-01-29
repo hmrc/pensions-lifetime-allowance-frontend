@@ -164,6 +164,5 @@ class manualCorrespondenceNeededSpec extends CommonViewSpecHelper with manualCor
         link.attr("target") shouldBe "_blank"
       }
     }
-
   }
 }

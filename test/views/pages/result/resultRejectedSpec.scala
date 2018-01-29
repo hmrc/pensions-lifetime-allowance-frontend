@@ -17,10 +17,8 @@
 package views.pages.result
 
 import enums.ApplicationType
-import enums.ApplicationType.IP2016
 import models.RejectionDisplayModel
 import org.jsoup.Jsoup
-import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
 import testHelpers.ViewSpecHelpers.result.resultRejected
@@ -131,26 +129,3 @@ class resultRejectedSpec extends CommonViewSpecHelper with resultRejected with C
     }
   }
 }
-
-//@(res: RejectionDisplayModel)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
-//
-//@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
-//
-//@views.html.main_template(title = Messages("pla.resultRejection.title"), bodyClasses = None) {
-//
-//<h1 class="heading-large" id="resultPageHeading">@Messages("pla.resultRejection.pageHeading")</h1>
-//
-//<p id="resultOutcome">@Messages("resultCode."+res.notificationId+".heading")</p>
-//
-//@for(infoNum <- res.additionalInfo) {
-//<p id=@{s"additionalInfo$infoNum"}>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
-//}
-//
-//<h2>@Messages("pla.resultSuccess.IPChangeDetails")</h2>
-//
-//<p>@Html(Messages("pla.resultRejection.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultRejection.viewDetailsLinkText")</a>.</p>
-//
-//<h2>@Messages("pla.resultSuccess.giveFeedback")</h2>
-//
-//<p><a href=@controllers.routes.ExitSurveyController.exitSurvey>@Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Html(Messages("pla.resultSuccess.exitSurvey"))</p>
-//}

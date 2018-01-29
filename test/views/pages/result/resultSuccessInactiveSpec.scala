@@ -143,35 +143,6 @@ class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages
       "have the link destination" in {
         exitLink.attr("href") shouldBe "/protect-your-lifetime-allowance/exit"
       }
-
     }
-
   }
 }
-
-//@views.html.main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None) {
-//
-//<h1 id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</h1>
-//
-//@for(infoNum <- res.additionalInfo) {
-//<p id=@{s"additionalInfo$infoNum"}>@Html(Messages(s"resultCode.${res.notificationId}.$infoNum"))</p>
-//}
-//
-//
-//
-//<h2>@Messages("pla.resultSuccess.IPChangeDetails")</h2>
-//
-//@if(res.protectionType == ApplicationType.IP2016 || res.protectionType == ApplicationType.IP2014 || Constants.fpShowPensionSharing.contains(res.notificationId.toInt)) {
-//<p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
-//}
-//
-//@if(res.protectionType == ApplicationType.FP2016 || Constants.ipShowAddToPension.contains(res.notificationId.toInt)) {
-//<p id="fpAddToPension">@Html(Messages("pla.resultSuccess.FPAddToPension"))</p>
-//}
-//
-//<p>@Html(Messages("pla.resultRejection.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultRejection.viewDetailsLinkText")</a>.</p>
-//
-//
-//<h2>@Messages("pla.resultSuccess.giveFeedback")</h2>
-//
-//<p><a href=@controllers.routes.ExitSurveyController.exitSurvey>@Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Html(Messages("pla.resultSuccess.exitSurvey"))</p>

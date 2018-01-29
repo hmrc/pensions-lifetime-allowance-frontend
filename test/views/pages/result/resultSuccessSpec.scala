@@ -19,7 +19,7 @@ package views.pages.result
 import enums.ApplicationType
 import models.{ProtectionDetailsDisplayModel, SuccessDisplayModel}
 import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
-import testHelpers.ViewSpecHelpers.result.{resultSuccess, resultSuccessInactive}
+import testHelpers.ViewSpecHelpers.result.resultSuccess
 import views.html.pages.result.{resultSuccess => views}
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
@@ -30,7 +30,7 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
   "The Result Success page" should {
 
     lazy val protectionmodel = ProtectionDetailsDisplayModel(Some(""), "", Some(""))
-    lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", false, Some(protectionmodel), Seq("1", "2"))
+    lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", true, Some(protectionmodel), Seq("1", "2"))
     lazy val view = views(testmodel)
     lazy val doc = Jsoup.parse(view.body)
 
@@ -40,196 +40,165 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
 
     "have a results section which" should {
 
-            "have a heading with the text" in {
-              doc.select("div div span").text shouldBe "You've added fixed protection 2016 100.00"//Messages(s"resultCode.${res.notificationId}.heading")
-            }
+      lazy val firstPara = doc.select("p").get(0)
+      lazy val protecAmount = doc.select("span").get(1)
+
+      "have an initial heading with the text" in {
+        doc.select("span").get(0).text shouldBe "You've added fixed protection 2016"
+      }
+
+      "have an initial heading with the id" in {
+        doc.select("span").get(0).attr("id") shouldBe "resultOutcome"
+      }
+
+      "have an initial heading with the class" in {
+        doc.select("span").get(0).hasClass("heading-large") shouldBe true
+      }
 
       "have a paragraph with the text" in {
-        doc.select("p").get(0).text shouldBe plaResultSuccessAllowanceSubHeading
+        firstPara.text shouldBe plaResultSuccessAllowanceSubHeading
       }
 
-            "have the correct paragraph id + class" in {
-              doc.body.select("div div span p").attr("id") shouldBe "resultAllowanceText"
-              doc.body.select("div div span p").hasClass("medium") shouldBe true
-            }
-
-            "have a span of protected amount" in {
-              doc.select("div div span span").text shouldBe "100.00"//res.protectedAmount
-            }
-
-            "have the correct id + class" in {
-              doc.body.select("div div span span").attr("id") shouldBe "protectedAmount"
-              doc.body.select("div div span span").hasClass("bold-medium") shouldBe true
-            }
-          }
-
-          "has a result paragraph with code which" should {
-
-            "have the text" in {
-              doc.select("div div span p").text shouldBe ""
-            }
-
-            "have the Id" in {
-              doc.select("div div span p").attr("id") shouldBe "additionalInfo1"//s"additionalInfo$infoNum"
-            }
-
-          }
-
-      "has a sub-heading with paragraph which" should {
-
-        s"have the heading text $plaResultSuccessProtectionDetails" in {
-          doc.select("h2").get(0).text shouldBe plaResultSuccessProtectionDetails
-        }
-
-        s"have the paragraph text $plaResultSuccessDetailsContent" in {
-          doc.select("p").get(2).text shouldBe plaResultSuccessDetailsContent
-        }
+      "have the correct paragraph id + class" in {
+        firstPara.attr("id") shouldBe "resultAllowanceText"
+        firstPara.hasClass("medium") shouldBe true
       }
 
-      "have a print page link which" should {
-
-        lazy val printLink = doc.select("p a").get(1)
-        lazy val linkPara = doc.body.select("p").get(3)
-
-        "have the paragraph class" in {
-          linkPara.attr("class") shouldBe "print-link"
-        }
-
-        s"have the link text $plaResultSuccessPrint($plaBaseNewWindow)" in {
-          linkPara.text shouldBe s"$plaResultSuccessPrint($plaBaseNewWindow)"
-        }
-
-        "have the destination" in {
-          printLink.attr("href") shouldBe controllers.routes.PrintController.printView
-        }
-
-        "have the link id" in {
-          printLink.attr("id") shouldBe "printPage"
-        }
-
-        "should specify a blank target" in {
-          printLink.attr("target") shouldBe "_blank"
-        }
+      "have a span of protected amount" in {
+        protecAmount.text shouldBe "100.00"
       }
 
-      "has a second subheading which" should {
-        s"have the heading text $plaResultSuccessIPChangeDetails" in {
-          doc.select("h2").get(1).text shouldBe plaResultSuccessIPChangeDetails
-        }
+      "have the correct id + class" in {
+        protecAmount.attr("id") shouldBe "protectedAmount"
+        protecAmount.hasClass("bold-medium") shouldBe true
+      }
+    }
+
+    "has a result paragraph with code which" should {
+
+      "have the text" in {
+        doc.body.select("div p").get(1).text shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."
       }
 
-      "have a IP Pension sharing paragraph which" should {
-
-        "have the text" in {
-          doc.body.select("p").get(4).text shouldBe plaResultSuccessIPPensionSharing
-        }
-
-        "have the correct Id" in {
-          doc.body.select("p").get(4).attr("id") shouldBe "ipPensionSharing"
-        }
+      "have the Id" in {
+        doc.select("div p").get(1).attr("id") shouldBe "additionalInfo1"//s"additionalInfo$infoNum"
       }
 
-        /*If Application Type = FP2016 ...*/
+    }
+
+    "has a sub-heading with paragraph which" should {
+
+      s"have the heading text $plaResultSuccessProtectionDetails" in {
+        doc.select("h2").get(0).text shouldBe plaResultSuccessProtectionDetails
+      }
+
+      s"have the paragraph text $plaResultSuccessDetailsContent" in {
+        doc.select("div p").get(3).text shouldBe plaResultSuccessDetailsContent
+      }
+    }
+
+    "have a print page link which" should {
+
+      lazy val printLink = doc.body.select("p a")
+      lazy val linkPara = doc.body.select("div p").get(4)
+
+      "have the paragraph class" in {
+        linkPara.attr("class") shouldBe "print-link"
+      }
+
+      s"have the link text $plaResultSuccessPrint ($plaBaseNewWindow)" in {
+        linkPara.text shouldBe s"$plaResultSuccessPrint ($plaBaseNewWindow)"
+      }
+
+      "have the destination" in {
+        doc.select("p a").get(1).attr("href") shouldBe "/protect-your-lifetime-allowance/print-protection"
+      }
+
+      "have the link id" in {
+        printLink.attr("id") shouldBe "printPage"
+      }
+
+      "should specify a blank target" in {
+        printLink.attr("target") shouldBe "_blank"
+      }
+    }
+
+    "has a second subheading which" should {
+      s"have the heading text $plaResultSuccessIPChangeDetails" in {
+        doc.select("h2").get(1).text shouldBe plaResultSuccessIPChangeDetails
+      }
+    }
+
+    "have a IP Pension sharing paragraph which" should {
+
+      "have the text" in {
+        doc.body.select("p").get(5).text shouldBe plaResultSuccessIPPensionSharing
+      }
+
+      "have the correct Id" in {
+        doc.body.select("p").get(5).attr("id") shouldBe "ipPensionSharing"
+      }
+    }
+
+      /*If Application Type = FP2016 ...*/
 
 //      "have a FP Add To Pension paragraph which" should {
 //
 //        "have the text" in {
-//          doc.select("p").get(4).text shouldBe plaResultSuccessFPAddToPension
+//          doc.select("p").get(5).text shouldBe plaResultSuccessFPAddToPension
 //        }
 //
 //        "have the correct Id" in {
-//          doc.select("p").get(4).attr("id") shouldBe "fpAddToPension"
+//          doc.select("p").get(5).attr("id") shouldBe "fpAddToPension"
 //        }
 //
 //      }
 
-      "has a paragraph which" should {
+    "has a paragraph which" should {
 
-        lazy val detailsLink = doc.select("p a").get(1)
+      lazy val detailsLink = doc.select("p a").get(3)
 
-        s"have the paragraph text $plaResultSuccessViewDetails" in {
-          doc.select("p").get(5).text shouldBe plaResultSuccessViewDetails
-        }
-
-        "have the destination" in {
-          detailsLink.attr("href") shouldBe "/protect-your-lifetime-allowance/existing-protections"
-        }
-
-        "have the link id" in {
-          detailsLink.attr("id") shouldBe "existingProtectionsLink"
-        }
-
-        "have the link text" in {
-          detailsLink.text shouldBe plaResultSuccessViewDetailsLinkText
-        }
-
+      s"have the paragraph text $plaResultSuccessViewDetails" in {
+        doc.select("p").get(6).text shouldBe s"$plaResultSuccessViewDetails $plaResultSuccessViewDetailsLinkText."
       }
 
-      "has a third subheading which" should {
-        s"have the heading text $plaResultSuccessGiveFeedback" in {
-          doc.select("h2").get(2).text shouldBe plaResultSuccessGiveFeedback
-        }
+      "have the destination" in {
+        detailsLink.attr("href") shouldBe "/protect-your-lifetime-allowance/existing-protections"
       }
 
-      "have a Exit Survey paragraph which" should {
+      "have the link id" in {
+        detailsLink.attr("id") shouldBe "existingProtectionsLink"
+      }
 
-        lazy val exitLink = doc.select("p a").get(2)
-
-        "have the text" in {
-          doc.body.select("p").get(5).text shouldBe plaResultSuccessExitSurveyCombined
-        }
-
-        "have the link text" in {
-          exitLink.text shouldBe plaResultSuccessExitSurveyLinkText
-        }
-
-        "have the link destination" in {
-          exitLink.attr("href") shouldBe "/protect-your-lifetime-allowance/exit"
-        }
-
+      "have the link text" in {
+        detailsLink.text shouldBe plaResultSuccessViewDetailsLinkText
       }
 
     }
-}
 
-//@views.html.main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None) {
-//
-//<div class="grid-row">
-//<div class="transaction-banner--complete">
-//<span class="heading-large" id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</span>
-//<p class="medium" id="resultAllowanceText">@Messages("pla.resultSuccess.allowanceSubHeading")</p>
-//<span class="bold-medium" id="protectedAmount">@res.protectedAmount</span>
-//</div>
-//
-//@for(infoNum <- res.additionalInfo) {
-//<p id=@{s"additionalInfo$infoNum"}>@Html(Messages(s"resultCode.${res.notificationId}.$infoNum"))</p>
-//}
-//
-//<h2>@Messages("pla.resultSuccess.protectionDetails")</h2>
-//<p>@Messages("pla.resultSuccess.detailsContent")</p>
-//
-//@res.details.map{ details =>
-//@resultDetails(details)
-//}
-//
-//@if(res.printable) {
-//<p class="print-link"><a id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" onclick="ga('send', 'event', 'print-active-protection', 'print-@{res.protectionType.toString}', 'result');">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newWindow"))</a></p>
-//}
-//
-//<h2>@Messages("pla.resultSuccess.IPChangeDetails")</h2>
-//
-//@if(res.protectionType == ApplicationType.IP2016 || res.protectionType == ApplicationType.IP2014 || Constants.fpShowPensionSharing.contains(res.notificationId.toInt)) {
-//<p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
-//}
-//
-//@if(res.protectionType == ApplicationType.FP2016 || Constants.ipShowAddToPension.contains(res.notificationId.toInt)) {
-//<p id="fpAddToPension">@Html(Messages("pla.resultSuccess.FPAddToPension"))</p>
-//}
-//
-//<p>@Html(Messages("pla.resultSuccess.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultSuccess.viewDetailsLinkText")</a>.</p>
-//
-//<h2>@Messages("pla.resultSuccess.giveFeedback")</h2>
-//
-//<p><a href=@controllers.routes.ExitSurveyController.exitSurvey>@Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Messages("pla.resultSuccess.exitSurvey")</p>
-//
-//</div>
+    "has a third subheading which" should {
+      s"have the heading text $plaResultSuccessGiveFeedback" in {
+        doc.select("h2").get(2).text shouldBe plaResultSuccessGiveFeedback
+      }
+    }
+
+    "have a Exit Survey paragraph which" should {
+
+      lazy val exitLink = doc.select("p a").get(4)
+
+      "have the text" in {
+        doc.body.select("p").get(7).text shouldBe plaResultSuccessExitSurveyCombined
+      }
+
+      "have the link text" in {
+        exitLink.text shouldBe plaResultSuccessExitSurveyLinkText
+      }
+
+      "have the link destination" in {
+        exitLink.attr("href") shouldBe "/protect-your-lifetime-allowance/exit"
+      }
+
+    }
+
+  }
+}
