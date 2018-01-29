@@ -17,22 +17,24 @@
 package views.pages.result
 
 import enums.ApplicationType
-import models.{ProtectionDetailsDisplayModel, RejectionDisplayModel, SuccessDisplayModel}
+import models.{ProtectionDetailsDisplayModel, SuccessDisplayModel}
 import play.api.i18n.Messages.Implicits._
 import org.jsoup.Jsoup
-import play.api.i18n.Messages
-import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
-import testHelpers.ViewSpecHelpers.result.resultSuccessInactive
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.ViewSpecHelpers.result.ResultSuccessInactive
 import views.html.pages.result.{resultSuccessInactive => views}
 
-class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages with resultSuccessInactive {
+class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessInactive {
 
   "The Result Rejected Page" should {
 
     lazy val protectionmodel = ProtectionDetailsDisplayModel(Some(""), "", Some(""))
-    lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", false, Some(protectionmodel), Seq("1", "2"))
-    implicit lazy val view = views(testmodel)
-    implicit lazy val doc = Jsoup.parse(view.body)
+    lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", true, Some(protectionmodel), Seq("1", "2"))
+    lazy val testmodel2 = SuccessDisplayModel(ApplicationType.FP2016, "16", "100.00", false, Some(protectionmodel), Seq("1", "2"))
+    lazy val view = views(testmodel)
+    lazy val view2 = views(testmodel2)
+    lazy val doc = Jsoup.parse(view.body)
+    lazy val doc2 = Jsoup.parse(view2.body)
 
     "have the correct title" in {
       doc.title() shouldBe plaResultSuccessTitle
@@ -54,7 +56,7 @@ class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages
     "have a result code paragraph which" should {
 
       "have the text" in {
-        doc.body.select("p").get(0).text  shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."//Messages(s"$resultCode."+res.notificationId+".$infoNum")
+        doc.body.select("p").get(0).text  shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."
       }
 
       "have the correct Id" in {
@@ -83,18 +85,16 @@ class resultSuccessInactiveSpec extends CommonViewSpecHelper with CommonMessages
       }
     }
 
-      /*If Application Type = FP2016 ...*/
-//
-//    "have a FP Add To Pension paragraph which" should {
-//
-//      "have the text" in {
-//        doc.select("p").get(1).text shouldBe plaResultSuccessFPAddToPension
-//      }
-//
-//      "have the correct Id" in {
-//        doc.select("p").get(1).attr("id") shouldBe "fpAddToPension"
-//      }
-//    }
+    "have a FP Add To Pension paragraph which" should {
+
+      "have the text" in {
+        doc2.select("p").get(2).text shouldBe plaResultSuccessFPAddToPension
+      }
+
+      "have the correct Id" in {
+        doc2.select("p").get(2).attr("id") shouldBe "fpAddToPension"
+      }
+    }
 
     "have a Existing Protections paragraph which" should {
 

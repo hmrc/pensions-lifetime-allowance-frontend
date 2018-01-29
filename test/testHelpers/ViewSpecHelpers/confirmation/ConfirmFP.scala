@@ -16,7 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.confirmation
 
-trait confirmFP {
+trait ConfirmFP {
 
 val plaConfirmFP16Title       = "Apply for FP 2016"
 val plaConfirmFP16PageHeading = "Get fixed protection 2016 for your lifetime allowance"

@@ -20,12 +20,12 @@ import enums.ApplicationType
 import models.RejectionDisplayModel
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
-import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
-import testHelpers.ViewSpecHelpers.result.resultRejected
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.ViewSpecHelpers.result.ResultRejected
 import views.html.pages.result.{resultRejected => views}
 
 
-class resultRejectedSpec extends CommonViewSpecHelper with resultRejected with CommonMessages {
+class ResultRejectedSpec extends CommonViewSpecHelper with ResultRejected {
 
   "The Result Rejected Page" should {
 
@@ -43,10 +43,6 @@ class resultRejectedSpec extends CommonViewSpecHelper with resultRejected with C
 
       s"have the heading text $plaResultRejectionPageHeading" in {
         h1Tag.text shouldBe plaResultRejectionPageHeading
-      }
-
-      "have the heading-large class" in {
-        h1Tag.hasClass("heading-large") shouldBe true
       }
 
       "have the correct Id" in {

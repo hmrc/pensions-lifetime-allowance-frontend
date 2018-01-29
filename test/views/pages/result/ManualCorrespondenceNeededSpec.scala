@@ -18,16 +18,16 @@ package views.pages.result
 
 import play.api.i18n.Messages.Implicits._
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
-import testHelpers.ViewSpecHelpers.result.manualCorrespondenceNeeded
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.ViewSpecHelpers.result.ManualCorrespondenceNeeded
 import views.html.pages.result.{manualCorrespondenceNeeded => views}
 
-class manualCorrespondenceNeededSpec extends CommonViewSpecHelper with manualCorrespondenceNeeded with CommonMessages {
+class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCorrespondenceNeeded {
 
   "The Manual Correspondence needed page" should {
 
-    implicit lazy val view = views()
-    implicit lazy val doc = Jsoup.parse(view.body)
+    lazy val view = views()
+    lazy val doc = Jsoup.parse(view.body)
 
     "have the correct title" in {
       doc.title() shouldBe plaMcNeededTitle
@@ -35,18 +35,10 @@ class manualCorrespondenceNeededSpec extends CommonViewSpecHelper with manualCor
 
     "have the first heading which" should {
 
-      lazy val h1Tag = doc.select("div div header h1")
+      lazy val h1Tag = doc.select("header h1")
 
       s"have the heading text $plaMcNeededPageHeading" in {
       h1Tag.text shouldBe plaMcNeededPageHeading
-      }
-
-      "have the heading-xlarge class" in {
-        h1Tag.hasClass("heading-xlarge") shouldBe true
-      }
-
-      "have the correct Id" in {
-        h1Tag.attr("id") shouldBe "pageHeading"
       }
 
       "have data metrics" in {
@@ -69,20 +61,16 @@ class manualCorrespondenceNeededSpec extends CommonViewSpecHelper with manualCor
 
     "have the second heading which" should {
 
-      lazy val h2Tag0 = doc.select("div div div h2").get(0)
+      lazy val h2Tag0 = doc.select("div h2").get(0)
 
       s"have the heading text $plaMcNeededHowToFix" in {
         h2Tag0.text shouldBe plaMcNeededHowToFix
-      }
-
-      "have the heading-large class" in {
-        h2Tag0.hasClass("heading-large") shouldBe true
       }
     }
 
     "should contain a list of instructions which" should {
 
-      lazy val listOption = doc.select("div div ol li")
+      lazy val listOption = doc.select("ol li")
 
       s"include the list option $plaMcNeededTelephone" in {
         listOption.get(0).text shouldBe plaMcNeededTelephone
@@ -107,20 +95,16 @@ class manualCorrespondenceNeededSpec extends CommonViewSpecHelper with manualCor
 
     "have the third heading which" should {
 
-      lazy val h2Tag1 = doc.select("div div div h2").get(1)
+      lazy val h2Tag1 = doc.select("h2").get(1)
 
       s"have the heading text $plaMcNeededOtherContact" in {
         h2Tag1.text shouldBe plaMcNeededOtherContact
-      }
-
-      "have the heading-large class" in {
-        h2Tag1.hasClass("heading-large") shouldBe true
       }
     }
 
     "should contain a list of other contact options which" should {
 
-      lazy val listOption = doc.select("div div ul li")
+      lazy val listOption = doc.select("ul li")
 
       s"include the list option $plaMcNeededTextphone" in {
         listOption.get(0).text shouldBe plaMcNeededTextphone
@@ -133,7 +117,7 @@ class manualCorrespondenceNeededSpec extends CommonViewSpecHelper with manualCor
 
     "have a set of paragraphs which" should {
 
-      lazy val pList = doc.select("div div p")
+      lazy val pList = doc.select("div p")
 
       s"have the text $plaMcNeededLinesOpen" in {
         pList.get(1).text shouldBe plaMcNeededLinesOpen
@@ -150,7 +134,7 @@ class manualCorrespondenceNeededSpec extends CommonViewSpecHelper with manualCor
 
     "have a link to call charges which" should {
 
-      lazy val link = doc.select("div div p a")
+      lazy val link = doc.select("div p a")
 
       s"have a link destination of callCharges" in {
         link.attr("href") shouldBe common.Links.callCharges

@@ -16,7 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.result
 
-trait resultRejected {
+trait ResultRejected {
 
   val plaResultRejectionTitle                 = "Unsuccessful"
   val plaResultRejectionPageHeading           = "Your application was unsuccessful"

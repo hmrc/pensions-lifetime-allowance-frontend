@@ -19,17 +19,16 @@ package views.pages.confirmation
 import org.jsoup.Jsoup
 
 import play.api.i18n.Messages.Implicits._
-import testHelpers.ViewSpecHelpers.confirmation.confirmFP
+import testHelpers.ViewSpecHelpers.confirmation.ConfirmFP
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.CommonMessages
 import views.html.pages.confirmation.{confirmFP => views}
 
-class confirmFPSpec extends CommonViewSpecHelper with confirmFP with CommonMessages {
+class ConfirmFPSpec extends CommonViewSpecHelper with ConfirmFP {
 
   "The FP 2016 page" should {
 
-    implicit lazy val view = views()
-    implicit lazy val doc = Jsoup.parse(view.body)
+    lazy val view = views()
+    lazy val doc = Jsoup.parse(view.body)
 
       "have the correct title" in {
         doc.title() shouldBe {
@@ -45,10 +44,6 @@ class confirmFPSpec extends CommonViewSpecHelper with confirmFP with CommonMessa
           h1Tag.text shouldBe {
             plaConfirmFP16PageHeading
           }
-        }
-
-        "have the heading-large class" in {
-          h1Tag.hasClass("heading-large") shouldBe true
         }
       }
 
@@ -143,14 +138,6 @@ class confirmFPSpec extends CommonViewSpecHelper with confirmFP with CommonMessa
 
         s"contain the text $plaConfirmFP16Declaration" in {
           declarationText shouldBe plaConfirmFP16Declaration
-        }
-
-        "have the panel-indent class" in {
-          declarationElement.hasClass("panel-indent") shouldBe true
-        }
-
-        "have the bold-small class" in {
-          declarationStrong.hasClass("bold-small") shouldBe true
         }
       }
 

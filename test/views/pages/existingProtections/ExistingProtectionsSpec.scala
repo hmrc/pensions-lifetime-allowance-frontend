@@ -22,16 +22,19 @@ import org.jsoup.Jsoup
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Call
-import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
-import testHelpers.ViewSpecHelpers.existingProtections.existingProtections
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.ViewSpecHelpers.existingProtections.ExistingProtections
 import views.html.pages.existingProtections.{existingProtections => views}
 
-class existingProtectionsSpec extends CommonViewSpecHelper with existingProtections with CommonMessages {
+class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtections {
 
   "The Existing Protections page" should {
 
     lazy val protectionModel = ExistingProtectionDisplayModel("IP2016", "active", Some(Call("", "", "")), Some(""), "protectionReference", Some("100.00"), Some(""))
+    lazy val protectionModel2 = ExistingProtectionDisplayModel("IP2014", "dormant", Some(Call("", "", "")), Some(""), "protectionReference", Some(""), Some(""))
+    lazy val protectionModel3 = ExistingProtectionDisplayModel("", "", Some(Call("", "", "")), Some(""), "", Some(""), Some(""))
     lazy val tstPSACheckRef = "PSA33456789"
+
     lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
       protectionType = "IP2014",
       status = "dormant",
@@ -42,9 +45,39 @@ class existingProtectionsSpec extends CommonViewSpecHelper with existingProtecti
       certificateDate = None,
       withdrawnDate =None)
 
-    implicit lazy val model = ExistingProtectionsDisplayModel(Some(protectionModel), List(tstProtectionDisplayModelDormant1))
-    implicit lazy val view = views(model)
-    implicit lazy val doc = Jsoup.parse(view.body)
+    lazy val tstProtectionDisplayModelActive1 = ExistingProtectionDisplayModel(
+      protectionType = "FP2016",
+      status = "active",
+      amendCall = Some(controllers.routes.AmendsController.amendsSummary("fp2016", "active")),
+      psaCheckReference = Some(tstPSACheckRef),
+      protectionReference = Messages("pla.protection.protectionReference"),
+      protectedAmount = Some("100"),
+      certificateDate = Some(""),
+      withdrawnDate =None)
+
+    lazy val tstProtectionDisplayModelEmpty1 = ExistingProtectionDisplayModel(
+      protectionType = "",
+      status = "",
+      amendCall = Some(controllers.routes.AmendsController.amendsSummary("", "")),
+      psaCheckReference = Some(""),
+      protectionReference = Messages(""),
+      protectedAmount = None,
+      certificateDate = None,
+      withdrawnDate =None)
+
+    lazy val model = ExistingProtectionsDisplayModel(Some(protectionModel), List(tstProtectionDisplayModelDormant1))
+    lazy val view = views(model)
+    lazy val doc = Jsoup.parse(view.body)
+
+    lazy val model2 = ExistingProtectionsDisplayModel(Some(protectionModel2), List(tstProtectionDisplayModelActive1))
+    lazy val view2 = views(model2)
+    lazy val doc2 = Jsoup.parse(view2.body)
+
+    lazy val model3 = ExistingProtectionsDisplayModel(Some(protectionModel3), List(tstProtectionDisplayModelEmpty1))
+    lazy val view3 = views(model3)
+    lazy val doc3 = Jsoup.parse(view3.body)
+
+
 
     "have the correct title" in {
       doc.title() shouldBe plaExistingProtectionsTitle
@@ -80,29 +113,26 @@ class existingProtectionsSpec extends CommonViewSpecHelper with existingProtecti
       s"contain the text '$plaExistingProtectionsPageHeading'" in {
         h1Tag.text shouldBe plaExistingProtectionsPageHeading
       }
+    }
 
-      "have the class" in {
-        h1Tag.hasClass("heading-xlarge") shouldBe true
+
+    "have a protections section display which" should {
+
+      "have the id" in {
+        doc2.select("div").get(2).attr("id") shouldBe "listProtections"
+      }
+
+      "have the message" in {
+        doc2.select("div").get(2).text shouldBe plaExistingProtectionsNoActiveProtections
       }
     }
-      /*If No previous protections exist ...*/
-//    "have a protections list which" should {
-//
-//      "have the id" in {
-//        doc.select("div").get(2).attr("id") shouldBe "listProtections"
-//      }
-//
-//      "have the message" in {
-//        doc.select("div").get(2).text shouldBe plaExistingProtectionsNoActiveProtections
-//      }
-//    }
-//
-//    "have another protections list which" should {
-//
-//      "have the message" in {
-//        doc.select("div").get(3).text shouldBe plaExistingProtectionsNoOtherProtections
-//      }
-//    }
+
+    "have another protections list which" should {
+
+      "have the message" in {
+        doc3.select("div").get(2).text shouldBe plaExistingProtectionsNoOtherProtections
+      }
+    }
 
     "have a back to home link which" should {
 

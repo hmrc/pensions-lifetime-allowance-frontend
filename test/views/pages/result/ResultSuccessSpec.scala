@@ -18,21 +18,26 @@ package views.pages.result
 
 import enums.ApplicationType
 import models.{ProtectionDetailsDisplayModel, SuccessDisplayModel}
-import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
-import testHelpers.ViewSpecHelpers.result.resultSuccess
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.ViewSpecHelpers.result.ResultSuccess
 import views.html.pages.result.{resultSuccess => views}
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 
 
-class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with resultSuccess {
+class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
 
   "The Result Success page" should {
 
     lazy val protectionmodel = ProtectionDetailsDisplayModel(Some(""), "", Some(""))
     lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", true, Some(protectionmodel), Seq("1", "2"))
+    lazy val testmodel2 = SuccessDisplayModel(ApplicationType.FP2016, "24", "100.00", false, Some(protectionmodel), Seq("1", "2"))
     lazy val view = views(testmodel)
+    lazy val view2 = views(testmodel2)
     lazy val doc = Jsoup.parse(view.body)
+    lazy val doc2 = Jsoup.parse(view2.body)
+
+
 
     "have the correct title" in {
       doc.title() shouldBe plaResultSuccessTitle
@@ -51,17 +56,12 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
         doc.select("span").get(0).attr("id") shouldBe "resultOutcome"
       }
 
-      "have an initial heading with the class" in {
-        doc.select("span").get(0).hasClass("heading-large") shouldBe true
-      }
-
       "have a paragraph with the text" in {
         firstPara.text shouldBe plaResultSuccessAllowanceSubHeading
       }
 
       "have the correct paragraph id + class" in {
         firstPara.attr("id") shouldBe "resultAllowanceText"
-        firstPara.hasClass("medium") shouldBe true
       }
 
       "have a span of protected amount" in {
@@ -70,7 +70,6 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
 
       "have the correct id + class" in {
         protecAmount.attr("id") shouldBe "protectedAmount"
-        protecAmount.hasClass("bold-medium") shouldBe true
       }
     }
 
@@ -129,30 +128,30 @@ class resultSuccessSpec extends CommonViewSpecHelper with CommonMessages with re
       }
     }
 
-    "have a IP Pension sharing paragraph which" should {
+    "have a dynamic result success paragraph which" should {
 
-      "have the text" in {
-        doc.body.select("p").get(5).text shouldBe plaResultSuccessIPPensionSharing
+      "have a IP Pension sharing paragraph which" should {
+
+        "have the text" in {
+          doc.body.select("p").get(5).text shouldBe plaResultSuccessIPPensionSharing
+        }
+
+        "have the correct Id" in {
+          doc.body.select("p").get(5).attr("id") shouldBe "ipPensionSharing"
+        }
       }
 
-      "have the correct Id" in {
-        doc.body.select("p").get(5).attr("id") shouldBe "ipPensionSharing"
+      "have a FP Add To Pension paragraph which" should {
+
+        "have the text" in {
+          doc2.select("p").get(5).text shouldBe plaResultSuccessFPAddToPension
+        }
+
+        "have the correct Id" in {
+          doc2.select("p").get(5).attr("id") shouldBe "fpAddToPension"
+        }
       }
     }
-
-      /*If Application Type = FP2016 ...*/
-
-//      "have a FP Add To Pension paragraph which" should {
-//
-//        "have the text" in {
-//          doc.select("p").get(5).text shouldBe plaResultSuccessFPAddToPension
-//        }
-//
-//        "have the correct Id" in {
-//          doc.select("p").get(5).attr("id") shouldBe "fpAddToPension"
-//        }
-//
-//      }
 
     "has a paragraph which" should {
 

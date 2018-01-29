@@ -16,7 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.result
 
-trait manualCorrespondenceNeeded {
+trait ManualCorrespondenceNeeded {
 
  val  plaMcNeededTitle                        = "There is a problem accessing your account"
  val  plaMcNeededPageHeading                  = "There's a problem logging you in"

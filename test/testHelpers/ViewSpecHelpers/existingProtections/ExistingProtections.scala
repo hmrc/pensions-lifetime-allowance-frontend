@@ -16,7 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.existingProtections
 
-trait existingProtections {
+trait ExistingProtections {
 
   val plaExistingProtectionsTitle = "View your existing protections"
   val plaExistingProtectionsPageHeading = "Your lifetime allowance protection"

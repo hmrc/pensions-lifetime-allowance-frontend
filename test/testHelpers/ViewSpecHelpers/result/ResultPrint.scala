@@ -16,7 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.result
 
-trait resultPrint {
+trait ResultPrint {
 
   val plaPrintTitle                             = "Print your active protection"
   val plaPrintHmrc                              = "HM Revenue & Customs"

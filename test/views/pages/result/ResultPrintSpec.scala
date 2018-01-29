@@ -18,19 +18,19 @@ package views.pages.result
 
 import play.api.i18n.Messages.Implicits._
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.{CommonMessages, CommonViewSpecHelper}
-import testHelpers.ViewSpecHelpers.result.resultPrint
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.ViewSpecHelpers.result.ResultPrint
 import views.html.pages.result.{resultPrint => views}
 import models.PrintDisplayModel
 import play.api.i18n.Messages
 
-class resultPrintSpec extends CommonViewSpecHelper with resultPrint with CommonMessages {
+class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
 
   "The Print Result Page" should {
 
-    implicit lazy val model = PrintDisplayModel("Jim", "Davis", "nino", "IP2016", "active", "PSA33456789", Messages("pla.protection.protectionReference"), Some("100.00"), Some("23/02/2015"))
-    implicit lazy val view = views(model)
-    implicit lazy val doc = Jsoup.parse(view.body)
+    lazy val model = PrintDisplayModel("Jim", "Davis", "nino", "IP2016", "active", "PSA33456789", Messages("pla.protection.protectionReference"), Some("100.00"), Some("23/02/2015"))
+    lazy val view = views(model)
+    lazy val doc = Jsoup.parse(view.body)
 
     "have the correct title" in {
       doc.title() shouldBe plaPrintTitle
@@ -39,10 +39,6 @@ class resultPrintSpec extends CommonViewSpecHelper with resultPrint with CommonM
     "have a primary heading which" should {
 
       lazy val p0 = doc.select("p").get(0)
-
-      "be the class" in {
-        p0.hasClass("header") shouldBe true
-      }
 
       "contain the text" in {
         p0.text shouldBe plaPrintHmrc
@@ -82,10 +78,6 @@ class resultPrintSpec extends CommonViewSpecHelper with resultPrint with CommonM
 
       lazy val tableHeading = doc.select("tr td")
 
-      "be of the class" in {
-        doc.select("table").hasClass("table") shouldBe true
-      }
-
       "contain the following title message information" in {
         tableHeading.get(0).text shouldBe plaPrintApplicationDate
         tableHeading.get(2).text shouldBe plaPrintProtectionType
@@ -116,16 +108,8 @@ class resultPrintSpec extends CommonViewSpecHelper with resultPrint with CommonM
       lazy val p2 = doc.select("div p").get(1)
       lazy val p3 = doc.select("div p").get(2)
 
-      "have a give to pension provider section with the class" in {
-        p2.hasClass("faint") shouldBe true
-      }
-
       "have a give to pension provider section with the text" in {
         p2.text shouldBe plaPrintGiveToPensionProvider
-      }
-
-      "have a contact hmrc section with the class" in {
-        p3.hasClass("faint") shouldBe true
       }
 
       "have a contact hmrc section with the id" in {

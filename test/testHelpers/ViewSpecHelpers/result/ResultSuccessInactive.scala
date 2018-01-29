@@ -16,7 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.result
 
-trait resultSuccessInactive {
+trait ResultSuccessInactive {
 
   val  plaResultSuccessTitle                 = "Success"
   val  plaResultSuccessIPChangeDetails       = "Changing your protection details"

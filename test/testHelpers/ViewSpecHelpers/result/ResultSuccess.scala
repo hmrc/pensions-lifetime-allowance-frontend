@@ -16,7 +16,7 @@
 
 package testHelpers.ViewSpecHelpers.result
 
-trait resultSuccess {
+trait ResultSuccess {
 
   val plaResultSuccessTitle                 = "Success"
   val plaResultSuccessAllowanceSubHeading   = "Your protected lifetime allowance is"
