@@ -32,23 +32,23 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
 
     lazy val protectionModel = ExistingProtectionDisplayModel("IP2016", "active", Some(Call("", "", "")), Some(""), "protectionReference", Some("100.00"), Some(""))
     lazy val protectionModel2 = ExistingProtectionDisplayModel("IP2014", "dormant", Some(Call("", "", "")), Some(""), "protectionReference", Some(""), Some(""))
-    lazy val protectionModel3 = ExistingProtectionDisplayModel("", "", Some(Call("", "", "")), Some(""), "", Some(""), Some(""))
+    lazy val protectionModel3 = ExistingProtectionDisplayModel("", "", None, None, "", None, None)
     lazy val tstPSACheckRef = "PSA33456789"
 
-    lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
-      protectionType = "IP2014",
-      status = "dormant",
-      amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "dormant")),
+    lazy val tstProtectionDisplayModelActive1 = ExistingProtectionDisplayModel(
+      protectionType = "FP2016",
+      status = "active",
+      amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "active")),
       psaCheckReference = Some(tstPSACheckRef),
       protectionReference = Messages("pla.protection.protectionReference"),
       protectedAmount = None,
       certificateDate = None,
       withdrawnDate =None)
 
-    lazy val tstProtectionDisplayModelActive1 = ExistingProtectionDisplayModel(
-      protectionType = "FP2016",
-      status = "active",
-      amendCall = Some(controllers.routes.AmendsController.amendsSummary("fp2016", "active")),
+    lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
+      protectionType = "IP2014",
+      status = "dormant",
+      amendCall = Some(controllers.routes.AmendsController.amendsSummary("fp2016", "dormant")),
       psaCheckReference = Some(tstPSACheckRef),
       protectionReference = Messages("pla.protection.protectionReference"),
       protectedAmount = Some("100"),
@@ -65,15 +65,19 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       certificateDate = None,
       withdrawnDate =None)
 
-    lazy val model = ExistingProtectionsDisplayModel(Some(protectionModel), List(tstProtectionDisplayModelDormant1))
+    lazy val model = ExistingProtectionsDisplayModel(Some(protectionModel), List(tstProtectionDisplayModelActive1))
     lazy val view = views(model)
     lazy val doc = Jsoup.parse(view.body)
 
-    lazy val model2 = ExistingProtectionsDisplayModel(Some(protectionModel2), List(tstProtectionDisplayModelActive1))
+    lazy val model2 = ExistingProtectionsDisplayModel(Some(protectionModel2), List(tstProtectionDisplayModelDormant1))
     lazy val view2 = views(model2)
     lazy val doc2 = Jsoup.parse(view2.body)
 
-    lazy val model3 = ExistingProtectionsDisplayModel(Some(protectionModel3), List(tstProtectionDisplayModelEmpty1))
+//    lazy val model3 = ExistingProtectionsDisplayModel(Some(protectionModel3), List(tstProtectionDisplayModelEmpty1))
+//    lazy val view3 = views(model3)
+//    lazy val doc3 = Jsoup.parse(view3.body)
+
+    lazy val model3 = ExistingProtectionsDisplayModel(None, List(tstProtectionDisplayModelDormant1))
     lazy val view3 = views(model3)
     lazy val doc3 = Jsoup.parse(view3.body)
 

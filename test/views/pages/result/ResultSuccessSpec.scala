@@ -24,19 +24,18 @@ import views.html.pages.result.{resultSuccess => views}
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 
-
 class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
 
   "The Result Success page" should {
 
     lazy val protectionmodel = ProtectionDetailsDisplayModel(Some(""), "", Some(""))
+    lazy val protectionmodel2 = ProtectionDetailsDisplayModel(Some("None"), "PSA33456789", Some("15/07/2015"))
     lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", true, Some(protectionmodel), Seq("1", "2"))
-    lazy val testmodel2 = SuccessDisplayModel(ApplicationType.FP2016, "24", "100.00", false, Some(protectionmodel), Seq("1", "2"))
+    lazy val testmodel2 = SuccessDisplayModel(ApplicationType.FP2016, "24", "100.00", false, Some(protectionmodel2), Seq("1", "2"))
     lazy val view = views(testmodel)
     lazy val view2 = views(testmodel2)
     lazy val doc = Jsoup.parse(view.body)
     lazy val doc2 = Jsoup.parse(view2.body)
-
 
 
     "have the correct title" in {
@@ -80,7 +79,7 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
       }
 
       "have the Id" in {
-        doc.select("div p").get(1).attr("id") shouldBe "additionalInfo1"//s"additionalInfo$infoNum"
+        doc.select("div p").get(1).attr("id") shouldBe "additionalInfo1"
       }
 
     }
@@ -94,6 +93,51 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
       s"have the paragraph text $plaResultSuccessDetailsContent" in {
         doc.select("div p").get(3).text shouldBe plaResultSuccessDetailsContent
       }
+    }
+
+    "have a list of result details which are mapped and" should {
+
+      "have a name line(protection ref defined)" in {
+        doc2.select("ul li").get(0).attr("id") shouldBe "yourFullName"
+        doc2.select("ul li").get(0).text shouldBe plaResultSuccessYourName
+      }
+
+      "have a nino line(protection ref defined)" in {
+        doc2.select("ul li").get(1).attr("id") shouldBe "yourNino"
+        doc2.select("ul li").get(1).text shouldBe plaResultSuccessYourNino
+      }
+
+      "have a protection reference line(protection ref defined)" in {
+        doc2.select("ul li").get(2).attr("id") shouldBe "protectionRef"
+        doc2.select("ul li").get(2).text shouldBe s"$plaResultSuccessProtectionRef: None"//@details.protectionReference
+      }
+
+      "have a psa line(protection ref defined)" in {
+        doc2.select("ul li").get(3).attr("id") shouldBe "psaRef"
+        doc2.select("ul li").get(3).text shouldBe s"$plaResultSuccessPsaRef: PSA33456789"//@details.psaReference
+      }
+
+      "have an application date line(protection ref defined)" in {
+        doc2.select("ul li").get(4).attr("id") shouldBe "applicationDate"
+        doc2.select("ul li").get(4).text shouldBe s"$plaResultSuccessApplicationDate: 15/07/2015" //@details.applicationDate.get
+      }
+
+
+      "have a name line(protection ref not defined)" in {
+        doc.select("ul li").get(0).attr("id") shouldBe "yourFullName"
+        doc.select("ul li").get(0).text shouldBe plaResultSuccessYourName
+      }
+
+      "have a nino line(protection ref not defined)" in {
+        doc.select("ul li").get(1).attr("id") shouldBe "yourNino"
+        doc.select("ul li").get(1).text shouldBe plaResultSuccessYourNino
+      }
+
+      "have a psa line(protection ref not defined)" in {
+        doc.select("ul li").get(3).attr("id") shouldBe "psaRef"
+        doc.select("ul li").get(3).text shouldBe s"$plaResultSuccessPsaRef:" //@details.psaReference
+      }
+
     }
 
     "have a print page link which" should {

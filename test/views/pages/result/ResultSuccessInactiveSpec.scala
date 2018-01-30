@@ -83,6 +83,7 @@ class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessI
       "have the correct Id" in {
         doc.select("p").get(2).attr("id") shouldBe "ipPensionSharing"
       }
+
     }
 
     "have a FP Add To Pension paragraph which" should {
@@ -94,6 +95,7 @@ class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessI
       "have the correct Id" in {
         doc2.select("p").get(2).attr("id") shouldBe "fpAddToPension"
       }
+
     }
 
     "have a Existing Protections paragraph which" should {

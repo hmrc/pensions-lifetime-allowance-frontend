@@ -31,6 +31,9 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
     lazy val model = PrintDisplayModel("Jim", "Davis", "nino", "IP2016", "active", "PSA33456789", Messages("pla.protection.protectionReference"), Some("100.00"), Some("23/02/2015"))
     lazy val view = views(model)
     lazy val doc = Jsoup.parse(view.body)
+    lazy val model2 = PrintDisplayModel("Jim", "Davis", "nino", "FP2014", "dormant", "PSA33456789", Messages("pla.protection.protectionReference"), Some("100.00"), Some("23/02/2015"))
+    lazy val view2 = views(model2)
+    lazy val doc2 = Jsoup.parse(view2.body)
 
     "have the correct title" in {
       doc.title() shouldBe plaPrintTitle
@@ -119,6 +122,17 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       "have a contact hmrc section with the text" in {
         p3.text shouldBe plaPrintIP2016ContactHMRC
       }
+    }
+
+    "have an sections paragraph (Other Protection) which" should {
+
+      lazy val p2 = doc2.select("div p").get(1)
+      lazy val p3 = doc2.select("div p").get(2)
+
+      "have a give to pension provider section with the text" in {
+        p2.text shouldBe plaPrintGiveToPensionProvider
+      }
+
     }
   }
 }
