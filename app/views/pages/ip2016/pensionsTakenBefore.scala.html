@@ -69,9 +69,11 @@
 
 @main_template(title=Messages("pla.pensionsTakenBefore.title")) {
 
+    @if(pensionsTakenBeforeForm.hasErrors){
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenBeforeForm
     )
+    }
 
     <h1 class="heading-large">@Messages("pla.pensionsTakenBefore.title")</h1>
 

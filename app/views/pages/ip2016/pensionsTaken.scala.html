@@ -28,9 +28,11 @@
 
 @views.html.main_template(title = Messages("pla.pensionsTaken.title"), bodyClasses = None) {
 
+    @if(pensionsTakenForm.hasErrors){
     @govHelpers.errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenForm
     )
+    }
 
     <h1 class="heading-large">@Messages("pla.pensionsTaken.title")</h1>
 

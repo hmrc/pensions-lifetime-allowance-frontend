@@ -37,9 +37,11 @@ Messages("pla.overseasPensions.questionTwo")
 
 @main_template(title=Messages("pla.overseasPensions.title")) {
 
+@if(amendOverseasPensionsForm.hasErrors){
 @govHelpers.errorSummary(
 Messages("pla.base.errorSummaryLabel"), amendOverseasPensionsForm
 )
+}
 
 <h1 class="heading-large">@Messages("pla.overseasPensions.title")</h1>
 
