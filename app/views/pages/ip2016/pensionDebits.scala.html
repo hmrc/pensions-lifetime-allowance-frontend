@@ -30,8 +30,9 @@
 @full_width_template(Messages("pla.pensionDebits.title")) {
 
 
-
+    @if(pensionDebitsForm.hasErrors){
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), pensionDebitsForm)
+    }
 
     <div class="grid grid-2-3">
         <h1 class="heading-large">@Messages("pla.pensionDebits.title")</h1>

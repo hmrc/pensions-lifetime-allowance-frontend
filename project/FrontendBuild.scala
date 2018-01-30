@@ -43,7 +43,7 @@ private object AppDependencies {
   private val mongoCachingVersion = "5.3.0"
   private val playLanguageVersion = "3.4.0"
   private val authClientVersion = "2.5.0"
-  private val localTemplateRendererVersion = "1.2.0"
+  private val localTemplateRendererVersion = "1.3.0"
 
   val compile = Seq(
     ws,

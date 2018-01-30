@@ -37,7 +37,9 @@
 
     <h1 class="heading-large">@Messages("pla.withdraw.date-input.title")</h1>
 
+    @if(withdrawDateForm.hasErrors){
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), withdrawDateForm)
+    }
 
     @govHelpers.form(action = routes.WithdrawProtectionController.submitWithdrawDateInput()) {
 
