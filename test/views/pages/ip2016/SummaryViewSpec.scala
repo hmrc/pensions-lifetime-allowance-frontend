@@ -91,7 +91,7 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages{
 
     val errorModel = SummaryModel(
       protectionType = ApplicationType.IP2016,
-      invalidRelevantAmount = false,
+      invalidRelevantAmount = true,
       pensionContributionSections = List.empty,
       psoDetailsSections = List.empty
     )
@@ -157,8 +157,8 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages{
 
     "have the right headers" in{
       doc.select("h1").eq(1).text shouldBe plaSummaryGetIP16
-      doc.select("h2").eq(1).text shouldBe plaSummaryPensionsHeading
-      doc.select("h2").eq(2).text shouldBe plaSummaryPsosHeading
+      doc.select("h2").eq(0).text shouldBe plaSummaryPensionsHeading
+      doc.select("h2").eq(1).text shouldBe plaSummaryPsosHeading
     }
 
     "have the right explanatory text" in{

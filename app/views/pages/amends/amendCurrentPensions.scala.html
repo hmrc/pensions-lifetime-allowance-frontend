@@ -54,7 +54,9 @@
 
 @main_template(title = Messages("pla.currentPensions.title")) {
 
+    @if(amendCurrentPensionForm.hasErrors){
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), amendCurrentPensionForm)
+    }
 
     <h1 class="heading-large">@Messages("pla.currentPensions.title")</h1>
 
