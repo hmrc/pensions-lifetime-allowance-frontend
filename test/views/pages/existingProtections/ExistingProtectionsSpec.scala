@@ -30,54 +30,27 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
 
   "The Existing Protections page" should {
 
-    lazy val protectionModel = ExistingProtectionDisplayModel("IP2016", "active", Some(Call("", "", "")), Some(""), "protectionReference", Some("100.00"), Some(""))
+    lazy val protectionModel = ExistingProtectionDisplayModel("IP2016", "active", Some(Call("", "", "")), Some(tstPSACheckRef), "protectionReference", Some("250.00"), Some(""))
     lazy val protectionModel2 = ExistingProtectionDisplayModel("IP2014", "dormant", Some(Call("", "", "")), Some(""), "protectionReference", Some(""), Some(""))
-    lazy val protectionModel3 = ExistingProtectionDisplayModel("", "", None, None, "", None, None)
     lazy val tstPSACheckRef = "PSA33456789"
 
-    lazy val tstProtectionDisplayModelActive1 = ExistingProtectionDisplayModel(
-      protectionType = "FP2016",
-      status = "active",
-      amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "active")),
-      psaCheckReference = Some(tstPSACheckRef),
-      protectionReference = Messages("pla.protection.protectionReference"),
-      protectedAmount = None,
-      certificateDate = None,
-      withdrawnDate =None)
-
-    lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
-      protectionType = "IP2014",
-      status = "dormant",
-      amendCall = Some(controllers.routes.AmendsController.amendsSummary("fp2016", "dormant")),
-      psaCheckReference = Some(tstPSACheckRef),
-      protectionReference = Messages("pla.protection.protectionReference"),
-      protectedAmount = Some("100"),
-      certificateDate = Some(""),
-      withdrawnDate =None)
-
-    lazy val tstProtectionDisplayModelEmpty1 = ExistingProtectionDisplayModel(
-      protectionType = "",
-      status = "",
-      amendCall = Some(controllers.routes.AmendsController.amendsSummary("", "")),
-      psaCheckReference = Some(""),
-      protectionReference = Messages(""),
-      protectedAmount = None,
-      certificateDate = None,
-      withdrawnDate =None)
+    lazy val tstProtectionDisplayModelActive1 = ExistingProtectionDisplayModel("FP2016","active", Some(controllers.routes.AmendsController.amendsSummary("ip2014", "active")), Some(tstPSACheckRef), Messages("pla.protection.protectionReference"), Some("100.00"), None, None)
+    lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel("IP2014", "dormant", Some(controllers.routes.AmendsController.amendsSummary("fp2016", "dormant")), Some(tstPSACheckRef), Messages("pla.protection.protectionReference"), Some("100.00"), Some(""), None)
+    lazy val tstProtectionDisplayModelEmpty1 = ExistingProtectionDisplayModel("", "", None, None, "", None, None, None)
 
     lazy val model = ExistingProtectionsDisplayModel(Some(protectionModel), List(tstProtectionDisplayModelActive1))
     lazy val view = views(model)
     lazy val doc = Jsoup.parse(view.body)
 
-    lazy val model2 = ExistingProtectionsDisplayModel(Some(protectionModel2), List(tstProtectionDisplayModelDormant1))
+    lazy val model2 = ExistingProtectionsDisplayModel(None, List(tstProtectionDisplayModelEmpty1))
     lazy val view2 = views(model2)
     lazy val doc2 = Jsoup.parse(view2.body)
 
-//    lazy val model3 = ExistingProtectionsDisplayModel(Some(protectionModel3), List(tstProtectionDisplayModelEmpty1))
-//    lazy val view3 = views(model3)
-//    lazy val doc3 = Jsoup.parse(view3.body)
+    lazy val model2b = ExistingProtectionsDisplayModel(Some(protectionModel2), List(tstProtectionDisplayModelDormant1))
+    lazy val view2b = views(model2b)
+    lazy val doc2b = Jsoup.parse(view2b.body)
 
-    lazy val model3 = ExistingProtectionsDisplayModel(None, List(tstProtectionDisplayModelDormant1))
+    lazy val model3 = ExistingProtectionsDisplayModel(Some(protectionModel), List.empty)
     lazy val view3 = views(model3)
     lazy val doc3 = Jsoup.parse(view3.body)
 
@@ -119,24 +92,51 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
     }
 
-
-    "have a protections section display which" should {
+    "have a protections section display which if no active protections are present" should {
 
       "have the id" in {
         doc2.select("div").get(2).attr("id") shouldBe "listProtections"
       }
 
       "have the message" in {
-        doc2.select("div").get(2).text shouldBe plaExistingProtectionsNoActiveProtections
+        doc2.select("div p").get(0).text shouldBe plaExistingProtectionsNoActiveProtections
       }
     }
 
-    "have another protections list which" should {
+
+    "have a protections section display which if active protections are present" should {
+
+      "display the protection details section" in {
+        doc.select("div div").hasClass("protection-detail") shouldBe true
+      }
+
+      "contain the correct data" in {
+        doc.select("div#activeProtection").text shouldBe "Individual protection 2016"
+        doc.select("#activeProtectedAmountContent").text shouldBe "250.00"
+      }
+    }
+
+
+    "have another protections list which if no other protections are present" should {
 
       "have the message" in {
-        doc3.select("div").get(2).text shouldBe plaExistingProtectionsNoOtherProtections
+        doc3.select("div p").get(0).text shouldBe plaExistingProtectionsNoOtherProtections
       }
     }
+
+
+    "have another protections list which if other protections are present" should {
+
+      "display the correct html including the print link" in {
+        doc2b.select("a#printLink").attr("href") shouldBe "/protect-your-lifetime-allowance/print-protection"
+      }
+
+      "contain the data" in {
+        doc2b.select("div#inactiveProtection1").text shouldBe "Individual protection 2014"
+        doc2b.select("#inactiveProtectedAmount1Content").text shouldBe "100.00"
+      }
+    }
+
 
     "have a back to home link which" should {
 
