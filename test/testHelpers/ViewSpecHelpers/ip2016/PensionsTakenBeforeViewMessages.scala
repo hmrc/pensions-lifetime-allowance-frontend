@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.IP16
+package testHelpers.ViewSpecHelpers.ip2016
 
 trait PensionsTakenBeforeViewMessages {
   val plaPensionsTakenBeforeTitle = "Did you get an income from any of your pensions before 6 April 2006?"

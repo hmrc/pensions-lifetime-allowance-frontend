@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.IP16
+package testHelpers.ViewSpecHelpers.ip2016
 
-trait PensionsTakenViewMessages {
-  val plaPensionsTakenTitle = "Did any of the following happen before 6 April 2016?"
-  val plaPensionsTakenBulletOne = "you got money from your pensions"
-  val plaPensionsTakenBulletTwo = "you transferred a pension to a scheme held overseas"
-  val plaPensionsTakenBulletThree = "you turned 75 with pension savings that you hadn't yet taken"
-  val plaPensionsTakenLegendText = "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?"
+trait PsoDetailsViewMessages {
+  val plaPsoDetailsTitle = "Pension sharing order"
+  val plaPsoDetailsDateQuestionText = "Date of pension sharing order"
+  val plaPsoDetailsPsoAmountQuestion = "Amount of pension sharing order"
+  val plaPsoDetailsDateHintText = "For example, 18 4 2016 "
+  val plaPsoDetailsVisitPTA = "Once you've completed this service, you can add a pension sharing order at any time by visiting your personal tax account."
 }

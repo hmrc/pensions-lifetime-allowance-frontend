@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package views.pages.ip2016
+package views.pages.amends
 
-import forms.OverseasPensionsForm
+import forms.AmendOverseasPensionsForm
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import views.html.pages.ip2016.{overseasPensions => views}
+import views.html.pages.amends.{amendOverseasPensions => views}
 import testHelpers.ViewSpecHelpers.ip2016.OverseasPensionsViewMessages
 
-class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPensionsViewMessages {
+class AmendOverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPensionsViewMessages{
 
-  "the OverseasPensionsView" should{
-    val oPensionsForm = OverseasPensionsForm.overseasPensionsForm.bind(Map("overseasPensions" -> "Yes", "overseasPensionsAmt" -> "1234"))
+  "the AmendOverseasPensionsView" should{
+    val oPensionsForm = AmendOverseasPensionsForm.amendOverseasPensionsForm.bind(Map("amendedOverseasPensions" -> "Yes",
+                                                                                     "amendedOverseasPensionsAmt" -> "1234",
+                                                                                     "protectionType" -> "ip2016",
+                                                                                     "status" -> "open"))
     lazy val view = views(oPensionsForm)
     lazy val doc = Jsoup.parse(view.body)
 
-    val errorForm = OverseasPensionsForm.overseasPensionsForm.bind(Map.empty[String, String])
+    val errorForm = AmendOverseasPensionsForm.amendOverseasPensionsForm.bind(Map.empty[String, String])
     lazy val errorView = views(errorForm)
     lazy val errorDoc = Jsoup.parse(errorView.body)
 
@@ -52,15 +55,15 @@ class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPension
     }
 
     "have a pair of yes/no buttons" in{
-      doc.select("[for=overseasPensions-yes]").text shouldBe plaBaseYes
-      doc.select("input#overseasPensions-yes").attr("type") shouldBe "radio"
-      doc.select("[for=overseasPensions-no]").text shouldBe plaBaseNo
-      doc.select("input#overseasPensions-no").attr("type") shouldBe "radio"
+      doc.select("[for=amendedOverseasPensions-yes]").text shouldBe plaBaseYes
+      doc.select("input#amendedOverseasPensions-yes").attr("type") shouldBe "radio"
+      doc.select("[for=amendedOverseasPensions-no]").text shouldBe plaBaseNo
+      doc.select("input#amendedOverseasPensions-no").attr("type") shouldBe "radio"
     }
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.IP2016Controller.submitOverseasPensions().url
+      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendOverseasPensions().url
       form.select("legend.visually-hidden").text() shouldBe plaOverseasPensionsLegendText
     }
 
@@ -69,7 +72,7 @@ class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPension
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").text shouldBe plaBaseChange
       doc.select("button").attr("type") shouldBe "submit"
     }
 

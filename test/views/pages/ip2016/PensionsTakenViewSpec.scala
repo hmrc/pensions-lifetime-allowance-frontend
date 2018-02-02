@@ -20,7 +20,7 @@ import forms.PensionsTakenForm
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.IP16.PensionsTakenViewMessages
+import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenViewMessages
 import views.html.pages.ip2016.{pensionsTaken => views}
 
 class PensionsTakenViewSpec extends CommonViewSpecHelper with PensionsTakenViewMessages {

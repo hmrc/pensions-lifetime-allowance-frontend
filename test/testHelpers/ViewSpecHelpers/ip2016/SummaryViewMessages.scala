@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.IP16
+package testHelpers.ViewSpecHelpers.ip2016
 
 trait SummaryViewMessages{
   val plaSummaryTitle                                   = "Submit your application"
@@ -61,5 +61,4 @@ trait SummaryViewMessages{
   val plaSummaryDeclaration                             = "By confirming, you will automatically submit your application for individual protection 2016."
 
   val plaHelpLinkLocation = "https://www.gov.uk/hmrc-internal-manuals/pensions-tax-manual/ptm094210"
-  val plaConfirmButton = "Confirm and submit"
 }

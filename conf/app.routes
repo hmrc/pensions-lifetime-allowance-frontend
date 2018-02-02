@@ -88,8 +88,6 @@ POST        /amend-protection/submit-amendment                                  
 GET         /amend-protection/amendment-outcome                                           controllers.AmendsController.amendmentOutcome
 GET         /amend-protection/:protectionType/:status                                     controllers.AmendsController.amendsSummary(protectionType, status)
 
-GET         /view-protection/:protectionType/:status                                     controllers.AmendsController.viewSummary(protectionType, status)
-
 ## Withdraw protection ##
 #GET         /withdraw-protection/summary                                                  controllers.WithdrawProtectionController.withdrawSummary
 GET         /withdraw-protection/implications                                             controllers.WithdrawProtectionController.withdrawImplications

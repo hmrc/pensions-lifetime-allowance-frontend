@@ -82,22 +82,6 @@ trait AmendsController extends BaseController with AuthFunction {
     }
   }
 
-  def viewSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-    genericAuthWithNino("existingProtections") { nino =>
-      keyStoreConnector.fetchAndGetFormData[ProtectionModel](Strings.keyStoreNonAmendFetchString(protectionType, status)).map {
-        case Some(currentProtection) =>
-          Ok(views.html.pages.amends.viewSummary(displayConstructors.createExistingProtectionDisplayModel(currentProtection),
-            status,
-            protectionType)
-
-          )
-        case _ =>
-          Logger.error(s"Could not retrieve view protection model for user with nino $nino when loading the view summary page")
-          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-      }
-    }
-  }
-
   val amendProtection = Action.async { implicit request =>
     genericAuthWithNino("existingProtections") { nino =>
       amendmentTypeForm.bindFromRequest.fold(

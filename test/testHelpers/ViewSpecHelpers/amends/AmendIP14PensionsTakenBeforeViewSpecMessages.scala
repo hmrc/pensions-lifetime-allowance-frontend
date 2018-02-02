@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.IP16
+package testHelpers.ViewSpecHelpers.amends
 
-trait PsoDetailsViewMessages {
-  val plaPsoDetailsTitle = "Pension sharing order"
-  val plaPsoDetailsDateQuestionText = "Date of pension sharing order"
-  val plaPsoDetailsPsoAmountQuestion = "Amount of pension sharing order"
-  val plaPsoDetailsDateHintText = "For example, 18 4 2016 "
-  val plaPsoDetailsVisitPTA = "Once you've completed this service, you can add a pension sharing order at any time by visiting your personal tax account."
+import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBeforeViewMessages
+
+trait AmendIP14PensionsTakenBeforeViewSpecMessages extends PensionsTakenBeforeViewMessages{
+  val plaIP14PensionsTakenBeforeQuestion = "What were these pensions worth on 5 April 2014?"
+  val plaIP14PensionsTakenBeforeStepTwo = "Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014."
 }

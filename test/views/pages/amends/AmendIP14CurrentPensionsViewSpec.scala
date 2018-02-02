@@ -14,33 +14,37 @@
  * limitations under the License.
  */
 
-package views.pages.ip2016
+package views.pages.amends
 
 import org.jsoup.Jsoup
-import forms.CurrentPensionsForm
-import views.html.pages.ip2016.{currentPensions => views}
+import forms.AmendCurrentPensionForm
+import views.html.pages.amends.{amendIP14CurrentPensions => views}
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.ip2016.CurrentPensionsViewMessages
+import testHelpers.ViewSpecHelpers.amends.AmendIP14CurrentPensionsViewSpecMessages
 
-class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsViewMessages{
+class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP14CurrentPensionsViewSpecMessages{
 
-  "the CurrentPensionsView" should{
-    val currentPensionsForm = CurrentPensionsForm.currentPensionsForm.bind(Map("currentPensionsAmt" -> "12000"))
-    lazy val view = views(currentPensionsForm)
+  "the AmendIP14CurrentPensionsView" should{
+    val amendCurrentPensionsForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "12000",
+      "protectionType" -> "ip2014",
+      "status" -> "open"))
+    lazy val view = views(amendCurrentPensionsForm)
     lazy val doc = Jsoup.parse(view.body)
 
-    val errorForm = CurrentPensionsForm.currentPensionsForm.bind(Map("currentPensionsAmt" -> "a"))
+    val errorForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "a",
+      "protectionType" -> "ip2014",
+      "status" -> "open"))
     lazy val errorView = views(errorForm)
     lazy val errorDoc = Jsoup.parse(errorView.body)
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaCurrentPensionsTitle
+      doc.title() shouldBe plaIp14CurrentPensionsTitle
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaCurrentPensionsTitle
+      doc.select("h1").text shouldBe plaIp14CurrentPensionsTitle
     }
 
     "have some introductory text" in{
@@ -49,6 +53,7 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
 
     "have a hidden menu with the correct values" in{
       doc.select("summary").text shouldBe plaCurrentPensionsHiddenLink
+      doc.select("p").eq(2).text shouldBe plaIp14CurrentPensionsHiddenTextPara
       doc.select("li").eq(0).text shouldBe plaHiddenMenuItemOne
       doc.select("li").eq(1).text shouldBe plaHiddenMenuItemTwo
       doc.select("li").eq(2).text shouldBe plaHiddenMenuItemThree
@@ -63,8 +68,8 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
 
     "has a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.IP2016Controller.submitCurrentPensions().url
-      form.select("legend.visually-hidden").text() shouldBe plaCurrentPensionsLegendText
+      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendCurrentPension().url
+      form.select("legend.visually-hidden").text() shouldBe plaIp14CurrentPensionsTitle
     }
 
     "have a £ symbol present" in{
@@ -72,20 +77,20 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").text shouldBe plaBaseChange
       doc.select("button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorDoc.select("h2").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select("a#currentPensionsAmt-error-summary").text shouldBe errorReal
-      errorDoc.select("span#currentPensionsAmt-error-message.error-notification").text shouldBe errorReal
+      errorDoc.select("a#amendedUKPensionAmt-error-summary").text shouldBe errorReal
+      errorDoc.select("span#amendedUKPensionAmt-error-message.error-notification").text shouldBe errorReal
     }
 
     "not have errors on valid pages" in{
-      currentPensionsForm.hasErrors shouldBe false
-      doc.select("a#currentPensionsAmt-error-summary").text shouldBe ""
-      doc.select("span#currentPensionsAmt-error-message.error-notification").text shouldBe ""
+      amendCurrentPensionsForm.hasErrors shouldBe false
+      doc.select("a#amendedUKPensionAmt-error-summary").text shouldBe ""
+      doc.select("span#amendedUKPensionAmt-error-message.error-notification").text shouldBe ""
     }
   }
 }

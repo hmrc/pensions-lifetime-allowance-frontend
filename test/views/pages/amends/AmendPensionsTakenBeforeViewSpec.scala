@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package views.pages.ip2016
+package views.pages.amends
 
-import forms.PensionsTakenBeforeForm
+import forms.AmendPensionsTakenBeforeForm
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBeforeViewMessages
-import views.html.pages.ip2016.{pensionsTakenBefore => views}
+import views.html.pages.amends.{amendPensionsTakenBefore => views}
 
-class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTakenBeforeViewMessages {
+class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTakenBeforeViewMessages{
 
-  "the PensionsTakenBeforeView" should{
-    val pensionsForm = PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> "Yes", "pensionsTakenBeforeAmt" -> "12345"))
+  "the AmendPensionsTakenBeforeView" should{
+    val pensionsForm = AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "Yes",
+                                                                                          "amendedPensionsTakenBeforeAmt" -> "12345",
+                                                                                          "protectionType" -> "ip2016",
+                                                                                          "status" -> "open"))
     lazy val view = views(pensionsForm)
     lazy val doc = Jsoup.parse(view.body)
 
-    val errorForm =  PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map.empty[String, String])
+    val errorForm =  AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map.empty[String, String])
     lazy val errorView = views(errorForm)
     lazy val errorDoc = Jsoup.parse(errorView.body)
 
@@ -67,7 +70,7 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTakenBefore().url
+      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPensionsTakenBefore().url
       form.select("legend.visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
     }
 
@@ -76,14 +79,14 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
     }
 
     "have a pair of yes/no buttons" in{
-      doc.select("[for=pensionsTakenBefore-yes]").text shouldBe plaBaseYes
-      doc.select("input#pensionsTakenBefore-yes").attr("type") shouldBe "radio"
-      doc.select("[for=pensionsTakenBefore-no]").text shouldBe plaBaseNo
-      doc.select("input#pensionsTakenBefore-no").attr("type") shouldBe "radio"
+      doc.select("[for=amendedPensionsTakenBefore-yes]").text shouldBe plaBaseYes
+      doc.select("input#amendedPensionsTakenBefore-yes").attr("type") shouldBe "radio"
+      doc.select("[for=amendedPensionsTakenBefore-no]").text shouldBe plaBaseNo
+      doc.select("input#amendedPensionsTakenBefore-no").attr("type") shouldBe "radio"
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").text shouldBe plaBaseChange
       doc.select("button").attr("type") shouldBe "submit"
     }
 

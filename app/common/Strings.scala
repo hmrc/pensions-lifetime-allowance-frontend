@@ -43,10 +43,6 @@ object Strings {
     statusString(protection.status).toLowerCase + protectionTypeString(protection.protectionType).toUpperCase
   }
 
-  def keyStoreNonAmendFetchString(protectionType: String, status: String): String = {
-    status.toLowerCase + protectionType.toUpperCase
-  }
-
   def keyStoreAmendFetchString(protectionType: String, status: String): String = {
     status.toLowerCase + protectionType.toUpperCase + "Amendment"
   }

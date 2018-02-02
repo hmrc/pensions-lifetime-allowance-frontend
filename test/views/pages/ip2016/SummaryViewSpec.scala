@@ -21,7 +21,7 @@ import models.{SummaryModel, SummaryRowModel, SummarySectionModel}
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.IP16.SummaryViewMessages
+import testHelpers.ViewSpecHelpers.ip2016.SummaryViewMessages
 import utils.CallMap
 import views.html.pages.ip2016.{summary => views}
 
@@ -192,7 +192,7 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages{
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaConfirmButton
+      doc.select("button").text shouldBe plaBaseSubmitApplication
       doc.select("button").attr("type") shouldBe "submit"
     }
 
