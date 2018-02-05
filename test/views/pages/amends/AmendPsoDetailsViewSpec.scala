@@ -14,28 +14,39 @@
  * limitations under the License.
  */
 
-package views.pages.ip2016
+package views.pages.amends
 
-import forms.PSODetailsForm
+import forms.AmendPSODetailsForm
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PsoDetailsViewMessages
-import views.html.pages.ip2016.{psoDetails => views}
+import views.html.pages.amends.{amendPsoDetails => views}
 
-class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessages {
+class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessages{
 
-  "the PsoDetailsView" should{
-    val pensionsForm = PSODetailsForm.psoDetailsForm.bind(Map(
+  "the AmendPsoDetailsView" should{
+    val pensionsForm = AmendPSODetailsForm.amendPsoDetailsForm.bind(Map(
       "psoDay" -> "1",
       "psoMonth" -> "2",
       "psoYear" -> "2017",
-      "psoAmt" -> "12345"))
+      "psoAmt" -> "12345",
+      "protectionType" -> "ip2016",
+      "status"         -> "open",
+      "existingPSO"    -> "true"))
 
     lazy val view = views(pensionsForm)
     lazy val doc = Jsoup.parse(view.body)
 
-    val errorForm =  PSODetailsForm.psoDetailsForm.bind(Map.empty[String, String])
+    lazy val errorForm =  AmendPSODetailsForm.amendPsoDetailsForm.bind(Map(
+      "psoDay" -> "",
+      "psoMonth" -> "",
+      "psoYear" -> "",
+      "psoAmt" -> "a",
+      "protectionType" -> "ip2016",
+      "status"         -> "",
+      "existingPSO"    -> "false"))
+
     lazy val errorView = views(errorForm)
     lazy val errorDoc = Jsoup.parse(errorView.body)
 
@@ -55,11 +66,9 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
     }
 
     "have the right date hint message" in{
-      doc.select("span.form-hint").text shouldBe plaPsoDetailsDateHintText
-    }
 
-    "have the right explanatory paragraph" in{
-      doc.select("p").text shouldBe plaPsoDetailsVisitPTA
+      doc.select("span.form-hint").text shouldBe plaPsoDetailsDateHintText
+      errorDoc.select("span.form-hint").text shouldBe plaPsoDetailsDateHintText
     }
 
     "have the right text above each textbox" in{
@@ -70,7 +79,7 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPSODetails().url
+      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPsoDetails().url
     }
 
     "have a £ symbol present" in{
@@ -78,17 +87,18 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").text shouldBe plaBaseUpdate
       doc.select("button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
+      errorDoc.select("button").text shouldBe plaBaseAdd
       errorDoc.select("span.error-notification").eq(0).text shouldBe plaBaseErrorsDayEmpty
       errorDoc.select("span.error-notification").eq(1).text shouldBe plaBaseErrorsMonthEmpty
       errorDoc.select("span.error-notification").eq(2).text shouldBe plaBaseErrorsYearEmpty
-      errorDoc.select("span.error-notification").eq(3).text shouldBe errorRequired
+      errorDoc.select("span.error-notification").eq(3).text shouldBe errorReal
     }
 
     "not have errors on valid pages" in{

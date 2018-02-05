@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.IP16
+package testHelpers.ViewSpecHelpers.ip2016
 
 trait PensionsTakenBetweenViewMessages {
   val plaPensionsTakenBetweenTitle = "Did any of these events happen between 6 April 2006 and 5 April 2016?"

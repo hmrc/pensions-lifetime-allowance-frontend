@@ -14,23 +14,27 @@
  * limitations under the License.
  */
 
-package views.pages.ip2016
+package views.pages.amends
 
 import org.jsoup.Jsoup
-import forms.CurrentPensionsForm
-import views.html.pages.ip2016.{currentPensions => views}
+import forms.AmendCurrentPensionForm
+import views.html.pages.amends.{amendCurrentPensions => views}
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.CurrentPensionsViewMessages
 
-class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsViewMessages{
+class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsViewMessages{
 
-  "the CurrentPensionsView" should{
-    val currentPensionsForm = CurrentPensionsForm.currentPensionsForm.bind(Map("currentPensionsAmt" -> "12000"))
-    lazy val view = views(currentPensionsForm)
+  "the AmendCurrentPensionsView" should{
+    val amendCurrentPensionsForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "12000",
+                                                                                            "protectionType" -> "ip2016",
+                                                                                            "status" -> "open"))
+    lazy val view = views(amendCurrentPensionsForm)
     lazy val doc = Jsoup.parse(view.body)
 
-    val errorForm = CurrentPensionsForm.currentPensionsForm.bind(Map("currentPensionsAmt" -> "a"))
+    val errorForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "a",
+                                                                             "protectionType" -> "ip2016",
+                                                                             "status" -> "open"))
     lazy val errorView = views(errorForm)
     lazy val errorDoc = Jsoup.parse(errorView.body)
     lazy val form = doc.select("form")
@@ -63,7 +67,7 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
 
     "has a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.IP2016Controller.submitCurrentPensions().url
+      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendCurrentPension().url
       form.select("legend.visually-hidden").text() shouldBe plaCurrentPensionsLegendText
     }
 
@@ -72,20 +76,20 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").text shouldBe plaBaseChange
       doc.select("button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorDoc.select("h2").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select("a#currentPensionsAmt-error-summary").text shouldBe errorReal
-      errorDoc.select("span#currentPensionsAmt-error-message.error-notification").text shouldBe errorReal
+      errorDoc.select("a#amendedUKPensionAmt-error-summary").text shouldBe errorReal
+      errorDoc.select("span#amendedUKPensionAmt-error-message.error-notification").text shouldBe errorReal
     }
 
     "not have errors on valid pages" in{
-      currentPensionsForm.hasErrors shouldBe false
-      doc.select("a#currentPensionsAmt-error-summary").text shouldBe ""
-      doc.select("span#currentPensionsAmt-error-message.error-notification").text shouldBe ""
+      amendCurrentPensionsForm.hasErrors shouldBe false
+      doc.select("a#amendedUKPensionAmt-error-summary").text shouldBe ""
+      doc.select("span#amendedUKPensionAmt-error-message.error-notification").text shouldBe ""
     }
   }
 }

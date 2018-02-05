@@ -14,34 +14,37 @@
  * limitations under the License.
  */
 
-package views.pages.ip2016
+package views.pages.amends
 
-import forms.PensionsTakenBetweenForm
+import forms.AmendPensionsTakenBetweenForm
 import org.jsoup.Jsoup
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBetweenViewMessages
-import views.html.pages.ip2016.{pensionsTakenBetween => views}
+import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBetweenViewSpecMessages
+import views.html.pages.amends.{amendIP14PensionsTakenBetween => views}
 
-class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTakenBetweenViewMessages {
+class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with AmendIP14PensionsTakenBetweenViewSpecMessages {
 
-  "the PensionsTakenBetweenView" should {
-    val pensionsForm = PensionsTakenBetweenForm.pensionsTakenBetweenForm.bind(Map("pensionsTakenBetween" -> "Yes", "pensionsTakenBetweenAmt" -> "12345"))
+  "the AmendIP14PensionsTakenBetweenView" should {
+    val pensionsForm = AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "Yes",
+      "amendedPensionsTakenBetweenAmt" -> "12345",
+      "protectionType" -> "ip2014",
+      "status" -> "open"))
     lazy val view = views(pensionsForm)
     lazy val doc = Jsoup.parse(view.body)
 
-    val errorForm =  PensionsTakenBetweenForm.pensionsTakenBetweenForm.bind(Map.empty[String, String])
+    val errorForm =  AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map.empty[String, String])
     lazy val errorView = views(errorForm)
     lazy val errorDoc = Jsoup.parse(errorView.body)
 
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaPensionsTakenBetweenTitle
+      doc.title() shouldBe plaIP14PensionsTakenBetweenTitle
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaPensionsTakenBetweenTitle
+      doc.select("h1").text shouldBe plaIP14PensionsTakenBetweenTitle
     }
 
     "have the right sub-headers and summary text" in{
@@ -51,7 +54,7 @@ class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTak
 
     "have the right explanatory paragraphs" in{
       doc.select("p").eq(0).text shouldBe plaPensionsTakenBetweenParaOne
-      doc.select("p").eq(2).text shouldBe plaPensionsTakenBetweenParaTwo
+      doc.select("p").eq(2).text shouldBe plaIP14PensionsTakenBetweenParaTwo
       doc.select("p").eq(3).text shouldBe plaPensionsTakenBetweenParaThree
     }
 
@@ -62,7 +65,7 @@ class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTak
     }
 
     "have a hidden drop-down menu with the correct list values" in{
-      doc.select("li").eq(3).text shouldBe plaPensionsTakenBetweenStepOne
+      doc.select("li").eq(3).text shouldBe plaIP14PensionsTakenBetweenStepOne
       doc.select("li").eq(4).text shouldBe plaPensionsTakenBetweenStepTwo
       doc.select("li").eq(5).text shouldBe plaPensionsTakenBetweenStepThree
       doc.select("li").eq(6).text shouldBe plaPensionsTakenBetweenStepFour
@@ -75,8 +78,8 @@ class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTak
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTakenBetween().url
-      form.select("legend.visually-hidden").text() shouldBe plaPensionsTakenBetweenLegendText
+      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPensionsTakenBetween().url
+      form.select("legend.visually-hidden").text() shouldBe plaIP14PensionsTakenBetweenLegendText
     }
 
     "have a £ symbol present" in{
@@ -84,14 +87,14 @@ class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTak
     }
 
     "have a pair of yes/no buttons" in{
-      doc.select("[for=pensionsTakenBetween-yes]").text shouldBe plaBaseYes
-      doc.select("input#pensionsTakenBetween-yes").attr("type") shouldBe "radio"
-      doc.select("[for=pensionsTakenBetween-no]").text shouldBe plaBaseNo
-      doc.select("input#pensionsTakenBetween-no").attr("type") shouldBe "radio"
+      doc.select("[for=amendedPensionsTakenBetween-yes]").text shouldBe plaBaseYes
+      doc.select("input#amendedPensionsTakenBetween-yes").attr("type") shouldBe "radio"
+      doc.select("[for=amendedPensionsTakenBetween-no]").text shouldBe plaBaseNo
+      doc.select("input#amendedPensionsTakenBetween-no").attr("type") shouldBe "radio"
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
+      doc.select("button").text shouldBe plaBaseChange
       doc.select("button").attr("type") shouldBe "submit"
     }
 

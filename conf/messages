@@ -140,7 +140,7 @@ pla.pensionsTakenBetween.helpLinkText       = working out how much lifetime allo
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken Between ##
-pla.ip14PensionsTakenBetween.title          = Did any of the these events happen between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.title          = Did any of these events happen between 6 April 2006 and 5 April 2014?
 pla.ip14PensionsTakenBetween.step.1         = Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened.
 pla.ip14PensionsTakenBetween.para.2         = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2014.
 
@@ -446,6 +446,8 @@ pla.views.heading.IP2016                                   = Your Individual pro
 
 pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.amends.CurrentPsos.IP2016.Amt                           = Value of pension sharing orders
+pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails.removeHint   = Remove your response to the amount or date of your pension sharing order
+pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails.changeHint   = Change the details of your pension sharing order
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Date and amount of pension sharing order
 pla.amends.pensionDebits.removePso                          = This will remove your pension sharing order.
 pla.amends.pensionDebits.cancelRemove                        = <a href="{0}" id="{1}">Do not remove</a>

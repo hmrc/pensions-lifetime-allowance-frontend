@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.IP16
+package testHelpers.ViewSpecHelpers.ip2016
 
-trait RemovePsoDetailsViewMessages{
-  val plaPsoDetailsTitle = "Pension sharing order"
-  val plaPsoDetailsRemovePso = "This will remove your pension sharing order."
-  val plaPsoDetailsCancelRemove = "Do not remove"
-  val plaPsoDetailsCancellationLink = "/protect-your-lifetime-allowance/apply-for-ip16-submit-your-application"
+trait PensionDebitsViewMessages {
+  val plaPensionDebitsTitle = "Have any of your pensions been shared in a divorce since 5 April 2016?"
+  val plaPensionDebitsParaOne = "This is called a pension sharing order and is issued by a court."
+  val plaPensionDebitsMandatoryErr = "Please answer this question"
+  val plaPensionsDebitLegendText = "Have any of your pensions been shared in a divorce since 5 April 2016?"
+
 }

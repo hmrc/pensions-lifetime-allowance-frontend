@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.IP16
+package testHelpers.ViewSpecHelpers.ip2016
 
 trait CurrentPensionsViewMessages{
   val plaCurrentPensionsTitle = "What were your UK pensions worth on 5 April 2016?"

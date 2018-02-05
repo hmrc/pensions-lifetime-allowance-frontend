@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.IP16
+package testHelpers.ViewSpecHelpers.ip2016
 
 trait OverseasPensionsViewMessages {
   val plaOverseasPensionsTitle = "Have you put money into a pension scheme held overseas?"

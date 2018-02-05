@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-package views.pages.ip2016
+package views.pages.amends
 
 import org.jsoup.Jsoup
+import forms.AmendmentTypeForm
 import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.RemovePsoDetailsViewMessages
-import views.html.pages.ip2016.{removePsoDetails => views}
+import views.html.pages.amends.{removePsoDebits => views}
 
-class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages{
+class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages{
 
   "the RemovePsoDetailsView" should{
-    lazy val view = views()
+    val amendmentForm = AmendmentTypeForm.amendmentTypeForm.bind(Map(
+      "protectionType" -> "ip2016",
+      "status"         -> "open"))
+
+    lazy val view = views(amendmentForm)
     lazy val doc = Jsoup.parse(view.body)
     lazy val form = doc.select("form")
 
@@ -43,12 +48,12 @@ class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetail
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.IP2016Controller.removePsoDetails().url
+      form.attr("action") shouldBe controllers.routes.AmendsController.submitRemovePso().url
     }
 
     "have a functional cancellation link" in{
       doc.select("a").text shouldBe plaPsoDetailsCancelRemove
-      doc.select("a").attr("href") shouldBe plaPsoDetailsCancellationLink
+      doc.select("a").attr("href") shouldBe plaAmendsPsoDetailsCancellationLink
     }
 
     "have a remove button" in{
