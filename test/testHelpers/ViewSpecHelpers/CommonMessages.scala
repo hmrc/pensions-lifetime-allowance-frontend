@@ -48,5 +48,4 @@ trait CommonMessages{
 
   val  errorReal                            = "Enter a number without commas, for example 10000.00"
   val  errorRequired                        = "This field is required"
-
 }
