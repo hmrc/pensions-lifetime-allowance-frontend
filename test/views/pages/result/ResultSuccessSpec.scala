@@ -109,17 +109,17 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
 
       "have a protection reference line(protection ref defined)" in {
         doc2.select("ul li").get(2).attr("id") shouldBe "protectionRef"
-        doc2.select("ul li").get(2).text shouldBe s"$plaResultSuccessProtectionRef: None"//@details.protectionReference
+        doc2.select("ul li").get(2).text shouldBe s"$plaResultSuccessProtectionRef: None"
       }
 
       "have a psa line(protection ref defined)" in {
         doc2.select("ul li").get(3).attr("id") shouldBe "psaRef"
-        doc2.select("ul li").get(3).text shouldBe s"$plaResultSuccessPsaRef: PSA33456789"//@details.psaReference
+        doc2.select("ul li").get(3).text shouldBe s"$plaResultSuccessPsaRef: PSA33456789"
       }
 
       "have an application date line(protection ref defined)" in {
         doc2.select("ul li").get(4).attr("id") shouldBe "applicationDate"
-        doc2.select("ul li").get(4).text shouldBe s"$plaResultSuccessApplicationDate: 15/07/2015" //@details.applicationDate.get
+        doc2.select("ul li").get(4).text shouldBe s"$plaResultSuccessApplicationDate: 15/07/2015"
       }
 
 
@@ -135,7 +135,7 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
 
       "have a psa line(protection ref not defined)" in {
         doc.select("ul li").get(3).attr("id") shouldBe "psaRef"
-        doc.select("ul li").get(3).text shouldBe s"$plaResultSuccessPsaRef:" //@details.psaReference
+        doc.select("ul li").get(3).text shouldBe s"$plaResultSuccessPsaRef:"
       }
 
     }
