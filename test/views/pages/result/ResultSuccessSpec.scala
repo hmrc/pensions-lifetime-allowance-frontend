@@ -202,15 +202,11 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
       lazy val detailsLink = doc.select("p a").get(3)
 
       s"have the paragraph text $plaResultSuccessViewDetails" in {
-        doc.select("p").get(6).text shouldBe s"$plaResultSuccessViewDetails $plaResultSuccessViewDetailsLinkText."
+        doc.select("p").get(6).text shouldBe s"$plaResultSuccessViewDetails"
       }
 
       "have the destination" in {
         detailsLink.attr("href") shouldBe "/protect-your-lifetime-allowance/existing-protections"
-      }
-
-      "have the link id" in {
-        detailsLink.attr("id") shouldBe "existingProtectionsLink"
       }
 
       "have the link text" in {

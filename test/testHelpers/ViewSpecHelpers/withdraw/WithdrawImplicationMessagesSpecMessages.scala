@@ -19,7 +19,6 @@ package testHelpers.ViewSpecHelpers.withdraw
 trait WithdrawImplicationMessagesSpecMessages {
 
   def plaWithdrawImplicationInfo(protectionType: String)                   = s"Once you withdraw, you will no longer have $protectionType. This might mean you have to pay a higher rate of tax on your pension."
-  val plaWithdrawProtectionIP2014label                                     = "Individual protection 2014"
-  val plaWithdrawProtectionIP2016label                                    = "Individual protection 2016"
-
+  val plaWithdrawProtectionIP2014label                                     = "individual protection 2014"
+  val plaWithdrawProtectionIP2016label                                     = "individual protection 2016"
 }

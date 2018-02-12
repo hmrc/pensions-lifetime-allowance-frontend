@@ -84,11 +84,7 @@ class ResultRejectedSpec extends CommonViewSpecHelper with ResultRejected {
     "have a rejection details paragraph which" should {
 
       s"contain the message $plaResultRejectionViewDetails" in {
-        doc.select("p").get(3).text shouldBe s"$plaResultRejectionViewDetails $plaResultRejectionViewDetailsLinkText."
-      }
-
-      "have a link Id" in {
-        doc.select("p a").get(1).attr("Id") shouldBe "existingProtectionsLink"
+        doc.select("p").get(3).text shouldBe s"$plaResultRejectionViewDetails"
       }
 
       "harbour a link with the destination $" in {

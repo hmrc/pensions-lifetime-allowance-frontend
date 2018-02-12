@@ -86,7 +86,8 @@ pla.techError.retry                         = Retry
 
 ## No notification ID returned ##
 pla.noNotificationId.title                  = Check your protection
-pla.noNotificationId.paraOne                = Visit your <a id="existingProtectionsLink" href="{0}">personal tax account</a> to see the new application or amendment.
+pla.noNotificationId.paraOne                = You can <a href="{0}">view or change details of your protections</a> at any time.
+
 
 
 ## Pensions Taken ##
@@ -328,8 +329,8 @@ pla.resultSuccess.print                 = Print and save your details
 pla.resultSuccess.IPChangeDetails       = Changing your protection details
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 60 days.
 pla.resultSuccess.FPAddToPension        = If you or your employer adds to your pension, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 90 days.
-pla.resultSuccess.viewDetails           = You can view or change your protection details in your
-pla.resultSuccess.viewDetailsLinkText   = personal tax account
+pla.resultSuccess.viewDetails           = You can <a href="{0}">view or change details of your protections</a> at any time.
+
 pla.resultSuccess.giveFeedback          = Give us feedback
 pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
 pla.resultSuccess.exitSurvey            = Your feedback helps us improve.
@@ -340,8 +341,8 @@ pla.resultSuccess.yourNino              = your National Insurance number
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
 pla.resultRejection.pageHeading           = Your application was unsuccessful
-pla.resultRejection.viewDetails           = You can view or change details of your protections in your
-pla.resultRejection.viewDetailsLinkText   = personal tax account
+pla.resultRejection.viewDetails           = You can <a href="{0}">view or change details of your protections</a> at any time.
+
 
 ## Manual Correspondence Needed ##
 pla.mcNeeded.title                        = There is a problem accessing your account
@@ -441,8 +442,8 @@ pla.views.heading.primary                                  = Your Primary protec
 pla.views.heading.enhanced                                 = Your Enhanced protection details
 pla.views.heading.fixed                                    = Your Fixed protection details
 pla.views.heading.FP2014                                   = Your Fixed protection 2014 details
-pla.views.heading.IP2014                                   = Your Individual protection 2014 details
-pla.views.heading.IP2016                                   = Your Individual protection 2016 details
+pla.views.heading.IP2014                                   = Your individual protection 2014 details
+pla.views.heading.IP2016                                   = Your individual protection 2016 details
 
 pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.amends.CurrentPsos.IP2016.Amt                           = Value of pension sharing orders
@@ -460,9 +461,7 @@ pla.amends.addPsoLink                                       = Add a pension shar
 
 ### AMENDS RESULTS MESSAGES ###
 pla.activeAmend.title                                       = Protection amended
-pla.activeAmend.viewDetails                                 = You can view these details in your
-pla.activeAmend.viewDetailsLinkText                         = personal tax account
-
+pla.activeAmend.viewDetails                                 = You can <a href="{0}">view or change details of your protections</a> at any time.
 pla.inactiveAmend.title                                     = Protection amended
 
 amendResultCode.25.heading  = You''re no longer entitled to individual protection 2014
@@ -825,8 +824,8 @@ pla.withdraw.confirm.feedback-text=<a href="{0}">What did you think of this serv
 pla.withdraw.protection.breadcrumb              = Withdraw Protection
 pla.withdraw.protection.start.title             = Start
 pla.withdraw.protection.continue.title          = Continue
-pla.withdraw.protection.IP2016.label            = Individual protection 2016
-pla.withdraw.protection.IP2014.label            = Individual protection 2014
+pla.withdraw.protection.IP2016.label            = individual protection 2016
+pla.withdraw.protection.IP2014.label            = individual protection 2014
 pla.withdraw.protection.FP2016.label            = Fixed protection 2016
 pla.withdraw.protection.FP2014.label            = Fixed protection 2014
 pla.withdraw.protection.primary.label           = Primary protection
@@ -851,6 +850,7 @@ pla.withdraw.protection.what-happens.info.4           = You might be asked to pr
 pla.withdraw.protection.what-happens.info.5           = You will not be able to cancel or amend this request once you submit.
 pla.withdraw.confirmation.message                     = Your {0} has been removed
 pla.withdraw.confirmation.contact.you.if.needed       = We may need to contact you to confirm the information you’ve given us.
+pla.withdraw.confirmation.other.protections.link      = View <a href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance">details about other protections and how to apply</a> on GOV.UK.
 pla.withdraw.confirmation.check.details               = You can check the details of your pension in your <a href="{0}">personal tax account</a>.
 pla.existingProtections.withdrawnDate                 = Withdrawn date
 
