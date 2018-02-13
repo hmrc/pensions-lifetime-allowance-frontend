@@ -103,15 +103,11 @@ class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessI
       lazy val detailsLink = doc.select("p a").get(2)
 
       "have the text" in {
-        doc.select("p").get(3).text shouldBe s"$plaResultRejectionViewDetails $plaResultRejectionViewDetailsLinkText."
+        doc.select("p").get(3).text shouldBe s"$plaResultRejectionViewDetails"
       }
 
       "have the link text" in {
         detailsLink.text shouldBe plaResultRejectionViewDetailsLinkText
-      }
-
-      "have the link id" in {
-        detailsLink.attr("id") shouldBe "existingProtectionsLink"
       }
 
       "have the link destination" in {

@@ -86,7 +86,7 @@ pla.techError.retry                         = Ail-geisio
 
 ## No notification ID returned ##
 pla.noNotificationId.title                  = Gwirio''ch diogelwch
-pla.noNotificationId.paraOne                = Ymwelwch â''ch <a id="existingProtectionsLink" href="{0}">cyfrif treth bersonol</a> i weld y cais newydd neu ddiwygiad.
+pla.noNotificationId.paraOne                = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
 
 
 ## Pensions Taken ##
@@ -294,7 +294,8 @@ pla.existingProtections.protectedAmount                 = Lwfans oes sydd wedi''
 pla.existingProtections.protectionRef                   = Rhif hysbysu diogelwch
 pla.existingProtections.psaRef                          = Cyfeirnod gweinyddwr y cynllun
 pla.existingProtections.backToHome                      = Yn ôl i hafan y cyfrif
-pla.existingProtections.amendLinkText                   = Bwrw golwg ar neu newid eich manylion diogelwch
+pla.existingProtections.amendLinkText                   = fwrw golwg ar fanylion eich diogelwch, neu eu newid
+
 
 
 ## PROTECTION INFORMATION ##
@@ -327,11 +328,12 @@ pla.resultSuccess.print                 = Argraffu a chadw''ch manylion
 pla.resultSuccess.IPChangeDetails       = Newid eich manylion diogelwch
 pla.resultSuccess.IPPensionSharing      = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn</a> cyn pen 60 diwrnod.
 pla.resultSuccess.FPAddToPension        = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a> cyn pen 90 diwrnod.
-pla.resultSuccess.viewDetails           = Gallwch fwrw golwg ar neu newid eich manylion diogelwch yn eich
-pla.resultSuccess.viewDetailsLinkText   = cyfrif treth personol
+pla.resultSuccess.viewDetails           = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
+pla.resultSuccess.viewDetailsLinkText   = fwrw golwg ar fanylion eich diogelwch, neu eu newid
 pla.resultSuccess.giveFeedback          = Rhoi adborth i ni
 pla.resultSuccess.exitSurveyLinkText    = Beth oedd eich barn am y gwasanaeth hwn?
 pla.resultSuccess.exitSurvey            = Mae eich adborth yn ein helpu i wella.
+
 
 pla.resultSuccess.yourName              = eich enw llawn
 pla.resultSuccess.yourNino              = eich rhif Yswiriant Gwladol
@@ -339,8 +341,8 @@ pla.resultSuccess.yourNino              = eich rhif Yswiriant Gwladol
 ## Result Rejection ##
 pla.resultRejection.title                 = Aflwyddiannus
 pla.resultRejection.pageHeading           = Roedd eich cais yn aflwyddiannus
-pla.resultRejection.viewDetails           = Gallwch fwrw golwg ar neu newid manylion eich diogelwch yn eich
-pla.resultRejection.viewDetailsLinkText   = cyfrif treth personol
+pla.resultRejection.viewDetails           = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
+pla.resultRejection.viewDetailsLinkText   = fwrw golwg ar fanylion eich diogelwch, neu eu newid
 
 ## Manual Correspondence Needed ##
 pla.mcNeeded.title                        = Mae problem wedi codi wrth gyrchu eich cyfrif
@@ -448,8 +450,8 @@ pla.amends.addPsoLink                                       = Ychwanegu gorchymy
 
 ### AMENDS RESULTS MESSAGES ###
 pla.activeAmend.title                                       = Diogelwch wedi''i ddiwygio
-pla.activeAmend.viewDetails                                 = Gallwch fwrw golwg ar y manylion hyn yn eich
-pla.activeAmend.viewDetailsLinkText                         = cyfrif treth personol
+pla.activeAmend.viewDetails                                 = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
+pla.activeAmend.viewDetailsLinkText                         = fwrw golwg ar fanylion eich diogelwch, neu eu newid
 
 pla.inactiveAmend.title                                     = Diogelwch wedi''i ddiwygio
 

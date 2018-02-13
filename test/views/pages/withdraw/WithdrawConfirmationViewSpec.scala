@@ -42,12 +42,22 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
     "have a div tag that" should {
       lazy val grid = doc.select("div.grid-row > div.grid")
 
-      s"has the first paragraph of ${"pla.withdraw.confirmation.check.details"}" in {
-        grid.select("p").get(0).text shouldBe plaWithdrawConfirmationCheckDetails
+
+      s"has the first paragraph of ${"pla.withdraw.confirmation.contact.you.if.needed"}" in {
+        grid.select("p").get(0).text shouldBe plaWithdrawConfirmationContactYouIfNeeded
       }
 
-      s"has the second paragraph of ${"pla.withdraw.confirmation.contact.you.if.needed"}" in {
-        grid.select("p").get(1).text shouldBe plaWithdrawConfirmationContactYouIfNeeded
+      s"have a question of ${"pla.withdraw.confirmation.other.protections.link"}" in {
+        doc.select("div.grid > p").get(1).text shouldBe plaWithdrawConfirmationOtherProtections
+      }
+
+      "Other protections link " in {
+        doc.select("div.grid > p a").text() shouldBe plaWithdrawConfirmationOtherProtectionsLink
+      }
+
+      "Other protections link href" in {
+        doc.select("div.grid > p a").attr("href") shouldBe plaWithdrawConfirmationOtherProtectionsUrl
+
       }
 
       "have a div tag size" in {

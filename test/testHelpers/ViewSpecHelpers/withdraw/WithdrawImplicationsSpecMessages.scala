@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers.withdraw
 
 trait WithdrawImplicationsSpecMessages {
   def plaWithdrawProtectionTitle(protectionType: String)        = s"Withdraw from $protectionType"
-  val plaWithdrawProtectionIP2014label                          = "Individual protection 2014"
+  val plaWithdrawProtectionIP2014label                          = "individual protection 2014"
   def plaWithdrawProtectionIfInfo(protectionType: String)       = s"Use this service to withdraw from your $protectionType if:"
   def plaWithdrawProtectionIfInfo1(protectionType: String)      = s"you no longer want to have $protectionType"
   def plaWithdrawProtectionIfInfo2(protectionType: String)      = s"you are no longer eligible to have $protectionType"

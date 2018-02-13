@@ -44,7 +44,7 @@
         <p id="fpAddToPension">@Html(Messages("pla.resultSuccess.FPAddToPension"))</p>
     }
 
-    <p>@Html(Messages("pla.resultRejection.viewDetails")) <a id="existingProtectionsLink" href=@controllers.routes.ReadProtectionsController.currentProtections>@Messages("pla.resultRejection.viewDetailsLinkText")</a>.</p>
+    <p>@Html(Messages("pla.resultRejection.viewDetails",controllers.routes.ReadProtectionsController.currentProtections))</p>
 
 
     <h2>@Messages("pla.resultSuccess.giveFeedback")</h2>

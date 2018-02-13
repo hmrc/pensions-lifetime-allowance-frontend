@@ -327,7 +327,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
       "show the technical error page for no notification ID" in {
         DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.noNotificationId.title")
-        DataItem.jsoupDoc.body.getElementById("existingProtectionsLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        DataItem.jsoupDoc.body.getElementsByTag("a").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       }
       "have the correct cache control" in {DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache" }
     }
