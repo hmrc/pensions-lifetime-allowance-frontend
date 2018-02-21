@@ -53,7 +53,7 @@
     <p>@Messages("psa.lookup.not-found.results.suggested-resolution")</p>
 
     <br>
-    <a class="button button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printNotFoundPDF()">@Messages("psa.lookup.results.save")</a>
+    <a class="section--branded button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printNotFoundPDF()">@Messages("psa.lookup.results.save")</a>
     <p>
         <a class="button button--get-started" href=@routes.LookupController.redirectToStart()>@Messages("psa.lookup.not-found.results.table.try-again")</a>
     </p>

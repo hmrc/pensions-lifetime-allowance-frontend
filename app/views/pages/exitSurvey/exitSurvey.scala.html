@@ -38,7 +38,9 @@
 
 @views.html.full_width_template(Messages("pla.exitSurvey.title")) {
 
+    @if(exitSurveyForm.hasErrors){
     @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), exitSurveyForm)
+    }
 
     <h1 class="heading-large">@Messages("pla.exitSurvey.pageHeading")</h1>
 
