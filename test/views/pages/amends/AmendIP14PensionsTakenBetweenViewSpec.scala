@@ -48,7 +48,7 @@ class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Am
     }
 
     "have the right sub-headers and summary text" in{
-      doc.select("h2").eq(1).text shouldBe plaPensionsTakenBetweenQuestionTwo
+      doc.select("h2").text shouldBe plaPensionsTakenBetweenQuestionTwo
       doc.select("summary").text shouldBe plaPensionsTakenBetweenHelp
     }
 

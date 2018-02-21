@@ -61,8 +61,8 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
     }
 
     "have the right headers for the PSO date and PSO amount" in{
-      doc.select("h2").eq(1).text shouldBe plaPsoDetailsDateQuestionText
-      doc.select("h2").eq(2).text shouldBe plaPsoDetailsPsoAmountQuestion
+      doc.select("h2").eq(0).text shouldBe plaPsoDetailsDateQuestionText
+      doc.select("h2").eq(1).text shouldBe plaPsoDetailsPsoAmountQuestion
     }
 
     "have the right date hint message" in{

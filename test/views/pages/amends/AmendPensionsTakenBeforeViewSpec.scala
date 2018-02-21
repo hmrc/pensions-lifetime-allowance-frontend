@@ -48,7 +48,7 @@ class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Pension
     }
 
     "have the right explanatory messages" in{
-      doc.select("h2").eq(1).text shouldBe plaPensionsTakenBeforeQuestion
+      doc.select("h2").text shouldBe plaPensionsTakenBeforeQuestion
       doc.select("summary").text shouldBe plaPensionsTakenBeforeHelp
       doc.select("p").eq(1).text shouldBe plaPensionsTakenBeforeParaOne
       doc.select("p").eq(2).text shouldBe plaPensionsTakenBeforeParaTwo

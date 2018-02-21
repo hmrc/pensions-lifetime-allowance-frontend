@@ -51,7 +51,7 @@ class AmendOverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPe
     }
 
     "have a question above the textbox"in{
-      doc.select("h2").get(1).text shouldBe plaOverseasPensionsQuestionTwo
+      doc.select("h2").text shouldBe plaOverseasPensionsQuestionTwo
     }
 
     "have a pair of yes/no buttons" in{
