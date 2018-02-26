@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import scala.concurrent.Future
 
 object StubConnector extends StubConnector with ServicesConfig {
-  override val serviceUrl: String = baseUrl("pla-stub")
+  override val serviceUrl: String = baseUrl("pla-dynamic-stub")
 
   override def http: WSHttp = WSHttp
 }
