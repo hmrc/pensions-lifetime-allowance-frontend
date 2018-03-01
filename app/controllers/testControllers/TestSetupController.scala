@@ -44,9 +44,8 @@ trait TestSetupController extends BaseController {
 
   def removeAllProtections(): Action[AnyContent] = Action.async { implicit request =>
     connector.deleteProtections().map {
-      case OK => Ok
-      case code if code > 399 && code < 500 => BadRequest
-      case _ => InternalServerError
+      case OK => Ok("All protections deleted")
+      case code => InternalServerError(s"$code returned by pla-stub")
     }
   }
 

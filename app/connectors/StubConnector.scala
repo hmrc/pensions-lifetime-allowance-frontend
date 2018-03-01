@@ -53,12 +53,8 @@ trait StubConnector {
 
   def deleteProtections()(implicit hc: HeaderCarrier): Future[Int] = {
 
-    http.DELETE(deleteProtectionsUrl) map {
-      case HttpResponse(Status.OK, _, _, _) => Status.OK
-      case HttpResponse(statusCode, _, _, _) =>
-        Logger.warn(s"Unable to delete all protections")
-        statusCode
-    }
+    http.DELETE(deleteProtectionsUrl).map{_.status}
+
   }
 
   def insertProtections(payload: JsValue)(implicit hc: HeaderCarrier): Future[Int] = {
