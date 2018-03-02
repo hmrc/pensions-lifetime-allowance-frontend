@@ -51,9 +51,8 @@ trait TestSetupController extends BaseController {
 
   def removeProtections(nino: String): Action[AnyContent] = Action.async { implicit request =>
     connector.deleteProtectionByNino(nino).map {
-      case OK => Ok(nino)
-      case code if code > 399 && code < 500 => BadRequest(nino)
-      case _ => InternalServerError(nino)
+      case OK => Ok(s"$nino deleted")
+      case code => InternalServerError(s"$code returned by pla-stub")
     }
   }
 

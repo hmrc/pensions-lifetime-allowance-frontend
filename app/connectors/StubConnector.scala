@@ -43,12 +43,8 @@ trait StubConnector {
 
   def deleteProtectionByNino(nino: String)(implicit hc: HeaderCarrier): Future[Int] = {
 
-    http.DELETE(deleteProtectionByNinoUrl(nino)) map {
-      case HttpResponse(Status.OK, _, _, _) => Status.OK
-      case HttpResponse(statusCode, _, _, _) =>
-        Logger.warn(s"Unable to delete protections for nino: $nino")
-        statusCode
-    }
+    http.DELETE(deleteProtectionByNinoUrl(nino)).map{_.status}
+
   }
 
   def deleteProtections()(implicit hc: HeaderCarrier): Future[Int] = {
