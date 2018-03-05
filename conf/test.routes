@@ -1,0 +1,3 @@
+DELETE  /individuals/:nino/protections    controllers.testControllers.TestSetupController.removeProtections(nino)
+DELETE  /protections/removeAll            controllers.testControllers.TestSetupController.removeAllProtections
+POST    /protections/insert               controllers.testControllers.TestSetupController.insertProtections

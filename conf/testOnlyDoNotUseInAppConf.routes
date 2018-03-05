@@ -10,8 +10,6 @@
 
 # Add all the application routes to the prod.routes file
 
-->         /                          prod.Routes
+->         /                                                prod.Routes
+->         /protect-your-lifetime-allowance/test-only       test.Routes
 
-DELETE  /test-only/individuals/:nino/protections    controllers.testControllers.TestSetupController.removeProtections(nino)
-DELETE  /test-only/protections/removeAll            controllers.testControllers.TestSetupController.removeAllProtections
-POST    /test-only/protections/insert               controllers.testControllers.TestSetupController.insertProtections
