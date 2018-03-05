@@ -55,12 +55,8 @@ trait StubConnector {
 
   def insertProtections(payload: JsValue)(implicit hc: HeaderCarrier): Future[Int] = {
 
-    http.POST(insertProtectionsUrl,payload) map {
-      case HttpResponse(Status.OK, _, _, _) => Status.OK
-      case HttpResponse(statusCode, _, _, _) =>
-        Logger.warn(s"Unable to insert protections")
-        statusCode
-    }
+    http.POST(insertProtectionsUrl,payload).map{_.status}
+
   }
 }
 
