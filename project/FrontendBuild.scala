@@ -75,7 +75,25 @@ private object AppDependencies {
     }.test
   }
 
-  def apply() = compile ++ Test()
+  object IntegrationTest {
+    def apply() = new TestDependencies {
+
+      override lazy val scope: String = "it"
+
+      override lazy val test = Seq(
+        "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
+        "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
+        "org.pegdown" % "pegdown" % pegdownVersion % scope,
+        "org.jsoup" % "jsoup" % "1.7.3" % scope,
+        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
+        "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
+        "org.mockito" % "mockito-all" % "1.9.5" % scope
+      )
+    }.test
+  }
+
+
+  def apply() = compile ++ Test() ++ IntegrationTest()
 }
 
 
