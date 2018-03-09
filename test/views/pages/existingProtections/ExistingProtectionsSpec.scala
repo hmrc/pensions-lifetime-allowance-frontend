@@ -95,7 +95,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     "have a protections section display which if no active protections are present" should {
 
       "have the id" in {
-        doc2.select("div").get(2).attr("id") shouldBe "listProtections"
+        doc2.select("div").get(1).attr("id") shouldBe "listProtections"
       }
 
       "have the message" in {
@@ -140,7 +140,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
 
     "have a back to home link which" should {
 
-      lazy val link = doc.select("section a").get(1)
+      lazy val link = doc.select("section a").get(3)
 
       s"have a link destination of account home" in {
         link.attr("href") shouldBe FrontendAppConfig.ptaFrontendUrl
