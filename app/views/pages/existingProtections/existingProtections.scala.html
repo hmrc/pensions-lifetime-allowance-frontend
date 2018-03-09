@@ -41,8 +41,6 @@
         <h1 class="heading-xlarge">@Messages("pla.existingProtections.pageHeading")</h1>
     </div>
 
-    <div class="grid-wrapper"></div>
-
     <div id="listProtections">
         @if(protections.activeProtection.isEmpty) {
             <p>@Messages("pla.existingProtections.noActiveProtections")</p>
@@ -70,9 +68,7 @@
     </div>
 
     <section>
-        <div class="grid">
         <a href="@{FrontendAppConfig.ptaFrontendUrl}" id="account-home-text-link">@Messages("pla.existingProtections.backToHome")</a>
-        </div>
     </section>
 
 }
