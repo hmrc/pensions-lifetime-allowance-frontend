@@ -44,6 +44,7 @@ private object AppDependencies {
   private val playLanguageVersion = "3.4.0"
   private val authClientVersion = "2.5.0"
   private val localTemplateRendererVersion = "1.3.0"
+  private val wireMockVersion          = "2.9.0"
 
   val compile = Seq(
     ws,
@@ -87,7 +88,8 @@ private object AppDependencies {
         "org.jsoup" % "jsoup" % "1.7.3" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
-        "org.mockito" % "mockito-all" % "1.9.5" % scope
+        "org.mockito" % "mockito-all" % "1.9.5" % scope,
+        "com.github.tomakehurst"  %  "wiremock" % wireMockVersion % scope
       )
     }.test
   }
