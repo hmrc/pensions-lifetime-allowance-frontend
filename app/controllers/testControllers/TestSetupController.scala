@@ -37,22 +37,18 @@ trait TestSetupController extends BaseController {
     val payload: JsValue = request.body
     connector.insertProtections(payload).map {
       case OK => Ok
-      //case code if code > 399 && code < 500 => BadRequest
-      //case _ => InternalServerError
     }
   }
 
   def removeAllProtections(): Action[AnyContent] = Action.async { implicit request =>
     connector.deleteProtections().map {
       case OK => Ok("All protections deleted")
-      //case code => InternalServerError(s"$code returned by pla-stub")
     }
   }
 
   def removeProtections(nino: String): Action[AnyContent] = Action.async { implicit request =>
     connector.deleteProtectionByNino(nino).map {
       case OK => Ok(s"$nino deleted")
-      //case code => InternalServerError(s"$code returned by pla-stub")
     }
   }
 
