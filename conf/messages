@@ -51,7 +51,7 @@ pla.confirmFP16.pageHeading = Get fixed protection 2016 for your lifetime allowa
 pla.confirmFP16.para.1      = To get this protection you must agree to these declarations.
 pla.confirmFP16.para.2      = I declare:
 pla.confirmFP16.bullet.1    = on 6 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme
-pla.confirmFP16.bullet.2    = on 6 April 2016 I did not hold enhanced protection, primray protection, fixed protection, or fixed protection 2014
+pla.confirmFP16.bullet.2    = on 6 April 2016 I did not hold enhanced protection, primary protection, fixed protection, or fixed protection 2014
 pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ‘protection cessation event’ (these are specific events that make you ineligible for fixed protection)
 pla.confirmFP16.para.3      = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
 pla.confirmFP16.help        = Help with these conditions
@@ -284,8 +284,6 @@ pla.summary.hiddenLinkText.ip14PsoDetails               = Change the details of 
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = View your existing protections
 pla.existingProtections.pageHeading                     = Your lifetime allowance protection
-pla.existingProtections.BreadcrumbPTAHome               = Account home
-pla.existingProtections.pageBreadcrumb                  = Lifetime allowance protection
 pla.existingProtections.details                         = Details
 pla.existingProtections.print                           = Print and save your details
 pla.existingProtections.applicationDate                 = Application date
@@ -297,6 +295,7 @@ pla.existingProtections.psaRef                          = Scheme administrator r
 pla.existingProtections.backToHome                      = Back to account home
 pla.existingProtections.amendLinkText                   = View or change your protection details
 pla.existingProtections.withdrawLinkText                = Withdraw your open protection
+pla.existingProtections.other.protections.link          = View <a href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance">details about individual and fixed protections and how to apply</a> on GOV.UK.
 
 
 ## PROTECTION INFORMATION ##
@@ -432,11 +431,9 @@ pla.amends.OverseasPensions.IP2014.Amt.changeHint           = Change how much yo
 pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.removeHint   = Remove your response to the amount or date of your pension sharing order
 pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.changeHint   = Change the details of your pension sharing order
 pla.amends.totalValueOfPensions                             = Total value of pensions
-pla.amends.pageBreadcrumb                                   = Change your protection details
 pla.amends.declaration                                      = The information that I have provided is true and complete to the best of my knowledge and belief.
 pla.amends.submit                                           = Submit your changes
 
-pla.views.pageBreadcrumb                                   = View your protection details
 pla.views.heading.FP2016                                   = Your Fixed protection 2016 details
 pla.views.heading.primary                                  = Your Primary protection details
 pla.views.heading.enhanced                                 = Your Enhanced protection details
@@ -786,16 +783,13 @@ psa.lookup.protection-guidance.protection-type-primary-label = Primary
 
 ## Withdraw ##
 pla.withdraw.title=Protection summary
-pla.withdraw.pageBreadcrumb=View your protection details
 pla.withdraw.heading.IP2016=Your individual protection 2016 details
 pla.withdraw.heading.IP2014=Your individual protection 2014 details
 pla.withdraw.summary.heading=Value of pensions
 pla.withdraw.summary.continue=Continue
 pla.withdraw.totalValueOfPensions=Total value of pensions
-pla.withdraw.implications.breadcrumb=Withdrawal implications
 
 pla.withdraw.implications.submit=Accept and continue
-pla.withdraw.date-input.breadcrumb=Enter withdrawal date
 pla.withdraw.date-input.title=Enter the withdrawal date
 pla.withdraw.date-input.form-title=Date of protection withdrawal
 pla.withdraw.date-input.form-hint=Example: 18 4 2016
@@ -821,7 +815,6 @@ pla.withdraw.confirm.feedback-heading=Give us feedback
 pla.withdraw.confirm.feedback-text=<a href="{0}">What did you think of this service?</a> Your feedback helps us improve.
 
 
-pla.withdraw.protection.breadcrumb              = Withdraw Protection
 pla.withdraw.protection.start.title             = Start
 pla.withdraw.protection.continue.title          = Continue
 pla.withdraw.protection.IP2016.label            = individual protection 2016

@@ -20,8 +20,6 @@ trait ExistingProtections {
 
   val plaExistingProtectionsTitle = "View your existing protections"
   val plaExistingProtectionsPageHeading = "Your lifetime allowance protection"
-  val plaExistingProtectionsBreadcrumbPTAHome = "Account home"
-  val plaExistingProtectionsPageBreadcrumb = "Lifetime allowance protection"
   val plaExistingProtectionsDetails = "Details"
   val plaExistingProtectionsPrint = "Print and save your details"
   val plaExistingProtectionsApplicationDate = "Application date"
@@ -30,7 +28,9 @@ trait ExistingProtections {
   val plaExistingProtectionsProtectedAmount = "Protected lifetime allowance"
   val plaExistingProtectionsProtectionRef = "Protection notification number"
   val plaExistingProtectionsPSARef = "Scheme administrator reference"
-  val plaExistingProtectionsBackToHome = "Back to account home"
+  val plaExistingProtectionsLinkText = "details about individual and fixed protections and how to apply"
+  val plaExistingProtectionOtherText = "View details about individual and fixed protections and how to apply on GOV.UK."
+  val plaExistingProtectionsHref = "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"
   val plaExistingProtectionsAmendLinkText = "View or change your protection details"
   val plaExistingProtectionsWithdrawLinkText = "Withdraw your open protection"
 

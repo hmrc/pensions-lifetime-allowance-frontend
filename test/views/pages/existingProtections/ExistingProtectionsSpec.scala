@@ -60,29 +60,6 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       doc.title() shouldBe plaExistingProtectionsTitle
     }
 
-    "have breadcrumb links which" should {
-
-      "have the class" in {
-        doc.select("nav").hasClass("breadcrumb-nav") shouldBe true
-      }
-
-      "have the link destination" in {
-        doc.select("nav a").attr("href") shouldBe FrontendAppConfig.ptaFrontendUrl
-      }
-
-      "have the link message" in {
-        doc.select("nav a").text shouldBe plaExistingProtectionsBreadcrumbPTAHome
-      }
-
-      "have the link id" in {
-        doc.select("nav a").attr("id") shouldBe "account-home-breadcrumb-link"
-      }
-
-      "have the message" in {
-        doc.select("nav ul li").get(2).text shouldBe plaExistingProtectionsPageBreadcrumb
-      }
-    }
-
     "have the correct heading which" should {
 
       lazy val h1Tag = doc.select("H1")
@@ -138,23 +115,23 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     }
 
 
-    "have a back to home link which" should {
+    "have a view details about other protections and how to apply link which" should {
 
       lazy val link = doc.select("section a").get(3)
 
-      s"have a link destination of account home" in {
-        link.attr("href") shouldBe FrontendAppConfig.ptaFrontendUrl
+      s"have a link destination of view details about other protections and how to apply" in {
+        link.attr("href") shouldBe plaExistingProtectionsHref
       }
 
-      s"have the link text $plaExistingProtectionsBackToHome" in {
-        link.text shouldBe plaExistingProtectionsBackToHome
+      s"have the link text $plaExistingProtectionsLinkText" in {
+       doc.select("section a").get(3).text shouldBe plaExistingProtectionsLinkText
       }
 
-      "have the correct id" in {
-        link.attr("id") shouldBe "account-home-text-link"
+      s"have a question of ${"pla.existingProtections.other.protections.link"}" in {
+      doc.select("section a, p").get(3).text shouldBe plaExistingProtectionOtherText
+        }
       }
     }
-  }
 }
 
 

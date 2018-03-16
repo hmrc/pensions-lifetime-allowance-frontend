@@ -21,9 +21,6 @@ import testHelpers.ViewSpecHelpers.ip2016.SummaryViewMessages
 trait AmendSummaryViewSpecMessages extends SummaryViewMessages{
   val plaAmendsSummaryTitle = "Protection summary"
   val plaAmendsHeaderOne = "Check your answers and submit the changes"
-  val plaAmendsBreadCrumbNavBarItemOne = "Account home"
-  val plaAmendsBreadCrumbNavBarItemTwo = "Lifetime allowance protection"
-  val plaAmendsBreadCrumbNavBarItemThree = "Change your protection details"
   val plaAmendsSummaryPageHeading = "Your individual protection 2016 details"
   val plaAmendsVisuallyHiddenTextPensionsTakenBeforeYesNo = "Change whether you received an income from any of your pensions before 6 April 2006"
   val plaAmendsVisuallyHiddenTextPensionsTakenBeforeAmt = "Change the value of the pensions you took before 6 April 2006"

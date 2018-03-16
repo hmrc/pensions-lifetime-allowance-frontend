@@ -98,17 +98,6 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       doc.title() shouldBe plaAmendsSummaryTitle
     }
 
-    "have a properly structured breadcrumb navbar" in{
-      doc.select("li").eq(0).text() shouldBe plaAmendsBreadCrumbNavBarItemOne
-      doc.select("li").eq(2).text() shouldBe plaAmendsBreadCrumbNavBarItemTwo
-      doc.select("li").eq(4).text() shouldBe plaAmendsBreadCrumbNavBarItemThree
-    }
-
-    "have a breadcrumb navbar with valid links" in{
-      doc.select("a#account-home-breadcrumb-link").attr("href") shouldBe FrontendAppConfig.ptaFrontendUrl
-      doc.select("a#existing-protections-breadcrumb-link").attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections().url
-    }
-
     "have the correct and properly formatted header" in{
       doc.select("h1").first().text shouldBe plaAmendsHeaderOne
       doc.select("h2").first().text shouldBe plaSummaryPensionsHeading
