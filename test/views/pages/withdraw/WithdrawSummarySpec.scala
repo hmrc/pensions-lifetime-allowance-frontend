@@ -43,29 +43,6 @@ class WithdrawSummarySpec extends CommonViewSpecHelper with WithdrawSummarySpecM
         doc.title() shouldBe plaWithdrawTitle
       }
 
-      "have a navigation tag that" should {
-
-        s"have text of $plaExistingProtectionsBreadcrumbPTAHome with id of 'account-home-breadcrumb-link'" in {
-          doc.select("#account-home-breadcrumb-link").text() shouldBe plaExistingProtectionsBreadcrumbPTAHome
-        }
-
-        "have 'a' tag with id of 'account-home-breadcrumb-link' has a href" in {
-          doc.select("#account-home-breadcrumb-link").attr("href") shouldBe FrontendAppConfig.ptaFrontendUrl
-        }
-
-        s"have text of $plaExistingProtectionsPageBreadcrumb with id of 'existing-protections-breadcrumb-link'" in {
-          doc.getElementById("existing-protections-breadcrumb-link").text() shouldBe plaExistingProtectionsPageBreadcrumb
-        }
-
-        "have 'a' tag with id of 'existing-protections-breadcrumb-link' has a href" in {
-          doc.getElementById("existing-protections-breadcrumb-link").attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
-        }
-
-        "have 'li' tag with class of 'breadcrumb-nav__item' that has text" in {
-          doc.select("li.breadcrumb-nav__item").get(2).text() shouldBe plaExistingProtectionsPageBreadcrumb
-        }
-      }
-
       "have 'li' tag with class of heading-large that has text" in {
         doc.select("h1").text() shouldBe plaWithdrawHeadingIP2014
       }

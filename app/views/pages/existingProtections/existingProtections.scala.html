@@ -27,16 +27,6 @@
 
 @views.html.full_width_template(title = Messages("pla.existingProtections.title"), bodyClasses = None) {
 
-    <nav class="breadcrumb-nav breadcrumb-nav--slim">
-        <ul class="breadcrumb-nav__list" role="breadcrumbs">
-            <li class="breadcrumb-nav__item">
-              <a href="@{FrontendAppConfig.ptaFrontendUrl}" id="account-home-breadcrumb-link">@Messages("pla.existingProtections.BreadcrumbPTAHome")</a>
-            </li>
-            <li class="breadcrumb-nav__item breadcrumb-nav__item--trail"></li>
-            <li class="breadcrumb-nav__item">@Messages("pla.existingProtections.pageBreadcrumb")</li>
-        </ul>
-    </nav>
-
     <div class="grid">
         <h1 class="heading-xlarge">@Messages("pla.existingProtections.pageHeading")</h1>
     </div>
@@ -68,7 +58,7 @@
     </div>
 
     <section>
-        <a href="@{FrontendAppConfig.ptaFrontendUrl}" id="account-home-text-link">@Messages("pla.existingProtections.backToHome")</a>
+        <p>@Html(Messages("pla.existingProtections.other.protections.link")) </p>
     </section>
 
 }

@@ -134,7 +134,6 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         when(mockDisplayConstructors.createWithdrawSummaryTable(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
         status(result) shouldBe OK
-        jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.pageBreadcrumb"))
       }
     }
   }

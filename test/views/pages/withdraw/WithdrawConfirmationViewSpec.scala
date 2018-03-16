@@ -78,7 +78,7 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
     }
 
     "feedback link href" in {
-      doc.select("div.grid-row > p a").attr("href") shouldBe plaWithdrawConfirmFeedbackUrl
+      doc.select("div.grid-row > p a").attr("href")  shouldBe plaWithdrawConfirmFeedbackUrl
 
     }
 

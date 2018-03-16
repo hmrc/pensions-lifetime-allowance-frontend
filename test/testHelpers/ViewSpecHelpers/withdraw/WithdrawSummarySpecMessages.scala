@@ -20,8 +20,6 @@ trait WithdrawSummarySpecMessages {
 
   val plaWithdrawTitle                                        = "Protection summary"
   val plaWithdrawSummaryContinue                              = "Continue"
-  val plaExistingProtectionsBreadcrumbPTAHome                 = "Account home"
-  val plaExistingProtectionsPageBreadcrumb                    = "Lifetime allowance protection"
   val plaWithdrawHeadingIP2014                                = "Your individual protection 2014 details"
   val plaWithdrawSummaryHeading                               = "Value of pensions"
   val plaWithdrawTotalValueOfPensions                         = "Total value of pensions"
