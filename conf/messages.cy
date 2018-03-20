@@ -688,3 +688,84 @@ resultCode.43.1         =   Gan fod diogelwch sefydlog 2016 wedi''i sefydlu genn
 resultCode.43.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
 
 resultCode.44.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
+
+## PSA Lookup form
+psa.lookup.form.scheme-admin-ref-form.title            = Nodwch Gyfeirnod Gweinyddwr y Cynllun
+psa.lookup.form.protection-notification-no-form.title  = Nodwch y Rhif Hysbysu Diogelwch
+psa.lookup.form.continue.button                        = Yn eich blaen
+psa.lookup.form.startover.button                       = Dechrau eto
+
+psa.lookup.title                     = Chwilio am Weinyddwr y Cynllun Pensiwn (PSA)
+psa.lookup.form.psaref.hint          = Enghraifft: PSA12345678A
+psa.lookup.form.pnn.hint             = Enghraifft: IP141000000000A
+psa.lookup.form.button               = Cyflwyno
+pla.lookup.form.error.summary        = Rydych wedi nodi rhywbeth annilys
+psa.lookup.form.psaref.required      = Nodwch Gyfeirnod Gweinyddwr y Cynllun
+psa.lookup.form.psaref.invalid       = Nid ydych wedi nodi Cyfeirnod Gweinyddwr y Cynllun cywir
+psa.lookup.form.pnn.required         = Nodwch Rif Hysbysu Diogelwch
+psa.lookup.form.pnn.invalid          = Nid ydych wedi nodi'r Rhif Hysbysu Diogelwch cywir
+psa.lookup.form.not-found            = Nid oes gan y manylion rydych wedi'u nodi ddiogelwch dilys
+psa.lookup.form.pnn.back             = Yn ôl
+
+## PSA lookup results
+psa.lookup.results.title                = Canlyniadau gwiriad diogelwch ar gyfer lwfans oes
+psa.lookup.results.table.title          = Manylion Chwilio am Weinyddwr y Cynllun Pensiwn (PSA)
+psa.lookup.results.table.header.1       = Blwch
+psa.lookup.results.table.header.2       = Gwerth
+psa.lookup.results.table.row.1          = Cyfeirnod Gweinyddwr y Cynllun:
+psa.lookup.results.table.row.2          = Rhif Hysbysu Diogelwch:
+psa.lookup.results.table.row.3          = Y math o ddiogelwch:
+psa.lookup.results.table.row.4          = Y swm wedi'i ddiogelu:
+psa.lookup.results.table.row.5          = Statws:
+psa.lookup.results.table.row.5.valid    = Mae'r diogelwch hwn yn ddilys
+psa.lookup.results.table.row.5.invalid  = Nid yw'r diogelwch hwn yn ddilys mwyach
+psa.lookup.results.table.row.6          = Gwiriwyd ar:
+
+psa.lookup.results.ltatype.1            = Diogelwch sefydlog 2016
+psa.lookup.results.ltatype.2            = Diogelwch unigol 2014
+psa.lookup.results.ltatype.3            = Diogelwch unigol 2016
+psa.lookup.results.ltatype.4            = Prif ddiogelwch
+psa.lookup.results.ltatype.5            = Diogelwch uwch
+psa.lookup.results.ltatype.6            = Diogelwch sefydlog 2012
+psa.lookup.results.ltatype.7            = Diogelwch sefydlog 2014
+
+psa.lookup.results.save                 = Lawrlwytho PDF o'r canlyniadau hyn
+psa.lookup.results.check-another        = Gwirio tystysgrif arall
+
+psa.lookup.results.title.print.1        = Canlyniadau lwfans oes
+psa.lookup.results.title.print.2        = gwiriad diogelwch
+psa.lookup.results.copyright.print      = © Hawlfraint y Goron
+psa.lookup.results.header.gov.uk        = GOV.UK
+psa.lookup.results.logo.text.print      = Cyllid a Thollau EM
+
+psa.lookup.not-found.results.title                          = Gwiriwch y manylion a nodwyd gennych
+psa.lookup.not-found.results.title.2                        = Nodwyd y canlynol gennych:
+psa.lookup.not-found.results.table.row.1                    = Cyfeirnod Gweinyddwr y Cynllun:
+psa.lookup.not-found.results.table.row.2                    = Rhif Hysbysu Diogelwch:
+psa.lookup.not-found.results.detail                         = Nid yw'r manylion a nodwyd gennych yn cyd-fynd â thystysgrif diogelwch sydd eisoes yn bodoli.
+psa.lookup.not-found.results.possible-causes                = Gallai hyn fod oherwydd i chi wedi:
+psa.lookup.not-found.results.possible-causes.bullet1        = cael yr wybodaeth anghywir gan eich cleient
+psa.lookup.not-found.results.possible-causes.bullet2        = nodi un o'r rhifau'n anghywir
+psa.lookup.not-found.results.suggested-resolution           = Gwiriwch yr wybodaeth a roddwyd i chi a rhowch gynnig arall arni.
+psa.lookup.not-found.results.table.try-again                = Rhowch gynnig arall arni
+
+psa.lookup.protection-guidance.title                                            = Gwiriwch werth y math o ddiogelwch
+psa.lookup.protection-guidance.table-heading-left                               = Y math o ddiogelwch
+psa.lookup.protection-guidance.table-heading-right                              = Y swm wedi'i ddiogelu
+psa.lookup.protection-guidance.protection-type-enhanced-label                   = Uwch
+psa.lookup.protection-guidance.protection-type-enhanced-value                   = £1,500,000 neu uwch
+psa.lookup.protection-guidance.protection-type-fixed12-label                    = Sefydlog 2012
+psa.lookup.protection-guidance.protection-type-fixed12-value                    = £1,800,000
+psa.lookup.protection-guidance.protection-type-fixed14-label                    = Sefydlog 2014
+psa.lookup.protection-guidance.protection-type-fixed14-value                    = £1,500,000
+psa.lookup.protection-guidance.protection-type-fixed16-label                    = Sefydlog 2016
+psa.lookup.protection-guidance.protection-type-fixed16-value                    = £1,250,000
+psa.lookup.protection-guidance.protection-type-individual14-label               = Unigol 2014
+psa.lookup.protection-guidance.protection-type-individual14-value-line1         = Yr un isaf o:
+psa.lookup.protection-guidance.protection-type-individual14-value-line2         = gwerth y pensiwn ar 5 Ebrill 2014
+psa.lookup.protection-guidance.protection-type-individual14-value-line3         = £1,500,000
+psa.lookup.protection-guidance.protection-type-individual16-label               = Unigol 2016
+psa.lookup.protection-guidance.protection-type-individual16-value-line1         = Yr isaf o:
+psa.lookup.protection-guidance.protection-type-individual16-value-line2         = gwerth y pensiwn ar 5 Ebrill 2016
+psa.lookup.protection-guidance.protection-type-individual16-value-line3         = £1,250,000
+psa.lookup.protection-guidance.protection-type-primary-label                    = Sylfaenol
