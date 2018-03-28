@@ -46,6 +46,8 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
   val validApplyFP16Json = """{"protectionType":"FP2016"}"""
   val nino = "AB999999C"
   val tstId = "testUserID"
+  val psaRef = "testPSARef"
+  val ltaRef = "testLTARef"
 
 
   val negativePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
@@ -144,6 +146,16 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         .thenReturn(Future.successful(HttpResponse(OK)))
 
       val response = TestPLAConnector.readProtections(nino)
+      await(response).status shouldBe OK
+    }
+  }
+
+  "Calling psaLookup" should {
+    "should return a 200 from a valid psa lookup request" in {
+      when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(HttpResponse(OK)))
+
+      val response = TestPLAConnector.psaLookup(psaRef, ltaRef)
       await(response).status shouldBe OK
     }
   }
