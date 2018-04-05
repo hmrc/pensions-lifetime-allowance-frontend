@@ -17,7 +17,7 @@
 package constructors
 
 import com.kenshoo.play.metrics.PlayModule
-import common.Display
+import common.{Display, Helpers}
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
@@ -26,6 +26,7 @@ import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import play.api.mvc.Call
 
 class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
   override def bindModules = Seq(new PlayModule)
@@ -769,4 +770,25 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     }
   }
 
+  "createWithdrawSummaryTable" should {
+
+    "create a valid amendDisplayModel" in {
+      val model = ProtectionModel(Some("checkRef"), Some(33), protectionType = Some("type"), status = Some("status"), uncrystallisedRights = Some(1000))
+      val result = DisplayConstructors.createWithdrawSummaryTable(model)
+      val pensionContributionSectionResult = List(AmendDisplaySectionModel("PensionsTakenBefore",List(
+        AmendDisplayRowModel("YesNo",None,None,"No"))),
+        AmendDisplaySectionModel("PensionsTakenBetween",List(AmendDisplayRowModel("YesNo",None,None,"No"))),
+        AmendDisplaySectionModel("OverseasPensions",List(AmendDisplayRowModel("YesNo",None,None,"No"))),
+        AmendDisplaySectionModel("CurrentPensions",List(AmendDisplayRowModel("Amt",None,None,"£1,000"))),
+        AmendDisplaySectionModel("CurrentPsos",List(AmendDisplayRowModel("YesNo",None,None,"No"))))
+      val psoSectionsResult = List(AmendDisplaySectionModel("PensionsTakenBefore",List(
+        AmendDisplayRowModel("YesNo",Some(Helpers.createAmendCall(model, ApplicationStage.PensionsTakenBefore)),None,"No"))),
+        AmendDisplaySectionModel("PensionsTakenBetween",List(AmendDisplayRowModel("YesNo",Some(Helpers.createAmendCall(model, ApplicationStage.PensionsTakenBetween)),None,"No"))),
+        AmendDisplaySectionModel("OverseasPensions",List(AmendDisplayRowModel("YesNo",Some(Helpers.createAmendCall(model, ApplicationStage.OverseasPensions)),None,"No"))),
+        AmendDisplaySectionModel("CurrentPensions",List(AmendDisplayRowModel("Amt",Some(Helpers.createAmendCall(model, ApplicationStage.CurrentPensions)),None,"£1,000"))),
+        AmendDisplaySectionModel("CurrentPsos",List(AmendDisplayRowModel("YesNo",None,None,"No"))))
+
+      result shouldBe AmendDisplayModel("notRecorded", false, pensionContributionSectionResult, false, psoSectionsResult, "£0")
+    }
+  }
 }

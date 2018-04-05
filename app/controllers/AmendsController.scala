@@ -405,7 +405,7 @@ trait AmendsController extends BaseController with AuthFunction {
     }
   }
 
-  private def createPsoDetailsList(formModel: AmendPSODetailsModel): Option[List[PensionDebitModel]] = {
+  private[controllers] def createPsoDetailsList(formModel: AmendPSODetailsModel): Option[List[PensionDebitModel]] = {
     val date = Dates.apiDateFormat(formModel.psoDay.get, formModel.psoMonth.get, formModel.psoYear.get)
     val amt = formModel.psoAmt.getOrElse{ throw new Exceptions.RequiredValueNotDefinedException("createPsoDetailsList", "psoAmt") }
     Some(List(PensionDebitModel(startDate = date, amount = amt.toDouble)))
@@ -417,7 +417,7 @@ trait AmendsController extends BaseController with AuthFunction {
     keyStoreConnector.saveData[AmendProtectionModel](key, amendModel.copy(updatedProtection = newUpdatedProtection))
   }
 
-  private def getRouteUsingModel(model: AmendValueModel)(implicit request: Request[AnyContent]) = {
+  private[controllers] def getRouteUsingModel(model: AmendValueModel)(implicit request: Request[AnyContent]) = {
 
     model match {
       case AmendCurrentPensionModel(_,"ip2016",_) =>
