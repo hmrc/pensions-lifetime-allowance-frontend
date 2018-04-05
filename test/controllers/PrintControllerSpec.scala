@@ -30,7 +30,7 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}

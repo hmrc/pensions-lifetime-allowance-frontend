@@ -20,7 +20,7 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock._
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig
-import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import org.scalatestplus.play.guice.GuiceGuiceOneServerPerSuite
 import play.api.libs.ws.WSClient
 
 object WiremockHelper {
@@ -30,7 +30,7 @@ object WiremockHelper {
 }
 
 trait WiremockHelper {
-  self: GuiceOneServerPerSuite =>
+  self: GuiceGuiceOneServerPerSuite =>
 
   import WiremockHelper._
 

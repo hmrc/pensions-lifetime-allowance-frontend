@@ -28,7 +28,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
 import org.mockito.stubbing.OngoingStubbing
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
 import play.api.libs.json.Json

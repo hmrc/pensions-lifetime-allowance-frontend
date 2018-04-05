@@ -32,7 +32,7 @@ import org.mockito.Matchers
 import org.mockito.Matchers.anyString
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.Play.current
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._

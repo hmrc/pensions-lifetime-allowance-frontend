@@ -36,7 +36,7 @@ import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages

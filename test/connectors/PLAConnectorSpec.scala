@@ -23,8 +23,8 @@ import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.OneServerPerSuite
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
@@ -34,7 +34,7 @@ import scala.collection.immutable.List
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{ HeaderCarrier, HttpResponse }
 
-class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with OneServerPerSuite {
+class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneServerPerSuite {
 
   val mockHttp : WSHttp = mock[WSHttp]
 
