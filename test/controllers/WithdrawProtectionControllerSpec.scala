@@ -27,7 +27,7 @@ import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.Play.current
 import play.api.http.HeaderNames.CACHE_CONTROL
@@ -39,6 +39,7 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
+import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
@@ -109,13 +110,89 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
 
   val fakeRequest = FakeRequest()
 
+  "In WithdrawProtectionController calling the showWithdrawConfirmation action" should {
+
+    "return 200" in {
+      mockAuthConnector(Future.successful())
+      when(mockKeyStoreConnector.remove(Matchers.any()))
+        .thenReturn(Future.successful(mock[HttpResponse]))
+      status(TestWithdrawController.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
+    }
+  }
+
+  "In WithdrawProtectionController calling the displayWithdrawConfirmation action" when {
+
+    "handling an OK response" should {
+      lazy val result = {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+        when(mockPLAConnector.amendProtection(Matchers.anyString(), Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(HttpResponse(OK)))
+        await(TestWithdrawController.displayWithdrawConfirmation("")(fakeRequest))
+      }
+
+      "return 303" in {
+        status(result) shouldBe SEE_OTHER
+      }
+    }
+
+    "handling a non-OK response" should {
+      lazy val result = {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+        when(mockPLAConnector.amendProtection(Matchers.anyString(), Matchers.any())(Matchers.any()))
+          .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR)))
+        await(TestWithdrawController.displayWithdrawConfirmation("")(fakeRequest))
+      }
+
+      "return 500" in {
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+
+      "have the correct cache control" in {
+        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      }
+    }
+  }
+
+  "In WithdrawProtectionController calling the withdrawImplications action" when {
+
+    "there is no stored protection model" should {
+      lazy val result = {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        keystoreFetchCondition[ProtectionModel](None)
+        await(TestWithdrawController.withdrawImplications(fakeRequest))
+      }
+
+      "return 500" in {
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+
+      "have the correct cache control" in {
+        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      }
+    }
+
+    "there is a stored protection model" should {
+
+      "return 200" in {
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+        when(mockDisplayConstructors.createWithdrawSummaryTable(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
+        lazy val result = await(TestWithdrawController.withdrawImplications(fakeRequest))
+        status(result) shouldBe OK
+      }
+    }
+  }
+
 
   "In WithdrawProtectionController calling the withdrawSummary action" when {
 
     "there is no stored protection model" should {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[ProtectionModel](None)
-      lazy val result = await(TestWithdrawController.withdrawSummary(fakeRequest))
+      lazy val result = {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        keystoreFetchCondition[ProtectionModel](None)
+        await(TestWithdrawController.withdrawSummary(fakeRequest))
+      }
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 500" in {

@@ -23,8 +23,8 @@ import models._
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mock.MockitoSugar
-import org.scalatestplus.play.OneServerPerSuite
+import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import uk.gov.hmrc.play.test.UnitSpec
@@ -34,7 +34,7 @@ import scala.collection.immutable.List
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{ HeaderCarrier, HttpResponse }
 
-class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with OneServerPerSuite {
+class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneServerPerSuite {
 
   val mockHttp : WSHttp = mock[WSHttp]
 
@@ -46,6 +46,8 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
   val validApplyFP16Json = """{"protectionType":"FP2016"}"""
   val nino = "AB999999C"
   val tstId = "testUserID"
+  val psaRef = "testPSARef"
+  val ltaRef = "testLTARef"
 
 
   val negativePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
@@ -144,6 +146,16 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         .thenReturn(Future.successful(HttpResponse(OK)))
 
       val response = TestPLAConnector.readProtections(nino)
+      await(response).status shouldBe OK
+    }
+  }
+
+  "Calling psaLookup" should {
+    "should return a 200 from a valid psa lookup request" in {
+      when(mockHttp.GET[HttpResponse](Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+        .thenReturn(Future.successful(HttpResponse(OK)))
+
+      val response = TestPLAConnector.psaLookup(psaRef, ltaRef)
       await(response).status shouldBe OK
     }
   }

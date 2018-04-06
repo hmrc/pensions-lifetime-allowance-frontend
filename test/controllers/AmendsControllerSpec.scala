@@ -16,24 +16,27 @@
 
 package controllers
 
-import java.time.LocalDate
 import java.util.UUID
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import auth.MockConfig
 import com.kenshoo.play.metrics.PlayModule
+import common.Exceptions.RequiredValueNotDefinedException
+import config.PlaContextImpl
+import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
+import forms.{AmendCurrentPensionForm, AmendOverseasPensionsForm, AmendPensionsTakenBeforeForm, AmendPensionsTakenBetweenForm}
 import models._
-import models.amendModels.{AmendProtectionModel, AmendsGAModel}
+import models.amendModels._
 import org.jsoup.Jsoup
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
@@ -45,12 +48,13 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HttpResponse
+import views.html.pages.amends._
+import views.html.pages.fallback.technicalError
 
 class AmendsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach with AuthMock {
   override def bindModules = Seq(new PlayModule)
@@ -61,6 +65,9 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   val mockResponseConstructors = mock[ResponseConstructors]
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
+  implicit val plaContext = PlaContextImpl
+  implicit val templateRenderer = MockTemplateRenderer
+  implicit lazy val retriever = PlaFormPartialRetriever
 
   override def beforeEach() {
     reset(mockAuthConnector)
@@ -83,7 +90,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
   }
 
   val sessionId = UUID.randomUUID.toString
-  val fakeRequest = FakeRequest()
+  implicit val fakeRequest = FakeRequest()
 
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
@@ -1181,8 +1188,183 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "open")}")
       }
     }
-
-    "choosing cancel on the remove page" should {}
   }
 
+  "Calling amendmentOutcomeResult" when {
+
+    "provided with no models" should {
+      lazy val result = TestAmendsController.amendmentOutcomeResult(None, None, "")(fakeRequest)
+
+      "return an internal server error" in {
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+
+      "load the technical error page" in {
+        await(bodyOf(result)) shouldBe technicalError(ApplicationType.existingProtections.toString).body
+      }
+    }
+
+    "provided with a model without an Id" should {
+      lazy val result = TestAmendsController.amendmentOutcomeResult(Some(AmendResponseModel(ProtectionModel(None, None))),
+        Some(AmendsGAModel(None, None, None, None, None)), "")
+
+      "return an exception" in {
+        the [RequiredValueNotDefinedException] thrownBy await(result) should have message "Value not found for notificationId in amendmentOutcome"
+      }
+    }
+
+    "provided with a model with an active amendment code" should {
+      val modelGA = Some(AmendsGAModel(None, None, None, None, None))
+      val model = AmendResponseModel(ProtectionModel(Some("ref"), Some(33), notificationId = Some(33)))
+      lazy val result = TestAmendsController.amendmentOutcomeResult(Some(model), modelGA, "")
+
+      "return an OK" in {
+        status(result) shouldBe OK
+      }
+
+      "load the active outcome page" in {
+        await(bodyOf(result)) shouldBe outcomeActive(ActiveAmendResultDisplayModel(ApplicationType.IP2014, "33", "£1,100,000", None), modelGA).body
+      }
+    }
+
+    "provided with a model with an inactive amendment code" should {
+      val modelGA = Some(AmendsGAModel(None, None, None, None, None))
+      val model = AmendResponseModel(ProtectionModel(Some("ref"), Some(1), notificationId = Some(41)))
+      lazy val result = TestAmendsController.amendmentOutcomeResult(Some(model), modelGA, "")
+
+      "return an OK" in {
+        status(result) shouldBe OK
+      }
+
+      "load the active outcome page" in {
+        await(bodyOf(result)) shouldBe outcomeInactive(InactiveAmendResultDisplayModel("41", Seq()), modelGA).body
+      }
+    }
+  }
+
+  "Calling createPsoDetailsList" when {
+
+    "not supplied with a PSO amount" should {
+
+      "return the correct value not found exception" in {
+        the [RequiredValueNotDefinedException] thrownBy {
+          AmendsController.createPsoDetailsList(AmendPSODetailsModel(Some(1), Some(3), Some(2017), None, "", "", false))
+        } should have message "Value not found for psoAmt in createPsoDetailsList"
+      }
+    }
+
+    "supplied with a PSO amount" should {
+
+      "return the correct list" in {
+        AmendsController.createPsoDetailsList(AmendPSODetailsModel(Some(1), Some(3), Some(2017), Some(1), "", "", false)) shouldBe Some(List(PensionDebitModel("2017-03-01", 1)))
+      }
+    }
+  }
+
+  "Calling getRouteUsingModel" when {
+
+    "supplied an IP2016 AmendCurrentPensionModel" should {
+      val model = AmendCurrentPensionModel(Some(1000), "ip2016", "dormant")
+      lazy val result = TestAmendsController.getRouteUsingModel(model)(fakeRequest)
+
+      "return a status of OK" in {
+        status(result) shouldBe OK
+      }
+
+      "load the amend current pensions page" in {
+        await(bodyOf(result)) shouldBe amendCurrentPensions(AmendCurrentPensionForm.amendCurrentPensionForm.fill(model)).body
+      }
+    }
+
+    "supplied an IP2014 AmendCurrentPensionModel" should {
+      val model = AmendCurrentPensionModel(Some(1000), "ip2014", "dormant")
+      lazy val result = TestAmendsController.getRouteUsingModel(model)(fakeRequest)
+
+      "return a status of OK" in {
+        status(result) shouldBe OK
+      }
+
+      "load the amend ip2014 current pensions page" in {
+        await(bodyOf(result)) shouldBe amendIP14CurrentPensions(AmendCurrentPensionForm.amendCurrentPensionForm.fill(model)).body
+      }
+    }
+
+    "supplied an IP2016 AmendPensionsTakenBeforeModel" should {
+      val model = AmendPensionsTakenBeforeModel("", Some(1000), "ip2016", "dormant")
+      lazy val result = TestAmendsController.getRouteUsingModel(model)(fakeRequest)
+
+      "return a status of OK" in {
+        status(result) shouldBe OK
+      }
+
+      "load the amend ip2016 current pensions before page" in {
+        await(bodyOf(result)) shouldBe amendPensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
+      }
+    }
+
+    "supplied an IP2014 AmendPensionsTakenBeforeModel" should {
+      val model = AmendPensionsTakenBeforeModel("", Some(1000), "ip2014", "dormant")
+      lazy val result = TestAmendsController.getRouteUsingModel(model)(fakeRequest)
+
+      "return a status of OK" in {
+        status(result) shouldBe OK
+      }
+
+      "load the amend ip2014 current pensions before page" in {
+        await(bodyOf(result)) shouldBe amendIP14PensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
+      }
+    }
+
+    "supplied an IP2016 AmendPensionsTakenBetweenModel" should {
+      val model = AmendPensionsTakenBetweenModel("", Some(1000), "ip2016", "dormant")
+      lazy val result = TestAmendsController.getRouteUsingModel(model)(fakeRequest)
+
+      "return a status of OK" in {
+        status(result) shouldBe OK
+      }
+
+      "load the amend ip2016 current pensions between page" in {
+        await(bodyOf(result)) shouldBe amendPensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
+      }
+    }
+
+    "supplied an IP2014 AmendPensionsTakenBetweenModel" should {
+      val model = AmendPensionsTakenBetweenModel("", Some(1000), "ip2014", "dormant")
+      lazy val result = TestAmendsController.getRouteUsingModel(model)(fakeRequest)
+
+      "return a status of OK" in {
+        status(result) shouldBe OK
+      }
+
+      "load the amend ip2014 current pensions between page" in {
+        await(bodyOf(result)) shouldBe amendIP14PensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
+      }
+    }
+
+    "supplied an IP2016 AmendOverseasPensionsModel" should {
+      val model = AmendOverseasPensionsModel("", Some(1000), "ip2016", "dormant")
+      lazy val result = TestAmendsController.getRouteUsingModel(model)(fakeRequest)
+
+      "return a status of OK" in {
+        status(result) shouldBe OK
+      }
+
+      "load the amend ip2016 overseas pension page" in {
+        await(bodyOf(result)) shouldBe amendOverseasPensions(AmendOverseasPensionsForm.amendOverseasPensionsForm.fill(model)).body
+      }
+    }
+
+    "supplied an IP2014 AmendOverseasPensionsModel" should {
+      val model = AmendOverseasPensionsModel("", Some(1000), "ip2014", "dormant")
+      lazy val result = TestAmendsController.getRouteUsingModel(model)(fakeRequest)
+
+      "return a status of OK" in {
+        status(result) shouldBe OK
+      }
+
+      "load the amend ip2014 overseas pension page" in {
+        await(bodyOf(result)) shouldBe amendIP14OverseasPensions(AmendOverseasPensionsForm.amendOverseasPensionsForm.fill(model)).body
+      }
+    }
+  }
 }

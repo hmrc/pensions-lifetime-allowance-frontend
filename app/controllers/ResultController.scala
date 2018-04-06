@@ -78,7 +78,7 @@ trait ResultController extends BaseController with AuthFunction {
   }
 
 
-  private def routeViaMCNeededCheck(response: HttpResponse, nino: String)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
+  private[controllers] def routeViaMCNeededCheck(response: HttpResponse, nino: String)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
     response.status match {
       case 423 => Future.successful(Locked(manualCorrespondenceNeeded()))
       case _ => saveAndRedirectToDisplay(response, nino)
@@ -86,7 +86,7 @@ trait ResultController extends BaseController with AuthFunction {
   }
 
 
-  private def saveAndRedirectToDisplay(response: HttpResponse, nino: String)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
+  private[controllers] def saveAndRedirectToDisplay(response: HttpResponse, nino: String)(implicit request: Request[AnyContent], protectionType: ApplicationType.Value): Future[Result] = {
     responseConstructors.createApplyResponseModelFromJson(response.json).map {
       model =>
         if (model.protection.notificationId.isEmpty) {

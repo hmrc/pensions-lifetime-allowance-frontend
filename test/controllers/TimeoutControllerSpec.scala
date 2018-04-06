@@ -19,7 +19,7 @@ package controllers
 
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import java.util.UUID
 import uk.gov.hmrc.renderer.TemplateRenderer
 

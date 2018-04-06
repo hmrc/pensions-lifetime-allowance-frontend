@@ -32,7 +32,7 @@ class PlaLanguageController @Inject()(override val messagesApi: MessagesApi) ext
   def langToCall(lang: String): Call = controllers.routes.PlaLanguageController.switchToLanguage(lang)
 
   /** Provides a fallback URL if there is no referer in the request header. **/
-  override protected def fallbackURL: String = Play.current.configuration.getString(s"$env.language.fallbackUrl").getOrElse("/")
+  override def fallbackURL: String = Play.current.configuration.getString(s"$env.language.fallbackUrl").getOrElse("/")
 
   /** Returns a mapping between strings and the corresponding Lang object. **/
   override def languageMap: Map[String, Lang] = Map(

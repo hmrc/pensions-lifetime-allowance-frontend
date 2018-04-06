@@ -19,7 +19,7 @@ package auth
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import play.api.mvc.Results._
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import testHelpers.{KeystoreTestHelper, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core._
