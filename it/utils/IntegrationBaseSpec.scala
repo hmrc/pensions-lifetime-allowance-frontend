@@ -18,7 +18,7 @@ package utils
 
 import akka.util.Timeout
 import org.scalatest._
-import org.scalatestplus.play.guice.GuiceGuiceOneServerPerSuite
+import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{Application, Configuration}
 import play.api.test.DefaultAwaitTimeout
@@ -28,7 +28,7 @@ import scala.concurrent.duration._
 
 trait IntegrationBaseSpec
   extends UnitSpec
-    with GuiceGuiceOneServerPerSuite
+    with GuiceOneServerPerSuite
     with WiremockHelper
     with BeforeAndAfterEach
     with BeforeAndAfterAll
