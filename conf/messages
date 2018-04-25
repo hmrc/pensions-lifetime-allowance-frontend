@@ -337,6 +337,11 @@ pla.resultSuccess.exitSurvey            = Your feedback helps us improve.
 pla.resultSuccess.yourName              = your full name
 pla.resultSuccess.yourNino              = your National Insurance number
 
+pla.resultSuccess.dismissBanner = No thanks
+pla.resultSuccess.userResearchLink.title = Help improve GOV.UK
+pla.resultSuccess.userResearchLink.text = Help improve this digital service by joining the HMRC user panel (opens in new window)
+pla.resultSuccess.userResearchLink      = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113
+
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
 pla.resultRejection.pageHeading           = Your application was unsuccessful

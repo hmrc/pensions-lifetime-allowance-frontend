@@ -27,14 +27,16 @@
   showLogout: Boolean = true,
   gaCode: Seq[String] = Seq.empty,
   gaDimensions: Option[Map[String, Any]] = None,
-  articleEnabled: Boolean = true
+  articleEnabled: Boolean = true,
+  isUserResearchBannerVisible:Boolean = false,
+          afterHeader: Html = HtmlFormat.empty
+
   )(implicit request: Request[_], messages: Messages, context: config.PlaContext, FormPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
 @import play.api.i18n._
 @import play.twirl.api.Html
-
 
 @mustacheCheck(str: String) = @{
 if(str.trim=="") false else str
@@ -104,6 +106,13 @@ if(str.trim=="") false else str
     context.assetsUrl
 }
 
+@afterHeader = @{if(isUserResearchBannerVisible) {
+    Map("fullWidthBannerTitle" -> Messages("pla.resultSuccess.userResearchLink.title"), "fullWidthBannerText" -> Messages("pla.resultSuccess.userResearchLink.text"),
+        "fullWidthBannerDismissText" -> Messages("pla.resultSuccess.dismissBanner"), "fullWidthBannerLink" -> Messages("pla.resultSuccess.userResearchLink"))
+} else
+    false
+}
+
 @{
 templateRenderer.renderDefaultTemplate(article, Map[String, Any](
     "pageTitle" -> title,
@@ -138,7 +147,12 @@ templateRenderer.renderDefaultTemplate(article, Map[String, Any](
 
     "optimizelyProjectId" -> "8421961441",
     "isWelsh" -> isWelsh,
-    "assetsPath" -> assetsUrl
+    "assetsPath" -> assetsUrl,
+
+    "fullWidthBannerTitle" -> afterHeader,
+    "fullWidthBannerText" -> afterHeader,
+    "fullWidthBannerLink" -> afterHeader,
+    "fullWidthBannerDismissText" -> afterHeader
 )
 )
 }
