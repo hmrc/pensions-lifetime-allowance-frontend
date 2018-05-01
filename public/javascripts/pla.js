@@ -81,6 +81,14 @@ $(document).ready($(function() {
         GOVUK.setCookie("mdtpurr", "suppress_for_all_services", 99999999999);
         setCookie("mdtpurr", "suppress_for_all_services", 28);
         $("#full-width-banner").removeClass("banner--show");
+        ga('send', 'event', 'link - click', 'UR banner', 'Dismiss');
+    });
+
+
+    var bannerTextLink = $( "a[target='_blank']" );
+
+    bannerTextLink.on('click', function(e){
+        ga('send', 'event', 'link - click', 'UR banner', 'Participate');
     });
 
 }));
