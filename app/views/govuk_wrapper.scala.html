@@ -107,8 +107,11 @@ if(str.trim=="") false else str
 }
 
 @afterHeader = @{if(isUserResearchBannerVisible) {
-    Map("fullWidthBannerTitle" -> Messages("pla.resultSuccess.userResearchLink.title"), "fullWidthBannerText" -> Messages("pla.resultSuccess.userResearchLink.text"),
-        "fullWidthBannerDismissText" -> Messages("pla.resultSuccess.dismissBanner"), "fullWidthBannerLink" -> Messages("pla.resultSuccess.userResearchLink"))
+    Map(
+        "fullWidthBannerTitle" -> Messages("pla.resultSuccess.userResearchLink.title"),
+        "fullWidthBannerText" -> Messages("pla.resultSuccess.userResearchLink.text"),
+        "fullWidthBannerDismissText" -> Messages("pla.resultSuccess.dismissBanner"),
+        "fullWidthBannerLink" -> Messages("pla.resultSuccess.userResearchLink"))
 } else
     false
 }
