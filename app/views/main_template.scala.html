@@ -24,7 +24,8 @@
   scriptElem: Option[Html] = None,
   showLogout: Boolean = true,
   gaCode: Seq[String] = Seq.empty,
-  gaDimensions: Option[Map[String, Any]] = None
+  gaDimensions: Option[Map[String, Any]] = None,
+  isUserResearchBannerVisible: Boolean = false
   )(mainContent: Html)(implicit request : Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @import uk.gov.hmrc.play.views.html.layouts
@@ -37,7 +38,7 @@
 }
 
 
-@govuk_wrapper(appConfig = config.FrontendAppConfig,
+    @govuk_wrapper(appConfig = config.FrontendAppConfig,
                title = title,
                mainClass = mainClass,
                bodyClasses = bodyClasses,
@@ -47,6 +48,7 @@
                scriptElem = scriptElem,
                showLogout = showLogout,
                gaCode = gaCode,
-               gaDimensions = gaDimensions
+               gaDimensions = gaDimensions,
+               isUserResearchBannerVisible = isUserResearchBannerVisible
 )
 

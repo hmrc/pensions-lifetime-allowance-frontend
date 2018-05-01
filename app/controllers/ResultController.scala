@@ -32,7 +32,9 @@ import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+
+import scala.util.Random
 
 
 object ResultController extends ResultController {
@@ -63,7 +65,6 @@ trait ResultController extends BaseController with AuthFunction {
       )
     }
   }
-
 
   val processIPApplication = Action.async {
     implicit request =>
@@ -115,6 +116,7 @@ trait ResultController extends BaseController with AuthFunction {
   def displayResult(implicit protectionType: ApplicationType.Value): Action[AnyContent] = Action.async {
     implicit request =>
       genericAuthWithNino("existingProtections") { nino =>
+        val showUserResearchPanel = setURPanelFlag
         val errorResponse = InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
           case Some(model) =>
@@ -127,21 +129,37 @@ trait ResultController extends BaseController with AuthFunction {
               case ApplicationOutcome.Successful =>
                 keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
                 val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
-                Ok(resultSuccess(displayModel))
+                Ok(resultSuccess(displayModel, showUserResearchPanel))
 
               case ApplicationOutcome.SuccessfulInactive =>
                 val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
-                Ok(resultSuccessInactive(displayModel))
+                Ok(resultSuccessInactive(displayModel, showUserResearchPanel))
 
               case ApplicationOutcome.Rejected =>
                 val displayModel = DisplayConstructors.createRejectionDisplayModel(model)
-                Ok(resultRejected(displayModel))
+                Ok(resultRejected(displayModel, showUserResearchPanel))
             }
           case _ =>
             Logger.warn(s"Could not retrieve ApplyResponseModel from keystore for user with nino: $nino")
             errorResponse
         }
       }
+  }
+
+  private[controllers] def setURPanelFlag(implicit hc: HeaderCarrier): Boolean = {
+    val random = new Random()
+    val seed = getLongFromSessionID(hc)
+    random.setSeed(seed)
+    random.nextInt(3) == 0
+  }
+
+  private[controllers] def getLongFromSessionID(implicit hc: HeaderCarrier): Long = {
+    val session = hc.sessionId.map(_.value).getOrElse("0")
+    val numericSessionValues = session.replaceAll("[^0-9]", "") match {
+      case "" => "0"
+      case num => num
+    }
+    numericSessionValues.takeRight(10).toLong
   }
 
 
