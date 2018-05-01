@@ -29,7 +29,7 @@ private object AppDependencies {
 
   private val playHealthVersion = "2.1.0"
   private val loggerVersion = "3.1.0"
-  private val frontendBootstrapVersion = "8.19.0"
+  private val frontendBootstrapVersion = "8.20.0"
   private val govukTemplateVersion = "5.10.0"
   private val playUiVersion = "7.14.0"
   private val playPartialsVersion = "6.1.0"
@@ -40,9 +40,9 @@ private object AppDependencies {
   private val scalaTestPlusVersion = "2.0.0"
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "7.1.0"
-  private val mongoCachingVersion = "5.3.0"
+  private val mongoCachingVersion = "5.4.0"
   private val playLanguageVersion = "3.4.0"
-  private val authClientVersion = "2.5.0"
+  private val authClientVersion = "2.6.0"
   private val localTemplateRendererVersion = "1.3.0"
   private val wireMockVersion          = "2.9.0"
 
