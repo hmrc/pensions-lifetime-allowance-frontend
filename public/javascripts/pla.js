@@ -48,6 +48,45 @@ $(document).ready($(function() {
         var parts = metrics.split(':');
         ga('send', 'event', parts[0], parts[1], parts[2]);
     });
+
+    $( "a[target='_blank']" ).attr("data-journey-click", "link - click:UR banner:Participate");
+
+    function setCookie (name, value, duration, domain) {
+        var secure = window.location.protocol.indexOf('https') ? '' : '; secure'
+
+        var cookieDomain = ""
+        if (domain) {
+            cookieDomain = '; domain=' + domain
+        }
+
+        var expires = ""
+        if (duration) {
+            var date = new Date()
+            date.setTime(date.getTime() + (duration * 24 * 60 * 60 * 1000))
+            expires = '; expires=' + date.toGMTString()
+        }
+
+        document.cookie = name + '=' + value + expires + cookieDomain + '; path=/' + secure
+    }
+
+    var cookieData=GOVUK.getCookie("mdtpurr");
+    if (cookieData == null) {
+        $("#full-width-banner").addClass("banner--show");
+    } else {
+        $("#full-width-banner").removeClass("banner--show");
+    }
+
+    var bannerClose = $(".full-width-banner__close")
+
+    bannerClose.on('click', function(e){
+        e.preventDefault();
+        GOVUK.setCookie("mdtpurr", "suppress_for_all_services", 99999999999);
+        setCookie("mdtpurr", "suppress_for_all_services", 28);
+        $("#full-width-banner").removeClass("banner--show");
+        ga('send', 'event', 'link - click', 'UR banner', 'Dismiss');
+    });
+
+
 }));
 
 

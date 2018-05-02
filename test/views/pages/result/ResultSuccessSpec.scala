@@ -32,8 +32,8 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
     lazy val protectionmodel2 = ProtectionDetailsDisplayModel(Some("None"), "PSA33456789", Some("15/07/2015"))
     lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", true, Some(protectionmodel), Seq("1", "2"))
     lazy val testmodel2 = SuccessDisplayModel(ApplicationType.FP2016, "24", "100.00", false, Some(protectionmodel2), Seq("1", "2"))
-    lazy val view = views(testmodel)
-    lazy val view2 = views(testmodel2)
+    lazy val view = views(testmodel, showUserResearchPanel = false)
+    lazy val view2 = views(testmodel2, showUserResearchPanel = false)
     lazy val doc = Jsoup.parse(view.body)
     lazy val doc2 = Jsoup.parse(view2.body)
 

@@ -100,3 +100,11 @@ div.last-login>p {
 
 input[type=number]
 { -moz-appearance:textfield; }
+
+.full-width-banner {
+    display: none;
+}
+
+.banner--show {
+    display: block;
+}
