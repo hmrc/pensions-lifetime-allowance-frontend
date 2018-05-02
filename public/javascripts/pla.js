@@ -49,6 +49,8 @@ $(document).ready($(function() {
         ga('send', 'event', parts[0], parts[1], parts[2]);
     });
 
+    $( "a[target='_blank']" ).attr("data-journey-click", "link - click:UR banner:Participate");
+
     function setCookie (name, value, duration, domain) {
         var secure = window.location.protocol.indexOf('https') ? '' : '; secure'
 
@@ -84,12 +86,6 @@ $(document).ready($(function() {
         ga('send', 'event', 'link - click', 'UR banner', 'Dismiss');
     });
 
-
-    var bannerTextLink = $( "a[target='_blank']" );
-
-    bannerTextLink.on('click', function(e){
-        ga('send', 'event', 'link - click', 'UR banner', 'Participate');
-    });
 
 }));
 
