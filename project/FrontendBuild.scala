@@ -36,14 +36,14 @@ private object AppDependencies {
   private val playAuthorisedFrontendVersion = "7.0.0"
   private val playConfigVersion = "5.0.0"
   private val hmrcTestVersion = "3.0.0"
-  private val scalaTestVersion = "2.2.6"
+  private val scalaTestVersion = "3.0.0"
   private val scalaTestPlusVersion = "2.0.0"
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "7.1.0"
   private val mongoCachingVersion = "5.4.0"
   private val playLanguageVersion = "3.4.0"
   private val authClientVersion = "2.6.0"
-  private val localTemplateRendererVersion = "1.3.0"
+  private val localTemplateRendererVersion = "1.4.0"
   private val wireMockVersion          = "2.9.0"
 
   val compile = Seq(
