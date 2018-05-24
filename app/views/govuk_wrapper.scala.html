@@ -93,6 +93,11 @@ if(str.trim=="") false else str
       @FormPartialRetriever.getPartialContent(context.getPageHelpPartial()(messages))
 }
 
+@showOrganisationLogo = @{
+    true
+}
+
+
 @isWelsh = @{
     if(messages.lang.code == "cy"){
       true
@@ -151,6 +156,7 @@ templateRenderer.renderDefaultTemplate(article, Map[String, Any](
     "optimizelyProjectId" -> "8421961441",
     "isWelsh" -> isWelsh,
     "assetsPath" -> assetsUrl,
+    "showOrganisationLogo" -> showOrganisationLogo,
 
     "fullWidthBannerTitle" -> afterHeader,
     "fullWidthBannerText" -> afterHeader,
