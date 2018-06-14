@@ -34,7 +34,6 @@
   )(implicit request: Request[_], messages: Messages, context: config.PlaContext, FormPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
 @import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
-@import uk.gov.hmrc.play.views.html.{helpers => uiHelpers}
 @import play.api.i18n._
 @import play.twirl.api.Html
 
@@ -117,7 +116,7 @@ if(str.trim=="") false else str
 }
 
 @{
-templateRenderer.renderDefaultTemplate(article, Map[String, Any](
+templateRenderer.renderDefaultTemplate(config.FrontendAppConfig.frontendTemplatePath,article, Map[String, Any](
     "pageTitle" -> title,
     "linkElems" -> linkElems,
     "scriptElems" -> scriptElement,
