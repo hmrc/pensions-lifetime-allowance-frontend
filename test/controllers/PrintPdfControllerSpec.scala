@@ -18,7 +18,7 @@ package controllers
 
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
 import models.{PSALookupRequest, PSALookupResult}
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.when
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.PlaySpec

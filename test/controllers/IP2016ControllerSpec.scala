@@ -20,6 +20,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 import akka.actor.ActorSystem
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import akka.stream.ActorMaterializer
 import auth._
@@ -28,9 +29,9 @@ import config.{AuthClientConnector, LocalTemplateRenderer}
 import connectors.KeyStoreConnector
 import models._
 import org.jsoup.Jsoup
-import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
+import org.mockito.ArgumentMatchers
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
@@ -40,7 +41,7 @@ import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.JsValue
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import org.mockito.Matchers.anyString
+import org.mockito.ArgumentMatchers.anyString
 import testHelpers._
 import uk.gov.hmrc.auth.core.PlayAuthConnector
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -80,18 +81,18 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     val mockUserId = "/auth/oid/" + mockUsername
 
     def keystoreFetchCondition[T](data: Option[T]): Unit = {
-        when(mockKeyStoreConnector.fetchAndGetFormData[T](Matchers.anyString())(Matchers.any(), Matchers.any()))
+        when(mockKeyStoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(data))
     }
 
 
     def psoDetailsKeystoreSetup(data: Option[PSODetailsModel]) = {
-        when(mockKeyStoreConnector.fetchAndGetFormData[PSODetailsModel](Matchers.eq(s"psoDetails"))(Matchers.any(), Matchers.any()))
+        when(mockKeyStoreConnector.fetchAndGetFormData[PSODetailsModel](ArgumentMatchers.eq(s"psoDetails"))(ArgumentMatchers.any(), ArgumentMatchers.any()))
           .thenReturn(Future.successful(data))
     }
 
     def pensionsDebitsSaveData(data: Option[PensionDebitsModel]) = {
-        when(mockKeyStoreConnector.saveData(anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+        when(mockKeyStoreConnector.saveData(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
     }
 

@@ -17,7 +17,7 @@
 package controllers
 
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import org.scalatestplus.play.OneAppPerSuite
@@ -46,10 +46,10 @@ class UnauthorisedControllerSpec extends UnitSpec with OneAppPerSuite with Mocki
 
   def setupKeystoreMocks(data: Option[Boolean]): Unit = {
     when(mockKeystoreConnector
-      .fetchAndGetFormData[Boolean](Matchers.eq("previous-technical-issues"))(Matchers.any[HeaderCarrier], Matchers.any[Format[Boolean]]))
+      .fetchAndGetFormData[Boolean](ArgumentMatchers.eq("previous-technical-issues"))(ArgumentMatchers.any[HeaderCarrier], ArgumentMatchers.any[Format[Boolean]]))
       .thenReturn(Future.successful(data))
     when(mockKeystoreConnector
-      .saveFormData(Matchers.eq("previous-technical-issues"), Matchers.any[Boolean])(Matchers.any[HeaderCarrier], Matchers.any[Format[Boolean]]))
+      .saveFormData(ArgumentMatchers.eq("previous-technical-issues"), ArgumentMatchers.any[Boolean])(ArgumentMatchers.any[HeaderCarrier], ArgumentMatchers.any[Format[Boolean]]))
       .thenReturn(Future.successful(mock[CacheMap]))
   }
 

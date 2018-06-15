@@ -27,19 +27,20 @@ import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import constructors.DisplayConstructors
 import models._
 import org.jsoup.Jsoup
-import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
+import org.mockito.ArgumentMatchers
 import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
+
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import play.api.test.FakeRequest
-import uk.gov.hmrc.auth.core.retrieve.{Retrievals}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.HeaderCarrier
 
 class PrintControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
@@ -72,16 +73,16 @@ class PrintControllerSpec extends UnitSpec with WithFakeApplication with Mockito
 
   object TestPrintControllerValidDetails extends BaseTestPrintController {
     override lazy val appConfig = MockConfig
-    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(Some(testPersonalDetails)))
-    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(Some(testProtectionModel)))
-    when(displayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(testPrintDisplayModel)
+    when(citizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(Some(testPersonalDetails)))
+    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future(Some(testProtectionModel)))
+    when(displayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(testPrintDisplayModel)
   }
 
   object TestPrintControllerInValidDetails extends BaseTestPrintController {
     override lazy val appConfig = MockConfig
-    when(citizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any())).thenReturn(Future(Some(testPersonalDetails)))
-    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(None)
-    when(displayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(testPrintDisplayModel)
+    when(citizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(Some(testPersonalDetails)))
+    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(None)
+    when(displayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(testPrintDisplayModel)
   }
 
   "Navigating to print protection" when {

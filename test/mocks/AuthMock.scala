@@ -16,7 +16,7 @@
 
 package mocks
 
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.mockito.MockitoSugar
@@ -31,12 +31,12 @@ trait AuthMock extends MockitoSugar{
   val mockAuthConnector = mock[PlayAuthConnector]
 
   def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A): OngoingStubbing[Future[A]] = {
-    when(mockAuthConnector.authorise[A](Matchers.any(), Matchers.eq(retrieval))(Matchers.any(), Matchers.any()))
+    when(mockAuthConnector.authorise[A](ArgumentMatchers.any(), ArgumentMatchers.eq(retrieval))(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future.successful(returnValue))
   }
 
   def mockAuthConnector[T](future: Future[T]): OngoingStubbing[Future[T]] = {
-    when(mockAuthConnector.authorise[T](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockAuthConnector.authorise[T](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(future)
   }
 

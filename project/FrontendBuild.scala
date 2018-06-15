@@ -29,7 +29,7 @@ private object AppDependencies {
 
   private val playHealthVersion = "2.1.0"
   private val loggerVersion = "3.1.0"
-  private val frontendBootstrapVersion = "8.20.0"
+  private val frontendBootstrapVersion = "8.24.0"
   private val govukTemplateVersion = "5.10.0"
   private val playUiVersion = "7.14.0"
   private val playPartialsVersion = "6.1.0"
@@ -71,7 +71,7 @@ private object AppDependencies {
         "org.jsoup" % "jsoup" % "1.7.3" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
-        "org.mockito" % "mockito-all" % "1.9.5" % scope
+        "org.mockito" % "mockito-core" % "2.18.3" % scope
       )
     }.test
   }
