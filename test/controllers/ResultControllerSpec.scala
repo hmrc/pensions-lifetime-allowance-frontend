@@ -28,8 +28,8 @@ import enums.{ApplicationOutcome, ApplicationType}
 import mocks.AuthMock
 import models.{ApplyResponseModel, ProtectionModel}
 import org.jsoup.Jsoup
-import org.mockito.Matchers
-import org.mockito.Matchers.anyString
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatest.mockito.MockitoSugar
@@ -180,21 +180,21 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testFP16SuccessResponse))
-    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP16SuccessResponse))
-    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP14SuccessResponse))
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testFP16SuccessResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP16SuccessResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP14SuccessResponse))
 
 
     override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
-    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
-    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("fp16ApplyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
-    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("ip14ApplyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testIP14SuccessApplyResponseModel))
-    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("applyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testIP16SuccessApplyResponseModel))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP14SuccessApplyResponseModel))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16SuccessApplyResponseModel))
 
 
     override val responseConstructors = mockResponseConstructors
-    when(responseConstructors.createApplyResponseModelFromJson(Matchers.any())(Matchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+    when(responseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
   }
 
   object TestInactiveSuccessResultController extends ResultController {
@@ -211,21 +211,21 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testFP16SuccessResponse))
-    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP16InactiveSuccessResponse))
-    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP14InactiveSuccessResponse))
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testFP16SuccessResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP16InactiveSuccessResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP14InactiveSuccessResponse))
 
 
     override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
-    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
-    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("fp16ApplyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
-    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("ip14ApplyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testIP14InactiveSuccessApplyResponseModel))
-    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("applyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testIP16InactiveSuccessApplyResponseModel))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP14InactiveSuccessApplyResponseModel))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16InactiveSuccessApplyResponseModel))
 
 
     override val responseConstructors = mockResponseConstructors
-    when(responseConstructors.createApplyResponseModelFromJson(Matchers.any())(Matchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+    when(responseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
   }
 
   object TestRejectResultController extends ResultController {
@@ -241,20 +241,20 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testFP16RejectionResponse))
-    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP16RejectionResponse))
-    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP14RejectionResponse))
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testFP16RejectionResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP16RejectionResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP14RejectionResponse))
 
     override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
-    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
-    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("fp16ApplyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testFPRejectionApplyResponseModel))
-    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("ip14ApplyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testIP14RejectionApplyResponseModel))
-    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](Matchers.matches("applyResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Some(testIP16RejectionApplyResponseModel))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testFPRejectionApplyResponseModel))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP14RejectionApplyResponseModel))
+    when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16RejectionApplyResponseModel))
 
 
     override val responseConstructors = mock[ResponseConstructors]
-    when(responseConstructors.createApplyResponseModelFromJson(Matchers.any())(Matchers.any())).thenReturn(Some(testFPRejectionApplyResponseModel))
+    when(responseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPRejectionApplyResponseModel))
 
   }
 
@@ -271,12 +271,12 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testMCNeededResponse))
-    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testMCNeededResponse))
-    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testMCNeededResponse))
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testMCNeededResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testMCNeededResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testMCNeededResponse))
 
     override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
     override val responseConstructors = mock[ResponseConstructors]
 
@@ -295,15 +295,15 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testFP16RejectionResponse))
-    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP16RejectionResponse))
-    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP14RejectionResponse))
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testFP16RejectionResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP16RejectionResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP14RejectionResponse))
 
     override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
     override val responseConstructors = mock[ResponseConstructors]
-    when(responseConstructors.createApplyResponseModelFromJson(Matchers.any())(Matchers.any())).thenReturn(None)
+    when(responseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(None)
 
   }
 
@@ -320,15 +320,15 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(Matchers.any())).thenReturn(Future(testFP16RejectionResponse))
-    when(plaConnector.applyIP16(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP16RejectionResponse))
-    when(plaConnector.applyIP14(anyString(), Matchers.any())(Matchers.any())).thenReturn(Future(testIP14RejectionResponse))
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testFP16RejectionResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP16RejectionResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP14RejectionResponse))
 
     override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
     override val responseConstructors = mock[ResponseConstructors]
-    when(responseConstructors.createApplyResponseModelFromJson(Matchers.any())(Matchers.any())).thenReturn(Some(ApplyResponseModel(ProtectionModel(None, None))))
+    when(responseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(ApplyResponseModel(ProtectionModel(None, None))))
 
   }
 

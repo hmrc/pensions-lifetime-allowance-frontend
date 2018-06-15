@@ -86,4 +86,6 @@ object FrontendAppConfig extends AppConfig with ServicesConfig {
   override val notFoundStatusMetric: String = configuration.getString("not-found-protection-status").getOrElse("")
 
   override lazy val appName: String = loadConfig("appName")
+  lazy val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
+
 }

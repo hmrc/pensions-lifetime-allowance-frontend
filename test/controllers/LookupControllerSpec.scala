@@ -20,7 +20,7 @@ import connectors.{KeyStoreConnector, PLAConnector, PdfGeneratorConnector}
 import controllers.LookupController.pnnForm
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
 import models.{PSALookupRequest, PSALookupResult}
-import org.mockito.Matchers.any
+import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar

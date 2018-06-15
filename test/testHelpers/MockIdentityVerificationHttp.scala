@@ -17,15 +17,15 @@
 package testHelpers
 
 import org.mockito.Mockito._
-import org.mockito.Matchers
 import org.scalatest.mockito.MockitoSugar
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import enums.IdentityVerificationResult
+import org.mockito.ArgumentMatchers
 
 import scala.concurrent.Future
 import scala.io.Source
-import uk.gov.hmrc.http.{ HttpGet, HttpResponse }
+import uk.gov.hmrc.http.{HttpGet, HttpResponse}
 
 object MockIdentityVerificationHttp extends MockitoSugar {
   val mockHttp = mock[HttpGet]
@@ -47,7 +47,7 @@ object MockIdentityVerificationHttp extends MockitoSugar {
 
   def mockJourneyId(journeyId: String): Unit = {
     val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-    when(mockHttp.GET[HttpResponse](Matchers.contains(journeyId))(Matchers.any(), Matchers.any(), Matchers.any())).
+    when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).
       thenReturn(Future.successful(HttpResponse(Status.OK, responseJson = Some(Json.parse(fileContents)))))
   }
 

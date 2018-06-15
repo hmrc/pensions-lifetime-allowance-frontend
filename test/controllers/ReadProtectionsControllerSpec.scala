@@ -24,9 +24,9 @@ import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel, ProtectionModel, TransformedReadResponseModel}
 import org.jsoup.Jsoup
-import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
+import org.mockito.ArgumentMatchers
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
@@ -81,22 +81,22 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
   val fakeRequest = FakeRequest()
 
   object TestReadProtectionsControllerUpstreamError extends BaseTestReadProtectionsController {
-    when(plaConnector.readProtections(Matchers.any())(Matchers.any())).thenReturn(testUpstreamErrorResponse)
+    when(plaConnector.readProtections(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(testUpstreamErrorResponse)
   }
 
   object TestReadProtectionsControllerMCNeeded extends BaseTestReadProtectionsController {
-    when(plaConnector.readProtections(Matchers.any())(Matchers.any())).thenReturn(testMCNeededResponse)
+    when(plaConnector.readProtections(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(testMCNeededResponse)
   }
 
   object TestReadProtectionsControllerIncorrectResponseJson extends BaseTestReadProtectionsController {
-    when(plaConnector.readProtections(Matchers.any())(Matchers.any())).thenReturn(testSuccessResponse)
-    when(responseConstructors.createTransformedReadResponseModelFromJson(Matchers.any())).thenReturn(None)
+    when(plaConnector.readProtections(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(testSuccessResponse)
+    when(responseConstructors.createTransformedReadResponseModelFromJson(ArgumentMatchers.any())).thenReturn(None)
   }
 
   object TestReadProtectionsControllerSuccess extends BaseTestReadProtectionsController {
-    when(plaConnector.readProtections(Matchers.any())(Matchers.any())).thenReturn(testSuccessResponse)
-    when(responseConstructors.createTransformedReadResponseModelFromJson(Matchers.any())).thenReturn(Some(testTransformedReadResponseModel))
-    when(displayConstructors.createExistingProtectionsDisplayModel(Matchers.any())).thenReturn(testExistingProtectionsDisplayModel)
+    when(plaConnector.readProtections(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(testSuccessResponse)
+    when(responseConstructors.createTransformedReadResponseModelFromJson(ArgumentMatchers.any())).thenReturn(Some(testTransformedReadResponseModel))
+    when(displayConstructors.createExistingProtectionsDisplayModel(ArgumentMatchers.any())).thenReturn(testExistingProtectionsDisplayModel)
   }
 
   val ip2016Protection = ProtectionModel(
@@ -129,7 +129,7 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
 
   val mockCacheMap = mock[CacheMap]
   def mockKeystoreSave: OngoingStubbing[Future[CacheMap]] = {
-    when(mockKeystoreConnector.saveData(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+    when(mockKeystoreConnector.saveData(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(mockCacheMap)
   }
 
@@ -142,7 +142,7 @@ class ReadProtectionsControllerSpec extends UnitSpec with WithFakeApplication wi
       }
 
       "provided with a protection model" in {
-        when(mockKeystoreConnector.saveData(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+        when(mockKeystoreConnector.saveData(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
           .thenReturn(Future.successful(mock[CacheMap]))
         await(TestReadProtectionsControllerSuccess.saveActiveProtection(Some(ip2016Protection))(fakeRequest)) shouldBe true
       }

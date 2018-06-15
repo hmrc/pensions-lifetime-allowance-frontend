@@ -30,9 +30,9 @@ import constructors.SummaryConstructor
 import enums.ApplicationType
 import models.SummaryModel
 import org.jsoup.Jsoup
-import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
+import org.mockito.ArgumentMatchers
 import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.Play.current
@@ -71,7 +71,7 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     val summaryConstructor = mockSummaryConstructor
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
-    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(None))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(None))
   }
 
   object TestSummaryControllerInvalidData extends SummaryController {
@@ -82,10 +82,10 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     override def env: Environment = mock[Environment]
     override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     val summaryConstructor = mockSummaryConstructor
-    when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(None)
+    when(summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(None)
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
-    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
   }
 
   object TestSummaryControllerValidData extends SummaryController {
@@ -96,10 +96,10 @@ class SummaryControllerSpec extends UnitSpec with WithFakeApplication with Mocki
     override def env: Environment = mock[Environment]
     override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     val summaryConstructor = mockSummaryConstructor
-    when(summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Some(tstSummaryModel))
+    when(summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(tstSummaryModel))
     implicit val hc: HeaderCarrier = HeaderCarrier()
     val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
-    when(keyStoreConnector.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
   }
 
   val sessionId = UUID.randomUUID.toString

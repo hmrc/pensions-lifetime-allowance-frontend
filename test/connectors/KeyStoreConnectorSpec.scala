@@ -19,7 +19,7 @@ package connectors
 import java.util.UUID
 
 import models._
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import play.api.libs.json.Json
@@ -45,7 +45,7 @@ class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar {
 
     "fetch and get from keystore" in {
       val testModel = PensionsTakenModel(Some("No"))
-      when(mockSessionCache.fetchAndGetEntry[PensionsTakenModel](Matchers.anyString())(Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockSessionCache.fetchAndGetEntry[PensionsTakenModel](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(Option(testModel)))
 
       lazy val result = TestKeyStoreConnector.fetchAndGetFormData[PensionsTakenModel]("willAddToPension")
@@ -55,7 +55,7 @@ class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar {
     "save data to keystore" in {
       val testModel = PensionsTakenModel(Some("No"))
       val returnedCacheMap = CacheMap("haveAddedToPension", Map("data" -> Json.toJson(testModel)))
-      when(mockSessionCache.cache[PensionsTakenModel](Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockSessionCache.cache[PensionsTakenModel](ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(returnedCacheMap))
 
       lazy val result = TestKeyStoreConnector.saveFormData("haveAddedToPension", testModel)

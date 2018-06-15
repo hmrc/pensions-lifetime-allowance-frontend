@@ -24,9 +24,9 @@ import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import models._
 import org.jsoup.Jsoup
-import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
+import org.mockito.ArgumentMatchers
 import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.Play.current
@@ -114,7 +114,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
 
     "return 200" in {
       mockAuthConnector(Future.successful())
-      when(mockKeyStoreConnector.remove(Matchers.any()))
+      when(mockKeyStoreConnector.remove(ArgumentMatchers.any()))
         .thenReturn(Future.successful(mock[HttpResponse]))
       status(TestWithdrawController.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
     }
@@ -126,7 +126,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
       lazy val result = {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockPLAConnector.amendProtection(Matchers.anyString(), Matchers.any())(Matchers.any()))
+        when(mockPLAConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(HttpResponse(OK)))
         await(TestWithdrawController.displayWithdrawConfirmation("")(fakeRequest))
       }
@@ -140,7 +140,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
       lazy val result = {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockPLAConnector.amendProtection(Matchers.anyString(), Matchers.any())(Matchers.any()))
+        when(mockPLAConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR)))
         await(TestWithdrawController.displayWithdrawConfirmation("")(fakeRequest))
       }
@@ -177,7 +177,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
 
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockDisplayConstructors.createWithdrawSummaryTable(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
+        when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
         lazy val result = await(TestWithdrawController.withdrawImplications(fakeRequest))
         status(result) shouldBe OK
       }
@@ -209,7 +209,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockDisplayConstructors.createWithdrawSummaryTable(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
+        when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
         status(result) shouldBe OK
       }
     }
@@ -279,7 +279,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
   }
 
   def keystoreFetchCondition[T](data: Option[T]): Unit = {
-    when(mockKeyStoreConnector.fetchAndGetFormData[T](Matchers.anyString())(Matchers.any(), Matchers.any()))
+    when(mockKeyStoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future.successful(data))
   }
 }

@@ -17,7 +17,7 @@
 package testHelpers
 
 import connectors.KeyStoreConnector
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -28,9 +28,9 @@ import uk.gov.hmrc.http.HeaderCarrier
 trait KeystoreTestHelper {
 
   def keystoreSaveCondition[T](mockKeyStoreConnector: KeyStoreConnector, key: Option[String] = None, returnedData: Option[CacheMap] = None): OngoingStubbing[Future[CacheMap]] = {
-    val keyMatcher = key.map(Matchers.contains).getOrElse(Matchers.anyString())
+    val keyMatcher = key.map(ArgumentMatchers.contains).getOrElse(ArgumentMatchers.anyString())
 
-    when(mockKeyStoreConnector.saveFormData[T](keyMatcher, Matchers.any())(Matchers.any[HeaderCarrier](), Matchers.any()))
+    when(mockKeyStoreConnector.saveFormData[T](keyMatcher, ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
       .thenReturn(Future.successful(returnedData.getOrElse(CacheMap("", Map.empty))))
   }
 
