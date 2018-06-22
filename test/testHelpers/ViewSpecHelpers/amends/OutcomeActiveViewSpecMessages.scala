@@ -36,6 +36,6 @@ trait OutcomeActiveViewSpecMessages {
   val plaResultSuccessViewDetails           = "You can view or change details of your protections at any time."
   val plaResultSuccessViewDetailsLinkText   = "view or change details of your protections"
   val plaResultSuccessGiveFeedback          = "Give us feedback"
-  val plaResultSuccessExitSurvey            = "What did you think of this service? Your feedback helps us improve."
+  val plaResultSuccessExitSurvey            = "What did you think of this service? We use your feedback to make our services better."
   val plaResultSuccessExitSurveyLinkText    = "What did you think of this service?"
 }

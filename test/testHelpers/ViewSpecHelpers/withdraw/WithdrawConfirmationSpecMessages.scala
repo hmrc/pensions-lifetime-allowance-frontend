@@ -23,7 +23,7 @@ trait WithdrawConfirmationSpecMessages {
   val plaWithdrawConfirmationCheckDetails                                = "You can check the details of your pension in your personal tax account."
   val plaWithdrawConfirmationContactYouIfNeeded                          = "We may need to contact you to confirm the information you’ve given us."
   val plaWithdrawConfirmFeedbackHeading                                  = "Give us feedback"
-  val plaWithdrawConfirmFeedbackText                                     = "What did you think of this service? Your feedback helps us improve."
+  val plaWithdrawConfirmFeedbackText                                     = "What did you think of this service? We use your feedback to make our services better."
   val plaWithdrawConfirmFeedbackLink                                     = "What did you think of this service?"
   val plaWithdrawConfirmFeedbackUrl                                      = "/protect-your-lifetime-allowance/exit"
   val plaWithdrawConfirmationOtherProtections                            = "View details about other protections and how to apply on GOV.UK."

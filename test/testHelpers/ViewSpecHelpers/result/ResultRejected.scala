@@ -38,7 +38,7 @@ trait ResultRejected {
   val plaResultSuccessViewDetails             = "You can view or change details of your protections at any time."
   val plaResultSuccessViewDetailsLinkText     = "view or change details of your protections"
   val plaResultSuccessGiveFeedback            = "Give us feedback"
-  val plaResultSuccessExitSurvey              = "Your feedback helps us improve"
+  val plaResultSuccessExitSurvey              = "We use your feedback to make our services better"
   val plaResultSuccessYourName                = "your full name"
   val plaResultSuccessYourNino                = "your National Insurance number"
 
