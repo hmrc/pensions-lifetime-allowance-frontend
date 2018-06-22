@@ -332,7 +332,7 @@ pla.resultSuccess.viewDetails           = Gallwch <a href="{0}">fwrw golwg ar fa
 pla.resultSuccess.viewDetailsLinkText   = fwrw golwg ar fanylion eich diogelwch, neu eu newid
 pla.resultSuccess.giveFeedback          = Rhoi adborth i ni
 pla.resultSuccess.exitSurveyLinkText    = Beth oedd eich barn am y gwasanaeth hwn?
-pla.resultSuccess.exitSurvey            = Mae eich adborth yn ein helpu i wella.
+pla.resultSuccess.exitSurvey            = Rydym yn defnyddio’ch adborth i wella ein gwasanaethau.
 
 
 pla.resultSuccess.yourName              = eich enw llawn
@@ -372,6 +372,7 @@ pla.exitSurvey.question2                                = <p class="bold-small">
 pla.exitSurvey.question3                                = <p class="bold-small">Pa mor debygol ydych o argymell eich cyfrif treth i''ch ffrindiau a''ch teulu?</p>
 pla.exitSurvey.question4                                = <p class="bold-small">Yn gyffredinol, sut ydych yn teimlo am eich profiad wrth ddefnyddio''ch cyfrif treth heddiw?</p>
 pla.exitSurvey.sendFeedback                             = Anfon adborth
+pla.exitSurvey.feedback.optional                        = Rydym yn defnyddio’ch adborth i wella ein gwasanaethau.
 
 ## Printing ##
 pla.print.title                             = Argraffu''ch diogelwch sydd ar waith

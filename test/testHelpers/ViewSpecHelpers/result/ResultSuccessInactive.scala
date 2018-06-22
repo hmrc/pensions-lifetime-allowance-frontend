@@ -26,7 +26,7 @@ trait ResultSuccessInactive {
   val  plaResultRejectionViewDetailsLinkText = "view or change details of your protections"
   val  plaResultSuccessGiveFeedback          = "Give us feedback"
   val  plaResultSuccessExitSurveyLinkText    = "What did you think of this service?"
-  val  plaResultSuccessExitSurvey            = "Your feedback helps us improve."
+  val  plaResultSuccessExitSurvey            = "We use your feedback to make our services better."
 
   val  pensionSchemesLink                    = "<a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries'>"
 
