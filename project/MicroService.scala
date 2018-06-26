@@ -13,6 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.typesafe.sbt.web.Import.pipelineStages
+import com.typesafe.sbt.web.Import.Assets
+import com.typesafe.sbt.digest.Import.digest
 
 import play.routes.compiler.StaticRoutesGenerator
 import sbt.Keys._
@@ -63,7 +66,8 @@ trait MicroService {
       fork in Test := false,
       retrieveManaged := true,
       evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-      routesGenerator := StaticRoutesGenerator
+      routesGenerator := StaticRoutesGenerator,
+      pipelineStages in Assets := Seq(digest)
     )
     .configs(IntegrationTest)
     .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
