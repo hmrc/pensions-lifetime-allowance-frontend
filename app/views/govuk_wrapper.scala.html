@@ -44,14 +44,14 @@ if(str.trim=="") false else str
 
 @scriptElement = @{
     Seq(
-        Map("url" -> controllers.routes.Assets.at("javascripts/exitSurvey.js")),
-        Map("url" -> controllers.routes.Assets.at("javascripts/pla.js"))
+        Map("url" -> controllers.routes.Assets.versioned("javascripts/exitSurvey.js")),
+        Map("url" -> controllers.routes.Assets.versioned("javascripts/pla.js"))
     )
 }
 
 @linkElems = @{
     Map(
-        "url" -> controllers.routes.Assets.at("stylesheets/pla.css")
+        "url" -> controllers.routes.Assets.versioned("stylesheets/pla.css")
     )
 }
 

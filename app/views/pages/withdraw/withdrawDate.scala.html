@@ -27,7 +27,7 @@
 }
 
 @scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.at("javascripts/pla.js")'></script>
+    <script type="text/javascript" src='@controllers.routes.Assets.versioned("javascripts/pla.js")'></script>
 }
 
 @views.html.main_template(title = Messages("pla.withdraw.date-input.title"), scriptElem = Some(scriptElement), bodyClasses = None) {
