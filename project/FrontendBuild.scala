@@ -27,7 +27,7 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val playHealthVersion = "2.1.0"
+  private val playHealthVersion = "2.2.0"
   private val loggerVersion = "3.1.0"
   private val frontendBootstrapVersion = "8.24.0"
   private val govukTemplateVersion = "5.10.0"
@@ -68,7 +68,7 @@ private object AppDependencies {
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "org.jsoup" % "jsoup" % "1.7.3" % scope,
+        "org.jsoup" % "jsoup" % "1.10.2" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
         "org.mockito" % "mockito-core" % "2.18.3" % scope
@@ -88,7 +88,7 @@ private object AppDependencies {
         "org.jsoup" % "jsoup" % "1.7.3" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
-        "org.mockito" % "mockito-all" % "1.9.5" % scope,
+        "org.mockito" % "mockito-core" % "2.19.0" % scope,
         "com.github.tomakehurst"  %  "wiremock" % wireMockVersion % scope
       )
     }.test
