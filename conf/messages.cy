@@ -64,9 +64,10 @@ pla.confirmFP16.declaration = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am dd
 
 ## Failure Messages ##
 pla.notAuthorised.title         = Heb ei awdurdodi
-pla.notAuthorised.pageHeading   = Nid oeddem yn gallu cadarnhau pwy ydych.
-pla.notAuthorised.paraOne       = <p>Os na allwch roi prawf o bwy ydych, ac mae gennych gwestiwn, gallwch <a href=ʺ{0}ʺ target=ʺ_blankʺ>gysylltu â Chyllid a Thollau EM (yn agor ffenestr newydd)</a> i gael help.</p>
-pla.notAuthorised.tryAgain      = Yn ôl i''r dudalen <a href="{0}" rel="external">diogelu''ch lwfans oes</a> i roi cynnig arall arni.
+pla.notAuthorised.pageHeading   = Ni allwn gadarnhau pwy ydych
+pla.notAuthorised.paraOne       = Gallwch wneud y canlynol:
+pla.notAuthorised.paraTwo       = <p><a href="{0}" target="_blank">cysylltu â Chyllid a Thollau EM am help</a></p>
+pla.notAuthorised.tryAgain      = <a href="{0}">ceisio cadarnhau pwy ydych eto</a>
 pla.lockedOut.title             = Wedi cloi allan
 pla.lockedOut.pageHeading       = Rydych wedi ceisio rhoi prawf o bwy ydych gormod o weithiau.
 pla.lockedOut.paraOne           = Gallwch roi cynnig arall arni ar ôl 24 awr.

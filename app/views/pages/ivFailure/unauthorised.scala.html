@@ -25,9 +25,10 @@
 @views.html.main_template(title = Messages("pla.notAuthorised.title"), bodyClasses = None, showLogout = false) {
 
 <h1 class="heading-large">@Messages("pla.notAuthorised.pageHeading")</h1>
+ <p>@messages("pla.notAuthorised.paraOne")</p>
 
-@Html(Messages("pla.notAuthorised.paraOne", Links.helpDesk))
-
-@Html(Messages("pla.notAuthorised.tryAgain", Links.plaMain))
-
+ <ul class="list-bullet">
+   <li>@Html(Messages("pla.notAuthorised.tryAgain", Links.plaMain))</li>
+   <li>@Html(Messages("pla.notAuthorised.paraTwo", Links.contactHMRC))</li>
+ </ul>
 }

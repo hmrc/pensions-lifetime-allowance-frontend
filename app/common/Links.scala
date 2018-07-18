@@ -26,6 +26,7 @@ object Links {
   val contactInfo       = baseGovUrl + "contact-hmrc"
   val helpDesk          = baseGovUrl + "government/organisations/hm-revenue-customs/contact/online-services-helpdesk"
   val callCharges       = baseGovUrl + "call-charges"
+  val contactHMRC       = baseGovUrl + "government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 
   val pensionValue      = baseGovUrl + "guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection"
 
