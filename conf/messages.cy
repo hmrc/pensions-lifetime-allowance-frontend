@@ -296,6 +296,7 @@ pla.existingProtections.protectionRef                   = Rhif hysbysu diogelwch
 pla.existingProtections.psaRef                          = Cyfeirnod gweinyddwr y cynllun
 pla.existingProtections.backToHome                      = Yn ôl i hafan y cyfrif
 pla.existingProtections.amendLinkText                   = fwrw golwg ar fanylion eich diogelwch, neu eu newid
+pla.existingProtections.withdrawLinkText                = Tynnu''n ôl eich diogelwch sydd ar agor
 
 
 
@@ -333,7 +334,7 @@ pla.resultSuccess.viewDetails           = Gallwch <a href="{0}">fwrw golwg ar fa
 pla.resultSuccess.viewDetailsLinkText   = fwrw golwg ar fanylion eich diogelwch, neu eu newid
 pla.resultSuccess.giveFeedback          = Rhoi adborth i ni
 pla.resultSuccess.exitSurveyLinkText    = Beth oedd eich barn am y gwasanaeth hwn?
-pla.resultSuccess.exitSurvey            = Rydym yn defnyddio’ch adborth i wella ein gwasanaethau.
+pla.resultSuccess.exitSurvey            = Rydym yn defnyddio''ch adborth i wella ein gwasanaethau.
 
 
 pla.resultSuccess.yourName              = eich enw llawn
@@ -373,7 +374,7 @@ pla.exitSurvey.question2                                = <p class="bold-small">
 pla.exitSurvey.question3                                = <p class="bold-small">Pa mor debygol ydych o argymell eich cyfrif treth i''ch ffrindiau a''ch teulu?</p>
 pla.exitSurvey.question4                                = <p class="bold-small">Yn gyffredinol, sut ydych yn teimlo am eich profiad wrth ddefnyddio''ch cyfrif treth heddiw?</p>
 pla.exitSurvey.sendFeedback                             = Anfon adborth
-pla.exitSurvey.feedback.optional                        = Rydym yn defnyddio’ch adborth i wella ein gwasanaethau.
+pla.exitSurvey.feedback.optional                        = Rydym yn defnyddio''ch adborth i wella ein gwasanaethau.
 
 ## Printing ##
 pla.print.title                             = Argraffu''ch diogelwch sydd ar waith
@@ -782,8 +783,8 @@ pla.withdraw.summary.continue=Yn eich blaen
 pla.withdraw.totalValueOfPensions=Cyfanswm y pensiynau
 
 pla.withdraw.implications.submit=Derbyn a mynd yn eich blaen
-pla.withdraw.date-input.title=Nodwch y dyddiad tynnu’n ôl
-pla.withdraw.date-input.form-title=Dyddiad tynnu’r diogelwch yn ôl
+pla.withdraw.date-input.title=Nodwch y dyddiad tynnu''n ôl
+pla.withdraw.date-input.form-title=Dyddiad tynnu''r diogelwch yn ôl
 pla.withdraw.date-input.form-hint=Enghraifft: 18 4 2016
 pla.withdraw.date-input.form-day=Diwrnod
 pla.withdraw.date-input.form-month=Mis
@@ -797,14 +798,14 @@ pla.withdraw.date-input.form.month-too-low=Nodwch fis dilys
 pla.withdraw.date-input.form.year-empty=Nodwch flwyddyn
 pla.withdraw.date-input.form.year-too-high=Ni all y dyddiad fod yn y dyfodol
 pla.withdraw.date-input.form.date-in-future=Ni all y dyddiad fod yn y dyfodol
-pla.withdraw.date-input.form.date-before-start-date=Mae’n rhaid i’r dyddiad fod ar ôl y dyddiad y dechreuwyd y diogelwch
+pla.withdraw.date-input.form.date-before-start-date=Mae''n rhaid i''r dyddiad fod ar ôl y dyddiad y dechreuwyd y diogelwch
 pla.withdraw.date-input-form.date-invalid=Nodwch ddyddiad dilys
 pla.withdraw.date-input.form.submit=Cyflwyno
-pla.withdraw.confirm.title=Rydych wedi tynnu’n ôl diogelwch unigol 2016
+pla.withdraw.confirm.title=Rydych wedi tynnu''n ôl diogelwch unigol 2016
 pla.withdraw.confirm.info-heading=Gallwch wneud cais am ddiogelwch arall ar unrhyw adeg
 pla.withdraw.confirm.info-text=Gallwch weld unrhyw ddiogelwch arall a all fod gennych yn eich <a href="{0}">cyfrif treth personol</a>
 pla.withdraw.confirm.feedback-heading=Rhoi adborth i ni
-pla.withdraw.confirm.feedback-text=<a href="{0}">Beth yw’ch barn am y gwasanaeth hwn?</a> Mae’ch adborth yn ein helpu i wella.
+pla.withdraw.confirm.feedback-text=<a href="{0}">Beth yw''ch barn am y gwasanaeth hwn?</a> Mae''ch adborth yn ein helpu i wella.
 
 
 pla.withdraw.protection.start.title             = Dechrau
@@ -817,24 +818,24 @@ pla.withdraw.protection.primary.label           = Prif ddiogelwch
 pla.withdraw.protection.enhanced.label          = Diogelwch uwch
 pla.withdraw.protection.fixed.label             = Diogelwch penodol
 pla.withdraw.check-your-answers.info-heading    = Gwiriwch eich atebion
-pla.withdraw.what-happens.info-heading          = Yr hyn sy’n digwydd os ydych yn tynnu’n ôl
-pla.withdraw.date.title                         = Dyddiad tynnu’n ôl
+pla.withdraw.what-happens.info-heading          = Yr hyn sy''n digwydd os ydych yn tynnu''n ôl
+pla.withdraw.date.title                         = Dyddiad tynnu''n ôl
 
-pla.withdraw.implication.info                         = Unwaith y byddwch yn tynnu’n ôl, ni fydd {0} gennych mwyach. Gallai hyn olygu y bydd yn rhaid i chi dalu cyfradd uwch o dreth ar eich pensiwn.
-pla.withdraw.protection.if.info                       = Defnyddiwch y gwasanaeth hwn i dynnu’n ôl o’ch {0} os:
+pla.withdraw.implication.info                         = Unwaith y byddwch yn tynnu''n ôl, ni fydd {0} gennych mwyach. Gallai hyn olygu y bydd yn rhaid i chi dalu cyfradd uwch o dreth ar eich pensiwn.
+pla.withdraw.protection.if.info                       = Defnyddiwch y gwasanaeth hwn i dynnu''n ôl o''ch {0} os:
 pla.withdraw.protection.if.info.1                     = nid ydych am gael {0} mwyach
 pla.withdraw.protection.if.info.2                     = nid ydych yn gymwys i gael {0} mwyach
-pla.withdraw.protection.title                         = Tynnu’n ôl o {0}
+pla.withdraw.protection.title                         = Tynnu''n ôl o {0}
 
 
 pla.withdraw.date-input.form.continue                 = Yn eich blaen
 pla.withdraw.protection.what-happens.info.1           = Heb unrhyw ddiogelwch, ni fydd eich pensiwn yn cael ei ddiogelu rhag <br>{0} a bydd yn cael ei drethu pan fyddwch yn dechrau ei ddefnyddio.
 pla.withdraw.protection.what-happens.info.2           = Efallai y gallwch wneud cais am ddiogelwch newydd yn y dyfodol, ond mae'n bosibl y bydd lefel y diogelwch yn llai nag sydd gennych ar hyn o bryd.
-pla.withdraw.protection.what-happens.info.3           = Os oes gennych ddiogelwch segur, bydd yn diogelu’ch pensiwn o’r dyddiad y gwnaethpwyd y cais. Efallai y bydd hyn yn golygu bod eich pensiwn heb ei ddiogelu rhwng {0} a’r dyddiad y gwnaethpwyd cais y diogelwch segur.
-pla.withdraw.protection.what-happens.info.4           = Mae’n bosibl y gofynnir i chi roi tystiolaeth bod eich diogelwch yn ddilys ac yn gymwys i gael ei dynnu’n ôl ar {0}.
-pla.withdraw.protection.what-happens.info.5           = Ni fyddwch yn gallu dileu na diwygio’r cais hwn ar ôl i chi ei gyflwyno.
-pla.withdraw.confirmation.message                     = Mae’ch {0} wedi cael ei (d)dileu
-pla.withdraw.confirmation.contact.you.if.needed       = Efallai y bydd yn rhaid i ni gysylltu â chi i gadarnhau’r wybodaeth rydych wedi’i rhoi i ni.
+pla.withdraw.protection.what-happens.info.3           = Os oes gennych ddiogelwch segur, bydd yn diogelu''ch pensiwn o''r dyddiad y gwnaethpwyd y cais. Efallai y bydd hyn yn golygu bod eich pensiwn heb ei ddiogelu rhwng {0} a''r dyddiad y gwnaethpwyd cais y diogelwch segur.
+pla.withdraw.protection.what-happens.info.4           = Mae''n bosibl y gofynnir i chi roi tystiolaeth bod eich diogelwch yn ddilys ac yn gymwys i gael ei dynnu''n ôl ar {0}.
+pla.withdraw.protection.what-happens.info.5           = Ni fyddwch yn gallu dileu na diwygio''r cais hwn ar ôl i chi ei gyflwyno.
+pla.withdraw.confirmation.message                     = Mae''ch {0} wedi cael ei (d)dileu
+pla.withdraw.confirmation.contact.you.if.needed       = Efallai y bydd yn rhaid i ni gysylltu â chi i gadarnhau''r wybodaeth rydych wedi''i rhoi i ni.
 pla.withdraw.confirmation.other.protections.link      = Gweler <a href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance.cy">manylion diogelwch arall a sut i wneud cais</a> ar GOV.UK.
 pla.withdraw.confirmation.check.details               = Gallwch wirio manylion eich pensiwn yn eich <a href="{0}">cyfrif treth personol</a>.
 pla.existingProtections.withdrawnDate                 = Dyddiad y tynnwyd yn ôl
