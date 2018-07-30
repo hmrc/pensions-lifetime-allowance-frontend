@@ -297,6 +297,8 @@ pla.existingProtections.psaRef                          = Cyfeirnod gweinyddwr y
 pla.existingProtections.backToHome                      = Yn ôl i hafan y cyfrif
 pla.existingProtections.amendLinkText                   = fwrw golwg ar fanylion eich diogelwch, neu eu newid
 pla.existingProtections.withdrawLinkText                = Tynnu''n ôl eich diogelwch sydd ar agor
+pla.existingProtections.other.protections.link          = Gweler <a href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance.cy">manylion diogelwch arall a sut i wneud cais</a> ar GOV.UK.
+
 
 
 
