@@ -42,7 +42,7 @@ object FrontendGlobal
     ApplicationCrypto.verifyConfiguration()
   }
 
-  override def filters: Seq[EssentialFilter] = super.filters ++ Seq(SessionIdFilter).filterNot(_ == RecoveryFilter)
+  override def filters: Seq[EssentialFilter] = (super.filters ++ Seq(SessionIdFilter)).filterNot(_ == RecoveryFilter)
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
     views.html.error_template(pageTitle, heading, message)
