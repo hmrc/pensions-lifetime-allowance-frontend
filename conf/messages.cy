@@ -832,7 +832,7 @@ pla.withdraw.protection.title                         = Tynnu''n ôl o {0}
 
 pla.withdraw.date-input.form.continue                 = Yn eich blaen
 pla.withdraw.protection.what-happens.info.1           = Heb unrhyw ddiogelwch, ni fydd eich pensiwn yn cael ei ddiogelu rhag <br>{0} a bydd yn cael ei drethu pan fyddwch yn dechrau ei ddefnyddio.
-pla.withdraw.protection.what-happens.info.2           = Efallai y gallwch wneud cais am ddiogelwch newydd yn y dyfodol, ond mae'n bosibl y bydd lefel y diogelwch yn llai nag sydd gennych ar hyn o bryd.
+pla.withdraw.protection.what-happens.info.2           = Efallai y gallwch wneud cais am ddiogelwch newydd yn y dyfodol, ond mae''n bosibl y bydd lefel y diogelwch yn llai nag sydd gennych ar hyn o bryd.
 pla.withdraw.protection.what-happens.info.3           = Os oes gennych ddiogelwch segur, bydd yn diogelu''ch pensiwn o''r dyddiad y gwnaethpwyd y cais. Efallai y bydd hyn yn golygu bod eich pensiwn heb ei ddiogelu rhwng {0} a''r dyddiad y gwnaethpwyd cais y diogelwch segur.
 pla.withdraw.protection.what-happens.info.4           = Mae''n bosibl y gofynnir i chi roi tystiolaeth bod eich diogelwch yn ddilys ac yn gymwys i gael ei dynnu''n ôl ar {0}.
 pla.withdraw.protection.what-happens.info.5           = Ni fyddwch yn gallu dileu na diwygio''r cais hwn ar ôl i chi ei gyflwyno.
