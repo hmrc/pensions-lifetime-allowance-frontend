@@ -28,7 +28,7 @@ import uk.gov.hmrc.crypto.ApplicationCrypto
 import uk.gov.hmrc.play.config.{AppName, ControllerConfig, RunMode}
 import uk.gov.hmrc.play.frontend.bootstrap.DefaultFrontendGlobal
 import utils.SessionIdFilter
-import uk.gov.hmrc.play.frontend.filters.{ FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport }
+import uk.gov.hmrc.play.frontend.filters.{FrontendAuditFilter, FrontendLoggingFilter, MicroserviceFilterSupport, RecoveryFilter}
 
 object FrontendGlobal
   extends DefaultFrontendGlobal with BaseController{
@@ -42,7 +42,7 @@ object FrontendGlobal
     ApplicationCrypto.verifyConfiguration()
   }
 
-  override def filters: Seq[EssentialFilter] = super.filters ++ Seq(SessionIdFilter)
+  override def filters: Seq[EssentialFilter] = (super.filters ++ Seq(SessionIdFilter)).filterNot(_ == RecoveryFilter)
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
     views.html.error_template(pageTitle, heading, message)
