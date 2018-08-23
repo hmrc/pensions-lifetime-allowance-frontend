@@ -21,7 +21,7 @@ trait WithdrawConfirmationSpecMessages {
   def plaWithdrawConfirmationMessage(protectionType: String)             = s"Your $protectionType has been removed"
   val plaWithdrawProtectionIP2014label                                   = "individual protection 2014"
   val plaWithdrawConfirmationCheckDetails                                = "You can check the details of your pension in your personal tax account."
-  val plaWithdrawConfirmationContactYouIfNeeded                          = "We may need to contact you to confirm the information you’ve given us."
+  val plaWithdrawConfirmationContactYouIfNeeded                          = "We may need to contact you to confirm the information you've given us."
   val plaWithdrawConfirmFeedbackHeading                                  = "Give us feedback"
   val plaWithdrawConfirmFeedbackText                                     = "What did you think of this service? We use your feedback to make our services better."
   val plaWithdrawConfirmFeedbackLink                                     = "What did you think of this service?"

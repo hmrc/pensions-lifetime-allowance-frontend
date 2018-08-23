@@ -55,7 +55,7 @@ trait SummaryViewMessages{
   val plaSummaryConfirmBullet2                          = "individual protection 2014"
   val plaSummaryHelp                                    = "Help with these conditions"
   val plaSummaryHiddenParaOne                           = "Speak to your pension scheme administrator to get professional help understanding these conditions."
-  val plaSummaryHiddenParaTwo                           = "HMRC’s Pensions Tax Manual has technical guidance about individual protection 2016 (opens in a new window)"
+  val plaSummaryHiddenParaTwo                           = "HMRC's Pensions Tax Manual has technical guidance about individual protection 2016 (opens in a new window)"
   val plaSummaryHiddenParaLinkText                      = "technical guidance about individual protection 2016 (opens in a new window)"
   val plaSummaryConfirmation2                           = "I declare that the information I have provided is true and complete to the best of my knowledge and belief."
   val plaSummaryDeclaration                             = "By confirming, you will automatically submit your application for individual protection 2016."

@@ -52,11 +52,11 @@ pla.confirmFP16.para.1      = To get this protection you must agree to these dec
 pla.confirmFP16.para.2      = I declare:
 pla.confirmFP16.bullet.1    = on 6 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme
 pla.confirmFP16.bullet.2    = on 6 April 2016 I did not hold enhanced protection, primary protection, fixed protection, or fixed protection 2014
-pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ‘protection cessation event’ (these are specific events that make you ineligible for fixed protection)
+pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ''protection cessation event'' (these are specific events that make you ineligible for fixed protection)
 pla.confirmFP16.para.3      = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
 pla.confirmFP16.help        = Help with these conditions
 pla.confirmFP16.hiddenPara.1 = Speak to your pension scheme administrator to get professional help understanding these conditions.
-pla.confirmFP16.hiddenPara.2 = HMRC’s Pensions Tax Manual has {0}
+pla.confirmFP16.hiddenPara.2 = HMRC''s Pensions Tax Manual has {0}
 
 pla.confirmFP16.hiddenPara.linkText = technical guidance about fixed protection
 pla.confirmFP16.declaration = By confirming, you will automatically submit your application for fixed protection 2016.
@@ -249,7 +249,7 @@ pla.summary.confirmBullet1                          = primary protection
 pla.summary.confirmBullet2                          = individual protection 2014
 pla.summary.help                                    = Help with these conditions
 pla.summary.hiddenPara.1                            = Speak to your pension scheme administrator to get professional help understanding these conditions.
-pla.summary.hiddenPara.2                            = HMRC’s Pensions Tax Manual has {0}
+pla.summary.hiddenPara.2                            = HMRC''s Pensions Tax Manual has {0}
 pla.summary.hiddenPara.linkText                     = technical guidance about individual protection 2016
 pla.summary.hiddenPara.ip14LinkText                 = technical guidance about individual protection 2014
 pla.summary.confirmation2                           = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
@@ -261,7 +261,7 @@ pla.summary.questions.ip14PensionsTaken                 = Before 5 April 2014, d
 pla.summary.hiddenLinkText.ip14PensionsTaken            = Change your response to the question ''have you taken any of your pensions''
 pla.summary.questions.ip14PensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
 pla.summary.hiddenLinkText.ip14PensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
-pla.summary.questions.ip14PensionsTakenBeforeAmt        = What's the value of the pensions you took before 6 April 2006?
+pla.summary.questions.ip14PensionsTakenBeforeAmt        = What''s the value of the pensions you took before 6 April 2006?
 pla.summary.hiddenLinkText.ip14PensionsTakenBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
 pla.summary.questions.ip14PensionsTakenBetween          = Between 6 April 2006 and 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.ip14PensionsTakenBetween     = Change your response to the question ''did you get money from your pensions between 6 April 2006 and 5 April 2014''
@@ -371,11 +371,11 @@ pla.mcNeeded.callCharges                  = Find out about call charges
 ## Exit Survey ##
 pla.exitSurvey.title                                    = Exit survey
 pla.exitSurvey.pageHeading                              = Before you go, please answer some questions to help us improve your experience
-pla.exitSurvey.question1                                = <p class="bold-small">Before using your tax account, were you going to phone or write to HMRC about your query?</p>
-pla.exitSurvey.hiddenQ1                                 = <p class="bold-small">After using your tax account, do you need to phone or write to HMRC?</p>
-pla.exitSurvey.question2                                = <p class="bold-small">Based on what you have done today, do you need to do anything else? You can tick more than one box.</p>
-pla.exitSurvey.question3                                = <p class="bold-small">How likely are you to recommend your tax account to your friends or family?</p>
-pla.exitSurvey.question4                                = <p class="bold-small">Overall, how do you feel about your experience using your tax account today?</p>
+pla.exitSurvey.question1                                = Before using your tax account, were you going to phone or write to HMRC about your query?
+pla.exitSurvey.hiddenQ1                                 = After using your tax account, do you need to phone or write to HMRC?
+pla.exitSurvey.question2                                = Based on what you have done today, do you need to do anything else? You can tick more than one box.
+pla.exitSurvey.question3                                = How likely are you to recommend your tax account to your friends or family?
+pla.exitSurvey.question4                                = Overall, how do you feel about your experience using your tax account today?
 pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##
@@ -848,7 +848,7 @@ pla.withdraw.protection.what-happens.info.3           = If you have a dormant pr
 pla.withdraw.protection.what-happens.info.4           = You might be asked to provide evidence that your protection was valid and eligible to be withdrawn on {0}.
 pla.withdraw.protection.what-happens.info.5           = You will not be able to cancel or amend this request once you submit.
 pla.withdraw.confirmation.message                     = Your {0} has been removed
-pla.withdraw.confirmation.contact.you.if.needed       = We may need to contact you to confirm the information you’ve given us.
+pla.withdraw.confirmation.contact.you.if.needed       = We may need to contact you to confirm the information you''ve given us.
 pla.withdraw.confirmation.other.protections.link      = View <a href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance">details about other protections and how to apply</a> on GOV.UK.
 pla.withdraw.confirmation.check.details               = You can check the details of your pension in your <a href="{0}">personal tax account</a>.
 pla.existingProtections.withdrawnDate                 = Withdrawn date
