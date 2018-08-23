@@ -284,8 +284,6 @@ pla.summary.hiddenLinkText.ip14PsoDetails               = Newidiwch fanylion eic
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = Bwrw golwg ar fanylion eich diogelwch presennol
 pla.existingProtections.pageHeading                     = Eich diogelwch lwfans oes
-pla.existingProtections.BreadcrumbPTAHome               = Hafan y cyfrif
-pla.existingProtections.pageBreadcrumb                  = Diogelwch lwfans oes
 pla.existingProtections.details                         = Manylion
 pla.existingProtections.print                           = Argraffu a chadw''ch manylion
 pla.existingProtections.applicationDate                 = Dyddiad y cais
@@ -333,7 +331,6 @@ pla.resultSuccess.IPChangeDetails       = Newid eich manylion diogelwch
 pla.resultSuccess.IPPensionSharing      = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn</a> cyn pen 60 diwrnod.
 pla.resultSuccess.FPAddToPension        = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a> cyn pen 90 diwrnod.
 pla.resultSuccess.viewDetails           = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
-pla.resultSuccess.viewDetailsLinkText   = fwrw golwg ar fanylion eich diogelwch, neu eu newid
 pla.resultSuccess.giveFeedback          = Rhoi adborth i ni
 pla.resultSuccess.exitSurveyLinkText    = Beth oedd eich barn am y gwasanaeth hwn?
 pla.resultSuccess.exitSurvey            = Rydym yn defnyddio''ch adborth i wella ein gwasanaethau.
@@ -346,7 +343,6 @@ pla.resultSuccess.yourNino              = eich rhif Yswiriant Gwladol
 pla.resultRejection.title                 = Aflwyddiannus
 pla.resultRejection.pageHeading           = Roedd eich cais yn aflwyddiannus
 pla.resultRejection.viewDetails           = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
-pla.resultRejection.viewDetailsLinkText   = fwrw golwg ar fanylion eich diogelwch, neu eu newid
 
 ## Manual Correspondence Needed ##
 pla.mcNeeded.title                        = Mae problem wedi codi wrth gyrchu eich cyfrif
@@ -376,7 +372,6 @@ pla.exitSurvey.question2                                = <p class="bold-small">
 pla.exitSurvey.question3                                = <p class="bold-small">Pa mor debygol ydych o argymell eich cyfrif treth i''ch ffrindiau a''ch teulu?</p>
 pla.exitSurvey.question4                                = <p class="bold-small">Yn gyffredinol, sut ydych yn teimlo am eich profiad wrth ddefnyddio''ch cyfrif treth heddiw?</p>
 pla.exitSurvey.sendFeedback                             = Anfon adborth
-pla.exitSurvey.feedback.optional                        = Rydym yn defnyddio''ch adborth i wella ein gwasanaethau.
 
 ## Printing ##
 pla.print.title                             = Argraffu''ch diogelwch sydd ar waith
@@ -437,7 +432,6 @@ pla.amends.OverseasPensions.IP2014.Amt.changeHint           = Newidiwch faint yr
 pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.removeHint   = Dilëwch eich ateb i swm neu ddyddiad eich gorchymyn rhannu pensiwn
 pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.changeHint   = Newidiwch fanylion eich gorchymyn rhannu pensiwn
 pla.amends.totalValueOfPensions                             = Cyfanswm gwerth pensiynau
-pla.amends.pageBreadcrumb                                   = Newidiwch eich manylion diogelwch
 pla.amends.declaration                                      = Mae''r wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
 pla.amends.submit                                           = Cyflwyno''ch newidiadau
 
@@ -456,7 +450,6 @@ pla.amends.addPsoLink                                       = Ychwanegu gorchymy
 ### AMENDS RESULTS MESSAGES ###
 pla.activeAmend.title                                       = Diogelwch wedi''i ddiwygio
 pla.activeAmend.viewDetails                                 = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
-pla.activeAmend.viewDetailsLinkText                         = fwrw golwg ar fanylion eich diogelwch, neu eu newid
 
 pla.inactiveAmend.title                                     = Diogelwch wedi''i ddiwygio
 
@@ -708,8 +701,8 @@ pla.lookup.form.error.summary        = Rydych wedi nodi rhywbeth annilys
 psa.lookup.form.psaref.required      = Nodwch Gyfeirnod Gweinyddwr y Cynllun
 psa.lookup.form.psaref.invalid       = Nid ydych wedi nodi Cyfeirnod Gweinyddwr y Cynllun cywir
 psa.lookup.form.pnn.required         = Nodwch Rif Hysbysu Diogelwch
-psa.lookup.form.pnn.invalid          = Nid ydych wedi nodi'r Rhif Hysbysu Diogelwch cywir
-psa.lookup.form.not-found            = Nid oes gan y manylion rydych wedi'u nodi ddiogelwch dilys
+psa.lookup.form.pnn.invalid          = Nid ydych wedi nodi''r Rhif Hysbysu Diogelwch cywir
+psa.lookup.form.not-found            = Nid oes gan y manylion rydych wedi''u nodi ddiogelwch dilys
 psa.lookup.form.pnn.back             = Yn ôl
 
 ## PSA lookup results
@@ -720,10 +713,10 @@ psa.lookup.results.table.header.2       = Gwerth
 psa.lookup.results.table.row.1          = Cyfeirnod Gweinyddwr y Cynllun:
 psa.lookup.results.table.row.2          = Rhif Hysbysu Diogelwch:
 psa.lookup.results.table.row.3          = Y math o ddiogelwch:
-psa.lookup.results.table.row.4          = Y swm wedi'i ddiogelu:
+psa.lookup.results.table.row.4          = Y swm wedi''i ddiogelu:
 psa.lookup.results.table.row.5          = Statws:
-psa.lookup.results.table.row.5.valid    = Mae'r diogelwch hwn yn ddilys
-psa.lookup.results.table.row.5.invalid  = Nid yw'r diogelwch hwn yn ddilys mwyach
+psa.lookup.results.table.row.5.valid    = Mae''r diogelwch hwn yn ddilys
+psa.lookup.results.table.row.5.invalid  = Nid yw''r diogelwch hwn yn ddilys mwyach
 psa.lookup.results.table.row.6          = Gwiriwyd ar:
 
 psa.lookup.results.ltatype.1            = Diogelwch sefydlog 2016
@@ -734,7 +727,7 @@ psa.lookup.results.ltatype.5            = Diogelwch uwch
 psa.lookup.results.ltatype.6            = Diogelwch sefydlog 2012
 psa.lookup.results.ltatype.7            = Diogelwch sefydlog 2014
 
-psa.lookup.results.save                 = Lawrlwytho PDF o'r canlyniadau hyn
+psa.lookup.results.save                 = Lawrlwytho PDF o''r canlyniadau hyn
 psa.lookup.results.check-another        = Gwirio tystysgrif arall
 
 psa.lookup.results.title.print.1        = Canlyniadau lwfans oes
@@ -747,16 +740,16 @@ psa.lookup.not-found.results.title                          = Gwiriwch y manylio
 psa.lookup.not-found.results.title.2                        = Nodwyd y canlynol gennych:
 psa.lookup.not-found.results.table.row.1                    = Cyfeirnod Gweinyddwr y Cynllun:
 psa.lookup.not-found.results.table.row.2                    = Rhif Hysbysu Diogelwch:
-psa.lookup.not-found.results.detail                         = Nid yw'r manylion a nodwyd gennych yn cyd-fynd â thystysgrif diogelwch sydd eisoes yn bodoli.
+psa.lookup.not-found.results.detail                         = Nid yw''r manylion a nodwyd gennych yn cyd-fynd â thystysgrif diogelwch sydd eisoes yn bodoli.
 psa.lookup.not-found.results.possible-causes                = Gallai hyn fod oherwydd i chi wedi:
 psa.lookup.not-found.results.possible-causes.bullet1        = cael yr wybodaeth anghywir gan eich cleient
-psa.lookup.not-found.results.possible-causes.bullet2        = nodi un o'r rhifau'n anghywir
+psa.lookup.not-found.results.possible-causes.bullet2        = nodi un o''r rhifau''n anghywir
 psa.lookup.not-found.results.suggested-resolution           = Gwiriwch yr wybodaeth a roddwyd i chi a rhowch gynnig arall arni.
 psa.lookup.not-found.results.table.try-again                = Rhowch gynnig arall arni
 
 psa.lookup.protection-guidance.title                                            = Gwiriwch werth y math o ddiogelwch
 psa.lookup.protection-guidance.table-heading-left                               = Y math o ddiogelwch
-psa.lookup.protection-guidance.table-heading-right                              = Y swm wedi'i ddiogelu
+psa.lookup.protection-guidance.table-heading-right                              = Y swm wedi''i ddiogelu
 psa.lookup.protection-guidance.protection-type-enhanced-label                   = Uwch
 psa.lookup.protection-guidance.protection-type-enhanced-value                   = £1,500,000 neu uwch
 psa.lookup.protection-guidance.protection-type-fixed12-label                    = Sefydlog 2012
@@ -842,3 +835,20 @@ pla.withdraw.confirmation.other.protections.link      = Gweler <a href="https://
 pla.withdraw.confirmation.check.details               = Gallwch wirio manylion eich pensiwn yn eich <a href="{0}">cyfrif treth personol</a>.
 pla.existingProtections.withdrawnDate                 = Dyddiad y tynnwyd yn ôl
 
+pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails.changeHint   = Newidiwch fanylion eich gorchymyn rhannu pensiwn
+pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails.removeHint   = Dilëwch eich ateb i swm neu ddyddiad eich gorchymyn rhannu pensiwn
+pla.resultSuccess.dismissBanner                                     = No thanks
+pla.resultSuccess.userResearchLink.title                            = Help improve GOV.UK
+pla.resultSuccess.userResearchLink.text                             = Help improve this digital service by joining the HMRC user panel (opens in new window)
+pla.resultSuccess.userResearchLink                                  = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113
+pla.withdrawn.pageHeading                                           = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
+pla.withdrawn.paraOne                                               = Gallwch dal i <a href="{0}">weld ceisiadau sy''n bodoli eisoes</a>.
+pla.withdrawn.title                                                 = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
+psa.lookup.protection-guidance.protection-type-primary-value        = £1,500,000 neu uwch
+pla.views.heading.FP2016                                   = Manylion eich diogelwch penodol 2016
+pla.views.heading.primary                                  = Manylion eich prif ddiogelwch
+pla.views.heading.enhanced                                 = Manylion eich diogelwch uwch
+pla.views.heading.fixed                                    = Manylion eich diogelwch penodol
+pla.views.heading.FP2014                                   = Manylion eich diogelwch penodol 2014
+pla.views.heading.IP2014                                   = Manylion eich diogelwch unigol 2014
+pla.views.heading.IP2016                                   = Manylion eich diogelwch unigol 2016
