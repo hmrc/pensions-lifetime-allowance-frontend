@@ -29,7 +29,7 @@ private object AppDependencies {
 
   private val playHealthVersion = "2.2.0"
   private val loggerVersion = "3.1.0"
-  private val frontendBootstrapVersion = "8.24.0"
+  private val frontendBootstrapVersion = "10.1.0"
   private val govukTemplateVersion = "5.10.0"
   private val playUiVersion = "7.14.0"
   private val playPartialsVersion = "6.1.0"
