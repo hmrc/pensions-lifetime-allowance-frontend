@@ -73,7 +73,7 @@ class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
         )
 
         val request = FakeRequest().withSession(sessionId)
-        val response : Future[WSResponse] = ws.url("http://testsite.com").get()
+        val response : Future[WSResponse] = ws.url("http://testsite.com").post("""{"foo":"bar"}""")
 
         keystoreFetchCondition[PSALookupResult](Option(testPsaLookupResult))
         when(mockPdfGeneratorConnector.generatePdf(any())).thenReturn(response)
@@ -117,7 +117,7 @@ class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       )
 
       val request = FakeRequest().withSession(sessionId)
-      val response : Future[WSResponse] = ws.url("http://testsite.com").get()
+      val response : Future[WSResponse] = ws.url("http://testsite.com").post("""{"foo":"bar"}""")
 
       keystoreFetchCondition[PSALookupRequest](Option(testPsaLookupRequest))
       when(mockPdfGeneratorConnector.generatePdf(any())).thenReturn(response)
