@@ -11,5 +11,3 @@ To run the project clone the repository and in terminal $sbt "run $PORT"
 ### License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html")
-
-
