@@ -105,19 +105,15 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
         docIP16.select("a").eq(2).attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections().url
       }
     }
-
     "have a properly structured 'Give us feedback' section" when{
       "looking at the header" in{
         docIP16.select("h2").eq(1).text() shouldBe plaResultSuccessGiveFeedback
       }
-
       "looking at the explanatory paragraph" in{
         docIP16.select("p").eq(4).text() shouldBe plaResultSuccessExitSurvey
       }
-
       "using the feedback link" in{
         docIP16.select("a").eq(3).text() shouldBe plaResultSuccessExitSurveyLinkText
-        docIP16.select("a").eq(3).attr("href") shouldBe controllers.routes.ExitSurveyController.exitSurvey().url
       }
     }
   }

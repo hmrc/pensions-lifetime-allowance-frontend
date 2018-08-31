@@ -108,6 +108,3 @@ GET         /psalookup/results/clear                                            
 GET         /psalookup/results/print                                                      controllers.PrintPdfController.printResultsPDF
 GET         /psalookup/not-found/print                                                    controllers.PrintPdfController.printNotFoundPDF
 GET         /psalookup/protection-guidance                                                controllers.LookupController.displayProtectionTypeGuidance
-
-#Feedback routes
-GET         /exit                                                                         controllers.ExitSurveyController.exitSurvey

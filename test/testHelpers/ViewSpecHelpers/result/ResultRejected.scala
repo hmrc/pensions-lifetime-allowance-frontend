@@ -24,6 +24,7 @@ trait ResultRejected {
   val plaResultRejectionViewDetailsLinkText   = "view or change details of your protections"
 
   val plaResultSuccessExitSurveyLinkText      = "What did you think of this service?"
+  val plaResultSuccessExitSurveyLink          = "/protect-your-lifetime-allowance/sign-out"
   val plaResultSuccessTitle                   = "Success"
   val plaResultSuccessAllowanceSubHeading     = "Your protected lifetime allowance is"
   val plaResultSuccessProtectionDetails       = "Your protection details"

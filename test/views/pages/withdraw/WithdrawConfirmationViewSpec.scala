@@ -72,14 +72,11 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
     s"feedback message of ${"pla.withdraw.confirm.feedback-text"}" in {
       doc.select("div.grid-row > p").text shouldBe plaWithdrawConfirmFeedbackText
     }
-
     "feedback link " in {
       doc.select("div.grid-row > p a").text() shouldBe plaWithdrawConfirmFeedbackLink
     }
-
     "feedback link href" in {
       doc.select("div.grid-row > p a").attr("href")  shouldBe plaWithdrawConfirmFeedbackUrl
-
     }
 
   }

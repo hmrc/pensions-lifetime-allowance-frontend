@@ -125,21 +125,16 @@ class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessI
       }
 
     }
-
     "have a Exit Survey paragraph which" should {
-
       lazy val exitLink = doc.select("p a").get(3)
-
       "have the text" in {
         doc.select("p").get(4).text shouldBe s"$plaResultSuccessExitSurveyLinkText $plaResultSuccessExitSurvey"
       }
-
       "have the link text" in {
         exitLink.text shouldBe plaResultSuccessExitSurveyLinkText
       }
-
       "have the link destination" in {
-        exitLink.attr("href") shouldBe "/protect-your-lifetime-allowance/exit"
+        exitLink.attr("href") shouldBe plaResultSuccessExitSurveyLink
       }
     }
   }

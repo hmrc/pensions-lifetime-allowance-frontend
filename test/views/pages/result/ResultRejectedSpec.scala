@@ -104,20 +104,17 @@ class ResultRejectedSpec extends CommonViewSpecHelper with ResultRejected {
         h2Tag1.text shouldBe plaResultSuccessGiveFeedback
       }
     }
-
     "have an exit survey paragraph which" should {
-
       s"contain the message of $plaResultSuccessExitSurvey" in {
         doc.select("p").get(4).text shouldBe s"$plaResultSuccessExitSurveyLinkText $plaResultSuccessExitSurvey."
       }
-
       "harbour a link with the destination $" in {
-        doc.select("p a").get(2).attr("href") shouldBe "/protect-your-lifetime-allowance/exit"
+        doc.select("p a").get(2).attr("href") shouldBe plaResultSuccessExitSurveyLink
       }
-
       "have link text" in {
         doc.select("p a").get(2).text shouldBe plaResultSuccessExitSurveyLinkText
       }
     }
+
   }
 }

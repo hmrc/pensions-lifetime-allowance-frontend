@@ -335,7 +335,6 @@ pla.resultSuccess.giveFeedback          = Rhoi adborth i ni
 pla.resultSuccess.exitSurveyLinkText    = Beth oedd eich barn am y gwasanaeth hwn?
 pla.resultSuccess.exitSurvey            = Rydym yn defnyddio''ch adborth i wella ein gwasanaethau.
 
-
 pla.resultSuccess.yourName              = eich enw llawn
 pla.resultSuccess.yourNino              = eich rhif Yswiriant Gwladol
 
@@ -364,13 +363,6 @@ pla.mcNeeded.linesBusy                    = Mae llinellau ffôn yn llai prysur c
 pla.mcNeeded.callCharges                  = Gwybodaeth am gost galwadau
 
 ## Exit Survey ##
-pla.exitSurvey.title                                    = Arolwg gadael
-pla.exitSurvey.pageHeading                              = Cyn i chi fynd, a fyddech cystal ag ateb rhai cwestiynau i''n helpu i wella''ch profiad o''r gwasanaeth.
-pla.exitSurvey.question1                                = <p class="bold-small">Cyn defnyddio''ch cyfrif treth, a oeddech yn mynd i ffonio neu ysgrifennu i CThEM am eich ymholiad?</p>
-pla.exitSurvey.hiddenQ1                                 = <p class="bold-small">Ar ôl defnyddio''ch cyfrif treth, a oes angen i chi ffonio neu ysgrifennu i CThEM bellach?</p>
-pla.exitSurvey.question2                                = <p class="bold-small">Ar sail yr hyn yr ydych wedi''i wneud heddiw, a oes angen i chi wneud unrhyw beth arall? Gallwch roi tic mewn mwy nag un blwch.</p>
-pla.exitSurvey.question3                                = <p class="bold-small">Pa mor debygol ydych o argymell eich cyfrif treth i''ch ffrindiau a''ch teulu?</p>
-pla.exitSurvey.question4                                = <p class="bold-small">Yn gyffredinol, sut ydych yn teimlo am eich profiad wrth ddefnyddio''ch cyfrif treth heddiw?</p>
 pla.exitSurvey.sendFeedback                             = Anfon adborth
 
 ## Printing ##

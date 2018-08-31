@@ -33,6 +33,7 @@ trait ResultSuccess {
   val plaResultSuccessViewDetailsLinkText   = "view or change details of your protections"
   val plaResultSuccessGiveFeedback          = "Give us feedback"
   val plaResultSuccessExitSurveyLinkText    = "What did you think of this service?"
+  val plaResultSuccessExitSurveyLink        = "/protect-your-lifetime-allowance/sign-out"
   val plaResultSuccessExitSurvey            = "Your feedback helps us improve"
   val plaResultSuccessExitSurveyCombined    = "What did you think of this service? We use your feedback to make our services better."
   val plaResultSuccessYourName              = "your full name"
