@@ -369,13 +369,6 @@ pla.mcNeeded.linesBusy                    = Phone lines are less busy before 10a
 pla.mcNeeded.callCharges                  = Find out about call charges
 
 ## Exit Survey ##
-pla.exitSurvey.title                                    = Exit survey
-pla.exitSurvey.pageHeading                              = Before you go, please answer some questions to help us improve your experience
-pla.exitSurvey.question1                                = Before using your tax account, were you going to phone or write to HMRC about your query?
-pla.exitSurvey.hiddenQ1                                 = After using your tax account, do you need to phone or write to HMRC?
-pla.exitSurvey.question2                                = Based on what you have done today, do you need to do anything else? You can tick more than one box.
-pla.exitSurvey.question3                                = How likely are you to recommend your tax account to your friends or family?
-pla.exitSurvey.question4                                = Overall, how do you feel about your experience using your tax account today?
 pla.exitSurvey.sendFeedback                             = Send feedback
 
 ## Printing ##

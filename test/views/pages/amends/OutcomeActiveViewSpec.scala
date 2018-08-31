@@ -126,15 +126,13 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
       "looking at the header" in{
         docIP16.select("h2").eq(2).text() shouldBe plaResultSuccessGiveFeedback
       }
-
       "looking at the explanatory paragraph" in{
         docIP16.select("p").eq(5).text() shouldBe plaResultSuccessExitSurvey
       }
-
       "using the feedback link" in{
         docIP16.select("a").eq(3).text() shouldBe plaResultSuccessExitSurveyLinkText
-        docIP16.select("a").eq(3).attr("href") shouldBe controllers.routes.ExitSurveyController.exitSurvey().url
       }
     }
+
   }
 }

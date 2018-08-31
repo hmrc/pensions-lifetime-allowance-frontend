@@ -44,7 +44,8 @@
 
         <h2>@Messages("pla.withdraw.confirm.feedback-heading")</h2>
 
-        <p>@Html(Messages("pla.withdraw.confirm.feedback-text", routes.ExitSurveyController.exitSurvey()))</p>
+        <p><a id="submit-survey-button" href=@controllers.routes.AccountController.signOut class="button--link-style" role="button" onclick="submitExitSurvey()">
+            @Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Messages("pla.resultSuccess.exitSurvey")</p>
 
     </div>
 }
