@@ -16,55 +16,36 @@
 
 package controllers
 
-import connectors.{KeyStoreConnector, PLAConnector, PdfGeneratorConnector}
-import controllers.LookupController.pnnForm
-import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
+import config.LocalTemplateRenderer
+import config.wiring.PlaFormPartialRetriever
+import connectors.{KeyStoreConnector, PLAConnector}
 import models.{PSALookupRequest, PSALookupResult}
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.data.{Form, FormError}
-import play.api.http.Status
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import testHelpers.MockTemplateRenderer
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys, Upstream4xxResponse}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys, Upstream4xxResponse}
 
-class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with MockitoSugar with GuiceOneAppPerSuite {
-
-  implicit override lazy val app: Application = new GuiceApplicationBuilder().
-    disable[com.kenshoo.play.metrics.PlayModule].build()
+class LookupControllerSpec extends UnitSpec with BeforeAndAfterEach with MockitoSugar with WithFakeApplication {
 
   implicit val hc = HeaderCarrier()
 
   private val mockKeyStoreConnector = mock[KeyStoreConnector]
   private val mockPLAConnector = mock[PLAConnector]
+  private val mockPartialRetriever = mock[PlaFormPartialRetriever]
+  private val mockTemplateRenderer = mock[LocalTemplateRenderer]
 
   private val sessionId = SessionKeys.sessionId -> "lookup-test"
 
-  object TestController extends LookupController {
-    override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
-    override val plaConnector: PLAConnector = mockPLAConnector
-
-    val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
-    val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
-    val lookupRequestID = "psa-lookup-request"
-    val lookupResultID = "psa-lookup-result"
-  }
+  val TestController = new LookupController(mockKeyStoreConnector, mockPLAConnector, mockPartialRetriever, mockTemplateRenderer)
 
   private val validPSARefForm = Seq(
     "pensionSchemeAdministratorCheckReference" -> "PSA12345678A"
@@ -126,8 +107,7 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
       val request = FakeRequest().withSession(sessionId)
       val result = TestController.displaySchemeAdministratorReferenceForm.apply(request)
 
-      status(result) mustBe OK
-      contentAsString(result) must include(Messages("psa.lookup.form.psaref.hint"))
+      status(result) shouldBe  OK
     }
 
     "submit psaRef form with valid data and redirect to pnn form" in {
@@ -137,8 +117,8 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.submitSchemeAdministratorReferenceForm.apply(request)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result).get mustBe routes.LookupController.displayProtectionNotificationNoForm().url
+      status(result) shouldBe  SEE_OTHER
+      redirectLocation(result).get shouldBe  routes.LookupController.displayProtectionNotificationNoForm().url
     }
 
     "display errors when invalid data entered for psaRef form" in {
@@ -148,8 +128,7 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.submitSchemeAdministratorReferenceForm.apply(request)
 
-      status(result) mustBe BAD_REQUEST
-      contentAsString(result) must include(Messages("psa.lookup.form.psaref.required"))
+      status(result) shouldBe  BAD_REQUEST
     }
 
     "return 200 with correct message on pnn form" in {
@@ -158,8 +137,7 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
       val request = FakeRequest().withSession(sessionId)
       val result = TestController.displayProtectionNotificationNoForm.apply(request)
 
-      status(result) mustBe OK
-      contentAsString(result) must include(Messages("psa.lookup.form.pnn.hint"))
+      status(result) shouldBe  OK
     }
 
     "redirect when no data entered on first page for pnn form" in {
@@ -168,8 +146,8 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
       val request = FakeRequest().withSession(sessionId)
       val result = TestController.displayProtectionNotificationNoForm.apply(request)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result).get mustBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      status(result) shouldBe  SEE_OTHER
+      redirectLocation(result).get shouldBe  routes.LookupController.displaySchemeAdministratorReferenceForm().url
     }
 
     "submit pnn form with valid data and redirect to results page" in {
@@ -182,8 +160,8 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.submitProtectionNotificationNoForm.apply(request)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result).get mustBe routes.LookupController.displayLookupResults().url
+      status(result) shouldBe  SEE_OTHER
+      redirectLocation(result).get shouldBe  routes.LookupController.displayLookupResults().url
     }
 
     "submit pnn form with valid data and redirect when a NOT FOUND is returned" in {
@@ -198,8 +176,8 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.submitProtectionNotificationNoForm.apply(request)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result).get mustBe routes.LookupController.displayNotFoundResults().url
+      status(result) shouldBe  SEE_OTHER
+      redirectLocation(result).get shouldBe  routes.LookupController.displayNotFoundResults().url
     }
 
     "display errors when invalid data entered for pnn form" in {
@@ -209,8 +187,7 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.submitProtectionNotificationNoForm.apply(request)
 
-      status(result) mustBe BAD_REQUEST
-      contentAsString(result) must include(Messages("psa.lookup.form.pnn.required"))
+      status(result) shouldBe  BAD_REQUEST
     }
 
     "redirect to the administrator reference form when PSA request data not found on submission" in {
@@ -220,8 +197,8 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.submitProtectionNotificationNoForm.apply(request)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result) mustBe Some(routes.LookupController.displaySchemeAdministratorReferenceForm().url)
+      status(result) shouldBe  SEE_OTHER
+      redirectLocation(result) shouldBe  Some(routes.LookupController.displaySchemeAdministratorReferenceForm().url)
     }
 
     "return 200 with correct message on results page" in {
@@ -230,8 +207,7 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.displayLookupResults.apply(request)
 
-      status(result) mustBe OK
-      contentAsString(result) must include(Messages("psa.lookup.results.title"))
+      status(result) shouldBe  OK
     }
 
     "redirect when no result data is stored on results page" in {
@@ -240,8 +216,8 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.displayLookupResults.apply(request)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result).get mustBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      status(result) shouldBe  SEE_OTHER
+      redirectLocation(result).get shouldBe  routes.LookupController.displaySchemeAdministratorReferenceForm().url
     }
 
     "return 200 with correct message on not found results page" in {
@@ -250,8 +226,7 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.displayNotFoundResults.apply(request)
 
-      status(result) mustBe OK
-      contentAsString(result) must include(Messages("psa.lookup.not-found.results.table.try-again"))
+      status(result) shouldBe  OK
     }
 
     "redirect when no result data is stored on not found results page" in {
@@ -260,8 +235,8 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
 
       val result = TestController.displayLookupResults.apply(request)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result).get mustBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      status(result) shouldBe  SEE_OTHER
+      redirectLocation(result).get shouldBe  routes.LookupController.displaySchemeAdministratorReferenceForm().url
     }
 
     "return 200 with correct message on protection type guidance page" in {
@@ -269,9 +244,7 @@ class LookupControllerSpec extends PlaySpec with BeforeAndAfterEach with Mockito
       val request = FakeRequest().withSession(sessionId)
       val result = TestController.displayProtectionTypeGuidance.apply(request)
 
-      status(result) mustBe OK
-      contentAsString(result) must include(Messages("psa.lookup.protection-guidance.title"))
-      contentAsString(result) must include(Messages("psa.lookup.protection-guidance.protection-type-primary-label"))
+      status(result) shouldBe  OK
     }
 
   }

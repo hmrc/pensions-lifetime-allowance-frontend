@@ -18,10 +18,12 @@ package controllers
 
 import auth.AuthFunction
 import common.Exceptions
-import config.{AuthClientConnector, FrontendAppConfig}
+import config.wiring.PlaFormPartialRetriever
+import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.{ApplicationOutcome, ApplicationType}
+import javax.inject.Inject
 import models._
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc._
@@ -33,28 +35,23 @@ import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.util.Random
 
 
-object ResultController extends ResultController {
-  override val keyStoreConnector = KeyStoreConnector
+class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
+                                 plaConnector: PLAConnector,
+                                 implicit val partialRetriever: PlaFormPartialRetriever,
+                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
   lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
   lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
-  override val plaConnector = PLAConnector
-  override val responseConstructors = ResponseConstructors
+  val responseConstructors: ResponseConstructors = ResponseConstructors
 
   override def config: Configuration = Play.current.configuration
   override def env: Environment = Play.current.injector.instanceOf[Environment]
-}
-
-trait ResultController extends BaseController with AuthFunction {
-
-  val keyStoreConnector: KeyStoreConnector
-  val plaConnector: PLAConnector
-  val responseConstructors: ResponseConstructors
 
 
   val processFPApplication = Action.async { implicit request =>

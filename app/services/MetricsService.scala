@@ -16,11 +16,14 @@
 
 package services
 
-import uk.gov.hmrc.play.graphite.MicroserviceMetrics
+import com.codahale.metrics.MetricRegistry
+import javax.inject.Inject
+import com.kenshoo.play.metrics.Metrics
 
-object MetricsService extends MicroserviceMetrics{
 
-  val identityVerificationTimer = metrics.defaultRegistry.timer("identity-verification-timer")
-  val identityVerificationFailedCounter = metrics.defaultRegistry.counter("identity-verification-failed-counter")
+object MetricsService extends MetricRegistry {
+
+  val identityVerificationTimer = timer("identity-verification-timer")
+  val identityVerificationFailedCounter = counter("identity-verification-failed-counter")
 
 }

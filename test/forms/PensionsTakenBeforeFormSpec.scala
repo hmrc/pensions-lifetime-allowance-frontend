@@ -17,13 +17,12 @@
 package forms
 
 import models.PensionsTakenBeforeModel
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import PensionsTakenBeforeForm._
-import org.scalatestplus.play.OneAppPerSuite
 import testHelpers.CommonErrorMessages
 import utils.Constants
 
-class PensionsTakenBeforeFormSpec extends UnitSpec with CommonErrorMessages with OneAppPerSuite {
+class PensionsTakenBeforeFormSpec extends UnitSpec with CommonErrorMessages with WithFakeApplication {
 
   "The PensionsTakenBeforeForm" should {
     val validMap = Map("pensionsTakenBefore" -> "yes", "pensionsTakenBeforeAmt" -> "1")

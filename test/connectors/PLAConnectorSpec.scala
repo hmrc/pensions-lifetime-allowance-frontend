@@ -24,23 +24,32 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.Mode.Mode
+import play.api.{Application, Configuration, Environment, Mode}
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import testHelpers.TestConfigHelper
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 import scala.collection.immutable.List
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneServerPerSuite {
+class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with WithFakeApplication {
 
   val mockHttp : WSHttp = mock[WSHttp]
+  val env = mock[Environment]
 
-  object TestPLAConnector extends PLAConnector {
+  when(env.mode).thenReturn(Mode(0))
+
+  object connector extends PLAConnector {
     val http = mockHttp
     val serviceUrl = "http://localhost:9012"
+
+    override protected def mode: Mode = mock[Mode]
+
+    override protected def runModeConfiguration: Configuration = mock[Configuration]
   }
 
   val validApplyFP16Json = """{"protectionType":"FP2016"}"""
@@ -76,17 +85,11 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
     reset(mockHttp)
   }
 
-  "PLAConnector" should {
-    "use the correct http" in {
-      PLAConnector.http shouldBe WSHttp
-    }
-  }
-
   "Calling applyFP16" should {
     "should return a 200 from a valid apply FP16 request" in {
       when(mockHttp.POST[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
-      val response = TestPLAConnector.applyFP16(nino)
+      val response = connector.applyFP16(nino)
       await(response).status shouldBe OK
     }
   }
@@ -99,7 +102,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
                                       negativeOverseasPensionsTuple,
                                       validCurrentPensionsTuple,
                                       negativePensionDebitsTuple))
-      val response = TestPLAConnector.applyIP16(nino, tstMap)
+      val response = connector.applyIP16(nino, tstMap)
       await(response).status shouldBe OK
     }
   }
@@ -113,7 +116,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
                                       validIP14CurrentPensionsTuple,
                                       negativeIP14PensionDebitsTuple))
 
-      val response = TestPLAConnector.applyIP14(nino, tstMap)
+      val response = connector.applyIP14(nino, tstMap)
       await(response).status shouldBe OK
     }
   }
@@ -135,7 +138,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456"))
 
-      val response = TestPLAConnector.amendProtection(nino, protectionModel)
+      val response = connector.amendProtection(nino, protectionModel)
       await(response).status shouldBe OK
     }
   }
@@ -145,7 +148,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
       when(mockHttp.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
 
-      val response = TestPLAConnector.readProtections(nino)
+      val response = connector.readProtections(nino)
       await(response).status shouldBe OK
     }
   }
@@ -155,7 +158,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
       when(mockHttp.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
 
-      val response = TestPLAConnector.psaLookup(psaRef, ltaRef)
+      val response = connector.psaLookup(psaRef, ltaRef)
       await(response).status shouldBe OK
     }
   }
@@ -178,7 +181,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
                                         psoDetailsTuple
                                         ))
 
-      val response = TestPLAConnector.applyIP16(nino, userData)
+      val response = connector.applyIP16(nino, userData)
       await(response).status shouldBe OK
     }
 
@@ -203,7 +206,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         protectedAmount = Some(1250000.1234567891),
         protectionReference = Some("PSA123456"))
 
-      val response = TestPLAConnector.amendProtection(nino, protectionModel)
+      val response = connector.amendProtection(nino, protectionModel)
       await(response).status shouldBe OK
     }
 
@@ -226,7 +229,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         protectedAmount = None,
         protectionReference = Some("PSA123456"))
 
-      val response = TestPLAConnector.amendProtection(nino, protectionModel)
+      val response = connector.amendProtection(nino, protectionModel)
       await(response).status shouldBe OK
     }
 
@@ -249,7 +252,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         protectedAmount = Some(1250000.1234567891),
         protectionReference = Some("PSA123456"))
 
-      val response = TestPLAConnector.amendProtection(nino, protectionModel)
+      val response = connector.amendProtection(nino, protectionModel)
       await(response).status shouldBe OK
     }
   }

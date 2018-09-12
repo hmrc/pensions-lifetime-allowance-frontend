@@ -29,9 +29,9 @@ private object AppDependencies {
 
   private val playHealthVersion = "2.2.0"
   private val loggerVersion = "3.1.0"
-  private val frontendBootstrapVersion = "10.2.0"
-  private val govukTemplateVersion = "5.10.0"
-  private val playUiVersion = "7.14.0"
+  private val bootstrapVersion = "1.7.0"
+  private val govukTemplateVersion = "5.22.0"
+  private val playUiVersion = "7.19.0"
   private val playPartialsVersion = "6.1.0"
   private val playAuthorisedFrontendVersion = "7.0.0"
   private val playConfigVersion = "5.0.0"
@@ -48,13 +48,15 @@ private object AppDependencies {
 
   val compile = Seq(
     ws,
-    "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
+    "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
     "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
     "uk.gov.hmrc" %% "play-language" % playLanguageVersion,
     "uk.gov.hmrc" %% "auth-client" % authClientVersion,
-    "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion
+    "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion,
+    "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
+    "uk.gov.hmrc" %% "play-ui" % playUiVersion
   )
 
   trait TestDependencies {
@@ -70,7 +72,6 @@ private object AppDependencies {
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % "1.10.2" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-        "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
         "org.mockito" % "mockito-core" % "2.18.3" % scope
       )
     }.test

@@ -18,13 +18,15 @@ package utils
 
 import java.util.UUID
 
+import akka.stream.Materializer
+import javax.inject.Inject
+import play.api.{Application, Play}
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
 import utils.SessionIdSupport._
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderNames, SessionKeys }
-import uk.gov.hmrc.play.frontend.filters.MicroserviceFilterSupport
+import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 
 /*
  * These utils provide session-id that is required by http-caching-client / keystore.
@@ -42,7 +44,7 @@ object SessionIdSupport {
   def hasSessionId(rh: RequestHeader): Boolean = maybeSessionId(rh).isDefined
 }
 
-object SessionIdFilter extends Filter with MicroserviceFilterSupport {
+class SessionIdFilter @Inject()(val mat:Materializer) extends Filter  {
   def apply(next: (RequestHeader) => Future[Result])
            (rh: RequestHeader): Future[Result] = {
     if (hasSessionId(rh)) {

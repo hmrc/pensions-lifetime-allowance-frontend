@@ -16,50 +16,40 @@
 
 package controllers
 
-import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
-import auth.MockConfig
-import com.kenshoo.play.metrics.PlayModule
 import config.wiring.PlaFormPartialRetriever
-import config.{AuthClientConnector, PlaContextImpl}
+import config.{AuthClientConnector, LocalTemplateRenderer, PlaContextImpl}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.ResponseConstructors
 import enums.{ApplicationOutcome, ApplicationType}
 import mocks.AuthMock
 import models.{ApplyResponseModel, ProtectionModel}
-import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfter
 import org.scalatest.mockito.MockitoSugar
-import play.api.Play.current
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
-import play.api.libs.json.{JsObject, JsString, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Configuration, Environment}
-import testHelpers.MockTemplateRenderer
+import testHelpers.TestConfigHelper
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import uk.gov.hmrc.renderer.TemplateRenderer
-import views.html.pages.fallback.{noNotificationId, technicalError}
-import views.html.pages.result.manualCorrespondenceNeeded
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfter with AuthMock {
-  override def bindModules = Seq(new PlayModule)
+class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfter with AuthMock with WithFakeApplication {
 
-  implicit val system = ActorSystem()
-  implicit val materializer = ActorMaterializer()
   implicit val fakeRequest = FakeRequest()
   implicit val plaContext = PlaContextImpl
-  implicit val templateRenderer = MockTemplateRenderer
-  implicit lazy val retriever = PlaFormPartialRetriever
+
+  implicit val partialRetriever  = mock[PlaFormPartialRetriever]
+  implicit val templateRenderer  = mock[LocalTemplateRenderer]
+  val keyStoreConnector = mock[KeyStoreConnector]
+  val plaConnector      = mock[PLAConnector]
 
   val successFP16Json = Json.parse("""{"certificateDate":"2016-05-10T17:20:55.138","nino":"AA123456A","notificationId":24,"protectionID":8243168284792526522,"protectionReference":"FP16138722390C","protectionType":"FP2016","status":"Open","version":1}""")
   val rejectionFP16Json = Json.parse("""{"nino":"AA123456A","notificationId":21,"protectionID":-4645895724767334826,"protectionType":"FP2016","status":"Rejected","version":1}""")
@@ -164,180 +154,111 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   val testIP14InactiveSuccessApplyResponseModel = ApplyResponseModel(testIP14InactiveSuccessProtectionModel)
   val testIP14RejectionApplyResponseModel = ApplyResponseModel(testIP14RejectionProtectionModel)
 
-  val mockKeyStoreConnector = mock[KeyStoreConnector]
-  val mockResponseConstructors = mock[ResponseConstructors]
+  val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
 
-  object TestSuccessResultController extends ResultController {
-    lazy val appConfig = MockConfig
-    override lazy val authConnector = mockAuthConnector
-    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+  val TestSuccessResultController = new ResultController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer) {
+    override lazy val authConnector: AuthConnector = mockAuthConnector
+    override val responseConstructors: ResponseConstructors = mockResponseConstructors
 
-    override def config: Configuration = mock[Configuration]
-
-    override def env: Environment = mock[Environment]
-
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testFP16SuccessResponse))
-    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP16SuccessResponse))
-    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP14SuccessResponse))
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16SuccessResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16SuccessResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14SuccessResponse))
 
 
-    override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
-    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP14SuccessApplyResponseModel))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16SuccessApplyResponseModel))
 
 
-    override val responseConstructors = mockResponseConstructors
-    when(responseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+    when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
   }
 
-  object TestInactiveSuccessResultController extends ResultController {
-    lazy val appConfig = MockConfig
-    override lazy val authConnector = mockAuthConnector
-    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+  val TestInactiveSuccessResultController = new ResultController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer) {
+    override lazy val authConnector: AuthConnector = mockAuthConnector
+    override val responseConstructors: ResponseConstructors = mockResponseConstructors
 
-    override def config: Configuration = mock[Configuration]
-
-    override def env: Environment = mock[Environment]
-
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testFP16SuccessResponse))
-    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP16InactiveSuccessResponse))
-    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP14InactiveSuccessResponse))
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16SuccessResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16InactiveSuccessResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14InactiveSuccessResponse))
 
 
-    override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
-    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP14InactiveSuccessApplyResponseModel))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16InactiveSuccessApplyResponseModel))
 
 
-    override val responseConstructors = mockResponseConstructors
-    when(responseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+    when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
   }
 
-  object TestRejectResultController extends ResultController {
-    lazy val appConfig = MockConfig
-    override lazy val authConnector = mockAuthConnector
-    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+  val TestRejectResultController = new ResultController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer) {
+    override lazy val authConnector: AuthConnector = mockAuthConnector
+    override val responseConstructors: ResponseConstructors = mockResponseConstructors
 
-    override def config: Configuration = mock[Configuration]
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16RejectionResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16RejectionResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14RejectionResponse))
 
-    override def env: Environment = mock[Environment]
-
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-    override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testFP16RejectionResponse))
-    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP16RejectionResponse))
-    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP14RejectionResponse))
-
-    override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
-    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testFPRejectionApplyResponseModel))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP14RejectionApplyResponseModel))
     when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16RejectionApplyResponseModel))
 
 
-    override val responseConstructors = mock[ResponseConstructors]
-    when(responseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPRejectionApplyResponseModel))
+    when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPRejectionApplyResponseModel))
 
   }
 
-  object TestMCNeededResultController extends ResultController {
-    lazy val appConfig = MockConfig
-    override lazy val authConnector = mockAuthConnector
-    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+  val TestMCNeededResultController = new ResultController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer) {
+    override lazy val authConnector: AuthConnector = mockAuthConnector
+    override val responseConstructors: ResponseConstructors = mockResponseConstructors
 
-    override def config: Configuration = mock[Configuration]
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testMCNeededResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testMCNeededResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testMCNeededResponse))
 
-    override def env: Environment = mock[Environment]
-
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-    override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testMCNeededResponse))
-    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testMCNeededResponse))
-    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testMCNeededResponse))
-
-    override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
-
-    override val responseConstructors = mock[ResponseConstructors]
-
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
   }
 
-  object TestIncorrectResponseModelResultController extends ResultController {
-    lazy val appConfig = MockConfig
-    override lazy val authConnector = mockAuthConnector
-    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
+  val TestNoNotificationIdResponse = {
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16RejectionResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16RejectionResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14RejectionResponse))
 
-    override def config: Configuration = mock[Configuration]
+    val keyStoreConnector = mock[KeyStoreConnector]
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
-    override def env: Environment = mock[Environment]
-
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-    override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testFP16RejectionResponse))
-    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP16RejectionResponse))
-    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP14RejectionResponse))
-
-    override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
-
-    override val responseConstructors = mock[ResponseConstructors]
-    when(responseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(None)
-
-  }
-
-  object TestNoNotificationIdResponse extends ResultController {
-    lazy val appConfig = MockConfig
-    override lazy val authConnector = mockAuthConnector
-    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-for-fp16"
-
-    override def config: Configuration = mock[Configuration]
-
-    override def env: Environment = mock[Environment]
-
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-    override val plaConnector = mock[PLAConnector]
-    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future(testFP16RejectionResponse))
-    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP16RejectionResponse))
-    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(testIP14RejectionResponse))
-
-    override val keyStoreConnector = mock[KeyStoreConnector]
-    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
-
-    override val responseConstructors = mock[ResponseConstructors]
+    val responseConstructors = mock[ResponseConstructors]
     when(responseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(ApplyResponseModel(ProtectionModel(None, None))))
+  }
 
+  val testResultController = new ResultController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer) {
+    override lazy val authConnector: AuthConnector = mockAuthConnector
+    override val responseConstructors: ResponseConstructors = mockResponseConstructors
+
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16RejectionResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16RejectionResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14RejectionResponse))
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(None)
   }
 
 
-  ///////////////////////////////////////////////
-  // Initial Setup
-  ///////////////////////////////////////////////
-  "ResultController should be correctly initialised" in {
-    ResultController.authConnector shouldBe AuthClientConnector
+  val TestIncorrectResponseModelResultController = new ResultController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer) {
+    override lazy val authConnector: AuthConnector = mockAuthConnector
+    override val responseConstructors: ResponseConstructors = mockResponseConstructors
+
+    when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16RejectionResponse))
+    when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16RejectionResponse))
+    when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14RejectionResponse))
+
+    when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+
+    when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(None)
   }
 
   //////////////////////////////////////////////
@@ -346,23 +267,32 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
 
 
   "Successfully applying for FP" should {
-    lazy val DataItemResult = await(TestSuccessResultController.processFPApplication(fakeRequest))
-    lazy val GetItemResult = await(TestSuccessResultController.displayResult(ApplicationType.FP2016)(fakeRequest))
-    lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
-
     "return 303" in {
+
+      when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16RejectionResponse))
+      when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16RejectionResponse))
+      when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14RejectionResponse))
+
+      when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+      when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
+      when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testFPRejectionApplyResponseModel))
+      when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP14RejectionApplyResponseModel))
+      when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16RejectionApplyResponseModel))
+
+
+      when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPRejectionApplyResponseModel))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+      val DataItemResult = await(TestSuccessResultController.processFPApplication(fakeRequest))
+
       status(DataItemResult) shouldBe 303
-    }
-    "redirect to the result success page" in {
       redirectLocation(DataItemResult) shouldBe Some(s"${routes.ResultController.displayFP16()}")
     }
     "return 200" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+      val GetItemResult = await(TestSuccessResultController.displayResult(ApplicationType.FP2016)(fakeRequest))
       status(GetItemResult) shouldBe 200
-    }
-    "take the user to the result success page" in {
-      jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")
     }
   }
 
@@ -371,7 +301,6 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     lazy val DataItemresult = await(TestRejectResultController.processFPApplication(fakeRequest))
     lazy val GetItemResult = await(TestRejectResultController.displayResult(ApplicationType.FP2016)(fakeRequest))
-    lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
 
     "return 303" in {
       status(DataItemresult) shouldBe 303
@@ -382,9 +311,6 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     "return 200" in {
       status(GetItemResult) shouldBe 200
     }
-    "take the user to the result rejection page" in {
-      jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")
-    }
   }
 
   "Successfully applying for IP 2016" should {
@@ -392,7 +318,6 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     lazy val DataItemresult = await(TestSuccessResultController.processIPApplication(fakeRequest))
     lazy val GetItemResult = await(TestSuccessResultController.displayResult(ApplicationType.IP2016)(fakeRequest))
-    lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
 
     "return 303" in {
       status(DataItemresult) shouldBe 303
@@ -403,9 +328,6 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     "return 200" in {
       status(GetItemResult) shouldBe 200
     }
-    "take the user to the result success page" in {
-      jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")
-    }
   }
 
   "Unsuccessfully applying for IP 2016" should {
@@ -413,7 +335,6 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     lazy val DataItemresult = await(TestRejectResultController.processIPApplication(fakeRequest))
     lazy val GetItemResult = await(TestRejectResultController.displayResult(ApplicationType.IP2016)(fakeRequest))
-    lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
 
     "return 303" in {
       status(DataItemresult) shouldBe 303
@@ -424,43 +345,50 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
     "return 200" in {
       status(GetItemResult) shouldBe 200
     }
-    "take the user to the result rejection page" in {
-      jsoupDoc.title shouldEqual Messages("pla.resultRejection.title")
-    }
   }
 
   "Failure to create an ApplyResponse model from an application response" should {
-
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    lazy val result = await(TestIncorrectResponseModelResultController.processFPApplication(fakeRequest))
-    lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
-
     "return 500" in {
+      when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16RejectionResponse))
+      when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16RejectionResponse))
+      when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14RejectionResponse))
+      when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+      when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(None)
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      val result = await(testResultController.processFPApplication(fakeRequest))
+
       status(result) shouldBe 500
-    }
-    "return \"no-cache\" in the response header" in {
       result.header.headers("Cache-Control") shouldBe "no-cache"
     }
   }
 
   "Applying for inactive IP2016 protection" should {
-
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    lazy val DataItemresult = await(TestInactiveSuccessResultController.processIPApplication(fakeRequest))
-    lazy val GetItemResult = await(TestInactiveSuccessResultController.displayResult(ApplicationType.IP2016)(fakeRequest))
-    lazy val jsoupDoc = Jsoup.parse(bodyOf(GetItemResult))
-
     "return 303" in {
+      when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16SuccessResponse))
+      when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16InactiveSuccessResponse))
+      when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14InactiveSuccessResponse))
+
+
+      when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+      when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
+      when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+      when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP14InactiveSuccessApplyResponseModel))
+      when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16InactiveSuccessApplyResponseModel))
+
+
+      when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+      val DataItemresult = await(TestInactiveSuccessResultController.processIPApplication(fakeRequest))
       status(DataItemresult) shouldBe 303
-    }
-    "redirect the user to the result inactive success page" in {
       redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16()}")
     }
     "return 200" in {
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+      val GetItemResult = await(TestInactiveSuccessResultController.displayResult(ApplicationType.IP2016)(fakeRequest))
       status(GetItemResult) shouldBe 200
-    }
-    "take the user to the result inactive success page" in {
-      jsoupDoc.title shouldEqual Messages("pla.resultSuccess.title")
     }
   }
 
@@ -544,10 +472,6 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
       "return a locked status" in {
         status(result) shouldBe LOCKED
       }
-
-      "load the manual correspondence page" in {
-        await(bodyOf(result)) shouldBe manualCorrespondenceNeeded().body
-      }
     }
 
     "handling any other response" should {
@@ -560,51 +484,66 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppli
   }
 
   "Calling saveAndRedirectToDisplay" when {
-
     "not provided with valid json" should {
-      lazy val result = TestIncorrectResponseModelResultController.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.IP2016)
-
       "return an internal server error" in {
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
+        when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16RejectionResponse))
+        when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16RejectionResponse))
+        when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14RejectionResponse))
 
-      "load the technical issues page" in {
-        await(bodyOf(result)) shouldBe technicalError(ApplicationType.IP2016.toString).body
+        when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+
+        when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(None)
+
+        val result = TestIncorrectResponseModelResultController.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.IP2016)
+        status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
 
     "provided with no notification ID" should {
-      lazy val result = TestNoNotificationIdResponse.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.IP2016)
+      val test = new ResultController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer){
+        override lazy val authConnector = mockAuthConnector
+        override val responseConstructors = mockResponseConstructors
+      }
+      when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16RejectionResponse))
+      when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16RejectionResponse))
+      when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14RejectionResponse))
+
+      when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+      when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(ApplyResponseModel(ProtectionModel(None, None))))
 
       "return an internal server error" in {
+        val result = test.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.IP2016)
         status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-
-      "load the no notification id page" in {
-        await(bodyOf(result)) shouldBe noNotificationId().body
       }
     }
 
     "provided with an IP2016 protection" should {
-      lazy val result = TestSuccessResultController.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.IP2016)
-
       "redirect the user" in {
-        status(result) shouldBe SEE_OTHER
-      }
+        when(plaConnector.applyFP16(anyString())(ArgumentMatchers.any())).thenReturn(Future.successful(testFP16SuccessResponse))
+        when(plaConnector.applyIP16(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP16SuccessResponse))
+        when(plaConnector.applyIP14(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(testIP14SuccessResponse))
 
-      "redirect to the IP2016 protection page" in {
+
+        when(keyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+        when(keyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
+        when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+        when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP14SuccessApplyResponseModel))
+        when(keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16SuccessApplyResponseModel))
+
+
+        when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
+
+        val result = TestSuccessResultController.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.IP2016)
+        status(result) shouldBe SEE_OTHER
         redirectLocation(result) shouldBe Some(routes.ResultController.displayIP16().url)
       }
     }
 
     "provided with an FP2016 protection" should {
-      lazy val result = TestSuccessResultController.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.FP2016)
 
       "redirect the user" in {
+        val result = TestSuccessResultController.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.FP2016)
         status(result) shouldBe SEE_OTHER
-      }
-
-      "redirect to the FP2016 protection page" in {
         redirectLocation(result) shouldBe Some(routes.ResultController.displayFP16().url)
       }
     }

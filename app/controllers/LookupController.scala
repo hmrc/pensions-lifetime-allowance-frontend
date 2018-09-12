@@ -19,42 +19,33 @@ package controllers
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
 
-import connectors.{KeyStoreConnector, PLAConnector, PdfGeneratorConnector}
+import config.LocalTemplateRenderer
+import config.wiring.PlaFormPartialRetriever
+import connectors.{KeyStoreConnector, PLAConnector}
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
+import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
-import play.api.Logger
 import play.api.Play.current
 import play.api.data.Form
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc._
+import uk.gov.hmrc.http.Upstream4xxResponse
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.Upstream4xxResponse
 
-object LookupController extends LookupController {
-  val keyStoreConnector = KeyStoreConnector
-  val plaConnector = PLAConnector
+class LookupController @Inject()(val keyStoreConnector: KeyStoreConnector,
+                                 val plaConnector: PLAConnector,
+                                 implicit val partialRetriever: PlaFormPartialRetriever,
+                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController {
 
   val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
   val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
 
   val lookupRequestID = "psa-lookup-request"
   val lookupResultID = "psa-lookup-result"
-}
-
-trait LookupController extends BaseController {
-
-  val keyStoreConnector: KeyStoreConnector
-  val plaConnector: PLAConnector
-
-  val psaRefForm: Form[String]
-  val pnnForm: Form[String]
-
-  val lookupRequestID: String
-  val lookupResultID: String
 
   def displaySchemeAdministratorReferenceForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
     keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {

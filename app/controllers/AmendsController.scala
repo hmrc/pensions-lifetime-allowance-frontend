@@ -18,7 +18,8 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.{AuthClientConnector, FrontendAppConfig}
+import config.wiring.PlaFormPartialRetriever
+import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{AmendsGAConstructor, DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
@@ -29,6 +30,7 @@ import forms.AmendPensionsTakenBeforeForm._
 import forms.AmendPensionsTakenBetweenForm._
 import forms.AmendPSODetailsForm._
 import forms.AmendmentTypeForm._
+import javax.inject.Inject
 import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import models.amendModels._
 import play.api.{Configuration, Environment, Logger, Play}
@@ -44,12 +46,15 @@ import uk.gov.hmrc.auth.core.AuthConnector
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-object AmendsController extends AmendsController {
-  val keyStoreConnector = KeyStoreConnector
+class AmendsControllerImpl @Inject()(implicit val partialRetriever: PlaFormPartialRetriever,
+                                     implicit val templateRenderer: LocalTemplateRenderer,
+                                     val keyStoreConnector: KeyStoreConnector,
+                                     val plaConnector: PLAConnector) extends AmendsController {
+
   val displayConstructors = DisplayConstructors
   val responseConstructors = ResponseConstructors
-  val plaConnector = PLAConnector
   lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
   lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
@@ -58,12 +63,13 @@ object AmendsController extends AmendsController {
   override def env: Environment = Play.current.injector.instanceOf[Environment]
 }
 
-trait AmendsController extends BaseController with AuthFunction {
 
-  val keyStoreConnector: KeyStoreConnector
-  val displayConstructors: DisplayConstructors
-  val responseConstructors: ResponseConstructors
-  val plaConnector: PLAConnector
+  trait AmendsController extends BaseController with AuthFunction {
+
+    val keyStoreConnector: KeyStoreConnector
+    val displayConstructors: DisplayConstructors
+    val responseConstructors: ResponseConstructors
+    val plaConnector: PLAConnector
 
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     genericAuthWithNino("existingProtections") { nino =>

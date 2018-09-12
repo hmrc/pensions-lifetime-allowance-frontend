@@ -16,27 +16,26 @@
 
 package controllers
 
+import config.LocalTemplateRenderer
+import config.wiring.PlaFormPartialRetriever
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
 import enums.IdentityVerificationResult
+import javax.inject.Inject
 import play.api.Logger
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc._
 import uk.gov.hmrc.http.NotFoundException
-import uk.gov.hmrc.play.frontend.controller.UnauthorisedAction
+import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
 import views.html.pages.ivFailure._
 
 import scala.concurrent.Future
 
-object UnauthorisedController extends UnauthorisedController {
-  override val identityVerificationConnector: IdentityVerificationConnector = IdentityVerificationConnector
-  override val keystoreConnector: KeyStoreConnector = KeyStoreConnector
-}
+class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
+                                       keystoreConnector: KeyStoreConnector,
+                                       implicit val partialRetriever: PlaFormPartialRetriever,
+                                       implicit val templateRenderer:LocalTemplateRenderer) extends BaseController {
 
-trait UnauthorisedController extends BaseController {
-
-  val identityVerificationConnector: IdentityVerificationConnector
-  val keystoreConnector: KeyStoreConnector
   val issuesKey = "previous-technical-issues"
 
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = UnauthorisedAction.async { implicit request =>

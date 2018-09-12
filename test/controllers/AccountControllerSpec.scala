@@ -16,26 +16,20 @@
 
 package controllers
 
-import java.util.UUID
-
 import auth.MockConfig
-import com.kenshoo.play.metrics.PlayModule
+import config.PlaConfig
 import play.api.http.Status
-import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
 import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+class AccountControllerSpec extends UnitSpec with WithFakeApplication with RunMode with PlaConfig {
 
-class AccountControllerSpec extends UnitSpec with WithFakeApplication with RunMode {
-  override def bindModules = Seq(new PlayModule)
-
-  val sessionId = UUID.randomUUID.toString
-  val fakeRequest = FakeRequest("GET", "/")
+  val accountController = new AccountController
 
   "navigating to signout with an existing session" should {
-    object DataItem extends FakeRequestTo("/", AccountController.signOut, Some(sessionId))
+    object DataItem extends FakeRequestTo("/", accountController.signOut, Some("sessionId"))
     "return 303" in {
       status(DataItem.result) shouldBe Status.SEE_OTHER
     }

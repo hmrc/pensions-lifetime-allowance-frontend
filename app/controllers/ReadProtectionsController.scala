@@ -18,58 +18,66 @@ package controllers
 
 import auth.AuthFunction
 import common.{Helpers, Strings}
+import config.wiring.PlaFormPartialRetriever
 import models._
 import enums.ApplicationType
-import config.{AuthClientConnector, FrontendAppConfig}
+import config.{AppConfig, AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import models.amendModels.AmendProtectionModel
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http._
 import play.api.libs.json.Json
 import constructors.{DisplayConstructors, ResponseConstructors}
 import connectors.{KeyStoreConnector, PLAConnector}
+import javax.inject.Inject
 import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html._
 
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException, Upstream4xxResponse}
-import uk.gov.hmrc.play.frontend.config.AuthRedirects
-import uk.gov.hmrc.auth.core.retrieve.{Retrievals, ~}
 
 
-object ReadProtectionsController extends ReadProtectionsController {
+class ReadProtectionsControllerImpl @Inject()(val plaConnector: PLAConnector,
+                                              val keyStoreConnector: KeyStoreConnector,
+                                              implicit val partialRetriever: PlaFormPartialRetriever,
+                                              implicit val templateRenderer:LocalTemplateRenderer) extends ReadProtectionsController {
   lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
   lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
-  override val keyStoreConnector = KeyStoreConnector
-  override val plaConnector = PLAConnector
-  override val displayConstructors = DisplayConstructors
-  override val responseConstructors = ResponseConstructors
+  val displayConstructors = DisplayConstructors
+  val responseConstructors = ResponseConstructors
 
   override def config: Configuration = Play.current.configuration
   override def env: Environment = Play.current.injector.instanceOf[Environment]
 }
 
-trait ReadProtectionsController extends BaseController with AuthFunction {
+trait ReadProtectionsController extends AuthFunction {
+  val appConfig: AppConfig
+  val authConnector: AuthConnector
+  val postSignInRedirectUrl: String
 
+  val displayConstructors: DisplayConstructors
+  val responseConstructors: ResponseConstructors
+
+  override def config: Configuration
+  override def env: Environment
+
+  val plaConnector: PLAConnector
   val keyStoreConnector: KeyStoreConnector
-  val plaConnector : PLAConnector
-  val displayConstructors : DisplayConstructors
-  val responseConstructors : ResponseConstructors
+  implicit val partialRetriever: PlaFormPartialRetriever
+  implicit val templateRenderer:LocalTemplateRenderer
+
 
   val currentProtections = Action.async {
     implicit request =>
       genericAuthWithNino("existingProtections") { nino =>
         plaConnector.readProtections(nino).flatMap { response =>
           response.status match {
-            case 200 => redirectFromSuccess(response, nino)
-            case 423 => Future.successful(Locked(pages.result.manualCorrespondenceNeeded()))
+            case OK => redirectFromSuccess(response, nino)
+            case LOCKED => Future.successful(Locked(pages.result.manualCorrespondenceNeeded()))
             case num => {
               Logger.error(s"unexpected status $num passed to currentProtections for nino: $nino")
               Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
@@ -135,3 +143,4 @@ trait ReadProtectionsController extends BaseController with AuthFunction {
   }
 
 }
+

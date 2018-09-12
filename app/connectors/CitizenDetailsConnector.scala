@@ -19,35 +19,43 @@ package connectors
 import models.PersonalDetailsModel
 import play.api.libs.json.{JsResult, JsValue, Json}
 import config.WSHttp
+import javax.inject.Inject
+import play.api.Mode.Mode
 import uk.gov.hmrc.play.http._
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import play.api.Logger
+import play.api.{Configuration, Environment, Logger}
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 
-object CitizenDetailsConnector extends CitizenDetailsConnector with ServicesConfig {
+class CitizenDetailsConnectorImpl @Inject()(override val runModeConfiguration: Configuration,
+                                            val environment: Environment) extends CitizenDetailsConnector {
+
   override val serviceUrl = baseUrl("citizen-details")
   override def http: HttpGet = WSHttp
+
+  override protected def mode: Mode = environment.mode
 }
 
-trait CitizenDetailsConnector {
-  val serviceUrl: String
-  def http: HttpGet
 
-  private def url(nino: String) = s"$serviceUrl/citizen-details/$nino/designatory-details"
+  trait CitizenDetailsConnector extends ServicesConfig{
 
-  def getPersonDetails(nino: String)(implicit hc: HeaderCarrier): Future[Option[PersonalDetailsModel]] = {
+    val serviceUrl: String
+    def http: HttpGet
 
-    http.GET(url(nino)) map {
-      response => response.status match {
-        case 200 => response.json.validate[PersonalDetailsModel].asOpt
-        case _ => {
-          Logger.warn(s"Unable to retrieve personal details for nino: $nino")
-          None
+    private def url(nino: String) = s"$serviceUrl/citizen-details/$nino/designatory-details"
+
+    def getPersonDetails(nino: String)(implicit hc: HeaderCarrier): Future[Option[PersonalDetailsModel]] = {
+
+      http.GET(url(nino)) map {
+        response => response.status match {
+          case 200 => response.json.validate[PersonalDetailsModel].asOpt
+          case _ => {
+            Logger.warn(s"Unable to retrieve personal details for nino: $nino")
+            None
+          }
         }
       }
     }
-  }
 }

@@ -17,7 +17,8 @@
 package controllers
 
 import auth.AuthFunction
-import config.{AuthClientConnector, FrontendAppConfig}
+import config.wiring.PlaFormPartialRetriever
+import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import enums.ApplicationType
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc.{Action, AnyContent, Request, Result}
@@ -25,30 +26,25 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import connectors.KeyStoreConnector
 import views.html._
 import constructors.SummaryConstructor
+import javax.inject.Inject
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core.AuthConnector
 
 
 
-object SummaryController extends SummaryController {
-  // $COVERAGE-OFF$
+class SummaryController@Inject()(keyStoreConnector: KeyStoreConnector,
+                                 implicit val partialRetriever: PlaFormPartialRetriever,
+                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
   lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
   lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 
-  val keyStoreConnector = KeyStoreConnector
-  val summaryConstructor = SummaryConstructor
+  val summaryConstructor: SummaryConstructor = SummaryConstructor
 
   override def config: Configuration = Play.current.configuration
   override def env: Environment = Play.current.injector.instanceOf[Environment]
-  // $COVERAGE-ON$
-}
 
-trait SummaryController extends BaseController with AuthFunction {
-
-  val keyStoreConnector : KeyStoreConnector
-  val summaryConstructor: SummaryConstructor
 
   val summaryIP16 = Action.async { implicit request =>
     implicit val protectionType = ApplicationType.IP2016
@@ -78,4 +74,12 @@ trait SummaryController extends BaseController with AuthFunction {
     dataMetricsIds.map{_.toLowerCase}.contains(rowId.stripPrefix("ip14").toLowerCase)
   }
 
+}
+
+object SummaryController{
+  // returns true if the passed ID corresponds to a data field which requires GA monitoring
+  def recordDataMetrics(rowId: String): Boolean = {
+    val dataMetricsIds = List("pensionsTaken", "pensionsTakenBefore", "pensionsTakenBetween", "overseasPensions", "pensionDebits", "numberOfPSOsAmt")
+    dataMetricsIds.map{_.toLowerCase}.contains(rowId.stripPrefix("ip14").toLowerCase)
+  }
 }

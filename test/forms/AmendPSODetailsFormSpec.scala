@@ -20,13 +20,12 @@ import java.time.LocalDate
 
 import forms.AmendPSODetailsForm._
 import models.amendModels.AmendPSODetailsModel
-import org.scalatestplus.play.OneAppPerSuite
 import testHelpers.PSODetailsMessages
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.Constants
 import common.Exceptions
 
-class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPerSuite {
+class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication {
 
   "The AmendPensionsTakenBetweenForm" should {
     val validMap = Map(

@@ -18,26 +18,37 @@ package connectors
 
 import java.util.UUID
 
+import config.PLASessionCache
 import models._
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
+import play.api.Mode.Mode
+import play.api.{Application, Configuration, Environment}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.logging.SessionId
 
-class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar {
+class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
   val mockSessionCache = mock[SessionCache]
   val sessionId = UUID.randomUUID.toString
+  val env = mock[Environment]
+
+
 
   object TestKeyStoreConnector extends KeyStoreConnector {
     override val sessionCache = mockSessionCache
+
+    override protected def mode: Mode = mock[Mode]
+
+    override protected def runModeConfiguration: Configuration = mock[Configuration]
   }
+
 
   implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId.toString)))
 
@@ -52,13 +63,23 @@ class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar {
       await(result) shouldBe Some(testModel)
     }
 
-    "save data to keystore" in {
+    "save form data to keystore" in {
       val testModel = PensionsTakenModel(Some("No"))
       val returnedCacheMap = CacheMap("haveAddedToPension", Map("data" -> Json.toJson(testModel)))
       when(mockSessionCache.cache[PensionsTakenModel](ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(returnedCacheMap))
 
       lazy val result = TestKeyStoreConnector.saveFormData("haveAddedToPension", testModel)
+      await(result) shouldBe returnedCacheMap
+    }
+
+    "save data to keystore" in {
+      val testModel = PensionsTakenModel(Some("No"))
+      val returnedCacheMap = CacheMap("haveAddedToPension", Map("data" -> Json.toJson(testModel)))
+      when(mockSessionCache.cache[PensionsTakenModel](ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(Future.successful(returnedCacheMap))
+
+      lazy val result = TestKeyStoreConnector.saveData("haveAddedToPension", testModel)
       await(result) shouldBe returnedCacheMap
     }
   }

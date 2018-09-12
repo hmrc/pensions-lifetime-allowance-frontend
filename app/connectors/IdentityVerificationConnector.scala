@@ -20,24 +20,28 @@ import play.api.data.validation.ValidationError
 import play.api.libs.json.{JsPath, Json}
 import config.WSHttp
 import enums.IdentityVerificationResult.IdentityVerificationResult
+import javax.inject.Inject
+import play.api.{Configuration, Environment}
+import play.api.Mode.Mode
 import services.MetricsService
 import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpGet, HttpResponse }
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 
-object IdentityVerificationConnector extends IdentityVerificationConnector with ServicesConfig {
+class IdentityVerificationConnectorImpl@Inject() (override val runModeConfiguration: Configuration,
+                                                  environment: Environment) extends IdentityVerificationConnector {
   override val serviceUrl = baseUrl("identity-verification")
   override def http: HttpGet = WSHttp
+  override protected def mode: Mode = environment.mode
 }
 
-trait IdentityVerificationConnector {
+  trait IdentityVerificationConnector extends ServicesConfig{
+
   val serviceUrl: String
   def http: HttpGet
-
   private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
-
   private[connectors] case class IdentityVerificationResponse(result: IdentityVerificationResult)
   private implicit val formats = Json.format[IdentityVerificationResponse]
 

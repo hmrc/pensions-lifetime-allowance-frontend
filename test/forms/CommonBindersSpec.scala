@@ -17,13 +17,12 @@
 package forms
 
 import forms.WithdrawDateForm.withdrawDateForm
-import org.scalatestplus.play.OneAppPerSuite
 import play.api.data.FormError
 import play.api.libs.json.Json
 import testHelpers.PSODetailsMessages
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class CommonBindersSpec extends UnitSpec with PSODetailsMessages with OneAppPerSuite {
+class CommonBindersSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication {
   object testForm extends CommonBinders
 
   "stringToOptionalIntFormatter form binder" should{

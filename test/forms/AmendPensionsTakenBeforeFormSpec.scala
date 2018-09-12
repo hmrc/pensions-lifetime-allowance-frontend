@@ -18,12 +18,11 @@ package forms
 
 import forms.AmendPensionsTakenBeforeForm._
 import models.amendModels.AmendPensionsTakenBeforeModel
-import org.scalatestplus.play.OneAppPerSuite
 import testHelpers.CommonErrorMessages
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.Constants
 
-class AmendPensionsTakenBeforeFormSpec extends UnitSpec with CommonErrorMessages with OneAppPerSuite {
+class AmendPensionsTakenBeforeFormSpec extends UnitSpec with CommonErrorMessages with WithFakeApplication {
 
   "The AmendPensionsTakenBeforeForm" should {
     val validMap = Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "1000.0", "protectionType" -> "type", "status" -> "status")

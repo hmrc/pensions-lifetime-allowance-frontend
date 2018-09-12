@@ -32,6 +32,11 @@ class StringsSpec extends UnitSpec {
       implicit val protectionType = ApplicationType.IP2016
       Strings.nameString("testString") shouldBe "testString"
     }
+
+    "correctly create an FP16 keystore name string" in {
+      implicit val protectionType = ApplicationType.FP2016
+      Strings.nameString("testString") shouldBe "fp16TestString"
+    }
   }
 
   "statusString" should {

@@ -22,10 +22,10 @@ import play.api.Logger
 import uk.gov.hmrc.auth.core.AuthorisedFunctions
 import play.api.mvc._
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.play.frontend.config.AuthRedirects
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 
 import scala.concurrent.Future
 

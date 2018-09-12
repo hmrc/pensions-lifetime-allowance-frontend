@@ -16,22 +16,20 @@
 
 package controllers.testControllers
 
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.wiring.PlaFormPartialRetriever
 import connectors.StubConnector
 import controllers.BaseController
+import javax.inject.Inject
 import play.api.libs.json._
 import play.api.mvc._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
-object TestSetupController extends TestSetupController {
-  override val connector = StubConnector
-}
-
-
-trait TestSetupController extends BaseController {
-
-  val connector: StubConnector
+class TestSetupController @Inject()(connector: StubConnector,
+                                    implicit val partialRetriever: PlaFormPartialRetriever,
+                                    implicit val templateRenderer:LocalTemplateRenderer) extends BaseController {
 
   def insertProtections(): Action[JsValue] = Action.async(BodyParsers.parse.json) { implicit request =>
     val payload: JsValue = request.body
