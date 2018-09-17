@@ -16,23 +16,25 @@
 
 package testHelpers.ViewSpecHelpers
 
-import config.wiring.PlaFormPartialRetriever
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import akka.stream.Materializer
+import config.wiring.{PlaFormPartialRetriever, SessionCookieCryptoFilterWrapper}
+import org.scalatest.mockito.MockitoSugar
+import play.api.Play
 import play.api.test.FakeRequest
-import testHelpers.MockTemplateRenderer
-import uk.gov.hmrc.play.frontend.filters.MicroserviceFilterSupport
-import uk.gov.hmrc.play.test.UnitSpec
+import testHelpers.{MockTemplateRenderer, TestConfigHelper}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.PlaTestContext
 
-trait CommonViewSpecHelper extends UnitSpec with MicroserviceFilterSupport with GuiceOneAppPerSuite with CommonMessages{
+trait CommonViewSpecHelper extends UnitSpec with CommonMessages with MockitoSugar with WithFakeApplication{
 
   //TODO
 
   //mock logger
-
+  implicit val application = fakeApplication
+  val sessionCookieCryptoFilterWrapper = mock[SessionCookieCryptoFilterWrapper]
   implicit lazy val fakeRequest = FakeRequest()
   implicit lazy val context = PlaTestContext
-  implicit lazy val retriever = PlaFormPartialRetriever
-  implicit lazy val renderer = MockTemplateRenderer
+  implicit lazy val renderer = MockTemplateRenderer.renderer
+  implicit val partialRetriever = new PlaFormPartialRetriever(sessionCookieCryptoFilterWrapper)
 
 }

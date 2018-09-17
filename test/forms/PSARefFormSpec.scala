@@ -16,14 +16,14 @@
 
 package forms
 
-import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import javax.inject.Inject
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class PSARefFormSpec extends PlaySpec with GuiceOneAppPerSuite {
+class PSARefFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec with WithFakeApplication {
 
   private val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm
 

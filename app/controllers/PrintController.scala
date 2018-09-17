@@ -17,37 +17,32 @@
 package controllers
 
 import auth.AuthFunction
+import config.wiring.PlaFormPartialRetriever
 import constructors.DisplayConstructors
-import config.{AppConfig, AuthClientConnector, FrontendAppConfig}
+import config.{AppConfig, AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
+import javax.inject.Inject
 import models.{ExistingProtectionsDisplayModel, PersonalDetailsModel, ProtectionModel}
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc._
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-// $COVERAGE-OFF$
-object PrintController extends PrintController {
-  val keyStoreConnector = KeyStoreConnector
-  val citizenDetailsConnector = CitizenDetailsConnector
-  val displayConstructors = DisplayConstructors
+class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
+                                val citizenDetailsConnector: CitizenDetailsConnector,
+                                val environment: Environment,
+                                implicit val partialRetriever: PlaFormPartialRetriever,
+                                implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
+  val displayConstructors: DisplayConstructors = DisplayConstructors
   lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
   lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
-  override def config: Configuration = Play.current.configuration
+  def config: Configuration = Play.current.configuration
 
-  override def env: Environment = Play.current.injector.instanceOf[Environment]
-}
-// $COVERAGE-ON$
-trait PrintController extends BaseController with AuthFunction {
-
-  val keyStoreConnector: KeyStoreConnector
-  val citizenDetailsConnector: CitizenDetailsConnector
-  val displayConstructors: DisplayConstructors
-  val appConfig: AppConfig
-
+  def env: Environment = environment
 
   val printView = Action.async { implicit request =>
     genericAuthWithNino("existingProtections") { nino =>

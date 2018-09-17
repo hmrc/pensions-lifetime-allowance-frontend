@@ -16,41 +16,43 @@
 
 package controllers
 
+import config.LocalTemplateRenderer
+import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
 import models.{PSALookupRequest, PSALookupResult}
 import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito.when
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.i18n.Messages
+import play.api.{Application, Logger}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import play.api.test.Helpers._
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc.Result
+import testHelpers.MockTemplateRenderer
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
 
-class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneAppPerSuite{
-  implicit override lazy val app: Application = new GuiceApplicationBuilder().disable[com.kenshoo.play.metrics.PlayModule].build()
-  implicit val hc = HeaderCarrier()
-  lazy val ws: WSClient = app.injector.instanceOf[WSClient]
+class PrintPdfControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
-  private val mockKeyStoreConnector = mock[KeyStoreConnector]
+
+  implicit val hc = HeaderCarrier()
+  lazy val ws: WSClient = fakeApplication.injector.instanceOf[WSClient]
+
+  val keyStoreConnector = mock[KeyStoreConnector]
   private val mockPdfGeneratorConnector = mock[PdfGeneratorConnector]
   private val sessionId = SessionKeys.sessionId -> "pdf-test"
+  implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
+  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
 
-  object TestController extends PrintPdfController {
-    override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
-    override val pdfGeneratorConnector: PdfGeneratorConnector = mockPdfGeneratorConnector
+  val TestController = new PrintPdfController(keyStoreConnector,mockPdfGeneratorConnector,partialRetriever,templateRenderer) {
     override def createPdfResult(response: WSResponse): Result = Ok("Misc.Text")
 
-    val lookupRequestID = "psa-lookup-request"
-    val lookupResultID = "psa-lookup-result"
+    override val lookupRequestID = "psa-lookup-request"
+    override val lookupResultID = "psa-lookup-result"
   }
 
   "printResultsPDF" should{
@@ -59,8 +61,8 @@ class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
         keystoreFetchCondition[PSALookupRequest](None)
         val result = TestController.printResultsPDF.apply(request)
 
-        status(result) mustBe SEE_OTHER
-        redirectLocation(result).get mustBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
       }
 
       "return a 200 when able to print a Results PDF" in{
@@ -81,8 +83,8 @@ class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
         val result = TestController.printResultsPDF.apply(request)
         val returnedHeader = Map("Set-Cookie" -> "mdtp=082c4de4d57fc34fa1e28c56e2e36b34519bcbb7-sessionId=pdf-test; Path=/; HTTPOnly", "Content-Disposition" -> "attachment; filename=lookup-result-IP14000000000A.pdf")
 
-        status(result) mustBe OK
-        headers(result) mustBe returnedHeader
+        status(result) shouldBe OK
+        headers(result) shouldBe returnedHeader
       }
   }
 
@@ -92,8 +94,8 @@ class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       keystoreFetchCondition[PSALookupRequest](None)
       val result = TestController.printNotFoundPDF.apply(request)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result).get mustBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
     }
 
     "return a 303 when unable to print a NotFound PDF when the lifetimeAllowanceReference is NOT defined" in{
@@ -106,8 +108,8 @@ class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       keystoreFetchCondition[PSALookupRequest](Option(testPsaLookupRequest))
       val result = TestController.printNotFoundPDF.apply(request)
 
-      status(result) mustBe SEE_OTHER
-      redirectLocation(result).get mustBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      status(result) shouldBe SEE_OTHER
+      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
     }
 
     "return a 200 when able to print a NotFound PDF when the lifetimeAllowanceReference is defined" in{
@@ -125,11 +127,12 @@ class PrintPdfControllerSpec extends PlaySpec with MockitoSugar with GuiceOneApp
       val result = TestController.printNotFoundPDF.apply(request)
       val returnedHeader = Map("Set-Cookie" -> "mdtp=082c4de4d57fc34fa1e28c56e2e36b34519bcbb7-sessionId=pdf-test; Path=/; HTTPOnly", "Content-Disposition" -> "attachment; filename=lookup-not-found.pdf")
 
-      status(result) mustBe OK
-      headers(result) mustBe returnedHeader
+
+      status(result) shouldBe OK
+      headers(result) shouldBe returnedHeader
     }
   }
 
-  def keystoreFetchCondition[T](data: Option[T]): Unit = when(mockKeyStoreConnector.fetchAndGetFormData[T](any())(any(), any()))
+  def keystoreFetchCondition[T](data: Option[T]): Unit = when(keyStoreConnector.fetchAndGetFormData[T](any())(any(), any()))
     .thenReturn(Future.successful(data))
 }

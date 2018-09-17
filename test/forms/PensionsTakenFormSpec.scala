@@ -16,13 +16,12 @@
 
 package forms
 
-import org.scalatestplus.play.OneAppPerSuite
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import PensionsTakenForm._
 import models.PensionsTakenModel
 import testHelpers.CommonErrorMessages
 
-class PensionsTakenFormSpec extends UnitSpec with OneAppPerSuite with CommonErrorMessages {
+class PensionsTakenFormSpec extends UnitSpec with WithFakeApplication with CommonErrorMessages {
 
   "The PensionsTakenForm" should {
 

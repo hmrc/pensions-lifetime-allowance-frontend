@@ -17,16 +17,18 @@
 package testHelpers
 
 
-import play.api.mvc.{AnyContent, Action}
+import akka.stream.Materializer
+import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
 import auth._
+import play.api.Play
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import uk.gov.hmrc.http.SessionKeys
-import uk.gov.hmrc.play.frontend.filters.MicroserviceFilterSupport
 
 
-class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*) extends UnitSpec with MicroserviceFilterSupport{
+class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*)  extends UnitSpec with TestConfigHelper {
   val fakeRequest = FakeRequest("POST", "/protect-your-lifetime-allowance/" + url)
     .withSession(SessionKeys.sessionId -> s"session-$sessionId")
     .withFormUrlEncodedBody(data:_*)
@@ -34,7 +36,7 @@ class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessi
   val jsoupDoc = Jsoup.parse(bodyOf(result))
 }
 
-class AuthorisedFakeRequestToPost(controllerAction: Action[AnyContent], data: (String, String)*) extends UnitSpec with MicroserviceFilterSupport {
+class AuthorisedFakeRequestToPost(controllerAction: Action[AnyContent], data: (String, String)*) extends TestConfigHelper {
     val result = controllerAction(authenticatedFakeRequest().withFormUrlEncodedBody(data:_*))
     val jsoupDoc = Jsoup.parse(bodyOf(result))
   

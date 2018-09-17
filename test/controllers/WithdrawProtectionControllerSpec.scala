@@ -16,58 +16,41 @@
 
 package controllers
 
-import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
-import auth.MockConfig
-import com.kenshoo.play.metrics.PlayModule
+import config.LocalTemplateRenderer
+import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
+import mocks.AuthMock
 import models._
 import org.jsoup.Jsoup
-import org.mockito.Mockito._
-import mocks.AuthMock
 import org.mockito.ArgumentMatchers
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
-import play.api.{Configuration, Environment}
-import play.api.Play.current
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.test.FakeRequest
-import testHelpers.{AuthorisedFakeRequestTo, AuthorisedFakeRequestToPost, MockTemplateRenderer}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.test.Helpers._
-import uk.gov.hmrc.auth.core.PlayAuthConnector
-import uk.gov.hmrc.auth.core.retrieve.{Retrieval, Retrievals}
+import testHelpers.{AuthorisedFakeRequestToPost, MockTemplateRenderer}
+import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
+class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication {
 
-  override def bindModules = Seq(new PlayModule)
+  val keyStoreConnector = mock[KeyStoreConnector]
+  val plaConnector = mock[PLAConnector]
 
-  val mockKeyStoreConnector = mock[KeyStoreConnector]
+  implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
+  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+
   val mockDisplayConstructors = mock[DisplayConstructors]
-  val mockPLAConnector = mock[PLAConnector]
-  implicit val system = ActorSystem()
-  implicit val materializer = ActorMaterializer()
 
-  object TestWithdrawController extends WithdrawProtectionController {
-    lazy val appConfig = MockConfig
+  val controller = new WithdrawProtectionController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer ) {
     override lazy val authConnector = mockAuthConnector
-    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
-
-    override val displayConstructors: DisplayConstructors = mockDisplayConstructors
-    override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
-    override val plaConnector: PLAConnector = mockPLAConnector
-
-    override def config: Configuration = mock[Configuration]
-
-    override def env: Environment = mock[Environment]
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-
+    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
+    override val displayConstructors = mockDisplayConstructors
   }
 
   val ip2016Protection = ProtectionModel(
@@ -114,21 +97,21 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
 
     "return 200" in {
       mockAuthConnector(Future.successful())
-      when(mockKeyStoreConnector.remove(ArgumentMatchers.any()))
+      when(keyStoreConnector.remove(ArgumentMatchers.any()))
         .thenReturn(Future.successful(mock[HttpResponse]))
-      status(TestWithdrawController.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
+      status(controller.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
     }
   }
 
   "In WithdrawProtectionController calling the displayWithdrawConfirmation action" when {
 
-    "handling an OK response" should {
+    "handling an OK response" should  {
       lazy val result = {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockPLAConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(plaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(HttpResponse(OK)))
-        await(TestWithdrawController.displayWithdrawConfirmation("")(fakeRequest))
+        await(controller.displayWithdrawConfirmation("")(fakeRequest))
       }
 
       "return 303" in {
@@ -140,9 +123,9 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
       lazy val result = {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockPLAConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(plaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR)))
-        await(TestWithdrawController.displayWithdrawConfirmation("")(fakeRequest))
+        await(controller.displayWithdrawConfirmation("")(fakeRequest))
       }
 
       "return 500" in {
@@ -161,7 +144,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
       lazy val result = {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[ProtectionModel](None)
-        await(TestWithdrawController.withdrawImplications(fakeRequest))
+        await(controller.withdrawImplications(fakeRequest))
       }
 
       "return 500" in {
@@ -178,7 +161,8 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
-        lazy val result = await(TestWithdrawController.withdrawImplications(fakeRequest))
+
+        val result = await(controller.withdrawImplications(fakeRequest))
         status(result) shouldBe OK
       }
     }
@@ -191,9 +175,8 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
       lazy val result = {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[ProtectionModel](None)
-        await(TestWithdrawController.withdrawSummary(fakeRequest))
+        await(controller.withdrawSummary(fakeRequest))
       }
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
       "return 500" in {
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -204,12 +187,11 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
     }
 
     "there is a stored protection model" should {
-
-      lazy val result = await(TestWithdrawController.withdrawSummary(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
+
+        val result = await(controller.withdrawSummary(fakeRequest))
         status(result) shouldBe OK
       }
     }
@@ -219,8 +201,8 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
 
     "there is no stored protection model" should {
       keystoreFetchCondition[ProtectionModel](None)
-      lazy val result = await(TestWithdrawController.withdrawSummary(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = await(controller.withdrawSummary(fakeRequest))
+
       "return 500" in {
         keystoreFetchCondition[ProtectionModel](None)
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -232,19 +214,18 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
 
     "there is a stored protection model" should {
 
-      lazy val result = await(TestWithdrawController.withdrawDateInput(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = await(controller.withdrawDateInput(fakeRequest))
+
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         status(result) shouldBe OK
-        jsoupDoc.body().getElementsByTag("h1").text should include(Messages("pla.withdraw.date-input.title"))
       }
     }
   }
 
   "In withdrawProtectionController calling the submitWithdrawDateInput action" when {
     "there is a stored protection model" should {
-      object UserRequest extends AuthorisedFakeRequestToPost(TestWithdrawController.submitWithdrawDateInput,
+      object UserRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
         ("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017"))
 
       "return 200" in {
@@ -252,34 +233,31 @@ class WithdrawProtectionControllerSpec extends UnitSpec with WithFakeApplication
         status(UserRequest.result) shouldBe OK
       }
 
-      object InvalidDayRequest extends AuthorisedFakeRequestToPost(TestWithdrawController.submitWithdrawDateInput,
+      object InvalidDayRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
         ("withdrawDay", "20000"), ("withdrawMonth", "10"), ("withdrawYear", "2017"))
       "return 400 Bad Request" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         status(InvalidDayRequest.result) shouldBe BAD_REQUEST
-        InvalidDayRequest.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.date-input.form.day-too-high"))
       }
 
-      object InvalidMultipleErrorRequest extends AuthorisedFakeRequestToPost(TestWithdrawController.submitWithdrawDateInput,
+      object InvalidMultipleErrorRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
         ("withdrawDay", "20000"), ("withdrawMonth", "70000"), ("withdrawYear", "2010000007"))
       "return 400 Bad Request with single error" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         status(InvalidDayRequest.result) shouldBe BAD_REQUEST
-        InvalidMultipleErrorRequest.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.date-input-form.date-invalid"))
       }
 
-      object BadRequestDateInPast extends AuthorisedFakeRequestToPost(TestWithdrawController.submitWithdrawDateInput,
+      object BadRequestDateInPast extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
         ("withdrawDay", "20"), ("withdrawMonth", "1"), ("withdrawYear", "2012"))
       "return 400 Bad Request with date in past error" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         status(InvalidDayRequest.result) shouldBe BAD_REQUEST
-        BadRequestDateInPast.jsoupDoc.body().getElementsByTag("li").text should include(Messages("pla.withdraw.date-input.form.date-before-start-date"))
       }
     }
   }
 
   def keystoreFetchCondition[T](data: Option[T]): Unit = {
-    when(mockKeyStoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(keyStoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future.successful(data))
   }
 }

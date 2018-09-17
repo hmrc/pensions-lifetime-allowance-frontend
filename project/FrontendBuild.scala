@@ -29,32 +29,34 @@ private object AppDependencies {
 
   private val playHealthVersion = "2.2.0"
   private val loggerVersion = "3.1.0"
-  private val frontendBootstrapVersion = "10.2.0"
-  private val govukTemplateVersion = "5.10.0"
-  private val playUiVersion = "7.14.0"
+  private val bootstrapVersion = "3.6.0"
+  private val govukTemplateVersion = "5.22.0"
+  private val playUiVersion = "7.22.0"
   private val playPartialsVersion = "6.1.0"
   private val playAuthorisedFrontendVersion = "7.0.0"
   private val playConfigVersion = "5.0.0"
-  private val hmrcTestVersion = "3.0.0"
+  private val hmrcTestVersion = "3.1.0"
   private val scalaTestVersion = "3.0.0"
   private val scalaTestPlusVersion = "2.0.0"
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "7.1.0"
   private val mongoCachingVersion = "5.4.0"
   private val playLanguageVersion = "3.4.0"
-  private val authClientVersion = "2.6.0"
+  private val authClientVersion = "2.9.0-play-25"
   private val localTemplateRendererVersion = "2.0.0"
   private val wireMockVersion          = "2.9.0"
 
   val compile = Seq(
     ws,
-    "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
+    "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
     "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
     "uk.gov.hmrc" %% "play-language" % playLanguageVersion,
     "uk.gov.hmrc" %% "auth-client" % authClientVersion,
-    "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion
+    "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion,
+    "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
+    "uk.gov.hmrc" %% "play-ui" % playUiVersion
   )
 
   trait TestDependencies {
@@ -70,7 +72,6 @@ private object AppDependencies {
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % "1.10.2" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-        "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
         "org.mockito" % "mockito-core" % "2.18.3" % scope
       )
     }.test

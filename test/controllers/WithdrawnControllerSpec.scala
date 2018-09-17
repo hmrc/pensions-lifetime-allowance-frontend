@@ -16,46 +16,45 @@
 
 package controllers
 
-import java.util.UUID
-
-import org.scalatestplus.play.OneAppPerSuite
-import play.api.http._
-import play.api.i18n.Messages
+import akka.stream.Materializer
+import config.LocalTemplateRenderer
+import config.wiring.PlaFormPartialRetriever
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import connectors.IdentityVerificationConnector
 import testHelpers._
-import org.scalatest._
-import org.scalatest.Matchers._
-import uk.gov.hmrc.time.DateTimeUtils._
-import uk.gov.hmrc.renderer.TemplateRenderer
+import org.scalatest.mockito.MockitoSugar
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class WithdrawnControllerSpec extends FunSpec with OneAppPerSuite with BaseController {
+
+class WithdrawnControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
+
+  implicit val mockPartialRetriever = mock[PlaFormPartialRetriever]
+  implicit val mockTemplateRenderer = MockTemplateRenderer.renderer
+
+    val controller = new WithdrawnController()
+
 
   val fakeRequest = FakeRequest("GET", "/")
-  override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
-  def testWithdrawnController(): WithdrawnController = new WithdrawnController {
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-  }
 
-  describe ("Withdrawn controller") {
-    it ("should show withdrawn page") {
-      val result = testWithdrawnController().showWithdrawn()(fakeRequest)
+  ("Withdrawn controller") should  {
+     ("should show withdrawn page") in  {
+      val result = controller.showWithdrawn()(fakeRequest)
       contentAsString(result) should include ("Sorry, applications for 2014 protection have ended")
     }
   }
 
-  describe ("IP14 application") {
+  ("IP14 application") should  {
     Seq("/apply-for-ip14-pensions-taken", "/apply-for-ip14-pensions-taken-before", "/apply-for-ip14-pensions-taken-between",
         "/apply-for-ip14-overseas-pensions", "/apply-for-ip14-current-pensions", "/apply-for-ip14-pension-sharing-orders",
         "/apply-for-ip14-pension-sharing-order-details", "/apply-for-ip14-remove-pension-sharing-order-details",
         "/apply-for-ip14-submit-your-application").foreach { (path) =>
-      it (s"show withdrawn page for /protect-your-lifetime-allowance$path") {
+       (s"show withdrawn page for /protect-your-lifetime-allowance$path") in {
 
-        val result = testWithdrawnController().showWithdrawn()(FakeRequest(GET, s"/protect-your-lifetime-allowance$path"))
+        val result = controller.showWithdrawn()(FakeRequest(GET, s"/protect-your-lifetime-allowance$path"))
         contentAsString(result) should include ("Sorry, applications for 2014 protection have ended")
       }
     }
   }
+
 }

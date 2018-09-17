@@ -16,62 +16,45 @@
 
 package controllers
 
-import java.time.LocalDate
 import java.util.UUID
 
-import akka.actor.ActorSystem
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import akka.stream.ActorMaterializer
-import auth._
-import com.kenshoo.play.metrics.PlayModule
+import config.wiring.PlaFormPartialRetriever
 import config.{AuthClientConnector, LocalTemplateRenderer}
 import connectors.KeyStoreConnector
-import models._
-import org.jsoup.Jsoup
-import org.mockito.Mockito._
 import mocks.AuthMock
+import models._
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import play.api.{Configuration, Environment}
-import play.api.Play.current
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.JsValue
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import org.mockito.ArgumentMatchers.anyString
 import testHelpers._
-import uk.gov.hmrc.auth.core.PlayAuthConnector
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
 
-class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with BeforeAndAfterEach with KeystoreTestHelper with AuthMock {
-    override def bindModules = Seq(new PlayModule)
+class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with KeystoreTestHelper with AuthMock with WithFakeApplication {
 
     val mockKeyStoreConnector = mock[KeyStoreConnector]
-    implicit val system = ActorSystem()
-    implicit val materializer = ActorMaterializer()
+    implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
+    implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
 
     override def beforeEach = {
         reset(mockKeyStoreConnector)
         reset(mockAuthConnector)
     }
 
-    implicit val hc=new HeaderCarrier()
-    object TestIP2016Controller extends IP2016Controller {
-        override lazy val appConfig = MockConfig
+    implicit val hc = HeaderCarrier()
+
+//    lazy val TestIP2016Controller = fakeApplication.injector.instanceOf[IP2016Controller]
+    object TestIP2016Controller extends IP2016Controller(mockKeyStoreConnector, partialRetriever, templateRenderer) {
         override lazy val authConnector = mockAuthConnector
-        override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
-        override lazy val postSignInRedirectUrl = "IP2016"
-        override def config: Configuration = mock[Configuration]
-        override def env: Environment = mock[Environment]
-        override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
     }
 
     val sessionId = UUID.randomUUID.toString
@@ -102,8 +85,8 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     // Initial Setup
     ///////////////////////////////////////////////
     "IP2016Controller should be correctly initialised" in {
-        IP2016Controller.keyStoreConnector shouldBe KeyStoreConnector
-        IP2016Controller.authConnector shouldBe AuthClientConnector
+        TestIP2016Controller.keyStoreConnector shouldBe mockKeyStoreConnector
+        TestIP2016Controller.authConnector shouldBe mockAuthConnector
     }
 
     ///////////////////////////////////////////////
@@ -114,17 +97,11 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "not supplied with a stored model" should {
 
             lazy val result = await(TestIP2016Controller.pensionsTaken(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenModel](None)
                 status(result) shouldBe 200
-            }
-
-            "take the user to the pensions taken page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionsTakenModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTaken.title")
             }
         }
 
@@ -132,18 +109,11 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             mockAuthConnector(Future.successful({}))
             val testModel = new PensionsTakenModel(Some("yes"))
             lazy val result = await(TestIP2016Controller.pensionsTaken(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenModel](Some(testModel))
                 status(result) shouldBe 200
-            }
-
-            "take the user to the pensions taken page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionsTakenModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTaken.title")
             }
 
             "return some HTML that" should {
@@ -152,11 +122,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                     keystoreFetchCondition[PensionsTakenModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
-                }
-
-                "have the radio option `yes` selected by default" in {
-                    keystoreFetchCondition[PensionsTakenModel](Some(testModel))
-                    jsoupDoc.body.getElementById("pensionsTaken-yes").parent.classNames().contains("selected") shouldBe true
                 }
             }
         }
@@ -203,7 +168,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "not supplied with a stored model" should {
             lazy val result = await(TestIP2016Controller.pensionsTakenBefore(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenBeforeModel](None)
@@ -213,14 +177,12 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "take the user to the pensions taken before page" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenBeforeModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.title")
             }
         }
 
         "supplied with a stored test model" should {
             val testModel = new PensionsTakenBeforeModel("yes", Some(1))
             lazy val result = await(TestIP2016Controller.pensionsTakenBefore(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
@@ -231,7 +193,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
             "take the user to the pensions taken before page" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenBeforeModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.title")
             }
 
             "return some HTML that" should {
@@ -246,13 +207,11 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 "have the radio option `yes` selected by default" in {
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
-                    jsoupDoc.body.getElementById("pensionsTakenBefore-yes").parent.classNames().contains("selected") shouldBe true
                 }
 
                 "have the amount £1 completed by default" in {
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
-                    jsoupDoc.body.getElementById("pensionsTakenBeforeAmt").attr("value") shouldBe "1"
                 }
             }
         }
@@ -301,35 +260,21 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "not supplied with a stored model" should {
 
             lazy val result = await(TestIP2016Controller.pensionsTakenBetween(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenBetweenModel](None)
                 status(result) shouldBe 200
-            }
-
-            "take the user to the pensions taken between page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionsTakenBetweenModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.title")
             }
         }
 
         "supplied with a stored test model" should {
             val testModel = new PensionsTakenBetweenModel("yes", Some(1))
             lazy val result = await(TestIP2016Controller.pensionsTakenBetween(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
                 status(result) shouldBe 200
-            }
-
-            "take the user to the pensions taken between page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionsTakenBetweenModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.title")
             }
 
             "return some HTML that" should {
@@ -339,18 +284,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                     keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
-                }
-
-                "have the radio option `yes` selected by default" in {
-                    mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
-                    jsoupDoc.body.getElementById("pensionsTakenBetween-yes").parent.classNames().contains("selected") shouldBe true
-                }
-
-                "have the amount £1 completed by default" in {
-                    mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
-                    jsoupDoc.body.getElementById("pensionsTakenBetweenAmt").attr("value") shouldBe "1"
                 }
             }
         }
@@ -400,35 +333,21 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "not supplied with a stored model" should {
 
             lazy val result = await(TestIP2016Controller.overseasPensions(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[OverseasPensionsModel](None)
                 status(result) shouldBe 200
-            }
-
-            "take the user to the overseas pensions page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[OverseasPensionsModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.title")
             }
         }
 
         "supplied with a stored test model (yes, £100000)" should {
             val testModel = new OverseasPensionsModel("yes", Some(100000))
             lazy val result = await(TestIP2016Controller.overseasPensions(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
                 status(result) shouldBe 200
-            }
-
-            "take the user to the pensions taken page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.title")
             }
 
             "return some HTML that" should {
@@ -438,18 +357,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                     keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
-                }
-
-                "have the radio option `yes` selected by default" in {
-                    mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
-                    jsoupDoc.body.getElementById("overseasPensions-yes").parent.classNames().contains("selected") shouldBe true
-                }
-
-                "have the value 100000 completed in the amount input by default" in {
-                    mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
-                    jsoupDoc.body.getElementById("overseasPensionsAmt").attr("value") shouldBe "100000"
                 }
             }
         }
@@ -496,24 +403,16 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "not supplied with a stored model" should {
 
             lazy val result = await(TestIP2016Controller.currentPensions(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[CurrentPensionsModel](None)
                 status(result) shouldBe 200
-            }
-
-            "take the user to the current pensions page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[CurrentPensionsModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
             }
         }
 
         "supplied with a stored test model (£100000)" should {
             val testModel = new CurrentPensionsModel(Some(100000))
             lazy val result = await(TestIP2016Controller.currentPensions(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
@@ -521,11 +420,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(result) shouldBe 200
             }
 
-            "take the user to the current pensions page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
-            }
 
             "return some HTML that" should {
 
@@ -536,11 +430,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                     charset(result) shouldBe Some("utf-8")
                 }
 
-                "have the value 100000 completed in the amount input by default" in {
-                    mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
-                    jsoupDoc.body.getElementById("currentPensionsAmt").attr("value") shouldBe "100000"
-                }
             }
         }
     }
@@ -577,35 +466,22 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "not supplied with a stored model" should {
 
             lazy val result = await(TestIP2016Controller.pensionDebits(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionDebitsModel](None)
                 status(result) shouldBe 200
             }
 
-            "take the user to the pension debits page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionDebitsModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionDebits.title")
-            }
         }
 
         "supplied with a stored test model" should {
             val testModel = new PensionDebitsModel(Some("yes"))
             lazy val result = await(TestIP2016Controller.pensionDebits(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionDebitsModel](Some(testModel))
                 status(result) shouldBe 200
-            }
-
-            "take the user to the pension debits page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionDebitsModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionDebits.title")
             }
 
             "return some HTML that" should {
@@ -615,12 +491,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                     keystoreFetchCondition[PensionDebitsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
-                }
-
-                "have the radio option `yes` selected by default" in {
-                    mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[PensionDebitsModel](Some(testModel))
-                    jsoupDoc.body.getElementById("pensionDebits-yes").parent.classNames().contains("selected") shouldBe true
                 }
             }
         }
@@ -668,24 +538,17 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
         "not supplied with a stored model" should {
 
             lazy val result = await(TestIP2016Controller.psoDetails(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PSODetailsModel](None)
                 status(result) shouldBe 200
-            }
-            "take the user to the pso details page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PSODetailsModel](None)
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
             }
         }
 
         "supplied with a stored test model" should {
             val testModel = PSODetailsModel(1, 8, 2016, BigDecimal(1234))
             lazy val result = await(TestIP2016Controller.psoDetails(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
@@ -693,11 +556,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                 status(result) shouldBe 200
             }
 
-            "take the user to the pso details page" in {
-                mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PSODetailsModel](Some(testModel))
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-            }
 
             "return some HTML that" should {
                 "contain some text and use the character set utf-8" in {
@@ -705,15 +563,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
                     keystoreFetchCondition[PSODetailsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
-                }
-
-                "have the input values set as default" in {
-                    mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[PSODetailsModel](Some(testModel))
-                    jsoupDoc.body.getElementById("psoDay").`val`() shouldBe "1"
-                    jsoupDoc.body.getElementById("psoMonth").`val`() shouldBe "8"
-                    jsoupDoc.body.getElementById("psoYear").`val`() shouldBe "2016"
-                    jsoupDoc.body.getElementById("psoAmt").`val`() shouldBe "1234"
                 }
             }
         }
@@ -775,15 +624,10 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "supplied with a stored model" should {
             lazy val result = await(TestIP2016Controller.removePsoDetails(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
 
             "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 status(result) shouldBe 200
-            }
-
-            "take the user to the remove PSO page" in {
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
             }
         }
     }
@@ -792,7 +636,6 @@ class IP2016ControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
         "not supplied with a stored model" should {
             lazy val result = await(TestIP2016Controller.submitRemovePsoDetails(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
             val testModel = new PensionDebitsModel(Some("yes"))
 
             "return 303" in {

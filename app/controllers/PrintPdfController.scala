@@ -19,7 +19,10 @@ package controllers
 import java.time.{LocalDate, LocalTime, ZoneId}
 import java.time.format.DateTimeFormatter
 
+import config.LocalTemplateRenderer
+import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
+import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Logger
 import play.api.mvc.{Action, AnyContent, Result}
@@ -28,21 +31,16 @@ import views.html.pages.lookup.{psa_lookup_not_found_print, psa_lookup_results_p
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.ws.WSResponse
+import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.concurrent.Future
 
-object PrintPdfController extends PrintPdfController{
-  val keyStoreConnector = KeyStoreConnector
-  val pdfGeneratorConnector: PdfGeneratorConnector = PdfGeneratorConnector
+class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
+                                  pdfGeneratorConnector: PdfGeneratorConnector,
+                                  implicit val partialRetriever: PlaFormPartialRetriever,
+                                  implicit val templateRenderer: LocalTemplateRenderer) extends BaseController{
   val lookupRequestID = "psa-lookup-request"
   val lookupResultID = "psa-lookup-result"
-}
-
-trait PrintPdfController extends BaseController {
-  val keyStoreConnector: KeyStoreConnector
-  val pdfGeneratorConnector: PdfGeneratorConnector
-  val lookupRequestID: String
-  val lookupResultID: String
 
   def printResultsPDF: Action[AnyContent] = ActionWithSessionId.async {
     implicit request =>
@@ -61,7 +59,7 @@ trait PrintPdfController extends BaseController {
       }
   }
 
-  protected def createPdfResult(response: WSResponse): Result = {
+  def createPdfResult(response: WSResponse): Result = {
     Ok(response.bodyAsBytes.toArray).as("application/pdf")
   }
 

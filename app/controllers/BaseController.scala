@@ -16,15 +16,13 @@
 
 package controllers
 
-import config.LocalTemplateRenderer
+import config.{LocalTemplateRenderer, PlaContext, PlaContextImpl}
 import config.wiring.PlaFormPartialRetriever
-import uk.gov.hmrc.play.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 trait BaseController extends FrontendController {
-  implicit val context = config.PlaContextImpl
-  implicit val partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = PlaFormPartialRetriever
-
-  implicit val templateRenderer: TemplateRenderer = LocalTemplateRenderer
+  implicit val context: PlaContext = PlaContextImpl
+  implicit val partialRetriever: PlaFormPartialRetriever
+  implicit val templateRenderer: LocalTemplateRenderer
 }

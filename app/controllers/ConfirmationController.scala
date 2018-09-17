@@ -17,27 +17,27 @@
 package controllers
 
 import auth.AuthFunction
-import config.{AuthClientConnector, FrontendAppConfig}
+import config.wiring.PlaFormPartialRetriever
+import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
+import javax.inject.Inject
+import play.api.Play.current
+import play.api.i18n.Messages.Implicits._
 import play.api.mvc._
+import play.api.{Configuration, Environment, Play}
+import uk.gov.hmrc.auth.core.AuthConnector
+import views.html.pages._
 
 import scala.concurrent.Future
-import play.api.{Configuration, Environment, Play}
-import views.html.pages._
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
-import uk.gov.hmrc.auth.core.AuthConnector
 
-object ConfirmationController extends ConfirmationController {
+class ConfirmationController @Inject()(implicit val partialRetriever: PlaFormPartialRetriever,
+                                       implicit val templateRenderer: LocalTemplateRenderer) extends BaseController with AuthFunction {
   lazy val appConfig = FrontendAppConfig
-  override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.confirmFPUrl
+  val authConnector: AuthConnector = AuthClientConnector
+  lazy val postSignInRedirectUrl = appConfig.confirmFPUrl
 
   override def config: Configuration = Play.current.configuration
 
   override def env: Environment = Play.current.injector.instanceOf[Environment]
-}
-
-trait ConfirmationController extends BaseController with AuthFunction {
 
   val confirmFP = Action.async {
     implicit request =>

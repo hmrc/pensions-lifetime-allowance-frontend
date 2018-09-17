@@ -20,11 +20,13 @@ import java.time.LocalDateTime
 
 import auth.AuthFunction
 import common.Strings
-import config.{AuthClientConnector, FrontendAppConfig}
+import config.wiring.PlaFormPartialRetriever
+import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.WithdrawDateForm._
+import javax.inject.Inject
 import models.ProtectionModel
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.Play.current
@@ -35,15 +37,15 @@ import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.frontend.config.AuthRedirects
 
 import scala.concurrent.Future
 
 
-object WithdrawProtectionController extends WithdrawProtectionController {
-  val keyStoreConnector = KeyStoreConnector
-  val displayConstructors = DisplayConstructors
-  val plaConnector = PLAConnector
+class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnector,
+                                             plaConnector: PLAConnector,
+                                             implicit val partialRetriever: PlaFormPartialRetriever,
+                                             implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
+  val displayConstructors: DisplayConstructors = DisplayConstructors
   lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
   lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
@@ -51,14 +53,6 @@ object WithdrawProtectionController extends WithdrawProtectionController {
   override def config: Configuration = Play.current.configuration
 
   override def env: Environment = Play.current.injector.instanceOf[Environment]
-}
-
-trait WithdrawProtectionController extends BaseController with AuthFunction {
-
-  val keyStoreConnector: KeyStoreConnector
-  val displayConstructors: DisplayConstructors
-  val plaConnector: PLAConnector
-  val authConnector: AuthConnector
 
   /** Withdraw protections journey **/
   def withdrawSummary: Action[AnyContent] = Action.async {

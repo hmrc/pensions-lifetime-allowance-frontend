@@ -16,10 +16,12 @@
 
 package config.wiring
 
-import uk.gov.hmrc.play.frontend.filters.SessionCookieCryptoFilter
+import javax.inject.Inject
+import uk.gov.hmrc.crypto.PlainText
+import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
 
-trait SessionCookieCryptoFilterWrapper {
+class SessionCookieCryptoFilterWrapper @Inject()(sessionCookieCrypto: SessionCookieCrypto){
   def encryptCookieString(cookie: String) : String = {
-    SessionCookieCryptoFilter.encrypt(cookie)
+    sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).toString
   }
 }

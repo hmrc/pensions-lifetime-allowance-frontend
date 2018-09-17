@@ -17,10 +17,11 @@
 package config.wiring
 
 import config.WSHttp
+import javax.inject.Inject
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.http.HttpGet
 
-object PlaFormPartialRetriever extends FormPartialRetriever with SessionCookieCryptoFilterWrapper {
+class PlaFormPartialRetriever @Inject()(sessionCookieCryptoFilterWrapper: SessionCookieCryptoFilterWrapper) extends FormPartialRetriever {
   override def httpGet: HttpGet with WSHttp = new HttpGet with WSHttp
-  override val crypto = encryptCookieString _
+  override val crypto = sessionCookieCryptoFilterWrapper.encryptCookieString _
 }

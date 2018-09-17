@@ -20,12 +20,11 @@ import java.time.LocalDate
 
 import forms.PSODetailsForm._
 import models.PSODetailsModel
-import org.scalatestplus.play.OneAppPerSuite
 import testHelpers.PSODetailsMessages
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.Constants
 
-class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with OneAppPerSuite {
+class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication {
 
   "PSODetailsForm" should {
     val validMap = Map("psoDay" -> "1", "psoMonth" -> "2", "psoYear" -> "2017", "psoAmt" -> "0.01")

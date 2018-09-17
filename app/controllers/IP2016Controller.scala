@@ -17,7 +17,8 @@
 package controllers
 
 import auth.AuthFunction
-import config.{AppConfig, AuthClientConnector, FrontendAppConfig}
+import config.wiring.PlaFormPartialRetriever
+import config.{AppConfig, AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import connectors.KeyStoreConnector
 import play.api.{Configuration, Environment, Play}
 import play.api.i18n.Messages
@@ -31,6 +32,7 @@ import forms.OverseasPensionsForm.overseasPensionsForm
 import forms.CurrentPensionsForm.currentPensionsForm
 import forms.PSODetailsForm.psoDetailsForm
 import forms.PensionDebitsForm.pensionDebitsForm
+import javax.inject.Inject
 import models._
 import play.api.data.FormError
 import play.api.mvc.{Action, AnyContent}
@@ -38,23 +40,17 @@ import views.html._
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.renderer.TemplateRenderer
 
-object IP2016Controller extends IP2016Controller {
-
-    val keyStoreConnector = KeyStoreConnector
-    override lazy val appConfig = FrontendAppConfig
+class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
+                                 implicit val partialRetriever: PlaFormPartialRetriever,
+                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
+    lazy val appConfig = FrontendAppConfig
     override lazy val authConnector: AuthConnector = AuthClientConnector
-    lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
+    lazy val postSignInRedirectUrl = appConfig.ipStartUrl
 
     override def config: Configuration = Play.current.configuration
     override def env: Environment = Play.current.injector.instanceOf[Environment]
-}
-
-trait IP2016Controller extends BaseController with AuthFunction {
-
-    val keyStoreConnector: KeyStoreConnector
-    val appConfig: AppConfig
-
 
     //PENSIONS TAKEN
     val pensionsTaken = Action.async { implicit request =>

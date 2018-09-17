@@ -23,12 +23,13 @@ import akka.stream.ActorMaterializer
 import auth.MockConfig
 import com.kenshoo.play.metrics.PlayModule
 import common.Exceptions.RequiredValueNotDefinedException
-import config.PlaContextImpl
+import config.{AppConfig, LocalTemplateRenderer, PlaContextImpl}
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import forms.{AmendCurrentPensionForm, AmendOverseasPensionsForm, AmendPensionsTakenBeforeForm, AmendPensionsTakenBetweenForm}
+import javax.inject.Inject
 import models._
 import models.amendModels._
 import org.jsoup.Jsoup
@@ -48,6 +49,7 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.renderer.TemplateRenderer
 
@@ -56,18 +58,19 @@ import uk.gov.hmrc.http.HttpResponse
 import views.html.pages.amends._
 import views.html.pages.fallback.technicalError
 
-class AmendsControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach with AuthMock {
+class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach with AuthMock with WithFakeApplication {
   override def bindModules = Seq(new PlayModule)
 
-  val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockDisplayConstructors = mock[DisplayConstructors]
-  val mockPLAConnector = mock[PLAConnector]
   val mockResponseConstructors = mock[ResponseConstructors]
+  val mockKeystoreConnector = mock[KeyStoreConnector]
+  val mockPlaConnector = mock[PLAConnector]
+
   implicit val system = ActorSystem()
   implicit val materializer = ActorMaterializer()
   implicit val plaContext = PlaContextImpl
-  implicit val templateRenderer = MockTemplateRenderer
-  implicit lazy val retriever = PlaFormPartialRetriever
+  implicit val mockPartialRetriever = mock[PlaFormPartialRetriever]
+  implicit val mockTemplateRenderer = MockTemplateRenderer.renderer
 
   override def beforeEach() {
     reset(mockAuthConnector)
@@ -75,19 +78,24 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
   val testIP16DormantModel = AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, protectionType = Some("IP2016"), status = Some("dormant"), relevantAmount = Some(100000), uncrystallisedRights = Some(100000)))
 
-  object TestAmendsController extends AmendsController  {
-    lazy val appConfig = MockConfig
-    override lazy val authConnector = mockAuthConnector
-    lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
-
+  object TestAmendsController extends AmendsController {
+    override val keyStoreConnector: KeyStoreConnector = mockKeystoreConnector
     override val displayConstructors: DisplayConstructors = mockDisplayConstructors
-    override val keyStoreConnector: KeyStoreConnector = mockKeyStoreConnector
-    override val plaConnector: PLAConnector = mockPLAConnector
     override val responseConstructors: ResponseConstructors = mockResponseConstructors
+    override val plaConnector: PLAConnector = mockPlaConnector
+    override val postSignInRedirectUrl: String = ""
+    override val appConfig: AppConfig = mock[AppConfig]
+    override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
+    override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
+
     override def config: Configuration = mock[Configuration]
+
     override def env: Environment = mock[Environment]
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
+
+    override def authConnector: AuthConnector = mockAuthConnector
   }
+
+
 
   val sessionId = UUID.randomUUID.toString
   implicit val fakeRequest = FakeRequest()
@@ -218,7 +226,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
 
   def keystoreFetchCondition[T](data: Option[T]): Unit = {
-    when(mockKeyStoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockKeystoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future.successful(data))
   }
 
@@ -279,8 +287,8 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "return 500" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        when(mockKeyStoreConnector.saveData(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
-        when(mockPLAConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(409)))
+        when(mockKeystoreConnector.saveData(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+        when(mockPlaConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(409)))
         status(DataItem.result) shouldBe 500
       }
       "show the technical error page for existing protections" in {
@@ -296,7 +304,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "return a Locked response" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        when(mockPLAConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(423)))
+        when(mockPlaConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(423)))
         status(DataItem.result) shouldBe 423
       }
 
@@ -310,7 +318,8 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "return 500" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        when(mockPLAConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockPlaConnector
+          .amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
         when(mockResponseConstructors.createAmendResponseModelFromJson(ArgumentMatchers.any())).thenReturn(None)
         status(DataItem.result) shouldBe 500
@@ -327,7 +336,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "return 500" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        when(mockPLAConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockPlaConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
         when(mockResponseConstructors.createAmendResponseModelFromJson(ArgumentMatchers.any())).thenReturn(Some(AmendResponseModel(noNotificationIdProtection)))
         status(DataItem.result) shouldBe 500
@@ -344,10 +353,10 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "return 303" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-        when(mockPLAConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockPlaConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(HttpResponse(200, responseJson = Some(Json.parse("""{"result":"doesNotMatter"}""")))))
         when(mockResponseConstructors.createAmendResponseModelFromJson(ArgumentMatchers.any())).thenReturn(Some(tstActiveAmendResponseModel))
-        when(mockKeyStoreConnector.saveData(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        when(mockKeystoreConnector.saveData(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
           .thenReturn(Future.successful(CacheMap("keyStoreId", Map.empty)))
         status(DataItem.result) shouldBe 303
       }
@@ -380,8 +389,8 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
       "return 200" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        when(mockKeyStoreConnector.fetchAndGetFormData[AmendResponseModel](ArgumentMatchers.startsWith("amendResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
-        when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](ArgumentMatchers.startsWith("AmendsGA"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(Some("updatedValue"),Some("changedToYes"),Some("changedToNo"),None,Some("addedPSO")))))
+        when(mockKeystoreConnector.fetchAndGetFormData[AmendResponseModel](ArgumentMatchers.startsWith("amendResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
+        when(mockKeystoreConnector.fetchAndGetFormData[AmendsGAModel](ArgumentMatchers.startsWith("AmendsGA"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(Some("updatedValue"),Some("changedToYes"),Some("changedToNo"),None,Some("addedPSO")))))
         when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(ArgumentMatchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
         status(result) shouldBe 200
       }
@@ -397,8 +406,8 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       "return 200" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-        when(mockKeyStoreConnector.fetchAndGetFormData[AmendResponseModel](ArgumentMatchers.startsWith("amendResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
-        when(mockKeyStoreConnector.fetchAndGetFormData[AmendsGAModel](ArgumentMatchers.startsWith("AmendsGA"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(None,Some("changedToNo"),Some("changedToYes"),None,None))))
+        when(mockKeystoreConnector.fetchAndGetFormData[AmendResponseModel](ArgumentMatchers.startsWith("amendResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
+        when(mockKeystoreConnector.fetchAndGetFormData[AmendsGAModel](ArgumentMatchers.startsWith("AmendsGA"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(None,Some("changedToNo"),Some("changedToYes"),None,None))))
         when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(ArgumentMatchers.any())).thenReturn(tstInactiveAmendResponseDisplayModel)
         status(result) shouldBe 200
       }
@@ -477,7 +486,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
       }
       "redirect to Amends Summary page" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreSaveCondition[AmendProtectionModel](mockKeyStoreConnector)
+        keystoreSaveCondition[AmendProtectionModel](mockKeystoreConnector)
         keystoreFetchCondition[AmendProtectionModel](Some(testIP16DormantModel))
         status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
@@ -612,7 +621,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "redirect to Amends Summary Page" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreSaveCondition[PensionsTakenBeforeModel](mockKeyStoreConnector)
+        keystoreSaveCondition[PensionsTakenBeforeModel](mockKeystoreConnector)
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
@@ -625,7 +634,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "redirect to Amends Summary Page" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreSaveCondition[PensionsTakenBeforeModel](mockKeyStoreConnector)
+        keystoreSaveCondition[PensionsTakenBeforeModel](mockKeystoreConnector)
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
@@ -1248,7 +1257,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
 
       "return the correct value not found exception" in {
         the [RequiredValueNotDefinedException] thrownBy {
-          AmendsController.createPsoDetailsList(AmendPSODetailsModel(Some(1), Some(3), Some(2017), None, "", "", false))
+          TestAmendsController.createPsoDetailsList(AmendPSODetailsModel(Some(1), Some(3), Some(2017), None, "", "", false))
         } should have message "Value not found for psoAmt in createPsoDetailsList"
       }
     }
@@ -1256,7 +1265,7 @@ class AmendsControllerSpec extends UnitSpec with WithFakeApplication with Mockit
     "supplied with a PSO amount" should {
 
       "return the correct list" in {
-        AmendsController.createPsoDetailsList(AmendPSODetailsModel(Some(1), Some(3), Some(2017), Some(1), "", "", false)) shouldBe Some(List(PensionDebitModel("2017-03-01", 1)))
+        TestAmendsController.createPsoDetailsList(AmendPSODetailsModel(Some(1), Some(3), Some(2017), Some(1), "", "", false)) shouldBe Some(List(PensionDebitModel("2017-03-01", 1)))
       }
     }
   }

@@ -16,8 +16,8 @@
 
 package config
 
+import javax.inject.Inject
 import play.api.i18n.Messages
-
 import uk.gov.hmrc.play.config.ServicesConfig
 
 trait PlaContext {
@@ -25,7 +25,7 @@ trait PlaContext {
   def assetsUrl: String
 }
 
-case object PlaContextImpl extends PlaContext with ServicesConfig{
+object PlaContextImpl extends PlaContext with ServicesConfig with PlaConfig {
   override def getPageHelpPartial()(messages: Messages): String = s"${baseUrl("contact-frontend")}/contact/problem_reports"
 
   override def assetsUrl: String = s"${getString("assets.url")}${getString("assets.version")}/"

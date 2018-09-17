@@ -16,21 +16,17 @@
 
 package controllers
 
-import config.{AppConfig, FrontendAppConfig}
+import config.FrontendAppConfig
+import javax.inject.Inject
 import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.Future
 
-object AccountController extends AccountController {
-  val applicationConfig: AppConfig = FrontendAppConfig
-}
-
-trait AccountController extends FrontendController {
-
-  val applicationConfig: AppConfig
+class AccountController@Inject()() extends FrontendController {
+  lazy val appConfig = FrontendAppConfig
 
   def signOut: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Redirect(applicationConfig.feedbackSurvey).withNewSession)
+    Future.successful(Redirect(appConfig.feedbackSurvey).withNewSession)
   }
 }

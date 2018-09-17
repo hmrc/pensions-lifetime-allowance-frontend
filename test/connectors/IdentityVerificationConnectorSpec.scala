@@ -16,16 +16,69 @@
 
 package connectors
 
+import com.kenshoo.play.metrics.Metrics
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatestplus.play.OneAppPerSuite
-import connectors.IdentityVerificationConnector.JsonValidationException
-import testHelpers.MockIdentityVerificationConnector
+import testHelpers.TestConfigHelper
 import enums.IdentityVerificationResult
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.http.HeaderCarrier
+import javax.inject.Inject
+import org.scalatest.mockito.MockitoSugar
+import org.mockito.Mockito._
+import play.api.{Application, Configuration, Environment}
+import services.MetricsService
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
+import org.mockito.Mockito._
+import org.scalatest.mockito.MockitoSugar
+import play.api.http.Status
+import play.api.libs.json.{JsValue, Json}
+import enums.IdentityVerificationResult
+import org.mockito.ArgumentMatchers
+import play.api.Mode.Mode
 
-class IdentityVerificationConnectorSpec extends UnitSpec with OneAppPerSuite with ScalaFutures {
+import scala.concurrent.Future
+import scala.io.Source
+import uk.gov.hmrc.http.{HttpGet, HttpResponse}
+
+class IdentityVerificationConnectorSpec extends UnitSpec with ScalaFutures with MockitoSugar with WithFakeApplication {
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
+
+  val env = mock[Environment]
+
+  object MockIdentityVerificationHttp extends MockitoSugar {
+    val mockHttp = mock[HttpGet]
+
+    val possibleJournies = Map (
+      "success-journey-id" -> "test/resources/identity-verification/success.json",
+      "incomplete-journey-id" -> "test/resources/identity-verification/incomplete.json",
+      "failed-matching-journey-id" -> "test/resources/identity-verification/failed-matching.json",
+      "insufficient-evidence-journey-id" -> "test/resources/identity-verification/insufficient-evidence.json",
+      "locked-out-journey-id" -> "test/resources/identity-verification/locked-out.json",
+      "user-aborted-journey-id" -> "test/resources/identity-verification/user-aborted.json",
+      "timeout-journey-id" -> "test/resources/identity-verification/timeout.json",
+      "technical-issue-journey-id" -> "test/resources/identity-verification/technical-issue.json",
+      "precondition-failed-journey-id" -> "test/resources/identity-verification/precondition-failed.json",
+      "failed-iv-journey-id" -> "test/resources/identity-verification/failed-iv.json",
+      "invalid-journey-id" -> "test/resources/identity-verification/invalid-result.json",
+      "invalid-fields-journey-id" -> "test/resources/identity-verification/invalid-fields.json"
+    )
+
+    def mockJourneyId(journeyId: String): Unit = {
+      val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
+      when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).
+        thenReturn(Future.successful(HttpResponse(Status.OK, responseJson = Some(Json.parse(fileContents)))))
+    }
+
+    possibleJournies.keys.foreach(mockJourneyId)
+  }
+
+  object MockIdentityVerificationConnector extends IdentityVerificationConnector {
+    override val serviceUrl: String = ""
+    override def http: HttpGet = MockIdentityVerificationHttp.mockHttp
+
+    override protected def mode: Mode = mock[Mode]
+
+    override protected def runModeConfiguration: Configuration = mock[Configuration]
+  }
 
   "return success when identityVerification returns success" in {
     MockIdentityVerificationConnector.identityVerificationResponse("success-journey-id").futureValue shouldBe IdentityVerificationResult.Success
@@ -74,7 +127,7 @@ class IdentityVerificationConnectorSpec extends UnitSpec with OneAppPerSuite wit
   "return failed future for invalid json fields" in {
     val result = MockIdentityVerificationConnector.identityVerificationResponse("invalid-fields-journey-id")
     ScalaFutures.whenReady(result.failed) { e =>
-      e shouldBe a [JsonValidationException]
+      e shouldBe a[MockIdentityVerificationConnector.JsonValidationException]
     }
   }
 }

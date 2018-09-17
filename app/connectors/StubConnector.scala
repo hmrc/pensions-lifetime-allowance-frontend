@@ -17,7 +17,9 @@
 package connectors
 
 import config.WSHttp
-import play.api.Logger
+import javax.inject.Inject
+import play.api.Mode.Mode
+import play.api.{Configuration, Environment, Logger}
 import play.api.http.Status
 import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
@@ -26,16 +28,12 @@ import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
 
-object StubConnector extends StubConnector with ServicesConfig {
-  override val serviceUrl: String = baseUrl("pla-dynamic-stub")
+class StubConnector@Inject()(override val runModeConfiguration: Configuration,
+                             environment: Environment) extends ServicesConfig {
+  lazy val serviceUrl: String = baseUrl("pla-dynamic-stub")
+  val http = WSHttp
 
-  override def http: WSHttp = WSHttp
-}
-
-trait StubConnector {
-  val serviceUrl: String
-
-  def http: WSHttp
+  override protected def mode: Mode = environment.mode
 
   private def deleteProtectionByNinoUrl(nino: String) = s"$serviceUrl/test-only/individuals/$nino/protections"
   private def deleteProtectionsUrl = s"$serviceUrl/test-only/protections/removeAll"

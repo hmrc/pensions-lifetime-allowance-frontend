@@ -22,26 +22,35 @@ import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json._
 import play.api.libs.json.Reads._
+
 import scala.concurrent.Future
 import config.WSHttp
 import enums.ApplicationType
 import constructors.IPApplicationConstructor
+import javax.inject.Inject
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import models._
-import uk.gov.hmrc.http.{ HeaderCarrier, HttpErrorFunctions, HttpGet, HttpPost, HttpPut, HttpReads, HttpResponse, Upstream4xxResponse }
+import play.api.Mode.Mode
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpErrorFunctions, HttpGet, HttpPost, HttpPut, HttpReads, HttpResponse, Upstream4xxResponse}
 
-object PLAConnector extends PLAConnector with ServicesConfig {
+class PLAConnectorImpl@Inject()(override val runModeConfiguration: Configuration,
+                            environment: Environment) extends PLAConnector {
 
   val serviceUrl: String = baseUrl("pensions-lifetime-allowance")
   val http = WSHttp
+
+  override protected def mode: Mode = environment.mode
 }
 
-trait PLAConnector {
+
+  trait PLAConnector extends ServicesConfig{
+
+    val http: HttpGet with HttpPost with HttpPut
+    val serviceUrl: String
 
   implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders("Accept" -> "application/vnd.hmrc.1.0+json", "Content-Type" -> "application/json")
 
-  val http: HttpGet with HttpPost with HttpPut
-  val serviceUrl: String
 
   implicit val readApiResponse: HttpReads[HttpResponse] = new HttpReads[HttpResponse] {
     def read(method: String, url: String, response: HttpResponse) = ResponseHandler.handlePLAResponse(method, url, response)

@@ -18,24 +18,29 @@ package auth
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
+import config.wiring.PlaFormPartialRetriever
+import config.{LocalTemplateRenderer, WSHttp}
 import play.api.mvc.Results._
 import org.scalatest.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
-import testHelpers.{KeystoreTestHelper, MockTemplateRenderer}
+import testHelpers.{KeystoreTestHelper, MockTemplateRenderer, TestConfigHelper, TestControllerHelper}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.mockito.Matchers
 import org.mockito.Mockito._
 import mocks.AuthMock
 import org.scalatest.BeforeAndAfterEach
-import org.scalatestplus.play.OneAppPerSuite
+import play.api.Mode.Mode
 import play.api.mvc.Result
 import play.api.test.Helpers._
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import scala.concurrent.duration._
+import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach with AuthMock {
+class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach with AuthMock {
 
   val mockPlayAuthConnector = mock[PlayAuthConnector]
   implicit val system = ActorSystem()
@@ -57,8 +62,9 @@ class AuthFunctionSpec extends UnitSpec with OneAppPerSuite with MockitoSugar wi
     override def ggLoginUrl = "http://www.gglogin.com"
 
     override def origin = "origin"
-    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
 
+    override implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+    override implicit val templateRenderer: LocalTemplateRenderer = mock[LocalTemplateRenderer]
   }
 
 

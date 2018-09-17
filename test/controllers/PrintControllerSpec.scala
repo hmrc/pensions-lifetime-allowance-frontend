@@ -16,97 +16,81 @@
 
 package controllers
 
-import java.util.concurrent.TimeUnit
-
-import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
-import akka.util.Timeout
-import auth.MockConfig
-import com.kenshoo.play.metrics.PlayModule
-import connectors.{CitizenDetailsConnector, KeyStoreConnector}
+import config.LocalTemplateRenderer
+import config.wiring.PlaFormPartialRetriever
+import connectors.{CitizenDetailsConnector, KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
-import models._
-import org.jsoup.Jsoup
-import org.mockito.Mockito._
+import javax.inject.Inject
 import mocks.AuthMock
+import models._
 import org.mockito.ArgumentMatchers
+import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
-import play.api.{Configuration, Environment}
+import play.api.Environment
 import play.api.i18n.Messages
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import play.api.test.Helpers._
-
-import scala.concurrent.Future
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class PrintControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar with AuthMock {
-  override def bindModules = Seq(new PlayModule)
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+
+class PrintControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication {
 
   val mockKeyStoreConnector = mock[KeyStoreConnector]
   val mockCitizenDetailsConnector = mock[CitizenDetailsConnector]
   val mockDisplayConstructors = mock[DisplayConstructors]
-  implicit val system = ActorSystem()
-  implicit val materializer = ActorMaterializer()
   val fakeRequest = FakeRequest()
+
+  val keyStoreConnector = mock[KeyStoreConnector]
+  val plaConnector = mock[PLAConnector]
+  implicit val partialRetriever = mock[PlaFormPartialRetriever]
+  implicit val templateRenderer = mock[LocalTemplateRenderer]
+  val env = mock[Environment]
+
 
   val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
   val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111))
   val testPrintDisplayModel = PrintDisplayModel("Testy", "Mctestface", "AA11TESTA", "IP2016", "open", "PSATestNum", "ProtRefTestNum", Some("£1,246,500"), Some("3 April 2016"))
 
-  trait BaseTestPrintController extends PrintController {
-    val keyStoreConnector = mockKeyStoreConnector
-    val citizenDetailsConnector = mockCitizenDetailsConnector
-    val displayConstructors = mockDisplayConstructors
-    lazy val applicationConfig = MockConfig
-    override lazy val authConnector = mockAuthConnector
-    lazy val postSignInRedirectUrl = "postSignInUrl"
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    override def config: Configuration = mock[Configuration]
-
-    override def env: Environment = mock[Environment]
+  val TestPrintController = new PrintController(keyStoreConnector, mockCitizenDetailsConnector, env, partialRetriever, templateRenderer) {
+    override lazy val authConnector: AuthConnector = mockAuthConnector
+    override val displayConstructors = mockDisplayConstructors
   }
 
-  object TestPrintControllerValidDetails extends BaseTestPrintController {
-    override lazy val appConfig = MockConfig
-    when(citizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(Some(testPersonalDetails)))
-    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future(Some(testProtectionModel)))
-    when(displayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(testPrintDisplayModel)
-  }
-
-  object TestPrintControllerInValidDetails extends BaseTestPrintController {
-    override lazy val appConfig = MockConfig
-    when(citizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(Future(Some(testPersonalDetails)))
-    when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(None)
-    when(displayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(testPrintDisplayModel)
-  }
-
-  "Navigating to print protection" when {
 
 
-    "Valid data is provided" should {
-      lazy val result = await(TestPrintControllerValidDetails.printView(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
-      "return 200" in {
+  "Navigating to print protection" should {
+    "return 200" when {
+      "Valid data is provided" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+        when(mockCitizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(Some(testPersonalDetails)))
+        when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+          .thenReturn(Future.successful(Some(testProtectionModel)))
+        when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+          .thenReturn(testPrintDisplayModel)
+
+        val result = await(TestPrintController.printView(fakeRequest))
         status(result) shouldBe 200
-      }
-      "show the print page" in {
-        implicit val timeout: Timeout = Timeout.apply(5000, TimeUnit.MILLISECONDS)
-        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("Testy Mctestface")
       }
     }
 
-    "InValid data is provided" should {
-      lazy val result = await(TestPrintControllerInValidDetails.printView(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
-      "return a 303 redirect" in {
+    "return a 303 redirect" when {
+      "InValid data is provided" in {
+        when(mockCitizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          .thenReturn(Future(Some(testPersonalDetails)))
+        when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+          .thenReturn(None)
+        when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+          .thenReturn(testPrintDisplayModel)
+
+        val result = await(TestPrintController.printView(fakeRequest))
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.url)
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections().url)
       }
     }
   }

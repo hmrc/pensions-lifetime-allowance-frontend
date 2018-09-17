@@ -22,20 +22,49 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.Mode.Mode
+import play.api.{Application, Configuration, Environment}
 import play.api.libs.json.Json
 import play.api.test.Helpers._
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with GuiceOneServerPerSuite {
+class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach {
+
+
+//  val mockHttp : WSHttp = mock[WSHttp]
+//  val env = mock[Environment]
+//
+//  val connector = new CitizenDetailsConnector(fakeApplication.configuration, env)
+//
+//  val tstDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
+//  val x = Json.toJson(tstDetails)
+//
+//  implicit val hc: HeaderCarrier = HeaderCarrier()
+//
+//  override def beforeEach() {
+//    reset(mockHttp)
+//  }
+//
+
+//  class Setup {
+//    val TestCitizenDetailsConnector = new CitizenDetailsConnector {
+//      def config: Configuration = mock[Configuration]
+//      def env: Environment = mock[Environment]
+//    }
+//  }
+
 
   val mockHttp : WSHttp = mock[WSHttp]
   object TestCitizenDetailsConnector extends CitizenDetailsConnector {
     val http = mockHttp
     val serviceUrl = "localhostUrl"
+
+    override protected def mode: Mode = mock[Mode]
+
+    override protected def runModeConfiguration: Configuration = mock[Configuration]
   }
 
   val tstDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
@@ -48,11 +77,6 @@ class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with Before
   }
 
 
-  "CitizenDetailsConnector" should {
-    "use the correct http" in {
-      CitizenDetailsConnector.http shouldBe WSHttp
-    }
-  }
 
   "Calling getPersonDetails with valid response" should {
     "return a defined Option on PersonalDetailsModel" in {

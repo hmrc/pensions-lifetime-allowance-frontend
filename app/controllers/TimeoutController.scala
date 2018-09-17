@@ -16,20 +16,19 @@
 
 package controllers
 
+import config.LocalTemplateRenderer
+import config.wiring.PlaFormPartialRetriever
+import javax.inject.Inject
 import play.api.mvc._
-import uk.gov.hmrc.play.frontend.controller.FrontendController
+
 import scala.concurrent.Future
 import models._
-
 import views.html._
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import uk.gov.hmrc.renderer.TemplateRenderer
 
-object TimeoutController extends TimeoutController {
-}
-
-trait TimeoutController extends BaseController {
+class TimeoutController @Inject()(implicit val partialRetriever: PlaFormPartialRetriever,
+                                  implicit val templateRenderer:LocalTemplateRenderer) extends BaseController {
 
   val timeout = Action.async { implicit request =>
     Future.successful(Ok(views.html.pages.timeout()))

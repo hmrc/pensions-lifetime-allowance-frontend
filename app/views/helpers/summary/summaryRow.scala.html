@@ -17,6 +17,7 @@
 @import play.api.mvc.Call
 @import controllers.SummaryController
 
+@import connectors.KeyStoreConnector
 @(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], removeLinkCall: Option[Call], removeLinkDefined: Boolean, boldText: Boolean, firstRow: Boolean)(implicit messages: Messages, lang: Lang)
 
 @boldString = {"-bold"}

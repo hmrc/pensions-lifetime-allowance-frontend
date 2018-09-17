@@ -16,15 +16,14 @@
 
 package forms
 
-import org.scalatestplus.play.PlaySpec
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.data.FormError
 import play.api.libs.json.Json
 import WithdrawDateForm.withdrawDateForm
 import testHelpers.CommonErrorMessages
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 
-class WithdrawDateFormSpec extends PlaySpec with GuiceOneAppPerSuite with CommonErrorMessages{
+class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with CommonErrorMessages{
 
   "Withdraw date form" should {
     "return no errors with valid date" in {

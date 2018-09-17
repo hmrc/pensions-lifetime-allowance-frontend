@@ -20,40 +20,28 @@ package controllers
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import org.scalatest.mockito.MockitoSugar
-import java.util.UUID
-import uk.gov.hmrc.renderer.TemplateRenderer
-
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import play.api.i18n.Messages
 import testHelpers._
 import auth._
-import com.kenshoo.play.metrics.PlayModule
+import config.wiring.PlaFormPartialRetriever
+import javax.inject.Inject
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
+import play.api.i18n.Messages
 
-class TimeoutControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
-    override def bindModules = Seq(new PlayModule)
+class TimeoutControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
-    implicit val system = ActorSystem()
-    implicit val materializer = ActorMaterializer()
+    implicit val mockPartialRetriever = mock[PlaFormPartialRetriever]
+    implicit val mockTemplateRenderer = MockTemplateRenderer.renderer
 
-    object TestTimeoutController extends TimeoutController {
-        override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-    }
+    val controller = new TimeoutController
 
     "Calling the .timeout action" when {
 
         "navigated to " should {
-            lazy val result = await(TestTimeoutController.timeout(fakeRequest))
-            lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+            lazy val result = await(controller.timeout(FakeRequest()))
             "return a 200" in {
                 status(result) shouldBe 200
-            }
-
-            "take user to the Timeout page" in {
-                jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.timeout.pageHeading")
             }
         }
     }
