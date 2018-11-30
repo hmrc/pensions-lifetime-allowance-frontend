@@ -23,35 +23,43 @@ import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.hooks.HttpHooks
 import uk.gov.hmrc.play.audit.http.HttpAuditing
-import uk.gov.hmrc.play.audit.http.connector.{AuditConnector => Auditing}
+import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.config.LoadAuditingConfig
 import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
 import uk.gov.hmrc.play.http.ws.{WSDelete, WSGet, WSPost, WSPut}
 
+object FrontendAuditConnector extends AppName with AuditConnector {
+  override protected def appNameConfiguration: Configuration = Play.current.configuration
+  protected def mode: Mode = Play.current.mode
+
+  override lazy val auditingConfig = LoadAuditingConfig(appNameConfiguration, mode, "auditing")
+}
+
 trait PlaConfig {
-  protected def appNameConfiguration:Configuration = Play.current.configuration
-  protected def mode:Mode = Play.current.mode
+  protected def appNameConfiguration: Configuration = Play.current.configuration
   protected def runModeConfiguration: Configuration = Play.current.configuration
-  def auditConnector:Auditing = ???
+  protected def mode: Mode = Play.current.mode
+  def auditConnector: AuditConnector = FrontendAuditConnector
 }
 
 trait Hooks extends HttpHooks with HttpAuditing {
   override val hooks = Seq(AuditingHook)
 }
 
-trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with HttpPost with WSPost with HttpDelete with WSDelete with AppName with Hooks with PlaConfig
+trait WSHttp extends HttpGet with WSGet with HttpPut with WSPut with
+  HttpPost with WSPost with HttpDelete with WSDelete with Hooks with AppName with PlaConfig {
+  override val configuration = Some(appNameConfiguration.underlying)
+}
 
-
-
-object WSHttp extends WSHttp
-
+object WSHttp extends WSHttp {
+}
 
 object PLASessionCache extends SessionCache with ServicesConfig with AppName with PlaConfig {
-
-  override lazy val domain = getConfString("cachable.session-cache.domain", throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
-  override lazy val baseUri = baseUrl("cachable.session-cache")
-  override lazy val defaultSource = appName
-  override lazy val http =  WSHttp
-
+  override lazy val domain: String = getConfString("cachable.session-cache.domain",
+    throw new Exception(s"Could not find config 'cachable.session-cache.domain'"))
+  override lazy val baseUri: String = baseUrl("cachable.session-cache")
+  override lazy val defaultSource: String = appName
+  override lazy val http: WSHttp.type =  WSHttp
 }
 
 object AuthClientConnector extends PlayAuthConnector with ServicesConfig with PlaConfig {
