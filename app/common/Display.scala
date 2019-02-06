@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 import java.time.LocalDate
 
+import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object Display {
@@ -32,9 +33,16 @@ object Display {
     else str
   }
 
-  def dateDisplayString(date: LocalDate): String = {
-    val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyy")
-    date.format(dateFormat)
+  def dateDisplayString(date: LocalDate)(implicit lang: play.api.i18n.Lang, messages: Messages): String = {
+    if(lang.language == "cy") {
+      val monthNum = date.getMonthValue
+      val welshFormatter = DateTimeFormatter.ofPattern(s"""d '${messages(s"pla.month.$monthNum")}' YYYY""")
+      date.format(welshFormatter)
+  }
+    else {
+      val dateFormat = DateTimeFormatter.ofPattern("d MMMM YYYY")
+      date.format(dateFormat)
+    }
   }
 
   def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {
