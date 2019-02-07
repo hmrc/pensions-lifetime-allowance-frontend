@@ -844,3 +844,17 @@ pla.views.heading.fixed                                    = Manylion eich dioge
 pla.views.heading.FP2014                                   = Manylion eich diogelwch penodol 2014
 pla.views.heading.IP2014                                   = Manylion eich diogelwch unigol 2014
 pla.views.heading.IP2016                                   = Manylion eich diogelwch unigol 2016
+
+##Month Names##
+pla.month.1 = Ionawr
+pla.month.2 = Chwefror
+pla.month.3 = Mawrth
+pla.month.4 = Ebrill
+pla.month.5 = Mai
+pla.month.6 = Mehefin
+pla.month.7 = Gorffennaf
+pla.month.8 = Awst
+pla.month.9 = Medi
+pla.month.10 = Hydref
+pla.month.11 = Tachwedd
+pla.month.12 = Rhagfyr

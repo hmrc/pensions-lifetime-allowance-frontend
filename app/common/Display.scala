@@ -20,6 +20,7 @@ import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 import java.time.LocalDate
 
+import play.api.i18n.Messages
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object Display {
@@ -32,9 +33,18 @@ object Display {
     else str
   }
 
-  def dateDisplayString(date: LocalDate): String = {
+  def dateDisplayString(date: LocalDate)(implicit lang: play.api.i18n.Lang, messages: Messages): String = {
     val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyy")
-    date.format(dateFormat)
+    if (lang.language == "cy") {
+      date.format(dateFormat)
+      val monthNum = date.getMonthValue
+      val welshFormatter = DateTimeFormatter.ofPattern(s"""d '${messages(s"pla.month.$monthNum")}' YYYY""")
+      date.format(welshFormatter)
+    }
+    else {
+      val dateFormat = DateTimeFormatter.ofPattern("d MMMM YYYY")
+      date.format(dateFormat)
+    }
   }
 
   def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {

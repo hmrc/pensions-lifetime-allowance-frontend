@@ -27,9 +27,6 @@ import utils.PlaTestContext
 
 trait CommonViewSpecHelper extends UnitSpec with CommonMessages with MockitoSugar with WithFakeApplication{
 
-  //TODO
-
-  //mock logger
   implicit val application = fakeApplication
   val sessionCookieCryptoFilterWrapper = mock[SessionCookieCryptoFilterWrapper]
   implicit lazy val fakeRequest = FakeRequest()

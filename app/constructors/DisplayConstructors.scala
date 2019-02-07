@@ -77,7 +77,7 @@ trait DisplayConstructors {
   }
 
   // EXISTING PROTECTIONS
-  def createExistingProtectionsDisplayModel(model: TransformedReadResponseModel): ExistingProtectionsDisplayModel = {
+  def createExistingProtectionsDisplayModel(model: TransformedReadResponseModel)(implicit lang: Lang): ExistingProtectionsDisplayModel = {
     val activeProtection = model.activeProtection.map(createExistingProtectionDisplayModel)
     val otherProtectionsList = model.inactiveProtections.map(createExistingProtectionDisplayModel).sortWith(sortByStatus)
 
@@ -96,7 +96,7 @@ trait DisplayConstructors {
     }
   }
 
-  def createExistingProtectionDisplayModel(model: ProtectionModel): ExistingProtectionDisplayModel = {
+  def createExistingProtectionDisplayModel(model: ProtectionModel)(implicit lang: Lang): ExistingProtectionDisplayModel = {
 
     val status = Strings.statusString(model.status)
     val protectionType = Strings.protectionTypeString(model.protectionType)
