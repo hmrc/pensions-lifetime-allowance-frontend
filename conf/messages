@@ -848,3 +848,16 @@ pla.existingProtections.withdrawnDate                 = Withdrawn date
 
 psa.lookup.protection-guidance.protection-type-primary-value = £1,500,000 or above
 
+##Month Names##
+pla.month.1 = January
+pla.month.2 = February
+pla.month.3 = March
+pla.month.4 = April
+pla.month.5 = May
+pla.month.6 = June
+pla.month.7 = July
+pla.month.8 = August
+pla.month.9 = September
+pla.month.10 = October
+pla.month.11 = November
+pla.month.12 = December
