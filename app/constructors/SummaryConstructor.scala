@@ -190,7 +190,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
       }.getOrElse(None)
     }
 
-    def createPSODetailsSection(model: Option[PSODetailsModel]) = {
+    def createPSODetailsSection(model: Option[PSODetailsModel])(implicit lang: Lang) = {
       model match {
         case Some(m) =>
           val name = nameString(s"psoDetails")
