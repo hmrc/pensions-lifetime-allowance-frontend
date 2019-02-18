@@ -43,7 +43,7 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
     }
 
     "have a back with href" in {
-      doc.select("a").attr("href") shouldBe routes.WithdrawProtectionController.withdrawDateInput().url
+      doc.select("a").attr("href") shouldBe routes.WithdrawProtectionController.getWithdrawDateInput().url
     }
 
     "have a form action of 'getAction'" in {

@@ -19,34 +19,38 @@ package forms
 import java.time.{LocalDate, LocalDateTime}
 
 import common.Dates
+import models.WithdrawDateFormModel
 import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
 
 object WithdrawDateForm extends CommonBinders{
 
-  def withdrawDateForm: Form[(Option[Int], Option[Int], Option[Int])] = Form(
-    tuple(
+  def withdrawDateForm: Form[WithdrawDateFormModel] = Form(
+    mapping(
       "withdrawDay" -> withdrawDateFormatter,
       "withdrawMonth" -> withdrawDatePartialFormatter("month"),
       "withdrawYear" -> withdrawDatePartialFormatter("year")
-    )
+    )(WithdrawDateFormModel.apply)(WithdrawDateFormModel.unapply)
   )
 
-  def validateWithdrawDate(form: Form[(Option[Int], Option[Int], Option[Int])],
-                           protectionStartDate: LocalDateTime): Form[(Option[Int], Option[Int], Option[Int])] = {
+  def validateWithdrawDate(form: Form[WithdrawDateFormModel],
+                           protectionStartDate: LocalDateTime): Form[WithdrawDateFormModel] = {
     if (form.hasErrors) form else {
-      val day = form.get._1.get
-      val month = form.get._2.get
-      val year = form.get._3.get
+      val day = form.get.withdrawDay.get
+      val month = form.get.withdrawMonth.get
+      val year = form.get.withdrawYear.get
       if (LocalDate.of(year, month, day) isBefore protectionStartDate.toLocalDate)
         form.withError("", "pla.withdraw.date-input.form.date-before-start-date")
       else form
     }
   }
 
-  def getWithdrawDate(form: Form[(Option[Int], Option[Int], Option[Int])]) : String = {
-    Dates.apiDateFormat(form.get._1.get,form.get._2.get,form.get._3.get)
+  def getWithdrawDate(form: Form[WithdrawDateFormModel]) : String = {
+    Dates.apiDateFormat(form.get.withdrawDay.get,form.get.withdrawMonth.get,form.get.withdrawYear.get)
   }
 
+  def getWithdrawDateModel(form: WithdrawDateFormModel) : String = {
+    Dates.apiDateFormat(form.withdrawDay.get,form.withdrawMonth.get,form.withdrawYear.get)
+  }
 }

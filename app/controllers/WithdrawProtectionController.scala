@@ -19,7 +19,7 @@ package controllers
 import java.time.LocalDateTime
 
 import auth.AuthFunction
-import common.Strings
+import common.{Dates, Strings}
 import config.wiring.PlaFormPartialRetriever
 import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import connectors.{KeyStoreConnector, PLAConnector}
@@ -27,15 +27,15 @@ import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.WithdrawDateForm._
 import javax.inject.Inject
-import models.ProtectionModel
+import models.{ProtectionModel, WithdrawDateFormModel}
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.Play.current
 import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import play.api.libs.json.{Json, OFormat}
 import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.auth.core.{AuthConnector, AuthorisedFunctions, Enrolment}
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HttpResponse
 
 import scala.concurrent.Future
@@ -83,7 +83,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
       }
   }
 
-  def withdrawDateInput: Action[AnyContent] = Action.async {
+  def getWithdrawDateInput: Action[AnyContent] = Action.async {
     implicit request =>
       genericAuthWithNino("existingProtections") { nino =>
         keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
@@ -98,6 +98,64 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
       }
   }
 
+  private[controllers] def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) = {
+    validateWithdrawDate(
+      withdrawDateForm.bindFromRequest(),
+      LocalDateTime.parse(protection.certificateDate.get)
+    ).fold(
+      formWithErrors =>
+        Future.successful(
+          BadRequest(
+            views.html.pages.withdraw.withdrawDate(buildInvalidForm(formWithErrors),
+              Strings.protectionTypeString(protection.protectionType),
+              Strings.statusString(protection.status))
+          )
+        ),
+      success =>
+        keyStoreConnector.saveFormData[WithdrawDateFormModel]("withdrawProtectionForm", success) map {
+          _  =>
+            Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput())
+        }
+    )
+  }
+
+  def postWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
+    implicit val format: OFormat[WithdrawDateFormModel] = Json.format[WithdrawDateFormModel]
+    genericAuthWithoutNino("existingProtections") {
+      keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap {
+        case Some(protection) => validateAndSaveWithdrawDateForm(protection)
+        case _ =>
+          Logger.error(s"Could not retrieve protection data for user when loading the withdraw date input page")
+          Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+      }
+    }
+  }
+
+
+  private[controllers] def fetchWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) = {
+    keyStoreConnector.fetchAndGetFormData[WithdrawDateFormModel]("withdrawProtectionForm") map  {
+      case Some(form) =>
+        Ok(views.html.pages.withdraw.withdrawConfirm(
+          getWithdrawDateModel(form), Strings.protectionTypeString(protection.protectionType),
+          Strings.statusString(protection.status)))
+      case _ =>
+        Logger.error(s"Could not retrieve withdraw form data for user")
+        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    }
+  }
+
+  def getSubmitWithdrawDateInput: Action[AnyContent] = Action.async {
+    implicit request =>
+      genericAuthWithNino("existingProtections") { nino =>
+        keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap  {
+          case Some(protection) =>
+            fetchWithdrawDateForm(protection)
+          case _ =>
+            Logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page")
+            Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+        }
+      }
+  }
 
   def submitWithdrawDateInput: Action[AnyContent] = Action.async {
     implicit request =>
@@ -107,14 +165,15 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
             validateWithdrawDate(withdrawDateForm.bindFromRequest(),
             LocalDateTime.parse(protection.certificateDate.get)).fold(
             formWithErrors =>
-              BadRequest(views.html.pages.withdraw.withdrawDate(buildInvalidForm(formWithErrors),
+                BadRequest(views.html.pages.withdraw.withdrawDate(buildInvalidForm(formWithErrors),
               Strings.protectionTypeString(protection.protectionType),
               Strings.statusString(protection.status))),
             _ => Ok(views.html.pages.withdraw.withdrawConfirm(
               getWithdrawDate(withdrawDateForm.bindFromRequest()), Strings.protectionTypeString(protection.protectionType),
               Strings.statusString(protection.status)))
           )
-          case _ => Logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page")
+          case _ =>
+            Logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page")
             InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
@@ -156,7 +215,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
   }
 
 
-  private def buildInvalidForm(errorForm: Form[(Option[Int], Option[Int], Option[Int])]): Form[(Option[Int], Option[Int], Option[Int])] = {
+  private def buildInvalidForm(errorForm: Form[WithdrawDateFormModel]): Form[WithdrawDateFormModel] = {
     if (errorForm.errors.size > 1) {
       val formFields: Seq[String] = errorForm.errors map (field => field.key)
       val formFieldsWithErrors: Seq[FormError] = formFields map (key => FormError(key, ""))
