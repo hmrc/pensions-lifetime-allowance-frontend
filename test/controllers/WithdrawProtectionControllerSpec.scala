@@ -16,6 +16,8 @@
 
 package controllers
 
+import akka.actor.ActorSystem
+import akka.stream.{ActorMaterializer, Materializer}
 import config.LocalTemplateRenderer
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
@@ -28,11 +30,14 @@ import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
+import play.api.libs.json.{JsString, JsValue, Json, OFormat}
+import play.api.mvc.{Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers.{AuthorisedFakeRequestToPost, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
@@ -44,6 +49,8 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
 
   implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val mat: Materializer = ActorMaterializer()
 
   val mockDisplayConstructors = mock[DisplayConstructors]
 
@@ -66,6 +73,18 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
     certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456"))
+
+  val withdrawDateForm = WithdrawDateFormModel(
+    withdrawDay = Some(5),
+    withdrawMonth = Some(9),
+    withdrawYear = Some(2017)
+  )
+
+  val invalidWithdrawDateForm = WithdrawDateFormModel(
+    withdrawDay = Some(3),
+    withdrawMonth = Some(9),
+    withdrawYear = Some(2016)
+  )
 
   val tstPensionContributionNoPsoDisplaySections = Seq(
 
@@ -197,7 +216,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
     }
   }
 
-  "In WithdrawProtectionController calling the withdrawDateInput action" when {
+  "In WithdrawProtectionController calling the getWithdrawDateInput action" when {
 
     "there is no stored protection model" should {
       keystoreFetchCondition[ProtectionModel](None)
@@ -214,7 +233,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
 
     "there is a stored protection model" should {
 
-      lazy val result = await(controller.withdrawDateInput(fakeRequest))
+      lazy val result = await(controller.getWithdrawDateInput(fakeRequest))
 
       "return 200" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
@@ -223,7 +242,67 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
     }
   }
 
+  "In WithdrawProtectionController calling the postWithdrawDateInput action" when {
+    val testController = new WithdrawProtectionController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer ) {
+      override lazy val authConnector = mockAuthConnector
+      override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
+      override val displayConstructors = mockDisplayConstructors
+
+      override def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]): Future[Result] = {
+        Future.successful(Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput()))
+      }
+    }
+
+    "there is no stored protection model" should {
+      keystoreFetchCondition[ProtectionModel](None)
+      lazy val result = await(testController.postWithdrawDateInput(fakeRequest))
+
+      "return 500" in {
+        keystoreFetchCondition[ProtectionModel](None)
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+    }
+
+    "there is a stored protection model" should {
+      "return 303" in {
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+        lazy val result = await(testController.postWithdrawDateInput(fakeRequest))
+
+        status(result) shouldBe SEE_OTHER
+      }
+    }
+  }
+
+  "In WithdrawProtectionController calling the getSubmitWithdrawDateInput action" when {
+    val testController = new WithdrawProtectionController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer ) {
+      override lazy val authConnector = mockAuthConnector
+      override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
+      override val displayConstructors = mockDisplayConstructors
+
+      override def fetchWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]): Future[Result] = {
+        Ok("test")
+      }
+    }
+
+    "there is a stored protection Model" should {
+      "return a 200" in {
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+        lazy val result = await(testController.getSubmitWithdrawDateInput(fakeRequest))
+        status(result) shouldBe OK
+      }
+    }
+
+    "there is no stored protection model" should {
+      "return a 500" in {
+        keystoreFetchCondition[ProtectionModel](None)
+        lazy val result = await(testController.getSubmitWithdrawDateInput(fakeRequest))
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+    }
+  }
+
   "In withdrawProtectionController calling the submitWithdrawDateInput action" when {
+
     "there is a stored protection model" should {
       object UserRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
         ("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017"))
@@ -252,6 +331,48 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
       "return 400 Bad Request with date in past error" in {
         keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
         status(InvalidDayRequest.result) shouldBe BAD_REQUEST
+      }
+    }
+  }
+
+  "In WithdrawProtectionController calling the validateAndSaveWithdrawDateForm action" when {
+    "the form has errors" should {
+      "return a 400" in {
+        val requestWithForm = FakeRequest().withBody(Json.toJson(invalidWithdrawDateForm))
+        lazy val result = await(controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithForm))
+        status(result) shouldBe BAD_REQUEST
+      }
+    }
+
+    "the form does not have errors" should {
+      "return a 303" in {
+        when(keyStoreConnector.saveFormData[WithdrawDateFormModel](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+          .thenReturn(Future.successful(CacheMap("test", Map.empty)))
+
+        val requestWithFormInvalid = FakeRequest().withBody(Json.toJson(withdrawDateForm))
+        lazy val result = await(controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithFormInvalid))
+
+        status(result) shouldBe SEE_OTHER
+        result.header.headers("Location") shouldBe  "/protect-your-lifetime-allowance/withdraw-protection/date-input-confirmation"
+
+      }
+    }
+  }
+
+  "In WithdrawProtectionController calling the fetchWithdrawDateForm action" when {
+    "there is a stored withdrawDateForm" should {
+      "return a 400" in {
+        keystoreFetchCondition[WithdrawDateFormModel](None)
+        lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest))
+        status(result) shouldBe INTERNAL_SERVER_ERROR
+      }
+    }
+
+    "there is no stored withdrawDateForm" should {
+      "return a 200" in {
+        keystoreFetchCondition[WithdrawDateFormModel](Some(withdrawDateForm))
+        lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest))
+        status(result) shouldBe OK
       }
     }
   }
