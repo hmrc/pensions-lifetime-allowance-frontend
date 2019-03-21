@@ -16,20 +16,22 @@
 
 package controllers.testControllers
 
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext, PlaContextImpl}
 import config.wiring.PlaFormPartialRetriever
 import connectors.StubConnector
-import controllers.BaseController
 import javax.inject.Inject
 import play.api.libs.json._
 import play.api.mvc._
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class TestSetupController @Inject()(connector: StubConnector,
                                     implicit val partialRetriever: PlaFormPartialRetriever,
-                                    implicit val templateRenderer:LocalTemplateRenderer) extends BaseController {
+                                    implicit val templateRenderer:LocalTemplateRenderer,
+                                    implicit val context: PlaContext = PlaContextImpl,
+                                    mcc: MessagesControllerComponents) extends FrontendController(mcc) {
 
   def insertProtections(): Action[JsValue] = Action.async(BodyParsers.parse.json) { implicit request =>
     val payload: JsValue = request.body

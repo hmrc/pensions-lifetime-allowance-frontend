@@ -61,13 +61,12 @@ trait MicroService {
     .settings(defaultSettings(): _*)
     .settings(
       targetJvm := "jvm-1.8",
-      scalaVersion := "2.11.11",
+      scalaVersion := "2.11.12",
       libraryDependencies ++= appDependencies,
       parallelExecution in Test := false,
       fork in Test := false,
       retrieveManaged := true,
       evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-      routesGenerator := StaticRoutesGenerator,
       pipelineStages in Assets := Seq(digest)
     )
     .configs(IntegrationTest)

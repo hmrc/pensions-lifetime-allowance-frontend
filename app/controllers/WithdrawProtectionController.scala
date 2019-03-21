@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 import auth.AuthFunction
 import common.{Dates, Strings}
 import config.wiring.PlaFormPartialRetriever
-import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
+import config._
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
@@ -31,24 +31,24 @@ import models.{ProtectionModel, WithdrawDateFormModel}
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.Play.current
 import play.api.data.{Form, FormError}
-import play.api.i18n.Messages
+import play.api.i18n.{I18nSupport, Lang, Messages}
 import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.{Json, OFormat}
-import play.api.mvc.{Action, AnyContent, Request, Result}
+import play.api.mvc._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnector,
                                              plaConnector: PLAConnector,
-                                             implicit val partialRetriever: PlaFormPartialRetriever,
-                                             implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
+                                             mcc: MessagesControllerComponents) extends FrontendController(mcc) with AuthFunction with I18nSupport {
   val displayConstructors: DisplayConstructors = DisplayConstructors
-  lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
+  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   override def config: Configuration = Play.current.configuration
 

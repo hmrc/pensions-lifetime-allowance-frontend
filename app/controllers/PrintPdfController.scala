@@ -19,30 +19,31 @@ package controllers
 import java.time.{LocalDate, LocalTime, ZoneId}
 import java.time.format.DateTimeFormatter
 
-import config.LocalTemplateRenderer
+import config.{LocalTemplateRenderer, PlaContext, PlaContextImpl}
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
 import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Logger
-import play.api.mvc.{Action, AnyContent, Result}
+import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import utils.ActionWithSessionId
 import views.html.pages.lookup.{psa_lookup_not_found_print, psa_lookup_results_print}
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.ws.WSResponse
-import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                                   pdfGeneratorConnector: PdfGeneratorConnector,
-                                  implicit val partialRetriever: PlaFormPartialRetriever,
-                                  implicit val templateRenderer: LocalTemplateRenderer) extends BaseController{
+                                  http: DefaultHttpClient,
+                                  mcc: MessagesControllerComponents) extends FrontendController(mcc) with I18nSupport{
   val lookupRequestID = "psa-lookup-request"
   val lookupResultID = "psa-lookup-result"
 
-  def printResultsPDF: Action[AnyContent] = ActionWithSessionId.async {
+  def printResultsPDF= ActionWithSessionId.async {
     implicit request =>
       keyStoreConnector.fetchAndGetFormData[PSALookupResult](lookupResultID).flatMap {
         case Some(result) =>
@@ -63,7 +64,7 @@ class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
     Ok(response.bodyAsBytes.toArray).as("application/pdf")
   }
 
-  def printNotFoundPDF: Action[AnyContent] = ActionWithSessionId.async {
+  def printNotFoundPDF = ActionWithSessionId.async {
     implicit request =>
       keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
         case Some(req@PSALookupRequest(_, Some(_))) =>

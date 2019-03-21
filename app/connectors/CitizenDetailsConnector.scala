@@ -22,20 +22,17 @@ import config.WSHttp
 import javax.inject.Inject
 import play.api.Mode.Mode
 import uk.gov.hmrc.play.http._
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 import play.api.{Configuration, Environment, Logger}
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 
-class CitizenDetailsConnectorImpl @Inject()(override val runModeConfiguration: Configuration,
-                                            val environment: Environment) extends CitizenDetailsConnector {
+class CitizenDetailsConnectorImpl @Inject()(val environment: Environment) extends CitizenDetailsConnector {
 
   override val serviceUrl = baseUrl("citizen-details")
   override def http: HttpGet = WSHttp
-
-  override protected def mode: Mode = environment.mode
 }
 
 

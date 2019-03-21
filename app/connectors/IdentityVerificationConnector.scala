@@ -24,17 +24,16 @@ import javax.inject.Inject
 import play.api.{Configuration, Environment}
 import play.api.Mode.Mode
 import services.MetricsService
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 
-class IdentityVerificationConnectorImpl@Inject() (override val runModeConfiguration: Configuration,
+class IdentityVerificationConnectorImpl@Inject() (val runModeConfiguration: Configuration,
                                                   environment: Environment) extends IdentityVerificationConnector {
   override val serviceUrl = baseUrl("identity-verification")
   override def http: HttpGet = WSHttp
-  override protected def mode: Mode = environment.mode
 }
 
   trait IdentityVerificationConnector extends ServicesConfig{
