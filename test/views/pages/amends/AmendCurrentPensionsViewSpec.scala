@@ -16,12 +16,11 @@
 
 package views.pages.amends
 
-import org.jsoup.Jsoup
 import forms.AmendCurrentPensionForm
-import views.html.pages.amends.{amendCurrentPensions => views}
-import play.api.i18n.Messages.Implicits._
+import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.CurrentPensionsViewMessages
+import views.html.pages.amends.{amendCurrentPensions => views}
 
 class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsViewMessages{
 

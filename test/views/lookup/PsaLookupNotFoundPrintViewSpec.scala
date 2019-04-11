@@ -19,9 +19,8 @@ package views.lookup
 import models.PSALookupRequest
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import views.html.pages.lookup.psa_lookup_not_found_print
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupNotFoundSpecMessages
+import views.html.pages.lookup.psa_lookup_not_found_print
 
 class PsaLookupNotFoundPrintViewSpec extends CommonViewSpecHelper with PsaLookupNotFoundSpecMessages {
 

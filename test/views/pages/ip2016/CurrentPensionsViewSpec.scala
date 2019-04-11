@@ -16,12 +16,11 @@
 
 package views.pages.ip2016
 
-import org.jsoup.Jsoup
 import forms.CurrentPensionsForm
-import views.html.pages.ip2016.{currentPensions => views}
-import play.api.i18n.Messages.Implicits._
+import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.CurrentPensionsViewMessages
+import views.html.pages.ip2016.{currentPensions => views}
 
 class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsViewMessages{
 

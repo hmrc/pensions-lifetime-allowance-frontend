@@ -18,62 +18,44 @@ package controllers
 
 import auth.AuthFunction
 import common.{Helpers, Strings}
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import config.wiring.PlaFormPartialRetriever
-import models._
-import enums.ApplicationType
-import config.{AppConfig, AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
-import models.amendModels.AmendProtectionModel
-import play.api.{Configuration, Environment, Logger, Play}
-import play.api.mvc._
-import play.api.libs.json.Json
-import constructors.{DisplayConstructors, ResponseConstructors}
 import connectors.{KeyStoreConnector, PLAConnector}
+import constructors.{DisplayConstructors, ResponseConstructors}
+import enums.ApplicationType
 import javax.inject.Inject
+import models._
+import models.amendModels.AmendProtectionModel
+import play.api.Logger
+import play.api.Play.current
+import play.api.i18n.I18nSupport
+import play.api.libs.json.Json
+import play.api.mvc._
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.http.{HttpResponse, NotFoundException, Upstream4xxResponse}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
-import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.{HttpResponse, NotFoundException, Upstream4xxResponse}
 
+class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
+                                          val keyStoreConnector: KeyStoreConnector,
+                                          displayConstructors: DisplayConstructors,
+                                          mcc: MessagesControllerComponents,
+                                          responseConstructors: ResponseConstructors,
+                                          authFunction: AuthFunction)
+                                         (implicit val appConfig: FrontendAppConfig,
+                                          implicit val partialRetriever: PlaFormPartialRetriever,
+                                          implicit val templateRenderer:LocalTemplateRenderer,
+                                          implicit val plaContext: PlaContext)
+extends FrontendController(mcc) with I18nSupport {
 
-class ReadProtectionsControllerImpl @Inject()(val plaConnector: PLAConnector,
-                                              val keyStoreConnector: KeyStoreConnector,
-                                              implicit val partialRetriever: PlaFormPartialRetriever,
-                                              implicit val templateRenderer:LocalTemplateRenderer) extends ReadProtectionsController {
-  lazy val appConfig = FrontendAppConfig
-  override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
-
-  val displayConstructors = DisplayConstructors
-  val responseConstructors = ResponseConstructors
-
-  override def config: Configuration = Play.current.configuration
-  override def env: Environment = Play.current.injector.instanceOf[Environment]
-}
-
-trait ReadProtectionsController extends AuthFunction {
-  val appConfig: AppConfig
-  val authConnector: AuthConnector
-  val postSignInRedirectUrl: String
-
-  val displayConstructors: DisplayConstructors
-  val responseConstructors: ResponseConstructors
-
-  override def config: Configuration
-  override def env: Environment
-
-  val plaConnector: PLAConnector
-  val keyStoreConnector: KeyStoreConnector
-  implicit val partialRetriever: PlaFormPartialRetriever
-  implicit val templateRenderer:LocalTemplateRenderer
-
+  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   val currentProtections = Action.async {
     implicit request =>
-      genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
         plaConnector.readProtections(nino).flatMap { response =>
           response.status match {
             case OK => redirectFromSuccess(response, nino)
@@ -102,7 +84,6 @@ trait ReadProtectionsController extends AuthFunction {
   }
 
   def saveAndDisplayExistingProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Future[Result] = {
-
       val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
       for {
         stepOne <- saveActiveProtection(model.activeProtection)

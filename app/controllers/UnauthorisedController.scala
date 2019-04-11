@@ -16,29 +16,35 @@
 
 package controllers
 
-import config.LocalTemplateRenderer
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext, PlaContextImpl}
 import config.wiring.PlaFormPartialRetriever
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
 import enums.IdentityVerificationResult
 import javax.inject.Inject
 import play.api.Logger
 import play.api.Play.current
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc._
 import uk.gov.hmrc.http.NotFoundException
-import uk.gov.hmrc.play.bootstrap.controller.UnauthorisedAction
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.pages.ivFailure._
 
 import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
                                        keystoreConnector: KeyStoreConnector,
+                                       mcc: MessagesControllerComponents)(
+                                       implicit val appConfig: FrontendAppConfig,
+                                       implicit val plaContext: PlaContext,
                                        implicit val partialRetriever: PlaFormPartialRetriever,
-                                       implicit val templateRenderer:LocalTemplateRenderer) extends BaseController {
+                                       implicit val templateRenderer:LocalTemplateRenderer) extends FrontendController(mcc) with I18nSupport {
 
   val issuesKey = "previous-technical-issues"
 
-  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = UnauthorisedAction.async { implicit request =>
+  def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
     val result: Future[Result] = journeyId map { id =>
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
       identityVerificationResult.flatMap {

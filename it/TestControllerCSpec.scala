@@ -6,7 +6,7 @@ import play.api.http.Status._
 import utils.{IntegrationBaseSpec, MockedAudit}
 import com.github.tomakehurst.wiremock.client.WireMock._
 
-class TestControllerCSpec extends UnitSpec with GuiceOneServerPerSuite with IntegrationBaseSpec with MockedAudit{
+class TestControllerCSpec extends UnitSpec with GuiceOneServerPerSuite with IntegrationBaseSpec with MockedAudit {
 
   val protectionInsertUrl = s"$localUrl/protect-your-lifetime-allowance/test-only/protections/insert"
 

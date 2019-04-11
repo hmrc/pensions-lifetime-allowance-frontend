@@ -20,13 +20,11 @@ import java.util.UUID
 
 import akka.stream.Materializer
 import javax.inject.Inject
-import play.api.{Application, Play}
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc._
+import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 import utils.SessionIdSupport._
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
 
 /*
  * These utils provide session-id that is required by http-caching-client / keystore.
@@ -45,7 +43,7 @@ object SessionIdSupport {
 }
 
 class SessionIdFilter @Inject()(val mat:Materializer) extends Filter  {
-  def apply(next: (RequestHeader) => Future[Result])
+  def apply(next: RequestHeader => Future[Result])
            (rh: RequestHeader): Future[Result] = {
     if (hasSessionId(rh)) {
       next(rh)
@@ -61,24 +59,3 @@ class SessionIdFilter @Inject()(val mat:Materializer) extends Filter  {
     request.copy(headers = newHeaders)
   }
 }
-
-object ActionWithSessionId extends ActionBuilder[Request] {
-  def invokeBlock[A](request: Request[A],
-                     block: (Request[A]) => Future[Result]): Future[Result] = {
-    maybeSessionId(request).map { sessionId =>
-      block(request).map(addSessionIdToSession(request, sessionId))
-    }.getOrElse {
-      throw SessionIdNotFoundException()
-    }
-  }
-
-  def addSessionIdToSession[A](request: Request[A], sessionId: String)
-                              (result: Result): Result =
-    result.withSession(request.session + (SessionKeys.sessionId -> sessionId))
-
-  case class SessionIdNotFoundException() extends Exception(
-    "Session id not found in headers or session as expected. Have you enabled SessionIdFilter?"
-  )
-
-}
-

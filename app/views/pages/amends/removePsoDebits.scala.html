@@ -20,10 +20,9 @@
 @import helpers.templates.{formInputMoney,hiddenText}
 @import controllers.PlaLanguageController
 @import play.api.Application
+@import config.FrontendAppConfig
 
-@(amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
-
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
+@(amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @main_template(title = Messages("pla.psoDetails.title")) {
 

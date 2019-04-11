@@ -35,20 +35,11 @@ import uk.gov.hmrc.http.logging.SessionId
 
 class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
-  val mockSessionCache = mock[SessionCache]
-  val sessionId = UUID.randomUUID.toString
-  val env = mock[Environment]
+  val mockSessionCache     = mock[PLASessionCache]
+  val sessionId            = UUID.randomUUID.toString
+  val mockEnv: Environment = mock[Environment]
 
-
-
-  object TestKeyStoreConnector extends KeyStoreConnector {
-    override val sessionCache = mockSessionCache
-
-    override protected def mode: Mode = mock[Mode]
-
-    override protected def runModeConfiguration: Configuration = mock[Configuration]
-  }
-
+  object TestKeyStoreConnector extends KeyStoreConnector(mockSessionCache)
 
   implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId.toString)))
 

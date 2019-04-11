@@ -17,37 +17,24 @@
 package connectors
 
 import common.Exceptions
-import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http._
-import play.api.libs.json._
+import config.FrontendAppConfig
+import constructors.IPApplicationConstructor
+import enums.ApplicationType
+import javax.inject.Inject
+import models._
 import play.api.libs.json.Reads._
+import play.api.libs.json._
+import uk.gov.hmrc.http._
+import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
-import config.WSHttp
-import enums.ApplicationType
-import constructors.IPApplicationConstructor
-import javax.inject.Inject
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import models._
-import play.api.Mode.Mode
-import play.api.{Configuration, Environment}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpErrorFunctions, HttpGet, HttpPost, HttpPut, HttpReads, HttpResponse, Upstream4xxResponse}
 
-class PLAConnectorImpl@Inject()(override val runModeConfiguration: Configuration,
-                            environment: Environment) extends PLAConnector {
+class PLAConnector @Inject()(appConfig: FrontendAppConfig,
+                                http: DefaultHttpClient) {
 
-  val serviceUrl: String = baseUrl("pensions-lifetime-allowance")
-  val http = WSHttp
-
-  override protected def mode: Mode = environment.mode
-}
-
-
-  trait PLAConnector extends ServicesConfig{
-
-    val http: HttpGet with HttpPost with HttpPut
-    val serviceUrl: String
+  val serviceUrl: String = appConfig.servicesConfig.baseUrl("pensions-lifetime-allowance")
 
   implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders("Accept" -> "application/vnd.hmrc.1.0+json", "Content-Type" -> "application/json")
 

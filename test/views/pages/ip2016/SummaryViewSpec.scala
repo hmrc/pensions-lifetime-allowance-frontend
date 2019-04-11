@@ -19,13 +19,12 @@ package views.pages.ip2016
 import enums.ApplicationType
 import models.{SummaryModel, SummaryRowModel, SummarySectionModel}
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.SummaryViewMessages
-import utils.CallMap
 import views.html.pages.ip2016.{summary => views}
 
-class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages{
+class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
+
   def totalPensionsAmountSummaryRow(totalAmount: String) = SummaryRowModel("totalPensionsAmt", None, None, true, totalAmount)
 
   val psoDetailsSummaryRow = SummaryRowModel("psoDetails", Some(controllers.routes.IP2016Controller.psoDetails), Some(controllers.routes.IP2016Controller.removePsoDetails), false, "£10,000", "1 February 2016")

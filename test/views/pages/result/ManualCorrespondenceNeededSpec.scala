@@ -16,7 +16,6 @@
 
 package views.pages.result
 
-import play.api.i18n.Messages.Implicits._
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ManualCorrespondenceNeeded

@@ -16,19 +16,17 @@
 
 package testHelpers
 
-import config.{AppConfig, LocalTemplateRenderer}
+import config.{FrontendAppConfig, LocalTemplateRenderer}
 import org.scalatest.mockito.MockitoSugar
-import play.api.{Configuration, Environment}
 import play.api.i18n.Messages
-import uk.gov.hmrc.renderer.TemplateRenderer
 import play.twirl.api.Html
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
-import scala.concurrent.duration._
 import scala.concurrent.Future
-
+import scala.concurrent.duration._
 
 object MockTemplateRenderer extends MockitoSugar {
-  val renderer = new LocalTemplateRenderer(mock[Configuration],mock[Environment]) {
+  val renderer = new LocalTemplateRenderer(mock[FrontendAppConfig],mock[DefaultHttpClient]) {
     override lazy val templateServiceBaseUrl = "http://example.com/template/mustache"
     override val refreshAfter = 10 minutes
 

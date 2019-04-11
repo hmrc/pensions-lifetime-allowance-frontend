@@ -18,7 +18,6 @@ package views.pages.amends
 
 import forms.AmendPensionsTakenBeforeForm
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBeforeViewSpecMessages
 import views.html.pages.amends.{amendIP14PensionsTakenBefore => views}

@@ -18,12 +18,11 @@ package views.pages.amends
 
 import forms.AmendPensionsTakenBeforeForm
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBeforeViewMessages
 import views.html.pages.amends.{amendPensionsTakenBefore => views}
 
-class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTakenBeforeViewMessages{
+class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTakenBeforeViewMessages {
 
   "the AmendPensionsTakenBeforeView" should{
     val pensionsForm = AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "Yes",

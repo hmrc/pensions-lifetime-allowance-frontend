@@ -18,12 +18,11 @@ package views.pages.amends
 
 import forms.AmendPSODetailsForm
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PsoDetailsViewMessages
 import views.html.pages.amends.{amendPsoDetails => views}
 
-class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessages{
+class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessages {
 
   "the AmendPsoDetailsView" should{
     val pensionsForm = AmendPSODetailsForm.amendPsoDetailsForm.bind(Map(

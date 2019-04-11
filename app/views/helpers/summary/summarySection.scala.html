@@ -14,7 +14,9 @@
  * limitations under the License.
  *@
 
-@(section: SummarySectionModel, removeLinkDefined: Boolean)(implicit messages: Messages, lang: Lang)
+@import config.FrontendAppConfig
+
+@(section: SummarySectionModel, removeLinkDefined: Boolean)(implicit messages: Messages, appConfig: FrontendAppConfig)
 
 @section.rows.headOption.map { firstRow =>
     @summaryRow(firstRow.rowID, firstRow.displayValues, firstRow.changeLinkCall, firstRow.removeLinkCall, removeLinkDefined, firstRow.boldText, section.rows.tail.nonEmpty)

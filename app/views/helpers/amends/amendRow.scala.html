@@ -16,8 +16,9 @@
 
 @import models.AmendDisplayRowModel
 @import controllers.PlaLanguageController
+@import config.FrontendAppConfig
 
-@(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean)(implicit messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean)(implicit messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig: FrontendAppConfig)
 
 
 <tr>

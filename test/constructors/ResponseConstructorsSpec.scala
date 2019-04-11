@@ -21,12 +21,12 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import play.api.libs.json.{JsValue, Json}
 import models._
 import enums.ApplicationType
+import org.scalatest.mockito.MockitoSugar
 
-class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
+class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   override def bindModules = Seq(new PlayModule)
 
-  object TestResponseConstructors extends ResponseConstructors {
-  }
+  val mockResponseConstructor = fakeApplication.injector.instanceOf[ResponseConstructors]
 
   val testFPSuccessProtectionModel = ProtectionModel (
     Some("testPSARef"),
@@ -48,7 +48,7 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
           |"protectionReference":"PSA123456",
           |"protectionType":"FP2016",
           |"psaCheckReference":"testPSARef"}""".stripMargin)
-      val testApplyResponseModel = TestResponseConstructors.createApplyResponseModelFromJson(jsn).get
+      val testApplyResponseModel = mockResponseConstructor.createApplyResponseModelFromJson(jsn).get
       testApplyResponseModel shouldBe testFPSuccessApplyResponseModel
     }
 
@@ -57,7 +57,7 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
       val jsn: JsValue = Json.parse(
         """{"protectionID":"wrong"
           |}""".stripMargin)
-      val testApplyResponseModel = TestResponseConstructors.createApplyResponseModelFromJson(jsn)
+      val testApplyResponseModel = mockResponseConstructor.createApplyResponseModelFromJson(jsn)
       testApplyResponseModel shouldBe None
     }
 
@@ -96,8 +96,7 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
           |}
         """.stripMargin)
       val tstTransformedReadResponseModel = TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
-      ResponseConstructors.createTransformedReadResponseModelFromJson(jsn) shouldBe Some(tstTransformedReadResponseModel)
-
+      mockResponseConstructor.createTransformedReadResponseModelFromJson(jsn) shouldBe Some(tstTransformedReadResponseModel)
     }
 
     "return None if a TransformedReadResponse model can't be created" in {
@@ -106,7 +105,7 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication {
         """{"psaCheckReference":"wrong"
           |}""".stripMargin)
 
-      ResponseConstructors.createTransformedReadResponseModelFromJson(jsn) shouldBe None
+      mockResponseConstructor.createTransformedReadResponseModelFromJson(jsn) shouldBe None
     }
   }
 }

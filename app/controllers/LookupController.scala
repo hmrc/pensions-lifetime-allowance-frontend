@@ -19,42 +19,57 @@ package controllers
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
 
-import config.LocalTemplateRenderer
 import config.wiring.PlaFormPartialRetriever
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
 import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Play.current
 import play.api.data.Form
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.http.Upstream4xxResponse
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.{ExecutionContext, Future}
 
 class LookupController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  val plaConnector: PLAConnector,
+                                 val actionWithSessionId: ActionWithSessionId,
+                                 mcc: MessagesControllerComponents,
+                                 http: DefaultHttpClient)(
                                  implicit val partialRetriever: PlaFormPartialRetriever,
-                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController {
+                                 implicit val templateRenderer:LocalTemplateRenderer,
+                                 implicit val context: PlaContext,
+                                 implicit val appConfig: FrontendAppConfig) extends FrontendController(mcc) with I18nSupport {
 
-  val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
-  val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm
+  implicit val executionContext: ExecutionContext = mcc.executionContext
+  implicit val parser: BodyParser[AnyContent] = mcc.parsers.defaultBodyParser
+
+  def psaRefForm(implicit request: Request[AnyContent]): Form[String] = {
+    PSALookupSchemeAdministratorReferenceForm.psaRefForm
+  }
+  def pnnForm(implicit request: Request[AnyContent]): Form[String] = {
+    PSALookupProtectionNotificationNoForm.pnnForm
+  }
 
   val lookupRequestID = "psa-lookup-request"
   val lookupResultID = "psa-lookup-result"
 
-  def displaySchemeAdministratorReferenceForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def displaySchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
       case Some(PSALookupRequest(psaRef, _)) => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
       case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
     }
   }
 
-  def submitSchemeAdministratorReferenceForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def submitSchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     psaRefForm.bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
       validFormData => {
@@ -65,14 +80,14 @@ class LookupController @Inject()(val keyStoreConnector: KeyStoreConnector,
     )
   }
 
-  def displayProtectionNotificationNoForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def displayProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
       case Some(_) => Future.successful(Ok(psa_lookup_protection_notification_no_form(pnnForm)))
       case _ => Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
     }
   }
 
-  def submitProtectionNotificationNoForm: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def submitProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     pnnForm.bindFromRequest().fold(
       formWithErrors => Future.successful(BadRequest(psa_lookup_protection_notification_no_form(formWithErrors))),
       validFormData => {
@@ -100,25 +115,25 @@ class LookupController @Inject()(val keyStoreConnector: KeyStoreConnector,
     )
   }
 
-  def displayNotFoundResults: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def displayNotFoundResults: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
       case Some(req@PSALookupRequest(_, Some(_))) => Future.successful(Ok(psa_lookup_not_found_results(req, buildTimestamp)))
       case _ => Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
     }
   }
 
-  def displayLookupResults: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def displayLookupResults: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     keyStoreConnector.fetchAndGetFormData[PSALookupResult](lookupResultID).map {
       case Some(result) => Ok(psa_lookup_results(result, buildTimestamp))
       case None => Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm())
     }
   }
 
-  def displayProtectionTypeGuidance: Action[AnyContent] = ActionWithSessionId { implicit request =>
+  def displayProtectionTypeGuidance: Action[AnyContent] = actionWithSessionId { implicit request =>
     Ok(pla_protection_guidance())
   }
 
-  def redirectToStart: Action[AnyContent] = ActionWithSessionId.async { implicit request =>
+  def redirectToStart: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     keyStoreConnector.remove.map { _ => Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm())
     }
   }

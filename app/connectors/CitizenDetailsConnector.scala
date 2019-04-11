@@ -16,33 +16,21 @@
 
 package connectors
 
-import models.PersonalDetailsModel
-import play.api.libs.json.{JsResult, JsValue, Json}
-import config.WSHttp
+import config.FrontendAppConfig
 import javax.inject.Inject
-import play.api.Mode.Mode
-import uk.gov.hmrc.play.http._
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-import play.api.{Configuration, Environment, Logger}
+import models.PersonalDetailsModel
+import play.api.Logger
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet}
 
-class CitizenDetailsConnectorImpl @Inject()(override val runModeConfiguration: Configuration,
-                                            val environment: Environment) extends CitizenDetailsConnector {
+class CitizenDetailsConnector @Inject()(appConfig: FrontendAppConfig,
+                                            http: DefaultHttpClient
+                                          ) {
 
-  override val serviceUrl = baseUrl("citizen-details")
-  override def http: HttpGet = WSHttp
-
-  override protected def mode: Mode = environment.mode
-}
-
-
-  trait CitizenDetailsConnector extends ServicesConfig{
-
-    val serviceUrl: String
-    def http: HttpGet
+   val serviceUrl = appConfig.servicesConfig.baseUrl("citizen-details")
 
     private def url(nino: String) = s"$serviceUrl/citizen-details/$nino/designatory-details"
 

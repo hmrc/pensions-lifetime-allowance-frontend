@@ -16,16 +16,14 @@
 
 package forms
 
-import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Messages, MessagesProvider}
 
 object PSALookupSchemeAdministratorReferenceForm {
 
-  def psaRefForm: Form[String] = {
+  def psaRefForm(implicit messagesProvider: MessagesProvider): Form[String] = {
     Form(single(
       "pensionSchemeAdministratorCheckReference" -> text.verifying(psaRefConstraint)
     ))
@@ -33,7 +31,7 @@ object PSALookupSchemeAdministratorReferenceForm {
 
   private val psaRefRegex = """^(?i)PSA[0-9]{8}[A-Z]$""".r
 
-  val psaRefConstraint: Constraint[String] = Constraint("constraints.psarefcheck")({
+  def psaRefConstraint(implicit messagesProvider: MessagesProvider): Constraint[String]  = Constraint("constraints.psarefcheck")({
     psaRef =>
       val errors = psaRef match {
         case "" => Seq(ValidationError(Messages("psa.lookup.form.psaref.required")))

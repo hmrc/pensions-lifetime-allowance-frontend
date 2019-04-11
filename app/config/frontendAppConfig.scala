@@ -16,8 +16,10 @@
 
 package config
 
-import play.api.Play._
-import uk.gov.hmrc.play.config.ServicesConfig
+import javax.inject.Inject
+import play.api.Configuration
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
 
 trait AppConfig {
   val betaFeedbackUrl: String
@@ -46,13 +48,14 @@ trait AppConfig {
   val invalidStatusMetric: String
   val notFoundStatusMetric: String
   val appName : String
+  val frontendTemplatePath: String
 }
 
-object FrontendAppConfig extends AppConfig with ServicesConfig with PlaConfig {
+class FrontendAppConfig @Inject()(val configuration: Configuration, val servicesConfig: ServicesConfig) extends AppConfig {
   private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  private val contactFrontendService = baseUrl("contact-frontend")
-  private val contactHost = configuration.getString(s"contact-frontend.host").getOrElse("")
+  private val contactFrontendService = servicesConfig.baseUrl("contact-frontend")
+  private val contactHost = servicesConfig.getConfString("contact-frontend.www", "")
   private val baseUrl = "protect-your-lifetime-allowance"
 
   override lazy val betaFeedbackUrl = s"$baseUrl/feedback"
@@ -75,15 +78,15 @@ object FrontendAppConfig extends AppConfig with ServicesConfig with PlaConfig {
   override lazy val existingProtectionsUrl = configuration.getString("existingProtections.url").getOrElse("")
   override lazy val ptaFrontendUrl = configuration.getString("pta-frontend.url").getOrElse("")
 
-  override lazy val notAuthorisedRedirectUrl = configuration.getString("not-authorised-callback.url").getOrElse("")
+  override lazy val notAuthorisedRedirectUrl = servicesConfig.getString("not-authorised-callback.url")
   override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
   override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
 
-  override val feedbackSurvey: String = configuration.getString(s"feedback-survey-frontend.url").getOrElse("")
+  override val feedbackSurvey: String = servicesConfig.getString("feedback-survey-frontend.url")
 
-  override val validStatusMetric: String = configuration.getString("valid-protection-status").getOrElse("")
-  override val invalidStatusMetric: String = configuration.getString("invalid-protection-status").getOrElse("")
-  override val notFoundStatusMetric: String = configuration.getString("not-found-protection-status").getOrElse("")
+  override val validStatusMetric: String = servicesConfig.getString("valid-protection-status")
+  override val invalidStatusMetric: String = servicesConfig.getString("invalid-protection-status")
+  override val notFoundStatusMetric: String = servicesConfig.getString("not-found-protection-status")
 
   override lazy val appName: String = loadConfig("appName")
   lazy val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")

@@ -17,15 +17,14 @@
 package views.pages.amends
 
 import enums.ApplicationType
-import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import models.amendModels.AmendsGAModel
 import models.{ActiveAmendResultDisplayModel, ProtectionDetailsDisplayModel}
+import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.OutcomeActiveViewSpecMessages
 import views.html.pages.amends.{outcomeActive => views}
 
-class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewSpecMessages{
+class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewSpecMessages {
 
   val amendsGAModel = AmendsGAModel(
     current = Some("current"),

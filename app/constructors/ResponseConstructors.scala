@@ -20,10 +20,7 @@ import play.api.libs.json.JsValue
 import models._
 import enums.ApplicationType
 
-object ResponseConstructors extends ResponseConstructors {
-}
-
-trait ResponseConstructors {
+class ResponseConstructors {
 
     def createApplyResponseModelFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value): Option[ApplyResponseModel] = {
         val psaReference = (json \ "psaCheckReference").asOpt[String]

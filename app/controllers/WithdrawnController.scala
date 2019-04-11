@@ -16,23 +16,23 @@
 
 package controllers
 
-import config.LocalTemplateRenderer
 import config.wiring.PlaFormPartialRetriever
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import javax.inject.Inject
+import play.api.i18n.Lang
 import play.api.mvc._
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.Future
-import views.html.pages.ivFailure._
-import connectors.IdentityVerificationConnector
-import enums.IdentityVerificationResult
-import javax.inject.Inject
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
-import uk.gov.hmrc.play.bootstrap.controller.ActionWithMdc
 
-class WithdrawnController @Inject()(implicit val partialRetriever: PlaFormPartialRetriever,
-                                    implicit val templateRenderer:LocalTemplateRenderer) extends BaseController {
 
-  def showWithdrawn(): Action[AnyContent] = ActionWithMdc.async { implicit request =>
+class WithdrawnController @Inject()(mcc: MessagesControllerComponents)
+                                   (implicit val partialRetriever: PlaFormPartialRetriever,
+                                    implicit val templateRenderer:LocalTemplateRenderer,
+                                    implicit val appConfig: FrontendAppConfig,
+                                    implicit val plaContext: PlaContext) extends FrontendController(mcc) {
+
+  def showWithdrawn(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Ok(views.html.pages.ip2014.withdrawn()))
   }
 }

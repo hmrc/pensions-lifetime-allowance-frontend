@@ -17,24 +17,28 @@
 package controllers
 
 
-import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import org.scalatest.mockito.MockitoSugar
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import testHelpers._
-import auth._
 import config.wiring.PlaFormPartialRetriever
-import javax.inject.Inject
-import org.jsoup.Jsoup
-import play.api.i18n.Messages
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import org.scalatest.mockito.MockitoSugar
+import play.api.mvc.MessagesControllerComponents
+import play.api.test.FakeRequest
+import testHelpers._
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class TimeoutControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
-    implicit val mockPartialRetriever = mock[PlaFormPartialRetriever]
-    implicit val mockTemplateRenderer = MockTemplateRenderer.renderer
+    val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents]
 
-    val controller = new TimeoutController
+    implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
+    implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+    implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+    implicit val mockPlaContext: PlaContext = mock[PlaContext]
+    implicit val system: ActorSystem = ActorSystem()
+    implicit val materializer: ActorMaterializer = ActorMaterializer()
+
+    val controller = new TimeoutController(mockMCC)
 
     "Calling the .timeout action" when {
 

@@ -20,20 +20,22 @@ import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
 import java.time.LocalDate
 
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages}
 import uk.gov.hmrc.play.views.helpers.MoneyPounds
 
 object Display {
 
   def currencyDisplayString(amt: BigDecimal): String = {
     val amount = MoneyPounds(amt)
-    val minus = if(amount.isNegative) "-" else ""
+    val minus = if (amount.isNegative) "-" else ""
     val str = s"£$minus${amount.quantity}"
-    if (str.endsWith(".00")) {str.takeWhile(_ != '.')}
+    if (str.endsWith(".00")) {
+      str.takeWhile(_ != '.')
+    }
     else str
   }
 
-  def dateDisplayString(date: LocalDate)(implicit lang: play.api.i18n.Lang, messages: Messages): String = {
+  def dateDisplayString(date: LocalDate)(implicit lang: Lang, messages: Messages): String = {
     val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyy")
     if (lang.language == "cy") {
       date.format(dateFormat)
@@ -48,7 +50,8 @@ object Display {
   }
 
   def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {
-    def df(n: BigDecimal):String = new DecimalFormat("0.00").format(n).replace(".00","")
+    def df(n: BigDecimal): String = new DecimalFormat("0.00").format(n).replace(".00", "")
+
     BigDecimal(df(amt))
   }
 }

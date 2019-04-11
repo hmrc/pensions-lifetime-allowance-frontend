@@ -19,13 +19,11 @@ package views.pages.withdraw
 import controllers.routes
 import forms.WithdrawDateForm
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawImplicationsSpecMessages
 import views.html.pages.withdraw.{withdrawImplications => views}
 
 class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplicationsSpecMessages {
-
 
   "Withdraw Implication view" when {
     val protectionType = "IP2014"

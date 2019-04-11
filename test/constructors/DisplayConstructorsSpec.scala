@@ -17,18 +17,29 @@
 package constructors
 
 import com.kenshoo.play.metrics.PlayModule
-import common.{Display, Helpers}
+import common.Helpers
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
-import org.mockito.Matchers
-import play.api.i18n.Messages
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import play.api.i18n.Messages.Implicits._
+import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.when
+import org.scalatest.mockito.MockitoSugar
 import play.api.Play.current
-import play.api.mvc.Call
+import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Lang, Messages}
+import play.api.libs.json.Json
+import play.api.test.Helpers.OK
+import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
+import scala.concurrent.Future
+
+class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+
+  implicit val mockLang   = mock[Lang]
+  val displayConstructor  = new DisplayConstructors()
+
+
   override def bindModules = Seq(new PlayModule)
 
   lazy val tstPSACheckRef = "PSA33456789"
@@ -162,7 +173,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
       lazy val tstTransformedReadResponseModel = TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
       lazy val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(Some(tstExistingProtectionDisplayModelOpen), List(tstExistingProtectionDisplayModelDormant))
 
-      DisplayConstructors.createExistingProtectionsDisplayModel(tstTransformedReadResponseModel) shouldBe tstExistingProtectionsDisplayModel
+      displayConstructor.createExistingProtectionsDisplayModel(tstTransformedReadResponseModel) shouldBe tstExistingProtectionsDisplayModel
     }
 
     "Correctly order existing protections with the same status" in {
@@ -345,7 +356,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         tstProtectionDisplayModelDormant6,
         tstProtectionDisplayModelDormant7))
 
-      DisplayConstructors.createExistingProtectionsDisplayModel(tstExistingProtectionModel) shouldBe tstExistingProtectionsDisplayModel
+      displayConstructor.createExistingProtectionsDisplayModel(tstExistingProtectionModel) shouldBe tstExistingProtectionsDisplayModel
     }
 
     "Correctly order existing protections with a variety of statuses" in {
@@ -530,7 +541,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         tstProtectionDisplayModelDormant7,
         tstProtectionDisplayModelDormant8))
 
-      DisplayConstructors.createExistingProtectionsDisplayModel(tstExistingProtectionModel) shouldBe tstExistingProtectionsDisplayModel
+      displayConstructor.createExistingProtectionsDisplayModel(tstExistingProtectionModel) shouldBe tstExistingProtectionsDisplayModel
     }
   }
 
@@ -564,8 +575,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016")
       )
-      DisplayConstructors.createPrintDisplayModel(Some(tstPersonalDetailsModel),tstProtectionModel,tstNino) shouldBe tstResultPrintDisplayModel
-
+      displayConstructor.createPrintDisplayModel(Some(tstPersonalDetailsModel),tstProtectionModel,tstNino) shouldBe tstResultPrintDisplayModel
     }
   }
 
@@ -573,25 +583,25 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
     "return false for the same model" in {
       lazy val tstModel = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000))
-      DisplayConstructors.modelsDiffer(tstModel, tstModel) shouldBe false
+      displayConstructor.modelsDiffer(tstModel, tstModel) shouldBe false
     }
 
     "return false for two models with the same properties" in {
       lazy val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000), preADayPensionInPayment = Some(23412.87))
       lazy val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), preADayPensionInPayment = Some(23412.87), protectionID = Some(10000))
-      DisplayConstructors.modelsDiffer(tstModel1, tstModel2) shouldBe false
+      displayConstructor.modelsDiffer(tstModel1, tstModel2) shouldBe false
     }
 
     "return true for two models with different properties" in {
       lazy val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(100001), preADayPensionInPayment = Some(23412.87))
       lazy val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000),  preADayPensionInPayment = Some(23412.87))
-      DisplayConstructors.modelsDiffer(tstModel1, tstModel2) shouldBe true
+      displayConstructor.modelsDiffer(tstModel1, tstModel2) shouldBe true
     }
 
     "return true for two models with different number of properties" in {
       lazy val tstModel1 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(100001), preADayPensionInPayment = Some(23412.87), version = Some(4))
       lazy val tstModel2 = ProtectionModel(psaCheckReference = Some("psaRef"), protectionID = Some(10000),  preADayPensionInPayment = Some(23412.87))
-      DisplayConstructors.modelsDiffer(tstModel1, tstModel2) shouldBe true
+      displayConstructor.modelsDiffer(tstModel1, tstModel2) shouldBe true
     }
 
   }
@@ -599,7 +609,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
   "createAmendDisplayModel" should {
     "correctly transform an AmendProtectionModel into an AmendDisplayModel without Psos" in {
 
-      DisplayConstructors.createAmendDisplayModel(tstNoPsoAmendProtectionModel) shouldBe AmendDisplayModel(
+      displayConstructor.createAmendDisplayModel(tstNoPsoAmendProtectionModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
@@ -610,7 +620,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     }
 
     "correctly transform an AmendProtectionModel into an AmendDisplayModel with PSOs" in {
-      DisplayConstructors.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
+      displayConstructor.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
         pensionContributionSections = tstPensionContributionPsoDisplaySections,
@@ -621,7 +631,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
     }
 
     "return no current PSO's when not supplied with an amountOption" in {
-      DisplayConstructors.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
+      displayConstructor.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
         pensionContributionSections = tstPensionContributionPsoDisplaySections,
@@ -647,7 +657,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
       lazy val amendModel = AmendProtectionModel(tstNoPsoAmountProtection, tstNoPsoAmountProtection)
 
-      DisplayConstructors.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
+      displayConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
@@ -685,7 +695,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
           ))
       )
 
-      DisplayConstructors.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
+      displayConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
@@ -714,7 +724,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
       lazy val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
 
-      DisplayConstructors.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
+      displayConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
         protectionType = "IP2016",
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
@@ -749,7 +759,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         ))
       )
 
-      DisplayConstructors.createActiveAmendResponseDisplayModel(tstAmendResponseModel) shouldBe tstActiveAmendResultDisplayModel
+      displayConstructor.createActiveAmendResponseDisplayModel(tstAmendResponseModel) shouldBe tstActiveAmendResultDisplayModel
     }
   }
 
@@ -765,7 +775,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
         additionalInfo = Seq("1","2")
       )
 
-      DisplayConstructors.createInactiveAmendResponseDisplayModel(tstAmendsResponseModel) shouldBe tstInactiveAmendsResultDisplayModel
+      displayConstructor.createInactiveAmendResponseDisplayModel(tstAmendsResponseModel) shouldBe tstInactiveAmendsResultDisplayModel
 
     }
   }
@@ -774,7 +784,7 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication{
 
     "create a valid amendDisplayModel" in {
       val model = ProtectionModel(Some("checkRef"), Some(33), protectionType = Some("type"), status = Some("status"), uncrystallisedRights = Some(1000))
-      val result = DisplayConstructors.createWithdrawSummaryTable(model)
+      val result = displayConstructor.createWithdrawSummaryTable(model)
       val pensionContributionSectionResult = List(AmendDisplaySectionModel("PensionsTakenBefore",List(
         AmendDisplayRowModel("YesNo",None,None,"No"))),
         AmendDisplaySectionModel("PensionsTakenBetween",List(AmendDisplayRowModel("YesNo",None,None,"No"))),

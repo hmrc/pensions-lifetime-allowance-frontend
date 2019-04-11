@@ -18,9 +18,12 @@ package controllers
 
 import java.util.UUID
 
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import config.{AuthClientConnector, LocalTemplateRenderer}
-import connectors.KeyStoreConnector
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import connectors.{KeyStoreConnector, PLAConnector}
 import mocks.AuthMock
 import models._
 import org.mockito.ArgumentMatchers
@@ -28,10 +31,14 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
+import play.api.{Configuration, Environment}
+import play.api.i18n.Messages
 import play.api.libs.json.JsValue
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -41,20 +48,50 @@ import scala.concurrent.Future
 
 class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with KeystoreTestHelper with AuthMock with WithFakeApplication {
 
-    val mockKeyStoreConnector = mock[KeyStoreConnector]
-    implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
-    implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+
+    val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
+    val mockPlaConnector: PLAConnector = mock[PLAConnector]
+    val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+    val mockAuthFunction: AuthFunction = fakeApplication.injector.instanceOf[AuthFunction]
+    val mockEnv: Environment = mock[Environment]
+
+    implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
+    implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+    implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+    implicit val mockPlaContext: PlaContext = mock[PlaContext]
+    implicit val mockMessages: Messages = mock[Messages]
+    implicit val system: ActorSystem = ActorSystem()
+    implicit val materializer: ActorMaterializer = ActorMaterializer()
+
+    class Setup {
+
+        val authFunction = new AuthFunction {
+            override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
+            override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
+            override implicit val plaContext: PlaContext = mockPlaContext
+            override implicit val appConfig: FrontendAppConfig = mockAppConfig
+            override val postSignInRedirectUrl: String = ""
+            override def authConnector: AuthConnector = mockAuthConnector
+            override def config: Configuration = mockAppConfig.configuration
+            override def env: Environment = mockEnv
+        }
+
+        val controller = new IP2016Controller(
+            mockKeyStoreConnector,
+            mockMCC,
+            authFunction
+        )
+    }
 
     override def beforeEach = {
-        reset(mockKeyStoreConnector)
-        reset(mockAuthConnector)
+        reset(mockKeyStoreConnector, mockAuthConnector, mockPlaConnector)
     }
 
     implicit val hc = HeaderCarrier()
 
-//    lazy val TestIP2016Controller = fakeApplication.injector.instanceOf[IP2016Controller]
-    object TestIP2016Controller extends IP2016Controller(mockKeyStoreConnector, partialRetriever, templateRenderer) {
-        override lazy val authConnector = mockAuthConnector
+    //    lazy val TestIP2016Controller = fakeApplication.injector.instanceOf[IP2016Controller]
+    object TestIP2016Controller extends IP2016Controller(mockKeyStoreConnector, mockMCC, mockAuthFunction) {
+        lazy val authConnector = mockAuthConnector
     }
 
     val sessionId = UUID.randomUUID.toString
@@ -65,7 +102,7 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
     def keystoreFetchCondition[T](data: Option[T]): Unit = {
         when(mockKeyStoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
-        .thenReturn(Future.successful(data))
+          .thenReturn(Future.successful(data))
     }
 
 
@@ -76,17 +113,7 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
     def pensionsDebitsSaveData(data: Option[PensionDebitsModel]) = {
         when(mockKeyStoreConnector.saveData(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
-      .thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
-    }
-
-
-
-    ///////////////////////////////////////////////
-    // Initial Setup
-    ///////////////////////////////////////////////
-    "IP2016Controller should be correctly initialised" in {
-        TestIP2016Controller.keyStoreConnector shouldBe mockKeyStoreConnector
-        TestIP2016Controller.authConnector shouldBe mockAuthConnector
+          .thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
     }
 
     ///////////////////////////////////////////////
@@ -95,30 +122,33 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "In IP2016Controller calling the .pensionsTaken action" when {
 
         "not supplied with a stored model" should {
-
-            lazy val result = await(TestIP2016Controller.pensionsTaken(fakeRequest))
-
-            "return 200" in {
+            "return 200" in new Setup {
+                lazy val result = await(controller.pensionsTaken(fakeRequest))
                 mockAuthConnector(Future.successful({}))
+
+
                 keystoreFetchCondition[PensionsTakenModel](None)
                 status(result) shouldBe 200
             }
         }
 
         "supplied with a stored test model" should {
-            mockAuthConnector(Future.successful({}))
-            val testModel = new PensionsTakenModel(Some("yes"))
-            lazy val result = await(TestIP2016Controller.pensionsTaken(fakeRequest))
+            "return 200" in new Setup {
+                mockAuthConnector(Future.successful({}))
+                val testModel = new PensionsTakenModel(Some("yes"))
+                lazy val result = await(controller.pensionsTaken(fakeRequest))
 
-            "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenModel](Some(testModel))
                 status(result) shouldBe 200
             }
 
             "return some HTML that" should {
-                mockAuthConnector(Future.successful({}))
-                "contain some text and use the character set utf-8" in {
+                "contain some text and use the character set utf-8" in new Setup {
+                    mockAuthConnector(Future.successful({}))
+                    val testModel = new PensionsTakenModel(Some("yes"))
+                    lazy val result = await(controller.pensionsTaken(fakeRequest))
+
                     keystoreFetchCondition[PensionsTakenModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
@@ -130,8 +160,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "Submitting Pensions Taken data" when {
 
         "Submitting 'yes' in pensionsTakenForm" should {
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTaken, ("pensionsTaken", "yes"))
-            "redirect to pensions taken before" in {
+            "redirect to pensions taken before" in new Setup {
+
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTaken, ("pensionsTaken", "yes"))
+
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
@@ -140,9 +172,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "Submitting 'no' in pensionsTakenForm" should {
+            "redirect to overseas pensions" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTaken, ("pensionsTaken", "no"))
-            "redirect to overseas pensions" in {
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTaken, ("pensionsTaken", "no"))
+
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
@@ -151,9 +184,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "Submitting pensionsTakenForm with no data" should {
+            "return 400" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTaken, ("pensionsTaken", ""))
-            "return 400" in {
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTaken, ("pensionsTaken", ""))
+
                 mockAuthConnector(Future.successful({}))
                 status(DataItem.result) shouldBe 400
             }
@@ -167,9 +201,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "In IP2016Controller calling the .pensionsTakenBefore action" when {
 
         "not supplied with a stored model" should {
-            lazy val result = await(TestIP2016Controller.pensionsTakenBefore(fakeRequest))
-            "return 200" in {
+            "return 200" in new Setup {
+                lazy val result = await(controller.pensionsTakenBefore(fakeRequest))
                 mockAuthConnector(Future.successful({}))
+
                 keystoreFetchCondition[PensionsTakenBeforeModel](None)
                 status(result) shouldBe 200
             }
@@ -181,10 +216,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "supplied with a stored test model" should {
-            val testModel = new PensionsTakenBeforeModel("yes", Some(1))
-            lazy val result = await(TestIP2016Controller.pensionsTakenBefore(fakeRequest))
+            "return 200" in new Setup {
+                val testModel = new PensionsTakenBeforeModel("yes", Some(1))
+                lazy val result = await(controller.pensionsTakenBefore(fakeRequest))
 
-            "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
                 status(result) shouldBe 200
@@ -197,19 +232,28 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
             "return some HTML that" should {
 
-                "contain some text and use the character set utf-8" in {
+                "contain some text and use the character set utf-8" in new Setup {
+                    val testModel = new PensionsTakenBeforeModel("yes", Some(1))
+                    lazy val result = await(controller.pensionsTakenBefore(fakeRequest))
+
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
                 }
 
-                "have the radio option `yes` selected by default" in {
+                "have the radio option `yes` selected by default" in new Setup {
+                    val testModel = new PensionsTakenBeforeModel("yes", Some(1))
+                    lazy val result = await(controller.pensionsTakenBefore(fakeRequest))
+
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
                 }
 
-                "have the amount £1 completed by default" in {
+                "have the amount £1 completed by default" in new Setup {
+                    val testModel = new PensionsTakenBeforeModel("yes", Some(1))
+                    lazy val result = await(controller.pensionsTakenBefore(fakeRequest))
+
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
                 }
@@ -222,10 +266,12 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         "Submitting 'yes' in pensionsTakenBeforeForm" when {
 
             "valid data is submitted" should {
+                "redirect to pensions taken between" in new Setup {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "1"))
-                "redirect to pensions taken between" in {
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", "1"))
+
                     mockAuthConnector(Future.successful({}))
+
                     keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                     status(DataItem.result) shouldBe 303
                     redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween()}")
@@ -233,18 +279,21 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
             }
 
             "invalid data is submitted" should {
+                "return 400" in new Setup {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", ""), ("pensionsTakenBeforeAmt", ""))
-                "return 400" in {
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBefore, ("pensionsTakenBefore", ""), ("pensionsTakenBeforeAmt", ""))
+
                     mockAuthConnector(Future.successful({}))
+
                     status(DataItem.result) shouldBe 400
                 }
             }
 
             "invalid data is submitted that fails additional validation" should {
+                "return 400" in new Setup {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", ""))
-                "return 400" in {
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBefore, ("pensionsTakenBefore", "yes"), ("pensionsTakenBeforeAmt", ""))
+
                     mockAuthConnector(Future.successful({}))
                     status(DataItem.result) shouldBe 400
                 }
@@ -258,9 +307,8 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "In IP2016Controller calling the .pensionsTakenBetween action" when {
 
         "not supplied with a stored model" should {
-
-            lazy val result = await(TestIP2016Controller.pensionsTakenBetween(fakeRequest))
-            "return 200" in {
+            "return 200" in new Setup {
+                lazy val result = await(controller.pensionsTakenBetween(fakeRequest))
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenBetweenModel](None)
                 status(result) shouldBe 200
@@ -268,10 +316,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "supplied with a stored test model" should {
-            val testModel = new PensionsTakenBetweenModel("yes", Some(1))
-            lazy val result = await(TestIP2016Controller.pensionsTakenBetween(fakeRequest))
+            "return 200" in new Setup {
+                val testModel = new PensionsTakenBetweenModel("yes", Some(1))
+                lazy val result = await(controller.pensionsTakenBetween(fakeRequest))
 
-            "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
                 status(result) shouldBe 200
@@ -279,7 +327,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
             "return some HTML that" should {
 
-                "contain some text and use the character set utf-8" in {
+                "contain some text and use the character set utf-8" in new Setup {
+                    val testModel = new PensionsTakenBetweenModel("yes", Some(1))
+                    lazy val result = await(controller.pensionsTakenBetween(fakeRequest))
+
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
@@ -294,27 +345,32 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         "Submitting 'yes' in pensionsTakenBetweenForm" when {
 
             "submitting valid data" should {
+                "redirect to overseas pensions" in new Setup {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "1"))
-                "redirect to overseas pensions" in {
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "1"))
+
                     mockAuthConnector(Future.successful({}))
                     keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                     status(DataItem.result) shouldBe 303
-                    redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}") }
+                    redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}")
+                }
             }
 
             "submitting invalid data" should {
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", ""), ("pensionsTakenBetweenAmt", ""))
-                "return 400" in {
+                "return 400" in new Setup {
+
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBetween, ("pensionsTakenBetween", ""), ("pensionsTakenBetweenAmt", ""))
+
                     mockAuthConnector(Future.successful({}))
                     status(DataItem.result) shouldBe 400
                 }
             }
 
             "submitting invalid data that fails additional validation" should {
+                "return 400" in new Setup {
 
-                object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", ""))
-                "return 400" in {
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", ""))
+
                     mockAuthConnector(Future.successful({}))
                     status(DataItem.result) shouldBe 400
                 }
@@ -323,17 +379,15 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     }
 
 
-
-
     ///////////////////////////////////////////////
     // Overseas Pensions
     ///////////////////////////////////////////////
     "In IP2016Controller calling the .overseasPensions action" when {
 
         "not supplied with a stored model" should {
+            "return 200" in new Setup {
 
-            lazy val result = await(TestIP2016Controller.overseasPensions(fakeRequest))
-            "return 200" in {
+                lazy val result = await(controller.overseasPensions(fakeRequest))
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[OverseasPensionsModel](None)
                 status(result) shouldBe 200
@@ -341,10 +395,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "supplied with a stored test model (yes, £100000)" should {
-            val testModel = new OverseasPensionsModel("yes", Some(100000))
-            lazy val result = await(TestIP2016Controller.overseasPensions(fakeRequest))
+            "return 200" in new Setup {
+                val testModel = new OverseasPensionsModel("yes", Some(100000))
+                lazy val result = await(controller.overseasPensions(fakeRequest))
 
-            "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
                 status(result) shouldBe 200
@@ -352,7 +406,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
             "return some HTML that" should {
 
-                "contain some text and use the character set utf-8" in {
+                "contain some text and use the character set utf-8" in new Setup {
+                    val testModel = new OverseasPensionsModel("yes", Some(100000))
+                    lazy val result = await(controller.overseasPensions(fakeRequest))
+
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
@@ -366,33 +423,37 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
 
         "Submitting valid data" should {
+            "redirect to Current Pensions" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "no"), ("overseasPensionsAmt", "") )
-            "redirect to Current Pensions" in {
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitOverseasPensions, ("overseasPensions", "no"), ("overseasPensionsAmt", ""))
+
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.currentPensions()}") }
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.currentPensions()}")
+            }
         }
         "Submitting invalid data" should {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", ""), ("overseasPensionsAmt", "") )
-            "return 400" in {
+            "return 400" in new Setup {
+
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitOverseasPensions, ("overseasPensions", ""), ("overseasPensionsAmt", ""))
+
                 mockAuthConnector(Future.successful({}))
                 status(DataItem.result) shouldBe 400
             }
         }
 
         "Submitting invalid data that fails additional validation" should {
+            "return 400" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", "") )
-            "return 400" in {
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitOverseasPensions, ("overseasPensions", "yes"), ("overseasPensionsAmt", ""))
+
                 mockAuthConnector(Future.successful({}))
                 status(DataItem.result) shouldBe 400
             }
         }
     }
-
 
 
     ///////////////////////////////////////////////
@@ -401,9 +462,9 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "In IP2016Controller calling the .currentPensions action" when {
 
         "not supplied with a stored model" should {
+            "return 200" in new Setup {
 
-            lazy val result = await(TestIP2016Controller.currentPensions(fakeRequest))
-            "return 200" in {
+                lazy val result = await(controller.currentPensions(fakeRequest))
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[CurrentPensionsModel](None)
                 status(result) shouldBe 200
@@ -411,10 +472,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "supplied with a stored test model (£100000)" should {
-            val testModel = new CurrentPensionsModel(Some(100000))
-            lazy val result = await(TestIP2016Controller.currentPensions(fakeRequest))
+            "return 200" in new Setup {
+                val testModel = new CurrentPensionsModel(Some(100000))
+                lazy val result = await(controller.currentPensions(fakeRequest))
 
-            "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
                 status(result) shouldBe 200
@@ -423,7 +484,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
             "return some HTML that" should {
 
-                "contain some text and use the character set utf-8" in {
+                "contain some text and use the character set utf-8" in new Setup {
+                    val testModel = new CurrentPensionsModel(Some(100000))
+                    lazy val result = await(controller.currentPensions(fakeRequest))
+
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
@@ -437,25 +501,27 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "Submitting Current Pensions data" when {
 
         "valid data is submitted" should {
+            "redirect to Pension Debits page" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitCurrentPensions, ("currentPensionsAmt", "100000") )
-            "redirect to Pension Debits page" in {
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitCurrentPensions, ("currentPensionsAmt", "100000"))
+
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionDebits()}") }
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionDebits()}")
+            }
         }
 
         "invalid data is submitted" should {
+            "return 400" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitCurrentPensions, ("currentPensionsAmt", ""))
-            "return 400" in {
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitCurrentPensions, ("currentPensionsAmt", ""))
+
                 mockAuthConnector(Future.successful({}))
                 status(DataItem.result) shouldBe 400
-                }
+            }
         }
     }
-
 
 
     ///////////////////////////////////////////////
@@ -464,9 +530,8 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "In IP2016Controller calling the .pensionDebits action" when {
 
         "not supplied with a stored model" should {
-
-            lazy val result = await(TestIP2016Controller.pensionDebits(fakeRequest))
-            "return 200" in {
+            "return 200" in new Setup {
+                lazy val result = await(controller.pensionDebits(fakeRequest))
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionDebitsModel](None)
                 status(result) shouldBe 200
@@ -475,10 +540,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "supplied with a stored test model" should {
-            val testModel = new PensionDebitsModel(Some("yes"))
-            lazy val result = await(TestIP2016Controller.pensionDebits(fakeRequest))
+            "return 200" in new Setup {
+                val testModel = new PensionDebitsModel(Some("yes"))
+                lazy val result = await(controller.pensionDebits(fakeRequest))
 
-            "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PensionDebitsModel](Some(testModel))
                 status(result) shouldBe 200
@@ -486,7 +551,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
             "return some HTML that" should {
 
-                "contain some text and use the character set utf-8" in {
+                "contain some text and use the character set utf-8" in new Setup {
+                    val testModel = new PensionDebitsModel(Some("yes"))
+                    lazy val result = await(controller.pensionDebits(fakeRequest))
+
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[PensionDebitsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
@@ -499,8 +567,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "Submitting Pensions Debits data" when {
 
         "Submitting 'yes' in pensionDebitsForm" should {
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionDebits, ("pensionDebits", "yes"))
-            "redirect to number of pension sharing orders" in {
+            "redirect to number of pension sharing orders" in new Setup {
+
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionDebits, ("pensionDebits", "yes"))
+
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionDebitsModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
@@ -509,19 +579,22 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "Submitting 'no' in pensionDebitsForm" should {
+            "redirect to summary" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionDebits, ("pensionDebits", "no"))
-            "redirect to summary" in {
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionDebits, ("pensionDebits", "no"))
+
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionDebitsModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}") }
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}")
+            }
         }
 
         "Submitting pensionDebitsForm with no data" should {
+            "return 400" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPensionDebits, ("pensionDebits", ""))
-            "return 400" in {
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionDebits, ("pensionDebits", ""))
+
                 mockAuthConnector(Future.successful({}))
                 status(DataItem.result) shouldBe 400
             }
@@ -533,13 +606,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     ///////////////////////////////////////////////
 
     "In IP2016Controller calling the .psoDetails action" when {
-
-
         "not supplied with a stored model" should {
+            "return 200" in new Setup {
+                lazy val result = await(controller.psoDetails(fakeRequest))
 
-            lazy val result = await(TestIP2016Controller.psoDetails(fakeRequest))
-
-            "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PSODetailsModel](None)
                 status(result) shouldBe 200
@@ -547,10 +617,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "supplied with a stored test model" should {
-            val testModel = PSODetailsModel(1, 8, 2016, BigDecimal(1234))
-            lazy val result = await(TestIP2016Controller.psoDetails(fakeRequest))
+            "return 200" in new Setup {
+                val testModel = PSODetailsModel(1, 8, 2016, BigDecimal(1234))
+                lazy val result = await(controller.psoDetails(fakeRequest))
 
-            "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 keystoreFetchCondition[PSODetailsModel](Some(testModel))
                 status(result) shouldBe 200
@@ -558,7 +628,10 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
 
             "return some HTML that" should {
-                "contain some text and use the character set utf-8" in {
+                "contain some text and use the character set utf-8" in new Setup {
+                    val testModel = PSODetailsModel(1, 8, 2016, BigDecimal(1234))
+                    lazy val result = await(controller.psoDetails(fakeRequest))
+
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[PSODetailsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
@@ -572,16 +645,16 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "Submitting valid PSO details data" when {
 
         "submitting valid PSO details" should {
+            "redirect to the summary page with a valid PSO" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
-                
-                ("psoDay", "6"),
-                ("psoMonth", "4"),
-                ("psoYear", "2016"),
-                ("psoAmt", "100000")
-            )
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitPSODetails,
 
-            "redirect to the summary page with a valid PSO" in {
+                    ("psoDay", "6"),
+                    ("psoMonth", "4"),
+                    ("psoYear", "2016"),
+                    ("psoAmt", "100000")
+                )
+
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
@@ -590,15 +663,15 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "submitting an invalid set of PSO details" should {
+            "return 400" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
-                
-                ("psoDay", ""),
-                ("psoMonth", "1"),
-                ("psoYear", "2015"),
-                ("psoAmt", "100000")
-            )
-            "return 400" in {
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitPSODetails,
+
+                    ("psoDay", ""),
+                    ("psoMonth", "1"),
+                    ("psoYear", "2015"),
+                    ("psoAmt", "100000")
+                )
                 mockAuthConnector(Future.successful({}))
                 status(DataItem.result) shouldBe 400
             }
@@ -606,14 +679,14 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         }
 
         "submitting an invalid set of PSO details that fails additional validation" should {
+            "return 400" in new Setup {
 
-            object DataItem extends AuthorisedFakeRequestToPost(TestIP2016Controller.submitPSODetails,
-                ("psoDay", "35"),
-                ("psoMonth", "1"),
-                ("psoYear", "2015"),
-                ("psoAmt", "100000")
-            )
-            "return 400" in {
+                object DataItem extends AuthorisedFakeRequestToPost(controller.submitPSODetails,
+                    ("psoDay", "35"),
+                    ("psoMonth", "1"),
+                    ("psoYear", "2015"),
+                    ("psoAmt", "100000")
+                )
                 mockAuthConnector(Future.successful({}))
                 status(DataItem.result) shouldBe 400
             }
@@ -623,9 +696,9 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "In IP2016Controller calling the .removePsoDetails action" when {
 
         "supplied with a stored model" should {
-            lazy val result = await(TestIP2016Controller.removePsoDetails(fakeRequest))
+            "return 200" in new Setup {
+                lazy val result = await(controller.removePsoDetails(fakeRequest))
 
-            "return 200" in {
                 mockAuthConnector(Future.successful({}))
                 status(result) shouldBe 200
             }
@@ -635,17 +708,22 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "Submitting a pso for removal from application" when {
 
         "not supplied with a stored model" should {
-            lazy val result = await(TestIP2016Controller.submitRemovePsoDetails(fakeRequest))
-            val testModel = new PensionDebitsModel(Some("yes"))
+            "return 303" in new Setup {
+                lazy val result = await(controller.submitRemovePsoDetails(fakeRequest))
+                val testModel = new PensionDebitsModel(Some("yes"))
 
-            "return 303" in {
                 mockAuthConnector(Future.successful({}))
                 pensionsDebitsSaveData(Some(testModel))
                 status(result) shouldBe 303
             }
+        }
+        "not supplied with a stored model" should {
+            "redirect location should be the summary page" in new Setup {
+                lazy val result = await(controller.submitRemovePsoDetails(fakeRequest))
+                val testModel = new PensionDebitsModel(Some("yes"))
 
-            "redirect location should be the summary page" in {
                 mockAuthConnector(Future.successful({}))
+                pensionsDebitsSaveData(Some(testModel))
                 redirectLocation(result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}")
             }
         }

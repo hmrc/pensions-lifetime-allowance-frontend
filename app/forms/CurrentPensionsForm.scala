@@ -18,16 +18,13 @@ package forms
 
 import common.Validation._
 import models._
-import play.api.Play.current
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{Lang, Messages}
 import utils.Constants._
 
 object CurrentPensionsForm {
 
-  def currentPensionsForm(implicit lang: Lang) = Form(
+  def currentPensionsForm = Form(
     mapping(
       "currentPensionsAmt" -> optional(bigDecimal)
         .verifying("pla.base.errors.errorQuestion", currentPensionsAmt => currentPensionsAmt.isDefined)

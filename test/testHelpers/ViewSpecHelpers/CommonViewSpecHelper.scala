@@ -16,22 +16,28 @@
 
 package testHelpers.ViewSpecHelpers
 
-import akka.stream.Materializer
 import config.wiring.{PlaFormPartialRetriever, SessionCookieCryptoFilterWrapper}
+import config.{FrontendAppConfig, PlaContext}
 import org.scalatest.mockito.MockitoSugar
-import play.api.Play
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
-import testHelpers.{MockTemplateRenderer, TestConfigHelper}
+import testHelpers.MockTemplateRenderer
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import utils.PlaTestContext
 
-trait CommonViewSpecHelper extends UnitSpec with CommonMessages with MockitoSugar with WithFakeApplication{
+trait CommonViewSpecHelper extends UnitSpec with CommonMessages with MockitoSugar with WithFakeApplication {
 
   implicit val application = fakeApplication
+  val http = mock[DefaultHttpClient]
   val sessionCookieCryptoFilterWrapper = mock[SessionCookieCryptoFilterWrapper]
   implicit lazy val fakeRequest = FakeRequest()
-  implicit lazy val context = PlaTestContext
   implicit lazy val renderer = MockTemplateRenderer.renderer
-  implicit val partialRetriever = new PlaFormPartialRetriever(sessionCookieCryptoFilterWrapper)
+  implicit val partialRetriever = mock[PlaFormPartialRetriever]
+
+  implicit val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockMessage = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit val plaContext = mock[PlaContext]
 
 }
+

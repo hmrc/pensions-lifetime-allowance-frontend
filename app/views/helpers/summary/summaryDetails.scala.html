@@ -17,7 +17,7 @@
 @import play.api.data._
 @import config.FrontendAppConfig
 
-@(summary: SummaryModel)(implicit messages: Messages, lang: Lang, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever)
+@(summary: SummaryModel)(implicit messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig: FrontendAppConfig)
 
 @defining(summary.hasRemoveLink){ removeLinkDefined =>
 

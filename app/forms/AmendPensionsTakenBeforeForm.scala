@@ -19,12 +19,11 @@ package forms
 import models.amendModels.AmendPensionsTakenBeforeModel
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.{Lang}
 
 
 object AmendPensionsTakenBeforeForm extends CommonBinders{
 
-  def amendPensionsTakenBeforeForm(implicit lang:Lang) = Form (
+  def amendPensionsTakenBeforeForm = Form (
     mapping(
       "amendedPensionsTakenBefore" -> nonEmptyText,
       "amendedPensionsTakenBeforeAmt" -> yesNoOptionalBigDecimal,

@@ -16,21 +16,25 @@
 
 package config
 
+import java.io.StringWriter
+
+import com.github.mustachejava.Mustache
 import javax.inject.Inject
-import play.api.{Configuration, Environment}
-import play.api.Mode.Mode
+import play.api.i18n.Messages
+import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.play.http.ws.WSGet
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.renderer.TemplateRenderer
 
+import scala.collection.JavaConversions._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-
-class LocalTemplateRenderer @Inject()(override val runModeConfiguration: Configuration, environment: Environment) extends TemplateRenderer with ServicesConfig {
-  override lazy val templateServiceBaseUrl = baseUrl("frontend-template-provider")
+class LocalTemplateRenderer @Inject()(appConfig: FrontendAppConfig,
+                                     WSHttp: DefaultHttpClient)
+                                      extends TemplateRenderer {
+  override lazy val templateServiceBaseUrl = appConfig.servicesConfig.baseUrl("frontend-template-provider")
   override val refreshAfter: Duration = 10 minutes
 
   private implicit val hc = HeaderCarrier()
@@ -39,6 +43,16 @@ class LocalTemplateRenderer @Inject()(override val runModeConfiguration: Configu
     WSHttp.GET(path).map(_.body)
   }
 
-  override protected def mode: Mode = environment.mode
+  private def renderTemplate(path: String)(content: Html, extraArgs: Map[String, Any])(implicit messages: Messages): Html = {
+    val isWelsh = messages.lang.code.take(2)=="cy"
+    val attributes: java.util.Map[String, Any] = mapAsJavaMap(Map("article" -> content.body, "isWelsh" -> isWelsh)) ++ extraArgs
+    val m: Mustache = cache.get(path)
+    val sw = new StringWriter()
+    m.execute(sw, attributes)
+    sw.flush()
+    Html(sw.toString)
+  }
 
+  override def renderDefaultTemplate(path: String, content: Html, extraArgs: Map[String, Any])(implicit messages: Messages): Html =
+    renderTemplate(path)(content, extraArgs)(messages)
 }

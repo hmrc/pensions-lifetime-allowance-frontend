@@ -18,7 +18,6 @@ package views.pages.lookup
 
 import models.PSALookupResult
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupResultsSpecMessages
 import views.html.pages.lookup.psa_lookup_results_print

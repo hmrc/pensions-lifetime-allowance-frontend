@@ -16,11 +16,9 @@
 
 package views.pages.existingProtections
 
-import config.FrontendAppConfig
 import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel}
 import org.jsoup.Jsoup
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.mvc.Call
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.existingProtections.ExistingProtections

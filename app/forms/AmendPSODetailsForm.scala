@@ -20,11 +20,10 @@ import common.Validation._
 import models.amendModels.AmendPSODetailsModel
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Lang
 import utils.Constants
 
 object AmendPSODetailsForm  extends CommonBinders{
-  def amendPsoDetailsForm(implicit lang:Lang) = Form(
+  def amendPsoDetailsForm = Form(
     mapping(
       "psoDay"    -> dateFormatterFromInt,
       "psoMonth"  -> psoPartialDateBinder("monthEmpty"),

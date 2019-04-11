@@ -15,9 +15,8 @@
  *@
 
 @import play.api.Application
-@import config.FrontendAppConfig._
-
-@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@import config.FrontendAppConfig
+@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, frontendAppConfig: FrontendAppConfig)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
@@ -25,9 +24,9 @@
 
 @metrics = {
 @if(lookupResult.psaCheckResult == 0) {
-    @ga_metrics(invalidStatusMetric)
+    @ga_metrics(frontendAppConfig.invalidStatusMetric)
 } else {
-    @ga_metrics(validStatusMetric)
+    @ga_metrics(frontendAppConfig.validStatusMetric)
 }
 }
 

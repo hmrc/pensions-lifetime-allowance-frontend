@@ -16,15 +16,12 @@
 
 package forms
 
-import play.api.i18n.{Lang, Messages}
-import play.api.data._
-import play.api.data.Forms._
 import models._
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
+import play.api.data.Forms._
+import play.api.data._
 
 object PensionDebitsForm {
-  def pensionDebitsForm(implicit lang:Lang) = Form(
+  def pensionDebitsForm = Form(
     mapping(
       "pensionDebits" -> optional(text).verifying("pla.base.errors.mandatoryError", {_.isDefined})
     )(PensionDebitsModel.apply)(PensionDebitsModel.unapply)

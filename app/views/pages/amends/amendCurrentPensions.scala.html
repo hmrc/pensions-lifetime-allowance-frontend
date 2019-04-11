@@ -22,11 +22,9 @@
 @import common.Links
 @import controllers.PlaLanguageController
 @import play.api.Application
+@import config.FrontendAppConfig
 
-@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
-
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
-
+@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @helpTextAccordionContent = {
     <p>@Messages("pla.currentPensions.hiddenTextPara")</p>

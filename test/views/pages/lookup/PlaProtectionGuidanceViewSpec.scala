@@ -17,7 +17,6 @@
 package views.pages.lookup
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.ProtectionGuidanceSpecMessages
 import views.html.pages.lookup.pla_protection_guidance

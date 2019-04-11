@@ -18,23 +18,19 @@ package config
 
 import config.wiring.PlaFormPartialRetriever
 import javax.inject.Inject
-import play.api.Configuration
-import play.api.i18n.MessagesApi
+import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
-import uk.gov.hmrc.renderer.TemplateRenderer
 
-class frontendErrorHandler @Inject()(val messagesApi: MessagesApi,
-                                     val configuration: Configuration,
-                                     val PlaFormPartialRetriever: PlaFormPartialRetriever,
-                                     val localTemplateRenderer: LocalTemplateRenderer) extends FrontendErrorHandler {
+class PlaFrontendErrorHandler @Inject()(implicit val messagesApi: MessagesApi,
+                                       implicit val PlaFormPartialRetriever: PlaFormPartialRetriever,
+                                       implicit val localTemplateRenderer: LocalTemplateRenderer,
+                                       implicit val appConfig: FrontendAppConfig,
+                                       implicit val plaContext: PlaContext) extends FrontendErrorHandler {
 
-  implicit val Placontext = PlaContextImpl
-  implicit val partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = PlaFormPartialRetriever
-  implicit val templateRenderer: TemplateRenderer = localTemplateRenderer
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html =
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html = {
     views.html.error_template(pageTitle, heading, message)
-
+  }
 }

@@ -17,14 +17,20 @@
 package constructors
 
 import com.kenshoo.play.metrics.PlayModule
+import enums.ApplicationType
+import models._
+import org.scalatest.mockito.MockitoSugar
+import play.api.i18n.Lang
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import play.api.libs.json.{JsValue, Json}
-import models._
-import enums.ApplicationType
 import utils.CallMap
 
-class SummaryConstructorSpec extends UnitSpec with WithFakeApplication {
+class SummaryConstructorSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+
+  implicit val mockLang = mock[Lang]
+
+
   override def bindModules = Seq(new PlayModule)
   object TestSummaryConstructor extends SummaryConstructor
   val tstId = "testUserID"

@@ -16,25 +16,35 @@
 
 package controllers
 
+import java.time.{LocalDate, LocalDateTime}
+
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
-import config.LocalTemplateRenderer
+import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
+import forms.WithdrawDateForm
+import forms.WithdrawDateForm.withdrawDateForm
 import mocks.AuthMock
 import models._
-import org.jsoup.Jsoup
 import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
+import org.mockito.stubbing.OngoingStubbing
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
+import play.api.{Configuration, Environment}
+import play.api.data.Form
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Messages
-import play.api.libs.json.{JsString, JsValue, Json, OFormat}
-import play.api.mvc.{Request, Result}
+import play.api.libs.json.{JsNull, JsValue, Json}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Request, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers.{AuthorisedFakeRequestToPost, MockTemplateRenderer}
+import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, Enrolment}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -42,22 +52,47 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication {
+class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication with BeforeAndAfterEach {
 
-  val keyStoreConnector = mock[KeyStoreConnector]
-  val plaConnector = mock[PLAConnector]
-
-  implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+  implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
+  implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val system: ActorSystem = ActorSystem()
   implicit val mat: Materializer = ActorMaterializer()
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext = mock[PlaContext]
 
-  val mockDisplayConstructors = mock[DisplayConstructors]
+  val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
+  val mockPlaConnector: PLAConnector = mock[PLAConnector]
+  val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
+  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockAuthFunction: AuthFunction = mock[AuthFunction]
+  val mockEnv: Environment = mock[Environment]
 
-  val controller = new WithdrawProtectionController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer ) {
-    override lazy val authConnector = mockAuthConnector
-    override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
-    override val displayConstructors = mockDisplayConstructors
+  class Setup {
+
+    val authFunction = new AuthFunction {
+      override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
+      override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
+      override implicit val plaContext: PlaContext = mockPlaContext
+      override implicit val appConfig: FrontendAppConfig = mockAppConfig
+      override val postSignInRedirectUrl: String = ""
+      override def authConnector: AuthConnector = mockAuthConnector
+      override def config: Configuration = mockAppConfig.configuration
+      override def env: Environment = mockEnv
+    }
+
+    val controller = new WithdrawProtectionController(
+      mockKeyStoreConnector,
+      mockPlaConnector,
+      mockDisplayConstructors,
+      mockMCC,
+      authFunction) {
+    }
+  }
+
+  override def beforeEach(): Unit = {
+    reset(mockAuthConnector, mockPlaConnector, mockPlaContext, mockDisplayConstructors)
+    super.beforeEach()
   }
 
   val ip2016Protection = ProtectionModel(
@@ -78,6 +113,12 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
     withdrawDay = Some(5),
     withdrawMonth = Some(9),
     withdrawYear = Some(2017)
+  )
+
+  val withdraw = Json.obj(
+    "withdrawDay" -> "0",
+    "withdrawMonth" -> "2",
+    "withdrawYear" -> "2017"
   )
 
   val invalidWithdrawDateForm = WithdrawDateFormModel(
@@ -112,273 +153,281 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
 
   val fakeRequest = FakeRequest()
 
-  "In WithdrawProtectionController calling the showWithdrawConfirmation action" should {
+    "In WithdrawProtectionController calling the showWithdrawConfirmation action" should {
 
-    "return 200" in {
-      mockAuthConnector(Future.successful())
-      when(keyStoreConnector.remove(ArgumentMatchers.any()))
-        .thenReturn(Future.successful(mock[HttpResponse]))
-      status(controller.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
-    }
-  }
-
-  "In WithdrawProtectionController calling the displayWithdrawConfirmation action" when {
-
-    "handling an OK response" should  {
-      lazy val result = {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(plaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
-          .thenReturn(Future.successful(HttpResponse(OK)))
-        await(controller.displayWithdrawConfirmation("")(fakeRequest))
-      }
-
-      "return 303" in {
-        status(result) shouldBe SEE_OTHER
+      "return 200" in new Setup {
+        mockAuthConnector(Future.successful())
+        when(mockKeyStoreConnector.remove(ArgumentMatchers.any())).thenReturn(Future.successful(mock[HttpResponse]))
+        status(controller.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
       }
     }
 
-    "handling a non-OK response" should {
-      lazy val result = {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(plaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
-          .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR)))
-        await(controller.displayWithdrawConfirmation("")(fakeRequest))
+    "In WithdrawProtectionController calling the displayWithdrawConfirmation action" when {
+
+      "handling an OK response" in new Setup {
+        lazy val result = {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+          when(mockPlaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(HttpResponse(OK)))
+          await(controller.displayWithdrawConfirmation("")(fakeRequest))
+        }
+          status(result) shouldBe SEE_OTHER
+
       }
 
-      "return 500" in {
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-
-      "have the correct cache control" in {
-        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-      }
-    }
-  }
-
-  "In WithdrawProtectionController calling the withdrawImplications action" when {
-
-    "there is no stored protection model" should {
-      lazy val result = {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[ProtectionModel](None)
-        await(controller.withdrawImplications(fakeRequest))
-      }
-
-      "return 500" in {
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-
-      "have the correct cache control" in {
-        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      "handling a non-OK response" in new Setup {
+        lazy val result = {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+          when(mockPlaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+            .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR)))
+          await(controller.displayWithdrawConfirmation("")(fakeRequest))
+        }
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+          result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
       }
     }
 
-    "there is a stored protection model" should {
+    "In WithdrawProtectionController calling the withdrawImplications action" when {
 
-      "return 200" in {
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
+      "there is no stored protection model" should {
+        "return 500" in new Setup {
+          lazy val result = {
+            mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+            keystoreFetchCondition[ProtectionModel](None)
+            await(controller.withdrawImplications(fakeRequest))
+          }
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+          result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
 
-        val result = await(controller.withdrawImplications(fakeRequest))
-        status(result) shouldBe OK
-      }
-    }
-  }
-
-
-  "In WithdrawProtectionController calling the withdrawSummary action" when {
-
-    "there is no stored protection model" should {
-      lazy val result = {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[ProtectionModel](None)
-        await(controller.withdrawSummary(fakeRequest))
+        }
       }
 
-      "return 500" in {
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-      "have the correct cache control" in {
-        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-      }
-    }
+      "there is a stored protection model" should {
 
-    "there is a stored protection model" should {
-      "return 200" in {
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
+        "return 200" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-        val result = await(controller.withdrawSummary(fakeRequest))
-        status(result) shouldBe OK
-      }
-    }
-  }
+          keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+          when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
 
-  "In WithdrawProtectionController calling the getWithdrawDateInput action" when {
-
-    "there is no stored protection model" should {
-      keystoreFetchCondition[ProtectionModel](None)
-      lazy val result = await(controller.withdrawSummary(fakeRequest))
-
-      "return 500" in {
-        keystoreFetchCondition[ProtectionModel](None)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-      "have the correct cache control" in {
-        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+          val result = await(controller.withdrawImplications(fakeRequest))
+          status(result) shouldBe OK
+        }
       }
     }
 
-    "there is a stored protection model" should {
 
-      lazy val result = await(controller.getWithdrawDateInput(fakeRequest))
+    "In WithdrawProtectionController calling the withdrawSummary action" when {
 
-      "return 200" in {
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(result) shouldBe OK
+      "there is no stored protection model" should {
+        "return 500" in new Setup {
+          lazy val result = {
+            mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+            keystoreFetchCondition[ProtectionModel](None)
+            await(controller.withdrawSummary(fakeRequest))
+          }
+
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+          result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+        }
+      }
+
+      "there is a stored protection model" should {
+        "return 200" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+          keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+          when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
+
+          val result = await(controller.withdrawSummary(fakeRequest))
+          status(result) shouldBe OK
+        }
       }
     }
-  }
+
+    "In WithdrawProtectionController calling the getWithdrawDateInput action" when {
+
+      "there is no stored protection model" should {
+        "return 500" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+          keystoreFetchCondition[ProtectionModel](None)
+          lazy val result = await(controller.withdrawSummary(fakeRequest))
+
+          keystoreFetchCondition[ProtectionModel](None)
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+          result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+        }
+      }
+
+      "there is a stored protection model" should {
+        "return 200" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+
+          lazy val result = await(controller.getWithdrawDateInput(fakeRequest))
+
+          status(result) shouldBe OK
+        }
+      }
+    }
 
   "In WithdrawProtectionController calling the postWithdrawDateInput action" when {
-    val testController = new WithdrawProtectionController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer ) {
-      override lazy val authConnector = mockAuthConnector
-      override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
-      override val displayConstructors = mockDisplayConstructors
-
-      override def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]): Future[Result] = {
-        Future.successful(Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput()))
-      }
-    }
 
     "there is no stored protection model" should {
-      keystoreFetchCondition[ProtectionModel](None)
-      lazy val result = await(testController.postWithdrawDateInput(fakeRequest))
-
-      "return 500" in {
+      "return 500" in new Setup {
+        mockAuthConnector(Future.successful({}))
         keystoreFetchCondition[ProtectionModel](None)
+        lazy val result = await(controller.postWithdrawDateInput(fakeRequest))
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
 
     "there is a stored protection model" should {
-      "return 303" in {
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        lazy val result = await(testController.postWithdrawDateInput(fakeRequest))
+      "return 303" in new Setup {
+        mockAuthConnector(Future.successful({}))
 
+        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+        keystoreSaveCondition[WithdrawDateFormModel](mockKeyStoreConnector)
+
+
+        val request = FakeRequest().withFormUrlEncodedBody(("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017"))
+
+        lazy val result = await(controller.postWithdrawDateInput(request))
         status(result) shouldBe SEE_OTHER
       }
     }
   }
 
-  "In WithdrawProtectionController calling the getSubmitWithdrawDateInput action" when {
-    val testController = new WithdrawProtectionController(keyStoreConnector, plaConnector, partialRetriever, templateRenderer ) {
-      override lazy val authConnector = mockAuthConnector
-      override lazy val postSignInRedirectUrl = "http://localhost:9012/protect-your-lifetime-allowance/apply-ip"
-      override val displayConstructors = mockDisplayConstructors
+    "In WithdrawProtectionController calling the getSubmitWithdrawDateInput action" when {
+      "there is a stored protection Model" should {
+        "return a 200" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-      override def fetchWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]): Future[Result] = {
-        Ok("test")
+          when(mockKeyStoreConnector.fetchAndGetFormData[Any](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+            .thenReturn(
+              Future.successful(Some(ip2016Protection)),
+              Future.successful(Some(withdrawDateForm))
+            )
+
+          lazy val result = await(controller.getSubmitWithdrawDateInput(fakeRequest))
+          status(result) shouldBe OK
+        }
+      }
+
+      "there is no stored protection model" should {
+        "return a 500" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          keystoreFetchCondition[ProtectionModel](None)
+          lazy val result = await(controller.getSubmitWithdrawDateInput(fakeRequest))
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+        }
       }
     }
 
-    "there is a stored protection Model" should {
-      "return a 200" in {
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        lazy val result = await(testController.getSubmitWithdrawDateInput(fakeRequest))
-        status(result) shouldBe OK
+    "In withdrawProtectionController calling the submitWithdrawDateInput action" when {
+
+      "there is a stored protection model" should {
+        "return 200" in new Setup {
+
+          object UserRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
+            ("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017"))
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+          keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+          status(UserRequest.result) shouldBe OK
+        }
+      }
+       "there is a stored protection model" should {
+         "return 400 Bad Request" in new Setup {
+
+           object InvalidDayRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
+             ("withdrawDay", "20000"), ("withdrawMonth", "10"), ("withdrawYear", "2017"))
+           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+           status(InvalidDayRequest.result) shouldBe BAD_REQUEST
+         }
+       }
+         "there is a stored protection model" should {
+           "return 400 Bad Request with single error" in new Setup {
+
+             object InvalidMultipleErrorRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
+               ("withdrawDay", "20000"), ("withdrawMonth", "70000"), ("withdrawYear", "2010000007"))
+             mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+             keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+             status(InvalidMultipleErrorRequest.result) shouldBe BAD_REQUEST
+           }
+         }
+      "there is a stored protection model" should {
+        "return 400 Bad Request with date in past error" in new Setup {
+
+          object BadRequestDateInPast extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
+            ("withdrawDay", "20"), ("withdrawMonth", "1"), ("withdrawYear", "2012"))
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+          keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
+          status(BadRequestDateInPast.result) shouldBe BAD_REQUEST
+        }
       }
     }
 
-    "there is no stored protection model" should {
-      "return a 500" in {
-        keystoreFetchCondition[ProtectionModel](None)
-        lazy val result = await(testController.getSubmitWithdrawDateInput(fakeRequest))
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-    }
-  }
+    "In WithdrawProtectionController calling the validateAndSaveWithdrawDateForm action" when {
+      "the form has errors" should {
+        "return a 400" in new Setup {
 
-  "In withdrawProtectionController calling the submitWithdrawDateInput action" when {
-
-    "there is a stored protection model" should {
-      object UserRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
-        ("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017"))
-
-      "return 200" in {
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(UserRequest.result) shouldBe OK
+          val requestWithForm = FakeRequest().withBody(Json.toJson(invalidWithdrawDateForm))
+          lazy val result = await(controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithForm))
+          status(result) shouldBe BAD_REQUEST
+        }
       }
 
-      object InvalidDayRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
-        ("withdrawDay", "20000"), ("withdrawMonth", "10"), ("withdrawYear", "2017"))
-      "return 400 Bad Request" in {
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(InvalidDayRequest.result) shouldBe BAD_REQUEST
-      }
+      "the form does not have errors" should {
+        "return a 303" in new Setup {
+          when(mockKeyStoreConnector.saveFormData[WithdrawDateFormModel](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+            .thenReturn(Future.successful(CacheMap("test", Map.empty)))
 
-      object InvalidMultipleErrorRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
-        ("withdrawDay", "20000"), ("withdrawMonth", "70000"), ("withdrawYear", "2010000007"))
-      "return 400 Bad Request with single error" in {
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(InvalidDayRequest.result) shouldBe BAD_REQUEST
-      }
+          val requestWithFormInvalid = FakeRequest().withBody(Json.toJson(withdrawDateForm))
+          lazy val result = await(controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithFormInvalid))
 
-      object BadRequestDateInPast extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
-        ("withdrawDay", "20"), ("withdrawMonth", "1"), ("withdrawYear", "2012"))
-      "return 400 Bad Request with date in past error" in {
-        keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(InvalidDayRequest.result) shouldBe BAD_REQUEST
-      }
-    }
-  }
+          status(result) shouldBe SEE_OTHER
+          result.header.headers("Location") shouldBe  "/protect-your-lifetime-allowance/withdraw-protection/date-input-confirmation"
 
-  "In WithdrawProtectionController calling the validateAndSaveWithdrawDateForm action" when {
-    "the form has errors" should {
-      "return a 400" in {
-        val requestWithForm = FakeRequest().withBody(Json.toJson(invalidWithdrawDateForm))
-        lazy val result = await(controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithForm))
-        status(result) shouldBe BAD_REQUEST
+        }
       }
     }
 
-    "the form does not have errors" should {
-      "return a 303" in {
-        when(keyStoreConnector.saveFormData[WithdrawDateFormModel](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
-          .thenReturn(Future.successful(CacheMap("test", Map.empty)))
+    "In WithdrawProtectionController calling the fetchWithdrawDateForm action" when {
+      "there is a stored withdrawDateForm" should {
+        "return a 400" in new Setup {
+          keystoreFetchCondition[WithdrawDateFormModel](None)
+          lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest))
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+        }
+      }
 
-        val requestWithFormInvalid = FakeRequest().withBody(Json.toJson(withdrawDateForm))
-        lazy val result = await(controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithFormInvalid))
-
-        status(result) shouldBe SEE_OTHER
-        result.header.headers("Location") shouldBe  "/protect-your-lifetime-allowance/withdraw-protection/date-input-confirmation"
-
+      "there is no stored withdrawDateForm" should {
+        "return a 200" in new Setup {
+          keystoreFetchCondition[WithdrawDateFormModel](Some(withdrawDateForm))
+          lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest))
+          status(result) shouldBe OK
+        }
       }
     }
-  }
-
-  "In WithdrawProtectionController calling the fetchWithdrawDateForm action" when {
-    "there is a stored withdrawDateForm" should {
-      "return a 400" in {
-        keystoreFetchCondition[WithdrawDateFormModel](None)
-        lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest))
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-    }
-
-    "there is no stored withdrawDateForm" should {
-      "return a 200" in {
-        keystoreFetchCondition[WithdrawDateFormModel](Some(withdrawDateForm))
-        lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest))
-        status(result) shouldBe OK
-      }
-    }
-  }
 
   def keystoreFetchCondition[T](data: Option[T]): Unit = {
-    when(keyStoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    when(mockKeyStoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(Future.successful(data))
   }
+
+  def keystoreSaveCondition[T](mockKeyStoreConnector: KeyStoreConnector, key: Option[String] = None, returnedData: Option[CacheMap] = None): OngoingStubbing[Future[CacheMap]] = {
+    val keyMatcher = key.map(ArgumentMatchers.contains).getOrElse(ArgumentMatchers.anyString())
+
+    when(mockKeyStoreConnector.saveFormData[T](keyMatcher, ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
+      .thenReturn(Future.successful(returnedData.getOrElse(CacheMap("", Map.empty))))
+  }
 }
+

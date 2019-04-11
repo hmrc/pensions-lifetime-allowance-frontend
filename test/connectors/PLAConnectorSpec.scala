@@ -16,40 +16,30 @@
 
 package connectors
 
-import java.util.UUID
-
-import config.WSHttp
+import config.FrontendAppConfig
 import models._
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import play.api.Mode.Mode
-import play.api.{Application, Configuration, Environment, Mode}
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
-import testHelpers.TestConfigHelper
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import play.api.{Environment, Mode}
 import uk.gov.hmrc.http.cache.client.CacheMap
-
-import scala.collection.immutable.List
-import scala.concurrent.Future
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+
+import scala.concurrent.Future
 
 class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with WithFakeApplication {
 
-  val mockHttp : WSHttp = mock[WSHttp]
-  val env = mock[Environment]
+  val mockEnv       = mock[Environment]
+  val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  val mockHttp      = mock[DefaultHttpClient]
 
-  when(env.mode).thenReturn(Mode(0))
-
-  object connector extends PLAConnector {
-    val http = mockHttp
-    val serviceUrl = "http://localhost:9012"
-
-    override protected def mode: Mode = mock[Mode]
-
-    override protected def runModeConfiguration: Configuration = mock[Configuration]
+  class Setup {
+    val connector = new PLAConnector(mockAppConfig, mockHttp)
   }
 
   val validApplyFP16Json = """{"protectionType":"FP2016"}"""
@@ -86,16 +76,17 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
   }
 
   "Calling applyFP16" should {
-    "should return a 200 from a valid apply FP16 request" in {
+    "should return a 200 from a valid apply FP16 request" in new Setup {
       when(mockHttp.POST[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
+
       val response = connector.applyFP16(nino)
       await(response).status shouldBe OK
     }
   }
 
   "Calling applyIP16" should {
-    "should return a 200 from a valid apply IP16 request" in {
+    "should return a 200 from a valid apply IP16 request" in new Setup {
       when(mockHttp.POST[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
       val tstMap = CacheMap(tstId, Map(negativePensionsTakenTuple,
@@ -103,26 +94,27 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
                                       validCurrentPensionsTuple,
                                       negativePensionDebitsTuple))
       val response = connector.applyIP16(nino, tstMap)
+
       await(response).status shouldBe OK
     }
   }
 
   "Calling applyIP14" should {
-    "should return a 200 from a valid apply IP14 request" in {
+    "should return a 200 from a valid apply IP14 request" in new Setup {
       when(mockHttp.POST[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
       val tstMap = CacheMap(tstId, Map(negativeIP14PensionsTakenTuple,
                                       negativeIP14OverseasPensionsTuple,
                                       validIP14CurrentPensionsTuple,
                                       negativeIP14PensionDebitsTuple))
-
       val response = connector.applyIP14(nino, tstMap)
+
       await(response).status shouldBe OK
     }
   }
 
   "Calling amendProtection" should {
-    "return 200 from a valid amendProtection request" in {
+    "return 200 from a valid amendProtection request" in new Setup {
       when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
       val protectionModel = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
@@ -139,35 +131,36 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         protectionReference = Some("PSA123456"))
 
       val response = connector.amendProtection(nino, protectionModel)
+
       await(response).status shouldBe OK
     }
   }
 
   "Calling readProtections" should {
-    "should return a 200 from a valid apply readProtections request" in {
+    "should return a 200 from a valid apply readProtections request" in new Setup {
       when(mockHttp.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
 
       val response = connector.readProtections(nino)
+
       await(response).status shouldBe OK
     }
   }
 
   "Calling psaLookup" should {
-    "should return a 200 from a valid psa lookup request" in {
+    "should return a 200 from a valid psa lookup request" in new Setup {
       when(mockHttp.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
 
       val response = connector.psaLookup(psaRef, ltaRef)
+
       await(response).status shouldBe OK
     }
   }
 
   "Calling with 10 decimal places" should {
-    import enums.ApplicationType
-    import constructors.IPApplicationConstructor
 
-    "convert json double values to 2 decimal places for applying for ip" in {
+    "convert json double values to 2 decimal places for applying for ip" in new Setup {
       val expectedJson = Json.parse("""{"uncrystallisedRights":1001.12,"protectionType":"IP2016","postADayBenefitCrystallisationEvents":1100.12,"nonUKRights":1010.12,"relevantAmount":4111.49,"preADayPensionInPayment":1000.12,"pensionDebits":[{"startDate":"2016-02-01","amount":10000.12}]}""")
       when(mockHttp.POST[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.eq(expectedJson), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK)))
@@ -182,10 +175,11 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
                                         ))
 
       val response = connector.applyIP16(nino, userData)
+
       await(response).status shouldBe OK
     }
 
-    "convert json double values to 2 decimal places for amending ips" in {
+    "convert json double values to 2 decimal places for amending ips" in new Setup {
       val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
                                         "protectionType":"IP2016","status":"dormant","protectedAmount":1250000.12,
                                         "postADayBenefitCrystallisationEvents":2000.12,"preADayPensionInPayment":2000.12,
@@ -207,10 +201,11 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         protectionReference = Some("PSA123456"))
 
       val response = connector.amendProtection(nino, protectionModel)
+
       await(response).status shouldBe OK
     }
 
-    "not fail when not able to convert json double values to 2 decimal places for amending ips" in {
+    "not fail when not able to convert json double values to 2 decimal places for amending ips" in new Setup {
       val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
                                         "protectionType":"IP2016","status":"dormant","notificationId":12,
                                         "protectionReference":"PSA123456"}""")
@@ -230,10 +225,11 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         protectionReference = Some("PSA123456"))
 
       val response = connector.amendProtection(nino, protectionModel)
+
       await(response).status shouldBe OK
     }
 
-    "be able to convert just one json double values to 2 decimal places for amending ips" in {
+    "be able to convert just one json double values to 2 decimal places for amending ips" in new Setup {
       val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
                                         "protectionType":"IP2016","status":"dormant","protectedAmount":1250000.12,"notificationId":12,
                                         "protectionReference":"PSA123456"}""")
@@ -253,6 +249,7 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
         protectionReference = Some("PSA123456"))
 
       val response = connector.amendProtection(nino, protectionModel)
+
       await(response).status shouldBe OK
     }
   }

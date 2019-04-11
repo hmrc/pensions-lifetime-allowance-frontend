@@ -14,7 +14,9 @@
  * limitations under the License.
  *@
 
-@(heading: String, showError: Boolean, protectionType: String)(implicit messages: Messages, lang: Lang)
+@import config.FrontendAppConfig
+
+@(heading: String, showError: Boolean, protectionType: String)(implicit messages: Messages, appConfig: FrontendAppConfig)
 
 <div class="flash error-summary@if(showError) { error-summary--show}"
      id="error-summary-display"

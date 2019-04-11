@@ -19,9 +19,12 @@ package controllers
 
 import java.util.UUID
 
-import config.LocalTemplateRenderer
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import connectors.KeyStoreConnector
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.SummaryConstructor
 import enums.ApplicationType
 import mocks.AuthMock
@@ -29,9 +32,13 @@ import models.SummaryModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.mockito.MockitoSugar
+import play.api.{Configuration, Environment}
+import play.api.i18n.Messages
 import play.api.libs.json.JsValue
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import testHelpers._
+import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -41,18 +48,49 @@ import scala.concurrent.Future
 
 class SummaryControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication {
 
-  implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+  val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
+  val mockPlaConnector: PLAConnector = mock[PLAConnector]
+  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
 
-  val mockKeyStoreConnector = mock[KeyStoreConnector]
-  val mockSummaryConstructor = mock[SummaryConstructor]
+  implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
+  implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext = mock[PlaContext]
+  implicit val mockMessages: Messages = mock[Messages]
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+
+  val mockSummaryConstructor: SummaryConstructor = mock[SummaryConstructor]
   val fakeRequest = FakeRequest()
+  val mockAuthFunction: AuthFunction = fakeApplication.injector.instanceOf[AuthFunction]
+  val mockEnv: Environment = mock[Environment]
 
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
 
-  val testSummaryController = new SummaryController(mockKeyStoreConnector, partialRetriever, templateRenderer) {
-    override lazy val authConnector = mockAuthConnector
+  val testSummaryController = new SummaryController(mockKeyStoreConnector, mockMCC, mockAuthFunction) {
     override val summaryConstructor = mockSummaryConstructor
+  }
+
+  class Setup {
+
+    val authFunction = new AuthFunction {
+      override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
+      override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
+      override implicit val plaContext: PlaContext = mockPlaContext
+      override implicit val appConfig: FrontendAppConfig = mockAppConfig
+      override val postSignInRedirectUrl: String = ""
+      override def authConnector: AuthConnector = mockAuthConnector
+      override def config: Configuration = mockAppConfig.configuration
+      override def env: Environment = mockEnv
+    }
+
+    val controller = new SummaryController(
+      mockKeyStoreConnector,
+      mockMCC,
+      authFunction
+    ) {
+      override val summaryConstructor = mockSummaryConstructor
+    }
   }
 
   val sessionId = UUID.randomUUID.toString
@@ -61,49 +99,44 @@ class SummaryControllerSpec extends UnitSpec with MockitoSugar with AuthMock wit
 
   "Navigating to summary when there is no user data" when {
 
-    "user is applying for IP16" should {
-      "return 500" in {
+    "user is applying for IP16" in new Setup {
+
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(None))
-        val result = await(testSummaryController.summaryIP16(fakeRequest))
+        val result = await(controller.summaryIP16(fakeRequest))
 
         status(result) shouldBe 500
-      }
     }
   }
 
   "Navigating to summary when there is invalid user data" when {
 
-    "user is applying for IP16" should {
-      lazy val result = await(testSummaryController.summaryIP16(fakeRequest))
+    "user is applying for IP16" in new Setup  {
+      lazy val result = await(controller.summaryIP16(fakeRequest))
 
-      when(testSummaryController.summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(None)
+      when(controller.summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(None)
       when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
-      "return 500" in {
-        status(result) shouldBe 500
-      }
+      status(result) shouldBe 500
     }
   }
 
   "Navigating to summary when user has valid data" when {
-    "user is applying for IP16" should {
-      "return 200" in {
-        when(testSummaryController.summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(tstSummaryModel))
+    "user is applying for IP16" in new Setup  {
+        when(controller.summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(tstSummaryModel))
         when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
-        val result = await(testSummaryController.summaryIP16(fakeRequest))
+        val result = await(controller.summaryIP16(fakeRequest))
         status(result) shouldBe 200
-      }
     }
   }
 
   "Checking for data metrics flags" should {
-    "return true for 'pensionsTakenBetween'" in {
+    "return true for 'pensionsTakenBetween'" in new Setup  {
       SummaryController.recordDataMetrics("pensionsTakenBetween") shouldBe true
     }
 
-    "return false for 'pensionsTakenBetweenAmt'" in {
+    "return false for 'pensionsTakenBetweenAmt'" in new Setup  {
       SummaryController.recordDataMetrics("pensionsTakenBetweenAmt") shouldBe false
     }
   }

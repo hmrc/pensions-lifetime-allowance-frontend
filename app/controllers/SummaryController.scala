@@ -18,37 +18,35 @@ package controllers
 
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
-import enums.ApplicationType
-import play.api.{Configuration, Environment, Logger, Play}
-import play.api.mvc.{Action, AnyContent, Request, Result}
-import uk.gov.hmrc.http.cache.client.CacheMap
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.KeyStoreConnector
-import views.html._
 import constructors.SummaryConstructor
+import enums.ApplicationType
 import javax.inject.Inject
-import play.api.i18n.Messages.Implicits._
+import play.api.Logger
 import play.api.Play.current
-import uk.gov.hmrc.auth.core.AuthConnector
+import play.api.i18n.{I18nSupport, Lang}
+import play.api.mvc._
+import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import views.html._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 
+class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
+                                 mcc: MessagesControllerComponents,
+                                  authFunction: AuthFunction)
+                                 (implicit val appConfig: FrontendAppConfig,
+                                  implicit val partialRetriever: PlaFormPartialRetriever,
+                                  implicit val templateRenderer:LocalTemplateRenderer,
+                                  implicit val plaContext: PlaContext) extends FrontendController(mcc) with I18nSupport {
 
-class SummaryController@Inject()(keyStoreConnector: KeyStoreConnector,
-                                 implicit val partialRetriever: PlaFormPartialRetriever,
-                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
-  lazy val appConfig = FrontendAppConfig
-  override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
-
+  lazy val postSignInRedirectUrl = appConfig.ipStartUrl
   val summaryConstructor: SummaryConstructor = SummaryConstructor
-
-  override def config: Configuration = Play.current.configuration
-  override def env: Environment = Play.current.injector.instanceOf[Environment]
-
 
   val summaryIP16 = Action.async { implicit request =>
     implicit val protectionType = ApplicationType.IP2016
-    genericAuthWithNino("IP2016") { nino =>
+    authFunction.genericAuthWithNino("IP2016") { nino =>
       keyStoreConnector.fetchAllUserData.map {
         case Some(data) => routeIP2016SummaryFromUserData(data, nino)
         case None => {
@@ -60,7 +58,8 @@ class SummaryController@Inject()(keyStoreConnector: KeyStoreConnector,
   }
 
   private def routeIP2016SummaryFromUserData(data: CacheMap, nino: String)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
-      summaryConstructor.createSummaryData(data).map {
+    implicit val lang: Lang = mcc.messagesApi.preferred(req).lang
+    summaryConstructor.createSummaryData(data).map {
         summaryModel => Ok(pages.ip2016.summary(summaryModel))
       }.getOrElse {
         Logger.warn(s"Unable to create IP16 summary model from summary data for user nino $nino")

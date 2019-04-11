@@ -17,14 +17,11 @@
 package views.pages.withdraw
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits.applicationMessages
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmationSpecMessages
 import views.html.pages.withdraw.{withdrawConfirmation => views}
 
-
 class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawConfirmationSpecMessages {
-
 
   "Withdraw Confirmation view" when {
     lazy val protectionType = "IP2014"

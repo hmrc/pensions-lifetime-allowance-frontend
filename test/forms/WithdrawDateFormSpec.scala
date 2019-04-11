@@ -23,7 +23,7 @@ import testHelpers.CommonErrorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 
-class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with CommonErrorMessages{
+class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with CommonErrorMessages {
 
   "Withdraw date form" should {
     "return no errors with valid date" in {

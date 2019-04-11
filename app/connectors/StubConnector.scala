@@ -16,45 +16,33 @@
 
 package connectors
 
-import config.WSHttp
+import config.FrontendAppConfig
 import javax.inject.Inject
-import play.api.Mode.Mode
-import play.api.{Configuration, Environment, Logger}
-import play.api.http.Status
 import play.api.libs.json.JsValue
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
 
-class StubConnector@Inject()(override val runModeConfiguration: Configuration,
-                             environment: Environment) extends ServicesConfig {
-  lazy val serviceUrl: String = baseUrl("pla-dynamic-stub")
-  val http = WSHttp
-
-  override protected def mode: Mode = environment.mode
+class StubConnector @Inject()(appConig: FrontendAppConfig,
+                             http: DefaultHttpClient) {
+  lazy val serviceUrl: String = appConig.servicesConfig.baseUrl("pla-dynamic-stub")
 
   private def deleteProtectionByNinoUrl(nino: String) = s"$serviceUrl/test-only/individuals/$nino/protections"
   private def deleteProtectionsUrl = s"$serviceUrl/test-only/protections/removeAll"
   private def insertProtectionsUrl = s"$serviceUrl/test-only/protections/insert"
 
   def deleteProtectionByNino(nino: String)(implicit hc: HeaderCarrier): Future[Int] = {
-
     http.DELETE(deleteProtectionByNinoUrl(nino)).map{_.status}
-
   }
 
   def deleteProtections()(implicit hc: HeaderCarrier): Future[Int] = {
-
     http.DELETE(deleteProtectionsUrl).map{_.status}
-
   }
 
   def insertProtections(payload: JsValue)(implicit hc: HeaderCarrier): Future[Int] = {
-
     http.POST(insertProtectionsUrl,payload).map{_.status}
-
   }
 }
 
