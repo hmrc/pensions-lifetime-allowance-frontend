@@ -18,8 +18,8 @@ package config
 
 import com.typesafe.config.Config
 import net.ceedubs.ficus.Ficus._
-import play.api.Play
-import uk.gov.hmrc.play.bootstrap.config.ControllerConfig
+import play.api. Play
+import uk.gov.hmrc.play.config.ControllerConfig
 
 object ControllerConfiguration extends ControllerConfig with PlaConfig {
   lazy val controllerConfigs = runModeConfiguration.underlying.as[Config]("controllers")

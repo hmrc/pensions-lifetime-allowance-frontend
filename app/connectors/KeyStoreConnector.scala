@@ -22,7 +22,7 @@ import play.api.{Configuration, Environment}
 import play.api.Mode.Mode
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.http.HttpGet
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 

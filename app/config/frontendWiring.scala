@@ -24,11 +24,12 @@ import uk.gov.hmrc.http.cache.client.SessionCache
 import uk.gov.hmrc.http.hooks.HttpHooks
 import uk.gov.hmrc.play.audit.http.HttpAuditing
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
-import uk.gov.hmrc.play.bootstrap.config.{AppName, RunMode, ServicesConfig}
+import uk.gov.hmrc.play.bootstrap.config.LoadAuditingConfig
+import uk.gov.hmrc.play.config.{AppName, RunMode, ServicesConfig}
 import uk.gov.hmrc.play.http.ws.{WSDelete, WSGet, WSPost, WSPut}
 
 object FrontendAuditConnector extends AppName with AuditConnector {
-  protected def appNameConfiguration: Configuration = Play.current.configuration
+  override protected def appNameConfiguration: Configuration = Play.current.configuration
   protected def mode: Mode = Play.current.mode
 
   override lazy val auditingConfig = LoadAuditingConfig(appNameConfiguration, mode, "auditing")

@@ -27,16 +27,16 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val bootstrapVersion = "0.37.0"
-  private val govukTemplateVersion = "5.30.0-play-26"
-  private val playUiVersion = "7.33.0-play-26"
-  private val playPartialsVersion = "6.5.0"
-  private val hmrcTestVersion = "3.6.0-play-26"
+  private val bootstrapVersion = "4.3.0"
+  private val govukTemplateVersion = "5.26.0-play-25"
+  private val playUiVersion = "7.27.0-play-25"
+  private val playPartialsVersion = "6.3.0"
+  private val hmrcTestVersion = "3.3.0"
   private val scalaTestVersion = "3.0.0"
-  private val scalaTestPlusVersion = "3.1.2"
+  private val scalaTestPlusVersion = "2.0.0"
   private val pegdownVersion = "1.6.0"
-  private val cachingClientVersion = "8.1.0"
-  private val mongoCachingVersion = "6.1.0-play-26"
+  private val cachingClientVersion = "8.0.0"
+  private val mongoCachingVersion = "5.6.0"
   private val playLanguageVersion = "3.4.0"
   private val authClientVersion = "2.17.0-play-25"
   private val localTemplateRendererVersion = "2.1.0"
@@ -44,7 +44,7 @@ private object AppDependencies {
 
   val compile = Seq(
     ws,
-    "uk.gov.hmrc" %% "bootstrap-play-26" % bootstrapVersion,
+    "uk.gov.hmrc" %% "bootstrap-play-25" % bootstrapVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
     "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
@@ -52,9 +52,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "auth-client" % authClientVersion,
     "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion,
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
-    "uk.gov.hmrc" %% "play-ui" % playUiVersion,
-    "com.typesafe.play" %% "play-java" % "2.6.12",
-    nettyServer
+    "uk.gov.hmrc" %% "play-ui" % playUiVersion
   )
 
   trait TestDependencies {
@@ -84,7 +82,7 @@ private object AppDependencies {
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "org.jsoup" % "jsoup" % "1.11.3" % scope,
+        "org.jsoup" % "jsoup" % "1.7.3" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
         "org.mockito" % "mockito-core" % "2.19.0" % scope,

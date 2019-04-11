@@ -19,7 +19,7 @@ package config
 import config.wiring.PlaFormPartialRetriever
 import javax.inject.Inject
 import play.api.Configuration
-import play.api.i18n.{Lang, MessagesApi}
+import play.api.i18n.MessagesApi
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
@@ -28,8 +28,7 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 class frontendErrorHandler @Inject()(val messagesApi: MessagesApi,
                                      val configuration: Configuration,
                                      val PlaFormPartialRetriever: PlaFormPartialRetriever,
-                                     val localTemplateRenderer: LocalTemplateRenderer,
-                                     implicit val lang: Lang) extends FrontendErrorHandler {
+                                     val localTemplateRenderer: LocalTemplateRenderer) extends FrontendErrorHandler {
 
   implicit val Placontext = PlaContextImpl
   implicit val partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever = PlaFormPartialRetriever

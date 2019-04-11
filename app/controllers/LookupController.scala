@@ -19,7 +19,7 @@ package controllers
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
 
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext, PlaContextImpl}
+import config.LocalTemplateRenderer
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
@@ -27,26 +27,19 @@ import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Play.current
 import play.api.data.Form
-import play.api.i18n.{I18nSupport, Lang}
+import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import play.api.mvc._
-import uk.gov.hmrc.http.{HeaderCarrier, Upstream4xxResponse}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.Upstream4xxResponse
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class LookupController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  val plaConnector: PLAConnector,
-                                 mcc: MessagesControllerComponents,
-                                 http: DefaultHttpClient)(implicit val partialRetriever: PlaFormPartialRetriever,
-implicit val templateRenderer:LocalTemplateRenderer,
-implicit val appConfig: FrontendAppConfig,
-implicit val lang: Lang,
-implicit val context: PlaContext = PlaContextImpl) extends FrontendController(mcc) with I18nSupport {
+                                 implicit val partialRetriever: PlaFormPartialRetriever,
+                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController {
 
   val psaRefForm: Form[String] = PSALookupSchemeAdministratorReferenceForm.psaRefForm
   val pnnForm: Form[String] = PSALookupProtectionNotificationNoForm.pnnForm

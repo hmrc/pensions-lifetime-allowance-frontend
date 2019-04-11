@@ -18,7 +18,7 @@ package connectors
 
 import common.Exceptions
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import uk.gov.hmrc.play.config.ServicesConfig
 import uk.gov.hmrc.play.http._
 import play.api.libs.json._
 import play.api.libs.json.Reads._
@@ -34,7 +34,7 @@ import play.api.Mode.Mode
 import play.api.{Configuration, Environment}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpErrorFunctions, HttpGet, HttpPost, HttpPut, HttpReads, HttpResponse, Upstream4xxResponse}
 
-class PLAConnectorImpl @Inject()(override val runModeConfiguration: Configuration,
+class PLAConnectorImpl@Inject()(override val runModeConfiguration: Configuration,
                             environment: Environment) extends PLAConnector {
 
   val serviceUrl: String = baseUrl("pensions-lifetime-allowance")

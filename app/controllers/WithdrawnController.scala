@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{LocalTemplateRenderer, PlaContext, PlaContextImpl}
+import config.LocalTemplateRenderer
 import config.wiring.PlaFormPartialRetriever
 import play.api.mvc._
 
@@ -27,14 +27,10 @@ import enums.IdentityVerificationResult
 import javax.inject.Inject
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import play.api.i18n.I18nSupport
-import uk.gov.hmrc.play.bootstrap.controller.{ActionWithMdc, FrontendController}
-
+import uk.gov.hmrc.play.bootstrap.controller.ActionWithMdc
 
 class WithdrawnController @Inject()(implicit val partialRetriever: PlaFormPartialRetriever,
-                                    implicit val templateRenderer:LocalTemplateRenderer,
-                                    implicit val context: PlaContext = PlaContextImpl,
-                                    mcc: MessagesControllerComponents) extends FrontendController(mcc) with I18nSupport {
+                                    implicit val templateRenderer:LocalTemplateRenderer) extends BaseController {
 
   def showWithdrawn(): Action[AnyContent] = ActionWithMdc.async { implicit request =>
     Future.successful(Ok(views.html.pages.ip2014.withdrawn()))

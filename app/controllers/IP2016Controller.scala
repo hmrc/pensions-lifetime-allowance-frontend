@@ -18,10 +18,10 @@ package controllers
 
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import config._
+import config.{AppConfig, AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import connectors.KeyStoreConnector
 import play.api.{Configuration, Environment, Play}
-import play.api.i18n.{I18nSupport, Lang, Messages}
+import play.api.i18n.Messages
 
 import scala.concurrent.Future
 import forms._
@@ -35,25 +35,17 @@ import forms.PensionDebitsForm.pensionDebitsForm
 import javax.inject.Inject
 import models._
 import play.api.data.FormError
-import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent}
 import views.html._
-import play.api.i18n.I18nSupport
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.renderer.TemplateRenderer
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  implicit val partialRetriever: PlaFormPartialRetriever,
-                                 implicit val templateRenderer:LocalTemplateRenderer,
-                                 implicit val appConfig: FrontendAppConfig,
-                                 implicit val context: PlaContext = PlaContextImpl,
-                                 implicit val lang: Lang,
-                                 mcc: MessagesControllerComponents) extends FrontendController(mcc) with AuthFunction{
-
+                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
+    lazy val appConfig = FrontendAppConfig
     override lazy val authConnector: AuthConnector = AuthClientConnector
     lazy val postSignInRedirectUrl = appConfig.ipStartUrl
 

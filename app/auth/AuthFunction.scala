@@ -16,7 +16,8 @@
 
 package auth
 
-import config.{AppConfig, PlaContext, PlaContextImpl}
+import config.AppConfig
+import controllers.BaseController
 import play.api.Logger
 import uk.gov.hmrc.auth.core.AuthorisedFunctions
 import play.api.mvc._
@@ -25,13 +26,11 @@ import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-trait AuthFunction extends FrontendController with AuthRedirects with AuthorisedFunctions{
+trait AuthFunction extends BaseController with AuthRedirects  with AuthorisedFunctions{
 
   val postSignInRedirectUrl: String
 

@@ -24,12 +24,11 @@ import play.api.i18n.Messages.Implicits._
 import play.api.{Configuration, Environment, Play}
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
 import play.api.mvc.Call
+import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.language.LanguageController
-
-
 class PlaLanguageController @Inject()(override val messagesApi: MessagesApi,
                                       val runModeConfiguration: Configuration,
-                                      env: Environment) extends LanguageController {
+                                      environment: Environment) extends LanguageController with RunMode {
 
   /** Converts a string to a URL, using the route to this controller. **/
   def langToCall(lang: String): Call = controllers.routes.PlaLanguageController.switchToLanguage(lang)
@@ -43,4 +42,5 @@ class PlaLanguageController @Inject()(override val messagesApi: MessagesApi,
     "cymraeg" -> Lang("cy")
   )
 
+  override protected def mode: Mode =  environment.mode
 }

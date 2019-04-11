@@ -16,15 +16,13 @@
 
 package controllers
 
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext, PlaContextImpl}
+import config.{LocalTemplateRenderer, PlaContext, PlaContextImpl}
 import config.wiring.PlaFormPartialRetriever
-import play.api.i18n.Lang
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-trait PLAImplicits {
+trait BaseController extends FrontendController {
   implicit val context: PlaContext = PlaContextImpl
-  implicit val plaFormPartialRet: PlaFormPartialRetriever
-  implicit val templateRenderer: LocalTemplateRenderer = implicitly[LocalTemplateRenderer](templateRenderer: LocalTemplateRenderer)
-  implicit val lang: Lang = implicitly[Lang](lang: Lang)
+  implicit val partialRetriever: PlaFormPartialRetriever
+  implicit val templateRenderer: LocalTemplateRenderer
 }

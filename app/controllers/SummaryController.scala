@@ -18,10 +18,10 @@ package controllers
 
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import config._
+import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import enums.ApplicationType
 import play.api.{Configuration, Environment, Logger, Play}
-import play.api.mvc._
+import play.api.mvc.{Action, AnyContent, Request, Result}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import connectors.KeyStoreConnector
 import views.html._
@@ -29,23 +29,16 @@ import constructors.SummaryConstructor
 import javax.inject.Inject
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
-import play.api.i18n.{I18nSupport, Lang}
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-
-import scala.concurrent.ExecutionContext.Implicits.global
 
 
 
 class SummaryController@Inject()(keyStoreConnector: KeyStoreConnector,
                                  implicit val partialRetriever: PlaFormPartialRetriever,
-                                 implicit val templateRenderer:LocalTemplateRenderer,
-                                 implicit val appConfig: FrontendAppConfig,
-                                 implicit val lang: Lang,
-                                 implicit val context: PlaContext = PlaContextImpl,
-                                 mcc: MessagesControllerComponents) extends FrontendController(mcc) with AuthFunction with I18nSupport {
+                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
+  lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = appConfig.ipStartUrl
+  lazy val postSignInRedirectUrl = FrontendAppConfig.ipStartUrl
 
   val summaryConstructor: SummaryConstructor = SummaryConstructor
 

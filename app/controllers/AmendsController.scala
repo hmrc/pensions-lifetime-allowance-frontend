@@ -35,7 +35,7 @@ import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import models.amendModels._
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.data.FormError
-import play.api.i18n.{I18nSupport, Lang, Messages}
+import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, Result, _}
 import utils.Constants
 import views.html.pages
@@ -44,30 +44,27 @@ import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
 import uk.gov.hmrc.auth.core.AuthConnector
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.renderer.TemplateRenderer
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
-class AmendsControllerImpl @Inject()(val keyStoreConnector: KeyStoreConnector,
-                                     val plaConnector: PLAConnector,
-                                     mcc: MessagesControllerComponents,
-                                     appConfig: FrontendAppConfig) extends FrontendController(mcc) with AmendsController with I18nSupport with PLAImplicits {
+class AmendsControllerImpl @Inject()(implicit val partialRetriever: PlaFormPartialRetriever,
+                                     implicit val templateRenderer: LocalTemplateRenderer,
+                                     val keyStoreConnector: KeyStoreConnector,
+                                     val plaConnector: PLAConnector) extends AmendsController {
 
   val displayConstructors = DisplayConstructors
   val responseConstructors = ResponseConstructors
+  lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
+  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
 
   override def config: Configuration = Play.current.configuration
   override def env: Environment = Play.current.injector.instanceOf[Environment]
 }
 
 
-  trait AmendsController extends FrontendController with AuthFunction with I18nSupport {
+  trait AmendsController extends BaseController with AuthFunction {
 
     val keyStoreConnector: KeyStoreConnector
     val displayConstructors: DisplayConstructors

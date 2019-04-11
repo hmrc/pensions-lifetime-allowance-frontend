@@ -18,14 +18,13 @@ package controllers
 
 import config.FrontendAppConfig
 import javax.inject.Inject
-import play.api.i18n.I18nSupport
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.Future
 
-class AccountController@Inject()(implicit val appConfig: FrontendAppConfig,
-                                 mcc: MessagesControllerComponents) extends FrontendController(mcc) with I18nSupport {
+class AccountController@Inject()() extends FrontendController {
+  lazy val appConfig = FrontendAppConfig
 
   def signOut: Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Redirect(appConfig.feedbackSurvey).withNewSession)
