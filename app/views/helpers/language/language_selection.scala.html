@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package config
+@import uk.gov.hmrc.urls.Link
 
-import javax.inject.Inject
-import play.api.i18n.Messages
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+@(langMap: Map[String, Lang], langToCall: String => Call, customClass: Option[String] = None, appName: Option[String] = None)(implicit messages: Messages)
 
-trait PlaContext {
-  def getPageHelpPartial()(messages: Messages): String
-  def assetsUrl: String
-}
+<p class="@if(customClass.isDefined) {@customClass.get}">
 
-object PlaContextImpl extends PlaContext with ServicesConfig with PlaConfig {
-  override def getPageHelpPartial()(messages: Messages): String = s"${baseUrl("contact-frontend")}/contact/problem_reports"
-
-  override def assetsUrl: String = s"${getString("assets.url")}${getString("assets.version")}/"
-}
+    @langMap.map { case (key: String, value: Lang) =>
+    @if(messages.lang.code != value.code) {
+    @Html(s"""<a id="$key-switch" href="${langToCall(key)}" target="_self" data-sso="false">${key.capitalize}</a>""")
+    } else {
+    @key.capitalize
+    }
+    @if(key != langMap.last._1) {
+    @Html(" | ")
+    }
+    }
+</p>

@@ -19,7 +19,7 @@ package controllers
 import auth.AuthFunction
 import common.Exceptions
 import config.wiring.PlaFormPartialRetriever
-import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
+import config._
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.{ApplicationOutcome, ApplicationType}
@@ -33,20 +33,28 @@ import views.html.pages.result._
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import play.api.i18n.{I18nSupport, Lang}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.renderer.TemplateRenderer
 
 import scala.util.Random
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  plaConnector: PLAConnector,
-                                 implicit val partialRetriever: PlaFormPartialRetriever,
-                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
-  lazy val appConfig = FrontendAppConfig
+                                 mcc: MessagesControllerComponents)
+                                (implicit val partialRetriever: PlaFormPartialRetriever,
+                                 implicit val templateRenderer:LocalTemplateRenderer,
+                                 implicit val appConfig: FrontendAppConfig,
+                                 implicit val lang: Lang,
+                                 implicit val context: PlaContext = PlaContextImpl)
+                                  extends FrontendController(mcc) with AuthFunction with I18nSupport {
+
   override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
+  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   val responseConstructors: ResponseConstructors = ResponseConstructors
 

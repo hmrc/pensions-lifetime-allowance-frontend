@@ -18,20 +18,26 @@ package controllers
 
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
+import config._
 import javax.inject.Inject
 import play.api.Play.current
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.i18n.Messages.Implicits._
 import play.api.mvc._
 import play.api.{Configuration, Environment, Play}
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.pages._
 
 import scala.concurrent.Future
 
 class ConfirmationController @Inject()(implicit val partialRetriever: PlaFormPartialRetriever,
-                                       implicit val templateRenderer: LocalTemplateRenderer) extends BaseController with AuthFunction {
-  lazy val appConfig = FrontendAppConfig
+                                       implicit val templateRenderer: LocalTemplateRenderer,
+                                       implicit val appConfig: FrontendAppConfig,
+                                       implicit val lang: Lang,
+                                       implicit val context: PlaContext = PlaContextImpl,
+                                       mcc: MessagesControllerComponents) extends FrontendController(mcc) with AuthFunction {
+
   val authConnector: AuthConnector = AuthClientConnector
   lazy val postSignInRedirectUrl = appConfig.confirmFPUrl
 

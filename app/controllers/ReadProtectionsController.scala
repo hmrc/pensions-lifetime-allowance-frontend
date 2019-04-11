@@ -21,7 +21,7 @@ import common.{Helpers, Strings}
 import config.wiring.PlaFormPartialRetriever
 import models._
 import enums.ApplicationType
-import config.{AppConfig, AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
+import config._
 import models.amendModels.AmendProtectionModel
 import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc._
@@ -35,17 +35,24 @@ import views.html._
 import scala.concurrent.Future
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import play.api.i18n.Lang
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException, Upstream4xxResponse}
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class ReadProtectionsControllerImpl @Inject()(val plaConnector: PLAConnector,
                                               val keyStoreConnector: KeyStoreConnector,
                                               implicit val partialRetriever: PlaFormPartialRetriever,
-                                              implicit val templateRenderer:LocalTemplateRenderer) extends ReadProtectionsController {
-  lazy val appConfig = FrontendAppConfig
+                                              implicit val templateRenderer:LocalTemplateRenderer,
+                                              implicit val appConfig: FrontendAppConfig,
+                                              implicit val lang: Lang,
+                                              implicit val context: PlaContext = PlaContextImpl,
+                                              mcc: MessagesControllerComponents) extends ReadProtectionsController {
+
   override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
+  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   val displayConstructors = DisplayConstructors
   val responseConstructors = ResponseConstructors

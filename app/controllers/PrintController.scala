@@ -19,7 +19,7 @@ package controllers
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import constructors.DisplayConstructors
-import config.{AppConfig, AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
+import config._
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import javax.inject.Inject
 import models.{ExistingProtectionsDisplayModel, PersonalDetailsModel, ProtectionModel}
@@ -27,22 +27,28 @@ import play.api.{Configuration, Environment, Logger, Play}
 import play.api.mvc._
 import play.api.i18n.Messages.Implicits._
 import play.api.Play.current
+import play.api.i18n.{I18nSupport, Lang}
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import uk.gov.hmrc.renderer.TemplateRenderer
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 val citizenDetailsConnector: CitizenDetailsConnector,
-                                val environment: Environment,
                                 implicit val partialRetriever: PlaFormPartialRetriever,
-                                implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
+                                implicit val templateRenderer:LocalTemplateRenderer,
+                                implicit val context: PlaContext = PlaContextImpl,
+                                implicit val appConfig: FrontendAppConfig,
+                                implicit val lang: Lang,
+                                implicit val env: Environment,
+                                mcc: MessagesControllerComponents) extends FrontendController(mcc) with AuthFunction {
+
   val displayConstructors: DisplayConstructors = DisplayConstructors
-  lazy val appConfig = FrontendAppConfig
   override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
+  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   def config: Configuration = Play.current.configuration
-
-  def env: Environment = environment
 
   val printView = Action.async { implicit request =>
     genericAuthWithNino("existingProtections") { nino =>
