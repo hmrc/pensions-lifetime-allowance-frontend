@@ -18,12 +18,11 @@ package views.pages.ip2016
 
 import forms.PensionDebitsForm
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import views.html.pages.ip2016.{pensionDebits => views}
 import testHelpers.ViewSpecHelpers.ip2016.PensionDebitsViewMessages
+import views.html.pages.ip2016.{pensionDebits => views}
 
-class PensionDebitsViewSpec extends CommonViewSpecHelper with PensionDebitsViewMessages{
+class PensionDebitsViewSpec extends CommonViewSpecHelper with PensionDebitsViewMessages {
 
   "the PensionDebitsView" should{
     val pensionsForm = PensionDebitsForm.pensionDebitsForm.bind(Map("pensionDebits" -> "Yes"))

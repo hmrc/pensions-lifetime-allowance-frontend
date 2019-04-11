@@ -16,11 +16,9 @@
 
 package views.pages.withdraw
 
-import config.FrontendAppConfig
 import controllers.routes
 import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawSummarySpecMessages
 import views.html.pages.withdraw.{withdrawSummary => views}

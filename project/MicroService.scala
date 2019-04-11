@@ -67,7 +67,6 @@ trait MicroService {
       fork in Test := false,
       retrieveManaged := true,
       evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-      routesGenerator := StaticRoutesGenerator,
       pipelineStages in Assets := Seq(digest)
     )
     .configs(IntegrationTest)

@@ -18,7 +18,6 @@ package views.lookup
 
 import forms.PSALookupProtectionNotificationNoForm
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupProtectionNotificationNoFormSpecMessages
 import views.html.pages.lookup.psa_lookup_protection_notification_no_form

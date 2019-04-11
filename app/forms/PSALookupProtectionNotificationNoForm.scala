@@ -16,16 +16,14 @@
 
 package forms
 
-import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.data.validation.{Constraint, Invalid, Valid, ValidationError}
-import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{Messages, MessagesProvider}
 
 object PSALookupProtectionNotificationNoForm {
 
-  def pnnForm: Form[String] = {
+  def pnnForm(implicit messagesProvider: MessagesProvider): Form[String] = {
     Form(single(
       "lifetimeAllowanceReference" -> text.verifying(ltaRefConstraint)
     ))
@@ -35,7 +33,7 @@ object PSALookupProtectionNotificationNoForm {
   private val tpssRefRegex = """^(?i)[1-9A][0-9]{6}[ABCDEFHXJKLMNYPQRSTZW]$""".r
 
 
-  val ltaRefConstraint: Constraint[String] = Constraint("constraints.ltarefcheck")({
+  def ltaRefConstraint(implicit messagesProvider: MessagesProvider): Constraint[String] = Constraint("constraints.ltarefcheck")({
     ltaRef =>
       val errors = ltaRef match {
         case "" => Seq(ValidationError(Messages("psa.lookup.form.pnn.required")))

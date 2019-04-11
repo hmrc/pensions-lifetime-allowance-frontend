@@ -45,4 +45,6 @@ object MockConfig extends AppConfig {
   override val invalidStatusMetric: String = ""
   override val notFoundStatusMetric: String = ""
   override val appName: String = ""
+  override val frontendTemplatePath: String = ""
+
 }

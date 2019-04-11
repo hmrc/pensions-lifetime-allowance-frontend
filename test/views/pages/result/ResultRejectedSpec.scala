@@ -19,7 +19,6 @@ package views.pages.result
 import enums.ApplicationType
 import models.RejectionDisplayModel
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultRejected
 import views.html.pages.result.{resultRejected => views}

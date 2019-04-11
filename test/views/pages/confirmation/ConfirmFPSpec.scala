@@ -17,10 +17,8 @@
 package views.pages.confirmation
 
 import org.jsoup.Jsoup
-
-import play.api.i18n.Messages.Implicits._
-import testHelpers.ViewSpecHelpers.confirmation.ConfirmFP
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.ViewSpecHelpers.confirmation.ConfirmFP
 import views.html.pages.confirmation.{confirmFP => views}
 
 class ConfirmFPSpec extends CommonViewSpecHelper with ConfirmFP {

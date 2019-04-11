@@ -21,8 +21,11 @@ import testHelpers.CommonErrorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.Constants
 import PensionsTakenBetweenForm._
+import org.scalatest.mockito.MockitoSugar
+import play.api.i18n.Lang
 
-class PensionsTakenBetweenFormSpec extends UnitSpec with CommonErrorMessages with WithFakeApplication {
+class PensionsTakenBetweenFormSpec extends UnitSpec with CommonErrorMessages with WithFakeApplication with MockitoSugar {
+  implicit val lang: Lang = mock[Lang]
 
   "The PensionsTakenBetweenForm" should {
     val validMap = Map("pensionsTakenBetween" -> "yes", "pensionsTakenBetweenAmt" -> "1")

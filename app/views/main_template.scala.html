@@ -16,6 +16,8 @@
 
 @import uk.gov.hmrc.renderer.TemplateRenderer
 
+@import config.AppConfig
+@import config.FrontendAppConfig
 @(title: String,
   sidebarLinks: Option[Html] = None,
   contentHeader: Option[Html] = None,
@@ -26,7 +28,7 @@
   gaCode: Seq[String] = Seq.empty,
   gaDimensions: Option[Map[String, Any]] = None,
   isUserResearchBannerVisible: Boolean = false
-  )(mainContent: Html)(implicit request : Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
+  )(mainContent: Html)(implicit request : Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer, appConfig: FrontendAppConfig)
 
 @import uk.gov.hmrc.play.views.html.layouts
 
@@ -38,7 +40,7 @@
 }
 
 
-    @govuk_wrapper(appConfig = config.FrontendAppConfig,
+    @govuk_wrapper(appConfig = appConfig,
                title = title,
                mainClass = mainClass,
                bodyClasses = bodyClasses,

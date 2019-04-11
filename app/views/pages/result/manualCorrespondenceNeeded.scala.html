@@ -17,11 +17,10 @@
 @import common.Links
 @import controllers.PlaLanguageController
 @import play.api.Application
+@import config.FrontendAppConfig
 
-@()(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
-
+@()(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @views.html.main_template(title = Messages("pla.mcNeeded.title"), bodyClasses = None) {
 

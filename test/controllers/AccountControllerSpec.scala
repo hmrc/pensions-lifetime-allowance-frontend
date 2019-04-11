@@ -17,25 +17,33 @@
 package controllers
 
 import auth.MockConfig
-import config.PlaConfig
+import config.FrontendAppConfig
+import org.scalatest.mockito.MockitoSugar
 import play.api.http.Status
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.Helpers._
 import testHelpers._
-import uk.gov.hmrc.play.config.RunMode
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class AccountControllerSpec extends UnitSpec with WithFakeApplication with RunMode with PlaConfig {
+class AccountControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
-  val accountController = new AccountController
+  val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents]
 
-  "navigating to signout with an existing session" should {
-    object DataItem extends FakeRequestTo("/", accountController.signOut, Some("sessionId"))
-    "return 303" in {
-      status(DataItem.result) shouldBe Status.SEE_OTHER
-    }
+  class Setup {
+    val controller = new AccountController(mockAppConfig, mockMCC)
+  }
 
-    "redirect to the feedback survey with the origin token PLA" in {
+  "navigating to signout with an existing session" in new Setup {
+
+    object DataItem extends FakeRequestTo("/", controller.signOut, Some("sessionId"))
+
+    status(DataItem.result) shouldBe Status.SEE_OTHER
+  }
+
+    "redirect to the feedback survey with the origin token PLA" in new Setup {
+      object DataItem extends FakeRequestTo("/", controller.signOut, Some("sessionId"))
+
       redirectLocation(DataItem.result).get shouldBe (MockConfig.feedbackSurvey)
     }
-  }
 }

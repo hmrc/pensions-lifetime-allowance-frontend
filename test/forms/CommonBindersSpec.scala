@@ -17,12 +17,15 @@
 package forms
 
 import forms.WithdrawDateForm.withdrawDateForm
+import org.scalatest.mockito.MockitoSugar
 import play.api.data.FormError
+import play.api.i18n.Lang
 import play.api.libs.json.Json
 import testHelpers.PSODetailsMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class CommonBindersSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication {
+class CommonBindersSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication with MockitoSugar {
+  implicit val lang: Lang = mock[Lang]
   object testForm extends CommonBinders
 
   "stringToOptionalIntFormatter form binder" should{

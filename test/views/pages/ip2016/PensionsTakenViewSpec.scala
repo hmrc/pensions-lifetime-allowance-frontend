@@ -18,7 +18,6 @@ package views.pages.ip2016
 
 import forms.PensionsTakenForm
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenViewMessages
 import views.html.pages.ip2016.{pensionsTaken => views}

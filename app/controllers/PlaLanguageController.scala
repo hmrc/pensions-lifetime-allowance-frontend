@@ -16,31 +16,38 @@
 
 package controllers
 
-import play.api.Play.current
+import config.FrontendAppConfig
 import javax.inject.Inject
-import play.api.Mode.Mode
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
-import play.api.{Configuration, Environment, Play}
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
-import play.api.mvc.Call
-import uk.gov.hmrc.play.config.RunMode
-import uk.gov.hmrc.play.language.LanguageController
-class PlaLanguageController @Inject()(override val messagesApi: MessagesApi,
-                                      val runModeConfiguration: Configuration,
-                                      environment: Environment) extends LanguageController with RunMode {
+import play.api.i18n.{I18nSupport, Lang}
+import play.api.mvc.{Action, AnyContent, Call, MessagesControllerComponents}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.language.LanguageUtils
+class PlaLanguageController @Inject()(mcc: MessagesControllerComponents,
+                                      appConfig: FrontendAppConfig) extends FrontendController(mcc) with I18nSupport {
 
   /** Converts a string to a URL, using the route to this controller. **/
   def langToCall(lang: String): Call = controllers.routes.PlaLanguageController.switchToLanguage(lang)
 
   /** Provides a fallback URL if there is no referer in the request header. **/
-  override def fallbackURL: String = Play.current.configuration.getString(s"$env.language.fallbackUrl").getOrElse("/")
+  def fallbackURL: String = "/"
 
   /** Returns a mapping between strings and the corresponding Lang object. **/
-  override def languageMap: Map[String, Lang] = Map(
+  def languageMap: Map[String, Lang] = Map(
     "english" -> Lang("en"),
     "cymraeg" -> Lang("cy")
   )
 
-  override protected def mode: Mode =  environment.mode
+  def switchToLanguage(language: String): Action[AnyContent] = Action { implicit request =>
+    val enabled = isWelshEnabled
+    val lang =
+      if (enabled) languageMap.getOrElse(language, LanguageUtils.getCurrentLang)
+      else Lang("en")
+    val redirectURL = request.headers.get(REFERER).getOrElse(fallbackURL)
+
+    Redirect(redirectURL).withLang(Lang.apply(lang.code)).flashing(LanguageUtils.FlashWithSwitchIndicator)
+  }
+
+  private def isWelshEnabled = {
+    appConfig.servicesConfig.getBoolean("microservice.services.features.welsh-translation")
+  }
 }

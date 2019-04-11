@@ -16,19 +16,13 @@
 
 package forms
 
-import common.Validation._
 import models._
-import play.api.Play.current
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.{Lang, Messages}
-import play.api.i18n.Messages.Implicits._
-import utils.Constants
-import uk.gov.hmrc.http.HeaderCarrier
 
 object OverseasPensionsForm extends CommonBinders{
 
-  def overseasPensionsForm(implicit lang: Lang) = Form (
+  def overseasPensionsForm = Form (
     mapping(
       "overseasPensions" -> nonEmptyText,
       "overseasPensionsAmt" -> yesNoOptionalBigDecimal

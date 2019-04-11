@@ -17,22 +17,23 @@
 package connectors
 
 import javax.inject.Inject
-import play.api.{Configuration, Environment}
 import play.api.Mode.Mode
-import play.api.libs.ws.{WS, WSResponse}
-import uk.gov.hmrc.play.config.ServicesConfig
-import play.api.Play.current
+import play.api.libs.ws.{WSClient, WSResponse}
+import play.api.{Configuration, Environment}
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import scala.concurrent.Future
 
-class PdfGeneratorConnector@Inject()(override val runModeConfiguration: Configuration,
-                                     environment: Environment) extends ServicesConfig {
-  val pdfServiceUrl: String = baseUrl("pdf-generator-service")
+class PdfGeneratorConnector @Inject()(val runModeConfiguration: Configuration,
+                                     environment: Environment,
+                                     servicesConfig: ServicesConfig,
+                                     ws: WSClient) {
+  val pdfServiceUrl: String = servicesConfig.baseUrl("pdf-generator-service")
   val serviceURL: String = s"$pdfServiceUrl/pdf-generator-service/generate"
 
-  def generatePdf(html: String): Future[WSResponse] = WS.url(serviceURL).post(Map("html" -> Seq(html)))
+  def generatePdf(html: String): Future[WSResponse] = ws.url(serviceURL).post(Map("html" -> Seq(html)))
 
-  override protected def mode: Mode = environment.mode
+  protected def mode: Mode = environment.mode
 }
 
 

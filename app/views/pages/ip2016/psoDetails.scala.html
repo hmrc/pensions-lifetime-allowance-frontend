@@ -20,9 +20,10 @@
 @import play.api.data._
 @import controllers.PlaLanguageController
 @import play.api.Application
+@import config.FrontendAppConfig
 
 
-@(psoDetailsForm: Form[PSODetailsModel])(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@(psoDetailsForm: Form[PSODetailsModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 

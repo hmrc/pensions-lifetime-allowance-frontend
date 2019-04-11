@@ -16,25 +16,44 @@
 
 package auth
 
-import config.AppConfig
-import controllers.BaseController
-import play.api.Logger
-import uk.gov.hmrc.auth.core.AuthorisedFunctions
+import config.wiring.PlaFormPartialRetriever
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import javax.inject.Inject
+import play.api.i18n.Messages
 import play.api.mvc._
-import uk.gov.hmrc.auth.core._
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import play.api.{Configuration, Environment, Logger}
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.auth.core.{AuthorisedFunctions, _}
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import play.api.mvc.Results._
+import uk.gov.hmrc.http.HeaderCarrier
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 
-trait AuthFunction extends BaseController with AuthRedirects  with AuthorisedFunctions{
+class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
+                             authClientConnector: AuthConnector,
+                             val env: Environment)(
+                             implicit val appConfig: FrontendAppConfig,
+                             implicit val partialRetriever: PlaFormPartialRetriever,
+                             implicit val templateRenderer:LocalTemplateRenderer,
+                             implicit val plaContext: PlaContext)
+  extends FrontendController(mcc) with AuthFunction {
+  override def config: Configuration = appConfig.configuration
+  override def authConnector: AuthConnector = authClientConnector
+  override val postSignInRedirectUrl: String = ""
+}
+
+trait AuthFunction extends AuthRedirects with AuthorisedFunctions {
+
+  implicit val partialRetriever: PlaFormPartialRetriever
+  implicit val templateRenderer:LocalTemplateRenderer
+  implicit val plaContext: PlaContext
+  implicit val appConfig: FrontendAppConfig
 
   val postSignInRedirectUrl: String
-
-  val appConfig : AppConfig
   val enrolmentKey : String = "HMRC-NI"
   val originString : String = "origin="
   val confidenceLevel : String = "&confidenceLevel=200"
@@ -48,26 +67,24 @@ trait AuthFunction extends BaseController with AuthRedirects  with AuthorisedFun
 
   class MissingNinoException extends Exception("Nino not returned by authorised call")
 
-  def genericAuthWithoutNino(pType: String)(body: => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
+  def genericAuthWithoutNino(pType: String)(body: => Future[Result])(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] = {
     authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200) {
       body
     }.recover(authErrorHandling(pType))
   }
 
-  def genericAuthWithNino(pType: String)(body: String => Future[Result])(implicit request: Request[AnyContent]): Future[Result] = {
+  def genericAuthWithNino(pType: String)(body: String => Future[Result])(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] = {
     authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200).retrieve(Retrievals.nino) { nino =>
       body(nino.getOrElse(throw new MissingNinoException))
     }.recover(authErrorHandling(pType))
   }
 
-  def authErrorHandling(pType: String)(implicit request: Request[AnyContent]):PartialFunction[Throwable, Result] = {
-    case _: NoActiveSession =>             toGGLogin(postSignInRedirectUrl)
-    case _: InsufficientEnrolments =>      Redirect(IVUpliftURL)
+  def authErrorHandling(pType: String)(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): PartialFunction[Throwable, Result] = {
+    case _: NoActiveSession => toGGLogin(postSignInRedirectUrl)
+    case _: InsufficientEnrolments => Redirect(IVUpliftURL)
     case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL)
-    case e: AuthorisationException => {
+    case e: AuthorisationException =>
       Logger.error("Unexpected auth exception ", e)
       InternalServerError(views.html.pages.fallback.technicalError(pType))
-    }
   }
-
 }

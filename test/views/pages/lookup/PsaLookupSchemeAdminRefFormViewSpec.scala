@@ -19,7 +19,6 @@ package views.pages.lookup
 import forms.PSALookupSchemeAdministratorReferenceForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupSchemeAdminRefFormSpecMessages
 import views.html.pages.lookup.psa_lookup_scheme_admin_ref_form
 

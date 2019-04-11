@@ -18,15 +18,15 @@ package config
 
 import javax.inject.Inject
 import play.api.i18n.Messages
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait PlaContext {
   def getPageHelpPartial()(messages: Messages): String
   def assetsUrl: String
 }
 
-object PlaContextImpl extends PlaContext with ServicesConfig with PlaConfig {
-  override def getPageHelpPartial()(messages: Messages): String = s"${baseUrl("contact-frontend")}/contact/problem_reports"
+class PlaContextImpl @Inject()(servicesConfig: ServicesConfig) extends PlaContext {
+  override def getPageHelpPartial()(messages: Messages): String = s"${servicesConfig.baseUrl("contact-frontend")}/contact/problem_reports"
 
-  override def assetsUrl: String = s"${getString("assets.url")}${getString("assets.version")}/"
+  override def assetsUrl: String = s"${servicesConfig.getString("assets.url")}${servicesConfig.getString("assets.version")}/"
 }

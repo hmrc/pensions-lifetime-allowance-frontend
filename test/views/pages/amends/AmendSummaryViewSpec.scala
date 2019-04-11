@@ -16,16 +16,14 @@
 
 package views.pages.amends
 
-import config.FrontendAppConfig
 import forms.AmendmentTypeForm
 import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages
 import views.html.pages.amends.{amendSummary => views}
 
-class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages{
+class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
 
   lazy val tstPensionContributionPsoDisplaySections = Seq(
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(

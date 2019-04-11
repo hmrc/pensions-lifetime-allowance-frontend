@@ -20,11 +20,14 @@ import java.time.LocalDate
 
 import forms.PSODetailsForm._
 import models.PSODetailsModel
+import org.scalatest.mockito.MockitoSugar
+import play.api.i18n.Lang
 import testHelpers.PSODetailsMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.Constants
 
-class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication {
+class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication with MockitoSugar {
+  implicit val lang: Lang = mock[Lang]
 
   "PSODetailsForm" should {
     val validMap = Map("psoDay" -> "1", "psoMonth" -> "2", "psoYear" -> "2017", "psoAmt" -> "0.01")

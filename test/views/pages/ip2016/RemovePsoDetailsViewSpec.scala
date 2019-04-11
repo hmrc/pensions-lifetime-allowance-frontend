@@ -17,12 +17,11 @@
 package views.pages.ip2016
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.RemovePsoDetailsViewMessages
 import views.html.pages.ip2016.{removePsoDetails => views}
 
-class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages{
+class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages {
 
   "the RemovePsoDetailsView" should{
     lazy val view = views()

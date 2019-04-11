@@ -17,7 +17,6 @@
 package views.pages.withdraw
 
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits.applicationMessages
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawImplicationMessagesSpecMessages
 import views.html.pages.withdraw.{withdrawImplicationMessage => views}

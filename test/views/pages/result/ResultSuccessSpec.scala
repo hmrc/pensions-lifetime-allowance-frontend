@@ -18,11 +18,10 @@ package views.pages.result
 
 import enums.ApplicationType
 import models.{ProtectionDetailsDisplayModel, SuccessDisplayModel}
+import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultSuccess
 import views.html.pages.result.{resultSuccess => views}
-import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 
 class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
 

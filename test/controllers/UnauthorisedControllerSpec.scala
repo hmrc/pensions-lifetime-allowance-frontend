@@ -16,43 +16,52 @@
 
 package controllers
 
-import com.kenshoo.play.metrics.Metrics
-import config.LocalTemplateRenderer
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
-import javax.inject.Inject
+import enums.IdentityVerificationResult
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import play.api.Mode.Mode
 import play.api.http.Status
-import play.api.{Configuration, Environment}
-import play.api.libs.json.{Format, Json}
+import play.api.libs.json.{Format, JsNull, Json}
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import services.MetricsService
 import testHelpers._
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import utils.ActionWithSessionId
 
 import scala.concurrent.Future
 import scala.io.Source
 
-class UnauthorisedControllerSpec  extends UnitSpec with MockitoSugar with WithFakeApplication {
+class UnauthorisedControllerSpec  extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfterEach {
 
-  val env = mock[Environment]
+  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
+  val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
   val fakeRequest = FakeRequest("GET", "/")
-  val mockKeystoreConnector = mock[KeyStoreConnector]
-  implicit val hc = mock[HeaderCarrier]
+  val mockKeystoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
+  val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  val mockIdentityVerificationConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
+
+  implicit val mockImplAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext = mock[PlaContext]
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val hc: HeaderCarrier = mock[HeaderCarrier]
   implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
 
-
   object MockIdentityVerificationHttp extends MockitoSugar {
-    val mockHttp = mock[HttpGet]
-
-    val possibleJournies = Map (
+    val possibleJournies = Map(
       "success-journey-id" -> "test/resources/identity-verification/success.json",
       "incomplete-journey-id" -> "test/resources/identity-verification/incomplete.json",
       "failed-matching-journey-id" -> "test/resources/identity-verification/failed-matching.json",
@@ -76,22 +85,20 @@ class UnauthorisedControllerSpec  extends UnitSpec with MockitoSugar with WithFa
     possibleJournies.keys.foreach(mockJourneyId)
   }
 
-  object MockIdentityVerificationConnector extends IdentityVerificationConnector {
-    override val serviceUrl: String = ""
-    override def http: HttpGet = MockIdentityVerificationHttp.mockHttp
-
-    override protected def mode: Mode = mock[Mode]
-
-    override protected def runModeConfiguration: Configuration = mock[Configuration]
+  class Setup {
+    val controller = new UnauthorisedController(
+      mockIdentityVerificationConnector,
+      mockKeystoreConnector,
+      mockMCC)
   }
 
-  val testUnauthorisedController = new UnauthorisedController(MockIdentityVerificationConnector,mockKeystoreConnector,partialRetriever,templateRenderer)
-
-//  def testUnauthorisedController(identityVerificationEnabled: Boolean = true): UnauthorisedController = new UnauthorisedController {
-//    override val identityVerificationConnector: IdentityVerificationConnector = MockIdentityVerificationConnector
-//    override implicit val templateRenderer: TemplateRenderer = MockTemplateRenderer
-//    override val keystoreConnector: KeyStoreConnector = mockKeystoreConnector
-//  }
+  override def beforeEach(): Unit = {
+    reset(
+      mockKeystoreConnector,
+      mockIdentityVerificationConnector
+    )
+    super.beforeEach()
+  }
 
   def setupKeystoreMocks(data: Option[Boolean]): Unit = {
     when(mockKeystoreConnector
@@ -102,84 +109,110 @@ class UnauthorisedControllerSpec  extends UnitSpec with MockitoSugar with WithFa
       .thenReturn(Future.successful(mock[CacheMap]))
   }
 
-  "GET /not-authorised" should {
-    "show not authorised page" in {
-      val result = testUnauthorisedController.showNotAuthorised(None)(fakeRequest)
-      contentAsString(result) should include("We cannot confirm your identity")
-      status(result) shouldBe UNAUTHORIZED
-    }
-
-    "show generic not_authorised template for FailedMatching journey" in {
-      val result = testUnauthorisedController.showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
-      contentAsString(result) should include("We cannot confirm your identity")
-      status(result) shouldBe UNAUTHORIZED
-    }
-
-    "show generic not_authorised template for InsufficientEvidence journey" in {
-      val result = testUnauthorisedController.showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
-      contentAsString(result) should include("We cannot confirm your identity")
-      status(result) shouldBe UNAUTHORIZED
-    }
-
-    "show generic not_authorised template for Incomplete journey" in {
-      val result = testUnauthorisedController.showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
-      contentAsString(result) should include("We cannot confirm your identity")
-      status(result) shouldBe UNAUTHORIZED
-    }
-
-    "show generic not_authorised template for PreconditionFailed journey" in {
-      val result = testUnauthorisedController.showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
-      contentAsString(result) should include("We cannot confirm your identity")
-      status(result) shouldBe UNAUTHORIZED
-    }
-
-    "show generic not_authorised template for UserAborted journey" in {
-      val result = testUnauthorisedController.showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
-      contentAsString(result) should include("We cannot confirm your identity")
-      status(result) shouldBe UNAUTHORIZED
-    }
-
-    "show technical_issue template for TechnicalIssue journey" which {
-
-      "returns an INTERNAL_SERVER_ERROR on the first attempt" in {
-        setupKeystoreMocks(None)
-        val result = testUnauthorisedController.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
-        contentAsString(result) should include("There is a technical problem")
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+    "GET /not-authorised" should {
+      "show not authorised page" in new Setup {
+        val result = controller.showNotAuthorised(None)(fakeRequest)
+        contentAsString(result) should include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
       }
 
-      "returns an OK on any attempt after the first" in {
-        setupKeystoreMocks(Some(true))
-        val result = testUnauthorisedController.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
-        contentAsString(result) should include("There is a technical problem")
-        status(result) shouldBe OK
+      "show generic not_authorised template for FailedMatching journey" in new Setup {
+        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier]))
+          .thenReturn(Future.successful(IdentityVerificationResult.FailedMatching))
+        val result = controller.showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
+        contentAsString(result) should include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
       }
 
-      "returns an INTERNAL_SERVER_ERROR if a false is returned" in {
-        setupKeystoreMocks(Some(false))
-        val result = testUnauthorisedController.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
-        contentAsString(result) should include("There is a technical problem")
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+      "show generic not_authorised template for InsufficientEvidence journey" in new Setup {
+        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier]))
+          .thenReturn(Future.successful(IdentityVerificationResult.InsufficientEvidence))
+        val result = controller.showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
+        contentAsString(result) should include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
+      }
+
+      "show generic not_authorised template for Incomplete journey" in new Setup {
+        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier]))
+          .thenReturn(Future.successful(IdentityVerificationResult.Incomplete))
+        val result = controller.showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
+        contentAsString(result) should include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
+      }
+
+      "show generic not_authorised template for PreconditionFailed journey" in new Setup {
+        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier]))
+          .thenReturn(Future.successful(IdentityVerificationResult.PreconditionFailed))
+        val result = controller.showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
+        contentAsString(result) should include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
+      }
+
+      "show generic not_authorised template for UserAborted journey" in new Setup {
+        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier]))
+          .thenReturn(Future.successful(IdentityVerificationResult.UserAborted))
+        val result = controller.showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
+        contentAsString(result) should include("We cannot confirm your identity")
+        status(result) shouldBe UNAUTHORIZED
       }
     }
 
-    "show locked_out template for LockedOut journey" in {
-      val result = testUnauthorisedController.showNotAuthorised(Some("locked-out-journey-id"))(fakeRequest)
-      contentAsString(result) should include("You have tried to confirm your identity too many times")
-      status(result) shouldBe UNAUTHORIZED
+  "show technical_issue template for TechnicalIssue journey" which {
+
+    "returns an INTERNAL_SERVER_ERROR on the first attempt" in new Setup {
+      when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        .thenReturn(Future.successful(IdentityVerificationResult.TechnicalIssue))
+
+      setupKeystoreMocks(None)
+
+      val result = controller.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
+      contentAsString(result) should include("There is a technical problem")
+      status(result) shouldBe INTERNAL_SERVER_ERROR
     }
 
-    "show timeout template for Timeout journey" in {
-      val result = testUnauthorisedController.showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
-      contentAsString(result) should include("signed out due to inactivity")
-      status(result) shouldBe UNAUTHORIZED
+    "returns an OK on any attempt after the first" in new Setup {
+      when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        .thenReturn(Future.successful(IdentityVerificationResult.TechnicalIssue))
+
+      setupKeystoreMocks(Some(true))
+      val result = controller.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
+
+      contentAsString(result) should include("There is a technical problem")
+      status(result) shouldBe OK
     }
 
-    "show 2FA failure page when no journey ID specified" in {
-      val result = testUnauthorisedController.showNotAuthorised(None)(fakeRequest)
-      contentAsString(result) should include("We cannot confirm your identity")
-      contentAsString(result) should not include "If you cannot confirm your identity and you have a query you can"
-      status(result) shouldBe UNAUTHORIZED
-    }
+     "returns an INTERNAL_SERVER_ERROR if a false is returned" in new Setup {
+       when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
+         .thenReturn(Future.successful(IdentityVerificationResult.TechnicalIssue))
+       setupKeystoreMocks(Some(false))
+       val result = controller.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
+       contentAsString(result) should include("There is a technical problem")
+       status(result) shouldBe INTERNAL_SERVER_ERROR
+     }
+   }
+
+     "show locked_out template for LockedOut journey" in new Setup {
+       when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
+         .thenReturn(Future.successful(IdentityVerificationResult.LockedOut))
+
+       val result = controller.showNotAuthorised(Some("locked-out-journey-id"))(fakeRequest)
+       contentAsString(result) should include("You have tried to confirm your identity too many times")
+       status(result) shouldBe UNAUTHORIZED
+     }
+
+      "show timeout template for Timeout journey" in new Setup {
+        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
+          .thenReturn(Future.successful(IdentityVerificationResult.Timeout))
+
+        val result = controller.showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)
+        contentAsString(result) should include("signed out due to inactivity")
+        status(result) shouldBe UNAUTHORIZED
+     }
+
+      "show 2FA failure page when no journey ID specified" in new Setup {
+        val result = controller.showNotAuthorised(None)(fakeRequest)
+        contentAsString(result) should include("We cannot confirm your identity")
+        contentAsString(result) should not include "If you cannot confirm your identity and you have a query you can"
+        status(result) shouldBe UNAUTHORIZED
+      }
   }
-}

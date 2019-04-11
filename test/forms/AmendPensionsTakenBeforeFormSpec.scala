@@ -18,11 +18,14 @@ package forms
 
 import forms.AmendPensionsTakenBeforeForm._
 import models.amendModels.AmendPensionsTakenBeforeModel
+import org.scalatest.mockito.MockitoSugar
+import play.api.i18n.Lang
 import testHelpers.CommonErrorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.Constants
 
-class AmendPensionsTakenBeforeFormSpec extends UnitSpec with CommonErrorMessages with WithFakeApplication {
+class AmendPensionsTakenBeforeFormSpec extends UnitSpec with CommonErrorMessages with WithFakeApplication with MockitoSugar {
+  implicit val lang: Lang = mock[Lang]
 
   "The AmendPensionsTakenBeforeForm" should {
     val validMap = Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "1000.0", "protectionType" -> "type", "status" -> "status")

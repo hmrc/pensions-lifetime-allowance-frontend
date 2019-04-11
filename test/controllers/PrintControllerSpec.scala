@@ -16,20 +16,24 @@
 
 package controllers
 
-import config.LocalTemplateRenderer
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
+import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import connectors.{CitizenDetailsConnector, KeyStoreConnector, PLAConnector}
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import constructors.DisplayConstructors
-import javax.inject.Inject
 import mocks.AuthMock
 import models._
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
+import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import play.api.Environment
-import play.api.i18n.Messages
+import play.api.{Configuration, Environment}
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import testHelpers.MockTemplateRenderer
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.Retrievals
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -37,30 +41,48 @@ import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PrintControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication {
+class PrintControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication with BeforeAndAfterEach {
 
-  val mockKeyStoreConnector = mock[KeyStoreConnector]
-  val mockCitizenDetailsConnector = mock[CitizenDetailsConnector]
-  val mockDisplayConstructors = mock[DisplayConstructors]
+  val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
+  val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
+  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   val fakeRequest = FakeRequest()
+  val mockEnv: Environment = mock[Environment]
 
-  val keyStoreConnector = mock[KeyStoreConnector]
-  val plaConnector = mock[PLAConnector]
-  implicit val partialRetriever = mock[PlaFormPartialRetriever]
-  implicit val templateRenderer = mock[LocalTemplateRenderer]
-  val env = mock[Environment]
-
+  implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
+  implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext = mock[PlaContext]
+  implicit val system: ActorSystem = ActorSystem()
+  implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
   val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111))
   val testPrintDisplayModel = PrintDisplayModel("Testy", "Mctestface", "AA11TESTA", "IP2016", "open", "PSATestNum", "ProtRefTestNum", Some("£1,246,500"), Some("3 April 2016"))
 
-  val TestPrintController = new PrintController(keyStoreConnector, mockCitizenDetailsConnector, env, partialRetriever, templateRenderer) {
-    override lazy val authConnector: AuthConnector = mockAuthConnector
-    override val displayConstructors = mockDisplayConstructors
+  val authFunction = new AuthFunction {
+    override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
+    override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
+    override implicit val plaContext: PlaContext = mockPlaContext
+    override implicit val appConfig: FrontendAppConfig = mockAppConfig
+    override val postSignInRedirectUrl: String = ""
+    override def authConnector: AuthConnector = mockAuthConnector
+    override def config: Configuration = mockAppConfig.configuration
+    override def env: Environment = mockEnv
   }
 
 
+  val TestPrintController = new PrintController(mockKeyStoreConnector, mockCitizenDetailsConnector, mockDisplayConstructors, mockMCC, authFunction) {
+  }
+
+  override def beforeEach(): Unit = {
+    reset(mockDisplayConstructors,
+      mockKeyStoreConnector,
+      mockCitizenDetailsConnector,
+      mockPlaContext)
+    super.beforeEach()
+  }
 
   "Navigating to print protection" should {
     "return 200" when {
@@ -69,7 +91,7 @@ class PrintControllerSpec extends UnitSpec with MockitoSugar with AuthMock with 
 
         when(mockCitizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
-        when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        when(mockKeyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
           .thenReturn(Future.successful(Some(testProtectionModel)))
         when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
           .thenReturn(testPrintDisplayModel)
@@ -83,7 +105,7 @@ class PrintControllerSpec extends UnitSpec with MockitoSugar with AuthMock with 
       "InValid data is provided" in {
         when(mockCitizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future(Some(testPersonalDetails)))
-        when(keyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        when(mockKeyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
           .thenReturn(None)
         when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
           .thenReturn(testPrintDisplayModel)

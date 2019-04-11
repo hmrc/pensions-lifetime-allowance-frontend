@@ -16,14 +16,21 @@
 
 package common
 
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import java.time.LocalDate
+import java.util.Locale
 
 import common.Display._
+import org.scalatest.mockito.MockitoSugar
 import play.api.Application
-import play.api.i18n.{Lang, Messages, MessagesApi}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
+import play.api.mvc.{MessagesControllerComponents, MessagesRequest}
+import play.api.test.FakeRequest
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class DisplaySpec extends UnitSpec with WithFakeApplication {
+class DisplaySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+
+  implicit val mockMessages = mock[Messages]
+  val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi
 
   "currencyDisplayString" should {
 
@@ -49,23 +56,25 @@ class DisplaySpec extends UnitSpec with WithFakeApplication {
   }
 
   "dateDisplayString" should {
-    def createLangMessages(languageCode: String): (Lang, Messages) = {
+    def createLangMessages(languageCode: Locale): (Lang, Messages) = {
       val application = fakeApplication
       val messagesApiCache = Application.instanceCache[MessagesApi]
+      val messagesRequest = new MessagesRequest(FakeRequest(), messagesApiCache.apply(application))
+
       val lang = new Lang(languageCode)
-      (lang, Messages(lang, messagesApiCache(application)))
+      (lang, MessagesImpl(lang, mockMCC))
     }
 
     "correctly create a date string for 17/04/2018" when {
       "lang is set to en" in {
 
-        val (lang, messsage) = createLangMessages("en")
+        val (lang, messsage) = createLangMessages(Locale.ENGLISH)
         val tstDate = LocalDate.of(2018, 4, 17)
         dateDisplayString(tstDate)(lang, messsage) shouldBe "17 April 2018"
       }
 
       "lang is set to cy" in {
-        val (lang, messsage) = createLangMessages("cy")
+        val (lang, messsage) = createLangMessages(Locale.forLanguageTag("cy"))
         val tstDate = LocalDate.of(2018, 4, 17)
         dateDisplayString(tstDate)(lang, messsage) shouldBe "17 Ebrill 2018"
       }

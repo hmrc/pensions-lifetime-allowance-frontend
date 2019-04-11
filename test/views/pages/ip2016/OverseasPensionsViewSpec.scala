@@ -18,10 +18,9 @@ package views.pages.ip2016
 
 import forms.OverseasPensionsForm
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import views.html.pages.ip2016.{overseasPensions => views}
 import testHelpers.ViewSpecHelpers.ip2016.OverseasPensionsViewMessages
+import views.html.pages.ip2016.{overseasPensions => views}
 
 class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPensionsViewMessages {
 

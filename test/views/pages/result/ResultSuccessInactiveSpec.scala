@@ -18,7 +18,6 @@ package views.pages.result
 
 import enums.ApplicationType
 import models.{ProtectionDetailsDisplayModel, SuccessDisplayModel}
-import play.api.i18n.Messages.Implicits._
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultSuccessInactive

@@ -18,7 +18,6 @@ package views.pages.amends
 
 import forms.AmendPensionsTakenBetweenForm
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBetweenViewMessages
 import views.html.pages.amends.{amendPensionsTakenBetween => views}

@@ -16,9 +16,10 @@
 
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import config.FrontendAppConfig
 
 
-@()(implicit request: Request[_], messages: Messages, lang: Lang, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@()(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @main_template(title = Messages("pla.psoDetails.title"), scriptElem=None, bodyClasses = None) {
 

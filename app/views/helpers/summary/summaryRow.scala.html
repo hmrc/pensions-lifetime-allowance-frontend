@@ -17,8 +17,8 @@
 @import play.api.mvc.Call
 @import controllers.SummaryController
 
-@import connectors.KeyStoreConnector
-@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], removeLinkCall: Option[Call], removeLinkDefined: Boolean, boldText: Boolean, firstRow: Boolean)(implicit messages: Messages, lang: Lang)
+@import config.FrontendAppConfig
+@(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], removeLinkCall: Option[Call], removeLinkDefined: Boolean, boldText: Boolean, firstRow: Boolean)(implicit messages: Messages, appConfig: FrontendAppConfig)
 
 @boldString = {"-bold"}
     @if(rowID == "totalPensionsAmt" || rowID == "ip14TotalPensionsAmt"){

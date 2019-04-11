@@ -19,7 +19,6 @@ package views.pages.withdraw
 import controllers.routes
 import forms.WithdrawDateForm._
 import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawDateSpecMessages

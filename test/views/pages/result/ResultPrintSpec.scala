@@ -16,13 +16,12 @@
 
 package views.pages.result
 
-import play.api.i18n.Messages.Implicits._
+import models.PrintDisplayModel
 import org.jsoup.Jsoup
+import play.api.i18n.Messages
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultPrint
 import views.html.pages.result.{resultPrint => views}
-import models.PrintDisplayModel
-import play.api.i18n.Messages
 
 class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
 

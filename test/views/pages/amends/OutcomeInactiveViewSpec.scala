@@ -16,16 +16,14 @@
 
 package views.pages.amends
 
-import enums.ApplicationType
-import org.jsoup.Jsoup
-import play.api.i18n.Messages.Implicits._
-import models.amendModels.AmendsGAModel
 import models.InactiveAmendResultDisplayModel
+import models.amendModels.AmendsGAModel
+import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.OutcomeInactiveViewSpecMessages
 import views.html.pages.amends.{outcomeInactive => views}
 
-class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveViewSpecMessages{
+class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveViewSpecMessages {
 
   lazy val amendsGAModel = AmendsGAModel(
     current = Some("current"),

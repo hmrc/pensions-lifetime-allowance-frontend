@@ -19,45 +19,46 @@ package controllers
 import java.time.LocalDateTime
 
 import auth.AuthFunction
-import common.{Dates, Strings}
+import common.Strings
+import config._
 import config.wiring.PlaFormPartialRetriever
-import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.WithdrawDateForm._
 import javax.inject.Inject
 import models.{ProtectionModel, WithdrawDateFormModel}
-import play.api.{Configuration, Environment, Logger, Play}
 import play.api.Play.current
 import play.api.data.{Form, FormError}
-import play.api.i18n.Messages
 import play.api.i18n.Messages.Implicits._
+import play.api.i18n.{I18nSupport, Lang, Messages}
 import play.api.libs.json.{Json, OFormat}
-import play.api.mvc.{Action, AnyContent, Request, Result}
+import play.api.mvc._
+import play.api.{Configuration, Environment, Logger, Play}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 
 class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnector,
                                              plaConnector: PLAConnector,
+                                             displayConstructors: DisplayConstructors,
+                                             mcc: MessagesControllerComponents,
+                                             authFunction: AuthFunction)
+                                            (implicit val appConfig: FrontendAppConfig,
                                              implicit val partialRetriever: PlaFormPartialRetriever,
-                                             implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
-  val displayConstructors: DisplayConstructors = DisplayConstructors
-  lazy val appConfig = FrontendAppConfig
-  override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
+                                             implicit val templateRenderer:LocalTemplateRenderer,
+                                             implicit val plaContext: PlaContext) extends FrontendController(mcc) with I18nSupport {
 
-  override def config: Configuration = Play.current.configuration
 
-  override def env: Environment = Play.current.injector.instanceOf[Environment]
+  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   /** Withdraw protections journey **/
   def withdrawSummary: Action[AnyContent] = Action.async {
     implicit request =>
-      genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
         keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(currentProtection) =>
             Ok(views.html.pages.withdraw.withdrawSummary(displayConstructors.createWithdrawSummaryTable(currentProtection)))
@@ -70,7 +71,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
 
   def withdrawImplications: Action[AnyContent] = Action.async {
     implicit request =>
-      genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
         keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(currentProtection) =>
             Ok(views.html.pages.withdraw.withdrawImplications(withdrawDateForm,
@@ -85,7 +86,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
 
   def getWithdrawDateInput: Action[AnyContent] = Action.async {
     implicit request =>
-      genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
         keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(currentProtection) =>
             Ok(views.html.pages.withdraw.withdrawDate(withdrawDateForm,
@@ -121,7 +122,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
 
   def postWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
     implicit val format: OFormat[WithdrawDateFormModel] = Json.format[WithdrawDateFormModel]
-    genericAuthWithoutNino("existingProtections") {
+    authFunction.genericAuthWithoutNino("existingProtections") {
       keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap {
         case Some(protection) => validateAndSaveWithdrawDateForm(protection)
         case _ =>
@@ -146,7 +147,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
 
   def getSubmitWithdrawDateInput: Action[AnyContent] = Action.async {
     implicit request =>
-      genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
         keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap  {
           case Some(protection) =>
             fetchWithdrawDateForm(protection)
@@ -159,7 +160,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
 
   def submitWithdrawDateInput: Action[AnyContent] = Action.async {
     implicit request =>
-      genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
         keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(protection) =>
             validateWithdrawDate(withdrawDateForm.bindFromRequest(),
@@ -182,7 +183,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
 
   def displayWithdrawConfirmation(withdrawDate: String): Action[AnyContent] = Action.async {
     implicit request =>
-      genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
         for {
           protectionAmendment <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
           response <- plaConnector.amendProtection(nino, protectionAmendment.get.copy(withdrawnDate = Some(withdrawDate), status = Some("Withdrawn")))
@@ -207,7 +208,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
 
   def showWithdrawConfirmation(protectionType: String): Action[AnyContent] = Action.async {
     implicit request =>
-      genericAuthWithoutNino("existingProtections") {
+      authFunction.genericAuthWithoutNino("existingProtections") {
         keyStoreConnector.remove.map {
           _ => Ok(views.html.pages.withdraw.withdrawConfirmation(protectionType))
         }
@@ -215,7 +216,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
   }
 
 
-  private def buildInvalidForm(errorForm: Form[WithdrawDateFormModel]): Form[WithdrawDateFormModel] = {
+  private def buildInvalidForm(errorForm: Form[WithdrawDateFormModel])(implicit messages: Messages): Form[WithdrawDateFormModel] = {
     if (errorForm.errors.size > 1) {
       val formFields: Seq[String] = errorForm.errors map (field => field.key)
       val formFieldsWithErrors: Seq[FormError] = formFields map (key => FormError(key, ""))

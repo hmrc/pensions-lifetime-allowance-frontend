@@ -23,8 +23,8 @@ import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
 import scala.concurrent.Future
 
-class AccountController@Inject()() extends FrontendController {
-  lazy val appConfig = FrontendAppConfig
+class AccountController @Inject()(appConfig: FrontendAppConfig,
+                                 mcc: MessagesControllerComponents) extends FrontendController(mcc) {
 
   def signOut: Action[AnyContent] = Action.async { implicit request =>
     Future.successful(Redirect(appConfig.feedbackSurvey).withNewSession)

@@ -16,31 +16,21 @@
 
 package connectors
 
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsPath, Json}
-import config.WSHttp
+import config.FrontendAppConfig
 import enums.IdentityVerificationResult.IdentityVerificationResult
 import javax.inject.Inject
-import play.api.{Configuration, Environment}
-import play.api.Mode.Mode
+import play.api.data.validation.ValidationError
+import play.api.libs.json.{JsPath, Json}
 import services.MetricsService
-import uk.gov.hmrc.play.config.ServicesConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, HttpGet, HttpResponse}
 
-class IdentityVerificationConnectorImpl@Inject() (override val runModeConfiguration: Configuration,
-                                                  environment: Environment) extends IdentityVerificationConnector {
-  override val serviceUrl = baseUrl("identity-verification")
-  override def http: HttpGet = WSHttp
-  override protected def mode: Mode = environment.mode
-}
+class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, http: DefaultHttpClient) {
+  val serviceUrl = appConfig.servicesConfig.baseUrl("identity-verification")
 
-  trait IdentityVerificationConnector extends ServicesConfig{
-
-  val serviceUrl: String
-  def http: HttpGet
   private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
   private[connectors] case class IdentityVerificationResponse(result: IdentityVerificationResult)
   private implicit val formats = Json.format[IdentityVerificationResponse]
@@ -50,7 +40,7 @@ class IdentityVerificationConnectorImpl@Inject() (override val runModeConfigurat
     val ivFuture = http.GET[HttpResponse](url(journeyId)).flatMap { httpResponse =>
       context.stop()
       httpResponse.json.validate[IdentityVerificationResponse].fold(
-        errs => Future.failed(new JsonValidationException(s"Unable to deserialise: ${formatJsonErrors(errs)}")),
+        errs => Future.failed(new JsonValidationException(s"Unable to deserialise: $errs")),
         valid => Future.successful(valid.result)
       )
     }

@@ -24,8 +24,11 @@ import testHelpers.PSODetailsMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.Constants
 import common.Exceptions
+import org.scalatest.mockito.MockitoSugar
+import play.api.i18n.Lang
 
-class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication {
+class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication with MockitoSugar {
+  implicit val lang: Lang = mock[Lang]
 
   "The AmendPensionsTakenBetweenForm" should {
     val validMap = Map(

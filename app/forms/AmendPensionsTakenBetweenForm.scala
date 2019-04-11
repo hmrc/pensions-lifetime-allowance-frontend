@@ -19,11 +19,10 @@ package forms
 import models.amendModels.AmendPensionsTakenBetweenModel
 import play.api.data.Forms._
 import play.api.data._
-import play.api.i18n.Lang
 
 object AmendPensionsTakenBetweenForm extends CommonBinders {
 
-  def amendPensionsTakenBetweenForm(implicit lang:Lang) = Form (
+  def amendPensionsTakenBetweenForm = Form (
     mapping(
       "amendedPensionsTakenBetween" -> nonEmptyText,
       "amendedPensionsTakenBetweenAmt" -> yesNoOptionalBigDecimal,

@@ -16,14 +16,13 @@
 
 package views.pages.amends
 
-import org.jsoup.Jsoup
 import forms.AmendCurrentPensionForm
-import views.html.pages.amends.{amendIP14CurrentPensions => views}
-import play.api.i18n.Messages.Implicits._
+import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14CurrentPensionsViewSpecMessages
+import views.html.pages.amends.{amendIP14CurrentPensions => views}
 
-class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP14CurrentPensionsViewSpecMessages{
+class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP14CurrentPensionsViewSpecMessages {
 
   "the AmendIP14CurrentPensionsView" should{
     val amendCurrentPensionsForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "12000",

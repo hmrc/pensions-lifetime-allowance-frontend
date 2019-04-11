@@ -21,7 +21,6 @@ import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupNotFoundSpecMessages
 import views.html.pages.lookup.psa_lookup_not_found_results
-import play.api.i18n.Messages.Implicits._
 
 class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLookupNotFoundSpecMessages {
 

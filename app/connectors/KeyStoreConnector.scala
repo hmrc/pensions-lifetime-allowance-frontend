@@ -17,29 +17,15 @@
 package connectors
 
 import config.PLASessionCache
-import javax.inject.{Inject, Singleton}
-import play.api.{Configuration, Environment}
-import play.api.Mode.Mode
+import javax.inject.Inject
 import play.api.libs.json.Format
-import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
-import uk.gov.hmrc.play.config.ServicesConfig
-import uk.gov.hmrc.http.HttpGet
+import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
 import scala.concurrent.Future
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 
-class KeyStoreConnectorImpl@Inject()(override val runModeConfiguration: Configuration,
-                                 environment: Environment) extends  KeyStoreConnector {
-  override val sessionCache = PLASessionCache
-  override protected def mode: Mode = environment.mode
-
-}
-
-  trait KeyStoreConnector extends ServicesConfig{
-
-  val sessionCache: SessionCache
-
+class KeyStoreConnector @Inject()(sessionCache: PLASessionCache) {
 
   implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders("Accept" -> "application/vnd.hmrc.1.0+json")
 

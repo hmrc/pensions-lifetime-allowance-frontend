@@ -18,32 +18,27 @@ package controllers
 
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import javax.inject.Inject
-import play.api.Play.current
-import play.api.i18n.Messages.Implicits._
+import play.api.Application
 import play.api.mvc._
-import play.api.{Configuration, Environment, Play}
-import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.pages._
 
 import scala.concurrent.Future
 
-class ConfirmationController @Inject()(implicit val partialRetriever: PlaFormPartialRetriever,
-                                       implicit val templateRenderer: LocalTemplateRenderer) extends BaseController with AuthFunction {
-  lazy val appConfig = FrontendAppConfig
-  val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = appConfig.confirmFPUrl
-
-  override def config: Configuration = Play.current.configuration
-
-  override def env: Environment = Play.current.injector.instanceOf[Environment]
+class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
+                                       authFunction: AuthFunction)
+                                      (implicit val application: Application,
+                                       implicit val appConfig: FrontendAppConfig,
+                                       implicit val partialRetriever: PlaFormPartialRetriever,
+                                       implicit val templateRenderer:LocalTemplateRenderer,
+                                       implicit val plaContext: PlaContext) extends FrontendController(mcc) {
 
   val confirmFP = Action.async {
     implicit request =>
-      genericAuthWithoutNino("FP2016") {
+      authFunction.genericAuthWithoutNino("FP2016") {
         Future.successful(Ok(confirmation.confirmFP()))
       }
   }
-
 }

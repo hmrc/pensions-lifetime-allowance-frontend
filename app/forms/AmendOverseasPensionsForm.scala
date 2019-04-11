@@ -19,11 +19,10 @@ package forms
 import models.amendModels.AmendOverseasPensionsModel
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Lang
 
 object AmendOverseasPensionsForm extends CommonBinders{
 
-  def amendOverseasPensionsForm(implicit lang:Lang) = Form (
+  def amendOverseasPensionsForm = Form (
     mapping(
       "amendedOverseasPensions" -> nonEmptyText,
       "amendedOverseasPensionsAmt" -> yesNoOptionalBigDecimal,

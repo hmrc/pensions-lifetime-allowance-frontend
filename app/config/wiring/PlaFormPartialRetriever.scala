@@ -16,12 +16,13 @@
 
 package config.wiring
 
-import config.WSHttp
 import javax.inject.Inject
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.http.HttpGet
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-class PlaFormPartialRetriever @Inject()(sessionCookieCryptoFilterWrapper: SessionCookieCryptoFilterWrapper) extends FormPartialRetriever {
-  override def httpGet: HttpGet with WSHttp = new HttpGet with WSHttp
+class PlaFormPartialRetriever @Inject()(sessionCookieCryptoFilterWrapper: SessionCookieCryptoFilterWrapper,
+                                        http: DefaultHttpClient) extends FormPartialRetriever {
+  override def httpGet: HttpGet = http
   override val crypto = sessionCookieCryptoFilterWrapper.encryptCookieString _
 }

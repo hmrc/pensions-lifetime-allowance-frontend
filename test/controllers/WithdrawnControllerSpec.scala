@@ -16,26 +16,27 @@
 
 package controllers
 
-import akka.stream.Materializer
-import config.LocalTemplateRenderer
 import config.wiring.PlaFormPartialRetriever
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import org.scalatest.mockito.MockitoSugar
+import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
-import org.scalatest.mockito.MockitoSugar
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 
 class WithdrawnControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
-  implicit val mockPartialRetriever = mock[PlaFormPartialRetriever]
-  implicit val mockTemplateRenderer = MockTemplateRenderer.renderer
+  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
 
-    val controller = new WithdrawnController()
+  implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
+  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext = mock[PlaContext]
 
-
+  val controller = new WithdrawnController(mockMCC)
   val fakeRequest = FakeRequest("GET", "/")
-
 
   ("Withdrawn controller") should  {
      ("should show withdrawn page") in  {

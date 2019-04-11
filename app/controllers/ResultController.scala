@@ -18,44 +18,41 @@ package controllers
 
 import auth.AuthFunction
 import common.Exceptions
+import config._
 import config.wiring.PlaFormPartialRetriever
-import config.{AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.{ApplicationOutcome, ApplicationType}
 import javax.inject.Inject
 import models._
-import play.api.{Configuration, Environment, Logger, Play}
+import play.api.Logger
+import play.api.Play.current
+import play.api.i18n.I18nSupport
 import play.api.mvc._
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.Constants
 import views.html.pages.result._
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
-import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.renderer.TemplateRenderer
-
 import scala.util.Random
-
 
 class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  plaConnector: PLAConnector,
+                                 displayConstructors: DisplayConstructors,
+                                 mcc: MessagesControllerComponents,
+                                 responseConstructors: ResponseConstructors,
+                                 authFunction: AuthFunction)
+                                (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: PlaFormPartialRetriever,
-                                 implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
-  lazy val appConfig = FrontendAppConfig
-  override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
-
-  val responseConstructors: ResponseConstructors = ResponseConstructors
-
-  override def config: Configuration = Play.current.configuration
-  override def env: Environment = Play.current.injector.instanceOf[Environment]
-
+                                 implicit val templateRenderer:LocalTemplateRenderer,
+                                 implicit val plaContext: PlaContext)
+  extends FrontendController(mcc) with I18nSupport {
+  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   val processFPApplication = Action.async { implicit request =>
-    genericAuthWithNino("FP2016") { nino =>
+    authFunction.genericAuthWithNino("FP2016") { nino =>
       implicit val protectionType = ApplicationType.FP2016
       plaConnector.applyFP16(nino).flatMap(
         response => routeViaMCNeededCheck(response, nino)
@@ -65,7 +62,7 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
 
   val processIPApplication = Action.async {
     implicit request =>
-      genericAuthWithNino("IP2016") { nino =>
+      authFunction.genericAuthWithNino("IP2016") { nino =>
         implicit val protectionType = ApplicationType.IP2016
         for {
           userData <- keyStoreConnector.fetchAllUserData
@@ -112,7 +109,7 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
 
   def displayResult(implicit protectionType: ApplicationType.Value): Action[AnyContent] = Action.async {
     implicit request =>
-      genericAuthWithNino("existingProtections") { nino =>
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
         val showUserResearchPanel = setURPanelFlag
         val errorResponse = InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
@@ -120,20 +117,19 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
             val notificationId = model.protection.notificationId.getOrElse {
               throw new Exceptions.OptionNotDefinedException("applicationOutcome", "notificationId", protectionType.toString)
             }
-
             applicationOutcome(notificationId) match {
 
               case ApplicationOutcome.Successful =>
                 keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
-                val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
+                val displayModel = displayConstructors.createSuccessDisplayModel(model)
                 Ok(resultSuccess(displayModel, showUserResearchPanel))
 
               case ApplicationOutcome.SuccessfulInactive =>
-                val displayModel = DisplayConstructors.createSuccessDisplayModel(model)
+                val displayModel = displayConstructors.createSuccessDisplayModel(model)
                 Ok(resultSuccessInactive(displayModel, showUserResearchPanel))
 
               case ApplicationOutcome.Rejected =>
-                val displayModel = DisplayConstructors.createRejectionDisplayModel(model)
+                val displayModel = displayConstructors.createRejectionDisplayModel(model)
                 Ok(resultRejected(displayModel, showUserResearchPanel))
             }
           case _ =>

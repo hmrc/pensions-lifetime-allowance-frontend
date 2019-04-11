@@ -19,8 +19,9 @@
 @import helpers.amends.amendSection
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
+@import config.FrontendAppConfig
 
-@(protectionType: String)(implicit request: Request[_], messages: Messages, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer)
+@(protectionType: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)

@@ -17,35 +17,34 @@
 package controllers
 
 import auth.AuthFunction
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import config.wiring.PlaFormPartialRetriever
-import constructors.DisplayConstructors
-import config.{AppConfig, AuthClientConnector, FrontendAppConfig, LocalTemplateRenderer}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
+import constructors.DisplayConstructors
 import javax.inject.Inject
-import models.{ExistingProtectionsDisplayModel, PersonalDetailsModel, ProtectionModel}
-import play.api.{Configuration, Environment, Logger, Play}
+import models.{PersonalDetailsModel, ProtectionModel}
+import play.api.Logger
+import play.api.i18n.I18nSupport
 import play.api.mvc._
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
-import uk.gov.hmrc.auth.core._
-import uk.gov.hmrc.renderer.TemplateRenderer
+import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 val citizenDetailsConnector: CitizenDetailsConnector,
-                                val environment: Environment,
+                                displayConstructors: DisplayConstructors,
+                                mcc: MessagesControllerComponents,
+                                authFunction: AuthFunction)
+                               (implicit val appConfig: FrontendAppConfig,
                                 implicit val partialRetriever: PlaFormPartialRetriever,
-                                implicit val templateRenderer:LocalTemplateRenderer) extends BaseController with AuthFunction {
-  val displayConstructors: DisplayConstructors = DisplayConstructors
-  lazy val appConfig = FrontendAppConfig
-  override lazy val authConnector: AuthConnector = AuthClientConnector
-  lazy val postSignInRedirectUrl = FrontendAppConfig.existingProtectionsUrl
+                                implicit val templateRenderer:LocalTemplateRenderer,
+                                implicit val plaContext: PlaContext)
+  extends FrontendController(mcc) with I18nSupport {
 
-  def config: Configuration = Play.current.configuration
-
-  def env: Environment = environment
+  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   val printView = Action.async { implicit request =>
-    genericAuthWithNino("existingProtections") { nino =>
+    authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
         personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
         protectionModel <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
