@@ -93,7 +93,7 @@ class PrintControllerSpec extends UnitSpec with MockitoSugar with AuthMock with 
           .thenReturn(Future.successful(Some(testPersonalDetails)))
         when(mockKeyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
           .thenReturn(Future.successful(Some(testProtectionModel)))
-        when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+        when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(testPrintDisplayModel)
 
         val result = await(TestPrintController.printView(fakeRequest))
@@ -107,7 +107,7 @@ class PrintControllerSpec extends UnitSpec with MockitoSugar with AuthMock with 
           .thenReturn(Future(Some(testPersonalDetails)))
         when(mockKeyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
           .thenReturn(None)
-        when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+        when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(testPrintDisplayModel)
 
         val result = await(TestPrintController.printView(fakeRequest))

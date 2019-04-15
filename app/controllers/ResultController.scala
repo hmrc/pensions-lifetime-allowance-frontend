@@ -27,7 +27,7 @@ import javax.inject.Inject
 import models._
 import play.api.Logger
 import play.api.Play.current
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
@@ -109,6 +109,7 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
 
   def displayResult(implicit protectionType: ApplicationType.Value): Action[AnyContent] = Action.async {
     implicit request =>
+      implicit val lang = mcc.messagesApi.preferred(request).lang
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         val showUserResearchPanel = setURPanelFlag
         val errorResponse = InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")

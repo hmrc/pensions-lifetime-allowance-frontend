@@ -232,7 +232,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
       when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
         .thenReturn(Some(testFPSuccessApplyResponseModel))
 
-      when(mockDisplayConstructors.createSuccessDisplayModel(any())(any())).thenReturn(SuccessDisplayModel(
+      when(mockDisplayConstructors.createSuccessDisplayModel(any())(any(),any())).thenReturn(SuccessDisplayModel(
         ApplicationType.FP2016, "12313123", "50", true, None, Nil
       ))
 
@@ -308,7 +308,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
       when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
         .thenReturn(Some(testIP16SuccessApplyResponseModel))
 
-      when(mockDisplayConstructors.createSuccessDisplayModel(any())(any())).thenReturn(SuccessDisplayModel(
+      when(mockDisplayConstructors.createSuccessDisplayModel(any())(any(),any())).thenReturn(SuccessDisplayModel(
         ApplicationType.FP2016, "12313123", "50", true, None, Nil
       ))
 
@@ -402,7 +402,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
           .thenReturn(Some(testIP16InactiveSuccessApplyResponseModel))
 
-        when(mockDisplayConstructors.createSuccessDisplayModel(any())(any())).thenReturn(SuccessDisplayModel(
+        when(mockDisplayConstructors.createSuccessDisplayModel(any())(any(),any())).thenReturn(SuccessDisplayModel(
           ApplicationType.FP2016, "12313123", "50", true, None, Nil
         ))
 

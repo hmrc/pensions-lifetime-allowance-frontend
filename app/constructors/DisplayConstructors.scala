@@ -37,7 +37,7 @@ class DisplayConstructors @Inject()() {
   def createPrintDisplayModel(personalDetailsModelOpt: Option[PersonalDetailsModel],
                               protectionModel: ProtectionModel,
                               nino: String
-                             ): PrintDisplayModel = {
+                             )(implicit lang: Lang): PrintDisplayModel = {
 
     val personalDetailsModel = personalDetailsModelOpt.getOrElse {
       throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")
@@ -80,7 +80,7 @@ class DisplayConstructors @Inject()() {
   }
 
   // EXISTING PROTECTIONS
-  def createExistingProtectionsDisplayModel(model: TransformedReadResponseModel): ExistingProtectionsDisplayModel = {
+  def createExistingProtectionsDisplayModel(model: TransformedReadResponseModel)(implicit lang: Lang): ExistingProtectionsDisplayModel = {
     val activeProtection = model.activeProtection.map(createExistingProtectionDisplayModel)
     val otherProtectionsList = model.inactiveProtections.map(createExistingProtectionDisplayModel).sortWith(sortByStatus)
 
@@ -99,7 +99,7 @@ class DisplayConstructors @Inject()() {
     }
   }
 
-  def createExistingProtectionDisplayModel(model: ProtectionModel): ExistingProtectionDisplayModel = {
+  def createExistingProtectionDisplayModel(model: ProtectionModel)(implicit lang: Lang): ExistingProtectionDisplayModel = {
 
     val status = Strings.statusString(model.status)
     val protectionType = Strings.protectionTypeString(model.protectionType)
@@ -134,7 +134,7 @@ class DisplayConstructors @Inject()() {
   }
 
   // AMENDS
-  def createAmendDisplayModel(model: AmendProtectionModel): AmendDisplayModel = {
+  def createAmendDisplayModel(model: AmendProtectionModel)(implicit lang: Lang): AmendDisplayModel = {
     val amended = modelsDiffer(model.originalProtection, model.updatedProtection)
     val totalAmount = Display.currencyDisplayString(BigDecimal(
       model.updatedProtection.relevantAmount.getOrElse(0.0)
@@ -161,7 +161,7 @@ class DisplayConstructors @Inject()() {
     createNoChangeSection(model, ApplicationStage.CurrentPsos, model.pensionDebitTotalAmount)
   }
 
-  def createCurrentPsoSection(model: ProtectionModel): Option[Seq[AmendDisplaySectionModel]] = {
+  def createCurrentPsoSection(model: ProtectionModel)(implicit lang: Lang): Option[Seq[AmendDisplaySectionModel]] = {
 
     model.pensionDebits.flatMap { psoList =>
       if (psoList.length > 1) {
@@ -285,7 +285,7 @@ class DisplayConstructors @Inject()() {
   }
 
   // SUCCESSFUL APPLICATION RESPONSE
-  def createSuccessDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value): SuccessDisplayModel = {
+  def createSuccessDisplayModel(model: ApplyResponseModel)(implicit protectionType: ApplicationType.Value, lang: Lang): SuccessDisplayModel = {
     val notificationId = model.protection.notificationId.getOrElse(throw new Exceptions.OptionNotDefinedException("CreateSuccessDisplayModel", "notification ID", protectionType.toString))
     val protectedAmount = model.protection.protectedAmount.getOrElse(if (protectionType == ApplicationType.FP2016) Constants.fpProtectedAmount else throw new Exceptions.OptionNotDefinedException("ApplyResponseModel", "protected amount", protectionType.toString))
     val printable = Constants.activeProtectionCodes.contains(notificationId)
@@ -308,7 +308,7 @@ class DisplayConstructors @Inject()() {
     RejectionDisplayModel(notificationId.toString, additionalInfo, protectionType)
   }
 
-  private def createProtectionDetailsFromProtection(protection: ProtectionModel): ProtectionDetailsDisplayModel = {
+  private def createProtectionDetailsFromProtection(protection: ProtectionModel)(implicit lang: Lang): ProtectionDetailsDisplayModel = {
     val protectionReference = protection.protectionReference
     val psaReference = protection.psaCheckReference.getOrElse(throw new Exceptions.OptionNotDefinedException("createProtectionDetailsFromModel", "psaCheckReference", protection.protectionType.getOrElse("No protection type in response")))
     val applicationDate = protection.certificateDate.map { dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt)) }
