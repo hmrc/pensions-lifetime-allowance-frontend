@@ -28,7 +28,7 @@ import models._
 import models.amendModels.AmendProtectionModel
 import play.api.Logger
 import play.api.Play.current
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -51,10 +51,12 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                           implicit val plaContext: PlaContext)
 extends FrontendController(mcc) with I18nSupport {
 
+
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   val currentProtections = Action.async {
     implicit request =>
+      implicit val lang = mcc.messagesApi.preferred(request).lang
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         plaConnector.readProtections(nino).flatMap { response =>
           response.status match {
@@ -73,7 +75,7 @@ extends FrontendController(mcc) with I18nSupport {
       }
   }
 
-  def redirectFromSuccess(response: HttpResponse, nino: String)(implicit request: Request[AnyContent]): Future[Result] = {
+  def redirectFromSuccess(response: HttpResponse, nino: String)(implicit request: Request[AnyContent], lang: Lang): Future[Result] = {
     responseConstructors.createTransformedReadResponseModelFromJson(Json.parse(response.body)).map {
       readResponseModel =>
         saveAndDisplayExistingProtections(readResponseModel)
@@ -83,7 +85,7 @@ extends FrontendController(mcc) with I18nSupport {
     }
   }
 
-  def saveAndDisplayExistingProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Future[Result] = {
+  def saveAndDisplayExistingProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent], lang: Lang): Future[Result] = {
       val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
       for {
         stepOne <- saveActiveProtection(model.activeProtection)

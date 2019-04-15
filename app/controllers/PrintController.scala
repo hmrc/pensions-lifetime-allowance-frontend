@@ -24,7 +24,7 @@ import constructors.DisplayConstructors
 import javax.inject.Inject
 import models.{PersonalDetailsModel, ProtectionModel}
 import play.api.Logger
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
@@ -44,6 +44,7 @@ class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   val printView = Action.async { implicit request =>
+    implicit val lang = mcc.messagesApi.preferred(request).lang
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
         personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
@@ -55,7 +56,7 @@ class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
 
   private def routePrintView(personalDetailsModel: Option[PersonalDetailsModel],
                              protectionModel: Option[ProtectionModel],
-                             nino: String)(implicit request: Request[AnyContent]): Result = {
+                             nino: String)(implicit request: Request[AnyContent],lang: Lang): Result = {
     protectionModel match {
       case Some(model) =>
         val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)

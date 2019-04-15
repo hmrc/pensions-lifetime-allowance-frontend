@@ -237,6 +237,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
   }
 
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
+    implicit val lang = mcc.messagesApi.preferred(request).lang
      authFunction.genericAuthWithNino("existingProtections") { nino =>
       val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
       keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {

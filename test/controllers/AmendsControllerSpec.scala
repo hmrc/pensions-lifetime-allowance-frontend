@@ -257,7 +257,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
     "there is a stored, updated amends model" in new Setup {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockDisplayConstructors.createAmendDisplayModel(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
+      when(mockDisplayConstructors.createAmendDisplayModel(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
 
       val result = await(controller.amendsSummary("ip2014", "dormant")(fakeRequest))
       val jsoupDoc = Jsoup.parse(bodyOf(result))
