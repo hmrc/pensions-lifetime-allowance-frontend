@@ -82,7 +82,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
   override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
   override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
 
-  override val feedbackSurvey: String = servicesConfig.getString("feedback-survey-frontend.url")
+  override val feedbackSurvey: String = servicesConfig.getString("feedback-frontend.url")
 
   override val validStatusMetric: String = servicesConfig.getString("valid-protection-status")
   override val invalidStatusMetric: String = servicesConfig.getString("invalid-protection-status")
