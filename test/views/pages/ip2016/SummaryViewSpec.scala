@@ -156,8 +156,8 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
 
     "have the right headers" in{
       doc.select("h1").eq(1).text shouldBe plaSummaryGetIP16
-      doc.select("h2").eq(0).text shouldBe plaSummaryPensionsHeading
-      doc.select("h2").eq(1).text shouldBe plaSummaryPsosHeading
+      doc.select("caption").get(0).text shouldBe plaSummaryPensionsHeading
+      doc.select("caption").get(1).text shouldBe plaSummaryPsosHeading
     }
 
     "have the right explanatory text" in{

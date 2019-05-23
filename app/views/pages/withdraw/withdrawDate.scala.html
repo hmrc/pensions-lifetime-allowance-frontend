@@ -36,21 +36,25 @@
     <a class="back-link" style="margin-bottom: 0px" href=@routes.WithdrawProtectionController.withdrawImplications()>Back</a>
 
 
-    <h1 class="heading-large">@Messages("pla.withdraw.date-input.title")</h1>
 
-    @if(withdrawDateForm.hasErrors){
-    @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), withdrawDateForm)
-    }
+@if(withdrawDateForm.hasErrors){
+@govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), withdrawDateForm)
+}
 
-    @govHelpers.form(action = routes.WithdrawProtectionController.postWithdrawDateInput()) {
+@govHelpers.form(action = routes.WithdrawProtectionController.postWithdrawDateInput()) {
 
-        <div class="inline form-group">
+<div class="inline form-group">
 
-            <div class="form-group">
+    <div class="form-group">
 
-                <fieldset class="form-group form-date @if(withdrawDateForm.hasErrors) {form-field--error}" id="pso-fieldset">
+        <fieldset class="form-group form-date @if(withdrawDateForm.hasErrors) {form-field--error}" id="pso-fieldset">
 
-                    <span class="form-hint">@Messages("pla.withdraw.date-input.form-hint")</span>
+            <legend>
+                <h1 class="heading-large">@Messages("pla.withdraw.date-input.title")</h1>
+            </legend>
+
+
+            <span class="form-hint">@Messages("pla.withdraw.date-input.form-hint")</span>
                     @withdrawDateForm.errors.map { error => <span class="error-notification">@Messages(error.message, error.args: _*)</span> }
 
                     <label for="withdrawDay" class="form-group form-group-day">

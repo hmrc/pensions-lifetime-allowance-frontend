@@ -27,20 +27,20 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val bootstrapVersion = "0.38.0"
-  private val govukTemplateVersion = "5.31.0-play-26"
-  private val playUiVersion = "7.38.0-play-26"
-  private val playPartialsVersion = "6.7.0-play-26"
-  private val hmrcTestVersion = "3.7.0-play-26"
-  private val scalaTestVersion = "3.0.0"
+  private val bootstrapVersion = "0.40.0"
+  private val govukTemplateVersion = "5.35.0-play-26"
+  private val playUiVersion = "7.40.0-play-26"
+  private val playPartialsVersion = "6.9.0-play-26"
+  private val hmrcTestVersion = "3.8.0-play-26"
+  private val scalaTestVersion = "3.0.7"
   private val scalaTestPlusVersion = "3.1.2"
   private val pegdownVersion = "1.6.0"
-  private val cachingClientVersion = "8.2.0"
-  private val mongoCachingVersion = "6.3.0-play-26"
+  private val cachingClientVersion = "8.3.0"
+  private val mongoCachingVersion = "6.4.0-play-26"
   private val playLanguageVersion = "3.4.0"
-  private val authClientVersion = "2.20.0-play-26"
+  private val authClientVersion = "2.21.0-play-26"
   private val localTemplateRendererVersion = "2.4.0"
-  private val wireMockVersion          = "2.22.0"
+  private val wireMockVersion          = "2.23.2"
 
   val compile = Seq(
     ws,
@@ -66,7 +66,7 @@ private object AppDependencies {
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "org.jsoup" % "jsoup" % "1.11.3" % scope,
+        "org.jsoup" % "jsoup" % "1.12.1" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.mockito" % "mockito-core" % "2.27.0" % scope
       )
@@ -82,12 +82,12 @@ private object AppDependencies {
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "org.jsoup" % "jsoup" % "1.11.3" % scope,
+        "org.jsoup" % "jsoup" % "1.12.1" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
         "org.mockito" % "mockito-core" % "2.27.0" % scope,
         "com.github.tomakehurst"  %  "wiremock" % wireMockVersion % scope, 
-        "com.github.tomakehurst" % "wiremock-jre8" % "2.22.0" % "test,it"
+        "com.github.tomakehurst" % "wiremock-jre8" % "2.23.2" % "test,it"
 
       )
     }.test

@@ -57,10 +57,6 @@ class DisplaySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
   "dateDisplayString" should {
     def createLangMessages(languageCode: Locale): (Lang, Messages) = {
-      val application = fakeApplication
-      val messagesApiCache = Application.instanceCache[MessagesApi]
-      val messagesRequest = new MessagesRequest(FakeRequest(), messagesApiCache.apply(application))
-
       val lang = new Lang(languageCode)
       (lang, MessagesImpl(lang, mockMCC))
     }

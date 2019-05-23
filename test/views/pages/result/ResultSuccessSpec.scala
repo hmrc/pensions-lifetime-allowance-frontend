@@ -44,14 +44,14 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
     "have a results section which" should {
 
       lazy val firstPara = doc.select("p").get(0)
-      lazy val protecAmount = doc.select("span").get(1)
+      lazy val protecAmount = doc.select("span").get(0)
 
       "have an initial heading with the text" in {
-        doc.select("span").get(0).text shouldBe "You've added fixed protection 2016"
+        doc.select("h1").text shouldBe "You've added fixed protection 2016"
       }
 
       "have an initial heading with the id" in {
-        doc.select("span").get(0).attr("id") shouldBe "resultOutcome"
+        doc.select("h1").attr("id") shouldBe "resultOutcome"
       }
 
       "have a paragraph with the text" in {

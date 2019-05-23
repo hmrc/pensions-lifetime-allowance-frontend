@@ -18,6 +18,7 @@ package views.pages.withdraw
 
 import controllers.routes
 import org.jsoup.Jsoup
+import play.api.i18n.Lang
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmSpecMessages
 import views.html.pages.withdraw.{withdrawConfirm => views}
@@ -25,7 +26,9 @@ import views.html.pages.withdraw.{withdrawConfirm => views}
 class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmSpecMessages {
 
   "Withdraw Confirm view" when {
-    val withdrawDate = "16/01/2018"
+    implicit val lang = mock[Lang]
+    val withdrawDate = "2018-01-16"
+    val withdrawDatePretty = "16 January 2018"
     lazy val view = views(withdrawDate, "ip14", "dormant")
     lazy val doc = Jsoup.parse(view.body)
 
@@ -69,7 +72,7 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
       lazy val grid = doc.select("div.grid")
 
       s"has the first paragraph of ${"pla.withdraw.protection.what-happens.info.1"}" in {
-        grid.select("p").get(0).text shouldBe plaWithdrawProtectionWhatHappensInfo1(withdrawDate)
+        grid.select("p").get(0).text shouldBe plaWithdrawProtectionWhatHappensInfo1(withdrawDatePretty)
       }
 
       s"has the second paragraph of $plaWithdrawProtectionWhatHappensInfo2" in {
@@ -77,11 +80,11 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
       }
 
       s"has the third paragraph of ${"pla.withdraw.protection.what-happens.info.3"}" in {
-        grid.select("p").get(2).text shouldBe plaWithdrawProtectionWhatHappensInfo3(withdrawDate)
+        grid.select("p").get(2).text shouldBe plaWithdrawProtectionWhatHappensInfo3(withdrawDatePretty)
       }
 
       s"has the fourth paragraph of ${"pla.withdraw.protection.what-happens.info.4"}" in {
-        grid.select("p").get(3).text shouldBe plaWithdrawProtectionWhatHappensInfo4(withdrawDate)
+        grid.select("p").get(3).text shouldBe plaWithdrawProtectionWhatHappensInfo4(withdrawDatePretty)
       }
 
       s"has the fifth paragraph of $plaWithdrawProtectionWhatHappensInfo5" in {

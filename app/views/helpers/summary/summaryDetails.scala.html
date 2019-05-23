@@ -33,10 +33,10 @@
 <div class="grid-wrapper"></div>
 
     <table>
-    <thead>
-        <tr>
+        <caption class="heading-medium">@Messages("pla.summary.pensionsHeading")</caption>
+        <thead>
+    <tr>
             <th colspan="@if(removeLinkDefined){4} else {3}">
-                <h2>@Messages("pla.summary.pensionsHeading")</h2>
             </th>
         </tr>
     </thead>
@@ -46,11 +46,12 @@
         @summarySection(section, removeLinkDefined)
 
     }
-
-    <thead>
-        <tr>
+    </table>
+    <table>
+        <caption class="heading-medium">@Messages("pla.summary.psosHeading")</caption>
+        <thead>
+    <tr>
             <th colspan="@if(removeLinkDefined){4} else {3}">
-                <h2>@Messages("pla.summary.psosHeading")</h2>
             </th>
         </tr>
     </thead>
