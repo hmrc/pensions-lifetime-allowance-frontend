@@ -16,15 +16,19 @@
 
 package common
 
-import uk.gov.hmrc.play.test.UnitSpec
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import common.Dates._
 import java.time.LocalDate
+import java.util.Locale
 
-class DatesSpec extends UnitSpec {
+import play.api.i18n.{Lang, Messages, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
+
+class DatesSpec extends UnitSpec with WithFakeApplication {
 
   "constructDate" should {
 
-    "correctly create a LocalDate" in { 
+    "correctly create a LocalDate" in {
       val tstDate = LocalDate.of(2016, 6, 4)
       constructDate(4, 6, 2016) shouldBe tstDate
     }
@@ -78,4 +82,28 @@ class DatesSpec extends UnitSpec {
     }
   }
 
+  "withDrawDateString" should {
+    val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi
+
+    def createLangMessages(languageCode: Locale): (Lang, Messages) = {
+      val lang = new Lang(languageCode)
+      (lang, MessagesImpl(lang, mockMCC))
+    }
+
+    "return a date in the format d-MMMM-YYYY" when {
+
+      "the language is set to English" in {
+        val date = "2019-05-22"
+        val(lang, messages) = createLangMessages(Locale.ENGLISH)
+        withDrawDateString(date)(lang, messages) shouldBe "22 May 2019"
+      }
+
+      "the language is set to Welsh" in {
+        val date = "2019-05-22"
+        val(lang, messages) = createLangMessages(Locale.forLanguageTag("cy"))
+        withDrawDateString(date)(lang, messages) shouldBe "22 Mai 2019"
+
+      }
+    }
+  }
 }

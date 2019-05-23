@@ -45,12 +45,4 @@ object WithdrawDateForm extends CommonBinders{
       else form
     }
   }
-
-  def getWithdrawDate(form: Form[WithdrawDateFormModel]) : String = {
-    Dates.apiDateFormat(form.get.withdrawDay.get,form.get.withdrawMonth.get,form.get.withdrawYear.get)
-  }
-
-  def getWithdrawDateModel(form: WithdrawDateFormModel) : String = {
-    Dates.apiDateFormat(form.withdrawDay.get,form.withdrawMonth.get,form.withdrawYear.get)
-  }
 }

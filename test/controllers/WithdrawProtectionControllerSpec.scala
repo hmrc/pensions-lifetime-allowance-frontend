@@ -17,6 +17,7 @@
 package controllers
 
 import java.time.{LocalDate, LocalDateTime}
+import java.util.Locale
 
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
@@ -35,12 +36,12 @@ import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.mockito.MockitoSugar
-import play.api.{Configuration, Environment}
+import play.api.{Application, Configuration, Environment}
 import play.api.data.Form
 import play.api.http.HeaderNames.CACHE_CONTROL
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.libs.json.{JsNull, JsValue, Json}
-import play.api.mvc.{AnyContent, MessagesControllerComponents, Request, Result}
+import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers.{AuthorisedFakeRequestToPost, MockTemplateRenderer}
@@ -152,6 +153,8 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
   )
 
   val fakeRequest = FakeRequest()
+
+  val lang = mock[Lang]
 
     "In WithdrawProtectionController calling the showWithdrawConfirmation action" should {
 
@@ -404,7 +407,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
       "there is a stored withdrawDateForm" should {
         "return a 400" in new Setup {
           keystoreFetchCondition[WithdrawDateFormModel](None)
-          lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest))
+          lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest, lang))
           status(result) shouldBe INTERNAL_SERVER_ERROR
         }
       }
@@ -412,11 +415,29 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
       "there is no stored withdrawDateForm" should {
         "return a 200" in new Setup {
           keystoreFetchCondition[WithdrawDateFormModel](Some(withdrawDateForm))
-          lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest))
+          lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest, lang))
           status(result) shouldBe OK
         }
       }
     }
+
+  "GetWithdrawDateModel" should {
+
+    "return the correct date" in new Setup {
+        val model = withdrawDateForm
+        controller.getWithdrawDateModel(model) shouldBe "2017-09-05"
+      }
+    }
+
+
+  "GetWithdrawDate" should {
+
+    "return the correct date" in new Setup {
+        val form = WithdrawDateForm.withdrawDateForm.fill(withdrawDateForm)
+        controller.getWithdrawDate(form) shouldBe "2017-09-05"
+      }
+    }
+
 
   def keystoreFetchCondition[T](data: Option[T]): Unit = {
     when(mockKeyStoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -429,5 +450,6 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
     when(mockKeyStoreConnector.saveFormData[T](keyMatcher, ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
       .thenReturn(Future.successful(returnedData.getOrElse(CacheMap("", Map.empty))))
   }
+  
 }
 

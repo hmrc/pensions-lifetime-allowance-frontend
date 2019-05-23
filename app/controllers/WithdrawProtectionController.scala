@@ -16,10 +16,10 @@
 
 package controllers
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
 
 import auth.AuthFunction
-import common.Strings
+import common.{Dates, Display, Strings}
 import config._
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
@@ -30,7 +30,6 @@ import javax.inject.Inject
 import models.{ProtectionModel, WithdrawDateFormModel}
 import play.api.Play.current
 import play.api.data.{Form, FormError}
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.{I18nSupport, Lang, Messages}
 import play.api.libs.json.{Json, OFormat}
 import play.api.mvc._
@@ -133,7 +132,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
   }
 
 
-  private[controllers] def fetchWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) = {
+  private[controllers] def fetchWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_], lang: Lang) = {
     keyStoreConnector.fetchAndGetFormData[WithdrawDateFormModel]("withdrawProtectionForm") map  {
       case Some(form) =>
         Ok(views.html.pages.withdraw.withdrawConfirm(
@@ -147,6 +146,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
 
   def getSubmitWithdrawDateInput: Action[AnyContent] = Action.async {
     implicit request =>
+      implicit val lang = mcc.messagesApi.preferred(request).lang
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap  {
           case Some(protection) =>
@@ -160,6 +160,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
 
   def submitWithdrawDateInput: Action[AnyContent] = Action.async {
     implicit request =>
+      implicit val lang = mcc.messagesApi.preferred(request).lang
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(protection) =>
@@ -224,5 +225,13 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
       withdrawDateForm.copy(errors = finalErrors, data = errorForm.data)
     }
     else errorForm
+  }
+
+  def getWithdrawDate(form: Form[WithdrawDateFormModel]) : String = {
+    Dates.apiDateFormat(form.get.withdrawDay.get,form.get.withdrawMonth.get,form.get.withdrawYear.get)
+  }
+
+  def getWithdrawDateModel(form: WithdrawDateFormModel) : String = {
+    Dates.apiDateFormat(form.withdrawDay.get,form.withdrawMonth.get,form.withdrawYear.get)
   }
 }

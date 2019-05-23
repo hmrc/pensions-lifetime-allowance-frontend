@@ -33,7 +33,7 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
     }
 
     s"have a question of ${"pla.withdraw.confirmation.message"}" in {
-      doc.select("span.heading-large").text() shouldBe plaWithdrawConfirmationMessage(plaWithdrawProtectionIP2014label)
+      doc.select("h1").text() shouldBe plaWithdrawConfirmationMessage(plaWithdrawProtectionIP2014label)
     }
 
     "have a div tag that" should {

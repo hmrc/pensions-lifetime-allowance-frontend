@@ -19,6 +19,8 @@ package common
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+import play.api.i18n.{Lang, Messages}
+
 object Dates {
 
   def constructDate(day: Int, month: Int, year: Int): LocalDate = {
@@ -51,5 +53,10 @@ object Dates {
 
     val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     LocalDate.of(year, month, day).format(dateFormat)
+  }
+
+  def withDrawDateString(date: String)(implicit lang: Lang, messages: Messages) : String = {
+    val localDate = constructDateFromAPIString(date)
+    Display.dateDisplayString(localDate)
   }
 }

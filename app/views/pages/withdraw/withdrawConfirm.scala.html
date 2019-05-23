@@ -20,8 +20,9 @@
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import config.FrontendAppConfig
+@import common.Dates._
 
-@(withdrawDate: String,protectionType: String, status: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(withdrawDate: String, protectionType: String, status: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, lang: Lang)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
@@ -42,10 +43,10 @@
         <h1 class="heading-large">@Messages(s"pla.withdraw.what-happens.info-heading")</h1>
 
         <div class="grid">
-            <p>@Html(Messages("pla.withdraw.protection.what-happens.info.1",withdrawDate))</p>
+            <p>@Html(Messages("pla.withdraw.protection.what-happens.info.1", withDrawDateString(withdrawDate)))</p>
             <p>@Messages("pla.withdraw.protection.what-happens.info.2",Messages(s"pla.withdraw.protection.${protectionType}.label"),Messages(s"pla.withdraw.protection.${protectionType}.label"))</p>
-            <p>@Messages("pla.withdraw.protection.what-happens.info.3",withdrawDate)</p>
-            <p>@Messages("pla.withdraw.protection.what-happens.info.4",withdrawDate)</p>
+            <p>@Messages("pla.withdraw.protection.what-happens.info.3",withDrawDateString(withdrawDate))</p>
+            <p>@Messages("pla.withdraw.protection.what-happens.info.4",withDrawDateString(withdrawDate))</p>
             <p>@Messages("pla.withdraw.protection.what-happens.info.5")</p>
         </div>
 
