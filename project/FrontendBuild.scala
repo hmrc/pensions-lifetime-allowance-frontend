@@ -41,6 +41,7 @@ private object AppDependencies {
   private val authClientVersion = "2.21.0-play-26"
   private val localTemplateRendererVersion = "2.4.0"
   private val wireMockVersion          = "2.23.2"
+  private val reactiveMongoVersion = "7.20.0-play-26"
 
   val compile = Seq(
     ws,
@@ -52,7 +53,8 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "auth-client" % authClientVersion,
     "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion,
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
-    "uk.gov.hmrc" %% "play-ui" % playUiVersion
+    "uk.gov.hmrc" %% "play-ui" % playUiVersion,
+    "uk.gov.hmrc" %% "simple-reactivemongo" % reactiveMongoVersion
   )
 
   trait TestDependencies {
