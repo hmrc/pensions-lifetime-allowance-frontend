@@ -49,6 +49,7 @@ trait AppConfig {
   val notFoundStatusMetric: String
   val appName : String
   val frontendTemplatePath: String
+  val googleTagManagerId: String
 }
 
 class FrontendAppConfig @Inject()(val configuration: Configuration, val servicesConfig: ServicesConfig) extends AppConfig {
@@ -90,5 +91,6 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
 
   override lazy val appName: String = loadConfig("appName")
   lazy val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
+  lazy val googleTagManagerId = loadConfig(s"google-tag-manager.id")
 
 }

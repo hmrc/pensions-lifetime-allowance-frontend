@@ -66,7 +66,7 @@ GET         /result-fp16                                                        
 POST        /result-ip16                                                                  @controllers.ResultController.processIPApplication
 GET         /result-ip16                                                                  @controllers.ResultController.displayIP16
 
-GET         /existing-protections                                                         @controllers.ReadProtectionsController.currentProtections
+    GET         /existing-protections                                                         @controllers.ReadProtectionsController.currentProtections
 GET         /print-protection                                                             @controllers.PrintController.printView
 
 ## Amends ##
