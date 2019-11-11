@@ -115,6 +115,13 @@ if(str.trim=="") false else str
     false
 }
 
+@googleTagManager = @{ if(appConfig.googleTagManagerId != "N/A") {
+        Map("gtmId" -> appConfig.googleTagManagerId)
+    } else {
+        false
+    }
+}
+
 @{
 templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath,article, Map[String, Any](
     "pageTitle" -> title,
@@ -125,6 +132,7 @@ templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath,article, M
     "mainContentHeader" -> mainContentHeader,
 
     "googleAnalytics" -> googleAnalytics,
+    "googleTagManager" -> googleTagManager,
     "ssoUrl" -> None,
 
     "betaBanner" -> betaHeaderEnable,

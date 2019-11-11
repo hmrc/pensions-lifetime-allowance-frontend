@@ -31,16 +31,16 @@ private object AppDependencies {
   private val govukTemplateVersion = "5.35.0-play-26"
   private val playUiVersion = "7.40.0-play-26"
   private val playPartialsVersion = "6.9.0-play-26"
-  private val hmrcTestVersion = "3.8.0-play-26"
+  private val hmrcTestVersion = "3.9.0-play-26"
   private val scalaTestVersion = "3.0.7"
   private val scalaTestPlusVersion = "3.1.2"
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "8.3.0"
-  private val mongoCachingVersion = "6.4.0-play-26"
+  private val mongoCachingVersion = "6.6.0-play-26"
   private val playLanguageVersion = "3.4.0"
-  private val authClientVersion = "2.21.0-play-26"
-  private val localTemplateRendererVersion = "2.4.0"
-  private val wireMockVersion          = "2.23.2"
+  private val authClientVersion = "2.31.0-play-26"
+  private val localTemplateRendererVersion = "2.5.0"
+  private val wireMockVersion          = "2.25.1"
   private val reactiveMongoVersion = "7.20.0-play-26"
 
   val compile = Seq(
@@ -70,7 +70,7 @@ private object AppDependencies {
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % "1.12.1" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-        "org.mockito" % "mockito-core" % "2.27.0" % scope
+        "org.mockito" % "mockito-core" % "3.1.0" % scope
       )
     }.test
   }
@@ -87,9 +87,9 @@ private object AppDependencies {
         "org.jsoup" % "jsoup" % "1.12.1" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
-        "org.mockito" % "mockito-core" % "2.27.0" % scope,
+        "org.mockito" % "mockito-core" % "3.1.0" % scope,
         "com.github.tomakehurst"  %  "wiremock" % wireMockVersion % scope, 
-        "com.github.tomakehurst" % "wiremock-jre8" % "2.23.2" % "test,it"
+        "com.github.tomakehurst" % "wiremock-jre8" % "2.25.1" % "test,it"
 
       )
     }.test
