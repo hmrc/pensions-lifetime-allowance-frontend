@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 HM Revenue & Customs
+ * Copyright 2020 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +115,8 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
 
   "Calling amendProtection" should {
     "return 200 from a valid amendProtection request" in new Setup {
-      when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
+      when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
+        (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
       val protectionModel = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
         uncrystallisedRights = Some(100000.00),
@@ -162,8 +163,9 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
 
     "convert json double values to 2 decimal places for applying for ip" in new Setup {
       val expectedJson = Json.parse("""{"uncrystallisedRights":1001.12,"protectionType":"IP2016","postADayBenefitCrystallisationEvents":1100.12,"nonUKRights":1010.12,"relevantAmount":4111.49,"preADayPensionInPayment":1000.12,"pensionDebits":[{"startDate":"2016-02-01","amount":10000.12}]}""")
-      when(mockHttp.POST[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.eq(expectedJson), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
-        .thenReturn(Future.successful(HttpResponse(OK)))
+      when(mockHttp.POST[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
+        (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+       .thenReturn(Future.successful(HttpResponse(OK)))
 
       val userData = CacheMap(tstId, Map(positivePensionsTakenTuple,
                                         positivePensionsTakenBeforeTuple,
@@ -185,7 +187,8 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
                                         "postADayBenefitCrystallisationEvents":2000.12,"preADayPensionInPayment":2000.12,
                                         "uncrystallisedRights":100000.12,"nonUKRights":2000.12,"notificationId":12,
                                         "protectionReference":"PSA123456"}""")
-      when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.eq(expectedJson))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
+      when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
+        (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
       val protectionModel = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
         uncrystallisedRights = Some(100000.1234567891),
@@ -209,7 +212,8 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
       val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
                                         "protectionType":"IP2016","status":"dormant","notificationId":12,
                                         "protectionReference":"PSA123456"}""")
-      when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.eq(expectedJson))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
+      when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
+        (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
       val protectionModel = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
         uncrystallisedRights = None,
@@ -233,7 +237,8 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
       val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
                                         "protectionType":"IP2016","status":"dormant","protectedAmount":1250000.12,"notificationId":12,
                                         "protectionReference":"PSA123456"}""")
-      when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.eq(expectedJson))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
+      when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
+        (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
       val protectionModel = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
         uncrystallisedRights = None,
