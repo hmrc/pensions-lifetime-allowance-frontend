@@ -1,47 +1,23 @@
-/*
- * Copyright 2016 HM Revenue & Customs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 import sbt._
 
-object FrontendBuild extends Build with MicroService {
+object AppDependencies {
 
-  val appName = "pensions-lifetime-allowance-frontend"
-
-  override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
-}
-
-private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val bootstrapVersion = "0.40.0"
-  private val govukTemplateVersion = "5.35.0-play-26"
-  private val playUiVersion = "7.40.0-play-26"
+  private val bootstrapVersion = "1.3.0"
+  private val govukTemplateVersion = "5.48.0-play-26"
+  private val playUiVersion = "8.8.0-play-26"
   private val playPartialsVersion = "6.9.0-play-26"
   private val hmrcTestVersion = "3.9.0-play-26"
   private val scalaTestVersion = "3.0.7"
   private val scalaTestPlusVersion = "3.1.2"
   private val pegdownVersion = "1.6.0"
-  private val cachingClientVersion = "8.3.0"
-  private val mongoCachingVersion = "6.6.0-play-26"
-  private val playLanguageVersion = "3.4.0"
-  private val authClientVersion = "2.31.0-play-26"
+  private val cachingClientVersion = "9.0.0-play-26"
+  private val mongoCachingVersion = "6.8.0-play-26"
   private val localTemplateRendererVersion = "2.5.0"
-  private val wireMockVersion          = "2.25.1"
-  private val reactiveMongoVersion = "7.20.0-play-26"
+  private val wireMockVersion = "2.26.0"
+  private val reactiveMongoVersion = "7.23.0-play-26"
 
   val compile = Seq(
     ws,
@@ -49,8 +25,6 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
     "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
-    "uk.gov.hmrc" %% "play-language" % playLanguageVersion,
-    "uk.gov.hmrc" %% "auth-client" % authClientVersion,
     "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion,
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
@@ -59,7 +33,7 @@ private object AppDependencies {
 
   trait TestDependencies {
     lazy val scope: String = "test"
-    lazy val test : Seq[ModuleID] = Seq.empty
+    lazy val test: Seq[ModuleID] = Seq.empty
   }
 
   object Test {
@@ -70,7 +44,7 @@ private object AppDependencies {
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % "1.12.1" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-        "org.mockito" % "mockito-core" % "3.1.0" % scope
+        "org.mockito" % "mockito-core" % "3.2.4" % scope
       )
     }.test
   }
@@ -88,15 +62,11 @@ private object AppDependencies {
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
         "org.mockito" % "mockito-core" % "3.1.0" % scope,
-        "com.github.tomakehurst"  %  "wiremock" % wireMockVersion % scope, 
+        "com.github.tomakehurst" % "wiremock" % wireMockVersion % scope,
         "com.github.tomakehurst" % "wiremock-jre8" % "2.25.1" % "test,it"
-
       )
     }.test
   }
 
-
   def apply() = compile ++ Test() ++ IntegrationTest()
 }
-
-
