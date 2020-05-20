@@ -17,6 +17,7 @@
 package forms
 
 import forms.WithdrawDateForm.withdrawDateForm
+import org.joda.time.LocalDate
 import org.scalatest.mockito.MockitoSugar
 import play.api.data.FormError
 import play.api.i18n.Lang
@@ -82,7 +83,7 @@ class CommonBindersSpec extends UnitSpec with PSODetailsMessages with WithFakeAp
           val postData = Json.obj(
             "withdrawDay" -> "20",
             "withdrawMonth" -> "2",
-            "withdrawYear" -> "2020"
+            "withdrawYear" -> s"${LocalDate.now.getYear + 1}"
           )
           val validatedForm = withdrawDateForm.bind(postData)
           assert(validatedForm.errors.size == 1)

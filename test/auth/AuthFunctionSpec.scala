@@ -28,6 +28,7 @@ import play.api.{Configuration, Environment, Mode}
 import play.api.i18n.Messages
 import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.mvc.Results._
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers.{KeystoreTestHelper, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core._
@@ -65,7 +66,6 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
 
     override def config: Configuration = mock[Configuration]
     override def env: Environment = mock[Environment]
-    override val postSignInRedirectUrl = "http://www.pla-frontend.gov.uk/ip16-start-page"
     override def personalIVUrl = "http://www.test.com"
     override def ggLoginUrl = "http://www.gglogin.com"
     override def origin = "origin"
@@ -74,6 +74,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
     override implicit val templateRenderer: LocalTemplateRenderer = mock[LocalTemplateRenderer]
     }
 
+  lazy val fakeRequest = FakeRequest(GET, "http://www.pla-frontend.gov.uk/ip16-start-page")
 
   "In AuthFunction calling the genericAuthWithoutNino action" when {
     "passing auth validation" should {
