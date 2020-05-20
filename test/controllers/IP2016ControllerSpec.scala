@@ -70,7 +70,6 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
             override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
             override implicit val plaContext: PlaContext = mockPlaContext
             override implicit val appConfig: FrontendAppConfig = mockAppConfig
-            override val postSignInRedirectUrl: String = ""
             override def authConnector: AuthConnector = mockAuthConnector
             override def config: Configuration = mockAppConfig.configuration
             override def env: Environment = mockEnv
