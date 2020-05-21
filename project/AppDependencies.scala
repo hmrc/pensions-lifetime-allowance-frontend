@@ -14,7 +14,7 @@ object AppDependencies {
   private val scalaTestPlusVersion = "3.1.2"
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "9.0.0-play-26"
-  private val mongoCachingVersion = "6.8.0-play-26"
+  private val mongoCachingVersion = "6.6.0-play-26"
   private val localTemplateRendererVersion = "2.5.0"
   private val wireMockVersion = "2.26.0"
   private val reactiveMongoVersion = "7.23.0-play-26"
