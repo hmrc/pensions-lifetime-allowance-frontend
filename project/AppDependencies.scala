@@ -5,19 +5,19 @@ object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val bootstrapVersion = "1.3.0"
-  private val govukTemplateVersion = "5.48.0-play-26"
-  private val playUiVersion = "8.8.0-play-26"
-  private val playPartialsVersion = "6.9.0-play-26"
+  private val bootstrapVersion = "1.8.0"
+  private val govukTemplateVersion = "5.54.0-play-26"
+  private val playUiVersion = "8.10.0-play-26"
+  private val playPartialsVersion = "6.11.0-play-26"
   private val hmrcTestVersion = "3.9.0-play-26"
-  private val scalaTestVersion = "3.0.7"
+  private val scalaTestVersion = "3.0.8"
   private val scalaTestPlusVersion = "3.1.2"
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "9.0.0-play-26"
-  private val mongoCachingVersion = "6.6.0-play-26"
-  private val localTemplateRendererVersion = "2.5.0"
-  private val wireMockVersion = "2.26.0"
-  private val reactiveMongoVersion = "7.23.0-play-26"
+  private val mongoCachingVersion = "6.12.0-play-26"
+  private val localTemplateRendererVersion = "2.8.0-play-26"
+  private val wireMockVersion = "2.26.3"
+  private val reactiveMongoVersion = "7.26.0-play-26"
 
   val compile = Seq(
     ws,
@@ -42,7 +42,7 @@ object AppDependencies {
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "org.jsoup" % "jsoup" % "1.12.1" % scope,
+        "org.jsoup" % "jsoup" % "1.13.1" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.mockito" % "mockito-core" % "3.2.4" % scope
       )
@@ -58,7 +58,7 @@ object AppDependencies {
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "org.jsoup" % "jsoup" % "1.12.1" % scope,
+        "org.jsoup" % "jsoup" % "1.13.1" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
         "org.mockito" % "mockito-core" % "3.1.0" % scope,
