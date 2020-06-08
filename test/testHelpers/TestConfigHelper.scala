@@ -21,7 +21,7 @@ import config.LocalTemplateRenderer
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
 import play.api.{Configuration, Environment, Play}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Messages
 import services.MetricsService
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}

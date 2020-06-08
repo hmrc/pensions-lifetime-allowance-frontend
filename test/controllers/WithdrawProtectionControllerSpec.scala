@@ -16,9 +16,6 @@
 
 package controllers
 
-import java.time.{LocalDate, LocalDateTime}
-import java.util.Locale
-
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, Materializer}
 import auth.AuthFunction
@@ -27,28 +24,25 @@ import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import forms.WithdrawDateForm
-import forms.WithdrawDateForm.withdrawDateForm
 import mocks.AuthMock
 import models._
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import play.api.{Application, Configuration, Environment}
-import play.api.data.Form
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.HeaderNames.CACHE_CONTROL
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
-import play.api.libs.json.{JsNull, JsValue, Json}
+import play.api.i18n.Lang
+import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.api.{Configuration, Environment}
 import testHelpers.{AuthorisedFakeRequestToPost, MockTemplateRenderer}
-import uk.gov.hmrc.auth.core.{AuthConnector, ConfidenceLevel, Enrolment}
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future

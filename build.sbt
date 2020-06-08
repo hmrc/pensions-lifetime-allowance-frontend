@@ -19,6 +19,7 @@ val appName = "pensions-lifetime-allowance-frontend"
 lazy val appDependencies: Seq[ModuleID] = Seq.empty
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
+val silencerVersion = "1.7.0"
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
@@ -46,7 +47,13 @@ lazy val root = Project(appName, file("."))
     fork in Test := false,
     retrieveManaged := true,
     evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    pipelineStages in Assets := Seq(digest)
+    pipelineStages in Assets := Seq(digest),
+    // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
+    scalacOptions += "-P:silencer:pathFilters=views;routes",
+    libraryDependencies ++= Seq(
+      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
+      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
+    )
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)

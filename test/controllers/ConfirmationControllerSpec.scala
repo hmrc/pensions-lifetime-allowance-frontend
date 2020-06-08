@@ -22,7 +22,7 @@ import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import mocks.AuthMock
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.{Application, Configuration, Environment}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest

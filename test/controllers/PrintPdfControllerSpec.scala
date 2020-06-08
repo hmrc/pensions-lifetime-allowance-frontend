@@ -25,7 +25,7 @@ import models.{PSALookupRequest, PSALookupResult}
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc.{MessagesControllerComponents, Result}

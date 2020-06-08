@@ -19,7 +19,7 @@ package forms
 import models.OverseasPensionsModel
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import OverseasPensionsForm._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.CommonErrorMessages
 import utils.Constants

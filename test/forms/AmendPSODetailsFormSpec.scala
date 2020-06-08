@@ -24,7 +24,7 @@ import testHelpers.PSODetailsMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.Constants
 import common.Exceptions
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 
 class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication with MockitoSugar {

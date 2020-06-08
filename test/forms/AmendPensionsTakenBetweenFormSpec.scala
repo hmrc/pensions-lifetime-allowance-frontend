@@ -20,7 +20,7 @@ import models.amendModels.AmendPensionsTakenBetweenModel
 import testHelpers.CommonErrorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import AmendPensionsTakenBetweenForm._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import utils.Constants
 

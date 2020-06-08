@@ -30,7 +30,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito._
 import org.scalatest.{BeforeAndAfter, BeforeAndAfterEach}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
 import play.api.i18n.Lang
 import play.api.libs.json.{JsValue, Json}
@@ -39,7 +39,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers.MockTemplateRenderer
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient

@@ -18,7 +18,7 @@ package forms
 
 import forms.AmendPensionsTakenBeforeForm._
 import models.amendModels.AmendPensionsTakenBeforeModel
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.CommonErrorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}

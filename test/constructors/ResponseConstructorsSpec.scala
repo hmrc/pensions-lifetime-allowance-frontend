@@ -17,11 +17,11 @@
 package constructors
 
 import com.kenshoo.play.metrics.PlayModule
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import play.api.libs.json.{JsValue, Json}
-import models._
 import enums.ApplicationType
-import org.scalatest.mockito.MockitoSugar
+import models._
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.libs.json.{JsValue, Json}
+import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
   override def bindModules = Seq(new PlayModule)

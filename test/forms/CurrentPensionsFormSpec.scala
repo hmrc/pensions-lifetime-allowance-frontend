@@ -20,7 +20,7 @@ import models.CurrentPensionsModel
 import testHelpers.CommonErrorMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import CurrentPensionsForm._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import utils.Constants
 

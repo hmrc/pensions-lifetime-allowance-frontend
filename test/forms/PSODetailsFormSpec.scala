@@ -20,7 +20,7 @@ import java.time.LocalDate
 
 import forms.PSODetailsForm._
 import models.PSODetailsModel
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.PSODetailsMessages
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}

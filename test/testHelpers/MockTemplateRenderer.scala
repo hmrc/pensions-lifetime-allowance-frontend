@@ -17,7 +17,7 @@
 package testHelpers
 
 import config.{FrontendAppConfig, LocalTemplateRenderer}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Messages
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
