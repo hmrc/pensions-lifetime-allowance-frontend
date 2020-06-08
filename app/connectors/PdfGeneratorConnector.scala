@@ -17,9 +17,8 @@
 package connectors
 
 import javax.inject.Inject
-import play.api.Mode.Mode
 import play.api.libs.ws.{WSClient, WSResponse}
-import play.api.{Configuration, Environment}
+import play.api.{Configuration, Environment, Mode}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import scala.concurrent.Future

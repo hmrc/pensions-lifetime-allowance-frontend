@@ -19,7 +19,7 @@ package constructors
 import com.kenshoo.play.metrics.PlayModule
 import enums.ApplicationType
 import models._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.cache.client.CacheMap

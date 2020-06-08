@@ -18,7 +18,7 @@ package controllers
 
 import auth.MockConfig
 import config.FrontendAppConfig
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.Helpers._

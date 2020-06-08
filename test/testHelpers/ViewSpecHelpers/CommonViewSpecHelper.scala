@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers
 
 import config.wiring.{PlaFormPartialRetriever, SessionCookieCryptoFilterWrapper}
 import config.{FrontendAppConfig, PlaContext}
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import testHelpers.MockTemplateRenderer

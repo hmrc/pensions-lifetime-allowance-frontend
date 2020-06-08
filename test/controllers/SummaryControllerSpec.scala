@@ -31,15 +31,15 @@ import mocks.AuthMock
 import models.SummaryModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
-import play.api.{Configuration, Environment}
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Messages
 import play.api.libs.json.JsValue
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
+import play.api.{Configuration, Environment}
 import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 

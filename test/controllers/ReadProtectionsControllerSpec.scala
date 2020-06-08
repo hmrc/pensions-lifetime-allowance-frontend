@@ -18,7 +18,7 @@ package controllers
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import auth.{AuthFunction, AuthFunctionImpl}
+import auth.AuthFunction
 import config._
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
@@ -29,16 +29,16 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
-import org.scalatest.mockito.MockitoSugar
-import play.api.{Configuration, Environment}
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Lang
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
+import play.api.{Configuration, Environment}
 import testHelpers.MockTemplateRenderer
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.auth.core.retrieve.Retrievals
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
@@ -127,8 +127,6 @@ class ReadProtectionsControllerSpec extends UnitSpec with MockitoSugar with Auth
   val mockCacheMap = mock[CacheMap]
 
   def mockKeystoreSave: OngoingStubbing[Future[CacheMap]] = {
-    import play.api.Configuration
-    import uk.gov.hmrc.auth.core.AuthConnector
     when(mockKeyStoreConnector.saveData(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
       .thenReturn(mockCacheMap)
   }

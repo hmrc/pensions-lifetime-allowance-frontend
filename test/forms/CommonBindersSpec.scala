@@ -18,7 +18,7 @@ package forms
 
 import forms.WithdrawDateForm.withdrawDateForm
 import org.joda.time.LocalDate
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.FormError
 import play.api.i18n.Lang
 import play.api.libs.json.Json

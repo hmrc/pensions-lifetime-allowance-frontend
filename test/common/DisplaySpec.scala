@@ -20,7 +20,7 @@ import java.time.LocalDate
 import java.util.Locale
 
 import common.Display._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.{MessagesControllerComponents, MessagesRequest}

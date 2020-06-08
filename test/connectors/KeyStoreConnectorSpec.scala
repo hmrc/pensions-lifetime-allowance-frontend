@@ -22,7 +22,7 @@ import config.PLASessionCache
 import models._
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.Mode.Mode
 import play.api.{Application, Configuration, Environment}
 import play.api.libs.json.Json

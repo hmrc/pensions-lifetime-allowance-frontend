@@ -53,7 +53,8 @@ trait AppConfig {
 }
 
 class FrontendAppConfig @Inject()(val configuration: Configuration, val servicesConfig: ServicesConfig) extends AppConfig {
-  private def loadConfig(key: String) = configuration.getString(key).getOrElse(throw new Exception(s"Missing key: $key"))
+
+  private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
   private val contactFrontendService = servicesConfig.baseUrl("contact-frontend")
   private val contactHost = servicesConfig.getConfString("contact-frontend.www", "")
@@ -61,27 +62,27 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
 
   override lazy val betaFeedbackUrl = s"$baseUrl/feedback"
   override lazy val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
-  override lazy val analyticsToken: String = configuration.getString(s"google-analytics.token").getOrElse("")
-  override lazy val analyticsHost: String = configuration.getString(s"google-analytics.host").getOrElse("auto")
-  override lazy val ssoUrl: Option[String] = configuration.getString(s"portal.ssoUrl")
+  override lazy val analyticsToken: String = configuration.getOptional[String](s"google-analytics.token").getOrElse("")
+  override lazy val analyticsHost: String = configuration.getOptional[String](s"google-analytics.host").getOrElse("auto")
+  override lazy val ssoUrl: Option[String] = configuration.getOptional[String](s"portal.ssoUrl")
 
   override val contactFormServiceIdentifier = "PLA"
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
   override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
   override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
-  override val excludeCopeTab: Boolean = configuration.getBoolean(s"microservice.services.exclusions.copetab").getOrElse(true)
-  override val identityVerification: Boolean = configuration.getBoolean("microservice.services.features.identityVerification").getOrElse(false)
+  override val excludeCopeTab: Boolean = configuration.getOptional[Boolean](s"microservice.services.exclusions.copetab").getOrElse(true)
+  override val identityVerification: Boolean = configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)
 
-  override lazy val citizenAuthHost = configuration.getString("citizen-auth.host")
-  override lazy val confirmFPUrl = configuration.getString("confirmFP.url").getOrElse("")
-  override lazy val ipStartUrl = configuration.getString("ipStart.url").getOrElse("")
-  override lazy val ip14StartUrl = configuration.getString("ip14Start.url").getOrElse("")
-  override lazy val existingProtectionsUrl = configuration.getString("existingProtections.url").getOrElse("")
-  override lazy val ptaFrontendUrl = configuration.getString("pta-frontend.url").getOrElse("")
+  override lazy val citizenAuthHost = configuration.getOptional[String]("citizen-auth.host")
+  override lazy val confirmFPUrl = configuration.getOptional[String]("confirmFP.url").getOrElse("")
+  override lazy val ipStartUrl = configuration.getOptional[String]("ipStart.url").getOrElse("")
+  override lazy val ip14StartUrl = configuration.getOptional[String]("ip14Start.url").getOrElse("")
+  override lazy val existingProtectionsUrl = configuration.getOptional[String]("existingProtections.url").getOrElse("")
+  override lazy val ptaFrontendUrl = configuration.getOptional[String]("pta-frontend.url").getOrElse("")
 
   override lazy val notAuthorisedRedirectUrl = servicesConfig.getString("not-authorised-callback.url")
-  override val ivUpliftUrl: String = configuration.getString(s"identity-verification-uplift.host").getOrElse("")
-  override val ggSignInUrl: String = configuration.getString(s"government-gateway-sign-in.host").getOrElse("")
+  override val ivUpliftUrl: String = configuration.getOptional[String](s"identity-verification-uplift.host").getOrElse("")
+  override val ggSignInUrl: String = configuration.getOptional[String](s"government-gateway-sign-in.host").getOrElse("")
 
   override val feedbackSurvey: String = servicesConfig.getString("feedback-frontend.url")
 
@@ -90,7 +91,10 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
   override val notFoundStatusMetric: String = servicesConfig.getString("not-found-protection-status")
 
   override lazy val appName: String = loadConfig("appName")
-  lazy val frontendTemplatePath: String = configuration.getString("microservice.services.frontend-template-provider.path").getOrElse("/template/mustache")
+
+  lazy val frontendTemplatePath: String = configuration.getOptional[String]("microservice.services.frontend-template-provider.path")
+    .getOrElse("/template/mustache")
+
   lazy val googleTagManagerId = loadConfig(s"google-tag-manager.id")
 
 }

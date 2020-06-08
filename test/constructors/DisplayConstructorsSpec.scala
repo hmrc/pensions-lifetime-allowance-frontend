@@ -23,7 +23,7 @@ import models._
 import models.amendModels.AmendProtectionModel
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.when
-import org.scalatest.mockito.MockitoSugar
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
 import play.api.i18n.{Lang, Messages}
