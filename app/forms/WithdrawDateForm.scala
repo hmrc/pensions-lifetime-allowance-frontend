@@ -18,9 +18,7 @@ package forms
 
 import java.time.{LocalDate, LocalDateTime}
 
-import common.Dates
 import models.WithdrawDateFormModel
-import play.api.Play.current
 import play.api.data.Form
 import play.api.data.Forms._
 

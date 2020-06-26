@@ -16,22 +16,19 @@
 
 package controllers
 
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext, PlaContextImpl}
 import config.wiring.PlaFormPartialRetriever
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
 import enums.IdentityVerificationResult
 import javax.inject.Inject
-import play.api.Logger
-import play.api.Play.current
-import play.api.i18n.{I18nSupport, Lang}
-import play.api.i18n.Messages.Implicits._
+import play.api.i18n.I18nSupport
 import play.api.mvc._
+import play.api.{Application, Logger}
 import uk.gov.hmrc.http.NotFoundException
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.pages.ivFailure._
-
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 
 class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
@@ -40,7 +37,8 @@ class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVe
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val plaContext: PlaContext,
                                        implicit val partialRetriever: PlaFormPartialRetriever,
-                                       implicit val templateRenderer:LocalTemplateRenderer) extends FrontendController(mcc) with I18nSupport {
+                                       implicit val templateRenderer:LocalTemplateRenderer,
+                                       implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
 
   val issuesKey = "previous-technical-issues"
 

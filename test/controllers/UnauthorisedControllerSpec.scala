@@ -18,7 +18,6 @@ package controllers
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
@@ -27,8 +26,9 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.Application
 import play.api.http.Status
-import play.api.libs.json.{Format, JsNull, Json}
+import play.api.libs.json.{Format, Json}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -59,6 +59,7 @@ class UnauthorisedControllerSpec  extends UnitSpec with MockitoSugar with WithFa
   implicit val hc: HeaderCarrier = mock[HeaderCarrier]
   implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+  implicit val application = mock[Application]
 
   object MockIdentityVerificationHttp extends MockitoSugar {
     val possibleJournies = Map(

@@ -17,7 +17,7 @@ class TestControllerCSpec extends UnitSpec with GuiceOneServerPerSuite with Inte
         stubPost("/test-only/protections/insert", OK , "")
 
         def request: WSResponse = ws.url(protectionInsertUrl)
-            .withHeaders(("Csrf-Token" , "nocheck"),("Content-Type" , "application/json"))
+          .addHttpHeaders(("Csrf-Token" , "nocheck"),("Content-Type" , "application/json"))
           .post(
             Json.parse(
               """{
@@ -78,7 +78,7 @@ class TestControllerCSpec extends UnitSpec with GuiceOneServerPerSuite with Inte
         stubDelete("/test-only/protections/removeAll", OK , "All protections deleted" )
 
         def request: WSResponse = ws.url(protectionDeleteAllUrl)
-          .withHeaders(("Csrf-Token" , "nocheck"),("Content-Type" , "application/json"))
+          .addHttpHeaders(("Csrf-Token" , "nocheck"),("Content-Type" , "application/json"))
           .delete()
 
         request.status shouldBe OK
@@ -97,7 +97,7 @@ class TestControllerCSpec extends UnitSpec with GuiceOneServerPerSuite with Inte
         stubDelete(s"/test-only/individuals/$nino/protections", OK , s"$nino deleted" )
 
         def request: WSResponse = ws.url(protectionDeleteNinoUrl)
-          .withHeaders(("Csrf-Token" , "nocheck"),("Content-Type" , "application/json"))
+          .addHttpHeaders(("Csrf-Token" , "nocheck"),("Content-Type" , "application/json"))
           .delete()
 
         request.status shouldBe OK

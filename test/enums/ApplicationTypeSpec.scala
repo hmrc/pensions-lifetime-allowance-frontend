@@ -16,7 +16,6 @@
 
 package enums
 
-import play.api.libs.json.{JsString, Json}
 import uk.gov.hmrc.play.test.UnitSpec
 
 class ApplicationTypeSpec extends UnitSpec {

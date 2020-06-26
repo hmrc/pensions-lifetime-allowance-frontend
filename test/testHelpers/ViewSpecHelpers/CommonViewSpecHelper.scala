@@ -23,7 +23,6 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import testHelpers.MockTemplateRenderer
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 trait CommonViewSpecHelper extends UnitSpec with CommonMessages with MockitoSugar with WithFakeApplication {

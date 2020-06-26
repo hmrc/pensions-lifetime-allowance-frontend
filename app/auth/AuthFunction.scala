@@ -19,14 +19,14 @@ import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import javax.inject.Inject
 import play.api.i18n.Messages
+import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.{Configuration, Environment, Logger}
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.{AuthorisedFunctions, _}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-import play.api.mvc.Results._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -76,7 +76,7 @@ trait AuthFunction extends AuthRedirects with AuthorisedFunctions {
   }
 
 
-  def authErrorHandling(pType: String)(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): PartialFunction[Throwable, Result] = {
+  def authErrorHandling(pType: String)(implicit request: Request[AnyContent], messages: Messages): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession => toGGLogin(request.uri)
     case _: InsufficientEnrolments => Redirect(IVUpliftURL)
     case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL)

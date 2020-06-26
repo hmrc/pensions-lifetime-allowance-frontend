@@ -22,6 +22,8 @@ import models._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import play.api.libs.json.Json
+import play.api.mvc.MessagesControllerComponents
+import play.api.test.FakeRequest
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.CallMap
@@ -30,6 +32,9 @@ class SummaryConstructorSpec extends UnitSpec with WithFakeApplication with Mock
 
   implicit val mockLang = mock[Lang]
 
+  lazy implicit val fakeRequest = FakeRequest()
+
+  implicit lazy val mockMessage = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   override def bindModules = Seq(new PlayModule)
   object TestSummaryConstructor extends SummaryConstructor

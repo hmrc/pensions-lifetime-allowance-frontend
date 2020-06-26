@@ -18,7 +18,7 @@ package enums
 
 import com.kenshoo.play.metrics.PlayModule
 import org.scalatest.{FlatSpec, Matchers}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import uk.gov.hmrc.play.test.WithFakeApplication
 
 class ApplicationStageSpec extends FlatSpec with Matchers with WithFakeApplication{
   override def bindModules = Seq(new PlayModule)

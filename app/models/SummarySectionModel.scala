@@ -16,8 +16,6 @@
 
 package models
 
-import enums.ApplicationType
-
 case class SummarySectionModel(rows: Seq[SummaryRowModel]) {
 
 }

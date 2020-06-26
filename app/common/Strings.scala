@@ -18,7 +18,6 @@ package common
 
 import enums.ApplicationType
 import models.ProtectionModel
-import models.amendModels.AmendProtectionModel
 
 object Strings {
 

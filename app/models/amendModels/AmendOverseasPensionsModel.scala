@@ -15,7 +15,6 @@
  */
 
 package models.amendModels
-import models.YesNoAmountModel
 import play.api.libs.json.Json
 
 case class AmendOverseasPensionsModel(amendedOverseasPensions: String, amendedOverseasPensionsAmt: Option[BigDecimal], protectionType: String, status: String) extends AmendValueModel

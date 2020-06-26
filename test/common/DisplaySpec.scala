@@ -21,10 +21,8 @@ import java.util.Locale
 
 import common.Display._
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Application
-import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
-import play.api.mvc.{MessagesControllerComponents, MessagesRequest}
-import play.api.test.FakeRequest
+import play.api.i18n.{Lang, Messages, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 class DisplaySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
