@@ -27,6 +27,8 @@ import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
+import uk.gov.hmrc.http.HttpReads.Implicits._
+
 class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, http: DefaultHttpClient)
                                               (implicit executionContext: ExecutionContext){
   val serviceUrl = appConfig.servicesConfig.baseUrl("identity-verification")

@@ -22,13 +22,15 @@ import com.github.mustachejava.Mustache
 import javax.inject.Inject
 import play.api.i18n.Messages
 import play.twirl.api.Html
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.renderer.TemplateRenderer
 import scala.language.postfixOps
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
+
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 class LocalTemplateRenderer @Inject()(appConfig: FrontendAppConfig,
                                      WSHttp: DefaultHttpClient)
@@ -39,7 +41,7 @@ class LocalTemplateRenderer @Inject()(appConfig: FrontendAppConfig,
   private implicit val hc = HeaderCarrier()
 
   override def fetchTemplate(path: String): Future[String] =  {
-    WSHttp.GET(path).map(_.body)
+    WSHttp.GET[HttpResponse](path).map(_.body)
   }
 
   private def renderTemplate(path: String)(content: Html, extraArgs: Map[String, Any])(implicit messages: Messages): Html = {

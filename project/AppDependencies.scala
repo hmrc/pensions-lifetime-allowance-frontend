@@ -5,7 +5,7 @@ object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val bootstrapVersion = "1.8.0"
+  private val bootstrapVersion = "1.10.0"
   private val govukTemplateVersion = "5.55.0-play-26"
   private val playUiVersion = "8.11.0-play-26"
   private val playPartialsVersion = "6.11.0-play-26"
@@ -14,10 +14,10 @@ object AppDependencies {
   private val scalaTestPlusVersion = "3.1.3"
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "9.1.0-play-26"
-  private val mongoCachingVersion = "6.13.0-play-26"
+  private val mongoCachingVersion = "6.14.0-play-26"
   private val localTemplateRendererVersion = "2.9.0-play-26"
   private val wireMockVersion = "2.26.3"
-  private val reactiveMongoVersion = "7.27.0-play-26"
+  private val reactiveMongoVersion = "7.29.0-play-26"
 
   val compile = Seq(
     ws,

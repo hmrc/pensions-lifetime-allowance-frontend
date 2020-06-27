@@ -19,9 +19,12 @@ package connectors
 import config.FrontendAppConfig
 import javax.inject.Inject
 import play.api.libs.json.JsValue
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+
 import scala.concurrent.{ExecutionContext, Future}
+
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 class StubConnector @Inject()(appConig: FrontendAppConfig,
                              http: DefaultHttpClient)(implicit ec: ExecutionContext) {
@@ -33,15 +36,15 @@ class StubConnector @Inject()(appConig: FrontendAppConfig,
   private def insertProtectionsUrl = s"$serviceUrl/test-only/protections/insert"
 
   def deleteProtectionByNino(nino: String)(implicit hc: HeaderCarrier): Future[Int] = {
-    http.DELETE(deleteProtectionByNinoUrl(nino)).map{_.status}
+    http.DELETE[HttpResponse](deleteProtectionByNinoUrl(nino)).map{_.status}
   }
 
   def deleteProtections()(implicit hc: HeaderCarrier): Future[Int] = {
-    http.DELETE(deleteProtectionsUrl).map{_.status}
+    http.DELETE[HttpResponse](deleteProtectionsUrl).map{_.status}
   }
 
   def insertProtections(payload: JsValue)(implicit hc: HeaderCarrier): Future[Int] = {
-    http.POST(insertProtectionsUrl,payload).map{_.status}
+    http.POST[JsValue,HttpResponse](insertProtectionsUrl,payload).map{_.status}
   }
 }
 
