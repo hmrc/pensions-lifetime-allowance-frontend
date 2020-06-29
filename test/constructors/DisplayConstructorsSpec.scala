@@ -21,24 +21,21 @@ import common.Helpers
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
-import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.when
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{Lang, Messages}
-import play.api.libs.json.Json
-import play.api.test.Helpers.OK
-import uk.gov.hmrc.http.HttpResponse
+import play.api.i18n.{Lang, Messages, MessagesProvider}
+import play.api.mvc.{ControllerComponents, MessagesControllerComponents}
+import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
-import scala.concurrent.Future
 
 class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
 
+  lazy implicit val fakeRequest = FakeRequest()
   implicit val mockLang   = mock[Lang]
-  val displayConstructor  = new DisplayConstructors()
-
+  implicit val mockMessagesProvider = mock[MessagesProvider]
+  implicit val controllerComponents = mock[ControllerComponents]
+  val displayConstructor: DisplayConstructors  = fakeApplication.injector.instanceOf[DisplayConstructors]
+  implicit lazy val mockMessage = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   override def bindModules = Seq(new PlayModule)
 

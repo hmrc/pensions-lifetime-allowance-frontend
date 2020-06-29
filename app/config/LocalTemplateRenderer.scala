@@ -25,8 +25,7 @@ import play.twirl.api.Html
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.renderer.TemplateRenderer
-
-import scala.collection.JavaConversions._
+import scala.language.postfixOps
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -44,8 +43,9 @@ class LocalTemplateRenderer @Inject()(appConfig: FrontendAppConfig,
   }
 
   private def renderTemplate(path: String)(content: Html, extraArgs: Map[String, Any])(implicit messages: Messages): Html = {
+    import collection.JavaConverters._
     val isWelsh = messages.lang.code.take(2)=="cy"
-    val attributes: java.util.Map[String, Any] = mapAsJavaMap(Map("article" -> content.body, "isWelsh" -> isWelsh)) ++ extraArgs
+    val attributes: java.util.Map[String, Any] = (Map("article" -> content.body, "isWelsh" -> isWelsh) ++ extraArgs).asJava
     val m: Mustache = cache.get(path)
     val sw = new StringWriter()
     m.execute(sw, attributes)

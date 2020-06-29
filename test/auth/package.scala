@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import java.net.{URLEncoder, URI}
-
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.SessionKeys
 
@@ -31,20 +29,27 @@ package object auth {
 
   val GovernmentGatewayId = "GGW"
 
+  private case object FakeRequestKeyConsts {
+    val UserId = SessionKeys.userId
+    val SessionId = SessionKeys.sessionId
+    val LastRequestTimestamp = SessionKeys.lastRequestTimestamp
+    val Token = "token"
+    val AuthProvider = "ap"
+  }
+
   def authenticatedFakeRequest(provider: String = GovernmentGatewayId,
                                userId: String = mockUserId) =
     FakeRequest().withSession(
-      SessionKeys.userId-> userId,
-      SessionKeys.sessionId -> s"session-${UUID.randomUUID()}",
-      SessionKeys.lastRequestTimestamp -> DateTimeUtils.now.getMillis.toString,
-      SessionKeys.token -> "ANYOLDTOKEN",
-
-      SessionKeys.authProvider -> provider
-  )
+      FakeRequestKeyConsts.UserId-> userId,
+      FakeRequestKeyConsts.SessionId -> s"session-${UUID.randomUUID()}",
+      FakeRequestKeyConsts.LastRequestTimestamp -> DateTimeUtils.now.getMillis.toString,
+      FakeRequestKeyConsts.Token -> "ANYOLDTOKEN",
+      FakeRequestKeyConsts.AuthProvider -> provider
+    )
 
   def weakCredentialsFakeRequest(provider: String = GovernmentGatewayId) =
     authenticatedFakeRequest(provider, "/auth/oid/mockweak")
 
   def lowConfidenceFakeRequest(provider: String = GovernmentGatewayId) =
-  authenticatedFakeRequest(provider, "/auth/oid/mocklowconfidence")
+    authenticatedFakeRequest(provider, "/auth/oid/mocklowconfidence")
 }

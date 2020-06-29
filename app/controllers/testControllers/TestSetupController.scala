@@ -23,16 +23,14 @@ import javax.inject.Inject
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
-
 import scala.concurrent.ExecutionContext.Implicits.global
-
 
 class TestSetupController @Inject()(connector: StubConnector,
                                     implicit val partialRetriever: PlaFormPartialRetriever,
                                     implicit val templateRenderer:LocalTemplateRenderer,
                                     mcc: MessagesControllerComponents) extends FrontendController(mcc) {
 
-  def insertProtections(): Action[JsValue] = Action.async(BodyParsers.parse.json) { implicit request =>
+  def insertProtections(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     val payload: JsValue = request.body
     connector.insertProtections(payload).map {
       case OK => Ok

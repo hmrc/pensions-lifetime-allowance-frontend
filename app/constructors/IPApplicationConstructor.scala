@@ -16,14 +16,11 @@
 
 package constructors
 
-import java.io.Serializable
-
-import common.Validation
-import common.Strings.nameString
 import common.Dates.apiDateFormat
-import models._
+import common.Strings.nameString
+import common.Validation
 import enums.ApplicationType
-import play.api.Logger
+import models._
 import uk.gov.hmrc.http.cache.client.CacheMap
 
 object IPApplicationConstructor {

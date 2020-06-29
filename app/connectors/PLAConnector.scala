@@ -27,9 +27,8 @@ import play.api.libs.json._
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class PLAConnector @Inject()(appConfig: FrontendAppConfig,
                                 http: DefaultHttpClient) {
@@ -43,14 +42,15 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
     def read(method: String, url: String, response: HttpResponse) = ResponseHandler.handlePLAResponse(method, url, response)
   }
 
-  def applyFP16(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+  def applyFP16(nino: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val requestJson: JsValue = Json.parse("""{"protectionType":"FP2016"}""")
     http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
   }
 
   protected val roundDown = of[JsNumber].map { case JsNumber(n) => JsNumber(n.setScale(2, BigDecimal.RoundingMode.DOWN)) }
 
-  protected def getProperties(cc: AnyRef) = (Map[String, Any]() /: cc.getClass.getDeclaredFields) { (a, f) =>
+  protected def getProperties(cc: AnyRef): Map[String, Any] = cc.getClass.getDeclaredFields
+    .foldLeft(Map[String, Any]()) { (a, f) =>
     f.setAccessible(true)
     a + (f.getName -> f.get(cc))
   }
@@ -94,7 +94,7 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
     r
   }
 
-  def applyIP16(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+  def applyIP16(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     implicit val protectionType = ApplicationType.IP2016
     val application = IPApplicationConstructor.createIPApplication(userData)
     val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
@@ -102,18 +102,18 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
     http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", body)
   }
 
-  def applyIP14(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+  def applyIP14(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     implicit val protectionType = ApplicationType.IP2014
     val application = IPApplicationConstructor.createIPApplication(userData)
     val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
     http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
   }
 
-  def readProtections(nino: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+  def readProtections(nino: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     http.GET[HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections")
   }
 
-  def amendProtection(nino: String, protection: ProtectionModel)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+  def amendProtection(nino: String, protection: ProtectionModel)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val id = protection.protectionID.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino))
     val requestJson = Json.toJson[ProtectionModel](protection)
     val body = requestJson.transform(transformer(protection)).get
@@ -121,7 +121,7 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
     http.PUT[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id", body)
   }
 
-  def psaLookup(psaRef: String, ltaRef: String)(implicit hc: HeaderCarrier): Future[HttpResponse] = {
+  def psaLookup(psaRef: String, ltaRef: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     http.GET[HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/psalookup/$psaRef/$ltaRef")
   }
 }

@@ -26,7 +26,7 @@ import scala.concurrent.Future
 class AccountController @Inject()(appConfig: FrontendAppConfig,
                                  mcc: MessagesControllerComponents) extends FrontendController(mcc) {
 
-  def signOut: Action[AnyContent] = Action.async { implicit request =>
+  def signOut: Action[AnyContent] = Action.async {
     Future.successful(Redirect(appConfig.feedbackSurvey).withNewSession)
   }
 }

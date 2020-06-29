@@ -22,21 +22,22 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
-import play.api.{Environment, Mode}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with WithFakeApplication {
 
   val mockEnv       = mock[Environment]
   val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   val mockHttp      = mock[DefaultHttpClient]
+  implicit val executionContext = fakeApplication.injector.instanceOf[ExecutionContext]
 
   class Setup {
     val connector = new PLAConnector(mockAppConfig, mockHttp)
@@ -162,7 +163,6 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
   "Calling with 10 decimal places" should {
 
     "convert json double values to 2 decimal places for applying for ip" in new Setup {
-      val expectedJson = Json.parse("""{"uncrystallisedRights":1001.12,"protectionType":"IP2016","postADayBenefitCrystallisationEvents":1100.12,"nonUKRights":1010.12,"relevantAmount":4111.49,"preADayPensionInPayment":1000.12,"pensionDebits":[{"startDate":"2016-02-01","amount":10000.12}]}""")
       when(mockHttp.POST[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
         (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
        .thenReturn(Future.successful(HttpResponse(OK)))
@@ -182,11 +182,6 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
     }
 
     "convert json double values to 2 decimal places for amending ips" in new Setup {
-      val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
-                                        "protectionType":"IP2016","status":"dormant","protectedAmount":1250000.12,
-                                        "postADayBenefitCrystallisationEvents":2000.12,"preADayPensionInPayment":2000.12,
-                                        "uncrystallisedRights":100000.12,"nonUKRights":2000.12,"notificationId":12,
-                                        "protectionReference":"PSA123456"}""")
       when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
         (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
       val protectionModel = ProtectionModel(
@@ -209,9 +204,6 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
     }
 
     "not fail when not able to convert json double values to 2 decimal places for amending ips" in new Setup {
-      val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
-                                        "protectionType":"IP2016","status":"dormant","notificationId":12,
-                                        "protectionReference":"PSA123456"}""")
       when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
         (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
       val protectionModel = ProtectionModel(
@@ -234,9 +226,6 @@ class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEac
     }
 
     "be able to convert just one json double values to 2 decimal places for amending ips" in new Setup {
-      val expectedJson = Json.parse("""{"psaCheckReference":"testPSARef","protectionID":12345,"certificateDate":"2016-04-17",
-                                        "protectionType":"IP2016","status":"dormant","protectedAmount":1250000.12,"notificationId":12,
-                                        "protectionReference":"PSA123456"}""")
       when(mockHttp.PUT[JsValue, HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
         (ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(OK)))
       val protectionModel = ProtectionModel(

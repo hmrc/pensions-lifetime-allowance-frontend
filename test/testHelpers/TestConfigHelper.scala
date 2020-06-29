@@ -16,21 +16,22 @@
 
 package testHelpers
 
-import akka.stream.Materializer
+import akka.actor.ActorSystem
+import akka.stream.{ActorMaterializer, Materializer}
 import config.LocalTemplateRenderer
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
-import play.api.{Configuration, Environment, Play}
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.Messages
-import services.MetricsService
+import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+
 trait TestConfigHelper extends MockitoSugar with UnitSpec with WithFakeApplication {
-  override lazy val fakeApplication = Play.current
+
   val config = mock[Configuration]
   val env = mock[Environment]
-  implicit val mat: Materializer = Play.materializer(fakeApplication)
+  implicit lazy val system: ActorSystem = ActorSystem("test")
+  implicit val mat: Materializer = ActorMaterializer()
 }
 
 trait TestControllerHelper extends MockitoSugar with TestConfigHelper{

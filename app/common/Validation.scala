@@ -18,10 +18,9 @@ package common
 
 import java.text.SimpleDateFormat
 
-import models._
 import enums.ApplicationType
+import models._
 import uk.gov.hmrc.http.cache.client.CacheMap
-import play.api.Logger
 
 object Validation {
 
@@ -64,7 +63,6 @@ object Validation {
     val currentPensionsModel = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
 
     val pensionDebitsModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
-    val PSODetailsModel = data.getEntry[PSODetailsModel](nameString("psoDetails"))
 
     def validPensionData(): Boolean = {
       if (pensionsTakenModel.isEmpty || overseasPensionsModel.isEmpty || currentPensionsModel.isEmpty) false

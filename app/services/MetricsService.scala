@@ -17,8 +17,6 @@
 package services
 
 import com.codahale.metrics.MetricRegistry
-import javax.inject.Inject
-import com.kenshoo.play.metrics.Metrics
 
 
 object MetricsService extends MetricRegistry {

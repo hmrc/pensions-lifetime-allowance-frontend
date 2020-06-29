@@ -26,8 +26,7 @@ import enums.ApplicationType
 import javax.inject.Inject
 import models._
 import models.amendModels.AmendProtectionModel
-import play.api.Logger
-import play.api.Play.current
+import play.api.{Application, Logger}
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -48,7 +47,8 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                          (implicit val appConfig: FrontendAppConfig,
                                           implicit val partialRetriever: PlaFormPartialRetriever,
                                           implicit val templateRenderer:LocalTemplateRenderer,
-                                          implicit val plaContext: PlaContext)
+                                          implicit val plaContext: PlaContext,
+                                          implicit val application: Application)
 extends FrontendController(mcc) with I18nSupport {
 
 

@@ -17,7 +17,6 @@
 package constructors
 
 import com.kenshoo.play.metrics.PlayModule
-import enums.ApplicationType
 import models._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.{JsValue, Json}
@@ -40,7 +39,6 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication with Mo
   "ResponseConstructors" should {
 
     "create the correct ApplyResponse model from Json" in {
-      implicit val applicationType = ApplicationType.FP2016
       val jsn: JsValue = Json.parse(
         """{"certificateDate":"2016-04-17",
           |"notificationId":24,
@@ -53,7 +51,6 @@ class ResponseConstructorsSpec extends UnitSpec with WithFakeApplication with Mo
     }
 
     "return None if an ApplyResponse model can't be created" in {
-      implicit val applicationType = ApplicationType.FP2016
       val jsn: JsValue = Json.parse(
         """{"protectionID":"wrong"
           |}""".stripMargin)

@@ -29,9 +29,9 @@ import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.PensionsTakenForm.pensionsTakenForm
 import javax.inject.Inject
 import models._
-import play.api.Play.current
+import play.api.Application
 import play.api.data.FormError
-import play.api.i18n.{I18nSupport, Messages}
+import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html._
@@ -45,7 +45,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: PlaFormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
-                                 implicit val plaContext: PlaContext) extends FrontendController(mcc) {
+                                 implicit val plaContext: PlaContext,
+                                 implicit val application: Application) extends FrontendController(mcc) {
 
   lazy val postSignInRedirectUrl = appConfig.ipStartUrl
 

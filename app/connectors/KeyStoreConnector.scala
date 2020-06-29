@@ -21,11 +21,10 @@ import javax.inject.Inject
 import play.api.libs.json.Format
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class KeyStoreConnector @Inject()(sessionCache: PLASessionCache) {
+class KeyStoreConnector @Inject()(sessionCache: PLASessionCache)(implicit executionContext: ExecutionContext) {
 
   implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders("Accept" -> "application/vnd.hmrc.1.0+json")
 

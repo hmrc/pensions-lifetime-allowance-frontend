@@ -56,6 +56,6 @@ class SessionIdFilter @Inject()(val mat:Materializer) extends Filter  {
     val newSessionId = s"session-${UUID.randomUUID().toString}"
     val newSessionIdHeader = HeaderNames.xSessionId -> newSessionId
     val newHeaders = request.headers.add(newSessionIdHeader)
-    request.copy(headers = newHeaders)
+    request.withHeaders(newHeaders)
   }
 }
