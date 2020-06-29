@@ -19,8 +19,6 @@ package forms
 import models.amendModels.AmendmentTypeModel
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.i18n.Messages.Implicits._
-import play.api.Play.current
 
 object AmendmentTypeForm {
   val amendmentTypeForm = Form(

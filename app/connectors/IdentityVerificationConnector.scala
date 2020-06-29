@@ -19,16 +19,16 @@ package connectors
 import config.FrontendAppConfig
 import enums.IdentityVerificationResult.IdentityVerificationResult
 import javax.inject.Inject
-import play.api.data.validation.ValidationError
-import play.api.libs.json.{JsPath, Json}
+import play.api.libs.json.Json
 import services.MetricsService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
-class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, http: DefaultHttpClient) {
+class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, http: DefaultHttpClient)
+                                              (implicit executionContext: ExecutionContext){
   val serviceUrl = appConfig.servicesConfig.baseUrl("identity-verification")
 
   private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
@@ -45,16 +45,12 @@ class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, htt
       )
     }
 
-    ivFuture onFailure {
-      case e: Exception =>
-        MetricsService.identityVerificationFailedCounter.inc()
+    ivFuture.onComplete {
+      case Failure(_) => MetricsService.identityVerificationFailedCounter.inc()
+      case Success(_) =>
     }
 
     ivFuture
-  }
-
-  private def formatJsonErrors(errors: Seq[(JsPath, Seq[ValidationError])]): String = {
-    errors.map(p => p._1 + " - " + p._2.map(_.message).mkString(",")).mkString(" | ")
   }
 
   private[connectors] class JsonValidationException(message: String) extends Exception(message)

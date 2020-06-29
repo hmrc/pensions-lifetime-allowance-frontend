@@ -25,15 +25,13 @@ import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.{ApplicationOutcome, ApplicationType}
 import javax.inject.Inject
 import models._
-import play.api.Logger
-import play.api.Play.current
-import play.api.i18n.{I18nSupport, Lang}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
+import play.api.{Application, Logger}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import utils.Constants
 import views.html.pages.result._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Random
@@ -47,8 +45,9 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: PlaFormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
-                                 implicit val plaContext: PlaContext)
-  extends FrontendController(mcc) with I18nSupport {
+                                 implicit val plaContext: PlaContext,
+                                 implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
+
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   val processFPApplication = Action.async { implicit request =>

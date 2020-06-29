@@ -37,7 +37,7 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Configuration, Environment}
+import play.api.{Application, Configuration, Environment}
 import testHelpers.{AuthorisedFakeRequestToPost, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -55,6 +55,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
   implicit val mat: Materializer = ActorMaterializer()
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
+  implicit val application = mock[Application]
 
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
@@ -152,7 +153,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
     "In WithdrawProtectionController calling the showWithdrawConfirmation action" should {
 
       "return 200" in new Setup {
-        mockAuthConnector(Future.successful())
+        mockAuthConnector(Future.successful({}))
         when(mockKeyStoreConnector.remove(ArgumentMatchers.any())).thenReturn(Future.successful(mock[HttpResponse]))
         status(controller.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
       }
@@ -164,7 +165,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
         lazy val result = {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-          when(mockPlaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockPlaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
             .thenReturn(Future.successful(HttpResponse(OK)))
           await(controller.displayWithdrawConfirmation("")(fakeRequest))
         }
@@ -176,7 +177,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
         lazy val result = {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-          when(mockPlaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+          when(mockPlaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
             .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR)))
           await(controller.displayWithdrawConfirmation("")(fakeRequest))
         }

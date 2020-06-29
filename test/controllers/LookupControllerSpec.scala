@@ -22,11 +22,11 @@ import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import models.{PSALookupRequest, PSALookupResult}
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.Application
 import play.api.i18n.Messages
 import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
 import play.api.mvc.MessagesControllerComponents
@@ -58,6 +58,7 @@ class LookupControllerSpec extends UnitSpec with BeforeAndAfterEach with Mockito
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val application = mock[Application]
 
   class Setup {
     val controller = new LookupController(
@@ -94,15 +95,6 @@ class LookupControllerSpec extends UnitSpec with BeforeAndAfterEach with Mockito
       |  "pensionSchemeAdministratorCheckReference": "PSA12345678A",
       |  "ltaType": 5,
       |  "psaCheckResult": 1,
-      |  "protectedAmount": 25000,
-      |  "protectionNotificationNumber": "IP14000000000A"
-      |}""".stripMargin)
-
-  private val plaInvalidReturnJson = Json.parse(
-    """{
-      |  "pensionSchemeAdministratorCheckReference": "PSA12345678A",
-      |  "ltaType": 5,
-      |  "psaCheckResult": 0,
       |  "protectedAmount": 25000,
       |  "protectionNotificationNumber": "IP14000000000A"
       |}""".stripMargin)
@@ -195,7 +187,7 @@ class LookupControllerSpec extends UnitSpec with BeforeAndAfterEach with Mockito
 
       val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*)
 
-      when(mockPlaConnector.psaLookup(any(), any())(any()))
+      when(mockPlaConnector.psaLookup(any(), any())(any(), any()))
         .thenReturn(Future.failed(Upstream4xxResponse("message", NOT_FOUND, NOT_FOUND)))
       keystoreSaveCondition[PSALookupResult](mockCacheMap)
 
@@ -280,6 +272,6 @@ class LookupControllerSpec extends UnitSpec with BeforeAndAfterEach with Mockito
   def keystoreSaveCondition[T](data: CacheMap): Unit = when(mockKeyStoreConnector.saveFormData[T](any(), any())(any(), any()))
     .thenReturn(Future.successful(data))
 
-  def plaConnectorReturn(data: HttpResponse): Unit = when(mockPlaConnector.psaLookup(any(), any())(any()))
+  def plaConnectorReturn(data: HttpResponse): Unit = when(mockPlaConnector.psaLookup(any(), any())(any(), any()))
     .thenReturn(Future.successful(data))
 }

@@ -16,13 +16,12 @@
 
 package constructors
 
-import play.api.libs.json.JsValue
 import models._
-import enums.ApplicationType
+import play.api.libs.json.JsValue
 
 class ResponseConstructors {
 
-    def createApplyResponseModelFromJson(json: JsValue)(implicit protectionType: ApplicationType.Value): Option[ApplyResponseModel] = {
+    def createApplyResponseModelFromJson(json: JsValue): Option[ApplyResponseModel] = {
         val psaReference = (json \ "psaCheckReference").asOpt[String]
 
         json.validate[ProtectionModel].fold(

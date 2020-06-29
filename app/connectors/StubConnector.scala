@@ -21,12 +21,11 @@ import javax.inject.Inject
 import play.api.libs.json.JsValue
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
-
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class StubConnector @Inject()(appConig: FrontendAppConfig,
-                             http: DefaultHttpClient) {
+                             http: DefaultHttpClient)(implicit ec: ExecutionContext) {
+
   lazy val serviceUrl: String = appConig.servicesConfig.baseUrl("pla-dynamic-stub")
 
   private def deleteProtectionByNinoUrl(nino: String) = s"$serviceUrl/test-only/individuals/$nino/protections"

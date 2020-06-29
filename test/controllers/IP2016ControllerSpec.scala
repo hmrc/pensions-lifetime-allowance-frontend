@@ -31,7 +31,7 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.{Configuration, Environment}
+import play.api.{Application, Configuration, Environment}
 import play.api.i18n.Messages
 import play.api.libs.json.JsValue
 import play.api.mvc.MessagesControllerComponents
@@ -62,6 +62,7 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     implicit val mockMessages: Messages = mock[Messages]
     implicit val system: ActorSystem = ActorSystem()
     implicit val materializer: ActorMaterializer = ActorMaterializer()
+    implicit val application = mock[Application]
 
     class Setup {
 
@@ -243,16 +244,12 @@ class IP2016ControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
                 "have the radio option `yes` selected by default" in new Setup {
                     val testModel = new PensionsTakenBeforeModel("yes", Some(1))
-                    lazy val result = await(controller.pensionsTakenBefore(fakeRequest))
-
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
                 }
 
                 "have the amount £1 completed by default" in new Setup {
                     val testModel = new PensionsTakenBeforeModel("yes", Some(1))
-                    lazy val result = await(controller.pensionsTakenBefore(fakeRequest))
-
                     mockAuthConnector(Future.successful({}))
                     keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
                 }

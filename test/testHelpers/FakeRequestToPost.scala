@@ -17,14 +17,11 @@
 package testHelpers
 
 
-import akka.stream.Materializer
 import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.UnitSpec
 import org.jsoup._
 import auth._
-import play.api.Play
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import uk.gov.hmrc.http.SessionKeys
 
 

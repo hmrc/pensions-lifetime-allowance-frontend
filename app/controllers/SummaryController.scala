@@ -23,10 +23,9 @@ import connectors.KeyStoreConnector
 import constructors.SummaryConstructor
 import enums.ApplicationType
 import javax.inject.Inject
-import play.api.Logger
-import play.api.Play.current
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
+import play.api.{Application, Logger}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html._
@@ -39,7 +38,8 @@ class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  (implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: PlaFormPartialRetriever,
                                   implicit val templateRenderer:LocalTemplateRenderer,
-                                  implicit val plaContext: PlaContext) extends FrontendController(mcc) with I18nSupport {
+                                  implicit val plaContext: PlaContext,
+                                  implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
 
   lazy val postSignInRedirectUrl = appConfig.ipStartUrl
   val summaryConstructor: SummaryConstructor = SummaryConstructor

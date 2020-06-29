@@ -22,16 +22,17 @@ import javax.inject.Inject
 import models._
 import models.amendModels.AmendProtectionModel
 import play.api.Logger
-import play.api.Play.current
 import play.api.i18n.Messages.Implicits._
-import play.api.i18n.{Lang, Messages}
+import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Call
 import utils.Constants
 
 
-class DisplayConstructors @Inject()() {
+class DisplayConstructors @Inject()(implicit messagesApi: MessagesApi) {
 
   implicit val lang: Lang = Lang.defaultLang
+
+  implicit val messages: Messages = messagesApi.preferred(Seq(lang))
 
   // PRINT PAGE
   def createPrintDisplayModel(personalDetailsModelOpt: Option[PersonalDetailsModel],

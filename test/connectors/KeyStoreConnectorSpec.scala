@@ -23,21 +23,21 @@ import models._
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Mode.Mode
-import play.api.{Application, Configuration, Environment}
+import play.api.Environment
 import play.api.libs.json.Json
-import uk.gov.hmrc.http.cache.client.{CacheMap, SessionCache}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.cache.client.CacheMap
+import uk.gov.hmrc.http.logging.SessionId
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-import scala.concurrent.Future
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.logging.SessionId
+import scala.concurrent.{ExecutionContext, Future}
 
 class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
 
   val mockSessionCache     = mock[PLASessionCache]
   val sessionId            = UUID.randomUUID.toString
   val mockEnv: Environment = mock[Environment]
+  implicit val executionContext = fakeApplication.injector.instanceOf[ExecutionContext]
 
   object TestKeyStoreConnector extends KeyStoreConnector(mockSessionCache)
 

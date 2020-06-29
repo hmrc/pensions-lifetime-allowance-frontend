@@ -22,6 +22,7 @@ import akka.stream.ActorMaterializer
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.Application
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import testHelpers._
@@ -37,6 +38,7 @@ class TimeoutControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppl
     implicit val mockPlaContext: PlaContext = mock[PlaContext]
     implicit val system: ActorSystem = ActorSystem()
     implicit val materializer: ActorMaterializer = ActorMaterializer()
+    implicit val application = mock[Application]
 
     val controller = new TimeoutController(mockMCC)
 

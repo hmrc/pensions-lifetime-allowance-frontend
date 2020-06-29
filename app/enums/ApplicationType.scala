@@ -16,8 +16,6 @@
 
 package enums
 
-import play.api.libs.json._
-
 object ApplicationType extends Enumeration {
 
   type ApplicationType = Value

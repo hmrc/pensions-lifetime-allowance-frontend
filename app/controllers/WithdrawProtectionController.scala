@@ -16,10 +16,10 @@
 
 package controllers
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDateTime
 
 import auth.AuthFunction
-import common.{Dates, Display, Strings}
+import common.{Dates, Strings}
 import config._
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
@@ -28,13 +28,10 @@ import enums.ApplicationType
 import forms.WithdrawDateForm._
 import javax.inject.Inject
 import models.{ProtectionModel, WithdrawDateFormModel}
-import play.api.Play.current
 import play.api.data.{Form, FormError}
 import play.api.i18n.{I18nSupport, Lang, Messages}
-import play.api.libs.json.{Json, OFormat}
 import play.api.mvc._
-import play.api.{Configuration, Environment, Logger, Play}
-import uk.gov.hmrc.auth.core.AuthConnector
+import play.api.{Application, Logger}
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 
@@ -49,7 +46,8 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
                                             (implicit val appConfig: FrontendAppConfig,
                                              implicit val partialRetriever: PlaFormPartialRetriever,
                                              implicit val templateRenderer:LocalTemplateRenderer,
-                                             implicit val plaContext: PlaContext) extends FrontendController(mcc) with I18nSupport {
+                                             implicit val plaContext: PlaContext,
+                                             implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
 
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
@@ -120,7 +118,6 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
   }
 
   def postWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
-    implicit val format: OFormat[WithdrawDateFormModel] = Json.format[WithdrawDateFormModel]
     authFunction.genericAuthWithoutNino("existingProtections") {
       keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap {
         case Some(protection) => validateAndSaveWithdrawDateForm(protection)

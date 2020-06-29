@@ -36,7 +36,7 @@ import play.api.i18n.Messages
 import play.api.libs.json.JsValue
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
-import play.api.{Configuration, Environment}
+import play.api.{Application, Configuration, Environment}
 import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -59,6 +59,7 @@ class SummaryControllerSpec extends UnitSpec with MockitoSugar with AuthMock wit
   implicit val mockMessages: Messages = mock[Messages]
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val application = mock[Application]
 
   val mockSummaryConstructor: SummaryConstructor = mock[SummaryConstructor]
   val fakeRequest = FakeRequest()
@@ -113,7 +114,7 @@ class SummaryControllerSpec extends UnitSpec with MockitoSugar with AuthMock wit
     "user is applying for IP16" in new Setup  {
       lazy val result = await(controller.summaryIP16(fakeRequest))
 
-      when(controller.summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(None)
+      when(controller.summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(None)
       when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
       status(result) shouldBe 500
@@ -122,7 +123,7 @@ class SummaryControllerSpec extends UnitSpec with MockitoSugar with AuthMock wit
 
   "Navigating to summary when user has valid data" when {
     "user is applying for IP16" in new Setup  {
-        when(controller.summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(tstSummaryModel))
+        when(controller.summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(tstSummaryModel))
         when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
         val result = await(controller.summaryIP16(fakeRequest))
