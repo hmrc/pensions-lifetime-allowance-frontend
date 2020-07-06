@@ -86,7 +86,7 @@ pla.techError.startAgain                    = Dechrau eto
 pla.techError.retry                         = Ail-geisio
 
 ## Generic 500 Error ##
-pla.error.InternalServerError500.title = Mae''n ddrwg gennym, mae problem gyda''r gwasanaeth
+pla.error.InternalServerError500.title = Mae''n ddrwg gennym, mae problem gyda''r gwasanaeth - Diogelu''ch lwfans oes - GOV.UK
 pla.error.InternalServerError500.heading = Mae''n ddrwg gennym, mae problem gyda''r gwasanaeth
 pla.error.InternalServerError500.message = Rhowch gynnig arall arni yn nes ymlaen.
 
