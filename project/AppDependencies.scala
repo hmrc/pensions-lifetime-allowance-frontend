@@ -17,7 +17,7 @@ object AppDependencies {
   private val mongoCachingVersion = "6.14.0-play-26"
   private val localTemplateRendererVersion = "2.9.0-play-26"
   private val wireMockVersion = "2.26.3"
-  private val reactiveMongoVersion = "7.29.0-play-26"
+  private val reactiveMongoVersion = "7.30.0-play-26"
 
   val compile = Seq(
     ws,
