@@ -18,7 +18,7 @@ package config
 
 import config.wiring.PlaFormPartialRetriever
 import javax.inject.Inject
-import play.api.i18n.MessagesApi
+import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
@@ -33,4 +33,10 @@ class PlaFrontendErrorHandler @Inject()(implicit val messagesApi: MessagesApi,
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html = {
     views.html.error_template(pageTitle, heading, message)
   }
+  override def internalServerErrorTemplate(implicit request: Request[_]): Html =
+    standardErrorTemplate(
+      Messages("pla.error.InternalServerError500.title"),
+      Messages("pla.error.InternalServerError500.heading"),
+      Messages("pla.error.InternalServerError500.message")
+    )
 }
