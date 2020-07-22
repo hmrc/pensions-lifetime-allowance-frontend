@@ -27,6 +27,13 @@ pla.base.errors.errorMaximum            = Nodwch swm sy''n llai na £99,999,999,
 pla.base.errors.errorDecimalPlaces      = Mae gan y swm yr ydych wedi''i nodi ormod o lefydd degol
 pla.base.errors.mandatoryError          = Atebwch y cwestiwn hwn
 
+## Generic 400 Type Errors in Welsh ##
+global.error.400.title=Cais annilys – 400
+global.error.400.heading=Cais annilys
+global.error.400.message=Gwiriwch eich bod wedi nodi''r cyfeiriad gwe cywir.
+global.error.404.title=Heb ddod o hyd i''r dudalen – 404
+global.error.404.heading=Ni ellir dod o hyd i''r dudalen hon
+global.error.404.message=Gwiriwch eich bod wedi nodi''r cyfeiriad gwe cywir.
 
 ## PLAY! Error Overrides ##
 error.real                              = Nodwch rif heb comas, er enghraifft 10000.00

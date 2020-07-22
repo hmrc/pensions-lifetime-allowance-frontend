@@ -33,6 +33,24 @@ class PlaFrontendErrorHandler @Inject()(implicit val messagesApi: MessagesApi,
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html = {
     views.html.error_template(pageTitle, heading, message)
   }
+
+
+  override def badRequestTemplate(implicit request: Request[_]): Html = {
+    standardErrorTemplate(
+      Messages("global.error.400.title"),
+      Messages("global.error.400.heading"),
+      Messages("global.error.400.message")
+    )
+  }
+
+  override def notFoundTemplate(implicit request: Request[_]): Html = {
+    standardErrorTemplate(
+      Messages("global.error.404.title"),
+      Messages("global.error.404.heading"),
+      Messages("global.error.404.message")
+    )
+  }
+
   override def internalServerErrorTemplate(implicit request: Request[_]): Html =
     standardErrorTemplate(
       Messages("pla.error.InternalServerError500.title"),
