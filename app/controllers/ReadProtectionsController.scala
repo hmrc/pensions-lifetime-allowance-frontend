@@ -31,7 +31,7 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.http.{HttpResponse, NotFoundException, Upstream4xxResponse}
+import uk.gov.hmrc.http.{HttpResponse, NotFoundException, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html._
 
@@ -69,7 +69,7 @@ extends FrontendController(mcc) with I18nSupport {
           }
         }.recover {
           case e: NotFoundException => Logger.warn(s"Error 404 passed to currentProtections for nino: $nino")
-            throw new Upstream4xxResponse(e.message, 404, 500)
+            throw UpstreamErrorResponse(e.message, 404, 500)
           case otherException: Exception => throw otherException
         }
       }

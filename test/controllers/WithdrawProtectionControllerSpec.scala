@@ -166,7 +166,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
           when(mockPlaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
-            .thenReturn(Future.successful(HttpResponse(OK)))
+            .thenReturn(Future.successful(HttpResponse(status = OK, body = "")))
           await(controller.displayWithdrawConfirmation("")(fakeRequest))
         }
           status(result) shouldBe SEE_OTHER
@@ -178,7 +178,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
           when(mockPlaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
-            .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR)))
+            .thenReturn(Future.successful(HttpResponse(status = INTERNAL_SERVER_ERROR, body = "")))
           await(controller.displayWithdrawConfirmation("")(fakeRequest))
         }
           status(result) shouldBe INTERNAL_SERVER_ERROR
