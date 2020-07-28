@@ -46,7 +46,7 @@ class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with WithFa
   "Calling getPersonDetails with valid response" should {
     "return a defined Option on PersonalDetailsModel" in new Setup {
       when(mockHttp.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
-        .thenReturn(Future.successful(HttpResponse(OK, Some(Json.toJson(tstDetails)))))
+        .thenReturn(Future.successful(HttpResponse(status = OK, json = Json.toJson(tstDetails), headers = Map.empty)))
 
       val response = controller.getPersonDetails("tstNino")
       await(response) shouldBe Some(tstDetails)
@@ -56,7 +56,7 @@ class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with WithFa
   "Calling getPersonDetails with invalid response" should {
     "return an undefined Option on PersonalDetailsModel" in new Setup {
       when(mockHttp.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
-        .thenReturn(Future.successful(HttpResponse(OK, Some(Json.toJson("""name:NoName""")))))
+        .thenReturn(Future.successful(HttpResponse(status = OK, json = Json.toJson("""name:NoName"""), headers = Map.empty)))
 
       val response = controller.getPersonDetails("tstNino")
       await(response) shouldBe None
@@ -66,7 +66,7 @@ class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with WithFa
   "Calling getPersonDetails with error response" should {
     "return an undefined Option on PersonalDetailsModel" in new Setup {
       when(mockHttp.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
-        .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR)))
+        .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR, "")))
 
       val response = controller.getPersonDetails("tstNino")
       await(response) shouldBe None

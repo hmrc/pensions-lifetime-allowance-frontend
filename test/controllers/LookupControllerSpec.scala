@@ -34,7 +34,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers.MockTemplateRenderer
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys, Upstream4xxResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.ActionWithSessionId
@@ -169,7 +169,7 @@ class LookupControllerSpec extends UnitSpec with BeforeAndAfterEach with Mockito
 
     "submit pnn form with valid data and redirect to results page" in new Setup  {
       keystoreFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSA REF")))
-      plaConnectorReturn(HttpResponse(OK, Some(plaReturnJson)))
+      plaConnectorReturn(HttpResponse(status = OK, json = plaReturnJson, headers = Map.empty))
 
       val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*)
 
@@ -183,12 +183,12 @@ class LookupControllerSpec extends UnitSpec with BeforeAndAfterEach with Mockito
 
     "submit pnn form with valid data and redirect when a NOT FOUND is returned" in new Setup  {
       keystoreFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSA REF")))
-      plaConnectorReturn(HttpResponse(OK, Some(plaReturnJson)))
+      plaConnectorReturn(HttpResponse(status = OK, json = plaReturnJson, headers = Map.empty))
 
       val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*)
 
       when(mockPlaConnector.psaLookup(any(), any())(any(), any()))
-        .thenReturn(Future.failed(Upstream4xxResponse("message", NOT_FOUND, NOT_FOUND)))
+        .thenReturn(Future.failed(UpstreamErrorResponse("message", NOT_FOUND, NOT_FOUND)))
       keystoreSaveCondition[PSALookupResult](mockCacheMap)
 
       val result = controller.submitProtectionNotificationNoForm.apply(request)

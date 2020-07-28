@@ -32,7 +32,7 @@ import org.mockito.Mockito._
 import org.scalatest.{BeforeAndAfter, BeforeAndAfterEach}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -107,16 +107,16 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
   val inactiveSuccessIP14Json = Json.parse("""{"notificationId":32,"protectedAmount":1400000.0}""")
   val rejectionIP14Json = Json.parse("""{"notificationId":1}""")
 
-  val testFP16SuccessResponse = HttpResponse(200, Some(successFP16Json))
-  val testFP16RejectionResponse = HttpResponse(409, Some(rejectionFP16Json))
-  val testIP16SuccessResponse = HttpResponse(200, Some(successIP16Json))
-  val testIP16RejectionResponse = HttpResponse(409, Some(rejectionIP16Json))
-  val testIP14SuccessResponse = HttpResponse(200, Some(successIP14Json))
-  val testIP14RejectionResponse = HttpResponse(409, Some(rejectionIP14Json))
-  val testMCNeededResponse = HttpResponse(423)
+  val testFP16SuccessResponse = HttpResponse(status = 200, json = successFP16Json, headers = Map.empty)
+  val testFP16RejectionResponse = HttpResponse(status = 409, json = rejectionFP16Json, headers = Map.empty)
+  val testIP16SuccessResponse = HttpResponse(status = 200, json = successIP16Json, headers = Map.empty)
+  val testIP16RejectionResponse = HttpResponse(status = 409, json = rejectionIP16Json, headers = Map.empty)
+  val testIP14SuccessResponse = HttpResponse(status = 200, json = successIP14Json, headers = Map.empty)
+  val testIP14RejectionResponse = HttpResponse(status = 409, json = rejectionIP14Json, headers = Map.empty)
+  val testMCNeededResponse = HttpResponse(status = 423, body = "")
 
-  val testIP16InactiveSuccessResponse = HttpResponse(200, Some(inactiveSuccessIP16Json))
-  val testIP14InactiveSuccessResponse = HttpResponse(200, Some(inactiveSuccessIP14Json))
+  val testIP16InactiveSuccessResponse = HttpResponse(status = 200, json = inactiveSuccessIP16Json, headers = Map.empty)
+  val testIP14InactiveSuccessResponse = HttpResponse(status = 200, json = inactiveSuccessIP14Json, headers = Map.empty)
 
   val testFPSuccessProtectionModel = ProtectionModel(
     Some("testPSARef"),
@@ -490,7 +490,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "Calling routeViaMCNeededCheck" when {
 
       "handling a 423 response" should {
-        lazy val result = TestSuccessResultController.routeViaMCNeededCheck(HttpResponse(LOCKED), "")(fakeRequest, ApplicationType.IP2016)
+        lazy val result = TestSuccessResultController.routeViaMCNeededCheck(HttpResponse(status = LOCKED, json = JsObject.empty, headers = Map.empty), "")(fakeRequest, ApplicationType.IP2016)
 
         "return a locked status" in {
           status(result) shouldBe LOCKED
@@ -505,7 +505,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
           when(mockResponseConstructors.createApplyResponseModelFromJson(any())).thenReturn(Some(testIP16SuccessApplyResponseModel))
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-          lazy val result = TestSuccessResultController.routeViaMCNeededCheck(HttpResponse(OK), "AB123456A")(fakeRequest, ApplicationType.IP2016)
+          lazy val result = TestSuccessResultController.routeViaMCNeededCheck(HttpResponse(status = OK, json = JsObject.empty, headers = Map.empty), "AB123456A")(fakeRequest, ApplicationType.IP2016)
 
           status(result) shouldBe SEE_OTHER
         }
@@ -523,7 +523,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
           when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())).thenReturn(None)
 
-          val result = TestIncorrectResponseModelResultController.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.IP2016)
+          val result = TestIncorrectResponseModelResultController.saveAndRedirectToDisplay(HttpResponse(status = OK, json = JsObject.empty, headers = Map.empty), "")(fakeRequest, ApplicationType.IP2016)
           status(result) shouldBe INTERNAL_SERVER_ERROR
         }
       }
@@ -537,7 +537,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
           when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
           when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())).thenReturn(Some(ApplyResponseModel(ProtectionModel(None, None))))
 
-          val result = TestIncorrectResponseModelResultController.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.IP2016)
+          val result = TestIncorrectResponseModelResultController.saveAndRedirectToDisplay(HttpResponse(status = OK, json = JsObject.empty, headers = Map.empty), "")(fakeRequest, ApplicationType.IP2016)
           status(result) shouldBe INTERNAL_SERVER_ERROR
         }
       }
@@ -557,7 +557,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
           when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
 
-          val result = TestSuccessResultController.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.IP2016)
+          val result = TestSuccessResultController.saveAndRedirectToDisplay(HttpResponse(status = OK, json = JsObject.empty, headers = Map.empty), "")(fakeRequest, ApplicationType.IP2016)
           status(result) shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.ResultController.displayIP16().url)
         }
@@ -569,7 +569,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
           when(mockKeyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
           when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
 
-          val result = TestSuccessResultController.saveAndRedirectToDisplay(HttpResponse(OK), "")(fakeRequest, ApplicationType.FP2016)
+          val result = TestSuccessResultController.saveAndRedirectToDisplay(HttpResponse(status = OK, json = JsObject.empty, headers = Map.empty), "")(fakeRequest, ApplicationType.FP2016)
           status(result) shouldBe SEE_OTHER
           redirectLocation(result) shouldBe Some(routes.ResultController.displayFP16().url)
         }

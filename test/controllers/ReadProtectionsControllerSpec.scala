@@ -48,9 +48,9 @@ import scala.concurrent.Future
 
 class ReadProtectionsControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication with BeforeAndAfterEach {
 
-  val testSuccessResponse = HttpResponse(200, Some(Json.parse("""{"thisJson":"doesNotMatter"}""")))
-  val testMCNeededResponse = HttpResponse(423)
-  val testUpstreamErrorResponse = HttpResponse(503)
+  val testSuccessResponse = HttpResponse(status = 200, json = Json.parse("""{"thisJson":"doesNotMatter"}"""), headers = Map.empty)
+  val testMCNeededResponse = HttpResponse(423, "")
+  val testUpstreamErrorResponse = HttpResponse(503, "")
 
   val testTransformedReadResponseModel = TransformedReadResponseModel(None, Seq.empty)
   val testExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(None, Seq.empty)

@@ -20,8 +20,9 @@ import config.FrontendAppConfig
 import javax.inject.Inject
 import models.PersonalDetailsModel
 import play.api.Logger
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -36,7 +37,7 @@ class CitizenDetailsConnector @Inject()(appConfig: FrontendAppConfig,
 
     def getPersonDetails(nino: String)(implicit hc: HeaderCarrier): Future[Option[PersonalDetailsModel]] = {
 
-      http.GET(url(nino)) map {
+      http.GET[HttpResponse](url(nino)) map {
         response => response.status match {
           case 200 => response.json.validate[PersonalDetailsModel].asOpt
           case _ => {
