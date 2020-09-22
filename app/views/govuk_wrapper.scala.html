@@ -122,13 +122,17 @@ if(str.trim=="") false else str
     }
 }
 
+@accessibilityFooterUrl = @{
+    Map("accessibilityFooterUrl" -> appConfig.accessibilityFrontendUrl)
+}
+
 @{
 templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath,article, Map[String, Any](
     "pageTitle" -> title,
     "linkElems" -> linkElems,
     "scriptElems" -> scriptElement,
     "mainClass" -> mainClass,
-
+    "accessibilityFooterUrl" -> accessibilityFooterUrl,
     "mainContentHeader" -> mainContentHeader,
 
     "googleAnalytics" -> googleAnalytics,
@@ -163,6 +167,7 @@ templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath,article, M
     "fullWidthBannerText" -> afterHeader,
     "fullWidthBannerLink" -> afterHeader,
     "fullWidthBannerDismissText" -> afterHeader
+
 )
 )
 }
