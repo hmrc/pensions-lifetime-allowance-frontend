@@ -19,6 +19,8 @@ package config
 import javax.inject.Inject
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+import play.api.mvc.RequestHeader
+import uk.gov.hmrc.play.config.AccessibilityStatementConfig
 
 
 trait AppConfig {
@@ -50,9 +52,11 @@ trait AppConfig {
   val appName : String
   val frontendTemplatePath: String
   val googleTagManagerId: String
+  def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String
+
 }
 
-class FrontendAppConfig @Inject()(val configuration: Configuration, val servicesConfig: ServicesConfig) extends AppConfig {
+class FrontendAppConfig @Inject()(val configuration: Configuration, val servicesConfig: ServicesConfig, accessibilityStatementConfig: AccessibilityStatementConfig) extends AppConfig {
 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
@@ -96,5 +100,6 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
     .getOrElse("/template/mustache")
 
   lazy val googleTagManagerId = loadConfig(s"google-tag-manager.id")
-
+  override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = accessibilityStatementConfig.url.getOrElse("")
 }
+

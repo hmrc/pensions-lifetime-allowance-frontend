@@ -6,8 +6,8 @@ object AppDependencies {
   import play.core.PlayVersion
 
   private val bootstrapVersion = "1.8.0"
-  private val govukTemplateVersion = "5.55.0-play-26"
-  private val playUiVersion = "8.11.0-play-26"
+  private val govukTemplateVersion = "5.56.0-play-26"
+  private val playUiVersion = "8.12.0-play-26"
   private val playPartialsVersion = "6.11.0-play-26"
   private val hmrcTestVersion = "3.9.0-play-26"
   private val scalaTestVersion = "3.0.8"

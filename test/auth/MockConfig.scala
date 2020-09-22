@@ -17,8 +17,11 @@
 package auth
 
 import config.AppConfig
+import play.api.mvc.RequestHeader
+
 
 object MockConfig extends AppConfig {
+  override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = "_"
   override val betaFeedbackUrl: String = ""
   override val betaFeedbackUnauthenticatedUrl = ""
   override val analyticsToken: String = ""
@@ -47,4 +50,5 @@ object MockConfig extends AppConfig {
   override val appName: String = ""
   override val frontendTemplatePath: String = ""
   override val googleTagManagerId: String = "N/A"
+
 }
