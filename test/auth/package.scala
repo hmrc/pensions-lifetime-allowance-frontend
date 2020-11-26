@@ -30,7 +30,6 @@ package object auth {
   val GovernmentGatewayId = "GGW"
 
   private case object FakeRequestKeyConsts {
-    val UserId = SessionKeys.userId
     val SessionId = SessionKeys.sessionId
     val LastRequestTimestamp = SessionKeys.lastRequestTimestamp
     val Token = "token"
@@ -40,7 +39,6 @@ package object auth {
   def authenticatedFakeRequest(provider: String = GovernmentGatewayId,
                                userId: String = mockUserId) =
     FakeRequest().withSession(
-      FakeRequestKeyConsts.UserId-> userId,
       FakeRequestKeyConsts.SessionId -> s"session-${UUID.randomUUID()}",
       FakeRequestKeyConsts.LastRequestTimestamp -> DateTimeUtils.now.getMillis.toString,
       FakeRequestKeyConsts.Token -> "ANYOLDTOKEN",

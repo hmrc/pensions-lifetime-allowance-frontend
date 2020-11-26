@@ -22,7 +22,7 @@ addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.1.4")
 
-addSbtPlugin("uk.gov.hmrc" % "sbt-artifactory" % "1.3.0")
+addSbtPlugin("uk.gov.hmrc" % "sbt-artifactory" % "1.8.0")
 
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
 
