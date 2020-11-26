@@ -19,7 +19,7 @@ val appName = "pensions-lifetime-allowance-frontend"
 lazy val appDependencies: Seq[ModuleID] = Seq.empty
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
-val silencerVersion = "1.7.0"
+val silencerVersion = "1.7.1"
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
