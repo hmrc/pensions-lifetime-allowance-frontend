@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,7 +77,7 @@ trait AuthFunction extends AuthRedirects with AuthorisedFunctions {
 
 
   def authErrorHandling(pType: String)(implicit request: Request[AnyContent], messages: Messages): PartialFunction[Throwable, Result] = {
-    case _: NoActiveSession => toGGLogin(request.uri)
+    case _: NoActiveSession => Redirect(appConfig.ggSignInUrl, Map("continue" -> Seq(request.uri), "origin" -> Seq(appConfig.appName)))
     case _: InsufficientEnrolments => Redirect(IVUpliftURL)
     case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL)
     case e: AuthorisationException =>

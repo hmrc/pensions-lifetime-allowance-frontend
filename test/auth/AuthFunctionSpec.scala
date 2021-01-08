@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+import java.net.URLEncoder
 import scala.concurrent.Future
 
 class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach with AuthMock {
@@ -74,7 +75,8 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
     override implicit val templateRenderer: LocalTemplateRenderer = mock[LocalTemplateRenderer]
     }
 
-  lazy val fakeRequest = FakeRequest(GET, "http://www.pla-frontend.gov.uk/ip16-start-page")
+  lazy val requestUrl = "http://www.pla-frontend.gov.uk/ip16-start-page"
+  lazy val fakeRequest = FakeRequest(GET, requestUrl)
 
   "In AuthFunction calling the genericAuthWithoutNino action" when {
     "passing auth validation" should {
@@ -123,7 +125,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
         val result = authFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.gglogin.com?continue=http%3A%2F%2Fwww.pla-frontend.gov.uk%2Fip16-start-page&origin=origin")
+        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ggSignInUrl}?continue=${URLEncoder.encode(requestUrl, "UTF-8")}&origin=${mockAppConfig.appName}")
       }
     }
   }
@@ -175,7 +177,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
         val result = await(authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc))
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.gglogin.com?continue=http%3A%2F%2Fwww.pla-frontend.gov.uk%2Fip16-start-page&origin=origin")
+        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ggSignInUrl}?continue=${URLEncoder.encode(requestUrl, "UTF-8")}&origin=${mockAppConfig.appName}")
       }
     }
   }
