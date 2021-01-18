@@ -20,13 +20,15 @@ import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
 import enums.IdentityVerificationResult
+
 import javax.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import play.api.{Application, Logger}
-import uk.gov.hmrc.http.NotFoundException
+import uk.gov.hmrc.http.{NotFoundException, Upstream4xxResponse}
 import uk.gov.hmrc.play.bootstrap.controller.FrontendController
 import views.html.pages.ivFailure._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -63,7 +65,7 @@ class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVe
           Logger.info("Unauthorised identity verification, returned to unauthorised page")
           Future.successful(Unauthorized(unauthorised()))
       } recover {
-        case e: NotFoundException =>
+        case Upstream4xxResponse(_, NOT_FOUND, _, _) =>
           Logger.warn("Could not find unauthorised journey ID")
           Unauthorized(unauthorised())
       }
