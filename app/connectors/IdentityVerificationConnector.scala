@@ -18,12 +18,12 @@ package connectors
 
 import config.FrontendAppConfig
 import enums.IdentityVerificationResult.IdentityVerificationResult
+
 import javax.inject.Inject
 import play.api.libs.json.Json
 import services.MetricsService
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
@@ -35,6 +35,8 @@ class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, htt
   private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
   private[connectors] case class IdentityVerificationResponse(result: IdentityVerificationResult)
   private implicit val formats = Json.format[IdentityVerificationResponse]
+
+  implicit val legacyRawReads = HttpReadsInstances.throwOnFailure(HttpReadsInstances.readEitherOf(HttpReadsInstances.readRaw))
 
   def identityVerificationResponse(journeyId: String)(implicit hc: HeaderCarrier): Future[IdentityVerificationResult] = {
     val context = MetricsService.identityVerificationTimer.time()

@@ -1,6 +1,5 @@
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, scalaSettings, targetJvm}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
-import uk.gov.hmrc.SbtArtifactory
 import com.typesafe.sbt.web.Import.pipelineStages
 import com.typesafe.sbt.web.Import.Assets
 import com.typesafe.sbt.digest.Import.digest
@@ -34,7 +33,7 @@ lazy val scoverageSettings = {
 }
 
 lazy val root = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory) ++ plugins: _*)
+  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin) ++ plugins: _*)
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(playSettings ++ scoverageSettings: _*)
   .settings(scalaSettings: _*)
@@ -65,3 +64,4 @@ lazy val root = Project(appName, file("."))
     parallelExecution in IntegrationTest := false)
   .settings(resolvers ++= Seq(Resolver.bintrayRepo("hmrc", "releases"), Resolver.jcenterRepo))
   .settings(majorVersion := 2)
+  PlayKeys.playDefaultPort := 9010
