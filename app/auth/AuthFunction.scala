@@ -77,13 +77,24 @@ trait AuthFunction extends AuthRedirects with AuthorisedFunctions {
 
 
   def authErrorHandling(pType: String)(implicit request: Request[AnyContent], messages: Messages): PartialFunction[Throwable, Result] = {
-    case _: NoActiveSession => Redirect(appConfig.ggSignInUrl, Map("continue" -> Seq(request.uri), "origin" -> Seq(appConfig.appName)))
+    case _: NoActiveSession => {
+      val upliftUrl = upliftEnvironmentUrl(request.uri)
+      Redirect(appConfig.ggSignInUrl,
+        Map("continue" -> Seq(upliftUrl), "origin" -> Seq(appConfig.appName)))
+    }
     case _: InsufficientEnrolments => Redirect(IVUpliftURL)
     case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL)
     case e: AuthorisationException =>
       Logger.error("Unexpected auth exception ", e)
       InternalServerError(views.html.pages.fallback.technicalError(pType))
 
+  }
+
+  def upliftEnvironmentUrl(requestUri: String): String = {
+    appConfig.sessionMissingUpliftUrlPrefix match {
+      case Some(prefix) => prefix + requestUri
+      case _ => requestUri
+    }
   }
 
 }
