@@ -52,6 +52,7 @@ trait AppConfig {
   val appName : String
   val frontendTemplatePath: String
   val googleTagManagerId: String
+  val sessionMissingUpliftUrlPrefix: Option[String]
   def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String
 
 }
@@ -85,6 +86,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
   override lazy val ptaFrontendUrl = configuration.getOptional[String]("pta-frontend.url").getOrElse("")
 
   override lazy val notAuthorisedRedirectUrl = servicesConfig.getString("not-authorised-callback.url")
+  override lazy val sessionMissingUpliftUrlPrefix = configuration.getOptional[String]("login-missing-session.url.prefix")
   override val ivUpliftUrl: String = configuration.getOptional[String](s"identity-verification-uplift.host").getOrElse("")
   override val ggSignInUrl: String = configuration.getOptional[String](s"government-gateway-sign-in.host").getOrElse("")
 

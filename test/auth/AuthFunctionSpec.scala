@@ -70,6 +70,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
     override def personalIVUrl = "http://www.test.com"
     override def ggLoginUrl = "http://www.gglogin.com"
     override def origin = "origin"
+    override def upliftEnvironmentUrl(requestUri: String): String = requestUri
 
     override implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
     override implicit val templateRenderer: LocalTemplateRenderer = mock[LocalTemplateRenderer]
