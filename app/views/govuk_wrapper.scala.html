@@ -115,13 +115,6 @@ if(str.trim=="") false else str
     false
 }
 
-@googleTagManager = @{ if(appConfig.googleTagManagerId != "N/A") {
-        Map("gtmId" -> appConfig.googleTagManagerId)
-    } else {
-        false
-    }
-}
-
 @accessibilityFooterUrl = @{
     Map("accessibilityFooterUrl" -> appConfig.accessibilityFrontendUrl)
 }
@@ -135,8 +128,6 @@ templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath,article, M
     "accessibilityFooterUrl" -> accessibilityFooterUrl,
     "mainContentHeader" -> mainContentHeader,
 
-    "googleAnalytics" -> googleAnalytics,
-    "googleTagManager" -> googleTagManager,
     "ssoUrl" -> None,
 
     "betaBanner" -> betaHeaderEnable,

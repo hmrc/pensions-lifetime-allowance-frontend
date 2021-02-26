@@ -51,7 +51,6 @@ trait AppConfig {
   val notFoundStatusMetric: String
   val appName : String
   val frontendTemplatePath: String
-  val googleTagManagerId: String
   val sessionMissingUpliftUrlPrefix: Option[String]
   def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String
 
@@ -101,7 +100,6 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
   lazy val frontendTemplatePath: String = configuration.getOptional[String]("microservice.services.frontend-template-provider.path")
     .getOrElse("/template/mustache")
 
-  lazy val googleTagManagerId = loadConfig(s"google-tag-manager.id")
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = accessibilityStatementConfig.url.getOrElse("")
 }
 

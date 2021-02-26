@@ -49,6 +49,5 @@ object MockConfig extends AppConfig {
   override val notFoundStatusMetric: String = ""
   override val appName: String = ""
   override val frontendTemplatePath: String = ""
-  override val googleTagManagerId: String = "N/A"
   override val sessionMissingUpliftUrlPrefix: Option[String] = None
 }
