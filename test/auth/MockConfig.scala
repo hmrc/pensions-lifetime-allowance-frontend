@@ -17,6 +17,7 @@
 package auth
 
 import config.AppConfig
+import play.api.Configuration
 import play.api.mvc.RequestHeader
 
 
@@ -50,4 +51,5 @@ object MockConfig extends AppConfig {
   override val appName: String = ""
   override val frontendTemplatePath: String = ""
   override val sessionMissingUpliftUrlPrefix: Option[String] = None
+  override val configuration: Configuration = ???
 }

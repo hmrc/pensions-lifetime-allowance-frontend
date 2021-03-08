@@ -52,6 +52,7 @@ trait AppConfig {
   val appName : String
   val frontendTemplatePath: String
   val sessionMissingUpliftUrlPrefix: Option[String]
+  val configuration: Configuration
   def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String
 
 }
