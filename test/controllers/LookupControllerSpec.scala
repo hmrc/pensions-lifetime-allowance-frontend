@@ -32,16 +32,15 @@ import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import testHelpers.MockTemplateRenderer
+import testHelpers.{FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.ActionWithSessionId
 
 import scala.concurrent.Future
 
-class LookupControllerSpec extends UnitSpec with BeforeAndAfterEach with MockitoSugar with WithFakeApplication {
+class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with MockitoSugar {
 
   private val sessionId = SessionKeys.sessionId -> "lookup-test"
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]

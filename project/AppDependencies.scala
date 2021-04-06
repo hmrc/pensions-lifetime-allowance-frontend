@@ -5,23 +5,22 @@ object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val bootstrapVersion = "2.3.0"
-  private val govukTemplateVersion = "5.60.0-play-26"
-  private val playUiVersion = "8.20.0-play-26"
-  private val playPartialsVersion = "7.0.0-play-26"
-  private val hmrcTestVersion = "3.9.0-play-26"
+  private val bootstrapVersion = "3.4.0"
+  private val govukTemplateVersion = "5.65.0-play-27"
+  private val playUiVersion = "8.21.0-play-27"
+  private val playPartialsVersion = "7.0.0-play-27"
   private val scalaTestVersion = "3.0.9"
-  private val scalaTestPlusVersion = "3.1.3"
+  private val scalaTestPlusVersion = "4.0.3"
   private val pegdownVersion = "1.6.0"
-  private val cachingClientVersion = "9.1.0-play-26"
-  private val mongoCachingVersion = "6.15.0-play-26"
+  private val cachingClientVersion = "9.1.0-play-27"
+  private val mongoCachingVersion = "6.16.0-play-27"
   private val localTemplateRendererVersion = "2.10.0-play-26"
   private val wireMockVersion = "2.26.3"
-  private val reactiveMongoVersion = "7.30.0-play-26"
+  private val reactiveMongoVersion = "7.31.0-play-27"
 
   val compile = Seq(
     ws,
-    "uk.gov.hmrc" %% "bootstrap-play-26" % bootstrapVersion,
+    "uk.gov.hmrc" %% "bootstrap-frontend-play-27" % bootstrapVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
     "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
@@ -39,8 +38,8 @@ object AppDependencies {
   object Test {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
-        "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
+        "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % "1.13.1" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
@@ -55,7 +54,6 @@ object AppDependencies {
       override lazy val scope: String = "it"
 
       override lazy val test = Seq(
-        "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % "1.13.1" % scope,

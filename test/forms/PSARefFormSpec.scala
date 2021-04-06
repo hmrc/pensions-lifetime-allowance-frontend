@@ -16,14 +16,14 @@
 
 package forms
 
-import javax.inject.Inject
-import play.api.data.FormError
+import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import testHelpers.FakeApplication
 
-class PSARefFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec with WithFakeApplication {
+import javax.inject.Inject
+
+class PSARefFormSpec @Inject()(implicit val messages: Messages) extends FakeApplication {
 
   private val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm
 
@@ -32,7 +32,7 @@ class PSARefFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec
       val postData = Json.obj(
         "pensionSchemeAdministratorCheckReference" -> "PSA12345678A"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.isEmpty)
     }
@@ -41,7 +41,7 @@ class PSARefFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec
       val postData = Json.obj(
         "pensionSchemeAdministratorCheckReference" -> "psa12345678a"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.isEmpty)
     }
@@ -50,7 +50,7 @@ class PSARefFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec
       val postData = Json.obj(
         "pensionSchemeAdministratorCheckReference" -> ""
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("pensionSchemeAdministratorCheckReference",
@@ -61,7 +61,7 @@ class PSARefFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec
       val postData = Json.obj(
         "pensionSchemeAdministratorCheckReference" -> "psa"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("pensionSchemeAdministratorCheckReference",

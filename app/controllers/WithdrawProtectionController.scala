@@ -31,9 +31,10 @@ import models.{ProtectionModel, WithdrawDateFormModel}
 import play.api.data.{Form, FormError}
 import play.api.i18n.{I18nSupport, Lang, Messages}
 import play.api.mvc._
-import play.api.{Application, Logger}
+import play.api.Application
+import play.api.Logger.logger
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -47,7 +48,8 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
                                              implicit val partialRetriever: PlaFormPartialRetriever,
                                              implicit val templateRenderer:LocalTemplateRenderer,
                                              implicit val plaContext: PlaContext,
-                                             implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
+                                             implicit val application: Application)
+extends FrontendController(mcc) with I18nSupport {
 
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
@@ -60,7 +62,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
           case Some(currentProtection) =>
             Ok(views.html.pages.withdraw.withdrawSummary(displayConstructors.createWithdrawSummaryTable(currentProtection)))
           case _ =>
-            Logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
+            logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
             InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
@@ -75,7 +77,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
               Strings.protectionTypeString(currentProtection.protectionType),
               Strings.statusString(currentProtection.status)))
           case _ =>
-            Logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
+            logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
             InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
@@ -90,7 +92,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
               Strings.protectionTypeString(currentProtection.protectionType),
               Strings.statusString(currentProtection.status)))
           case _ =>
-            Logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
+            logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
             InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
@@ -122,7 +124,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
       keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap {
         case Some(protection) => validateAndSaveWithdrawDateForm(protection)
         case _ =>
-          Logger.error(s"Could not retrieve protection data for user when loading the withdraw date input page")
+          logger.error(s"Could not retrieve protection data for user when loading the withdraw date input page")
           Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
     }
@@ -136,7 +138,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
           getWithdrawDateModel(form), Strings.protectionTypeString(protection.protectionType),
           Strings.statusString(protection.status)))
       case _ =>
-        Logger.error(s"Could not retrieve withdraw form data for user")
+        logger.error(s"Could not retrieve withdraw form data for user")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
@@ -149,7 +151,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
           case Some(protection) =>
             fetchWithdrawDateForm(protection)
           case _ =>
-            Logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page")
+            logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page")
             Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
         }
       }
@@ -172,7 +174,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
               Strings.statusString(protection.status)))
           )
           case _ =>
-            Logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page")
+            logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page")
             InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
@@ -195,7 +197,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
     response.status match {
       case OK => Future.successful(Redirect(routes.WithdrawProtectionController.showWithdrawConfirmation(Strings.protectionTypeString(protectionType))))
       case _ => {
-        Logger.error(s"conflict response returned for withdrawal request for user nino $nino")
+        logger.error(s"conflict response returned for withdrawal request for user nino $nino")
         Future.successful(InternalServerError(
           views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString))
           .withHeaders(CACHE_CONTROL -> "no-cache"))

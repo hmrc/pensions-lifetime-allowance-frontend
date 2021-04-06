@@ -23,10 +23,10 @@ import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import constructors.DisplayConstructors
 import javax.inject.Inject
 import models.{PersonalDetailsModel, ProtectionModel}
-import play.api.Logger
+import play.api.Logger.logger
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -62,7 +62,7 @@ class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
         val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
         Ok(views.html.pages.result.resultPrint(displayModel))
       case _ =>
-        Logger.warn(s"Forced redirect to PrintView for $nino")
+        logger.warn(s"Forced redirect to PrintView for $nino")
         Redirect(routes.ReadProtectionsController.currentProtections())
     }
   }

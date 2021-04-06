@@ -16,14 +16,13 @@
 
 package forms
 
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import PensionsTakenForm._
+import forms.PensionsTakenForm._
 import models.PensionsTakenModel
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
-import testHelpers.CommonErrorMessages
+import testHelpers.{CommonErrorMessages, FakeApplication}
 
-class PensionsTakenFormSpec extends UnitSpec with WithFakeApplication with CommonErrorMessages with MockitoSugar {
+class PensionsTakenFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
   "The PensionsTakenForm" should {

@@ -20,11 +20,12 @@ import forms.AmendPensionsTakenBeforeForm._
 import models.amendModels.AmendPensionsTakenBeforeModel
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
-import testHelpers.CommonErrorMessages
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import testHelpers.{CommonErrorMessages, FakeApplication}
 import utils.Constants
 
-class AmendPensionsTakenBeforeFormSpec extends UnitSpec with CommonErrorMessages with WithFakeApplication with MockitoSugar {
+class AmendPensionsTakenBeforeFormSpec extends FakeApplication
+  with CommonErrorMessages
+  with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
   "The AmendPensionsTakenBeforeForm" should {

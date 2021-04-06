@@ -21,7 +21,7 @@ import javax.inject.Inject
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
 import play.twirl.api.Html
-import uk.gov.hmrc.play.bootstrap.http.FrontendErrorHandler
+import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
 class PlaFrontendErrorHandler @Inject()(implicit val messagesApi: MessagesApi,
                                        implicit val PlaFormPartialRetriever: PlaFormPartialRetriever,

@@ -23,16 +23,16 @@ import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import mocks.AuthMock
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.{Application, Configuration, Environment}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
+import play.api.test.Helpers.{defaultAwaitTimeout, status}
+import play.api.{Application, Configuration, Environment}
 import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class ConfirmationControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication {
+class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with AuthMock {
 
     implicit val mockTemplateRenderer: LocalTemplateRenderer   = MockTemplateRenderer.renderer
     implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
@@ -68,7 +68,7 @@ class ConfirmationControllerSpec extends UnitSpec with MockitoSugar with AuthMoc
         "return a 200" in new Setup {
             mockAuthConnector(Future.successful({}))
 
-            val result = await(controller.confirmFP(FakeRequest()))
+            val result = controller.confirmFP(FakeRequest())
             status(result) shouldBe 200
         }
     }

@@ -27,22 +27,25 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
+import play.api.libs.ws.ahc.AhcWSResponse
+import play.api.libs.ws.ahc.cache.CacheableHttpResponseStatus
 import play.api.libs.ws.{WSClient, WSResponse}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import testHelpers.MockTemplateRenderer
+import play.shaded.ahc.org.asynchttpclient.Response
+import play.shaded.ahc.org.asynchttpclient.uri.Uri
+import testHelpers.{FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.ActionWithSessionId
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-
-class PrintPdfControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfterEach {
+class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
 
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
+  implicit val ec: ExecutionContext = fakeApplication.injector.instanceOf[ExecutionContext]
   lazy val ws: WSClient = fakeApplication.injector.instanceOf[WSClient]
 
   val mockPdfGeneratorConnector: PdfGeneratorConnector = mock[PdfGeneratorConnector]
@@ -51,6 +54,11 @@ class PrintPdfControllerSpec extends UnitSpec with MockitoSugar with WithFakeApp
   val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = fakeApplication.injector.instanceOf[ActionWithSessionId]
   val mockEnv: Environment = mock[Environment]
+  val response: Future[WSResponse] = {
+    val responseBuilder = new Response.ResponseBuilder()
+    responseBuilder.accumulate(new CacheableHttpResponseStatus(Uri.create("http://testsite.com"), OK, "OK", ""))
+    Future(new AhcWSResponse(responseBuilder.build()))
+  }
 
   implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
@@ -89,8 +97,9 @@ class PrintPdfControllerSpec extends UnitSpec with MockitoSugar with WithFakeApp
         protectionNotificationNumber = Some("IP14000000000A")
       )
 
+
+
       val request = FakeRequest().withSession(sessionId)
-      val response: Future[WSResponse] = ws.url("http://testsite.com").post("""{"foo":"bar"}""")
 
       keystoreFetchCondition[PSALookupResult](Option(testPsaLookupResult))
       when(mockPdfGeneratorConnector.generatePdf(any())).thenReturn(response)
@@ -135,7 +144,6 @@ class PrintPdfControllerSpec extends UnitSpec with MockitoSugar with WithFakeApp
       )
 
       val request = FakeRequest().withSession(sessionId)
-      val response: Future[WSResponse] = ws.url("http://testsite.com").post("""{"foo":"bar"}""")
 
       keystoreFetchCondition[PSALookupRequest](Option(testPsaLookupRequest))
       when(mockPdfGeneratorConnector.generatePdf(any())).thenReturn(response)

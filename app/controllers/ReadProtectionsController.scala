@@ -26,13 +26,14 @@ import enums.ApplicationType
 import javax.inject.Inject
 import models._
 import models.amendModels.AmendProtectionModel
-import play.api.{Application, Logger}
+import play.api.Application
+import play.api.Logger.logger
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException, UpstreamErrorResponse}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -63,12 +64,12 @@ extends FrontendController(mcc) with I18nSupport {
             case OK => redirectFromSuccess(response, nino)
             case LOCKED => Future.successful(Locked(pages.result.manualCorrespondenceNeeded()))
             case num => {
-              Logger.error(s"unexpected status $num passed to currentProtections for nino: $nino")
+              logger.error(s"unexpected status $num passed to currentProtections for nino: $nino")
               Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
           }
         }.recover {
-          case e: NotFoundException => Logger.warn(s"Error 404 passed to currentProtections for nino: $nino")
+          case e: NotFoundException => logger.warn(s"Error 404 passed to currentProtections for nino: $nino")
             throw UpstreamErrorResponse(e.message, 404, 500)
           case otherException: Exception => throw otherException
         }
@@ -80,7 +81,7 @@ extends FrontendController(mcc) with I18nSupport {
       readResponseModel =>
         saveAndDisplayExistingProtections(readResponseModel)
     }.getOrElse {
-      Logger.warn(s"unable to create transformed read response model from microservice response for nino: $nino")
+      logger.warn(s"unable to create transformed read response model from microservice response for nino: $nino")
       Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }

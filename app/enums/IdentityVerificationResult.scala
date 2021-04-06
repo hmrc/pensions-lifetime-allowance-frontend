@@ -16,7 +16,7 @@
 
 package enums
 
-import play.api.Logger
+import play.api.Logger.logger
 import play.api.libs.json._
 
 object IdentityVerificationResult extends Enumeration {
@@ -36,7 +36,7 @@ object IdentityVerificationResult extends Enumeration {
   implicit val formats = new Format[IdentityVerificationResult] {
     def reads(json: JsValue): JsResult[IdentityVerificationResult] = {
       JsSuccess(IdentityVerificationResult.values.find(_.toString == json.as[String]).getOrElse{
-        Logger.warn(s"No Identity Verification Result for ${json.as[String]} response from auth service. User was taken to the default unauthorised page.")
+        logger.warn(s"No Identity Verification Result for ${json.as[String]} response from auth service. User was taken to the default unauthorised page.")
         IdentityVerificationResult.UnknownOutcome
       })
     }

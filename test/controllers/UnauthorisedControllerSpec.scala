@@ -36,13 +36,12 @@ import testHelpers._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.ActionWithSessionId
 
 import scala.concurrent.Future
 import scala.io.Source
 
-class UnauthorisedControllerSpec  extends UnitSpec with MockitoSugar with WithFakeApplication with BeforeAndAfterEach {
+class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
 
   val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]

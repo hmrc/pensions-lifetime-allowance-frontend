@@ -19,15 +19,14 @@ package utils
 import akka.util.Timeout
 import org.scalatest._
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.{Application, Configuration}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.DefaultAwaitTimeout
-import uk.gov.hmrc.play.test.UnitSpec
 
 import scala.concurrent.duration._
 
 trait IntegrationBaseSpec
-  extends UnitSpec
+  extends WordSpecLike with Matchers with OptionValues
     with GuiceOneServerPerSuite
     with WiremockHelper
     with BeforeAndAfterEach
@@ -40,14 +39,15 @@ trait IntegrationBaseSpec
   val localPort: Int = port
   val localUrl  = s"http://$localHost:$localPort"
 
-  val additionalConfiguration: Seq[(String, Any)] = Seq.empty
+  def defaultConfiguration: Configuration = Configuration(
+    "testserver.port" -> s"$localPort",
+      "application.router" -> "testOnlyDoNotUseInAppConf.Routes",
+      "microservice.services.pla-dynamic-stub.port" -> s"${WiremockHelper.wiremockPort}",
+      "auditing.consumer.baseUri.port" -> s"${WiremockHelper.wiremockPort}"
+  )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
-    .configure(Configuration("testserver.port" -> s"$localPort"))
-    .configure(Configuration("application.router" -> "testOnlyDoNotUseInAppConf.Routes"))
-    .configure(Configuration("microservice.services.pla-dynamic-stub.port" -> s"${WiremockHelper.wiremockPort}"))
-    .configure(Configuration("auditing.consumer.baseUri.port" -> s"${WiremockHelper.wiremockPort}"))
-    .configure(Configuration(additionalConfiguration: _*))
+    .configure(defaultConfiguration)
     .build()
 
   override def beforeEach() = {

@@ -17,8 +17,6 @@
 package controllers
 
 
-import java.util.UUID
-
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import auth.AuthFunction
@@ -36,17 +34,18 @@ import play.api.i18n.Messages
 import play.api.libs.json.JsValue
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment}
 import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class SummaryControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication {
+class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthMock {
 
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
@@ -103,7 +102,7 @@ class SummaryControllerSpec extends UnitSpec with MockitoSugar with AuthMock wit
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(None))
-        val result = await(controller.summaryIP16(fakeRequest))
+        val result = controller.summaryIP16(fakeRequest)
 
         status(result) shouldBe 500
     }
@@ -112,7 +111,7 @@ class SummaryControllerSpec extends UnitSpec with MockitoSugar with AuthMock wit
   "Navigating to summary when there is invalid user data" when {
 
     "user is applying for IP16" in new Setup  {
-      lazy val result = await(controller.summaryIP16(fakeRequest))
+      lazy val result = controller.summaryIP16(fakeRequest)
 
       when(controller.summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(None)
       when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
@@ -126,7 +125,7 @@ class SummaryControllerSpec extends UnitSpec with MockitoSugar with AuthMock wit
         when(controller.summaryConstructor.createSummaryData(ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(tstSummaryModel))
         when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
-        val result = await(controller.summaryIP16(fakeRequest))
+        val result = controller.summaryIP16(fakeRequest)
         status(result) shouldBe 200
     }
   }

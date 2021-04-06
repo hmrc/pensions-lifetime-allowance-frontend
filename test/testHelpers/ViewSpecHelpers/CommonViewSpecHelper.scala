@@ -21,11 +21,10 @@ import config.{FrontendAppConfig, PlaContext}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
-import testHelpers.MockTemplateRenderer
+import testHelpers.{FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-trait CommonViewSpecHelper extends UnitSpec with CommonMessages with MockitoSugar with WithFakeApplication {
+trait CommonViewSpecHelper extends FakeApplication with CommonMessages with MockitoSugar {
 
   implicit val application = fakeApplication
   val http = mock[DefaultHttpClient]

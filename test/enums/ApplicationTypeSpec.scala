@@ -16,9 +16,9 @@
 
 package enums
 
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatest.{Matchers, OptionValues, WordSpecLike}
 
-class ApplicationTypeSpec extends UnitSpec {
+class ApplicationTypeSpec extends WordSpecLike with Matchers with OptionValues {
   "ApplicationType" when {
     "translating from string to enum" should {
 

@@ -24,11 +24,11 @@ import config.LocalTemplateRenderer
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
 import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
-import play.api.Logger
+import play.api.Logger.logger
 import play.api.i18n.I18nSupport
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.ActionWithSessionId
 import views.html.pages.lookup.{psa_lookup_not_found_print, psa_lookup_results_print}
 
@@ -40,7 +40,8 @@ class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                                   pdfGeneratorConnector: PdfGeneratorConnector,
                                   mcc: MessagesControllerComponents)(
                                   implicit val partialRetriever: PlaFormPartialRetriever,
-                                  implicit val templateRenderer: LocalTemplateRenderer) extends FrontendController(mcc) with I18nSupport {
+                                  implicit val templateRenderer: LocalTemplateRenderer)
+extends FrontendController(mcc) with I18nSupport {
 
   val lookupRequestID = "psa-lookup-request"
   val lookupResultID = "psa-lookup-result"
@@ -57,7 +58,7 @@ class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                   s"attachment; filename=lookup-result-${result.protectionNotificationNumber.getOrElse("")}.pdf")
           }
         case None =>
-          Logger.warn("[PrintPdfController]: Unable to print ResultsPDF. Redirected to displaySchemeAdministratorReferenceForm")
+          logger.warn("[PrintPdfController]: Unable to print ResultsPDF. Redirected to displaySchemeAdministratorReferenceForm")
           Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
       }
   }
@@ -80,10 +81,10 @@ class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
           }
 
         case Some(req@PSALookupRequest(_, None)) =>
-          Logger.warn("[PrintPdfController]: lifetimeAllowanceReference is not defined, unable to print NotFound PDF. Redirected to displaySchemeAdministratorReferenceForm")
+          logger.warn("[PrintPdfController]: lifetimeAllowanceReference is not defined, unable to print NotFound PDF. Redirected to displaySchemeAdministratorReferenceForm")
           Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
         case None =>
-          Logger.warn("[PrintPdfController]: Unable to print NotFound PDF. Redirected to displaySchemeAdministratorReferenceForm")
+          logger.warn("[PrintPdfController]: Unable to print NotFound PDF. Redirected to displaySchemeAdministratorReferenceForm")
           Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
       }
   }

@@ -29,19 +29,18 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.{Configuration, Environment}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import testHelpers.MockTemplateRenderer
+import play.api.{Configuration, Environment}
+import testHelpers.{FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class PrintControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication with BeforeAndAfterEach {
+class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach {
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
@@ -95,7 +94,7 @@ class PrintControllerSpec extends UnitSpec with MockitoSugar with AuthMock with 
         when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(testPrintDisplayModel)
 
-        val result = await(TestPrintController.printView(fakeRequest))
+        val result = TestPrintController.printView(fakeRequest)
         status(result) shouldBe 200
       }
     }
@@ -105,11 +104,11 @@ class PrintControllerSpec extends UnitSpec with MockitoSugar with AuthMock with 
         when(mockCitizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(Future(Some(testPersonalDetails)))
         when(mockKeyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
-          .thenReturn(None)
+          .thenReturn(Future(None))
         when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
           .thenReturn(testPrintDisplayModel)
 
-        val result = await(TestPrintController.printView(fakeRequest))
+        val result = TestPrintController.printView(fakeRequest)
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections().url)
       }

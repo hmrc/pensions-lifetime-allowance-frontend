@@ -23,10 +23,9 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 
-class WithdrawnControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
+class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
 
   val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
 

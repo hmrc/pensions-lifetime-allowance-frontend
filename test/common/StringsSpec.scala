@@ -16,10 +16,10 @@
 
 package common
 
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatest.{Matchers, OptionValues, WordSpecLike}
 import enums.ApplicationType
 
-class StringsSpec extends UnitSpec {
+class StringsSpec extends WordSpecLike with Matchers with OptionValues {
 
   "nameString" should {
 

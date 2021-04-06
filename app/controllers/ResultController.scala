@@ -27,9 +27,10 @@ import javax.inject.Inject
 import models._
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import play.api.{Application, Logger}
+import play.api.Application
+import play.api.Logger.logger
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Constants
 import views.html.pages.result._
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -46,7 +47,8 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  implicit val partialRetriever: PlaFormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val plaContext: PlaContext,
-                                 implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
+                                 implicit val application: Application)
+extends FrontendController(mcc) with I18nSupport {
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
@@ -84,7 +86,7 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
     responseConstructors.createApplyResponseModelFromJson(response.json).map {
       model =>
         if (model.protection.notificationId.isEmpty) {
-          Logger.warn(s"No notification ID found in the ApplyResponseModel for user with nino $nino")
+          logger.warn(s"No notification ID found in the ApplyResponseModel for user with nino $nino")
           Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
         } else {
           keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
@@ -96,7 +98,7 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
           }
         }
     }.getOrElse {
-      Logger.warn(s"Unable to create ApplyResponseModel from application response for ${protectionType.toString} for user nino: $nino")
+      logger.warn(s"Unable to create ApplyResponseModel from application response for ${protectionType.toString} for user nino: $nino")
       Future.successful(InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
@@ -133,7 +135,7 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
                 Ok(resultRejected(displayModel, showUserResearchPanel))
             }
           case _ =>
-            Logger.warn(s"Could not retrieve ApplyResponseModel from keystore for user with nino: $nino")
+            logger.warn(s"Could not retrieve ApplyResponseModel from keystore for user with nino: $nino")
             errorResponse
         }
       }

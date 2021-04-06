@@ -19,13 +19,12 @@ package forms
 import forms.WithdrawDateForm.withdrawDateForm
 import org.joda.time.LocalDate
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.data.FormError
+import play.api.data.{Form, FormError}
 import play.api.i18n.Lang
 import play.api.libs.json.Json
-import testHelpers.PSODetailsMessages
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import testHelpers.{FakeApplication, PSODetailsMessages}
 
-class CommonBindersSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication with MockitoSugar {
+class CommonBindersSpec extends FakeApplication with PSODetailsMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
   object testForm extends CommonBinders
 
@@ -58,7 +57,7 @@ class CommonBindersSpec extends UnitSpec with PSODetailsMessages with WithFakeAp
           "withdrawMonth" -> "2",
           "incorrectKey" -> "2017"
         )
-        val validatedForm = withdrawDateForm.bind(postData)
+        val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
         assert(validatedForm.errors.size == 1)
         assert(validatedForm.errors.contains(FormError("withdrawYear",
           List(errorEmptyYear))))
@@ -70,7 +69,7 @@ class CommonBindersSpec extends UnitSpec with PSODetailsMessages with WithFakeAp
           "withdrawMonth" -> "2",
           "withdrawYear" -> "X"
         )
-        val validatedForm = withdrawDateForm.bind(postData)
+        val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
         assert(validatedForm.errors.size == 1)
         assert(validatedForm.errors.contains(FormError("withdrawYear",
           List(errorReal))))
@@ -85,7 +84,7 @@ class CommonBindersSpec extends UnitSpec with PSODetailsMessages with WithFakeAp
             "withdrawMonth" -> "2",
             "withdrawYear" -> s"${LocalDate.now.getYear + 1}"
           )
-          val validatedForm = withdrawDateForm.bind(postData)
+          val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
           assert(validatedForm.errors.size == 1)
           assert(validatedForm.errors.contains(FormError("withdrawDay",
             List(errorFutureDate))))
@@ -97,7 +96,7 @@ class CommonBindersSpec extends UnitSpec with PSODetailsMessages with WithFakeAp
             "withdrawMonth" -> "2",
             "withdrawYear" -> "0000"
           )
-          val validatedForm = withdrawDateForm.bind(postData)
+          val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
           assert(validatedForm.errors.size == 1)
           assert(validatedForm.errors.contains(FormError("withdrawDay",
             List(errorDate))))

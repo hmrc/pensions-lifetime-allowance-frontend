@@ -22,7 +22,7 @@ import connectors.StubConnector
 import javax.inject.Inject
 import play.api.libs.json._
 import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class TestSetupController @Inject()(connector: StubConnector,

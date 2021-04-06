@@ -25,10 +25,10 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import testHelpers._
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class TimeoutControllerSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
+class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
 
     val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents]
 
@@ -45,7 +45,7 @@ class TimeoutControllerSpec extends UnitSpec with MockitoSugar with WithFakeAppl
     "Calling the .timeout action" when {
 
         "navigated to " should {
-            lazy val result = await(controller.timeout(FakeRequest()))
+            lazy val result = controller.timeout(FakeRequest())
             "return a 200" in {
                 status(result) shouldBe 200
             }

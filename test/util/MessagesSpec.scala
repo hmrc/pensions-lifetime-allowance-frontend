@@ -16,12 +16,13 @@
 
 package util
 
+import org.scalatest.{Matchers, OptionValues, WordSpecLike}
 import play.api.i18n.Messages
 import play.api.i18n.Messages.MessageSource
-import uk.gov.hmrc.play.test.UnitSpec
+
 import scala.io.Source
 
-class MessagesSpec extends UnitSpec  {
+class MessagesSpec extends WordSpecLike with Matchers with OptionValues  {
 
   private val MatchSingleQuoteOnly = """\w+'{1}\w+""".r
   private val MatchBacktickQuoteOnly = """`+""".r

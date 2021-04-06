@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package controllers
+package testHelpers
 
-import config.FrontendAppConfig
-import javax.inject.Inject
-import play.api.mvc._
-import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import com.kenshoo.play.metrics.PlayModule
+import org.scalatest.{Matchers, OptionValues, WordSpecLike}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
+import play.api.Application
+import play.api.inject.guice.GuiceApplicationBuilder
 
-import scala.concurrent.Future
+trait FakeApplication extends WordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite {
 
-class AccountController @Inject()(appConfig: FrontendAppConfig,
-                                 mcc: MessagesControllerComponents) extends FrontendController(mcc) {
+  override def fakeApplication: Application = app
 
-  def signOut: Action[AnyContent] = Action.async {
-    Future.successful(Redirect(appConfig.feedbackSurvey).withNewSession)
-  }
+  override lazy val app: Application = new GuiceApplicationBuilder()
+    .bindings(new PlayModule)
+    .configure(Map("metrics.enabled" -> false)).build()
 }

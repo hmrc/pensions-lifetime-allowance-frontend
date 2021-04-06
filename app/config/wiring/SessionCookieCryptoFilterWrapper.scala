@@ -18,7 +18,7 @@ package config.wiring
 
 import javax.inject.Inject
 import uk.gov.hmrc.crypto.PlainText
-import uk.gov.hmrc.play.bootstrap.filters.frontend.crypto.SessionCookieCrypto
+import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCrypto
 
 class SessionCookieCryptoFilterWrapper @Inject()(sessionCookieCrypto: SessionCookieCrypto){
   def encryptCookieString(cookie: String) : String = {

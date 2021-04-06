@@ -24,9 +24,10 @@ import enums.IdentityVerificationResult
 import javax.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import play.api.{Application, Logger}
+import play.api.Application
+import play.api.Logger.logger
 import uk.gov.hmrc.http.Upstream4xxResponse
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.ivFailure._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -40,7 +41,8 @@ class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVe
                                        implicit val plaContext: PlaContext,
                                        implicit val partialRetriever: PlaFormPartialRetriever,
                                        implicit val templateRenderer:LocalTemplateRenderer,
-                                       implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
+                                       implicit val application: Application)
+extends FrontendController(mcc) with I18nSupport {
 
   val issuesKey = "previous-technical-issues"
 
@@ -49,7 +51,7 @@ class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVe
       val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
       identityVerificationResult.flatMap {
         case IdentityVerificationResult.TechnicalIssue =>
-          Logger.warn("Technical Issue relating to Identity verification, user directed to technical issue page")
+          logger.warn("Technical Issue relating to Identity verification, user directed to technical issue page")
           keystoreConnector.fetchAndGetFormData[Boolean](issuesKey).flatMap {
             case Some(true) => Future.successful(Ok(technicalIssue()))
             case _ =>
@@ -59,14 +61,14 @@ class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVe
           }
         case IdentityVerificationResult.LockedOut => Future.successful(Unauthorized(lockedOut()))
         case IdentityVerificationResult.Timeout =>
-          Logger.info("User session timed out during IV uplift")
+          logger.info("User session timed out during IV uplift")
           Future.successful(Unauthorized(views.html.pages.timeout()))
         case _ =>
-          Logger.info("Unauthorised identity verification, returned to unauthorised page")
+          logger.info("Unauthorised identity verification, returned to unauthorised page")
           Future.successful(Unauthorized(unauthorised()))
       } recover {
         case Upstream4xxResponse(_, NOT_FOUND, _, _) =>
-          Logger.warn("Could not find unauthorised journey ID")
+          logger.warn("Could not find unauthorised journey ID")
           Unauthorized(unauthorised())
       }
     } getOrElse Future.successful(Unauthorized(unauthorised()))
