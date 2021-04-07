@@ -14,8 +14,14 @@
  * limitations under the License.
  *@
 
+@import play.twirl.api.{Html, HtmlFormat}
+@import uk.gov.hmrc.play.config.{OptimizelyConfig, TrackingConsentConfig}
+@import uk.gov.hmrc.play.views.html.layouts.TrackingConsentSnippet
+@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
 @import uk.gov.hmrc.renderer.TemplateRenderer
-@import play.twirl.api.HtmlFormat
+@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
+@import play.twirl.api.Html
+@import uk.gov.hmrc.play.config.TrackingConsentConfig
 
 @(appConfig: config.AppConfig,
   title: String,
@@ -34,13 +40,15 @@
 
   )(implicit request: Request[_], messages: Messages, context: config.PlaContext, FormPartialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer)
 
-@import uk.gov.hmrc.play.views.html.{layouts => uiLayouts}
-@import play.twirl.api.Html
-
 @mustacheCheck(str: String) = @{
 if(str.trim=="") false else str
 }
 
+@headInlineScript = @{
+    val trackingConsentConfig = new TrackingConsentConfig(appConfig.configuration)
+    val optimizelyConfig = new OptimizelyConfig(appConfig.configuration)
+    Map("headInlineScript" -> new TrackingConsentSnippet(trackingConsentConfig, optimizelyConfig)(None))
+}
 
 @scriptElement = @{
     Seq(
@@ -115,13 +123,6 @@ if(str.trim=="") false else str
     false
 }
 
-@googleTagManager = @{ if(appConfig.googleTagManagerId != "N/A") {
-        Map("gtmId" -> appConfig.googleTagManagerId)
-    } else {
-        false
-    }
-}
-
 @accessibilityFooterUrl = @{
     Map("accessibilityFooterUrl" -> appConfig.accessibilityFrontendUrl)
 }
@@ -135,8 +136,6 @@ templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath,article, M
     "accessibilityFooterUrl" -> accessibilityFooterUrl,
     "mainContentHeader" -> mainContentHeader,
 
-    "googleAnalytics" -> googleAnalytics,
-    "googleTagManager" -> googleTagManager,
     "ssoUrl" -> None,
 
     "betaBanner" -> betaHeaderEnable,
@@ -166,8 +165,9 @@ templateRenderer.renderDefaultTemplate(appConfig.frontendTemplatePath,article, M
     "fullWidthBannerTitle" -> afterHeader,
     "fullWidthBannerText" -> afterHeader,
     "fullWidthBannerLink" -> afterHeader,
-    "fullWidthBannerDismissText" -> afterHeader
+    "fullWidthBannerDismissText" -> afterHeader,
 
+    "headInlineScript" -> headInlineScript
 )
 )
 }

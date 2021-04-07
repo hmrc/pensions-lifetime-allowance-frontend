@@ -17,10 +17,14 @@
 package auth
 
 import config.AppConfig
+import play.api.Configuration
 import play.api.mvc.RequestHeader
 
 
 object MockConfig extends AppConfig {
+
+  val NoConfiguration = null
+
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = "_"
   override val betaFeedbackUrl: String = ""
   override val betaFeedbackUnauthenticatedUrl = ""
@@ -49,6 +53,6 @@ object MockConfig extends AppConfig {
   override val notFoundStatusMetric: String = ""
   override val appName: String = ""
   override val frontendTemplatePath: String = ""
-  override val googleTagManagerId: String = "N/A"
   override val sessionMissingUpliftUrlPrefix: Option[String] = None
+  override val configuration: Configuration = NoConfiguration
 }
