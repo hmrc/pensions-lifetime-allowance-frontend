@@ -32,12 +32,12 @@ import forms.AmendmentTypeForm._
 import javax.inject.Inject
 import models.amendModels._
 import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
-import play.api.Logger
+import play.api.Logger.logger
 import play.api.data.FormError
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, Result, _}
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Constants
 import views.html.pages
 import views.html.pages.result.manualCorrespondenceNeeded
@@ -54,7 +54,8 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: PlaFormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
-                                 implicit val plaContext: PlaContext) extends FrontendController(mcc) with I18nSupport {
+                                 implicit val plaContext: PlaContext)
+extends FrontendController(mcc) with I18nSupport {
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
@@ -62,7 +63,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
      authFunction.genericAuthWithNino("existingProtections") { nino =>
       amendmentTypeForm.bindFromRequest.fold(
         errors => {
-          Logger.warn(s"Couldn't bind protection type or status to amend request for user with nino $nino")
+          logger.warn(s"Couldn't bind protection type or status to amend request for user with nino $nino")
           Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
         },
         success => for {
@@ -98,7 +99,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                   }
 
                 case _ =>
-                  Logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before")
+                  logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before")
                   Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
 
             }
@@ -128,7 +129,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                 }
 
               case _ =>
-                Logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken between")
+                logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken between")
                 Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
         }
@@ -160,7 +161,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                   }
 
                 case _ =>
-                  Logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before")
+                  logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before")
                   Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
               }
           }
@@ -187,7 +188,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
 
 
             case _ =>
-              Logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend current UK pension")
+              logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend current UK pension")
               Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
           }
         }
@@ -211,7 +212,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
               }
 
             case None =>
-              Logger.warn(s"Could not retrieve Amend Protection Model for user with nino $nino when submitting a removal of a pension debit")
+              logger.warn(s"Could not retrieve Amend Protection Model for user with nino $nino when submitting a removal of a pension debit")
               Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
           }
         }
@@ -248,7 +249,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
             amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))
           ))
         case _ =>
-          Logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend summary page")
+          logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend summary page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
@@ -267,7 +268,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
   def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel], nino: String)
                             (implicit request:Request[AnyContent]):Future[Result] = {
     if (modelGA.isEmpty) {
-        Logger.warn(s"Unable to retrieve amendsGAModel from keyStore for user nino :$nino")
+        logger.warn(s"Unable to retrieve amendsGAModel from keyStore for user nino :$nino")
       }
       Future(modelAR.map {
         case model => {
@@ -282,7 +283,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
           }
         }
       }.getOrElse {
-        Logger.warn(s"Unable to retrieve amendment outcome model from keyStore for user nino :$nino")
+        logger.warn(s"Unable to retrieve amendment outcome model from keyStore for user nino :$nino")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString))
           .withHeaders(CACHE_CONTROL -> "no-cache")
       })
@@ -334,7 +335,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
           }
         )(request)
       case _ =>
-        Logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend $journey page")
+        logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend $journey page")
         InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
@@ -384,7 +385,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
               Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
           }
         case _ =>
-          Logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend PSO details page")
+          logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend PSO details page")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
@@ -395,7 +396,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
         case 0 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
         case 1 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head, protectionType, status))))
         case num => {
-          Logger.warn(s"$num pension debits recorded for user nino $nino during amend journey")
+          logger.warn(s"$num pension debits recorded for user nino $nino during amend journey")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
@@ -416,7 +417,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
         case Some(model) =>
           Ok(pages.amends.removePsoDebits(amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))))
         case _ =>
-          Logger.warn(s"Could not retrieve Amend ProtectionModel for user with nino $nino when removing the new pension debit")
+          logger.warn(s"Could not retrieve Amend ProtectionModel for user with nino $nino when removing the new pension debit")
           InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
@@ -425,12 +426,12 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
   private def routeViaMCNeededCheck(response: HttpResponse, nino: String)(implicit request: Request[AnyContent]): Future[Result] = {
     response.status match {
       case 409 => {
-        Logger.warn(s"conflict response returned for amend request for user nino $nino")
+        logger.warn(s"conflict response returned for amend request for user nino $nino")
         Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString))
           .withHeaders(CACHE_CONTROL -> "no-cache"))
       }
       case 423 =>
-        Logger.info(s"locked reponse returned for amend request for user nino $nino")
+        logger.info(s"locked reponse returned for amend request for user nino $nino")
         Future.successful(Locked(manualCorrespondenceNeeded()))
       case _ => saveAndRedirectToDisplay(response, nino)
     }
@@ -444,11 +445,11 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
             cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
           }
         } else {
-          Logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
+          logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
           Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
         }
     }.getOrElse {
-      Logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
+      logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
       Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString))
         .withHeaders(CACHE_CONTROL -> "no-cache"))
     }

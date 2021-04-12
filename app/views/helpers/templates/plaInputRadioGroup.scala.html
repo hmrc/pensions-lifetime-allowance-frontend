@@ -34,7 +34,7 @@
         @elements.args.get('_helpText)
     </span>
 }
-@elements.errors.map{error => <span class="error-notification" id='@{field.id+"-error-message"}'>@Messages(error)</span>}
+@elements.errors.map{error => <span class="error-notification" id='@{field.id+"-error-message"}'>@Messages(error.toString)</span>}
 @radioOptions.map { case (value, label) =>
     @defining(s"${elements.field.name}-${value.toLowerCase.replace(" ","_")}")  { inputId =>
         <label for="@inputId"

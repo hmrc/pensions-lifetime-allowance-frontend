@@ -22,6 +22,7 @@ import constructors.IPApplicationConstructor
 import enums.ApplicationType
 import javax.inject.Inject
 import models._
+import play.api.Logger.logger
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import uk.gov.hmrc.http._
@@ -117,7 +118,7 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
     val id = protection.protectionID.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino))
     val requestJson = Json.toJson[ProtectionModel](protection)
     val body = requestJson.transform(transformer(protection)).get
-    play.Logger.info(body.toString)
+    logger.info(body.toString)
     http.PUT[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id", body)
   }
 

@@ -26,7 +26,7 @@
 @labelAfter = @{ elements.args.get('_labelAfter).getOrElse(false).asInstanceOf[Boolean] }
 <fieldset class="@fieldsetClass" id="@field.id"
     @if(elements.args.get('_fieldsetAttributes).isDefined) {@elements.args.get('_fieldsetAttributes)}>
-    @elements.errors.map{error => <span class="error-notification" id="@{elements.field.id}--error">@Messages(error)</span>}
+    @elements.errors.map{error => <span class="error-notification" id="@{elements.field.id}--error">@Messages(error.toString)</span>}
     @if(elements.args.get('_legend).isDefined) {
         <legend @if(elements.args.get('_legendClass).isDefined) {class="@elements.args.get('_legendClass)"}>
             <span id="@{elements.field.id}Label">
@@ -35,12 +35,29 @@
         </legend>
     }
     <ul>
-    @checkboxOptions.zipWithIndex.map { case ((value, label), count) =>
+    @checkboxOptions.zipWithIndex.map { case ((value, label), count) => {
         @defining(s"${elements.field.id}-${value.toLowerCase.replace(" ","_")}")  { inputId =>
-        <li>
-            <label class="block-label" for="@inputId"
-                @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
-                @if(!labelAfter) {
+            <li>
+                <label class="block-label" for="@inputId"
+                    @elements.args.get('_labelClass).map{labelClass => class="@labelClass@field.value.filter( _ == value).map{_ => selected}"}>
+                    @if(!labelAfter) {
+                        @if(elements.args.get('_stackedLabel)) {
+                            @if(label.split(" ").length < 2) { @label
+                            } else {
+                                @for( (l, index) <- label.split(" ").zipWithIndex) {
+                                    @if(index != 0) { }@l
+                                }
+                            }
+                        } else { @label }
+                    }
+                <input
+                    type="checkbox"
+                    id="@inputId"
+                    name="@inputId"
+                    value="@value"
+                    @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
+                    @if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}/>
+                @if(labelAfter) {
                     @if(elements.args.get('_stackedLabel)) {
                         @if(label.split(" ").length < 2) { @label
                         } else {
@@ -50,25 +67,9 @@
                         }
                     } else { @label }
                 }
-            <input
-                type="checkbox"
-                id="@inputId"
-                name="@inputId"
-                value="@value"
-                @elements.args.get('_inputClass).map{inputClass => class="@inputClass"}
-                @if(elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}/>
-            @if(labelAfter) {
-                @if(elements.args.get('_stackedLabel)) {
-                    @if(label.split(" ").length < 2) { @label
-                    } else {
-                        @for( (l, index) <- label.split(" ").zipWithIndex) {
-                            @if(index != 0) { }@l
-                        }
-                    }
-                } else { @label }
-            }
-            </label>
-        </li>
+                </label>
+            </li>
+        }
     }
 }
     </ul>

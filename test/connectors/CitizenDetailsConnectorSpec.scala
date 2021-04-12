@@ -23,13 +23,13 @@ import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.Json
 import play.api.test.Helpers._
+import testHelpers.FakeApplication
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class CitizenDetailsConnectorSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
+class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
 
   val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   val mockHttp = mock[DefaultHttpClient]

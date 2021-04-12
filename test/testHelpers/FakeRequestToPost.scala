@@ -17,24 +17,25 @@
 package testHelpers
 
 
+import auth._
+import org.jsoup._
+import org.scalatest.{Matchers, OptionValues, WordSpecLike}
 import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.UnitSpec
-import org.jsoup._
-import auth._
 import uk.gov.hmrc.http.SessionKeys
+import play.api.test.Helpers._
 
-
-class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*)  extends UnitSpec with TestConfigHelper {
+class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*)
+  extends WordSpecLike with Matchers with OptionValues with TestConfigHelper {
   val fakeRequest = FakeRequest("POST", "/protect-your-lifetime-allowance/" + url)
     .withSession(SessionKeys.sessionId -> s"session-$sessionId")
     .withFormUrlEncodedBody(data:_*)
   val result = controllerAction(fakeRequest)
-  val jsoupDoc = Jsoup.parse(bodyOf(result))
+  val jsoupDoc = Jsoup.parse(contentAsString(result))
 }
 
 class AuthorisedFakeRequestToPost(controllerAction: Action[AnyContent], data: (String, String)*) extends TestConfigHelper {
     val result = controllerAction(authenticatedFakeRequest().withFormUrlEncodedBody(data:_*))
-    val jsoupDoc = Jsoup.parse(bodyOf(result))
+    val jsoupDoc = Jsoup.parse(contentAsString(result))
   
 }

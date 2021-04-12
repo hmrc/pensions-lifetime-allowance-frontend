@@ -25,14 +25,14 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
+import testHelpers.FakeApplication
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PLAConnectorSpec extends UnitSpec with MockitoSugar with BeforeAndAfterEach with WithFakeApplication {
+class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
 
   val mockEnv       = mock[Environment]
   val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]

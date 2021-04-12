@@ -16,8 +16,6 @@
 
 package connectors
 
-import java.util.UUID
-
 import config.PLASessionCache
 import models._
 import org.mockito.ArgumentMatchers
@@ -25,14 +23,16 @@ import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.libs.json.Json
+import play.api.test.Helpers._
+import testHelpers.FakeApplication
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.logging.SessionId
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
+import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
-class KeyStoreConnectorSpec extends UnitSpec with MockitoSugar with WithFakeApplication {
+class KeyStoreConnectorSpec extends FakeApplication with MockitoSugar {
 
   val mockSessionCache     = mock[PLASessionCache]
   val sessionId            = UUID.randomUUID.toString

@@ -16,14 +16,14 @@
 
 package forms
 
-import javax.inject.Inject
-import play.api.data.FormError
+import play.api.data.{Form, FormError}
 import play.api.i18n.Messages
-import play.api.i18n.Messages.Implicits._
 import play.api.libs.json.Json
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import testHelpers.FakeApplication
 
-class PNNFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec with WithFakeApplication {
+import javax.inject.Inject
+
+class PNNFormSpec @Inject()(implicit val messages: Messages) extends FakeApplication {
 
   private val form = PSALookupProtectionNotificationNoForm.pnnForm
 
@@ -32,7 +32,7 @@ class PNNFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec wi
       val postData = Json.obj(
         "lifetimeAllowanceReference" -> "IP141000000000A"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.isEmpty)
     }
@@ -41,7 +41,7 @@ class PNNFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec wi
       val postData = Json.obj(
         "lifetimeAllowanceReference" -> "A123456A"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.isEmpty)
     }
@@ -50,7 +50,7 @@ class PNNFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec wi
       val postData = Json.obj(
         "lifetimeAllowanceReference" -> "ip141000000000a"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.isEmpty)
     }
@@ -59,7 +59,7 @@ class PNNFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec wi
       val postData = Json.obj(
         "lifetimeAllowanceReference" -> "a123456a"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.isEmpty)
     }
@@ -69,7 +69,7 @@ class PNNFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec wi
       val postData = Json.obj(
         "lifetimeAllowanceReference" -> ""
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("lifetimeAllowanceReference",
@@ -80,7 +80,7 @@ class PNNFormSpec @Inject()(implicit val messages: Messages) extends UnitSpec wi
       val postData = Json.obj(
         "lifetimeAllowanceReference" -> "ip14"
       )
-      val validatedForm = form.bind(postData)
+      val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("lifetimeAllowanceReference",

@@ -37,18 +37,18 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment}
-import testHelpers.MockTemplateRenderer
+import testHelpers.{FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import utils.ActionWithSessionId
 
 import scala.concurrent.Future
 
-class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfter with AuthMock with WithFakeApplication with BeforeAndAfterEach {
+class ResultControllerSpec extends FakeApplication with MockitoSugar
+  with BeforeAndAfter with AuthMock with BeforeAndAfterEach {
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
@@ -220,20 +220,20 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
       when(mockKeyStoreConnector.fetchAllUserData(any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
       when(mockKeyStoreConnector.saveData[ApplyResponseModel](anyString(), any())(any(), any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
-      when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(any(), any())).thenReturn(Some(testIP14RejectionApplyResponseModel))
+      when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(any(), any())).thenReturn(Future.successful(Some(testIP14RejectionApplyResponseModel)))
 
 
       when(mockResponseConstructors.createApplyResponseModelFromJson(any())).thenReturn(Some(testFPRejectionApplyResponseModel))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-      val DataItemResult = await(TestSuccessResultController.processFPApplication(fakeRequest))
+      val DataItemResult = TestSuccessResultController.processFPApplication(fakeRequest)
 
       status(DataItemResult) shouldBe 303
       redirectLocation(DataItemResult) shouldBe Some(s"${routes.ResultController.displayFP16()}")
     }
     "return 200" in {
       when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
-        .thenReturn(Some(testFPSuccessApplyResponseModel))
+        .thenReturn(Future.successful(Some(testFPSuccessApplyResponseModel)))
 
       when(mockDisplayConstructors.createSuccessDisplayModel(any())(any(), any())).thenReturn(SuccessDisplayModel(
         ApplicationType.FP2016, "12313123", "50", true, None, Nil
@@ -241,7 +241,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-      val GetItemResult = await(TestSuccessResultController.displayResult(ApplicationType.FP2016)(fakeRequest))
+      val GetItemResult = TestSuccessResultController.displayResult(ApplicationType.FP2016)(fakeRequest)
       status(GetItemResult) shouldBe 200
     }
   }
@@ -256,33 +256,33 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
       when(mockKeyStoreConnector.saveData[ApplyResponseModel](anyString(), any())(any(), any()))
         .thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
       when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(any(), any()))
-        .thenReturn(Some(testIP14RejectionApplyResponseModel))
+        .thenReturn(Future.successful(Some(testIP14RejectionApplyResponseModel)))
 
 
       when(mockResponseConstructors.createApplyResponseModelFromJson(any())).thenReturn(Some(testFPRejectionApplyResponseModel))
       when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
-        .thenReturn(Some(testFPRejectionApplyResponseModel))
+        .thenReturn(Future.successful(Some(testFPRejectionApplyResponseModel)))
 
       when(mockDisplayConstructors.createRejectionDisplayModel(any())(any())).thenReturn(RejectionDisplayModel(
         "12313123", Nil, ApplicationType.FP2016
       ))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-      lazy val DataItemresult = await(TestRejectResultController.processFPApplication(fakeRequest))
+      lazy val DataItemresult = TestRejectResultController.processFPApplication(fakeRequest)
       status(DataItemresult) shouldBe 303
       redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayFP16()}")
     }
     "return 200" in {
 
       when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
-        .thenReturn(Some(testFPRejectionApplyResponseModel))
+        .thenReturn(Future.successful(Some(testFPRejectionApplyResponseModel)))
 
       when(mockDisplayConstructors.createRejectionDisplayModel(any())(any())).thenReturn(RejectionDisplayModel(
         "12313123", Nil, ApplicationType.FP2016
       ))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-      lazy val GetItemResult = await(TestRejectResultController.displayResult(ApplicationType.FP2016)(fakeRequest))
+      lazy val GetItemResult = TestRejectResultController.displayResult(ApplicationType.FP2016)(fakeRequest)
       status(GetItemResult) shouldBe 200
     }
   }
@@ -296,12 +296,12 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
       when(mockKeyStoreConnector.fetchAllUserData(any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
       when(mockKeyStoreConnector.saveData[ApplyResponseModel](anyString(), any())(any(), any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
-      when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(any(), any())).thenReturn(Some(testIP14RejectionApplyResponseModel))
+      when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(any(), any())).thenReturn(Future.successful(Some(testIP14RejectionApplyResponseModel)))
 
 
       when(mockResponseConstructors.createApplyResponseModelFromJson(any())).thenReturn(Some(testIP16SuccessApplyResponseModel))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      lazy val DataItemresult = await(TestSuccessResultController.processIPApplication(fakeRequest))
+      lazy val DataItemresult = TestSuccessResultController.processIPApplication(fakeRequest)
       status(DataItemresult) shouldBe 303
       redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16()}")
 
@@ -309,14 +309,14 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
     "return 200" in {
 
       when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
-        .thenReturn(Some(testIP16SuccessApplyResponseModel))
+        .thenReturn(Future.successful(Some(testIP16SuccessApplyResponseModel)))
 
       when(mockDisplayConstructors.createSuccessDisplayModel(any())(any(), any())).thenReturn(SuccessDisplayModel(
         ApplicationType.FP2016, "12313123", "50", true, None, Nil
       ))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      lazy val GetItemResult = await(TestSuccessResultController.displayResult(ApplicationType.IP2016)(fakeRequest))
+      lazy val GetItemResult = TestSuccessResultController.displayResult(ApplicationType.IP2016)(fakeRequest)
 
       status(GetItemResult) shouldBe 200
     }
@@ -331,19 +331,19 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         when(mockKeyStoreConnector.saveData[ApplyResponseModel](anyString(), any())(any(), any()))
           .thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
         when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(any(), any()))
-          .thenReturn(Some(testIP14RejectionApplyResponseModel))
+          .thenReturn(Future.successful(Some(testIP14RejectionApplyResponseModel)))
 
 
         when(mockResponseConstructors.createApplyResponseModelFromJson(any())).thenReturn(Some(testFPRejectionApplyResponseModel))
         when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
-          .thenReturn(Some(testFPRejectionApplyResponseModel))
+          .thenReturn(Future.successful(Some(testFPRejectionApplyResponseModel)))
 
         when(mockDisplayConstructors.createRejectionDisplayModel(any())(any())).thenReturn(RejectionDisplayModel(
           "12313123", Nil, ApplicationType.IP2016
         ))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        lazy val DataItemresult = await(TestRejectResultController.processIPApplication(fakeRequest))
+        lazy val DataItemresult = TestRejectResultController.processIPApplication(fakeRequest)
 
         status(DataItemresult) shouldBe 303
         redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16()}")
@@ -351,13 +351,13 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
       "return 200" in {
 
         when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
-          .thenReturn(Some(testFPRejectionApplyResponseModel))
+          .thenReturn(Future.successful(Some(testFPRejectionApplyResponseModel)))
 
         when(mockDisplayConstructors.createRejectionDisplayModel(any())(any())).thenReturn(RejectionDisplayModel(
           "12313123", Nil, ApplicationType.IP2016
         ))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        lazy val GetItemResult = await(TestRejectResultController.displayResult(ApplicationType.IP2016)(fakeRequest))
+        lazy val GetItemResult = TestRejectResultController.displayResult(ApplicationType.IP2016)(fakeRequest)
         status(GetItemResult) shouldBe 200
       }
     }
@@ -371,10 +371,10 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
         when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())).thenReturn(None)
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        val result = await(testResultController.processFPApplication(fakeRequest))
+        val result = testResultController.processFPApplication(fakeRequest)
 
         status(result) shouldBe 500
-        result.header.headers("Cache-Control") shouldBe "no-cache"
+        await(result).header.headers("Cache-Control") shouldBe "no-cache"
       }
     }
 
@@ -387,7 +387,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
         when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
         when(mockKeyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
-        when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16InactiveSuccessApplyResponseModel))
+        when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(testIP16InactiveSuccessApplyResponseModel)))
 
 
         when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())).thenReturn(Some(testIP16InactiveSuccessApplyResponseModel))
@@ -397,13 +397,13 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-        val DataItemresult = await(TestInactiveSuccessResultController.processIPApplication(fakeRequest))
+        val DataItemresult = TestInactiveSuccessResultController.processIPApplication(fakeRequest)
         status(DataItemresult) shouldBe 303
         redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16()}")
       }
       "return 200" in {
         when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
-          .thenReturn(Some(testIP16InactiveSuccessApplyResponseModel))
+          .thenReturn(Future.successful(Some(testIP16InactiveSuccessApplyResponseModel)))
 
         when(mockDisplayConstructors.createSuccessDisplayModel(any())(any(), any())).thenReturn(SuccessDisplayModel(
           ApplicationType.FP2016, "12313123", "50", true, None, Nil
@@ -411,7 +411,7 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-        val GetItemResult = await(TestInactiveSuccessResultController.displayResult(ApplicationType.IP2016)(fakeRequest))
+        val GetItemResult = TestInactiveSuccessResultController.displayResult(ApplicationType.IP2016)(fakeRequest)
         status(GetItemResult) shouldBe 200
       }
     }
@@ -550,9 +550,9 @@ class ResultControllerSpec extends UnitSpec with MockitoSugar with BeforeAndAfte
 
           when(mockKeyStoreConnector.fetchAllUserData(ArgumentMatchers.any())).thenReturn(Future.successful(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
           when(mockKeyStoreConnector.saveData[ApplyResponseModel](anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("tstId", Map.empty[String, JsValue])))
-          when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))
-          when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP14SuccessApplyResponseModel))
-          when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Some(testIP16SuccessApplyResponseModel))
+          when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("fp16ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(testFPSuccessApplyResponseModel)))
+          when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("ip14ApplyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(testIP14SuccessApplyResponseModel)))
+          when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](ArgumentMatchers.matches("applyResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(testIP16SuccessApplyResponseModel)))
 
 
           when(mockResponseConstructors.createApplyResponseModelFromJson(ArgumentMatchers.any())).thenReturn(Some(testFPSuccessApplyResponseModel))

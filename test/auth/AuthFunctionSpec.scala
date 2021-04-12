@@ -18,27 +18,30 @@ package auth
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import config.wiring.PlaFormPartialRetriever
+import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import mocks.AuthMock
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.{Configuration, Environment, Mode}
 import play.api.i18n.Messages
-import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.mvc.Results._
+import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import testHelpers.{KeystoreTestHelper, MockTemplateRenderer}
+import play.api.{Configuration, Environment, Mode}
+import testHelpers.{FakeApplication, KeystoreTestHelper, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import java.net.URLEncoder
 import scala.concurrent.Future
 
-class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSugar with KeystoreTestHelper with BeforeAndAfterEach with AuthMock {
+class AuthFunctionSpec extends FakeApplication
+  with MockitoSugar
+  with KeystoreTestHelper
+  with BeforeAndAfterEach
+  with AuthMock {
 
   implicit val system: ActorSystem                        = ActorSystem()
   implicit val materializer:ActorMaterializer             = ActorMaterializer()
@@ -85,9 +88,9 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "execute the body" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.successful({}))
-        val result = await(authFunction.genericAuthWithoutNino("IP2016")(Ok("Test body"))(fakeRequest, mockMessages, hc))
+        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(Ok("Test body")))(fakeRequest, mockMessages, hc)
         status(result) shouldBe 200
-        bodyOf(result) shouldBe "Test body"
+        contentAsString(result) shouldBe "Test body"
       }
     }
 
@@ -97,7 +100,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
         val authFunction = new TestAuthFunction
         when(mockEnv.mode).thenReturn(Mode.Test)
         mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some("http://www.test.com?origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
@@ -106,7 +109,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "return a 500 on an unexpected authorisation exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new InternalError("")))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Ok("Test body"))(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(Ok("Test body")))(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 500
       }
@@ -114,7 +117,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "redirect to IV uplift page on an insufficient enrolments exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some("http://www.test.com?origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
@@ -123,7 +126,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "redirect to gg login page on an no active session exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new SessionRecordNotFound))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(InternalServerError("Test body"))(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(s"${mockAppConfig.ggSignInUrl}?continue=${URLEncoder.encode(requestUrl, "UTF-8")}&origin=${mockAppConfig.appName}")
@@ -132,16 +135,16 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
   }
 
   "In AuthFunction calling the genericAuthWithNino action" when {
-    val body: String => Future[Result] = nino => Ok(nino)
+    val body: String => Future[Result] = nino => Future.successful(Ok(nino))
     "passing auth validation" should {
 
       "execute the body" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.successful(Option("AA000001A")))
-        val result = await(authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc))
+        val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 200
-        bodyOf(result) shouldBe "AA000001A"
+        contentAsString(result) shouldBe "AA000001A"
       }
     }
     "failing auth validation" should {
@@ -149,7 +152,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "redirect to IV uplift page on an insufficient confidence level exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
-        val result = await(authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc))
+        val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some("http://www.test.com?origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
@@ -158,7 +161,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "return a 500 on an unexpected authorisation exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new InternalError("")))
-        val result = await(authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc))
+        val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 500
       }
@@ -166,7 +169,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "redirect to IV uplift page on an insufficient enrolments exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
-        val result = await(authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc))
+        val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some("http://www.test.com?origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
@@ -175,7 +178,7 @@ class AuthFunctionSpec extends UnitSpec with WithFakeApplication with MockitoSug
       "redirect to gg login page on an no active session exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new SessionRecordNotFound))
-        val result = await(authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc))
+        val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(s"${mockAppConfig.ggSignInUrl}?continue=${URLEncoder.encode(requestUrl, "UTF-8")}&origin=${mockAppConfig.appName}")

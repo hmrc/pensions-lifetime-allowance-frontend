@@ -16,15 +16,15 @@
 
 package common
 
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import common.Dates._
+import play.api.i18n.{Lang, Messages, MessagesImpl}
+import play.api.mvc.MessagesControllerComponents
+import testHelpers.FakeApplication
+
 import java.time.LocalDate
 import java.util.Locale
 
-import play.api.i18n.{Lang, Messages, MessagesImpl}
-import play.api.mvc.MessagesControllerComponents
-
-class DatesSpec extends UnitSpec with WithFakeApplication {
+class DatesSpec extends FakeApplication {
 
   "constructDate" should {
 

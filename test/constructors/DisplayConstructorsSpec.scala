@@ -16,19 +16,16 @@
 
 package constructors
 
-import com.kenshoo.play.metrics.PlayModule
 import common.Helpers
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.Messages.Implicits._
 import play.api.i18n.{Lang, Messages, MessagesProvider}
 import play.api.mvc.{ControllerComponents, MessagesControllerComponents}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
-class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+import testHelpers.FakeApplication
+class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
   lazy implicit val fakeRequest = FakeRequest()
   implicit val mockLang   = mock[Lang]
@@ -36,8 +33,6 @@ class DisplayConstructorsSpec extends UnitSpec with WithFakeApplication with Moc
   implicit val controllerComponents = mock[ControllerComponents]
   val displayConstructor: DisplayConstructors  = fakeApplication.injector.instanceOf[DisplayConstructors]
   implicit lazy val mockMessage = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
-
-  override def bindModules = Seq(new PlayModule)
 
   lazy val tstPSACheckRef = "PSA33456789"
 

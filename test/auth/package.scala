@@ -20,6 +20,7 @@ import uk.gov.hmrc.http.SessionKeys
 package object auth {
 
   import uk.gov.hmrc.time.DateTimeUtils
+
   import java.util.UUID
 
   val mockUsername = "mockuser"

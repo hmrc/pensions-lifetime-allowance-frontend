@@ -19,7 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import javax.inject.Inject
 import models.PersonalDetailsModel
-import play.api.Logger
+import play.api.Logger.logger
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.http.HttpReads.Implicits._
@@ -41,7 +41,7 @@ class CitizenDetailsConnector @Inject()(appConfig: FrontendAppConfig,
         response => response.status match {
           case 200 => response.json.validate[PersonalDetailsModel].asOpt
           case _ => {
-            Logger.warn(s"Unable to retrieve personal details for nino: $nino")
+            logger.warn(s"Unable to retrieve personal details for nino: $nino")
             None
           }
         }

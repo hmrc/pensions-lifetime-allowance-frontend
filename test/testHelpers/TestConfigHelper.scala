@@ -23,10 +23,8 @@ import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-
-trait TestConfigHelper extends MockitoSugar with UnitSpec with WithFakeApplication {
+trait TestConfigHelper extends FakeApplication with MockitoSugar {
 
   val config = mock[Configuration]
   val env = mock[Environment]

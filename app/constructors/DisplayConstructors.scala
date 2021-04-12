@@ -21,8 +21,7 @@ import enums.{ApplicationStage, ApplicationType}
 import javax.inject.Inject
 import models._
 import models.amendModels.AmendProtectionModel
-import play.api.Logger
-import play.api.i18n.Messages.Implicits._
+import play.api.Logger.logger
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Call
 import utils.Constants
@@ -166,7 +165,7 @@ class DisplayConstructors @Inject()(implicit messagesApi: MessagesApi) {
 
     model.pensionDebits.flatMap { psoList =>
       if (psoList.length > 1) {
-        Logger.warn("More than one PSO amendment was found in the protection model, where only one is permitted.")
+        logger.warn("More than one PSO amendment was found in the protection model, where only one is permitted.")
         None
       } else {
         val psoAmendCall = Helpers.createAmendCall(model, ApplicationStage.CurrentPsos)

@@ -18,9 +18,9 @@ package enums
 
 import play.api.libs.json.{JsString, Json}
 import enums.IdentityVerificationResult.IdentityVerificationResult
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatest.{Matchers, OptionValues, WordSpecLike}
 
-class IdentityVerificationResultSpec extends UnitSpec {
+class IdentityVerificationResultSpec extends WordSpecLike with Matchers with OptionValues {
   "IdentityVerificationResult" when {
     "serialising to JSON" should {
       "return JSString" in {

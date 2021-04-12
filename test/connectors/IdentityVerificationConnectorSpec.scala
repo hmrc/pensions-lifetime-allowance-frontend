@@ -24,14 +24,14 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status
 import play.api.libs.json.Json
+import testHelpers.FakeApplication
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 
-class IdentityVerificationConnectorSpec extends UnitSpec with ScalaFutures with MockitoSugar with WithFakeApplication {
+class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFutures with MockitoSugar {
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 
   implicit val executionContext = fakeApplication.injector.instanceOf[ExecutionContext]

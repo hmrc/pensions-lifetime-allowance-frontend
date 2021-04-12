@@ -21,12 +21,13 @@ import javax.inject.Inject
 import play.api.i18n.Messages
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.api.{Configuration, Environment, Logger}
+import play.api.{Configuration, Environment}
+import play.api.Logger.logger
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.{AuthorisedFunctions, _}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -85,7 +86,7 @@ trait AuthFunction extends AuthRedirects with AuthorisedFunctions {
     case _: InsufficientEnrolments => Redirect(IVUpliftURL)
     case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL)
     case e: AuthorisationException =>
-      Logger.error("Unexpected auth exception ", e)
+      logger.error("Unexpected auth exception ", e)
       InternalServerError(views.html.pages.fallback.technicalError(pType))
 
   }

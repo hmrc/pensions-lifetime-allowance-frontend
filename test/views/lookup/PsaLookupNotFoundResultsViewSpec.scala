@@ -20,7 +20,6 @@ import models.PSALookupRequest
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupNotFoundSpecMessages
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages.lookup.psa_lookup_not_found_results
 
 class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLookupNotFoundSpecMessages {

@@ -1,12 +1,28 @@
-import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+/*
+ * Copyright 2021 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import com.github.tomakehurst.wiremock.client.WireMock._
 import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
-import uk.gov.hmrc.play.test.UnitSpec
-import play.api.http.Status._
+import play.api.test.Helpers._
 import utils.{IntegrationBaseSpec, MockedAudit}
-import com.github.tomakehurst.wiremock.client.WireMock._
 
-class TestControllerCSpec extends UnitSpec with GuiceOneServerPerSuite with IntegrationBaseSpec with MockedAudit {
+import scala.concurrent.Future
+
+class TestControllerCSpec extends IntegrationBaseSpec with MockedAudit {
 
   val protectionInsertUrl = s"$localUrl/protect-your-lifetime-allowance/test-only/protections/insert"
 
@@ -16,7 +32,7 @@ class TestControllerCSpec extends UnitSpec with GuiceOneServerPerSuite with Inte
 
         stubPost("/test-only/protections/insert", OK , "")
 
-        def request: WSResponse = ws.url(protectionInsertUrl)
+        def request: Future[WSResponse] = ws.url(protectionInsertUrl)
           .addHttpHeaders(("Csrf-Token" , "nocheck"),("Content-Type" , "application/json"))
           .post(
             Json.parse(
@@ -39,7 +55,7 @@ class TestControllerCSpec extends UnitSpec with GuiceOneServerPerSuite with Inte
                 |}""".stripMargin)
           )
 
-        request.status shouldBe OK
+        await(request).status shouldBe OK
 
         verify(postRequestedFor(urlEqualTo("/test-only/protections/insert"))
           .withRequestBody(equalToJson(Json.parse(
@@ -77,12 +93,12 @@ class TestControllerCSpec extends UnitSpec with GuiceOneServerPerSuite with Inte
 
         stubDelete("/test-only/protections/removeAll", OK , "All protections deleted" )
 
-        def request: WSResponse = ws.url(protectionDeleteAllUrl)
+        def request: Future[WSResponse] = ws.url(protectionDeleteAllUrl)
           .addHttpHeaders(("Csrf-Token" , "nocheck"),("Content-Type" , "application/json"))
           .delete()
 
-        request.status shouldBe OK
-        request.body shouldBe  "All protections deleted"
+        await(request).status shouldBe OK
+        await(request).body shouldBe  "All protections deleted"
       }
     }
   }
@@ -96,12 +112,12 @@ class TestControllerCSpec extends UnitSpec with GuiceOneServerPerSuite with Inte
 
         stubDelete(s"/test-only/individuals/$nino/protections", OK , s"$nino deleted" )
 
-        def request: WSResponse = ws.url(protectionDeleteNinoUrl)
+        def request: Future[WSResponse] = ws.url(protectionDeleteNinoUrl)
           .addHttpHeaders(("Csrf-Token" , "nocheck"),("Content-Type" , "application/json"))
           .delete()
 
-        request.status shouldBe OK
-        request.body shouldBe  s"$nino deleted"
+        await(request).status shouldBe OK
+        await(request).body shouldBe  s"$nino deleted"
       }
     }
   }

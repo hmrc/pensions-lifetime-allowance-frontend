@@ -16,17 +16,16 @@
 
 package forms
 
-import java.time.LocalDate
-
 import forms.PSODetailsForm._
 import models.PSODetailsModel
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
-import testHelpers.PSODetailsMessages
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import testHelpers.{FakeApplication, PSODetailsMessages}
 import utils.Constants
 
-class PSODetailsFormSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication with MockitoSugar {
+import java.time.LocalDate
+
+class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
   "PSODetailsForm" should {

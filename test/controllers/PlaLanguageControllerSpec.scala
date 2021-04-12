@@ -15,11 +15,10 @@
  */
 
 package controllers
-
 import play.api.i18n.Lang
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import testHelpers.FakeApplication
 
-class PlaLanguageControllerSpec extends UnitSpec with WithFakeApplication {
+class PlaLanguageControllerSpec extends FakeApplication {
 
   lazy val controller = fakeApplication.injector.instanceOf[PlaLanguageController]
 

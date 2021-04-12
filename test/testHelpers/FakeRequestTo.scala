@@ -18,22 +18,24 @@ package testHelpers
 
 
 import akka.actor.ActorSystem
-import play.api.mvc.{Action, AnyContent}
+import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty}
 import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatest.{Matchers, OptionValues, WordSpecLike}
 import org.jsoup._
 import auth._
 import akka.stream.{ActorMaterializer, Materializer}
+import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 
-class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: Option[String], data: (String, String)*) extends UnitSpec {
+class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: Option[String], data: (String, String)*)
+  extends WordSpecLike with Matchers with OptionValues {
   implicit val system = ActorSystem("test")
   implicit def mat: Materializer = ActorMaterializer()
   val fakeRequest = constructRequest(url, sessionId)
   val result = controllerAction(fakeRequest)
-  val jsoupDoc = Jsoup.parse(bodyOf(result))
+  val jsoupDoc = Jsoup.parse(contentAsString(result))
 
-  def constructRequest(url: String, sessionId: Option[String]) = {
+  def constructRequest(url: String, sessionId: Option[String]): FakeRequest[AnyContentAsEmpty.type] = {
     sessionId match {
       case Some(sessId) => FakeRequest("GET", "/protect-your-lifetime-allowance/" + url).withSession(SessionKeys.sessionId -> s"session-$sessionId")
       case None => FakeRequest("GET", "/protect-your-lifetime-allowance/" + url)
@@ -41,9 +43,9 @@ class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId
   }
 }
 
-class AuthorisedFakeRequestTo(controllerAction: Action[AnyContent]) extends UnitSpec {
+class AuthorisedFakeRequestTo(controllerAction: Action[AnyContent]) extends WordSpecLike with Matchers with OptionValues {
   implicit val system = ActorSystem("test")
   implicit def mat: Materializer = ActorMaterializer()
   val result = controllerAction(authenticatedFakeRequest())
-  val jsoupDoc = Jsoup.parse(bodyOf(result))
+  val jsoupDoc = Jsoup.parse(contentAsString(result))
 }

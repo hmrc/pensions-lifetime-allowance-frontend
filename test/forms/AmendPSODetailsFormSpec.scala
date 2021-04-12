@@ -16,18 +16,17 @@
 
 package forms
 
-import java.time.LocalDate
-
+import common.Exceptions
 import forms.AmendPSODetailsForm._
 import models.amendModels.AmendPSODetailsModel
-import testHelpers.PSODetailsMessages
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-import utils.Constants
-import common.Exceptions
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
+import testHelpers.{FakeApplication, PSODetailsMessages}
+import utils.Constants
 
-class AmendPSODetailsFormSpec extends UnitSpec with PSODetailsMessages with WithFakeApplication with MockitoSugar {
+import java.time.LocalDate
+
+class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
   "The AmendPensionsTakenBetweenForm" should {

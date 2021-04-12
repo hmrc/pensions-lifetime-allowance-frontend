@@ -16,12 +16,9 @@
 
 package controllers
 
-import java.util.UUID
-
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
-import com.kenshoo.play.metrics.PlayModule
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
 import config.wiring.PlaFormPartialRetriever
@@ -48,15 +45,16 @@ import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 import views.html.pages.amends._
 import views.html.pages.fallback.technicalError
 
+import java.util.UUID
 import scala.concurrent.Future
 
-class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestHelper
-                              with BeforeAndAfterEach with AuthMock with WithFakeApplication with I18nSupport {
-  override def bindModules = Seq(new PlayModule)
+class AmendsControllerSpec extends FakeApplication
+  with MockitoSugar
+  with KeystoreTestHelper
+  with BeforeAndAfterEach with AuthMock with I18nSupport {
 
   implicit lazy val mockMessage = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
@@ -246,14 +244,14 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](None)
 
-      val result = await(controller.amendsSummary("ip2016", "open")(fakeRequest))
-      val jsoupDoc = Jsoup.parse(bodyOf(result))
+      val result = controller.amendsSummary("ip2016", "open")(fakeRequest)
+      val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       status(result) shouldBe 500
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
       jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
-      result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
     "there is a stored, updated amends model" in new Setup {
@@ -261,8 +259,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
       when(mockDisplayConstructors.createAmendDisplayModel(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
 
-      val result = await(controller.amendsSummary("ip2014", "dormant")(fakeRequest))
-      val jsoupDoc = Jsoup.parse(bodyOf(result))
+      val result = controller.amendsSummary("ip2014", "dormant")(fakeRequest)
+      val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       status(result) shouldBe 200
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.amends.heading.IP2014.changed")
@@ -283,7 +281,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       status(DataItem.result) shouldBe 500
       DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-      DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
     "the microservice returns a conflict response" in new Setup {
@@ -298,7 +296,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       status(DataItem.result) shouldBe 500
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
       DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
-      DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
     "the microservice returns a manual correspondence needed response" in new Setup {
@@ -315,8 +313,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
   }
 
     "the microservice returns an invalid json response" in new Setup {
-      lazy val result = await(controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("eggs", "dormant"))))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("eggs", "dormant")))
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -334,7 +332,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
         body.getElementById("tryAgainLink")
         .attr("href") shouldEqual
         s"${controllers.routes.ReadProtectionsController.currentProtections()}"
-      result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
     "the microservice returns a response with no notificationId" in new Setup {
@@ -353,11 +351,11 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       status(DataItem.result) shouldBe 500
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.noNotificationId.title")
       DataItem.jsoupDoc.body.getElementsByTag("a").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
-      DataItem.result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
     "the microservice returns a valid response" in new Setup {
-      lazy val result = await(controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("status", "dormant"))))
+      lazy val result = controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("status", "dormant")))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -373,8 +371,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
   "Calling the amendmentOutcome action" when {
     "there is no outcome object stored in keystore" in new Setup {
-      lazy val result = await(controller.amendmentOutcome()(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendmentOutcome()(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendResponseModel](None)
         keystoreFetchCondition[AmendsGAModel](None)
@@ -382,12 +380,12 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
         status(result) shouldBe 500
         jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
-        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+        await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
     "there is an active protection outcome in keystore" in new Setup {
-      lazy val result = await(controller.amendmentOutcome()(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendmentOutcome()(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         when(mockKeystoreConnector.fetchAndGetFormData[AmendResponseModel](ArgumentMatchers.startsWith("amendResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
         when(mockKeystoreConnector.fetchAndGetFormData[AmendsGAModel](ArgumentMatchers.startsWith("AmendsGA"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(Some("updatedValue"),Some("changedToYes"),Some("changedToNo"),None,Some("addedPSO")))))
@@ -400,8 +398,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
 
     "there is an inactive protection outcome in keystore" in new Setup {
-      lazy val result = await(controller.amendmentOutcome()(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendmentOutcome()(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         when(mockKeystoreConnector.fetchAndGetFormData[AmendResponseModel](ArgumentMatchers.startsWith("amendResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
         when(mockKeystoreConnector.fetchAndGetFormData[AmendsGAModel](ArgumentMatchers.startsWith("AmendsGA"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(None,Some("changedToNo"),Some("changedToYes"),None,None))))
@@ -418,14 +416,14 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](None)
 
-      val result = await(controller.amendCurrentPensions("ip2016", "open")(fakeRequest))
+      val result = controller.amendCurrentPensions("ip2016", "open")(fakeRequest)
       status(result) shouldBe 500
     }
 
     "supplied with a stored test model (£100000, IP2016, dormant)" in new Setup {
       val testModel = new AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, uncrystallisedRights = Some(100000)))
-      lazy val result = await(controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testModel))
@@ -439,7 +437,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
         "contain some text and use the character set utf-8" in new Setup {
           val testModel = new AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, uncrystallisedRights = Some(100000)))
-          lazy val result = await(controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest))
+          lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testModel))
 
@@ -448,8 +446,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
         }
 
         "have the value 100000 completed in the amount input by default" in new Setup {
-          lazy val result = await(controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest))
-          lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+          lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
+          lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
           val testModel = new AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, uncrystallisedRights = Some(100000)))
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -461,7 +459,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
     }
 
     "supplied with a stored test model (£100000, IP2014, dormant)" in new Setup {
-      lazy val result = await(controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest))
+      lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -500,7 +498,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
   "In AmendsController calling the .amendPensionsTakenBefore action" when {
 
     "not supplied with a stored model" in new Setup {
-      lazy val result = await(controller.amendPensionsTakenBefore("ip2016", "open")(fakeRequest))
+      lazy val result = controller.amendPensionsTakenBefore("ip2016", "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](None)
 
@@ -508,8 +506,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
     }
 
     "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" in new Setup {
-      lazy val result = await(controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
@@ -520,7 +518,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
     "supplied with the stored test model for (dormant, IP2016, preADay = £2000)" in new Setup {
 
-      lazy val result = await(controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
+      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
@@ -528,8 +526,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
     }
 
     "should take the user to the pensions taken before page" in new Setup {
-      lazy val result = await(controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -540,7 +538,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
     "return some HTML that" should {
 
       "contain some text and use the character set utf-8" in new Setup {
-        lazy val result = await(controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
+        lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
@@ -549,8 +547,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       }
 
       "have the value of the check box set as 'Yes' by default" in new Setup {
-        lazy val result = await(controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
-        lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+        lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -559,8 +557,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       }
 
       "have the value of the input field set to 2000 by default" in new Setup {
-        lazy val result = await(controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
-        lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+        lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -569,7 +567,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       }
     }
     "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" in new Setup {
-      lazy val result = await(controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest))
+      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -582,7 +580,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
   "Submitting Amend IP16 Pensions Taken Before data" when {
 
     "the data is invalid" in new Setup {
-  lazy val result = await(controller.submitAmendPensionsTakenBefore(fakeRequest))
+  lazy val result = controller.submitAmendPensionsTakenBefore(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
         status(result) shouldBe 400
@@ -637,7 +635,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
   "In AmendsController calling the .amendPensionsTakenBetween action" when {
     "not supplied with a stored model" in new Setup {
 
-      lazy val result = await(controller.amendPensionsTakenBetween("ip2016", "open")(fakeRequest))
+      lazy val result = controller.amendPensionsTakenBetween("ip2016", "open")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
 
@@ -645,8 +643,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
     }
     "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" in new Setup {
-      lazy val result = await(controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
@@ -656,15 +654,15 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
     "supplied with the stored test model for (dormant, IP2016, preADay = £2000)" in new Setup {
 
-      lazy val result = await(controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest))
+      lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(result) shouldBe 200
       }
 
       "should take the user to the pensions taken before page" in new Setup {
-        lazy val result = await(controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest))
-        lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+        lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -674,7 +672,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       "return some HTML that" should {
 
         "contain some text and use the character set utf-8" in new Setup {
-          lazy val result = await(controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest))
+          lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
@@ -683,8 +681,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
         }
 
         "have the value of the check box set as 'Yes' by default" in new Setup {
-          lazy val result = await(controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest))
-          lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+          lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+          lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -693,8 +691,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
         }
 
         "have the value of the input field set to 2000 by default" in new Setup {
-          lazy val result = await(controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest))
-          lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+          lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+          lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -704,7 +702,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       }
 
     "supplied with the stored test model for (dormant, IP2014, preADay = £2000))" in new Setup {
-      lazy val result = await(controller.amendPensionsTakenBetween("ip2014", "dormant")(fakeRequest))
+      lazy val result = controller.amendPensionsTakenBetween("ip2014", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -773,7 +771,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
   "In AmendsController calling the .amendOverseasPensions action" when {
 
     "not supplied with a stored model" in new Setup {
-      lazy val result = await(controller.amendOverseasPensions("ip2016", "open")(fakeRequest))
+      lazy val result = controller.amendOverseasPensions("ip2016", "open")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
 
@@ -781,8 +779,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       }
 
     "supplied with the stored test model for (dormant, IP2016, nonUKRights = £0.0)" in new Setup {
-      lazy val result = await(controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
@@ -793,7 +791,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
     "supplied with the stored test model for (dormant, IP2016, nonUKRights = £2000)" in new Setup {
 
-      lazy val result = await(controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest))
+      lazy val result = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
@@ -801,8 +799,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       }
 
       "should take the user to the overseas pensions page" in new Setup {
-        lazy val result = await(controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest))
-        lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+        lazy val result = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
+        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -814,7 +812,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       "return some HTML that" should {
 
         "contain some text and use the character set utf-8" in new Setup {
-          lazy val result = await(controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest))
+          lazy val result = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
@@ -824,8 +822,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
         "have the value of the check box set as 'Yes' by default" in new Setup {
 
-          lazy val result = await(controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest))
-          lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+          lazy val result = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
+          lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -835,8 +833,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
         }
 
         "have the value of the input field set to 2000 by default" in new Setup {
-          lazy val result = await(controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest))
-          lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+          lazy val result = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
+          lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -847,7 +845,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       }
 
     "supplied with the stored test model for (dormant, IP2014, nonUKRights = £2000)" in new Setup {
-      lazy val result = await(controller.amendOverseasPensions("ip2014", "dormant")(fakeRequest))
+      lazy val result = controller.amendOverseasPensions("ip2014", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -858,7 +856,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
   "Submitting Amend IP16 Overseas Pensions data" when {
 
     "there is an error reading the form" in new Setup {
-      lazy val result = await(controller.submitAmendOverseasPensions(fakeRequest))
+      lazy val result = controller.submitAmendOverseasPensions(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
       status(result) shouldBe 400
@@ -939,28 +937,28 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
     "there is no amendment model fetched from keystore" in new Setup {
 
-      lazy val result = await(controller.amendPsoDetails("ip2014", "open")(fakeRequest))
+      lazy val result = controller.amendPsoDetails("ip2014", "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](None)
 
       status(result) shouldBe 500
     }
     "show the technical error page for existing protections" in new Setup {
-      lazy val result = await(controller.amendPsoDetails("ip2014", "open")(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendPsoDetails("ip2014", "open")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](None)
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
       jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
-      result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
     "there is no PSO list stored in the AmendProtectionModel" in new Setup {
 
-      lazy val result = await(controller.amendPsoDetails("ip2014", "open")(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendPsoDetails("ip2014", "open")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionNoPsoList, testProtectionNoPsoList)))
@@ -974,8 +972,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
     "there is an empty PSO list stored in the AmendProtectionModel" in new Setup {
 
-      lazy val result = await(controller.amendPsoDetails("ip2016", "open")(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendPsoDetails("ip2016", "open")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionEmptyPsoList, testProtectionEmptyPsoList)))
@@ -1007,8 +1005,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
     "there is a PSO list of more then one PSO stored in the AmendProtectionModel" in new Setup {
 
-      lazy val result = await(controller.amendPsoDetails("ip2016", "open")(fakeRequest))
-      lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+      lazy val result = controller.amendPsoDetails("ip2016", "open")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionMultiplePsoList, testProtectionMultiplePsoList)))
@@ -1016,7 +1014,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       status(result) shouldBe 500
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
       jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
-      result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+      await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
   }
 
@@ -1108,14 +1106,14 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
     )
 
     "there is no amend protection model fetched from keystore" in new Setup {
-      lazy val result = await(controller.removePso("ip2016", "open")(fakeRequest))
+      lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](None)
       status(result) shouldBe 500
     }
       "show the technical error page for existing protections" in new Setup {
-        lazy val result = await(controller.removePso("ip2016", "open")(fakeRequest))
-        lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+        lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
+        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](None)
@@ -1132,15 +1130,15 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       }
 
     "a valid amend protection model is fetched from keystore" in new Setup {
-      lazy val result = await(controller.removePso("ip2016", "open")(fakeRequest))
+      lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
         status(result) shouldBe 200
       }
 
       "show the remove pso page with correct details" in new Setup {
-        lazy val result = await(controller.removePso("ip2016", "open")(fakeRequest))
-        lazy val jsoupDoc = Jsoup.parse(bodyOf(result))
+        lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
+        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
@@ -1152,7 +1150,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
 
     "choosing remove on the remove page" in new Setup {
-      lazy val result = await(controller.submitRemovePso(fakeRequest))
+      lazy val result = controller.submitRemovePso(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(result) shouldEqual 400
       }
@@ -1205,7 +1203,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
       lazy val result = controller.amendmentOutcomeResult(None, None, "")(fakeRequest)
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
-      await(bodyOf(result)) shouldBe technicalError(appType.toString).body
+      contentAsString(result) shouldBe technicalError(appType.toString).body
     }
 
     "provided with a model without an Id" in new Setup {
@@ -1229,7 +1227,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
       lazy val result = controller.amendmentOutcomeResult(Some(model), modelGA, "")
 
-      await(bodyOf(result)) shouldBe outcomeActive(ActiveAmendResultDisplayModel(ApplicationType.IP2014, "33", "£1,100,000", None), modelGA).body
+      contentAsString(result) shouldBe outcomeActive(ActiveAmendResultDisplayModel(ApplicationType.IP2014, "33", "£1,100,000", None), modelGA).body
       status(result) shouldBe OK
     }
 
@@ -1245,7 +1243,7 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
         .thenReturn(InactiveAmendResultDisplayModel("41", Seq()))
 
         status(result) shouldBe OK
-        await(bodyOf(result)) shouldBe outcomeInactive(InactiveAmendResultDisplayModel("41", Seq()), modelGA).body
+        contentAsString(result) shouldBe outcomeInactive(InactiveAmendResultDisplayModel("41", Seq()), modelGA).body
     }
   }
 
@@ -1274,8 +1272,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
       "return a status of OK" in new Setup() {
         val model = AmendCurrentPensionModel(Some(1000), "ip2016", "dormant")
-        val result = controller.getRouteUsingModel(model)(fakeRequest)
-        await(bodyOf(result)) shouldBe amendCurrentPensions(AmendCurrentPensionForm.amendCurrentPensionForm.fill(model)).body
+        val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
+        contentAsString(result) shouldBe amendCurrentPensions(AmendCurrentPensionForm.amendCurrentPensionForm.fill(model)).body
         status(result) shouldBe OK
       }
     }
@@ -1284,8 +1282,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
       "return a status of OK" in new Setup() {
         val model = AmendCurrentPensionModel(Some(1000), "ip2014", "dormant")
-        val result = controller.getRouteUsingModel(model)(fakeRequest)
-        await(bodyOf(result)) shouldBe amendIP14CurrentPensions(AmendCurrentPensionForm.amendCurrentPensionForm.fill(model)).body
+        val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
+        contentAsString(result) shouldBe amendIP14CurrentPensions(AmendCurrentPensionForm.amendCurrentPensionForm.fill(model)).body
         status(result) shouldBe OK
       }
     }
@@ -1294,8 +1292,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
 
       "return a status of OK" in new Setup() {
         val model = AmendPensionsTakenBeforeModel("", Some(1000), "ip2016", "dormant")
-        lazy val result = controller.getRouteUsingModel(model)(fakeRequest)
-        await(bodyOf(result)) shouldBe amendPensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
+        lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
+        contentAsString(result) shouldBe amendPensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
         status(result) shouldBe OK
       }
     }
@@ -1303,8 +1301,8 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
     "supplied an IP2014 AmendPensionsTakenBeforeModel" should {
       "return a status of OK" in new Setup() {
         val model = AmendPensionsTakenBeforeModel("", Some(1000), "ip2014", "dormant")
-        val result = controller.getRouteUsingModel(model)(fakeRequest)
-        await(bodyOf(result)) shouldBe amendIP14PensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
+        val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
+        contentAsString(result) shouldBe amendIP14PensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
         status(result) shouldBe OK
       }
     }
@@ -1312,36 +1310,36 @@ class AmendsControllerSpec extends UnitSpec with MockitoSugar with KeystoreTestH
     "supplied an IP2016 AmendPensionsTakenBetweenModel" should {
       "return a status of OK" in new Setup() {
         val model = AmendPensionsTakenBetweenModel("", Some(1000), "ip2016", "dormant")
-        lazy val result = controller.getRouteUsingModel(model)(fakeRequest)
+        lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         status(result) shouldBe OK
-        await(bodyOf(result)) shouldBe amendPensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
+        contentAsString(result) shouldBe amendPensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
       }
     }
 
     "supplied an IP2014 AmendPensionsTakenBetweenModel" should {
       "return a status of OK" in new Setup() {
         val model = AmendPensionsTakenBetweenModel("", Some(1000), "ip2014", "dormant")
-        lazy val result = controller.getRouteUsingModel(model)(fakeRequest)
+        lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         status(result) shouldBe OK
-        await(bodyOf(result)) shouldBe amendIP14PensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
+        contentAsString(result) shouldBe amendIP14PensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
       }
     }
 
     "supplied an IP2016 AmendOverseasPensionsModel" should {
       "return a status of OK" in new Setup() {
         val model = AmendOverseasPensionsModel("", Some(1000), "ip2016", "dormant")
-        lazy val result = controller.getRouteUsingModel(model)(fakeRequest)
+        lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         status(result) shouldBe OK
-        await(bodyOf(result)) shouldBe amendOverseasPensions(AmendOverseasPensionsForm.amendOverseasPensionsForm.fill(model)).body
+        contentAsString(result) shouldBe amendOverseasPensions(AmendOverseasPensionsForm.amendOverseasPensionsForm.fill(model)).body
       }
     }
 
     "supplied an IP2014 AmendOverseasPensionsModel" should {
       "return a status of OK" in new Setup() {
         val model = AmendOverseasPensionsModel("", Some(1000), "ip2014", "dormant")
-        lazy val result = controller.getRouteUsingModel(model)(fakeRequest)
+        lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         status(result) shouldBe OK
-        await(bodyOf(result)) shouldBe amendIP14OverseasPensions(AmendOverseasPensionsForm.amendOverseasPensionsForm.fill(model)).body
+        contentAsString(result) shouldBe amendIP14OverseasPensions(AmendOverseasPensionsForm.amendOverseasPensionsForm.fill(model)).body
       }
     }
   }

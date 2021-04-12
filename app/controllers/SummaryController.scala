@@ -25,9 +25,10 @@ import enums.ApplicationType
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
-import play.api.{Application, Logger}
+import play.api.Application
+import play.api.Logger.logger
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -39,7 +40,8 @@ class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
                                   implicit val partialRetriever: PlaFormPartialRetriever,
                                   implicit val templateRenderer:LocalTemplateRenderer,
                                   implicit val plaContext: PlaContext,
-                                  implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
+                                  implicit val application: Application)
+extends FrontendController(mcc) with I18nSupport {
 
   lazy val postSignInRedirectUrl = appConfig.ipStartUrl
   val summaryConstructor: SummaryConstructor = SummaryConstructor
@@ -50,7 +52,7 @@ class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
       keyStoreConnector.fetchAllUserData.map {
         case Some(data) => routeIP2016SummaryFromUserData(data, nino)
         case None => {
-          Logger.warn(s"unable to fetch summary IP16 data from keystore for user nino $nino")
+          logger.warn(s"unable to fetch summary IP16 data from keystore for user nino $nino")
           InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
@@ -62,7 +64,7 @@ class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
     summaryConstructor.createSummaryData(data).map {
         summaryModel => Ok(pages.ip2016.summary(summaryModel))
       }.getOrElse {
-        Logger.warn(s"Unable to create IP16 summary model from summary data for user nino $nino")
+        logger.warn(s"Unable to create IP16 summary model from summary data for user nino $nino")
         InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }

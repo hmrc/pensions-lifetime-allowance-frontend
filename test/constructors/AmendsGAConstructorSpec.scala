@@ -16,13 +16,10 @@
 
 package constructors
 
-import com.kenshoo.play.metrics.PlayModule
-import models.{PensionDebitModel, ProtectionModel}
 import models.amendModels.AmendsGAModel
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
-
-class AmendsGAConstructorSpec extends UnitSpec with WithFakeApplication{
-  override def bindModules = Seq(new PlayModule)
+import models.{PensionDebitModel, ProtectionModel}
+import testHelpers.FakeApplication
+class AmendsGAConstructorSpec extends FakeApplication{
 
   val testProtectionModel1: ProtectionModel = ProtectionModel(
     psaCheckReference = Some("testPSARef"),

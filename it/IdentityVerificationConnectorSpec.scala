@@ -15,15 +15,19 @@
  */
 
 import connectors.IdentityVerificationConnector
-import org.scalatestplus.play.guice.GuiceOneServerPerSuite
+import play.api.{Application, Configuration}
+import play.api.inject.guice.GuiceApplicationBuilder
+import play.api.test.Helpers._
 import play.mvc.Http.Status.NOT_FOUND
 import uk.gov.hmrc.http.{HeaderCarrier, UpstreamErrorResponse}
-import uk.gov.hmrc.play.test.UnitSpec
 import utils.{IntegrationBaseSpec, MockedAudit, WiremockHelper}
 
-class IdentityVerificationConnectorSpec extends UnitSpec with GuiceOneServerPerSuite with IntegrationBaseSpec with MockedAudit {
+class IdentityVerificationConnectorSpec extends IntegrationBaseSpec with MockedAudit {
 
-  override val additionalConfiguration = Seq("microservice.services.identity-verification.port" -> WiremockHelper.wiremockPort)
+  override implicit lazy val app: Application = new GuiceApplicationBuilder()
+    .configure(defaultConfiguration)
+    .configure(Configuration("microservice.services.identity-verification.port" -> WiremockHelper.wiremockPort))
+    .build()
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -33,7 +37,7 @@ class IdentityVerificationConnectorSpec extends UnitSpec with GuiceOneServerPerS
   "IdentityVerificationConnector" should {
     "throw an UpstreamErrorResponse with a statusCode of NOT_FOUND" when {
       "IV returns a 404" in {
-        stubGet(s"/mdtp/journey/journeyId/$missingJourneyId", NOT_FOUND, s"No journey found for the supplied journeyId = $missingJourneyId")
+        stubGet(s"/mdtp/journey/journeyId/$missingJourneyId", NOT_FOUND, s"[WiremockServer]: No journey found for the supplied journeyId = $missingJourneyId")
 
         val thrown = intercept[UpstreamErrorResponse] {
           await(identityVerificationConnector.identityVerificationResponse(missingJourneyId))

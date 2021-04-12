@@ -22,7 +22,7 @@ import javax.inject.Inject
 import play.api.Application
 import play.api.mvc._
 import scala.concurrent.Future
-import uk.gov.hmrc.play.bootstrap.controller.FrontendController
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 class TimeoutController @Inject()(mcc: MessagesControllerComponents)(
                                   implicit val partialRetriever: PlaFormPartialRetriever,

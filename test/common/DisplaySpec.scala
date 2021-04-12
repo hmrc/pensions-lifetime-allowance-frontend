@@ -16,16 +16,16 @@
 
 package common
 
-import java.time.LocalDate
-import java.util.Locale
-
 import common.Display._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import testHelpers.FakeApplication
 
-class DisplaySpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+import java.time.LocalDate
+import java.util.Locale
+
+class DisplaySpec extends FakeApplication with MockitoSugar {
 
   implicit val mockMessages = mock[Messages]
   val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi

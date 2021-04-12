@@ -20,7 +20,6 @@ import models.PSALookupResult
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupResultsSpecMessages
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages.lookup.psa_lookup_results
 
 class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResultsSpecMessages {

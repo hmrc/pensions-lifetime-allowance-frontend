@@ -23,9 +23,8 @@ import play.api.http.Status
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.Helpers._
 import testHelpers._
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
-class AccountControllerSpec extends UnitSpec with WithFakeApplication with MockitoSugar {
+class AccountControllerSpec extends FakeApplication with MockitoSugar {
 
   val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents]

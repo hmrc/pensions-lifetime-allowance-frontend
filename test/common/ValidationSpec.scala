@@ -16,10 +16,10 @@
 
 package common
 
-import uk.gov.hmrc.play.test.UnitSpec
+import org.scalatest.{Matchers, OptionValues, WordSpecLike}
 import common.Validation._
 
-class ValidationSpec extends UnitSpec {
+class ValidationSpec extends WordSpecLike with Matchers with OptionValues {
 
   "Two decimal places check" should {
 

@@ -38,16 +38,15 @@ import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment}
-import testHelpers.{AuthorisedFakeRequestToPost, MockTemplateRenderer}
+import testHelpers.{AuthorisedFakeRequestToPost, FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
 
 import scala.concurrent.Future
 
-class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with AuthMock with WithFakeApplication with BeforeAndAfterEach {
+class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach {
 
   implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
@@ -167,7 +166,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
           when(mockPlaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
             .thenReturn(Future.successful(HttpResponse(status = OK, body = "")))
-          await(controller.displayWithdrawConfirmation("")(fakeRequest))
+          controller.displayWithdrawConfirmation("")(fakeRequest)
         }
           status(result) shouldBe SEE_OTHER
 
@@ -179,10 +178,10 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
           when(mockPlaConnector.amendProtection(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
             .thenReturn(Future.successful(HttpResponse(status = INTERNAL_SERVER_ERROR, body = "")))
-          await(controller.displayWithdrawConfirmation("")(fakeRequest))
+          controller.displayWithdrawConfirmation("")(fakeRequest)
         }
           status(result) shouldBe INTERNAL_SERVER_ERROR
-          result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
       }
     }
 
@@ -193,10 +192,10 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
           lazy val result = {
             mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
             keystoreFetchCondition[ProtectionModel](None)
-            await(controller.withdrawImplications(fakeRequest))
+            controller.withdrawImplications(fakeRequest)
           }
           status(result) shouldBe INTERNAL_SERVER_ERROR
-          result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
 
         }
       }
@@ -209,7 +208,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
           when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
 
-          val result = await(controller.withdrawImplications(fakeRequest))
+          val result = controller.withdrawImplications(fakeRequest)
           status(result) shouldBe OK
         }
       }
@@ -223,11 +222,11 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
           lazy val result = {
             mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
             keystoreFetchCondition[ProtectionModel](None)
-            await(controller.withdrawSummary(fakeRequest))
+            controller.withdrawSummary(fakeRequest)
           }
 
           status(result) shouldBe INTERNAL_SERVER_ERROR
-          result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
         }
       }
 
@@ -238,7 +237,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
           when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
 
-          val result = await(controller.withdrawSummary(fakeRequest))
+          val result = controller.withdrawSummary(fakeRequest)
           status(result) shouldBe OK
         }
       }
@@ -251,11 +250,11 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
           keystoreFetchCondition[ProtectionModel](None)
-          lazy val result = await(controller.withdrawSummary(fakeRequest))
+          lazy val result = controller.withdrawSummary(fakeRequest)
 
           keystoreFetchCondition[ProtectionModel](None)
           status(result) shouldBe INTERNAL_SERVER_ERROR
-          result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
         }
       }
 
@@ -264,7 +263,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
 
-          lazy val result = await(controller.getWithdrawDateInput(fakeRequest))
+          lazy val result = controller.getWithdrawDateInput(fakeRequest)
 
           status(result) shouldBe OK
         }
@@ -277,7 +276,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
       "return 500" in new Setup {
         mockAuthConnector(Future.successful({}))
         keystoreFetchCondition[ProtectionModel](None)
-        lazy val result = await(controller.postWithdrawDateInput(fakeRequest))
+        lazy val result = controller.postWithdrawDateInput(fakeRequest)
         status(result) shouldBe INTERNAL_SERVER_ERROR
       }
     }
@@ -292,7 +291,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
 
         val request = FakeRequest().withFormUrlEncodedBody(("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017"))
 
-        lazy val result = await(controller.postWithdrawDateInput(request))
+        lazy val result = controller.postWithdrawDateInput(request)
         status(result) shouldBe SEE_OTHER
       }
     }
@@ -309,7 +308,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
               Future.successful(Some(withdrawDateForm))
             )
 
-          lazy val result = await(controller.getSubmitWithdrawDateInput(fakeRequest))
+          lazy val result = controller.getSubmitWithdrawDateInput(fakeRequest)
           status(result) shouldBe OK
         }
       }
@@ -318,7 +317,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
         "return a 500" in new Setup {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[ProtectionModel](None)
-          lazy val result = await(controller.getSubmitWithdrawDateInput(fakeRequest))
+          lazy val result = controller.getSubmitWithdrawDateInput(fakeRequest)
           status(result) shouldBe INTERNAL_SERVER_ERROR
         }
       }
@@ -377,7 +376,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
         "return a 400" in new Setup {
 
           val requestWithForm = FakeRequest().withBody(Json.toJson(invalidWithdrawDateForm))
-          lazy val result = await(controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithForm))
+          lazy val result = controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithForm)
           status(result) shouldBe BAD_REQUEST
         }
       }
@@ -388,10 +387,10 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
             .thenReturn(Future.successful(CacheMap("test", Map.empty)))
 
           val requestWithFormInvalid = FakeRequest().withBody(Json.toJson(withdrawDateForm))
-          lazy val result = await(controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithFormInvalid))
+          lazy val result = controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithFormInvalid)
 
           status(result) shouldBe SEE_OTHER
-          result.header.headers("Location") shouldBe  "/protect-your-lifetime-allowance/withdraw-protection/date-input-confirmation"
+          await(result).header.headers("Location") shouldBe  "/protect-your-lifetime-allowance/withdraw-protection/date-input-confirmation"
 
         }
       }
@@ -401,7 +400,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
       "there is a stored withdrawDateForm" should {
         "return a 400" in new Setup {
           keystoreFetchCondition[WithdrawDateFormModel](None)
-          lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest, lang))
+          lazy val result = controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest, lang)
           status(result) shouldBe INTERNAL_SERVER_ERROR
         }
       }
@@ -409,7 +408,7 @@ class WithdrawProtectionControllerSpec extends UnitSpec with MockitoSugar with A
       "there is no stored withdrawDateForm" should {
         "return a 200" in new Setup {
           keystoreFetchCondition[WithdrawDateFormModel](Some(withdrawDateForm))
-          lazy val result = await(controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest, lang))
+          lazy val result = controller.fetchWithdrawDateForm(ip2016Protection)(fakeRequest, lang)
           status(result) shouldBe OK
         }
       }

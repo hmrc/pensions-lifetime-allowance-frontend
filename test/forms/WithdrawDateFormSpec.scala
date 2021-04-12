@@ -16,14 +16,12 @@
 
 package forms
 
-import play.api.data.FormError
+import forms.WithdrawDateForm.withdrawDateForm
+import play.api.data.{Form, FormError}
 import play.api.libs.json.Json
-import WithdrawDateForm.withdrawDateForm
-import testHelpers.CommonErrorMessages
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import testHelpers.{CommonErrorMessages, FakeApplication}
 
-
-class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with CommonErrorMessages {
+class WithdrawDateFormSpec extends FakeApplication with CommonErrorMessages {
 
   "Withdraw date form" should {
     "return no errors with valid date" in {
@@ -32,7 +30,7 @@ class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with Common
         "withdrawMonth" -> "2",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = withdrawDateForm.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.isEmpty)
     }
     "return errors when no day provided" in {
@@ -41,7 +39,7 @@ class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with Common
         "withdrawMonth" -> "2",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = withdrawDateForm.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawDay",
         List(errorEmptyDay))))
@@ -52,7 +50,7 @@ class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with Common
         "withdrawMonth" -> "",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = withdrawDateForm.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawMonth",
         List(errorEmptyMonth))))
@@ -63,7 +61,7 @@ class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with Common
         "withdrawMonth" -> "2",
         "withdrawYear" -> ""
       )
-      val validatedForm = withdrawDateForm.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawYear",
         List(errorEmptyYear))))
@@ -74,7 +72,7 @@ class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with Common
         "withdrawMonth" -> "2",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = withdrawDateForm.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawDay",
         List(errorHighDay))))
@@ -85,7 +83,7 @@ class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with Common
         "withdrawMonth" -> "62",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = withdrawDateForm.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawMonth",
         List(errorHighMonth))))
@@ -96,7 +94,7 @@ class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with Common
         "withdrawMonth" -> "2",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = withdrawDateForm.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawDay",
         List(errorLowDay))))
@@ -107,7 +105,7 @@ class WithdrawDateFormSpec extends UnitSpec with WithFakeApplication with Common
         "withdrawMonth" -> "0",
         "withdrawYear" -> "2017"
       )
-      val validatedForm = withdrawDateForm.bind(postData)
+      val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
       assert(validatedForm.errors.contains(FormError("withdrawMonth",
         List(errorLowMonth))))
