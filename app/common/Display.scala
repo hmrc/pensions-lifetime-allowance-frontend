@@ -36,15 +36,15 @@ object Display {
   }
 
   def dateDisplayString(date: LocalDate)(implicit lang: Lang, messages: Messages): String = {
-    val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyy")
     if (lang.language == "cy") {
+      val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
       date.format(dateFormat)
       val monthNum = date.getMonthValue
-      val welshFormatter = DateTimeFormatter.ofPattern(s"""d '${messages(s"pla.month.$monthNum")}' YYYY""")
+      val welshFormatter = DateTimeFormatter.ofPattern(s"""d '${messages(s"pla.month.$monthNum")}' yyyy""")
       date.format(welshFormatter)
     }
     else {
-      val dateFormat = DateTimeFormatter.ofPattern("d MMMM YYYY")
+      val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
       date.format(dateFormat)
     }
   }
