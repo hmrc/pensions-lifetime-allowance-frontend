@@ -19,14 +19,13 @@ package views.pages.withdraw
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmationSpecMessages
-import views.html.pages.withdraw.{withdrawConfirmation => views}
+import views.html.pages.withdraw.withdrawConfirmation
 
 class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawConfirmationSpecMessages {
 
   "Withdraw Confirmation view" when {
-    lazy val protectionType = "IP2014"
-    lazy val view = views(protectionType)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[withdrawConfirmation]
+    lazy val doc = Jsoup.parse(view("IP2014").body)
 
     s"have a title ${"pla.withdraw.confirmation.message"}" in {
       doc.title() shouldBe plaWithdrawConfirmationMessage(plaWithdrawProtectionIP2014label)

@@ -20,7 +20,7 @@ import forms.AmendCurrentPensionForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.CurrentPensionsViewMessages
-import views.html.pages.amends.{amendCurrentPensions => views}
+import views.html.pages.amends.amendCurrentPensions
 
 class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsViewMessages{
 
@@ -28,14 +28,14 @@ class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPens
     val amendCurrentPensionsForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "12000",
                                                                                             "protectionType" -> "ip2016",
                                                                                             "status" -> "open"))
-    lazy val view = views(amendCurrentPensionsForm)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[amendCurrentPensions]
+    lazy val doc = Jsoup.parse(view.apply(amendCurrentPensionsForm).body)
 
     val errorForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "a",
                                                                              "protectionType" -> "ip2016",
                                                                              "status" -> "open"))
-    lazy val errorView = views(errorForm)
-    lazy val errorDoc = Jsoup.parse(errorView.body)
+    lazy val errorView = application.injector.instanceOf[amendCurrentPensions]
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
     lazy val form = doc.select("form")
 
     "have the correct title" in{

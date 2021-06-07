@@ -16,6 +16,10 @@
 
 @import play.api.Application
 @import config.FrontendAppConfig
+
+@this(
+    main_template: main_template)
+
 @(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, frontendAppConfig: FrontendAppConfig)
 
 @lc = @{
@@ -30,8 +34,7 @@
 }
 }
 
-@views.html.main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false,
-    gaCode = Seq(metrics.body)) {
+@main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
 
     <h1> @Messages("psa.lookup.results.title")</h1>
     <br>

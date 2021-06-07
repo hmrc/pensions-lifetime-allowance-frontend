@@ -29,8 +29,8 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
 
     "provided with a form without errors" should {
       lazy val form = PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "IP141000000000A"))
-      lazy val view = psa_lookup_protection_notification_no_form(form)
-      lazy val doc = Jsoup.parse(view.body)
+      lazy val view = application.injector.instanceOf[psa_lookup_protection_notification_no_form]
+      lazy val doc = Jsoup.parse(view.apply(form)body)
 
       "have the correct title" in {
         doc.title() shouldBe titleText
@@ -96,8 +96,8 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
 
     "provided with a form with errors" should {
       lazy val form = PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "A"))
-      lazy val view = psa_lookup_protection_notification_no_form(form)
-      lazy val doc = Jsoup.parse(view.body)
+      lazy val view = application.injector.instanceOf[psa_lookup_protection_notification_no_form]
+      lazy val doc = Jsoup.parse(view.apply(form)body)
 
       "have an error summary" in {
         doc.select("div.error-summary").size() shouldBe 1
@@ -114,8 +114,8 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
 
     "provided with an empty form" should {
       lazy val form = PSALookupProtectionNotificationNoForm.pnnForm
-      lazy val view = psa_lookup_protection_notification_no_form(form)
-      lazy val doc = Jsoup.parse(view.body)
+      lazy val view = application.injector.instanceOf[psa_lookup_protection_notification_no_form]
+      lazy val doc = Jsoup.parse(view.apply(form)body)
 
       "not have an error summary" in {
         doc.select("div.error-summary").size() shouldBe 0

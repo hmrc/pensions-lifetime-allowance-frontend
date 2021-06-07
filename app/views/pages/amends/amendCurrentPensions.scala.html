@@ -24,6 +24,9 @@
 @import play.api.Application
 @import config.FrontendAppConfig
 
+@this(
+    main_template: main_template)
+
 @(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @helpTextAccordionContent = {

@@ -42,7 +42,13 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  displayConstructors: DisplayConstructors,
                                  mcc: MessagesControllerComponents,
                                  responseConstructors: ResponseConstructors,
-                                 authFunction: AuthFunction)
+                                 authFunction: AuthFunction,
+                                 technicalError: views.html.pages.fallback.technicalError,
+                                 manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
+                                 noNotificationId: views.html.pages.fallback.noNotificationId,
+                                 resultRejected: views.html.pages.result.resultRejected,
+                                 resultSuccess: views.html.pages.result.resultSuccess,
+                                 resultSuccessInactive: views.html.pages.result.resultSuccessInactive)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: PlaFormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
@@ -87,7 +93,7 @@ extends FrontendController(mcc) with I18nSupport {
       model =>
         if (model.protection.notificationId.isEmpty) {
           logger.warn(s"No notification ID found in the ApplyResponseModel for user with nino $nino")
-          Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+          Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
         } else {
           keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
             cacheMap =>
@@ -99,7 +105,7 @@ extends FrontendController(mcc) with I18nSupport {
         }
     }.getOrElse {
       logger.warn(s"Unable to create ApplyResponseModel from application response for ${protectionType.toString} for user nino: $nino")
-      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+      Future.successful(InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
 
@@ -113,7 +119,7 @@ extends FrontendController(mcc) with I18nSupport {
       implicit val lang = mcc.messagesApi.preferred(request).lang
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         val showUserResearchPanel = setURPanelFlag
-        val errorResponse = InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+        val errorResponse = InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
           case Some(model) =>
             val notificationId = model.protection.notificationId.getOrElse {

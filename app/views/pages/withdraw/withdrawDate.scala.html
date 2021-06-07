@@ -21,6 +21,8 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import config.FrontendAppConfig
 
+@this(mainTemplate: main_template)
+
 @(withdrawDateForm: Form[WithdrawDateFormModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @lc = @{
@@ -31,7 +33,7 @@
     <script type="text/javascript" src='@controllers.routes.Assets.versioned("javascripts/pla.js")'></script>
 }
 
-@views.html.main_template(title = Messages("pla.withdraw.date-input.title"), scriptElem = Some(scriptElement), bodyClasses = None) {
+@mainTemplate(title = Messages("pla.withdraw.date-input.title"), scriptElem = Some(scriptElement), bodyClasses = None) {
 
     <a class="back-link" style="margin-bottom: 0px" href=@routes.WithdrawProtectionController.withdrawImplications()>Back</a>
 

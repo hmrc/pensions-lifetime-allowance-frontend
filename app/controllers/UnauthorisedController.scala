@@ -36,7 +36,11 @@ import scala.concurrent.Future
 
 class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
                                        keystoreConnector: KeyStoreConnector,
-                                       mcc: MessagesControllerComponents)(
+                                       mcc: MessagesControllerComponents,
+                                       lockedOut: views.html.pages.ivFailure.lockedOut,
+                                       technicalIssue: views.html.pages.ivFailure.technicalIssue,
+                                       unauthorised: views.html.pages.ivFailure.unauthorised,
+                                       timeout: views.html.pages.timeout)(
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val plaContext: PlaContext,
                                        implicit val partialRetriever: PlaFormPartialRetriever,
@@ -62,7 +66,7 @@ extends FrontendController(mcc) with I18nSupport {
         case IdentityVerificationResult.LockedOut => Future.successful(Unauthorized(lockedOut()))
         case IdentityVerificationResult.Timeout =>
           logger.info("User session timed out during IV uplift")
-          Future.successful(Unauthorized(views.html.pages.timeout()))
+          Future.successful(Unauthorized(timeout()))
         case _ =>
           logger.info("Unauthorised identity verification, returned to unauthorised page")
           Future.successful(Unauthorized(unauthorised()))

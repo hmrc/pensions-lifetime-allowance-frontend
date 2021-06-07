@@ -23,7 +23,8 @@ import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
-class PlaFrontendErrorHandler @Inject()(implicit val messagesApi: MessagesApi,
+class PlaFrontendErrorHandler @Inject()(errorTemplate: views.html.error_template
+                                       )(implicit val messagesApi: MessagesApi,
                                        implicit val PlaFormPartialRetriever: PlaFormPartialRetriever,
                                        implicit val localTemplateRenderer: LocalTemplateRenderer,
                                        implicit val appConfig: FrontendAppConfig,
@@ -31,7 +32,7 @@ class PlaFrontendErrorHandler @Inject()(implicit val messagesApi: MessagesApi,
 
 
   override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html = {
-    views.html.error_template(pageTitle, heading, message)
+    errorTemplate(pageTitle, heading, message)
   }
 
 

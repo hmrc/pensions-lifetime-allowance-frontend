@@ -20,18 +20,18 @@ import forms.PensionsTakenBeforeForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBeforeViewMessages
-import views.html.pages.ip2016.{pensionsTakenBefore => views}
+import views.html.pages.ip2016.pensionsTakenBefore
 
 class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTakenBeforeViewMessages {
 
   "the PensionsTakenBeforeView" should{
     val pensionsForm = PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> "Yes", "pensionsTakenBeforeAmt" -> "12345"))
-    lazy val view = views(pensionsForm)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[pensionsTakenBefore]
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
     val errorForm =  PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map.empty[String, String])
-    lazy val errorView = views(errorForm)
-    lazy val errorDoc = Jsoup.parse(errorView.body)
+    lazy val errorView = application.injector.instanceOf[pensionsTakenBefore]
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
 

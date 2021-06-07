@@ -22,7 +22,7 @@ import models.{ActiveAmendResultDisplayModel, ProtectionDetailsDisplayModel}
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.OutcomeActiveViewSpecMessages
-import views.html.pages.amends.{outcomeActive => views}
+import views.html.pages.amends.outcomeActive
 
 class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewSpecMessages {
 
@@ -56,11 +56,11 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
     ))
   )
 
-  lazy val viewIP16 = views(amendsActiveResultModelIP16, Some(amendsGAModel))
-  lazy val docIP16 = Jsoup.parse(viewIP16.body)
+  lazy val viewIP16 = application.injector.instanceOf[outcomeActive]
+  lazy val docIP16 = Jsoup.parse(viewIP16.apply(amendsActiveResultModelIP16,Some(amendsGAModel)).body)
 
-  lazy val viewIP14 = views(amendsActiveResultModelIP14, Some(amendsGAModel))
-  lazy val docIP14 = Jsoup.parse(viewIP14.body)
+  lazy val viewIP14 = application.injector.instanceOf[outcomeActive]
+  lazy val docIP14 = Jsoup.parse(viewIP14.apply(amendsActiveResultModelIP14, Some(amendsGAModel)).body)
 
   "the OutcomeActiveView" should{
     "have the correct title" in{

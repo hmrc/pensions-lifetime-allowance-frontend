@@ -16,9 +16,12 @@
 
 @import config.FrontendAppConfig
 
+@this(
+ main_template: main_template)
+
 @()(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
-@views.html.main_template(title = Messages("pla.withdrawn.title"), bodyClasses = None) {
+@main_template(title = Messages("pla.withdrawn.title"), bodyClasses = None) {
 <h1 class="heading-large" id="pageHeading">@Messages("pla.withdrawn.pageHeading")</h1>
 
 <p id="startAgainText">@Html(Messages("pla.withdrawn.paraOne", controllers.routes.ReadProtectionsController.currentProtections))</p>

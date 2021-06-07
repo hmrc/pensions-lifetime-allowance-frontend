@@ -20,7 +20,7 @@ import forms.AmendOverseasPensionsForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14OverseasPensionsViewSpecMessages
-import views.html.pages.amends.{amendIP14OverseasPensions => views}
+import views.html.pages.amends.amendIP14OverseasPensions
 
 class AmendIP14OverseasPensionsViewSpec extends CommonViewSpecHelper with AmendIP14OverseasPensionsViewSpecMessages{
 
@@ -29,12 +29,12 @@ class AmendIP14OverseasPensionsViewSpec extends CommonViewSpecHelper with AmendI
       "amendedOverseasPensionsAmt" -> "1234",
       "protectionType" -> "ip2014",
       "status" -> "open"))
-    lazy val view = views(oPensionsForm)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[amendIP14OverseasPensions]
+    lazy val doc = Jsoup.parse(view.apply(oPensionsForm).body)
 
     val errorForm = AmendOverseasPensionsForm.amendOverseasPensionsForm.bind(Map.empty[String, String])
-    lazy val errorView = views(errorForm)
-    lazy val errorDoc = Jsoup.parse(errorView.body)
+    lazy val errorView = application.injector.instanceOf[amendIP14OverseasPensions]
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
     "have the correct title" in{

@@ -50,7 +50,22 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  displayConstructors: DisplayConstructors,
                                  mcc: MessagesControllerComponents,
                                  responseConstructors: ResponseConstructors,
-                                 authFunction: AuthFunction)
+                                 authFunction: AuthFunction,
+                                 manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
+                                 noNotificationId: views.html.pages.fallback.noNotificationId,
+                                 amendPsoDetails: pages.amends.amendPsoDetails,
+                                 technicalError: views.html.pages.fallback.technicalError,
+                                 amendCurrentPensions: pages.amends.amendCurrentPensions,
+                                 amendPensionsTakenBefore: pages.amends.amendPensionsTakenBefore,
+                                 amendPensionsTakenBetween: pages.amends.amendPensionsTakenBetween,
+                                 amendIP14CurrentPensions: pages.amends.amendIP14CurrentPensions,
+                                 amendIP14PensionsTakenBefore: pages.amends.amendIP14PensionsTakenBefore,
+                                 amendIP14PensionsTakenBetween: pages.amends.amendIP14PensionsTakenBetween,
+                                 amendOverseasPensions: pages.amends.amendOverseasPensions,
+                                 amendIP14OverseasPensions: pages.amends.amendIP14OverseasPensions,
+                                 outcomeActive: views.html.pages.amends.outcomeActive,
+                                 outcomeInactive: views.html.pages.amends.outcomeInactive,
+                                 removePsoDebits: pages.amends.removePsoDebits)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: PlaFormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
@@ -64,7 +79,7 @@ extends FrontendController(mcc) with I18nSupport {
       amendmentTypeForm.bindFromRequest.fold(
         errors => {
           logger.warn(s"Couldn't bind protection type or status to amend request for user with nino $nino")
-          Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+          Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
         },
         success => for {
           protectionAmendment <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
@@ -81,7 +96,7 @@ extends FrontendController(mcc) with I18nSupport {
         amendPensionsTakenBeforeForm.bindFromRequest.fold(
           errors => {
             val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-            Future.successful(BadRequest(pages.amends.amendPensionsTakenBefore(form)))
+            Future.successful(BadRequest(amendPensionsTakenBefore(form)))
           },
           success => {
               keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
@@ -100,7 +115,7 @@ extends FrontendController(mcc) with I18nSupport {
 
                 case _ =>
                   logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before")
-                  Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+                  Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
 
             }
           }
@@ -111,7 +126,7 @@ extends FrontendController(mcc) with I18nSupport {
       amendPensionsTakenBetweenForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-          Future.successful(BadRequest(pages.amends.amendPensionsTakenBetween(form)))
+          Future.successful(BadRequest(amendPensionsTakenBetween(form)))
         },
         success => {
             keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
@@ -130,7 +145,7 @@ extends FrontendController(mcc) with I18nSupport {
 
               case _ =>
                 logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken between")
-                Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+                Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
         }
       )
@@ -143,7 +158,7 @@ extends FrontendController(mcc) with I18nSupport {
         amendOverseasPensionsForm.bindFromRequest.fold(
           errors => {
             val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-            Future.successful(BadRequest(pages.amends.amendOverseasPensions(form)))
+            Future.successful(BadRequest(amendOverseasPensions(form)))
           },
           success => {
               keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
@@ -162,7 +177,7 @@ extends FrontendController(mcc) with I18nSupport {
 
                 case _ =>
                   logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before")
-                  Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+                  Future.successful(InternalServerError(technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
               }
           }
         )
@@ -173,7 +188,7 @@ extends FrontendController(mcc) with I18nSupport {
       amendCurrentPensionForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-          Future.successful(BadRequest(pages.amends.amendCurrentPensions(form)))
+          Future.successful(BadRequest(amendCurrentPensions(form)))
         },
         success => {
           keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
@@ -189,7 +204,7 @@ extends FrontendController(mcc) with I18nSupport {
 
             case _ =>
               logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend current UK pension")
-              Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+              Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
           }
         }
       )
@@ -199,7 +214,7 @@ extends FrontendController(mcc) with I18nSupport {
       amendmentTypeForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-          Future.successful(BadRequest(pages.amends.removePsoDebits(form)))
+          Future.successful(BadRequest(removePsoDebits(form)))
         },
         success => {
           keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
@@ -213,7 +228,7 @@ extends FrontendController(mcc) with I18nSupport {
 
             case None =>
               logger.warn(s"Could not retrieve Amend Protection Model for user with nino $nino when submitting a removal of a pension debit")
-              Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+              Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
           }
         }
       )
@@ -224,7 +239,7 @@ extends FrontendController(mcc) with I18nSupport {
       amendPsoDetailsForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-          Future.successful(BadRequest(pages.amends.amendPsoDetails(form)))
+          Future.successful(BadRequest(amendPsoDetails(form)))
         },
         success => {
             val details = createPsoDetailsList(success)
@@ -250,7 +265,7 @@ extends FrontendController(mcc) with I18nSupport {
           ))
         case _ =>
           logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend summary page")
-          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+          InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
   }
@@ -277,14 +292,14 @@ extends FrontendController(mcc) with I18nSupport {
           }
           if (Constants.activeAmendmentCodes.contains(id)) {
             keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
-            Ok(views.html.pages.amends.outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
+            Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
           } else {
-            Ok(views.html.pages.amends.outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
+            Ok(outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
           }
         }
       }.getOrElse {
         logger.warn(s"Unable to retrieve amendment outcome model from keyStore for user nino :$nino")
-        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString))
+        InternalServerError(technicalError(ApplicationType.existingProtections.toString))
           .withHeaders(CACHE_CONTROL -> "no-cache")
       })
     }
@@ -336,35 +351,35 @@ extends FrontendController(mcc) with I18nSupport {
         )(request)
       case _ =>
         logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend $journey page")
-        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+        InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
 
   private[controllers] def getRouteUsingModel(model: AmendValueModel)(implicit request: Request[AnyContent]) = {
     model match {
       case AmendCurrentPensionModel(_,"ip2016",_) =>
-        Ok(pages.amends.amendCurrentPensions(amendCurrentPensionForm.fill(model.asInstanceOf[AmendCurrentPensionModel])))
+        Ok(amendCurrentPensions(amendCurrentPensionForm.fill(model.asInstanceOf[AmendCurrentPensionModel])))
 
       case AmendCurrentPensionModel(_,"ip2014",_) =>
-        Ok(pages.amends.amendIP14CurrentPensions(amendCurrentPensionForm.fill(model.asInstanceOf[AmendCurrentPensionModel])))
+        Ok(amendIP14CurrentPensions(amendCurrentPensionForm.fill(model.asInstanceOf[AmendCurrentPensionModel])))
 
       case AmendPensionsTakenBeforeModel(_,_,"ip2016",_) =>
-        Ok(pages.amends.amendPensionsTakenBefore(amendPensionsTakenBeforeForm.fill(model.asInstanceOf[AmendPensionsTakenBeforeModel])))
+        Ok(amendPensionsTakenBefore(amendPensionsTakenBeforeForm.fill(model.asInstanceOf[AmendPensionsTakenBeforeModel])))
 
       case AmendPensionsTakenBeforeModel(_,_,"ip2014",_) =>
-        Ok(pages.amends.amendIP14PensionsTakenBefore(amendPensionsTakenBeforeForm.fill(model.asInstanceOf[AmendPensionsTakenBeforeModel])))
+        Ok(amendIP14PensionsTakenBefore(amendPensionsTakenBeforeForm.fill(model.asInstanceOf[AmendPensionsTakenBeforeModel])))
 
       case AmendPensionsTakenBetweenModel(_,_,"ip2016",_) =>
-        Ok(pages.amends.amendPensionsTakenBetween(amendPensionsTakenBetweenForm.fill(model.asInstanceOf[AmendPensionsTakenBetweenModel])))
+        Ok(amendPensionsTakenBetween(amendPensionsTakenBetweenForm.fill(model.asInstanceOf[AmendPensionsTakenBetweenModel])))
 
       case AmendPensionsTakenBetweenModel(_,_,"ip2014",_) =>
-        Ok(pages.amends.amendIP14PensionsTakenBetween(amendPensionsTakenBetweenForm.fill(model.asInstanceOf[AmendPensionsTakenBetweenModel])))
+        Ok(amendIP14PensionsTakenBetween(amendPensionsTakenBetweenForm.fill(model.asInstanceOf[AmendPensionsTakenBetweenModel])))
 
       case AmendOverseasPensionsModel(_,_,"ip2016",_) =>
-        Ok(pages.amends.amendOverseasPensions(amendOverseasPensionsForm.fill(model.asInstanceOf[AmendOverseasPensionsModel])))
+        Ok(amendOverseasPensions(amendOverseasPensionsForm.fill(model.asInstanceOf[AmendOverseasPensionsModel])))
 
       case AmendOverseasPensionsModel(_,_,"ip2014",_) =>
-        Ok(pages.amends.amendIP14OverseasPensions(amendOverseasPensionsForm.fill(model.asInstanceOf[AmendOverseasPensionsModel])))
+        Ok(amendIP14OverseasPensions(amendOverseasPensionsForm.fill(model.asInstanceOf[AmendOverseasPensionsModel])))
     }
   }
 
@@ -382,22 +397,22 @@ extends FrontendController(mcc) with I18nSupport {
             case Some(debits) =>
               routeFromPensionDebitsList(debits, protectionType, status, nino)
             case None =>
-              Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
+              Ok(amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
           }
         case _ =>
           logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend PSO details page")
-          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+          InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
   }
 
   def routeFromPensionDebitsList(debits: Seq[PensionDebitModel], protectionType: String, status: String, nino: String)(implicit request: Request[AnyContent]): Result = {
     debits.length match {
-        case 0 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
-        case 1 => Ok(pages.amends.amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head, protectionType, status))))
+        case 0 => Ok(amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
+        case 1 => Ok(amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head, protectionType, status))))
         case num => {
           logger.warn(s"$num pension debits recorded for user nino $nino during amend journey")
-          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+          InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
     }
@@ -415,10 +430,10 @@ extends FrontendController(mcc) with I18nSupport {
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
         case Some(model) =>
-          Ok(pages.amends.removePsoDebits(amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))))
+          Ok(removePsoDebits(amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))))
         case _ =>
           logger.warn(s"Could not retrieve Amend ProtectionModel for user with nino $nino when removing the new pension debit")
-          InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+          InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
   }
@@ -427,7 +442,7 @@ extends FrontendController(mcc) with I18nSupport {
     response.status match {
       case 409 => {
         logger.warn(s"conflict response returned for amend request for user nino $nino")
-        Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString))
+        Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString))
           .withHeaders(CACHE_CONTROL -> "no-cache"))
       }
       case 423 =>
@@ -446,11 +461,11 @@ extends FrontendController(mcc) with I18nSupport {
           }
         } else {
           logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
-          Future.successful(InternalServerError(views.html.pages.fallback.noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+          Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
         }
     }.getOrElse {
       logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
-      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString))
+      Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString))
         .withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }

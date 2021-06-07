@@ -28,13 +28,13 @@ import uk.gov.hmrc.auth.core.{AuthorisedFunctions, _}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
-
 class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                  authClientConnector: AuthConnector,
-                                 val env: Environment)(
+                                 val technicalError: views.html.pages.fallback.technicalError,
+                                 val env: Environment
+                                )(
                                   implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: PlaFormPartialRetriever,
                                   implicit val templateRenderer:LocalTemplateRenderer,
@@ -44,39 +44,32 @@ class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
   override def authConnector: AuthConnector = authClientConnector
 }
 trait AuthFunction extends AuthRedirects with AuthorisedFunctions {
-
   implicit val partialRetriever: PlaFormPartialRetriever
   implicit val templateRenderer: LocalTemplateRenderer
   implicit val plaContext: PlaContext
   implicit val appConfig: FrontendAppConfig
-
+  val technicalError: views.html.pages.fallback.technicalError
   val enrolmentKey: String = "HMRC-NI"
   val originString: String = "origin="
   val confidenceLevel: String = "&confidenceLevel=200"
   val completionURL: String = "&completionURL="
   val failureURL: String = "&failureURL="
-
   private def IVUpliftURL()(implicit request: Request[AnyContent]): String = s"$personalIVUrl?" +
     s"$originString${appConfig.appName}" +
     s"$confidenceLevel" +
     s"$completionURL${request.uri}" +
     s"$failureURL${appConfig.notAuthorisedRedirectUrl}"
-
   class MissingNinoException extends Exception("Nino not returned by authorised call")
-
   def genericAuthWithoutNino(pType: String)(body: => Future[Result])(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] = {
     authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200) {
       body
     }.recover(authErrorHandling(pType))
   }
-
   def genericAuthWithNino(pType: String)(body: String => Future[Result])(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] = {
     authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200).retrieve(Retrievals.nino) { nino =>
       body(nino.getOrElse(throw new MissingNinoException))
     }.recover(authErrorHandling(pType))
   }
-
-
   def authErrorHandling(pType: String)(implicit request: Request[AnyContent], messages: Messages): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession => {
       val upliftUrl = upliftEnvironmentUrl(request.uri)
@@ -87,15 +80,12 @@ trait AuthFunction extends AuthRedirects with AuthorisedFunctions {
     case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL)
     case e: AuthorisationException =>
       logger.error("Unexpected auth exception ", e)
-      InternalServerError(views.html.pages.fallback.technicalError(pType))
-
+      InternalServerError(technicalError(pType))
   }
-
   def upliftEnvironmentUrl(requestUri: String): String = {
     appConfig.sessionMissingUpliftUrlPrefix match {
       case Some(prefix) => prefix + requestUri
       case _ => requestUri
     }
   }
-
 }

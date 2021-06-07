@@ -39,8 +39,11 @@ import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.CacheMap
-
 import java.util.UUID
+
+import views.html.pages.fallback.technicalError
+import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, psoDetails, removePsoDetails}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -54,6 +57,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     val mockAuthFunction: AuthFunction = fakeApplication.injector.instanceOf[AuthFunction]
     val mockEnv: Environment = mock[Environment]
 
+
     implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
     implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
     implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
@@ -62,6 +66,15 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     implicit val system: ActorSystem = ActorSystem()
     implicit val materializer: ActorMaterializer = ActorMaterializer()
     implicit val application = mock[Application]
+    implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
+    implicit val mockPensionsTaken: pensionsTaken = app.injector.instanceOf[pensionsTaken]
+    implicit val mockPensionsTakenBefore: pensionsTakenBefore = app.injector.instanceOf[pensionsTakenBefore]
+    implicit val mockPensionsTakenBetween: pensionsTakenBetween = app.injector.instanceOf[pensionsTakenBetween]
+    implicit val mockOverseasPensions: overseasPensions = app.injector.instanceOf[overseasPensions]
+    implicit val mockCurrentPensions: currentPensions = app.injector.instanceOf[currentPensions]
+    implicit val mockPsoDetails: psoDetails = app.injector.instanceOf[psoDetails]
+    implicit val mockRemovePsoDetails: removePsoDetails = app.injector.instanceOf[removePsoDetails]
+
 
     class Setup {
 
@@ -70,6 +83,8 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
             override implicit val plaContext: PlaContext = mockPlaContext
             override implicit val appConfig: FrontendAppConfig = mockAppConfig
+            override implicit val technicalError: technicalError = mockTechnicalError
+
             override def authConnector: AuthConnector = mockAuthConnector
             override def config: Configuration = mockAppConfig.configuration
             override def env: Environment = mockEnv
@@ -78,7 +93,14 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         val controller = new IP2016Controller(
             mockKeyStoreConnector,
             mockMCC,
-            authFunction
+            authFunction,
+            mockPensionsTaken,
+            mockPensionsTakenBefore,
+            mockPensionsTakenBetween,
+            mockOverseasPensions,
+            mockCurrentPensions,
+            mockPsoDetails,
+            mockRemovePsoDetails
         )
     }
 
@@ -89,7 +111,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     implicit val hc = HeaderCarrier()
 
     //    lazy val TestIP2016Controller = fakeApplication.injector.instanceOf[IP2016Controller]
-    object TestIP2016Controller extends IP2016Controller(mockKeyStoreConnector, mockMCC, mockAuthFunction) {
+    object TestIP2016Controller extends IP2016Controller(mockKeyStoreConnector, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsTakenBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails) {
         lazy val authConnector = mockAuthConnector
     }
 

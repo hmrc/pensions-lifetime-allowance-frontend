@@ -27,6 +27,7 @@ trait PsaLookupResultsSpecMessages {
   val statusRowValidText = "This protection is valid"
   val statusRowInvalidText = "This protection is no longer valid"
   val checkedOnTitleText = "Checked on:"
+  val timestampText = "timestamp"
   val protectionNumberTitleText = "Protection Notification Number:"
   val protectionTypeTitleText = "Protection Type:"
   val protectionTypeFP2016Text = "Fixed protection 2016"

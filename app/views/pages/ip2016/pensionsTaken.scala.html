@@ -22,12 +22,15 @@
 @import play.api.Application
 @import config.FrontendAppConfig
 
+@this(
+    main_template: main_template)
+
 @(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
 
-@views.html.main_template(title = Messages("pla.pensionsTaken.title"), bodyClasses = None) {
+@main_template(title = Messages("pla.pensionsTaken.title"), bodyClasses = None) {
 
     @if(pensionsTakenForm.hasErrors){
     @govHelpers.errorSummary(

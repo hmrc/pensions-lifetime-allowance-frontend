@@ -20,7 +20,7 @@ import forms.AmendmentTypeForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.RemovePsoDetailsViewMessages
-import views.html.pages.amends.{removePsoDebits => views}
+import views.html.pages.amends.removePsoDebits
 
 class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages{
 
@@ -29,8 +29,8 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
       "protectionType" -> "ip2016",
       "status"         -> "open"))
 
-    lazy val view = views(amendmentForm)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[removePsoDebits]
+    lazy val doc = Jsoup.parse(view.apply(amendmentForm).body)
     lazy val form = doc.select("form")
 
     "have the correct title" in{

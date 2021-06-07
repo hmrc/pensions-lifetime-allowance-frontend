@@ -19,14 +19,14 @@ package views.pages.confirmation
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.confirmation.ConfirmFP
-import views.html.pages.confirmation.{confirmFP => views}
+import views.html.pages.confirmation.confirmFP
 
 class ConfirmFPSpec extends CommonViewSpecHelper with ConfirmFP {
 
   "The FP 2016 page" should {
 
-    lazy val view = views()
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[confirmFP]
+    lazy val doc = Jsoup.parse(view().body)
 
       "have the correct title" in {
         doc.title() shouldBe {

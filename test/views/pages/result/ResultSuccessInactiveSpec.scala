@@ -21,19 +21,20 @@ import models.{ProtectionDetailsDisplayModel, SuccessDisplayModel}
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultSuccessInactive
-import views.html.pages.result.{resultSuccessInactive => views}
+import views.html.pages.result.resultSuccessInactive
 
 class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessInactive {
 
   "The Result Rejected Page" should {
 
     lazy val protectionmodel = ProtectionDetailsDisplayModel(Some(""), "", Some(""))
-    lazy val testmodel = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", true, Some(protectionmodel), Seq("1", "2"))
-    lazy val testmodel2 = SuccessDisplayModel(ApplicationType.FP2016, "16", "100.00", false, Some(protectionmodel), Seq("1", "2"))
-    lazy val view = views(testmodel, showUserResearchPanel = false)
-    lazy val view2 = views(testmodel2, showUserResearchPanel = false)
-    lazy val doc = Jsoup.parse(view.body)
-    lazy val doc2 = Jsoup.parse(view2.body)
+    lazy val ip2016Model = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", true, Some(protectionmodel), Seq("1", "2"))
+    lazy val fp2016Model = SuccessDisplayModel(ApplicationType.FP2016, "16", "100.00", false, Some(protectionmodel), Seq("1", "2"))
+
+    lazy val view = application.injector.instanceOf[resultSuccessInactive]
+
+    lazy val doc = Jsoup.parse(view.apply(ip2016Model, false).body)
+    lazy val doc2 = Jsoup.parse(view.apply(fp2016Model, false).body)
 
     "have the correct title" in {
       doc.title() shouldBe plaResultSuccessTitle

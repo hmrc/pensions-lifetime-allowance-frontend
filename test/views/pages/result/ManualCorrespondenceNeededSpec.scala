@@ -19,14 +19,14 @@ package views.pages.result
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ManualCorrespondenceNeeded
-import views.html.pages.result.{manualCorrespondenceNeeded => views}
+import views.html.pages.result.manualCorrespondenceNeeded
 
 class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCorrespondenceNeeded {
 
   "The Manual Correspondence needed page" should {
 
-    lazy val view = views()
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[manualCorrespondenceNeeded]
+    lazy val doc = Jsoup.parse(view().body)
 
     "have the correct title" in {
       doc.title() shouldBe plaMcNeededTitle

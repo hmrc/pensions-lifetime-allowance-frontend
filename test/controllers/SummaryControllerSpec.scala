@@ -40,8 +40,10 @@ import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
-
 import java.util.UUID
+
+import views.html.pages.fallback.technicalError
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -59,6 +61,8 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val application = mock[Application]
+  implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
+
 
   val mockSummaryConstructor: SummaryConstructor = mock[SummaryConstructor]
   val fakeRequest = FakeRequest()
@@ -67,7 +71,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
 
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
 
-  val testSummaryController = new SummaryController(mockKeyStoreConnector, mockMCC, mockAuthFunction) {
+  val testSummaryController = new SummaryController(mockKeyStoreConnector, mockMCC, mockAuthFunction, mockTechnicalError) {
     override val summaryConstructor = mockSummaryConstructor
   }
 
@@ -78,6 +82,8 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
       override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
       override implicit val plaContext: PlaContext = mockPlaContext
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
+      override implicit val technicalError: technicalError = mockTechnicalError
+
       override def authConnector: AuthConnector = mockAuthConnector
       override def config: Configuration = mockAppConfig.configuration
       override def env: Environment = mockEnv
@@ -86,7 +92,8 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
     val controller = new SummaryController(
       mockKeyStoreConnector,
       mockMCC,
-      authFunction
+      authFunction,
+      mockTechnicalError
     ) {
       override val summaryConstructor = mockSummaryConstructor
     }

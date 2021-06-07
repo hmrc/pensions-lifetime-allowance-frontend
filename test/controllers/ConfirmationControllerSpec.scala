@@ -29,6 +29,8 @@ import play.api.test.Helpers.{defaultAwaitTimeout, status}
 import play.api.{Application, Configuration, Environment}
 import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
+import views.html.pages.fallback.technicalError
+import views.html.pages.confirmation.confirmFP
 
 import scala.concurrent.Future
 
@@ -41,6 +43,9 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     implicit val system: ActorSystem                           = ActorSystem()
     implicit val materializer: ActorMaterializer               = ActorMaterializer()
     implicit val application: Application                      = mock[Application]
+    implicit val mockTechnicalError: technicalError            = app.injector.instanceOf[technicalError]
+    implicit val mockConfirmFP: confirmFP                      = app.injector.instanceOf[confirmFP]
+
 
     val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents]
     val mockAuthFunction = fakeApplication.injector.instanceOf[AuthFunction]
@@ -51,6 +56,8 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
         override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
         override implicit val plaContext: PlaContext = mockPlaContext
         override implicit val appConfig: FrontendAppConfig = mockAppConfig
+        override implicit val technicalError: technicalError = mockTechnicalError
+
         override def authConnector: AuthConnector = mockAuthConnector
         override def config: Configuration = mockAppConfig.configuration
         override def env: Environment = mockEnv
@@ -60,7 +67,8 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     class Setup {
         val controller = new ConfirmationController(
             mockMCC,
-            authFunction
+            authFunction,
+            mockConfirmFP
         )
     }
 

@@ -25,9 +25,9 @@ import views.html.pages.lookup.psa_lookup_not_found_results
 class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLookupNotFoundSpecMessages {
 
   "The Psa Lookup Not Found Print view" should {
-    val model = PSALookupRequest("check", Some("ref"))
-    lazy val view = psa_lookup_not_found_results(model, "timestamp")
-    lazy val doc = Jsoup.parse(view.body)
+    val psaLookupRequest = PSALookupRequest("check", Some("ref"))
+    lazy val view = application.injector.instanceOf[psa_lookup_not_found_results]
+    lazy val doc = Jsoup.parse(view.apply(psaLookupRequest,"timestamp").body)
 
     "have the correct header text" in {
       doc.select("h1").text() shouldBe checkDetailsText

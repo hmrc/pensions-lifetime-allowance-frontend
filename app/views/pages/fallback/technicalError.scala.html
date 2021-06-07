@@ -16,6 +16,9 @@
 
 @import config.FrontendAppConfig
 
+@this(
+    main_template: main_template)
+
 @(pType: String)(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @restartTarget = @{
@@ -31,7 +34,7 @@
     else Messages("pla.techError.retry")
 }
 
-@views.html.main_template(title = Messages("pla.techError.title"), bodyClasses = None) {
+@main_template(title = Messages("pla.techError.title"), bodyClasses = None) {
 
 <h1 class="heading-large" id="pageHeading">@Messages("pla.techError.pageHeading")</h1>
 

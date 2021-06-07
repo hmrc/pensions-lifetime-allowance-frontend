@@ -21,7 +21,7 @@ import org.jsoup.Jsoup
 import play.api.i18n.Lang
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmSpecMessages
-import views.html.pages.withdraw.{withdrawConfirm => views}
+import views.html.pages.withdraw.withdrawConfirm
 
 class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmSpecMessages {
 
@@ -29,8 +29,10 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
     implicit val lang = mock[Lang]
     val withdrawDate = "2018-01-16"
     val withdrawDatePretty = "16 January 2018"
-    lazy val view = views(withdrawDate, "ip14", "dormant")
-    lazy val doc = Jsoup.parse(view.body)
+
+    lazy val view = application.injector.instanceOf[withdrawConfirm]
+
+    lazy val doc = Jsoup.parse(view.apply(withdrawDate,"ip14", "dormant").body)
 
     s"have a title ${"pla.withdraw.what-happens.info-heading"}" in {
       doc.title() shouldBe plaWithdrawWhatHappensInfoHeading

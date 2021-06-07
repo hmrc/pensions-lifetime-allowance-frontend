@@ -21,6 +21,7 @@ import akka.stream.ActorMaterializer
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
+import views.html.pages.lookup.{pla_protection_guidance, psa_lookup_not_found_results, psa_lookup_protection_notification_no_form, psa_lookup_results, psa_lookup_scheme_admin_ref_form}
 import models.{PSALookupRequest, PSALookupResult}
 import org.mockito.ArgumentMatchers._
 import org.mockito.Mockito.{reset, when}
@@ -58,6 +59,11 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val application = mock[Application]
+  implicit val mockPsa_lookup_not_found_results: psa_lookup_not_found_results = app.injector.instanceOf[psa_lookup_not_found_results]
+  implicit val mockPla_protection_guidance: pla_protection_guidance = app.injector.instanceOf[pla_protection_guidance]
+  implicit val mockPsa_lookup_protection_notification_no_form: psa_lookup_protection_notification_no_form = app.injector.instanceOf[psa_lookup_protection_notification_no_form]
+  implicit val mockPsa_lookup_results: psa_lookup_results = app.injector.instanceOf[psa_lookup_results]
+  implicit val mockPsa_lookup_scheme_admin_ref_form: psa_lookup_scheme_admin_ref_form = app.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
 
   class Setup {
     val controller = new LookupController(
@@ -65,7 +71,11 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       mockPlaConnector,
       mockActionWithSessionId,
       mockMCC,
-      mockHttp
+      mockPsa_lookup_not_found_results,
+      mockPla_protection_guidance,
+      mockPsa_lookup_protection_notification_no_form,
+      mockPsa_lookup_results,
+      mockPsa_lookup_scheme_admin_ref_form,
     )
   }
 

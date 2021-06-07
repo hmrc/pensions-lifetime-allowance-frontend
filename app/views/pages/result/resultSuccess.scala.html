@@ -23,12 +23,14 @@
 @import play.api.Application
 @import config.FrontendAppConfig
 
+@this(
+	main_template: main_template)
 
 @(res: SuccessDisplayModel, showUserResearchPanel: Boolean)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
-@views.html.main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None, isUserResearchBannerVisible = showUserResearchPanel) {
+@main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None, isUserResearchBannerVisible = showUserResearchPanel) {
 
 	<div class="grid-row">
 		<div class="transaction-banner--complete">

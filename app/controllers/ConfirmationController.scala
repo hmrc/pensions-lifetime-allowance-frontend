@@ -28,7 +28,8 @@ import views.html.pages._
 import scala.concurrent.Future
 
 class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
-                                       authFunction: AuthFunction)
+                                       authFunction: AuthFunction,
+                                       ConfirmFP: confirmation.confirmFP)
                                       (implicit val application: Application,
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val partialRetriever: PlaFormPartialRetriever,
@@ -38,7 +39,7 @@ class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
   val confirmFP = Action.async {
     implicit request =>
       authFunction.genericAuthWithoutNino("FP2016") {
-        Future.successful(Ok(confirmation.confirmFP()))
+        Future.successful(Ok(ConfirmFP()))
       }
   }
 }

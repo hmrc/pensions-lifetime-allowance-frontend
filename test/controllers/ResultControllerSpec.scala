@@ -44,6 +44,8 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import utils.ActionWithSessionId
+import views.html.pages.fallback.{noNotificationId, technicalError}
+import views.html.pages.result.{manualCorrespondenceNeeded, resultRejected, resultSuccess, resultSuccessInactive}
 
 import scala.concurrent.Future
 
@@ -68,17 +70,25 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   implicit val mockLang: Lang = mock[Lang]
   implicit val fakeRequest = FakeRequest()
   implicit val application = mock[Application]
+  implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
+  implicit val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded = app.injector.instanceOf[manualCorrespondenceNeeded]
+  implicit val mockNoNotificationID: noNotificationId = app.injector.instanceOf[noNotificationId]
+  implicit val mockResultRejected: resultRejected = app.injector.instanceOf[resultRejected]
+  implicit val mockResultSuccess: resultSuccess = app.injector.instanceOf[resultSuccess]
+  implicit val mockResultSuccessInactive: resultSuccessInactive = app.injector.instanceOf[resultSuccessInactive]
+
+
+
 
   val authFunction = new AuthFunction {
     override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
     override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
     override implicit val plaContext: PlaContext = mockPlaContext
     override implicit val appConfig: FrontendAppConfig = mockAppConfig
+    override implicit val technicalError: technicalError = mockTechnicalError
 
     override def authConnector: AuthConnector = mockAuthConnector
-
     override def config: Configuration = mockAppConfig.configuration
-
     override def env: Environment = mockEnv
   }
 
@@ -199,12 +209,12 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   val testIP14InactiveSuccessApplyResponseModel = ApplyResponseModel(testIP14InactiveSuccessProtectionModel)
   val testIP14RejectionApplyResponseModel = ApplyResponseModel(testIP14RejectionProtectionModel)
 
-  val TestSuccessResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction)
-  val TestInactiveSuccessResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction)
-  val TestRejectResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction)
-  val TestMCNeededResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction)
-  val testResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction)
-  val TestIncorrectResponseModelResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction)
+  val TestSuccessResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
+  val TestInactiveSuccessResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
+  val TestRejectResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
+  val TestMCNeededResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
+  val testResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
+  val TestIncorrectResponseModelResultController = new ResultController(mockKeyStoreConnector, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
 
   //////////////////////////////////////////////
   //  POST / REDIRECT

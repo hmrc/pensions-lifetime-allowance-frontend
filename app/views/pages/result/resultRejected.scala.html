@@ -19,11 +19,14 @@
 @import play.api.Application
 @import config.FrontendAppConfig
 
+@this(
+    main_template: main_template)
+
 @(res: RejectionDisplayModel, showUserResearchPanel: Boolean)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
-@views.html.main_template(title = Messages("pla.resultRejection.title"), bodyClasses = None, isUserResearchBannerVisible = showUserResearchPanel) {
+@main_template(title = Messages("pla.resultRejection.title"), bodyClasses = None, isUserResearchBannerVisible = showUserResearchPanel) {
 
 	<h1 class="heading-large" id="resultPageHeading">@Messages("pla.resultRejection.pageHeading")</h1>
 
