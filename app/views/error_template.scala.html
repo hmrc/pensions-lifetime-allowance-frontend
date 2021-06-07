@@ -16,6 +16,11 @@
 
 @import config.FrontendAppConfig
 
+@this(
+ main_template: main_template,
+ appConfig: FrontendAppConfig
+)
+
 @(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @contentHeader = {
@@ -23,7 +28,12 @@
 }
 
 @mainContent = {
-  <p>@message</p>
+ <h1 class="heading-xlarge">@heading</h1>
+ <p>@message</p>
 }
 
-@govuk_wrapper(appConfig = appConfig, title = pageTitle, contentHeader = Some(contentHeader), mainContent = mainContent, isUserResearchBannerVisible = false)
+@main_template(
+ title = pageTitle
+){
+  @mainContent
+}

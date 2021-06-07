@@ -42,6 +42,8 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
 import utils.ActionWithSessionId
+import views.html.pages.fallback.technicalError
+import views.html.pages.result.manualCorrespondenceNeeded
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.Future
@@ -72,6 +74,9 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val mockLang: Lang = mock[Lang]
   implicit val application = mock[Application]
+  implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
+  implicit val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded = app.injector.instanceOf[manualCorrespondenceNeeded]
+
 
   val fakeRequest = FakeRequest()
 
@@ -82,6 +87,8 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
       override implicit val plaContext: PlaContext = mockPlaContext
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
+      override implicit val technicalError: technicalError = mockTechnicalError
+
       override def authConnector: AuthConnector = mockAuthConnector
       override def config: Configuration = mockAppConfig.configuration
       override def env: Environment = mockEnv
@@ -93,7 +100,9 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       mockDisplayConstructors,
       mockMCC,
       mockResponseConstructors,
-      authFunction)
+      authFunction,
+      mockTechnicalError,
+      mockManualCorrespondenceNeeded)
   }
 
   val ip2016Protection = ProtectionModel(

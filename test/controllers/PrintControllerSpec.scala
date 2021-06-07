@@ -36,6 +36,7 @@ import play.api.{Configuration, Environment}
 import testHelpers.{FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import views.html.pages.fallback.technicalError
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -55,6 +56,8 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
+
 
   val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
   val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111))
@@ -65,6 +68,8 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
     override implicit val plaContext: PlaContext = mockPlaContext
     override implicit val appConfig: FrontendAppConfig = mockAppConfig
+    override implicit val technicalError: technicalError = mockTechnicalError
+
     override def authConnector: AuthConnector = mockAuthConnector
     override def config: Configuration = mockAppConfig.configuration
     override def env: Environment = mockEnv

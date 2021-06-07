@@ -20,7 +20,7 @@ import forms.AmendPensionsTakenBetweenForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBetweenViewMessages
-import views.html.pages.amends.{amendPensionsTakenBetween => views}
+import views.html.pages.amends.amendPensionsTakenBetween
 
 class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTakenBetweenViewMessages {
 
@@ -29,12 +29,12 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
                                                                                             "amendedPensionsTakenBetweenAmt" -> "12345",
                                                                                             "protectionType" -> "ip2016",
                                                                                             "status" -> "open"))
-    lazy val view = views(pensionsForm)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[amendPensionsTakenBetween]
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
     val errorForm =  AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map.empty[String, String])
-    lazy val errorView = views(errorForm)
-    lazy val errorDoc = Jsoup.parse(errorView.body)
+    lazy val errorView = application.injector.instanceOf[amendPensionsTakenBetween]
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
 

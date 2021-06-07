@@ -27,6 +27,7 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
+import views.html.pages.timeout
 
 class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
 
@@ -39,8 +40,9 @@ class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
     implicit val system: ActorSystem = ActorSystem()
     implicit val materializer: ActorMaterializer = ActorMaterializer()
     implicit val application = mock[Application]
+    implicit val mockTimeout: timeout = app.injector.instanceOf[timeout]
 
-    val controller = new TimeoutController(mockMCC)
+    val controller = new TimeoutController(mockMCC, mockTimeout)
 
     "Calling the .timeout action" when {
 

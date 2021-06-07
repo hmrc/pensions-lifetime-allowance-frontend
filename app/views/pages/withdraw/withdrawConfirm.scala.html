@@ -22,6 +22,8 @@
 @import config.FrontendAppConfig
 @import common.Dates._
 
+@this(mainTemplate:main_template)
+
 @(withdrawDate: String, protectionType: String, status: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, lang: Lang)
 
 @lc = @{
@@ -32,7 +34,7 @@
     <script type="text/javascript" src='@controllers.routes.Assets.versioned("javascripts/pla.js")'></script>
 }
 
-@views.html.main_template(title = Messages("pla.withdraw.what-happens.info-heading"), scriptElem = Some(scriptElement), bodyClasses = None) {
+@mainTemplate(title = Messages("pla.withdraw.what-happens.info-heading"), scriptElem = Some(scriptElement), bodyClasses = None) {
 
     @govHelpers.form(action = routes.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)) {
 

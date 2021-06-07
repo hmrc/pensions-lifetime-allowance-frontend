@@ -43,7 +43,12 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
                                              plaConnector: PLAConnector,
                                              displayConstructors: DisplayConstructors,
                                              mcc: MessagesControllerComponents,
-                                             authFunction: AuthFunction)
+                                             authFunction: AuthFunction,
+                                             withdrawConfirm: views.html.pages.withdraw.withdrawConfirm,
+                                             withdrawConfirmation: views.html.pages.withdraw.withdrawConfirmation,
+                                             withdrawDate: views.html.pages.withdraw.withdrawDate,
+                                             withdrawImplications: views.html.pages.withdraw.withdrawImplications,
+                                             technicalError: views.html.pages.fallback.technicalError)
                                             (implicit val appConfig: FrontendAppConfig,
                                              implicit val partialRetriever: PlaFormPartialRetriever,
                                              implicit val templateRenderer:LocalTemplateRenderer,
@@ -63,7 +68,7 @@ extends FrontendController(mcc) with I18nSupport {
             Ok(views.html.pages.withdraw.withdrawSummary(displayConstructors.createWithdrawSummaryTable(currentProtection)))
           case _ =>
             logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
-            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+            InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
   }
@@ -73,12 +78,12 @@ extends FrontendController(mcc) with I18nSupport {
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(currentProtection) =>
-            Ok(views.html.pages.withdraw.withdrawImplications(withdrawDateForm,
+            Ok(withdrawImplications(withdrawDateForm,
               Strings.protectionTypeString(currentProtection.protectionType),
               Strings.statusString(currentProtection.status)))
           case _ =>
             logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
-            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+            InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
   }
@@ -88,12 +93,12 @@ extends FrontendController(mcc) with I18nSupport {
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(currentProtection) =>
-            Ok(views.html.pages.withdraw.withdrawDate(withdrawDateForm,
+            Ok(withdrawDate(withdrawDateForm,
               Strings.protectionTypeString(currentProtection.protectionType),
               Strings.statusString(currentProtection.status)))
           case _ =>
             logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
-            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+            InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
   }
@@ -106,7 +111,7 @@ extends FrontendController(mcc) with I18nSupport {
       formWithErrors =>
         Future.successful(
           BadRequest(
-            views.html.pages.withdraw.withdrawDate(buildInvalidForm(formWithErrors),
+            withdrawDate(buildInvalidForm(formWithErrors),
               Strings.protectionTypeString(protection.protectionType),
               Strings.statusString(protection.status))
           )
@@ -125,7 +130,7 @@ extends FrontendController(mcc) with I18nSupport {
         case Some(protection) => validateAndSaveWithdrawDateForm(protection)
         case _ =>
           logger.error(s"Could not retrieve protection data for user when loading the withdraw date input page")
-          Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+          Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
       }
     }
   }
@@ -134,12 +139,12 @@ extends FrontendController(mcc) with I18nSupport {
   private[controllers] def fetchWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_], lang: Lang) = {
     keyStoreConnector.fetchAndGetFormData[WithdrawDateFormModel]("withdrawProtectionForm") map  {
       case Some(form) =>
-        Ok(views.html.pages.withdraw.withdrawConfirm(
+        Ok(withdrawConfirm(
           getWithdrawDateModel(form), Strings.protectionTypeString(protection.protectionType),
           Strings.statusString(protection.status)))
       case _ =>
         logger.error(s"Could not retrieve withdraw form data for user")
-        InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+        InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
     }
   }
 
@@ -152,7 +157,7 @@ extends FrontendController(mcc) with I18nSupport {
             fetchWithdrawDateForm(protection)
           case _ =>
             logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page")
-            Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+            Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
         }
       }
   }
@@ -166,16 +171,16 @@ extends FrontendController(mcc) with I18nSupport {
             validateWithdrawDate(withdrawDateForm.bindFromRequest(),
             LocalDateTime.parse(protection.certificateDate.get)).fold(
             formWithErrors =>
-                BadRequest(views.html.pages.withdraw.withdrawDate(buildInvalidForm(formWithErrors),
+                BadRequest(withdrawDate(buildInvalidForm(formWithErrors),
               Strings.protectionTypeString(protection.protectionType),
               Strings.statusString(protection.status))),
-            _ => Ok(views.html.pages.withdraw.withdrawConfirm(
+            _ => Ok(withdrawConfirm(
               getWithdrawDate(withdrawDateForm.bindFromRequest()), Strings.protectionTypeString(protection.protectionType),
               Strings.statusString(protection.status)))
           )
           case _ =>
             logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page")
-            InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+            InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
   }
@@ -199,7 +204,7 @@ extends FrontendController(mcc) with I18nSupport {
       case _ => {
         logger.error(s"conflict response returned for withdrawal request for user nino $nino")
         Future.successful(InternalServerError(
-          views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString))
+          technicalError(ApplicationType.existingProtections.toString))
           .withHeaders(CACHE_CONTROL -> "no-cache"))
       }
     }
@@ -210,7 +215,7 @@ extends FrontendController(mcc) with I18nSupport {
     implicit request =>
       authFunction.genericAuthWithoutNino("existingProtections") {
         keyStoreConnector.remove.map {
-          _ => Ok(views.html.pages.withdraw.withdrawConfirmation(protectionType))
+          _ => Ok(withdrawConfirmation(protectionType))
         }
       }
   }

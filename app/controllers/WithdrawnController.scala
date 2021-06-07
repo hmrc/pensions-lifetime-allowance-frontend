@@ -21,17 +21,19 @@ import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import javax.inject.Inject
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import views.html.pages.ip2014.withdrawn
 
 import scala.concurrent.Future
 
 
-class WithdrawnController @Inject()(mcc: MessagesControllerComponents)
+class WithdrawnController @Inject()(mcc: MessagesControllerComponents,
+                                    withdrawn: withdrawn)
                                    (implicit val partialRetriever: PlaFormPartialRetriever,
                                     implicit val templateRenderer:LocalTemplateRenderer,
                                     implicit val appConfig: FrontendAppConfig,
                                     implicit val plaContext: PlaContext) extends FrontendController(mcc) {
 
   def showWithdrawn(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(views.html.pages.ip2014.withdrawn()))
+    Future.successful(Ok(withdrawn()))
   }
 }

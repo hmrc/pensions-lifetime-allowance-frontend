@@ -33,8 +33,10 @@ import play.api.{Configuration, Environment, Mode}
 import testHelpers.{FakeApplication, KeystoreTestHelper, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
-
 import java.net.URLEncoder
+
+import views.html.pages.fallback.technicalError
+
 import scala.concurrent.Future
 
 class AuthFunctionSpec extends FakeApplication
@@ -77,6 +79,7 @@ class AuthFunctionSpec extends FakeApplication
 
     override implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
     override implicit val templateRenderer: LocalTemplateRenderer = mock[LocalTemplateRenderer]
+    override implicit val technicalError: technicalError = app.injector.instanceOf[technicalError]
     }
 
   lazy val requestUrl = "http://www.pla-frontend.gov.uk/ip16-start-page"

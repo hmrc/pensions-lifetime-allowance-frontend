@@ -19,6 +19,10 @@
 @import controllers.PlaLanguageController
 @import play.api.Application
 @import config.FrontendAppConfig
+
+@this(
+ main_template: main_template)
+
 @(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], messages: Messages, formPartialRetriever: FormPartialRetriever,
   partialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang, application: Application, context: config.PlaContext, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 

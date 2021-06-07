@@ -44,7 +44,10 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                           displayConstructors: DisplayConstructors,
                                           mcc: MessagesControllerComponents,
                                           responseConstructors: ResponseConstructors,
-                                          authFunction: AuthFunction)
+                                          authFunction: AuthFunction,
+                                          technicalError: views.html.pages.fallback.technicalError,
+                                          manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded
+                                         )
                                          (implicit val appConfig: FrontendAppConfig,
                                           implicit val partialRetriever: PlaFormPartialRetriever,
                                           implicit val templateRenderer:LocalTemplateRenderer,
@@ -62,10 +65,10 @@ extends FrontendController(mcc) with I18nSupport {
         plaConnector.readProtections(nino).flatMap { response =>
           response.status match {
             case OK => redirectFromSuccess(response, nino)
-            case LOCKED => Future.successful(Locked(pages.result.manualCorrespondenceNeeded()))
+            case LOCKED => Future.successful(Locked(manualCorrespondenceNeeded()))
             case num => {
               logger.error(s"unexpected status $num passed to currentProtections for nino: $nino")
-              Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+              Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
           }
         }.recover {
@@ -82,7 +85,7 @@ extends FrontendController(mcc) with I18nSupport {
         saveAndDisplayExistingProtections(readResponseModel)
     }.getOrElse {
       logger.warn(s"unable to create transformed read response model from microservice response for nino: $nino")
-      Future.successful(InternalServerError(views.html.pages.fallback.technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+      Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
   }
 

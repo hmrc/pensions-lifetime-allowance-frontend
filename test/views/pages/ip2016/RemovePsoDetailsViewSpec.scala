@@ -19,13 +19,13 @@ package views.pages.ip2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.RemovePsoDetailsViewMessages
-import views.html.pages.ip2016.{removePsoDetails => views}
+import views.html.pages.ip2016.removePsoDetails
 
 class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages {
 
   "the RemovePsoDetailsView" should{
-    lazy val view = views()
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[removePsoDetails]
+    lazy val doc = Jsoup.parse(view().body)
     lazy val form = doc.select("form")
 
     "have the correct title" in{

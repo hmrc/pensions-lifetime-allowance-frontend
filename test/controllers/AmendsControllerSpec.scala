@@ -46,9 +46,10 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.pages.amends._
-import views.html.pages.fallback.technicalError
-
+import views.html.pages.fallback.{noNotificationId, technicalError}
 import java.util.UUID
+import views.html.pages.result.manualCorrespondenceNeeded
+
 import scala.concurrent.Future
 
 class AmendsControllerSpec extends FakeApplication
@@ -64,8 +65,23 @@ class AmendsControllerSpec extends FakeApplication
   val mockPlaConnector: PLAConnector                 = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents          = fakeApplication.injector.instanceOf[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction                 = mock[AuthFunction]
-  val mockEnv: Environment                           = mock[Environment]
-  val messagesApi: MessagesApi                       = mockMCC.messagesApi
+  val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded = app.injector.instanceOf[manualCorrespondenceNeeded]
+  val mockNoNotificationID: noNotificationId         = app.injector.instanceOf[noNotificationId]
+  val mockAmendPsoDetails: amendPsoDetails           = app.injector.instanceOf[amendPsoDetails]
+  val mockTechnicalError: technicalError             = app.injector.instanceOf[technicalError]
+  val mockAmendCurrentPensions: amendCurrentPensions = app.injector.instanceOf[amendCurrentPensions]
+  val mockAmendPensionsTakenBefore: amendPensionsTakenBefore = app.injector.instanceOf[amendPensionsTakenBefore]
+  val mockAmendPensionsTakenBetween: amendPensionsTakenBetween = app.injector.instanceOf[amendPensionsTakenBetween]
+  val mockAmendIP14CurrentPensions: amendIP14CurrentPensions = app.injector.instanceOf[amendIP14CurrentPensions]
+  val mockAmendIP14PensionsTakenBefore: amendIP14PensionsTakenBefore = app.injector.instanceOf[amendIP14PensionsTakenBefore]
+  val mockAmendIP14PensionsTakenBetween: amendIP14PensionsTakenBetween = app.injector.instanceOf[amendIP14PensionsTakenBetween]
+  val mockAmendOverseasPensions: amendOverseasPensions = app.injector.instanceOf[amendOverseasPensions]
+  val mockAmendIP414OverseasPensions: amendIP14OverseasPensions = app.injector.instanceOf[amendIP14OverseasPensions]
+  val mockOutcomeActive: outcomeActive                = app.injector.instanceOf[outcomeActive]
+  val mockOutcomeInactive: outcomeInactive            = app.injector.instanceOf[outcomeInactive]
+  val mockRemovePsoDebits: removePsoDebits            = app.injector.instanceOf[removePsoDebits]
+  val mockEnv: Environment                            = mock[Environment]
+  val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
   implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
@@ -93,6 +109,7 @@ class AmendsControllerSpec extends FakeApplication
     val authFunction = new AuthFunctionImpl (
       mockMCC,
       mockAuthConnector,
+      mockTechnicalError,
       mockEnv)
 
     val controller = new AmendsController(
@@ -101,7 +118,22 @@ class AmendsControllerSpec extends FakeApplication
       mockDisplayConstructors,
       mockMCC,
       mockResponseConstructors,
-      authFunction
+      authFunction,
+      mockManualCorrespondenceNeeded,
+      mockNoNotificationID,
+      mockAmendPsoDetails,
+      mockTechnicalError,
+      mockAmendCurrentPensions,
+      mockAmendPensionsTakenBefore,
+      mockAmendPensionsTakenBetween,
+      mockAmendIP14CurrentPensions,
+      mockAmendIP14PensionsTakenBefore,
+      mockAmendIP14PensionsTakenBetween,
+      mockAmendOverseasPensions,
+      mockAmendIP414OverseasPensions,
+      mockOutcomeActive,
+      mockOutcomeInactive,
+      mockRemovePsoDebits
     )
   }
 
@@ -1203,7 +1235,7 @@ class AmendsControllerSpec extends FakeApplication
       lazy val result = controller.amendmentOutcomeResult(None, None, "")(fakeRequest)
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
-      contentAsString(result) shouldBe technicalError(appType.toString).body
+      contentAsString(result) shouldBe mockTechnicalError(appType.toString).body
     }
 
     "provided with a model without an Id" in new Setup {
@@ -1227,7 +1259,7 @@ class AmendsControllerSpec extends FakeApplication
 
       lazy val result = controller.amendmentOutcomeResult(Some(model), modelGA, "")
 
-      contentAsString(result) shouldBe outcomeActive(ActiveAmendResultDisplayModel(ApplicationType.IP2014, "33", "£1,100,000", None), modelGA).body
+      contentAsString(result) shouldBe mockOutcomeActive(ActiveAmendResultDisplayModel(ApplicationType.IP2014, "33", "£1,100,000", None), modelGA).body
       status(result) shouldBe OK
     }
 
@@ -1243,7 +1275,7 @@ class AmendsControllerSpec extends FakeApplication
         .thenReturn(InactiveAmendResultDisplayModel("41", Seq()))
 
         status(result) shouldBe OK
-        contentAsString(result) shouldBe outcomeInactive(InactiveAmendResultDisplayModel("41", Seq()), modelGA).body
+        contentAsString(result) shouldBe mockOutcomeInactive(InactiveAmendResultDisplayModel("41", Seq()), modelGA).body
     }
   }
 
@@ -1273,7 +1305,7 @@ class AmendsControllerSpec extends FakeApplication
       "return a status of OK" in new Setup() {
         val model = AmendCurrentPensionModel(Some(1000), "ip2016", "dormant")
         val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
-        contentAsString(result) shouldBe amendCurrentPensions(AmendCurrentPensionForm.amendCurrentPensionForm.fill(model)).body
+        contentAsString(result) shouldBe mockAmendCurrentPensions(AmendCurrentPensionForm.amendCurrentPensionForm.fill(model)).body
         status(result) shouldBe OK
       }
     }
@@ -1283,7 +1315,7 @@ class AmendsControllerSpec extends FakeApplication
       "return a status of OK" in new Setup() {
         val model = AmendCurrentPensionModel(Some(1000), "ip2014", "dormant")
         val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
-        contentAsString(result) shouldBe amendIP14CurrentPensions(AmendCurrentPensionForm.amendCurrentPensionForm.fill(model)).body
+        contentAsString(result) shouldBe mockAmendIP14CurrentPensions(AmendCurrentPensionForm.amendCurrentPensionForm.fill(model)).body
         status(result) shouldBe OK
       }
     }
@@ -1293,7 +1325,7 @@ class AmendsControllerSpec extends FakeApplication
       "return a status of OK" in new Setup() {
         val model = AmendPensionsTakenBeforeModel("", Some(1000), "ip2016", "dormant")
         lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
-        contentAsString(result) shouldBe amendPensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
+        contentAsString(result) shouldBe mockAmendPensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
         status(result) shouldBe OK
       }
     }
@@ -1302,7 +1334,7 @@ class AmendsControllerSpec extends FakeApplication
       "return a status of OK" in new Setup() {
         val model = AmendPensionsTakenBeforeModel("", Some(1000), "ip2014", "dormant")
         val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
-        contentAsString(result) shouldBe amendIP14PensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
+        contentAsString(result) shouldBe mockAmendIP14PensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
         status(result) shouldBe OK
       }
     }
@@ -1312,7 +1344,7 @@ class AmendsControllerSpec extends FakeApplication
         val model = AmendPensionsTakenBetweenModel("", Some(1000), "ip2016", "dormant")
         lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         status(result) shouldBe OK
-        contentAsString(result) shouldBe amendPensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
+        contentAsString(result) shouldBe mockAmendPensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
       }
     }
 
@@ -1321,7 +1353,7 @@ class AmendsControllerSpec extends FakeApplication
         val model = AmendPensionsTakenBetweenModel("", Some(1000), "ip2014", "dormant")
         lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         status(result) shouldBe OK
-        contentAsString(result) shouldBe amendIP14PensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
+        contentAsString(result) shouldBe mockAmendIP14PensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
       }
     }
 
@@ -1330,7 +1362,7 @@ class AmendsControllerSpec extends FakeApplication
         val model = AmendOverseasPensionsModel("", Some(1000), "ip2016", "dormant")
         lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         status(result) shouldBe OK
-        contentAsString(result) shouldBe amendOverseasPensions(AmendOverseasPensionsForm.amendOverseasPensionsForm.fill(model)).body
+        contentAsString(result) shouldBe mockAmendOverseasPensions(AmendOverseasPensionsForm.amendOverseasPensionsForm.fill(model)).body
       }
     }
 
@@ -1339,7 +1371,7 @@ class AmendsControllerSpec extends FakeApplication
         val model = AmendOverseasPensionsModel("", Some(1000), "ip2014", "dormant")
         lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         status(result) shouldBe OK
-        contentAsString(result) shouldBe amendIP14OverseasPensions(AmendOverseasPensionsForm.amendOverseasPensionsForm.fill(model)).body
+        contentAsString(result) shouldBe mockAmendIP414OverseasPensions(AmendOverseasPensionsForm.amendOverseasPensionsForm.fill(model)).body
       }
     }
   }

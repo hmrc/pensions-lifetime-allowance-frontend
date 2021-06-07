@@ -42,7 +42,11 @@ class LookupController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  val plaConnector: PLAConnector,
                                  val actionWithSessionId: ActionWithSessionId,
                                  mcc: MessagesControllerComponents,
-                                 http: DefaultHttpClient)(
+                                 psa_lookup_not_found_results: views.html.pages.lookup.psa_lookup_not_found_results,
+                                 pla_protection_guidance: views.html.pages.lookup.pla_protection_guidance,
+                                 psa_lookup_protection_notification_no_form: views.html.pages.lookup.psa_lookup_protection_notification_no_form,
+                                 psa_lookup_results: views.html.pages.lookup.psa_lookup_results,
+                                 psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form)(
                                  implicit val partialRetriever: PlaFormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val context: PlaContext,

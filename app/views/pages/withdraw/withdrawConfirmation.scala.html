@@ -21,13 +21,15 @@
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import config.FrontendAppConfig
 
+@this(mainTemplate: main_template)
+
 @(protectionType: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
 }
 
-@views.html.main_template(title = Messages("pla.withdraw.confirmation.message", Messages(s"pla.withdraw.protection.${protectionType}.label"))) {
+@mainTemplate(title = Messages("pla.withdraw.confirmation.message", Messages(s"pla.withdraw.protection.${protectionType}.label"))) {
 
 
 

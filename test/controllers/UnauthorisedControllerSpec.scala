@@ -37,6 +37,9 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import utils.ActionWithSessionId
+import views.html.pages.ivFailure.{lockedOut, technicalIssue, unauthorised}
+import views.html.pages.timeout
+
 
 import scala.concurrent.Future
 import scala.io.Source
@@ -59,6 +62,10 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
   implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val application = mock[Application]
+  implicit val mockLockedOut: lockedOut = app.injector.instanceOf[lockedOut]
+  implicit val mockTechnicalIssue: technicalIssue = app.injector.instanceOf[technicalIssue]
+  implicit val mockUnauthorised: unauthorised = app.injector.instanceOf[unauthorised]
+  implicit val mockTimeout: timeout = app.injector.instanceOf[timeout]
 
   object MockIdentityVerificationHttp extends MockitoSugar {
     val possibleJournies = Map(
@@ -89,7 +96,11 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
     val controller = new UnauthorisedController(
       mockIdentityVerificationConnector,
       mockKeystoreConnector,
-      mockMCC)
+      mockMCC,
+      mockLockedOut,
+      mockTechnicalIssue,
+      mockUnauthorised,
+      mockTimeout)
   }
 
   override def beforeEach(): Unit = {

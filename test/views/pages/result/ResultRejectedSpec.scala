@@ -17,20 +17,21 @@
 package views.pages.result
 
 import enums.ApplicationType
-import models.RejectionDisplayModel
+import models.{RejectionDisplayModel, SuccessDisplayModel}
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultRejected
-import views.html.pages.result.{resultRejected => views}
+import views.html.pages.result.resultRejected
 
 
 class ResultRejectedSpec extends CommonViewSpecHelper with ResultRejected {
 
+  val rejectionDisplayModel = RejectionDisplayModel("24", Seq("1", "2"), ApplicationType.IP2016)
+
   "The Result Rejected Page" should {
 
-    lazy val model = RejectionDisplayModel("24", Seq("1", "2"), ApplicationType.IP2016)
-    lazy val view = views(model, showUserResearchPanel = false)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[resultRejected]
+    lazy val doc = Jsoup.parse(view.apply(rejectionDisplayModel,false).body)
 
     "have the correct title" in {
       doc.title() shouldBe plaResultRejectionTitle

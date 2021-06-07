@@ -20,18 +20,18 @@ import forms.PensionsTakenBetweenForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBetweenViewMessages
-import views.html.pages.ip2016.{pensionsTakenBetween => views}
+import views.html.pages.ip2016.pensionsTakenBetween
 
 class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTakenBetweenViewMessages {
 
   "the PensionsTakenBetweenView" should {
     val pensionsForm = PensionsTakenBetweenForm.pensionsTakenBetweenForm.bind(Map("pensionsTakenBetween" -> "Yes", "pensionsTakenBetweenAmt" -> "12345"))
-    lazy val view = views(pensionsForm)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[pensionsTakenBetween]
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
     val errorForm =  PensionsTakenBetweenForm.pensionsTakenBetweenForm.bind(Map.empty[String, String])
-    lazy val errorView = views(errorForm)
-    lazy val errorDoc = Jsoup.parse(errorView.body)
+    lazy val errorView = application.injector.instanceOf[pensionsTakenBetween]
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
 

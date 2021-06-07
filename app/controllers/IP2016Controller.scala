@@ -41,7 +41,14 @@ import scala.concurrent.Future
 
 class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  mcc: MessagesControllerComponents,
-                                 authFunction: AuthFunction)
+                                 authFunction: AuthFunction,
+                                 pensionsTaken: pages.ip2016.pensionsTaken,
+                                 pensionsTakenBefore: pages.ip2016.pensionsTakenBefore,
+                                 pensionsTakenBetween: pages.ip2016.pensionsTakenBetween,
+                                 overseasPensions: pages.ip2016.overseasPensions,
+                                 currentPensions: pages.ip2016.currentPensions,
+                                 psoDetails: pages.ip2016.psoDetails,
+                                 RemovePsoDetails: pages.ip2016.removePsoDetails)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: PlaFormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
@@ -54,8 +61,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   def pensionsTaken: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       keyStoreConnector.fetchAndGetFormData[PensionsTakenModel]("pensionsTaken").map {
-        case Some(data) => Ok(pages.ip2016.pensionsTaken(pensionsTakenForm.fill(data)))
-        case None => Ok(pages.ip2016.pensionsTaken(pensionsTakenForm))
+        case Some(data) => Ok(pensionsTaken(pensionsTakenForm.fill(data)))
+        case None => Ok(pensionsTaken(pensionsTakenForm))
       }
     }
   }
@@ -66,7 +73,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
         pensionsTakenForm.bindFromRequest.fold(
           errors => {
             val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-            Future.successful(BadRequest(pages.ip2016.pensionsTaken(form)))
+            Future.successful(BadRequest(pensionsTaken(form)))
           },
           success => {
             keyStoreConnector.saveFormData("pensionsTaken", success).map {
@@ -86,8 +93,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   def pensionsTakenBefore: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       keyStoreConnector.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").map {
-        case Some(data) => Ok(pages.ip2016.pensionsTakenBefore(pensionsTakenBeforeForm.fill(data)))
-        case _ => Ok(pages.ip2016.pensionsTakenBefore(pensionsTakenBeforeForm))
+        case Some(data) => Ok(pensionsTakenBefore(pensionsTakenBeforeForm.fill(data)))
+        case _ => Ok(pensionsTakenBefore(pensionsTakenBeforeForm))
       }
     }
   }
@@ -97,7 +104,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
       pensionsTakenBeforeForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-          Future.successful(BadRequest(pages.ip2016.pensionsTakenBefore(form)))
+          Future.successful(BadRequest(pensionsTakenBefore(form)))
         },
         success => {
           keyStoreConnector.saveFormData("pensionsTakenBefore", success).flatMap {
@@ -113,8 +120,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   def pensionsTakenBetween: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       keyStoreConnector.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").map {
-        case Some(data) => Ok(pages.ip2016.pensionsTakenBetween(pensionsTakenBetweenForm.fill(data)))
-        case _ => Ok(pages.ip2016.pensionsTakenBetween(pensionsTakenBetweenForm))
+        case Some(data) => Ok(pensionsTakenBetween(pensionsTakenBetweenForm.fill(data)))
+        case _ => Ok(pensionsTakenBetween(pensionsTakenBetweenForm))
       }
     }
   }
@@ -124,7 +131,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
       pensionsTakenBetweenForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-          Future.successful(BadRequest(pages.ip2016.pensionsTakenBetween(form)))
+          Future.successful(BadRequest(pensionsTakenBetween(form)))
         },
         success => {
           keyStoreConnector.saveFormData("pensionsTakenBetween", success).flatMap {
@@ -140,8 +147,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   def overseasPensions: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       keyStoreConnector.fetchAndGetFormData[OverseasPensionsModel]("overseasPensions").map {
-        case Some(data) => Ok(pages.ip2016.overseasPensions(overseasPensionsForm.fill(data)))
-        case _ => Ok(pages.ip2016.overseasPensions(overseasPensionsForm))
+        case Some(data) => Ok(overseasPensions(overseasPensionsForm.fill(data)))
+        case _ => Ok(overseasPensions(overseasPensionsForm))
       }
     }
   }
@@ -151,7 +158,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
       overseasPensionsForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-          Future.successful(BadRequest(pages.ip2016.overseasPensions(form)))
+          Future.successful(BadRequest(overseasPensions(form)))
         },
         success => {
           keyStoreConnector.saveFormData("overseasPensions", success).flatMap {
@@ -167,8 +174,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   def currentPensions: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       keyStoreConnector.fetchAndGetFormData[CurrentPensionsModel]("currentPensions").map {
-        case Some(data) => Ok(pages.ip2016.currentPensions(currentPensionsForm.fill(data)))
-        case _ => Ok(pages.ip2016.currentPensions(currentPensionsForm))
+        case Some(data) => Ok(currentPensions(currentPensionsForm.fill(data)))
+        case _ => Ok(currentPensions(currentPensionsForm))
       }
     }
   }
@@ -178,7 +185,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
       currentPensionsForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-          Future.successful(BadRequest(pages.ip2016.currentPensions(form)))
+          Future.successful(BadRequest(currentPensions(form)))
         },
         success => {
           keyStoreConnector.saveFormData("currentPensions", success).flatMap {
@@ -225,8 +232,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   def psoDetails: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       keyStoreConnector.fetchAndGetFormData[PSODetailsModel]("psoDetails").map {
-        case Some(data) => Ok(pages.ip2016.psoDetails(psoDetailsForm.fill(data)))
-        case _ => Ok(pages.ip2016.psoDetails(psoDetailsForm))
+        case Some(data) => Ok(psoDetails(psoDetailsForm.fill(data)))
+        case _ => Ok(psoDetails(psoDetailsForm))
       }
     }
   }
@@ -236,7 +243,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
       psoDetailsForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-          Future.successful(BadRequest(pages.ip2016.psoDetails(form)))
+          Future.successful(BadRequest(psoDetails(form)))
         },
         form => {
           keyStoreConnector.saveFormData(s"psoDetails", form).flatMap {
@@ -249,7 +256,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
 
   def removePsoDetails: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      Future(Ok(pages.ip2016.removePsoDetails()))
+      Future(Ok(RemovePsoDetails()))
     }
   }
 

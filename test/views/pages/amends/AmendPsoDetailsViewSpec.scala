@@ -20,7 +20,7 @@ import forms.AmendPSODetailsForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PsoDetailsViewMessages
-import views.html.pages.amends.{amendPsoDetails => views}
+import views.html.pages.amends.amendPsoDetails
 
 class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessages {
 
@@ -34,8 +34,8 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
       "status"         -> "open",
       "existingPSO"    -> "true"))
 
-    lazy val view = views(pensionsForm)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[amendPsoDetails]
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
     lazy val errorForm =  AmendPSODetailsForm.amendPsoDetailsForm.bind(Map(
       "psoDay" -> "",
@@ -46,8 +46,8 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
       "status"         -> "",
       "existingPSO"    -> "false"))
 
-    lazy val errorView = views(errorForm)
-    lazy val errorDoc = Jsoup.parse(errorView.body)
+    lazy val errorView = application.injector.instanceOf[amendPsoDetails]
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
 

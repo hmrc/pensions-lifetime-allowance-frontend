@@ -21,7 +21,7 @@ import models.amendModels.AmendsGAModel
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.OutcomeInactiveViewSpecMessages
-import views.html.pages.amends.{outcomeInactive => views}
+import views.html.pages.amends.outcomeInactive
 
 class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveViewSpecMessages {
 
@@ -43,11 +43,11 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
     additionalInfo = Seq("1","2")
   )
 
-  lazy val viewIP16 = views(amendsInactiveResultModelIP16, Some(amendsGAModel))
-  lazy val docIP16 = Jsoup.parse(viewIP16.body)
+  lazy val viewIP16 = application.injector.instanceOf[outcomeInactive]
+  lazy val docIP16 = Jsoup.parse(viewIP16.apply(amendsInactiveResultModelIP16, Some(amendsGAModel)).body)
 
-  lazy val viewIP14 = views(amendsInactiveResultModelIP14, Some(amendsGAModel))
-  lazy val docIP14 = Jsoup.parse(viewIP14.body)
+  lazy val viewIP14 = application.injector.instanceOf[outcomeInactive]
+  lazy val docIP14 = Jsoup.parse(viewIP14.apply(amendsInactiveResultModelIP14, Some(amendsGAModel)).body)
 
   "the OutcomeInactiveView" should{
     "have the correct title" in{

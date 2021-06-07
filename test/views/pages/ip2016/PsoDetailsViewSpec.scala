@@ -20,7 +20,7 @@ import forms.PSODetailsForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PsoDetailsViewMessages
-import views.html.pages.ip2016.{psoDetails => views}
+import views.html.pages.ip2016.psoDetails
 
 class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessages {
 
@@ -31,12 +31,12 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
       "psoYear" -> "2017",
       "psoAmt" -> "12345"))
 
-    lazy val view = views(pensionsForm)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[psoDetails]
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
     val errorForm =  PSODetailsForm.psoDetailsForm.bind(Map.empty[String, String])
-    lazy val errorView = views(errorForm)
-    lazy val errorDoc = Jsoup.parse(errorView.body)
+    lazy val errorView = application.injector.instanceOf[psoDetails]
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
 

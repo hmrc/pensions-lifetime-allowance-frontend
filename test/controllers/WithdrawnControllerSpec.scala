@@ -23,6 +23,7 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
+import views.html.pages.ip2014.withdrawn
 
 
 class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
@@ -33,8 +34,9 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
+  implicit val mockWithdrawn: withdrawn = app.injector.instanceOf[withdrawn]
 
-  val controller = new WithdrawnController(mockMCC)
+  val controller = new WithdrawnController(mockMCC, mockWithdrawn)
   val fakeRequest = FakeRequest("GET", "/")
 
   ("Withdrawn controller") should  {

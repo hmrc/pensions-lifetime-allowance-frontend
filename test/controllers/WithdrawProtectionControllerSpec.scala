@@ -43,6 +43,8 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import views.html.pages.fallback.technicalError
+import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdrawDate, withdrawImplications}
 
 import scala.concurrent.Future
 
@@ -61,6 +63,11 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction = mock[AuthFunction]
+  val mockWithdrawConfirm: withdrawConfirm = app.injector.instanceOf[withdrawConfirm]
+  val mockWithdrawConfirmation: withdrawConfirmation = app.injector.instanceOf[withdrawConfirmation]
+  val mockWithdrawDate: withdrawDate = app.injector.instanceOf[withdrawDate]
+  val mockWithdrawImplications: withdrawImplications = app.injector.instanceOf[withdrawImplications]
+  val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
   val mockEnv: Environment = mock[Environment]
 
   class Setup {
@@ -70,6 +77,8 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
       override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
       override implicit val plaContext: PlaContext = mockPlaContext
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
+      override implicit val technicalError: technicalError = mockTechnicalError
+
       override def authConnector: AuthConnector = mockAuthConnector
       override def config: Configuration = mockAppConfig.configuration
       override def env: Environment = mockEnv
@@ -80,7 +89,13 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
       mockPlaConnector,
       mockDisplayConstructors,
       mockMCC,
-      authFunction) {
+      authFunction,
+      mockWithdrawConfirm,
+      mockWithdrawConfirmation,
+      mockWithdrawDate,
+      mockWithdrawImplications,
+      mockTechnicalError
+    ) {
     }
   }
 

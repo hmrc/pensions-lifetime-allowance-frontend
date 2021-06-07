@@ -17,19 +17,21 @@
 package views.pages.withdraw
 
 import controllers.routes
-import forms.WithdrawDateForm
+import forms.WithdrawDateForm.withdrawDateForm
+import models.WithdrawDateFormModel
+import views.html.pages.withdraw.withdrawImplications
 import org.jsoup.Jsoup
+import play.api.data.Form
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawImplicationsSpecMessages
-import views.html.pages.withdraw.{withdrawImplications => views}
 
 class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplicationsSpecMessages {
 
+  val withdrawDateForModel = withdrawDateForm: Form[WithdrawDateFormModel]
+
   "Withdraw Implication view" when {
-    val protectionType = "IP2014"
-    val status = "dormant"
-    lazy val view = views(WithdrawDateForm, protectionType, status)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[withdrawImplications]
+    lazy val doc = Jsoup.parse(view.apply(withdrawDateForModel, "IP2014", "dormant").body)
 
     s"have a title ${"pla.withdraw.protection.title"}" in {
       doc.title() shouldBe plaWithdrawProtectionTitle(plaWithdrawProtectionIP2014label)

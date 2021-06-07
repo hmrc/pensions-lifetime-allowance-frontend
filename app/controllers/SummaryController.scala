@@ -35,7 +35,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  mcc: MessagesControllerComponents,
-                                  authFunction: AuthFunction)
+                                  authFunction: AuthFunction,
+                                  technicalError: views.html.pages.fallback.technicalError
+                                 )
                                  (implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: PlaFormPartialRetriever,
                                   implicit val templateRenderer:LocalTemplateRenderer,
@@ -53,7 +55,7 @@ extends FrontendController(mcc) with I18nSupport {
         case Some(data) => routeIP2016SummaryFromUserData(data, nino)
         case None => {
           logger.warn(s"unable to fetch summary IP16 data from keystore for user nino $nino")
-          InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+          InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }
     }
@@ -65,7 +67,7 @@ extends FrontendController(mcc) with I18nSupport {
         summaryModel => Ok(pages.ip2016.summary(summaryModel))
       }.getOrElse {
         logger.warn(s"Unable to create IP16 summary model from summary data for user nino $nino")
-        InternalServerError(views.html.pages.fallback.technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+        InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
 
