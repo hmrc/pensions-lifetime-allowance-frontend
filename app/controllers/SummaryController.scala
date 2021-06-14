@@ -17,6 +17,7 @@
 package controllers
 
 import auth.AuthFunction
+import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.KeyStoreConnector
 import constructors.SummaryConstructor
@@ -28,7 +29,6 @@ import play.api.Application
 import play.api.Logger.logger
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -39,7 +39,7 @@ class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
                                   technicalError: views.html.pages.fallback.technicalError
                                  )
                                  (implicit val appConfig: FrontendAppConfig,
-                                  implicit val partialRetriever: FormPartialRetriever,
+                                  implicit val partialRetriever: PlaFormPartialRetriever,
                                   implicit val templateRenderer:LocalTemplateRenderer,
                                   implicit val plaContext: PlaContext,
                                   implicit val application: Application)

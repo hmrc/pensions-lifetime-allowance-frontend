@@ -16,9 +16,11 @@
 
 package controllers
 
+import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
 import enums.IdentityVerificationResult
+
 import javax.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -26,7 +28,7 @@ import play.api.Application
 import play.api.Logger.logger
 import uk.gov.hmrc.http.Upstream4xxResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
+import views.html.pages.ivFailure._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,7 +43,7 @@ class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVe
                                        timeout: views.html.pages.timeout)(
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val plaContext: PlaContext,
-                                       implicit val partialRetriever: FormPartialRetriever,
+                                       implicit val partialRetriever: PlaFormPartialRetriever,
                                        implicit val templateRenderer:LocalTemplateRenderer,
                                        implicit val application: Application)
 extends FrontendController(mcc) with I18nSupport {

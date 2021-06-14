@@ -23,16 +23,13 @@
 @import uk.gov.hmrc.play.config.TrackingConsentConfig
 @import config.AppConfig
 @import config.FrontendAppConfig
-@import scala.concurrent.ExecutionContext
-
 
 @this(
     appConfig: FrontendAppConfig,
     articleLayout: Article,
     headUi: HeadWithTrackingConsent,
     sidebarUi: Sidebar,
-    templateRenderer: TemplateRenderer,
-    implicit val ec: ExecutionContext
+    templateRenderer: TemplateRenderer
 )
 
 @(title: String,

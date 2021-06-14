@@ -15,6 +15,7 @@
  */
 
 package auth
+import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import javax.inject.Inject
 import play.api.i18n.Messages
@@ -27,8 +28,6 @@ import uk.gov.hmrc.auth.core.{AuthorisedFunctions, _}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
@@ -37,7 +36,7 @@ class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                  val env: Environment
                                 )(
                                   implicit val appConfig: FrontendAppConfig,
-                                  implicit val partialRetriever: FormPartialRetriever,
+                                  implicit val partialRetriever: PlaFormPartialRetriever,
                                   implicit val templateRenderer:LocalTemplateRenderer,
                                   implicit val plaContext: PlaContext)
   extends FrontendController(mcc) with AuthFunction {
@@ -45,7 +44,7 @@ class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
   override def authConnector: AuthConnector = authClientConnector
 }
 trait AuthFunction extends AuthRedirects with AuthorisedFunctions {
-  implicit val partialRetriever: FormPartialRetriever
+  implicit val partialRetriever: PlaFormPartialRetriever
   implicit val templateRenderer: LocalTemplateRenderer
   implicit val plaContext: PlaContext
   implicit val appConfig: FrontendAppConfig
