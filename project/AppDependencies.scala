@@ -5,14 +5,14 @@ object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val bootstrapVersion = "3.4.0"
+  private val bootstrapVersion = "4.2.0"
   private val govukTemplateVersion = "5.65.0-play-27"
   private val playUiVersion = "8.21.0-play-27"
-  private val playPartialsVersion = "7.0.0-play-27"
+  private val playPartialsVersion = "8.1.0-play-27"
   private val scalaTestVersion = "3.0.9"
   private val scalaTestPlusVersion = "4.0.3"
   private val pegdownVersion = "1.6.0"
-  private val cachingClientVersion = "9.1.0-play-27"
+  private val cachingClientVersion = "9.4.0-play-27"
   private val mongoCachingVersion = "6.16.0-play-27"
   private val localTemplateRendererVersion = "2.10.0-play-26"
   private val wireMockVersion = "2.26.3"

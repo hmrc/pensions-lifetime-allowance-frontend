@@ -21,6 +21,7 @@ import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionDebitsViewMessages
 import views.html.pages.ip2016.{pensionDebits => views}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class PensionDebitsViewSpec extends CommonViewSpecHelper with PensionDebitsViewMessages {
 

@@ -19,7 +19,6 @@ package controllers
 import auth.AuthFunction
 import common.Exceptions
 import config._
-import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.{ApplicationOutcome, ApplicationType}
@@ -31,8 +30,9 @@ import play.api.Application
 import play.api.Logger.logger
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
-import views.html.pages.result._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 import scala.util.Random
@@ -50,7 +50,7 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  resultSuccess: views.html.pages.result.resultSuccess,
                                  resultSuccessInactive: views.html.pages.result.resultSuccessInactive)
                                 (implicit val appConfig: FrontendAppConfig,
-                                 implicit val partialRetriever: PlaFormPartialRetriever,
+                                 implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val plaContext: PlaContext,
                                  implicit val application: Application)

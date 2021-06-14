@@ -19,7 +19,6 @@ package controllers
 import auth.AuthFunction
 import common.{Helpers, Strings}
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
-import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
@@ -34,6 +33,7 @@ import play.api.mvc._
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -49,7 +49,7 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                           manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded
                                          )
                                          (implicit val appConfig: FrontendAppConfig,
-                                          implicit val partialRetriever: PlaFormPartialRetriever,
+                                          implicit val partialRetriever: FormPartialRetriever,
                                           implicit val templateRenderer:LocalTemplateRenderer,
                                           implicit val plaContext: PlaContext,
                                           implicit val application: Application)

@@ -21,8 +21,8 @@ import uk.gov.hmrc.http.HttpGet
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-class PlaFormPartialRetriever @Inject()(sessionCookieCryptoFilterWrapper: SessionCookieCryptoFilterWrapper,
+abstract class PlaFormPartialRetriever @Inject()(sessionCookieCryptoFilterWrapper: SessionCookieCryptoFilterWrapper,
                                         http: DefaultHttpClient) extends FormPartialRetriever {
   override def httpGet: HttpGet = http
-  override val crypto = sessionCookieCryptoFilterWrapper.encryptCookieString _
+  val crypto = sessionCookieCryptoFilterWrapper.encryptCookieString _
 }

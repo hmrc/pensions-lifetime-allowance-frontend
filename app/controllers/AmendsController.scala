@@ -18,7 +18,6 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{AmendsGAConstructor, DisplayConstructors, ResponseConstructors}
@@ -38,9 +37,9 @@ import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, Result, _}
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
 import views.html.pages
-import views.html.pages.result.manualCorrespondenceNeeded
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -67,7 +66,7 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  outcomeInactive: views.html.pages.amends.outcomeInactive,
                                  removePsoDebits: pages.amends.removePsoDebits)
                                 (implicit val appConfig: FrontendAppConfig,
-                                 implicit val partialRetriever: PlaFormPartialRetriever,
+                                 implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val plaContext: PlaContext)
 extends FrontendController(mcc) with I18nSupport {
