@@ -22,6 +22,8 @@ import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.SummaryViewMessages
 import views.html.pages.ip2016.{summary => views}
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
 

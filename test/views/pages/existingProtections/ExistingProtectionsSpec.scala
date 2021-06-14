@@ -23,6 +23,7 @@ import play.api.mvc.Call
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.existingProtections.ExistingProtections
 import views.html.pages.existingProtections.{existingProtections => views}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtections {
 

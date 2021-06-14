@@ -18,7 +18,6 @@ package controllers
 
 import auth.AuthFunction
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
-import config.wiring.PlaFormPartialRetriever
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import constructors.DisplayConstructors
 import javax.inject.Inject
@@ -27,6 +26,7 @@ import play.api.Logger.logger
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -36,7 +36,7 @@ class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 mcc: MessagesControllerComponents,
                                 authFunction: AuthFunction)
                                (implicit val appConfig: FrontendAppConfig,
-                                implicit val partialRetriever: PlaFormPartialRetriever,
+                                implicit val partialRetriever: FormPartialRetriever,
                                 implicit val templateRenderer:LocalTemplateRenderer,
                                 implicit val plaContext: PlaContext)
   extends FrontendController(mcc) with I18nSupport {

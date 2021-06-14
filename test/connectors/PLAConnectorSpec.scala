@@ -140,7 +140,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   "Calling readProtections" should {
     "should return a 200 from a valid apply readProtections request" in new Setup {
-      when(mockHttp.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+      when(mockHttp.GET[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val response = connector.readProtections(nino)
@@ -151,7 +151,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   "Calling psaLookup" should {
     "should return a 200 from a valid psa lookup request" in new Setup {
-      when(mockHttp.GET[HttpResponse](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+      when(mockHttp.GET[HttpResponse](ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val response = connector.psaLookup(psaRef, ltaRef)

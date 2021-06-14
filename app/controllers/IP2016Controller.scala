@@ -17,7 +17,6 @@
 package controllers
 
 import auth.AuthFunction
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.KeyStoreConnector
 import forms.CurrentPensionsForm.currentPensionsForm
@@ -34,6 +33,7 @@ import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -50,7 +50,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  psoDetails: pages.ip2016.psoDetails,
                                  RemovePsoDetails: pages.ip2016.removePsoDetails)
                                 (implicit val appConfig: FrontendAppConfig,
-                                 implicit val partialRetriever: PlaFormPartialRetriever,
+                                 implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val plaContext: PlaContext,
                                  implicit val application: Application) extends FrontendController(mcc) {

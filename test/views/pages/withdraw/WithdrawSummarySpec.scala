@@ -22,6 +22,8 @@ import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawSummarySpecMessages
 import views.html.pages.withdraw.{withdrawSummary => views}
+import scala.concurrent.ExecutionContext.Implicits.global
+
 
 class WithdrawSummarySpec extends CommonViewSpecHelper with WithdrawSummarySpecMessages {
 
