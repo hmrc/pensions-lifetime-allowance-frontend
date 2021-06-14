@@ -16,6 +16,8 @@
 
 @import uk.gov.hmrc.renderer.TemplateRenderer
 @import config.FrontendAppConfig
+@import scala.concurrent.ExecutionContext
+
 
 @(title: String,
   sidebarLinks: Option[Html] = None,
@@ -23,7 +25,7 @@
   bodyClasses: Option[String] = None,
   mainClass: Option[String] = None,
   scriptElem: Option[Html] = None,
-  showLogout: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer, appConfig: FrontendAppConfig)
+  showLogout: Boolean = true)(mainContent: Html)(implicit request : Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext)
 
 @import uk.gov.hmrc.play.views.html.layouts
 

@@ -24,8 +24,10 @@
 @import controllers.PlaLanguageController
 @import play.api.Application
 @import config.FrontendAppConfig
+@import scala.concurrent.ExecutionContext
 
-@(summary: SummaryModel)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+
+@(summary: SummaryModel)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 

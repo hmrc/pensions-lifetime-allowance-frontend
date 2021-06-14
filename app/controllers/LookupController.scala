@@ -19,7 +19,6 @@ package controllers
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
 
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
@@ -32,9 +31,8 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.http.Upstream4xxResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
-import views.html.pages.lookup._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,7 +45,7 @@ class LookupController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  psa_lookup_protection_notification_no_form: views.html.pages.lookup.psa_lookup_protection_notification_no_form,
                                  psa_lookup_results: views.html.pages.lookup.psa_lookup_results,
                                  psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form)(
-                                 implicit val partialRetriever: PlaFormPartialRetriever,
+                                 implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val context: PlaContext,
                                  implicit val appConfig: FrontendAppConfig,

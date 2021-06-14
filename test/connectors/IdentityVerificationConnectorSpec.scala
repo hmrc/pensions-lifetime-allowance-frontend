@@ -59,7 +59,7 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
 
     def mockJourneyId(journeyId: String): Unit = {
       val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-      when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).
+      when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).
         thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
     }
     possibleJournies.keys.foreach(mockJourneyId)

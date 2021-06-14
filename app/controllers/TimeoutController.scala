@@ -17,16 +17,17 @@
 package controllers
 
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
-import config.wiring.PlaFormPartialRetriever
 import javax.inject.Inject
 import play.api.Application
 import play.api.mvc._
+
 import scala.concurrent.Future
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 class TimeoutController @Inject()(mcc: MessagesControllerComponents,
                                   Timeout: views.html.pages.timeout)(
-                                  implicit val partialRetriever: PlaFormPartialRetriever,
+                                  implicit val partialRetriever: FormPartialRetriever,
                                   implicit val templateRenderer:LocalTemplateRenderer,
                                   implicit val context: PlaContext,
                                   implicit val appConfig: FrontendAppConfig,

@@ -25,9 +25,8 @@ import play.api.Environment
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import testHelpers.FakeApplication
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.http.{HeaderCarrier, SessionId}
 import uk.gov.hmrc.http.cache.client.CacheMap
-import uk.gov.hmrc.http.logging.SessionId
 
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
@@ -41,7 +40,7 @@ class KeyStoreConnectorSpec extends FakeApplication with MockitoSugar {
 
   object TestKeyStoreConnector extends KeyStoreConnector(mockSessionCache)
 
-  implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId.toString)))
+  implicit val hc: HeaderCarrier = HeaderCarrier(sessionId = Some(SessionId(sessionId)))
 
   "Calculator Connector" should {
 

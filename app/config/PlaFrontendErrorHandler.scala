@@ -16,16 +16,16 @@
 
 package config
 
-import config.wiring.PlaFormPartialRetriever
 import javax.inject.Inject
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.mvc.Request
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 class PlaFrontendErrorHandler @Inject()(errorTemplate: views.html.error_template
                                        )(implicit val messagesApi: MessagesApi,
-                                       implicit val PlaFormPartialRetriever: PlaFormPartialRetriever,
+                                       implicit val PlaFormPartialRetriever: FormPartialRetriever,
                                        implicit val localTemplateRenderer: LocalTemplateRenderer,
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val plaContext: PlaContext) extends FrontendErrorHandler {

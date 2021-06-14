@@ -21,7 +21,6 @@ import java.time.LocalDateTime
 import auth.AuthFunction
 import common.{Dates, Strings}
 import config._
-import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
@@ -35,6 +34,7 @@ import play.api.Application
 import play.api.Logger.logger
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -50,7 +50,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
                                              withdrawImplications: views.html.pages.withdraw.withdrawImplications,
                                              technicalError: views.html.pages.fallback.technicalError)
                                             (implicit val appConfig: FrontendAppConfig,
-                                             implicit val partialRetriever: PlaFormPartialRetriever,
+                                             implicit val partialRetriever: FormPartialRetriever,
                                              implicit val templateRenderer:LocalTemplateRenderer,
                                              implicit val plaContext: PlaContext,
                                              implicit val application: Application)

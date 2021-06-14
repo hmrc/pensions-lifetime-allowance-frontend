@@ -19,7 +19,6 @@ package controllers
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
 
-import config.wiring.PlaFormPartialRetriever
 import config.LocalTemplateRenderer
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
 import javax.inject.Inject
@@ -29,6 +28,7 @@ import play.api.i18n.I18nSupport
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
 import views.html.pages.lookup.{psa_lookup_not_found_print, psa_lookup_results_print}
 
@@ -39,7 +39,7 @@ class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                                   val actionWithSessionId: ActionWithSessionId,
                                   pdfGeneratorConnector: PdfGeneratorConnector,
                                   mcc: MessagesControllerComponents)(
-                                  implicit val partialRetriever: PlaFormPartialRetriever,
+                                  implicit val partialRetriever: FormPartialRetriever,
                                   implicit val templateRenderer: LocalTemplateRenderer)
 extends FrontendController(mcc) with I18nSupport {
 

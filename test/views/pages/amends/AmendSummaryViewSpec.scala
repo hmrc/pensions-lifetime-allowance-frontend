@@ -22,6 +22,7 @@ import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages
 import views.html.pages.amends.{amendSummary => views}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
 
