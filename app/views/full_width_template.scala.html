@@ -18,6 +18,8 @@
 @import config.FrontendAppConfig
 @import scala.concurrent.ExecutionContext
 
+@this(main_template: main_template)
+
 
 @(title: String,
   sidebarLinks: Option[Html] = None,
@@ -38,16 +40,13 @@
 }
 
 
-@govuk_wrapper(appConfig = appConfig,
-               title = title,
+@main_template(title = title,
                mainClass = mainClass,
                bodyClasses = bodyClasses,
-               sidebar = sidebar,
+               sidebarLinks = sidebarLinks,
                contentHeader = contentHeader,
-               mainContent = mainContent,
                scriptElem = scriptElem,
                showLogout = showLogout,
-               articleEnabled = false,
                isUserResearchBannerVisible = false
-)
+)(mainContent: Html)
 

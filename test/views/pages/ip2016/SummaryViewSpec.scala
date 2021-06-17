@@ -21,7 +21,7 @@ import models.{SummaryModel, SummaryRowModel, SummarySectionModel}
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.SummaryViewMessages
-import views.html.pages.ip2016.{summary => views}
+import views.html.pages.ip2016.summary
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
@@ -97,14 +97,14 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
       psoDetailsSections = List.empty
     )
 
-    lazy val view = views(model)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[summary]
+    lazy val doc = Jsoup.parse(view.apply(model).body)
 
-    lazy val viewTwo = views(modelTwo)
-    lazy val docTwo = Jsoup.parse(viewTwo.body)
+    lazy val viewTwo = application.injector.instanceOf[summary]
+    lazy val docTwo = Jsoup.parse(viewTwo.apply(modelTwo).body)
 
-    lazy val errorView = views(errorModel)
-    lazy val errorDoc = Jsoup.parse(errorView.body)
+    lazy val errorView = application.injector.instanceOf[summary]
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorModel).body)
 
     lazy val form = doc.select("form")
     "have the correct title" in{

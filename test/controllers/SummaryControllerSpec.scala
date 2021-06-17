@@ -43,6 +43,7 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import java.util.UUID
 
 import views.html.pages.fallback.technicalError
+import views.html.pages.ip2016.summary
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -62,6 +63,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val application = mock[Application]
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
+  implicit val mockSummary: summary = app.injector.instanceOf[summary]
 
 
   val mockSummaryConstructor: SummaryConstructor = mock[SummaryConstructor]
@@ -71,7 +73,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
 
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
 
-  val testSummaryController = new SummaryController(mockKeyStoreConnector, mockMCC, mockAuthFunction, mockTechnicalError) {
+  val testSummaryController = new SummaryController(mockKeyStoreConnector, mockMCC, mockAuthFunction, mockTechnicalError, mockSummary) {
     override val summaryConstructor = mockSummaryConstructor
   }
 
@@ -93,7 +95,8 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
       mockKeyStoreConnector,
       mockMCC,
       authFunction,
-      mockTechnicalError
+      mockTechnicalError,
+      mockSummary
     ) {
       override val summaryConstructor = mockSummaryConstructor
     }

@@ -80,6 +80,7 @@ class AmendsControllerSpec extends FakeApplication
   val mockOutcomeActive: outcomeActive                = app.injector.instanceOf[outcomeActive]
   val mockOutcomeInactive: outcomeInactive            = app.injector.instanceOf[outcomeInactive]
   val mockRemovePsoDebits: removePsoDebits            = app.injector.instanceOf[removePsoDebits]
+  val mockAmendSummary: amendSummary                  = app.injector.instanceOf[amendSummary]
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
@@ -133,7 +134,8 @@ class AmendsControllerSpec extends FakeApplication
       mockAmendIP414OverseasPensions,
       mockOutcomeActive,
       mockOutcomeInactive,
-      mockRemovePsoDebits
+      mockRemovePsoDebits,
+      mockAmendSummary
     )
   }
 

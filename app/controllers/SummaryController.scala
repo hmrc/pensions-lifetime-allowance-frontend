@@ -36,7 +36,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  mcc: MessagesControllerComponents,
                                   authFunction: AuthFunction,
-                                  technicalError: views.html.pages.fallback.technicalError
+                                  technicalError: views.html.pages.fallback.technicalError,
+                                  summary: pages.ip2016.summary
                                  )
                                  (implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: FormPartialRetriever,
@@ -64,7 +65,7 @@ extends FrontendController(mcc) with I18nSupport {
   private def routeIP2016SummaryFromUserData(data: CacheMap, nino: String)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
     implicit val lang: Lang = mcc.messagesApi.preferred(req).lang
     summaryConstructor.createSummaryData(data).map {
-        summaryModel => Ok(pages.ip2016.summary(summaryModel))
+        summaryModel => Ok(summary(summaryModel))
       }.getOrElse {
         logger.warn(s"Unable to create IP16 summary model from summary data for user nino $nino")
         InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")

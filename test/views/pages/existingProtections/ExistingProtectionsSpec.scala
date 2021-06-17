@@ -22,7 +22,7 @@ import play.api.i18n.Messages
 import play.api.mvc.Call
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.existingProtections.ExistingProtections
-import views.html.pages.existingProtections.{existingProtections => views}
+import views.html.pages.existingProtections.existingProtections
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtections {
@@ -38,20 +38,20 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     lazy val tstProtectionDisplayModelEmpty1 = ExistingProtectionDisplayModel("", "", None, None, "", None, None, None)
 
     lazy val model = ExistingProtectionsDisplayModel(Some(protectionModel), List(tstProtectionDisplayModelActive1))
-    lazy val view = views(model)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[existingProtections]
+    lazy val doc = Jsoup.parse(view.apply(model).body)
 
     lazy val model2 = ExistingProtectionsDisplayModel(None, List(tstProtectionDisplayModelEmpty1))
-    lazy val view2 = views(model2)
-    lazy val doc2 = Jsoup.parse(view2.body)
+    lazy val view2 = application.injector.instanceOf[existingProtections]
+    lazy val doc2 = Jsoup.parse(view2.apply(model2).body)
 
     lazy val model2b = ExistingProtectionsDisplayModel(Some(protectionModel2), List(tstProtectionDisplayModelDormant1))
-    lazy val view2b = views(model2b)
-    lazy val doc2b = Jsoup.parse(view2b.body)
+    lazy val view2b = application.injector.instanceOf[existingProtections]
+    lazy val doc2b = Jsoup.parse(view2b.apply(model2b).body)
 
     lazy val model3 = ExistingProtectionsDisplayModel(Some(protectionModel), List.empty)
-    lazy val view3 = views(model3)
-    lazy val doc3 = Jsoup.parse(view3.body)
+    lazy val view3 = application.injector.instanceOf[existingProtections]
+    lazy val doc3 = Jsoup.parse(view3.apply(model3).body)
 
 
 
