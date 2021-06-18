@@ -20,19 +20,19 @@ import forms.PensionDebitsForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionDebitsViewMessages
-import views.html.pages.ip2016.{pensionDebits => views}
+import views.html.pages.ip2016.pensionDebits
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class PensionDebitsViewSpec extends CommonViewSpecHelper with PensionDebitsViewMessages {
 
   "the PensionDebitsView" should{
     val pensionsForm = PensionDebitsForm.pensionDebitsForm.bind(Map("pensionDebits" -> "Yes"))
-    lazy val view = views(pensionsForm)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[pensionDebits]
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
     val errorForm = PensionDebitsForm.pensionDebitsForm.bind(Map.empty[String, String])
-    lazy val errorView = views(errorForm)
-    lazy val errorDoc = Jsoup.parse(errorView.body)
+    lazy val errorView = application.injector.instanceOf[pensionDebits]
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
 

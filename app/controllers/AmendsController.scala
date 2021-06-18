@@ -64,7 +64,8 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  amendIP14OverseasPensions: pages.amends.amendIP14OverseasPensions,
                                  outcomeActive: views.html.pages.amends.outcomeActive,
                                  outcomeInactive: views.html.pages.amends.outcomeInactive,
-                                 removePsoDebits: pages.amends.removePsoDebits)
+                                 removePsoDebits: pages.amends.removePsoDebits,
+                                 amendSummary: views.html.pages.amends.amendSummary)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
@@ -257,7 +258,7 @@ extends FrontendController(mcc) with I18nSupport {
       val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
       keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
         case Some(amendModel) =>
-            Ok(views.html.pages.amends.amendSummary(
+            Ok(amendSummary(
             displayConstructors.createAmendDisplayModel(amendModel),
             status,
             amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))

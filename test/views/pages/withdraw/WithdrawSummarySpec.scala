@@ -21,7 +21,7 @@ import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawSummarySpecMessages
-import views.html.pages.withdraw.{withdrawSummary => views}
+import views.html.pages.withdraw.withdrawSummary
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
@@ -36,8 +36,8 @@ class WithdrawSummarySpec extends CommonViewSpecHelper with WithdrawSummarySpecM
           AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2014", "active")), None, "No"))
         ))
       lazy val model = AmendDisplayModel("IP2014", amended = true, tstPensionContributionNoPsoDisplaySections, psoAdded = false, Seq(), "£1,100,000")
-      lazy val view = views(model)
-      lazy val doc = Jsoup.parse(view.body)
+      lazy val view = application.injector.instanceOf[withdrawSummary]
+      lazy val doc = Jsoup.parse(view.apply(model).body)
 
       s"have a title ${"pla.withdraw.protection.title"}" in {
         doc.title() shouldBe plaWithdrawTitle
@@ -104,8 +104,8 @@ class WithdrawSummarySpec extends CommonViewSpecHelper with WithdrawSummarySpecM
     val tstPensionContributionNoPsoDisplaySections = Seq(
     )
     val model = AmendDisplayModel("IP2014", amended = true, tstPensionContributionNoPsoDisplaySections, psoAdded = false, Seq(), "£1,100,000")
-    lazy val view = views(model)
-    lazy val doc = Jsoup.parse(view.body)
+    lazy val view = application.injector.instanceOf[withdrawSummary]
+    lazy val doc = Jsoup.parse(view.apply(model).body)
 
     "have 2 tr tags" in {
       doc.select("tr").size() shouldBe 2

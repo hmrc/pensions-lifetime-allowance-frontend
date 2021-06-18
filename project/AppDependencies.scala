@@ -5,16 +5,16 @@ object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val bootstrapVersion = "4.2.0"
-  private val govukTemplateVersion = "5.65.0-play-27"
-  private val playUiVersion = "8.21.0-play-27"
+  private val bootstrapVersion = "5.3.0"
+  private val govukTemplateVersion = "5.68.0-play-27"
+  private val playUiVersion = "9.5.0-play-27"
   private val playPartialsVersion = "8.1.0-play-27"
   private val scalaTestVersion = "3.0.9"
   private val scalaTestPlusVersion = "4.0.3"
   private val pegdownVersion = "1.6.0"
-  private val cachingClientVersion = "9.4.0-play-27"
+  private val cachingClientVersion = "9.5.0-play-27"
   private val mongoCachingVersion = "6.16.0-play-27"
-  private val localTemplateRendererVersion = "2.10.0-play-26"
+  private val localTemplateRendererVersion = "2.14.0-play-27"
   private val wireMockVersion = "2.26.3"
   private val reactiveMongoVersion = "7.31.0-play-27"
 
@@ -24,7 +24,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
     "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
-    "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion,
+    "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion excludeAll(ExclusionRule(organization="org.scalactic")),
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
     "uk.gov.hmrc" %% "simple-reactivemongo" % reactiveMongoVersion

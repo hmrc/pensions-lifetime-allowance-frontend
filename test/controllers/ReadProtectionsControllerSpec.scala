@@ -42,6 +42,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
 import utils.ActionWithSessionId
+import views.html.pages.existingProtections.existingProtections
 import views.html.pages.fallback.technicalError
 import views.html.pages.result.manualCorrespondenceNeeded
 
@@ -76,6 +77,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
   implicit val application = mock[Application]
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
   implicit val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded = app.injector.instanceOf[manualCorrespondenceNeeded]
+  implicit val mockExistingProtections: existingProtections = app.injector.instanceOf[existingProtections]
 
 
   val fakeRequest = FakeRequest()
@@ -102,7 +104,8 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       mockResponseConstructors,
       authFunction,
       mockTechnicalError,
-      mockManualCorrespondenceNeeded)
+      mockManualCorrespondenceNeeded,
+      mockExistingProtections)
   }
 
   val ip2016Protection = ProtectionModel(

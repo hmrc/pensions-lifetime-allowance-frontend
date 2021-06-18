@@ -25,6 +25,7 @@
 @import config.FrontendAppConfig
 @import scala.concurrent.ExecutionContext
 
+@this(full_width_template: full_width_template)
 
 @(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext)
 

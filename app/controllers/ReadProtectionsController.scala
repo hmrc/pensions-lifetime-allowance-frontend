@@ -46,7 +46,8 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                           responseConstructors: ResponseConstructors,
                                           authFunction: AuthFunction,
                                           technicalError: views.html.pages.fallback.technicalError,
-                                          manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded
+                                          manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
+                                          existingProtections: pages.existingProtections.existingProtections
                                          )
                                          (implicit val appConfig: FrontendAppConfig,
                                           implicit val partialRetriever: FormPartialRetriever,
@@ -94,7 +95,7 @@ extends FrontendController(mcc) with I18nSupport {
       for {
         stepOne <- saveActiveProtection(model.activeProtection)
         stepTwo <- saveAmendableProtections(model)
-      } yield Ok(pages.existingProtections.existingProtections(displayModel))
+      } yield Ok(existingProtections(displayModel))
   }
 
   def saveActiveProtection(activeModel: Option[ProtectionModel])(implicit request: Request[AnyContent]): Future[Boolean] = {

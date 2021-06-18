@@ -21,6 +21,7 @@
 @import config.FrontendAppConfig
 @import scala.concurrent.ExecutionContext
 
+@this(full_width_template: full_width_template)
 
 @(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext)
 
@@ -28,7 +29,7 @@
 
 @import config.FrontendAppConfig
 
-@views.html.full_width_template(title = Messages("pla.existingProtections.title"), bodyClasses = None) {
+@full_width_template(title = Messages("pla.existingProtections.title"), bodyClasses = None) {
 
     <div class="grid">
         <h1 class="heading-xlarge">@Messages("pla.existingProtections.pageHeading")</h1>

@@ -44,7 +44,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import views.html.pages.fallback.technicalError
-import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdrawDate, withdrawImplications}
+import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdrawDate, withdrawImplications, withdrawSummary}
 
 import scala.concurrent.Future
 
@@ -69,6 +69,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
   val mockWithdrawImplications: withdrawImplications = app.injector.instanceOf[withdrawImplications]
   val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
   val mockEnv: Environment = mock[Environment]
+  val mockWithdrawSummary: withdrawSummary = app.injector.instanceOf[withdrawSummary]
 
   class Setup {
 
@@ -94,7 +95,8 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
       mockWithdrawConfirmation,
       mockWithdrawDate,
       mockWithdrawImplications,
-      mockTechnicalError
+      mockTechnicalError,
+      mockWithdrawSummary
     ) {
     }
   }

@@ -21,7 +21,7 @@ import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages
-import views.html.pages.amends.{amendSummary => views}
+import views.html.pages.amends.amendSummary
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
@@ -85,11 +85,11 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       "protectionType" -> "ip2016",
       "status"         -> "open"))
 
-    lazy val view = views(amendDisplayModel, "open", amendmentForm)
-    lazy val viewWithoutPso = views(amendDisplayModelWithoutPso, "open", amendmentForm)
+    lazy val view = application.injector.instanceOf[amendSummary]
+    lazy val viewWithoutPso = application.injector.instanceOf[amendSummary]
 
-    lazy val doc = Jsoup.parse(view.body)
-    lazy val docWithoutPso = Jsoup.parse(viewWithoutPso.body)
+    lazy val doc = Jsoup.parse(view.apply(amendDisplayModel, "open", amendmentForm).body)
+    lazy val docWithoutPso = Jsoup.parse(viewWithoutPso.apply(amendDisplayModelWithoutPso, "open", amendmentForm).body)
 
     lazy val form = doc.select("form")
 

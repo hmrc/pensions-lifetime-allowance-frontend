@@ -42,7 +42,7 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import java.util.UUID
 
 import views.html.pages.fallback.technicalError
-import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, psoDetails, removePsoDetails}
+import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionDebits, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, psoDetails, removePsoDetails}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -74,6 +74,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     implicit val mockCurrentPensions: currentPensions = app.injector.instanceOf[currentPensions]
     implicit val mockPsoDetails: psoDetails = app.injector.instanceOf[psoDetails]
     implicit val mockRemovePsoDetails: removePsoDetails = app.injector.instanceOf[removePsoDetails]
+    implicit val mockPensionDebits: pensionDebits = app.injector.instanceOf[pensionDebits]
 
 
     class Setup {
@@ -100,7 +101,8 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             mockOverseasPensions,
             mockCurrentPensions,
             mockPsoDetails,
-            mockRemovePsoDetails
+            mockRemovePsoDetails,
+            mockPensionDebits
         )
     }
 
@@ -111,7 +113,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     implicit val hc = HeaderCarrier()
 
     //    lazy val TestIP2016Controller = fakeApplication.injector.instanceOf[IP2016Controller]
-    object TestIP2016Controller extends IP2016Controller(mockKeyStoreConnector, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsTakenBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails) {
+    object TestIP2016Controller extends IP2016Controller(mockKeyStoreConnector, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsTakenBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails, mockPensionDebits) {
         lazy val authConnector = mockAuthConnector
     }
 

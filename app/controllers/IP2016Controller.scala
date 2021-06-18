@@ -48,7 +48,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  overseasPensions: pages.ip2016.overseasPensions,
                                  currentPensions: pages.ip2016.currentPensions,
                                  psoDetails: pages.ip2016.psoDetails,
-                                 RemovePsoDetails: pages.ip2016.removePsoDetails)
+                                 RemovePsoDetails: pages.ip2016.removePsoDetails,
+                                 pensionDebits: pages.ip2016.pensionDebits)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
@@ -201,8 +202,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   def pensionDebits: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").map {
-        case Some(data) => Ok(pages.ip2016.pensionDebits(pensionDebitsForm.fill(data)))
-        case None => Ok(pages.ip2016.pensionDebits(pensionDebitsForm))
+        case Some(data) => Ok(pensionDebits(pensionDebitsForm.fill(data)))
+        case None => Ok(pensionDebits(pensionDebitsForm))
       }
     }
   }
@@ -212,7 +213,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
       pensionDebitsForm.bindFromRequest.fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-          Future.successful(BadRequest(pages.ip2016.pensionDebits(form)))
+          Future.successful(BadRequest(pensionDebits(form)))
         },
         success => {
           keyStoreConnector.saveFormData("pensionDebits", success).map {
