@@ -28,7 +28,7 @@
 
 @this(full_width_template: full_width_template)
 
-@(summary: SummaryModel)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext)
+@(summary: SummaryModel)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
@@ -84,7 +84,7 @@
         </p>
     </div>
 
-    @govHelpers.form(action = routes.ResultController.processIPApplication) {
+    @form(action = routes.ResultController.processIPApplication) {
         
         <button class="button" type="submit" id="apply" @if(summary.invalidRelevantAmount) {disabled}>@Messages("pla.base.submitApplication")</button>
     }

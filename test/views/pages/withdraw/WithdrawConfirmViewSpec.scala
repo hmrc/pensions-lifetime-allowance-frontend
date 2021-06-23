@@ -21,9 +21,13 @@ import org.jsoup.Jsoup
 import play.api.i18n.Lang
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawConfirmSpecMessages
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.withdraw.withdrawConfirm
 
 class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmSpecMessages {
+
+  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
+  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "Withdraw Confirm view" when {
     implicit val lang = mock[Lang]

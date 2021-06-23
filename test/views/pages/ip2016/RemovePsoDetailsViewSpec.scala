@@ -19,9 +19,13 @@ package views.pages.ip2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.RemovePsoDetailsViewMessages
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.ip2016.removePsoDetails
 
 class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages {
+
+  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
+  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the RemovePsoDetailsView" should{
     lazy val view = application.injector.instanceOf[removePsoDetails]

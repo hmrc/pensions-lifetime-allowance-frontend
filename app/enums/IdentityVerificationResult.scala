@@ -16,10 +16,10 @@
 
 package enums
 
-import play.api.Logger.logger
+import play.api.Logging
 import play.api.libs.json._
 
-object IdentityVerificationResult extends Enumeration {
+object IdentityVerificationResult extends Enumeration with Logging {
   type IdentityVerificationResult = Value
   val Success = Value
   val Incomplete = Value

@@ -21,7 +21,7 @@ import play.api.i18n.Messages
 import play.api.mvc.Results._
 import play.api.mvc._
 import play.api.{Configuration, Environment}
-import play.api.Logger.logger
+import play.api.Logging
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.{AuthorisedFunctions, _}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -40,11 +40,11 @@ class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                   implicit val partialRetriever: FormPartialRetriever,
                                   implicit val templateRenderer:LocalTemplateRenderer,
                                   implicit val plaContext: PlaContext)
-  extends FrontendController(mcc) with AuthFunction {
+  extends FrontendController(mcc) with AuthFunction with Logging{
   override def config: Configuration = appConfig.configuration
   override def authConnector: AuthConnector = authClientConnector
 }
-trait AuthFunction extends AuthRedirects with AuthorisedFunctions {
+trait AuthFunction extends AuthRedirects with AuthorisedFunctions with Logging {
   implicit val partialRetriever: FormPartialRetriever
   implicit val templateRenderer: LocalTemplateRenderer
   implicit val plaContext: PlaContext

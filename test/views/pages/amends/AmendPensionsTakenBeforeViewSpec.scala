@@ -20,9 +20,13 @@ import forms.AmendPensionsTakenBeforeForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBeforeViewMessages
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.amends.amendPensionsTakenBefore
 
 class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTakenBeforeViewMessages {
+
+  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
+  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendPensionsTakenBeforeView" should{
     val pensionsForm = AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "Yes",

@@ -31,13 +31,14 @@ import forms.AmendmentTypeForm._
 import javax.inject.Inject
 import models.amendModels._
 import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
-import play.api.Logger.logger
+import play.api.Logging
 import play.api.data.FormError
 import play.api.i18n.I18nSupport
 import play.api.mvc.{Action, AnyContent, Result, _}
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import utils.Constants
 import views.html.pages
 
@@ -69,8 +70,10 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
+                                 implicit val errorSummary: ErrorSummary,
+                                 implicit val formWithCSRF: FormWithCSRF,
                                  implicit val plaContext: PlaContext)
-extends FrontendController(mcc) with I18nSupport {
+extends FrontendController(mcc) with I18nSupport with Logging{
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 

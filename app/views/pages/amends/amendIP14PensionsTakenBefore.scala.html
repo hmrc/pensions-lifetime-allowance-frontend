@@ -25,7 +25,7 @@
 
 @this(main_template: main_template)
 
-@(amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @helpTextAccordionContent = {
 
@@ -71,14 +71,14 @@
 @main_template(title=Messages("pla.pensionsTakenBefore.title")) {
 
 @if(amendPensionsTakenBeforeForm.hasErrors){
-@govHelpers.errorSummary(
+@errorSummary(
 Messages("pla.base.errorSummaryLabel"), amendPensionsTakenBeforeForm
 )
 }
 
 <h1 class="heading-large">@Messages("pla.pensionsTakenBefore.title")</h1>
 
-@govHelpers.form(action = routes.AmendsController.submitAmendPensionsTakenBefore) {
+@form(action = routes.AmendsController.submitAmendPensionsTakenBefore) {
 
 <div class="inline form-group">
     @formHiddenYesNoRadio(

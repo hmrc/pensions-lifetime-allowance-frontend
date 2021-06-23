@@ -26,7 +26,7 @@
 @this(main_template: main_template)
 
 
-@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @helpTextAccordionContent = {
 
@@ -72,14 +72,14 @@
 @main_template(title=Messages("pla.pensionsTakenBetween.title")) {
 
 @if(amendPensionsTakenBetweenForm.hasErrors){
-@govHelpers.errorSummary(
+@errorSummary(
 Messages("pla.base.errorSummaryLabel"), amendPensionsTakenBetweenForm
 )
 }
 
 <h1 class="heading-large">@Messages("pla.pensionsTakenBetween.title")</h1>
 
-@govHelpers.form(action = routes.AmendsController.submitAmendPensionsTakenBetween) {
+@form(action = routes.AmendsController.submitAmendPensionsTakenBetween) {
 
     <legend>
         <ul class="list list-bullet">

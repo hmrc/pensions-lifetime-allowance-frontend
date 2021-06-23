@@ -41,6 +41,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.CacheMap
 import java.util.UUID
 
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.fallback.technicalError
 import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionDebits, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, psoDetails, removePsoDetails}
 
@@ -75,6 +76,8 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     implicit val mockPsoDetails: psoDetails = app.injector.instanceOf[psoDetails]
     implicit val mockRemovePsoDetails: removePsoDetails = app.injector.instanceOf[removePsoDetails]
     implicit val mockPensionDebits: pensionDebits = app.injector.instanceOf[pensionDebits]
+    implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
+    implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
 
     class Setup {

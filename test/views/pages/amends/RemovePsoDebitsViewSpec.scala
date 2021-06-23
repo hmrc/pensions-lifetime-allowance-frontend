@@ -20,9 +20,13 @@ import forms.AmendmentTypeForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.RemovePsoDetailsViewMessages
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.amends.removePsoDebits
 
 class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages{
+
+  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
+  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the RemovePsoDetailsView" should{
     val amendmentForm = AmendmentTypeForm.amendmentTypeForm.bind(Map(

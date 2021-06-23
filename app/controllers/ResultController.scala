@@ -27,7 +27,7 @@ import models._
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import play.api.Application
-import play.api.Logger.logger
+import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
@@ -54,7 +54,7 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val plaContext: PlaContext,
                                  implicit val application: Application)
-extends FrontendController(mcc) with I18nSupport {
+extends FrontendController(mcc) with I18nSupport with Logging{
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 

@@ -21,13 +21,13 @@ import enums.{ApplicationStage, ApplicationType}
 import javax.inject.Inject
 import models._
 import models.amendModels.AmendProtectionModel
-import play.api.Logger.logger
+import play.api.Logging
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Call
 import utils.Constants
 
 
-class DisplayConstructors @Inject()(implicit messagesApi: MessagesApi) {
+class DisplayConstructors @Inject()(implicit messagesApi: MessagesApi) extends Logging {
 
   implicit val lang: Lang = Lang.defaultLang
 

@@ -20,9 +20,13 @@ import forms.OverseasPensionsForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.OverseasPensionsViewMessages
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.ip2016.overseasPensions
 
 class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPensionsViewMessages {
+
+  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
+  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the OverseasPensionsView" should{
     val oPensionsForm = OverseasPensionsForm.overseasPensionsForm.bind(Map("overseasPensions" -> "Yes", "overseasPensionsAmt" -> "1234"))

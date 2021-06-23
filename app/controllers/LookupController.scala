@@ -32,6 +32,7 @@ import play.api.mvc._
 import uk.gov.hmrc.http.Upstream4xxResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import utils.ActionWithSessionId
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,6 +50,8 @@ class LookupController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val context: PlaContext,
                                  implicit val appConfig: FrontendAppConfig,
+                                 implicit val errorSummary: ErrorSummary,
+                                 implicit val formWithCSRF: FormWithCSRF,
                                  implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
 
   implicit val executionContext: ExecutionContext = mcc.executionContext

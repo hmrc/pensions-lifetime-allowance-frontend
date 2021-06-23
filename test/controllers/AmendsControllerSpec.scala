@@ -48,6 +48,8 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
 import java.util.UUID
+
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.result.manualCorrespondenceNeeded
 
 import scala.concurrent.Future
@@ -91,6 +93,8 @@ class AmendsControllerSpec extends FakeApplication
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
   implicit val mockLang: Lang = mock[Lang]
+  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
+  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   override def beforeEach(): Unit = {
     reset(

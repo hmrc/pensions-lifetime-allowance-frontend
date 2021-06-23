@@ -31,15 +31,6 @@
 
 @import uk.gov.hmrc.play.views.html.layouts
 
-
-
-@sidebar = {
-    @if(sidebarLinks.isDefined) {
-        @layouts.sidebar(sidebarLinks.get, Some("sidebar"))
-    }
-}
-
-
 @main_template(title = title,
                mainClass = mainClass,
                bodyClasses = bodyClasses,

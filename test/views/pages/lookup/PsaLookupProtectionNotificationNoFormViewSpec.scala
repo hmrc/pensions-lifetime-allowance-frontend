@@ -20,12 +20,15 @@ import forms.PSALookupProtectionNotificationNoForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupProtectionNotificationNoFormSpecMessages
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.lookup.psa_lookup_protection_notification_no_form
 
 
 class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper with PsaLookupProtectionNotificationNoFormSpecMessages {
 
   "The Psa Lookup Protection Notification No Form view" when {
+    implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
+    implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
     "provided with a form without errors" should {
       lazy val form = PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "IP141000000000A"))
