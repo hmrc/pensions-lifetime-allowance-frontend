@@ -22,7 +22,7 @@ import constructors.IPApplicationConstructor
 import enums.ApplicationType
 import javax.inject.Inject
 import models._
-import play.api.Logger.logger
+import play.api.Logging
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import uk.gov.hmrc.http._
@@ -32,7 +32,7 @@ import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import scala.concurrent.{ExecutionContext, Future}
 
 class PLAConnector @Inject()(appConfig: FrontendAppConfig,
-                                http: DefaultHttpClient) {
+                                http: DefaultHttpClient) extends Logging{
 
   val serviceUrl: String = appConfig.servicesConfig.baseUrl("pensions-lifetime-allowance")
 

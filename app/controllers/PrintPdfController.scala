@@ -23,7 +23,7 @@ import config.LocalTemplateRenderer
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
 import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
-import play.api.Logger.logger
+import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
@@ -41,7 +41,7 @@ class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                                   mcc: MessagesControllerComponents)(
                                   implicit val partialRetriever: FormPartialRetriever,
                                   implicit val templateRenderer: LocalTemplateRenderer)
-extends FrontendController(mcc) with I18nSupport {
+extends FrontendController(mcc) with I18nSupport with Logging {
 
   val lookupRequestID = "psa-lookup-request"
   val lookupResultID = "psa-lookup-result"

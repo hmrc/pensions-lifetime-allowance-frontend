@@ -22,7 +22,7 @@ import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import constructors.DisplayConstructors
 import javax.inject.Inject
 import models.{PersonalDetailsModel, ProtectionModel}
-import play.api.Logger.logger
+import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -39,7 +39,7 @@ class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 implicit val partialRetriever: FormPartialRetriever,
                                 implicit val templateRenderer:LocalTemplateRenderer,
                                 implicit val plaContext: PlaContext)
-  extends FrontendController(mcc) with I18nSupport {
+  extends FrontendController(mcc) with I18nSupport with Logging {
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 

@@ -24,7 +24,7 @@
 
 @this(mainTemplate:main_template)
 
-@(withdrawDate: String, protectionType: String, status: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, lang: Lang)
+@(withdrawDate: String, protectionType: String, status: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, lang: Lang, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
@@ -36,7 +36,7 @@
 
 @mainTemplate(title = Messages("pla.withdraw.what-happens.info-heading"), scriptElem = Some(scriptElement), bodyClasses = None) {
 
-    @govHelpers.form(action = routes.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)) {
+    @form(action = routes.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)) {
 
 
         <a class="back-link" style="margin-bottom: 0px" href=@routes.WithdrawProtectionController.getWithdrawDateInput()>Back</a>

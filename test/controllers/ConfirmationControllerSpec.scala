@@ -29,6 +29,7 @@ import play.api.test.Helpers.{defaultAwaitTimeout, status}
 import play.api.{Application, Configuration, Environment}
 import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.fallback.technicalError
 import views.html.pages.confirmation.confirmFP
 
@@ -45,6 +46,8 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     implicit val application: Application                      = mock[Application]
     implicit val mockTechnicalError: technicalError            = app.injector.instanceOf[technicalError]
     implicit val mockConfirmFP: confirmFP                      = app.injector.instanceOf[confirmFP]
+    implicit val errorSummary: ErrorSummary                    = app.injector.instanceOf[ErrorSummary]
+    implicit val formWithCSRF: FormWithCSRF                    = app.injector.instanceOf[FormWithCSRF]
 
 
     val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents]

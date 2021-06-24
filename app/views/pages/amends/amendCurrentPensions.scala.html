@@ -27,7 +27,7 @@
 @this(
     main_template: main_template)
 
-@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @helpTextAccordionContent = {
     <p>@Messages("pla.currentPensions.hiddenTextPara")</p>
@@ -56,7 +56,7 @@
 @main_template(title = Messages("pla.currentPensions.title")) {
 
     @if(amendCurrentPensionForm.hasErrors){
-    @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), amendCurrentPensionForm)
+    @errorSummary(Messages("pla.base.errorSummaryLabel"), amendCurrentPensionForm)
     }
 
     <h1 class="heading-large">@Messages("pla.currentPensions.title")</h1>
@@ -65,7 +65,7 @@
 
     @helpTextAccordion("ip16-amend-current-pensions-help", Messages("pla.currentPensions.hiddenLink"), helpTextAccordionContent)
 
-    @govHelpers.form(action = routes.AmendsController.submitAmendCurrentPension) {
+    @form(action = routes.AmendsController.submitAmendCurrentPension) {
 
 
         <div class="form-group">

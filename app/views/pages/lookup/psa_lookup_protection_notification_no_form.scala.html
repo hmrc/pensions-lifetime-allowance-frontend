@@ -21,7 +21,7 @@
 @this(
     main_template: main_template)
 
-@(pnnForm: Form[String])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(pnnForm: Form[String])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @lc = @{
     Application.instanceCache[PlaLanguageController].apply(application)
@@ -32,10 +32,10 @@
     <h1> @Messages("psa.lookup.form.protection-notification-no-form.title")</h1>
 
     @if(pnnForm("lifetimeAllowanceReference").hasErrors) {
-        @govHelpers.errorSummary(Messages("pla.lookup.form.error.summary"), pnnForm)
+        @errorSummary(Messages("pla.lookup.form.error.summary"), pnnForm)
     }
 
-    @govHelpers.form(action = routes.LookupController.submitProtectionNotificationNoForm) {
+    @form(action = routes.LookupController.submitProtectionNotificationNoForm) {
 
         <div class="form-group">
             <fieldset class="form-field-group">

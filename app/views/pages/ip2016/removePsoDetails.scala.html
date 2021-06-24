@@ -21,7 +21,7 @@
 @this(
     main_template: main_template)
 
-@()(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@()(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @main_template(title = Messages("pla.psoDetails.title"), scriptElem=None, bodyClasses = None) {
 
@@ -34,7 +34,7 @@
     <p class="icon-min-height">@Messages("pla.psoDetails.removePso")</p>
 
 <div class="form-group">
-    @govHelpers.form(action = routes.IP2016Controller.submitRemovePsoDetails) {
+    @form(action = routes.IP2016Controller.submitRemovePsoDetails) {
     <p>
         <button id="submit" class="button" type="submit">@Messages("pla.base.remove")</button>
     </p>

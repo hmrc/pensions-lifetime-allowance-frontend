@@ -25,7 +25,7 @@
 @this(
     main_template: main_template)
 
-@(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
@@ -33,7 +33,7 @@
 @main_template(title = Messages("pla.pensionsTaken.title"), bodyClasses = None) {
 
     @if(pensionsTakenForm.hasErrors){
-    @govHelpers.errorSummary(
+    @errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenForm
     )
     }
@@ -46,7 +46,7 @@
         <li>@Messages("pla.pensionsTaken.bullet.3")</li>
     </ul>
 
-    @govHelpers.form(action = routes.IP2016Controller.submitPensionsTaken) {
+    @form(action = routes.IP2016Controller.submitPensionsTaken) {
 
         <div class="inline form-group">
             @plaInputRadioGroup(

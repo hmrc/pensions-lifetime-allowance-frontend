@@ -26,7 +26,7 @@
 @this(
     main_template: main_template)
 
-@(pensionsTakenBeforeForm: Form[PensionsTakenBeforeModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(pensionsTakenBeforeForm: Form[PensionsTakenBeforeModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
@@ -73,14 +73,14 @@
 @main_template(title=Messages("pla.pensionsTakenBefore.title")) {
 
     @if(pensionsTakenBeforeForm.hasErrors){
-    @govHelpers.errorSummary(
+    @errorSummary(
         Messages("pla.base.errorSummaryLabel"), pensionsTakenBeforeForm
     )
     }
 
     <h1 class="heading-large">@Messages("pla.pensionsTakenBefore.title")</h1>
 
-    @govHelpers.form(action = routes.IP2016Controller.submitPensionsTakenBefore) {
+    @form(action = routes.IP2016Controller.submitPensionsTakenBefore) {
 
         <div class="inline form-group">
             @formHiddenYesNoRadio(

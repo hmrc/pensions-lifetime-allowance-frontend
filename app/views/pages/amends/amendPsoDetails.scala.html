@@ -24,17 +24,17 @@
 
 @this(main_template: main_template)
 
-@(psoDetailsForm: Form[AmendPSODetailsModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(psoDetailsForm: Form[AmendPSODetailsModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @main_template(title = Messages("pla.psoDetails.title"), bodyClasses = None) {
 
     @if(psoDetailsForm.hasErrors){
-    @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), psoDetailsForm)
+    @errorSummary(Messages("pla.base.errorSummaryLabel"), psoDetailsForm)
     }
 
     <h1 class="heading-large">@Messages("pla.psoDetails.title")</h1>
 
-    @govHelpers.form(action = routes.AmendsController.submitAmendPsoDetails) {
+    @form(action = routes.AmendsController.submitAmendPsoDetails) {
 
     <div class="inline form-group">
 

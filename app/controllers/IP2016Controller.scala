@@ -34,6 +34,7 @@ import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -54,6 +55,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val plaContext: PlaContext,
+                                 implicit val errorSummary: ErrorSummary,
+                                 implicit val formWithCSRF: FormWithCSRF,
                                  implicit val application: Application) extends FrontendController(mcc) {
 
   lazy val postSignInRedirectUrl = appConfig.ipStartUrl

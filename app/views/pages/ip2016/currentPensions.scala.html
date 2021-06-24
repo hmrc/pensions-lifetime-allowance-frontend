@@ -26,7 +26,7 @@
 @this(
     main_template: main_template)
 
-@(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(currentPensionsForm: Form[CurrentPensionsModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
@@ -58,7 +58,7 @@
 @main_template(title = Messages("pla.currentPensions.title")) {
 
     @if(currentPensionsForm.hasErrors){
-    @govHelpers.errorSummary(Messages("pla.base.errorSummaryLabel"), currentPensionsForm)
+    @errorSummary(Messages("pla.base.errorSummaryLabel"), currentPensionsForm)
     }
 
     <h1 class="heading-large">@Messages("pla.currentPensions.title")</h1>
@@ -69,7 +69,7 @@
 
 
 
-    @govHelpers.form(action = routes.IP2016Controller.submitCurrentPensions) {
+    @form(action = routes.IP2016Controller.submitCurrentPensions) {
 
 
         <div class="form-group">

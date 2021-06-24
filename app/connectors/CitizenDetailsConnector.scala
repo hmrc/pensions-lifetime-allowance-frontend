@@ -19,7 +19,7 @@ package connectors
 import config.FrontendAppConfig
 import javax.inject.Inject
 import models.PersonalDetailsModel
-import play.api.Logger.logger
+import play.api.Logging
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.http.HttpReads.Implicits._
@@ -29,7 +29,7 @@ import scala.concurrent.Future
 
 class CitizenDetailsConnector @Inject()(appConfig: FrontendAppConfig,
                                             http: DefaultHttpClient
-                                          ) {
+                                          ) extends Logging {
 
    val serviceUrl = appConfig.servicesConfig.baseUrl("citizen-details")
 

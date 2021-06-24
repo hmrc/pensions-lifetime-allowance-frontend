@@ -21,10 +21,15 @@ import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.amends.amendSummary
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
+
+  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
+  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   lazy val tstPensionContributionPsoDisplaySections = Seq(
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(

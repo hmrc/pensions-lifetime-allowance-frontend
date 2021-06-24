@@ -26,7 +26,7 @@ import javax.inject.Inject
 import models._
 import models.amendModels.AmendProtectionModel
 import play.api.Application
-import play.api.Logger.logger
+import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -54,7 +54,7 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                           implicit val templateRenderer:LocalTemplateRenderer,
                                           implicit val plaContext: PlaContext,
                                           implicit val application: Application)
-extends FrontendController(mcc) with I18nSupport {
+extends FrontendController(mcc) with I18nSupport with Logging {
 
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl

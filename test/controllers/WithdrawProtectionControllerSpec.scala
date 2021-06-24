@@ -43,6 +43,7 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.fallback.technicalError
 import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdrawDate, withdrawImplications, withdrawSummary}
 
@@ -70,6 +71,8 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
   val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
   val mockEnv: Environment = mock[Environment]
   val mockWithdrawSummary: withdrawSummary = app.injector.instanceOf[withdrawSummary]
+  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
+  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   class Setup {
 
