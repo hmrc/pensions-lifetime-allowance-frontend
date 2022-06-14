@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
 
     "has a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendCurrentPension().url
+      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendCurrentPension.url
       form.select("legend.visually-hidden").text() shouldBe plaIp14CurrentPensionsTitle
     }
 

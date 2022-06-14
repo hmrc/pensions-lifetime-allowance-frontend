@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,8 +83,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
             keyStoreConnector.saveFormData("pensionsTaken", success).map {
               _ =>
                 success.pensionsTaken.get match {
-                  case "yes" => Redirect(routes.IP2016Controller.pensionsTakenBefore())
-                  case "no" => Redirect(routes.IP2016Controller.overseasPensions())
+                  case "yes" => Redirect(routes.IP2016Controller.pensionsTakenBefore)
+                  case "no" => Redirect(routes.IP2016Controller.overseasPensions)
                 }
             }
 
@@ -112,7 +112,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
         },
         success => {
           keyStoreConnector.saveFormData("pensionsTakenBefore", success).flatMap {
-            _ => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween()))
+            _ => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
           }
         }
       )
@@ -139,7 +139,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
         },
         success => {
           keyStoreConnector.saveFormData("pensionsTakenBetween", success).flatMap {
-            _ => Future.successful(Redirect(routes.IP2016Controller.overseasPensions()))
+            _ => Future.successful(Redirect(routes.IP2016Controller.overseasPensions))
           }
         }
       )
@@ -166,7 +166,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
         },
         success => {
           keyStoreConnector.saveFormData("overseasPensions", success).flatMap {
-            _ => Future.successful(Redirect(routes.IP2016Controller.currentPensions()))
+            _ => Future.successful(Redirect(routes.IP2016Controller.currentPensions))
           }
         }
       )
@@ -193,7 +193,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
         },
         success => {
           keyStoreConnector.saveFormData("currentPensions", success).flatMap {
-            _ => Future.successful(Redirect(routes.IP2016Controller.pensionDebits()))
+            _ => Future.successful(Redirect(routes.IP2016Controller.pensionDebits))
           }
         }
       )
@@ -222,8 +222,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
           keyStoreConnector.saveFormData("pensionDebits", success).map {
             _ =>
               success.pensionDebits.get match {
-                case "yes" => Redirect(routes.IP2016Controller.psoDetails())
-                case "no" => Redirect(routes.SummaryController.summaryIP16())
+                case "yes" => Redirect(routes.IP2016Controller.psoDetails)
+                case "no" => Redirect(routes.SummaryController.summaryIP16)
 
               }
           }
@@ -251,7 +251,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
         },
         form => {
           keyStoreConnector.saveFormData(s"psoDetails", form).flatMap {
-            _ => Future.successful(Redirect(routes.SummaryController.summaryIP16()))
+            _ => Future.successful(Redirect(routes.SummaryController.summaryIP16))
           }
         }
       )
@@ -268,7 +268,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
     authFunction.genericAuthWithoutNino("IP2016") {
       val updatedModel = PensionDebitsModel(Some("no"))
       keyStoreConnector.saveData[PensionDebitsModel]("pensionDebits", updatedModel).map {
-        _ => Redirect(routes.SummaryController.summaryIP16())
+        _ => Redirect(routes.SummaryController.summaryIP16)
       }
     }
   }

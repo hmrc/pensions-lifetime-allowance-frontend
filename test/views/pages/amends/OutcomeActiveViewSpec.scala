@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
 
       "have the right print message" in{
         docIP16.select("a#printPage").text() shouldBe plaResultSuccessPrint
-        docIP16.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView().url
+        docIP16.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
       }
     }
 
@@ -117,7 +117,7 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
         docIP16.select("a").eq(1).text() shouldBe plaResultSuccessIPPensionSharingLinkText
         docIP16.select("a").eq(1).attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
         docIP16.select("a").eq(2).text() shouldBe plaResultSuccessViewDetailsLinkText
-        docIP16.select("a").eq(2).attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections().url
+        docIP16.select("a").eq(2).attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
       }
     }
 

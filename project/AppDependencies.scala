@@ -5,10 +5,10 @@ object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val bootstrapVersion = "5.3.0"
+  private val bootstrapVersion = "5.24.0"
   private val govukTemplateVersion = "5.68.0-play-28"
   private val playUiVersion = "9.6.0-play-28"
-  private val playPartialsVersion = "8.1.0-play-28"
+  private val playPartialsVersion = "8.3.0-play-28"
   private val scalaTestVersion = "3.0.9"
   private val scalaTestPlusVersion = "5.1.0"
   private val pegdownVersion = "1.6.0"
@@ -41,12 +41,12 @@ object AppDependencies {
         "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % scalaTestPlusVersion % scope,
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
-        "org.jsoup" % "jsoup" % "1.13.1" % scope,
+        "org.jsoup" % "jsoup" % "1.14.3" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-        "com.vladsch.flexmark"    %   "flexmark-all"              % "0.35.10",
-        "org.scalatestplus"       %%  "scalatestplus-mockito"     % "1.0.0-M2",
-        "org.scalatestplus.play"  %%  "scalatestplus-play"        % "5.1.0",
-        "org.scalatestplus"       %%  "scalatestplus-scalacheck"  % "3.1.0.0-RC2",
+        "com.vladsch.flexmark"    %   "flexmark-all"              % "0.35.10" % scope,
+        "org.scalatestplus"       %%  "scalatestplus-mockito"     % "1.0.0-M2" % scope,
+        "org.scalatestplus.play"  %%  "scalatestplus-play"        % "5.1.0" % scope,
+        "org.scalatestplus"       %%  "scalatestplus-scalacheck"  % "3.1.0.0-RC2" % scope,
         "org.mockito" % "mockito-core" % "3.3.3" % scope
       )
     }.test

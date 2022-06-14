@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
         }
 
         "has the correct action" in {
-          doc.select("form").attr("action") shouldBe controllers.routes.LookupController.submitProtectionNotificationNoForm().url
+          doc.select("form").attr("action") shouldBe controllers.routes.LookupController.submitProtectionNotificationNoForm.url
         }
       }
 
@@ -92,7 +92,7 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
         }
 
         "has the correct destination" in {
-          doc.select("a.back-link").attr("href") shouldBe controllers.routes.LookupController.displaySchemeAdministratorReferenceForm().url
+          doc.select("a.back-link").attr("href") shouldBe controllers.routes.LookupController.displaySchemeAdministratorReferenceForm.url
         }
       }
     }

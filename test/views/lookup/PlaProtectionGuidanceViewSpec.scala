@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,7 +162,7 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
       }
 
       "has a link to the correct location" in {
-       link.attr("href") shouldBe controllers.routes.LookupController.displayLookupResults().url
+       link.attr("href") shouldBe controllers.routes.LookupController.displayLookupResults.url
       }
     }
   }

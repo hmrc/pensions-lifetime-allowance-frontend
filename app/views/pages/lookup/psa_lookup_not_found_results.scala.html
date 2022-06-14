@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,8 +56,8 @@
     <p>@Messages("psa.lookup.not-found.results.suggested-resolution")</p>
 
     <br>
-    <a class="section--branded button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printNotFoundPDF()">@Messages("psa.lookup.results.save")</a>
+    <a class="section--branded button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printNotFoundPDF">@Messages("psa.lookup.results.save")</a>
     <p>
-        <a class="button button--get-started" href=@routes.LookupController.redirectToStart()>@Messages("psa.lookup.not-found.results.table.try-again")</a>
+        <a class="button button--get-started" href=@routes.LookupController.redirectToStart>@Messages("psa.lookup.not-found.results.table.try-again")</a>
     </p>
 }

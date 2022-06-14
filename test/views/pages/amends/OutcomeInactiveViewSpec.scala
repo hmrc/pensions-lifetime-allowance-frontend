@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
         docIP16.select("a").eq(0).text() shouldBe plaResultSuccessIPPensionSharingLinkText
         docIP16.select("a").eq(0).attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
         docIP16.select("a").eq(2).text() shouldBe plaResultSuccessViewDetailsLinkText
-        docIP16.select("a").eq(2).attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections().url
+        docIP16.select("a").eq(2).attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
       }
     }
     "have a properly structured 'Give us feedback' section" when{

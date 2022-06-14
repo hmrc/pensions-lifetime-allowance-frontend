@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,20 +37,20 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the SummaryView" should{
-    val positivePensionsTakenSummaryRow = SummaryRowModel("pensionsTaken", Some(controllers.routes.IP2016Controller.pensionsTaken()), None,  false, "Yes")
-    val positivePensionsTakenBeforeSummaryRow = SummaryRowModel("pensionsTakenBefore", Some(controllers.routes.IP2016Controller.pensionsTakenBefore()), None,  false, "Yes")
-    val positivePensionsTakenBeforeAmtSummaryRow = SummaryRowModel("pensionsTakenBeforeAmt", Some(controllers.routes.IP2016Controller.pensionsTakenBefore()), None,  false, "£1,001,000")
-    val positivePensionsTakenBetweenSummaryRow = SummaryRowModel("pensionsTakenBetween", Some(controllers.routes.IP2016Controller.pensionsTakenBetween()), None,  false, "Yes")
-    val positivePensionsTakenBetweenAmtSummaryRow = SummaryRowModel("pensionsTakenBetweenAmt", Some(controllers.routes.IP2016Controller.pensionsTakenBetween()), None,  false, "£1,100")
-    val positiveOverseasPensionsSummaryRow = SummaryRowModel("overseasPensions", Some(controllers.routes.IP2016Controller.overseasPensions()), None,  false, "Yes")
-    val positiveOverseasPensionsAmtSummaryRow = SummaryRowModel("overseasPensionsAmt", Some(controllers.routes.IP2016Controller.overseasPensions()), None,  false, "£1,010")
-    val currentPensionsSummaryRow = SummaryRowModel("currentPensionsAmt", Some(controllers.routes.IP2016Controller.currentPensions()), None, false, "£1,001")
-    val positivePensionDebitsSummaryRow = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits()), None,  false, "Yes")
+    val positivePensionsTakenSummaryRow = SummaryRowModel("pensionsTaken", Some(controllers.routes.IP2016Controller.pensionsTaken), None,  false, "Yes")
+    val positivePensionsTakenBeforeSummaryRow = SummaryRowModel("pensionsTakenBefore", Some(controllers.routes.IP2016Controller.pensionsTakenBefore), None,  false, "Yes")
+    val positivePensionsTakenBeforeAmtSummaryRow = SummaryRowModel("pensionsTakenBeforeAmt", Some(controllers.routes.IP2016Controller.pensionsTakenBefore), None,  false, "£1,001,000")
+    val positivePensionsTakenBetweenSummaryRow = SummaryRowModel("pensionsTakenBetween", Some(controllers.routes.IP2016Controller.pensionsTakenBetween), None,  false, "Yes")
+    val positivePensionsTakenBetweenAmtSummaryRow = SummaryRowModel("pensionsTakenBetweenAmt", Some(controllers.routes.IP2016Controller.pensionsTakenBetween), None,  false, "£1,100")
+    val positiveOverseasPensionsSummaryRow = SummaryRowModel("overseasPensions", Some(controllers.routes.IP2016Controller.overseasPensions), None,  false, "Yes")
+    val positiveOverseasPensionsAmtSummaryRow = SummaryRowModel("overseasPensionsAmt", Some(controllers.routes.IP2016Controller.overseasPensions), None,  false, "£1,010")
+    val currentPensionsSummaryRow = SummaryRowModel("currentPensionsAmt", Some(controllers.routes.IP2016Controller.currentPensions), None, false, "£1,001")
+    val positivePensionDebitsSummaryRow = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits), None,  false, "Yes")
 
-    val positivePensionsTakenSummaryRowTwo = SummaryRowModel("pensionsTaken", Some(controllers.routes.IP2016Controller.pensionsTaken()), None,  false, "No")
-    val positiveOverseasPensionsSummaryRowTwo = SummaryRowModel("overseasPensions", Some(controllers.routes.IP2016Controller.overseasPensions()), None,  false, "No")
-    val currentPensionsSummaryRowTwo = SummaryRowModel("currentPensionsAmt", Some(controllers.routes.IP2016Controller.currentPensions()), None, false, "£123,456")
-    val positivePensionDebitsSummaryRowTwo = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits()), None,  false, "No")
+    val positivePensionsTakenSummaryRowTwo = SummaryRowModel("pensionsTaken", Some(controllers.routes.IP2016Controller.pensionsTaken), None,  false, "No")
+    val positiveOverseasPensionsSummaryRowTwo = SummaryRowModel("overseasPensions", Some(controllers.routes.IP2016Controller.overseasPensions), None,  false, "No")
+    val currentPensionsSummaryRowTwo = SummaryRowModel("currentPensionsAmt", Some(controllers.routes.IP2016Controller.currentPensions), None, false, "£123,456")
+    val positivePensionDebitsSummaryRowTwo = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits), None,  false, "No")
 
 
     val model = SummaryModel( ApplicationType.IP2016, false,
@@ -194,7 +194,7 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
 
     "have a valid form submission" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.ResultController.processIPApplication().url
+      form.attr("action") shouldBe controllers.routes.ResultController.processIPApplication.url
     }
 
     "have a continue button" in{

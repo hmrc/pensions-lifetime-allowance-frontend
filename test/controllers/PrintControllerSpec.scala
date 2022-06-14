@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
 
         val result = TestPrintController.printView(fakeRequest)
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections().url)
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.url)
       }
     }
   }

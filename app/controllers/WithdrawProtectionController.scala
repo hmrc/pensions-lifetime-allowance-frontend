@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -124,7 +124,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
       success =>
         keyStoreConnector.saveFormData[WithdrawDateFormModel]("withdrawProtectionForm", success) map {
           _  =>
-            Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput())
+            Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput)
         }
     )
   }

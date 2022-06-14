@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@
 @mainTemplate(title = Messages("pla.withdraw.protection.title", Messages(s"pla.withdraw.protection.${protectionType}.label")), scriptElem = Some(scriptElement), bodyClasses = None) {
 
 
-    <a class="back-link" style="margin-bottom: 0px" href=@routes.ReadProtectionsController.currentProtections()>Back</a>
+    <a class="back-link" style="margin-bottom: 0px" href=@routes.ReadProtectionsController.currentProtections>Back</a>
     <h1 class="heading-large">@Messages("pla.withdraw.protection.title",Messages(s"pla.withdraw.protection.${protectionType}.label"))</h1>
 
     @withdrawImplicationMessage(protectionType, status)
@@ -50,7 +50,7 @@
 
     </div>
 
-    <a id="continue-button" class="button" role="button" type="submit" href=@routes.WithdrawProtectionController.getWithdrawDateInput()>@Messages("pla.withdraw.protection.continue.title")</a>
+    <a id="continue-button" class="button" role="button" type="submit" href=@routes.WithdrawProtectionController.getWithdrawDateInput>@Messages("pla.withdraw.protection.continue.title")</a>
     <br />
     <br />
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
       val result = controller.printResultsPDF.apply(request)
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm.url
     }
 
     "return a 200 when able to print a Results PDF" in new Setup {
@@ -120,7 +120,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
       val result = controller.printNotFoundPDF.apply(request)
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm.url
     }
 
     "return a 303 when unable to print a NotFound PDF when the lifetimeAllowanceReference is NOT defined" in new Setup {
@@ -134,7 +134,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
       val result = controller.printNotFoundPDF.apply(request)
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm.url
     }
 
     "return a 200 when able to print a NotFound PDF when the lifetimeAllowanceReference is defined" in new Setup {

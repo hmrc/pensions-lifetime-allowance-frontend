@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -193,7 +193,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBefore()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBefore}")
             }
         }
 
@@ -205,7 +205,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}")
             }
         }
 
@@ -296,7 +296,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                     keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                     status(DataItem.result) shouldBe 303
-                    redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween()}")
+                    redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween}")
                 }
             }
 
@@ -452,7 +452,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.currentPensions()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.currentPensions}")
             }
         }
         "Submitting invalid data" should {
@@ -530,7 +530,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionDebits()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionDebits}")
             }
         }
 
@@ -596,7 +596,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionDebitsModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.psoDetails()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.psoDetails}")
             }
         }
 
@@ -608,7 +608,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionDebitsModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16}")
             }
         }
 
@@ -680,7 +680,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 mockAuthConnector(Future.successful({}))
                 keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
                 status(DataItem.result) shouldBe 303
-                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}")
+                redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16}")
             }
         }
 
@@ -746,7 +746,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 mockAuthConnector(Future.successful({}))
                 pensionsDebitsSaveData(Some(testModel))
-                redirectLocation(result) shouldBe Some(s"${routes.SummaryController.summaryIP16()}")
+                redirectLocation(result) shouldBe Some(s"${routes.SummaryController.summaryIP16}")
             }
         }
     }
