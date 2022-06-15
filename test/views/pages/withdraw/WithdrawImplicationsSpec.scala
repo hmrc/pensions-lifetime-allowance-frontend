@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
     }
 
     s"have a back link with href" in {
-      doc.select("a.back-link").attr("href") shouldBe routes.ReadProtectionsController.currentProtections().url
+      doc.select("a.back-link").attr("href") shouldBe routes.ReadProtectionsController.currentProtections.url
     }
 
     s"have the question of the page ${"pla.withdraw.protection.title"}" in {
@@ -71,7 +71,7 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
       }
 
       s"have a href" in {
-        button.attr("href") shouldBe routes.WithdrawProtectionController.getWithdrawDateInput().url
+        button.attr("href") shouldBe routes.WithdrawProtectionController.getWithdrawDateInput.url
       }
 
     }

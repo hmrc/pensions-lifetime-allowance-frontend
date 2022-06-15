@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ class WithdrawDateSpec extends CommonViewSpecHelper with WithdrawDateSpecMessage
       doc.select("a.back-link").text() shouldBe plaBaseBack
     }
     s"have a back link with href" in {
-      doc.select("a.back-link").attr("href") shouldBe routes.WithdrawProtectionController.withdrawImplications().url
+      doc.select("a.back-link").attr("href") shouldBe routes.WithdrawProtectionController.withdrawImplications.url
     }
     s"have a hint of $plaWithdrawDateInputFormHint" in {
       doc.select("span").get(0).text() shouldBe plaWithdrawDateInputFormHint

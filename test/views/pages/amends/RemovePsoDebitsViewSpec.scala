@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitRemovePso().url
+      form.attr("action") shouldBe controllers.routes.AmendsController.submitRemovePso.url
     }
 
     "have a functional cancellation link" in{

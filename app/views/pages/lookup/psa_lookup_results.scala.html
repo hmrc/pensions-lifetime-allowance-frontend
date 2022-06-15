@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@
             @if(lookupResult.psaCheckResult == 1) {
                 <tr>
                     <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
-                    <td id="protection-type-value" class="font-small"><a href="@routes.LookupController.displayProtectionTypeGuidance()">
+                    <td id="protection-type-value" class="font-small"><a href="@routes.LookupController.displayProtectionTypeGuidance">
                     @lookupResult.ltaType match {
                         case 1 => {
                             @Messages("psa.lookup.results.ltatype.1")
@@ -106,9 +106,9 @@
     </table>
 
     <div>
-        <a class="subsection button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printResultsPDF()">@Messages("psa.lookup.results.save")</a>
+        <a class="subsection button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printResultsPDF">@Messages("psa.lookup.results.save")</a>
         <p>
-        <a class="button button--get-started" role="button" onclick="ga('send', 'event', 'ResultsPage', 'click', 'Check another certificate')" href="@routes.LookupController.redirectToStart()">@Messages("psa.lookup.results.check-another")</a>
+        <a class="button button--get-started" role="button" onclick="ga('send', 'event', 'ResultsPage', 'click', 'Check another certificate')" href="@routes.LookupController.redirectToStart">@Messages("psa.lookup.results.check-another")</a>
         </p>
     </div>
 }

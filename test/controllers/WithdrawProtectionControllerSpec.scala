@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -309,7 +309,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
         keystoreSaveCondition[WithdrawDateFormModel](mockKeyStoreConnector)
 
 
-        val request = FakeRequest().withFormUrlEncodedBody(("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017"))
+        val request = FakeRequest().withFormUrlEncodedBody(("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017")).withMethod("POST")
 
         lazy val result = controller.postWithdrawDateInput(request)
         status(result) shouldBe SEE_OTHER
@@ -406,7 +406,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
           when(mockKeyStoreConnector.saveFormData[WithdrawDateFormModel](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
             .thenReturn(Future.successful(CacheMap("test", Map.empty)))
 
-          val requestWithFormInvalid = FakeRequest().withBody(Json.toJson(withdrawDateForm))
+          val requestWithFormInvalid = FakeRequest().withFormUrlEncodedBody(("withdrawDay", "5"), ("withdrawMonth", "9"), ("withdrawYear", "2017")).withMethod("POST")
           lazy val result = controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithFormInvalid)
 
           status(result) shouldBe SEE_OTHER

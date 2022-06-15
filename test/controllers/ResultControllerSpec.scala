@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -239,7 +239,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
       val DataItemResult = TestSuccessResultController.processFPApplication(fakeRequest)
 
       status(DataItemResult) shouldBe 303
-      redirectLocation(DataItemResult) shouldBe Some(s"${routes.ResultController.displayFP16()}")
+      redirectLocation(DataItemResult) shouldBe Some(s"${routes.ResultController.displayFP16}")
     }
     "return 200" in {
       when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
@@ -280,7 +280,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
 
       lazy val DataItemresult = TestRejectResultController.processFPApplication(fakeRequest)
       status(DataItemresult) shouldBe 303
-      redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayFP16()}")
+      redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayFP16}")
     }
     "return 200" in {
 
@@ -313,7 +313,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       lazy val DataItemresult = TestSuccessResultController.processIPApplication(fakeRequest)
       status(DataItemresult) shouldBe 303
-      redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16()}")
+      redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16}")
 
     }
     "return 200" in {
@@ -356,7 +356,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
         lazy val DataItemresult = TestRejectResultController.processIPApplication(fakeRequest)
 
         status(DataItemresult) shouldBe 303
-        redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16()}")
+        redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16}")
       }
       "return 200" in {
 
@@ -409,7 +409,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
 
         val DataItemresult = TestInactiveSuccessResultController.processIPApplication(fakeRequest)
         status(DataItemresult) shouldBe 303
-        redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16()}")
+        redirectLocation(DataItemresult) shouldBe Some(s"${routes.ResultController.displayIP16}")
       }
       "return 200" in {
         when(mockKeyStoreConnector.fetchAndGetFormData[ApplyResponseModel](any())(any(), any()))
@@ -569,7 +569,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
 
           val result = TestSuccessResultController.saveAndRedirectToDisplay(HttpResponse(status = OK, json = JsObject.empty, headers = Map.empty), "")(fakeRequest, ApplicationType.IP2016)
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.ResultController.displayIP16().url)
+          redirectLocation(result) shouldBe Some(routes.ResultController.displayIP16.url)
         }
       }
 
@@ -581,7 +581,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
 
           val result = TestSuccessResultController.saveAndRedirectToDisplay(HttpResponse(status = OK, json = JsObject.empty, headers = Map.empty), "")(fakeRequest, ApplicationType.FP2016)
           status(result) shouldBe SEE_OTHER
-          redirectLocation(result) shouldBe Some(routes.ResultController.displayFP16().url)
+          redirectLocation(result) shouldBe Some(routes.ResultController.displayFP16.url)
         }
       }
     }

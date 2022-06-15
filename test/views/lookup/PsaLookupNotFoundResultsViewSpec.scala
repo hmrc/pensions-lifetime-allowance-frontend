@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,7 +102,7 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
       }
 
       "links to the pdf page" in {
-        doc.select("a.button--secondary").attr("href") shouldBe controllers.routes.PrintPdfController.printNotFoundPDF().url
+        doc.select("a.button--secondary").attr("href") shouldBe controllers.routes.PrintPdfController.printNotFoundPDF.url
       }
     }
 
@@ -113,7 +113,7 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
       }
 
       "links to the start point" in {
-        doc.select("a.button--get-started").attr("href") shouldBe controllers.routes.LookupController.redirectToStart().url
+        doc.select("a.button--get-started").attr("href") shouldBe controllers.routes.LookupController.redirectToStart.url
       }
     }
   }

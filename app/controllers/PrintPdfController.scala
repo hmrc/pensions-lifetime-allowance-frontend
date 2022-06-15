@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
           }
         case None =>
           logger.warn("[PrintPdfController]: Unable to print ResultsPDF. Redirected to displaySchemeAdministratorReferenceForm")
-          Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
+          Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm))
       }
   }
 
@@ -82,10 +82,10 @@ extends FrontendController(mcc) with I18nSupport with Logging {
 
         case Some(req@PSALookupRequest(_, None)) =>
           logger.warn("[PrintPdfController]: lifetimeAllowanceReference is not defined, unable to print NotFound PDF. Redirected to displaySchemeAdministratorReferenceForm")
-          Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
+          Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm))
         case None =>
           logger.warn("[PrintPdfController]: Unable to print NotFound PDF. Redirected to displaySchemeAdministratorReferenceForm")
-          Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm()))
+          Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm))
       }
   }
 

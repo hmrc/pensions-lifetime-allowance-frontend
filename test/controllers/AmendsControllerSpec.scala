@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -288,7 +288,7 @@ class AmendsControllerSpec extends FakeApplication
       status(result) shouldBe 500
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-      jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
       await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
@@ -317,7 +317,7 @@ class AmendsControllerSpec extends FakeApplication
 
 
       status(DataItem.result) shouldBe 500
-      DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
       await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
@@ -333,7 +333,7 @@ class AmendsControllerSpec extends FakeApplication
 
       status(DataItem.result) shouldBe 500
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-      DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
       await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
@@ -351,7 +351,7 @@ class AmendsControllerSpec extends FakeApplication
   }
 
     "the microservice returns an invalid json response" in new Setup {
-      lazy val result = controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("eggs", "dormant")))
+      lazy val result = controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("eggs", "dormant")).withMethod("POST"))
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
 
@@ -369,7 +369,7 @@ class AmendsControllerSpec extends FakeApplication
       jsoupDoc.
         body.getElementById("tryAgainLink")
         .attr("href") shouldEqual
-        s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        s"${controllers.routes.ReadProtectionsController.currentProtections}"
       await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
@@ -388,12 +388,12 @@ class AmendsControllerSpec extends FakeApplication
 
       status(DataItem.result) shouldBe 500
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.noNotificationId.title")
-      DataItem.jsoupDoc.body.getElementsByTag("a").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      DataItem.jsoupDoc.body.getElementsByTag("a").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
       await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
     "the microservice returns a valid response" in new Setup {
-      lazy val result = controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("status", "dormant")))
+      lazy val result = controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("status", "dormant")).withMethod("POST"))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -404,7 +404,7 @@ class AmendsControllerSpec extends FakeApplication
           .thenReturn(Future.successful(CacheMap("keyStoreId", Map.empty)))
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendmentOutcome()}")
+        redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendmentOutcome}")
     }
 
   "Calling the amendmentOutcome action" when {
@@ -417,7 +417,7 @@ class AmendsControllerSpec extends FakeApplication
 
         status(result) shouldBe 500
         jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
         await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
@@ -989,7 +989,7 @@ class AmendsControllerSpec extends FakeApplication
       keystoreFetchCondition[AmendProtectionModel](None)
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-      jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
       await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
@@ -1051,7 +1051,7 @@ class AmendsControllerSpec extends FakeApplication
 
       status(result) shouldBe 500
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-      jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+      jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
       await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
   }
@@ -1157,7 +1157,7 @@ class AmendsControllerSpec extends FakeApplication
         keystoreFetchCondition[AmendProtectionModel](None)
 
         jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections()}"
+        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
       }
       "have the correct cache control" in new Setup {
         lazy val result = await(controller.removePso("ip2016", "open")(fakeRequest))

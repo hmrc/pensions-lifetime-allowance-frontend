@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,8 +98,8 @@ extends FrontendController(mcc) with I18nSupport with Logging{
           keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
             cacheMap =>
               protectionType match {
-                case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16())
-                case ApplicationType.FP2016 => Redirect(routes.ResultController.displayFP16())
+                case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16)
+                case ApplicationType.FP2016 => Redirect(routes.ResultController.displayFP16)
               }
           }
         }

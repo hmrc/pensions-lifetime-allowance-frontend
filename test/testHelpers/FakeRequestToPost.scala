@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +29,13 @@ class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessi
   extends WordSpecLike with Matchers with OptionValues with TestConfigHelper {
   val fakeRequest = FakeRequest("POST", "/protect-your-lifetime-allowance/" + url)
     .withSession(SessionKeys.sessionId -> s"session-$sessionId")
-    .withFormUrlEncodedBody(data:_*)
+    .withFormUrlEncodedBody(data:_*).withMethod("POST")
   val result = controllerAction(fakeRequest)
   val jsoupDoc = Jsoup.parse(contentAsString(result))
 }
 
 class AuthorisedFakeRequestToPost(controllerAction: Action[AnyContent], data: (String, String)*) extends TestConfigHelper {
-    val result = controllerAction(authenticatedFakeRequest().withFormUrlEncodedBody(data:_*))
+    val result = controllerAction(authenticatedFakeRequest().withFormUrlEncodedBody(data:_*).withMethod("POST"))
     val jsoupDoc = Jsoup.parse(contentAsString(result))
   
 }

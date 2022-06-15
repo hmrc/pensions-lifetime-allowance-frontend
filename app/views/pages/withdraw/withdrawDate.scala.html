@@ -1,5 +1,5 @@
 @*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@
 
 @mainTemplate(title = Messages("pla.withdraw.date-input.title"), scriptElem = Some(scriptElement), bodyClasses = None) {
 
-    <a class="back-link" style="margin-bottom: 0px" href=@routes.WithdrawProtectionController.withdrawImplications()>Back</a>
+    <a class="back-link" style="margin-bottom: 0px" href=@routes.WithdrawProtectionController.withdrawImplications>Back</a>
 
 
 
@@ -42,7 +42,7 @@
 @errorSummary(Messages("pla.base.errorSummaryLabel"), withdrawDateForm)
 }
 
-@form(action = routes.WithdrawProtectionController.postWithdrawDateInput()) {
+@form(action = routes.WithdrawProtectionController.postWithdrawDateInput) {
 
 <div class="inline form-group">
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,17 +21,17 @@ import play.api.mvc.Call
 
 object CallMap {
   private val callMap: Map[String, Call] = Map(
-    "pensionsTaken"     -> controllers.routes.IP2016Controller.pensionsTaken(),
+    "pensionsTaken"     -> controllers.routes.IP2016Controller.pensionsTaken,
 
-    "pensionsTakenBefore"     -> controllers.routes.IP2016Controller.pensionsTakenBefore(),
+    "pensionsTakenBefore"     -> controllers.routes.IP2016Controller.pensionsTakenBefore,
 
-    "pensionsTakenBetween"     -> controllers.routes.IP2016Controller.pensionsTakenBetween(),
+    "pensionsTakenBetween"     -> controllers.routes.IP2016Controller.pensionsTakenBetween,
 
-    "overseasPensions"     -> controllers.routes.IP2016Controller.overseasPensions(),
+    "overseasPensions"     -> controllers.routes.IP2016Controller.overseasPensions,
 
-    "currentPensions"     -> controllers.routes.IP2016Controller.currentPensions(),
+    "currentPensions"     -> controllers.routes.IP2016Controller.currentPensions,
 
-    "pensionDebits"       -> controllers.routes.IP2016Controller.pensionDebits(),
+    "pensionDebits"       -> controllers.routes.IP2016Controller.pensionDebits,
 
     "psoDetails"     -> controllers.routes.IP2016Controller.psoDetails,
 

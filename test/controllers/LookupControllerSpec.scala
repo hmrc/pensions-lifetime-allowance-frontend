@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -140,18 +140,18 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
     }
 
     "submit psaRef form with valid data and redirect to pnn form" in new Setup  {
-      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPSARefForm: _*)
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPSARefForm: _*).withMethod("POST")
 
       keystoreSaveCondition[PSALookupRequest](mockCacheMap)
 
       val result = controller.submitSchemeAdministratorReferenceForm.apply(request)
 
       status(result) shouldBe  SEE_OTHER
-      redirectLocation(result).get shouldBe  routes.LookupController.displayProtectionNotificationNoForm().url
+      redirectLocation(result).get shouldBe  routes.LookupController.displayProtectionNotificationNoForm.url
     }
 
     "display errors when invalid data entered for psaRef form" in new Setup  {
-      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(invalidPSARefForm: _*)
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(invalidPSARefForm: _*).withMethod("POST")
 
       keystoreSaveCondition[PSALookupRequest](mockCacheMap)
 
@@ -176,28 +176,28 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       val result = controller.displayProtectionNotificationNoForm.apply(request)
 
       status(result) shouldBe  SEE_OTHER
-      redirectLocation(result).get shouldBe  routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      redirectLocation(result).get shouldBe  routes.LookupController.displaySchemeAdministratorReferenceForm.url
     }
 
     "submit pnn form with valid data and redirect to results page" in new Setup  {
       keystoreFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSA REF")))
       plaConnectorReturn(HttpResponse(status = OK, json = plaReturnJson, headers = Map.empty))
 
-      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*)
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*).withMethod("POST")
 
       keystoreSaveCondition[PSALookupResult](mockCacheMap)
 
       val result = controller.submitProtectionNotificationNoForm.apply(request)
 
       status(result) shouldBe  SEE_OTHER
-      redirectLocation(result).get shouldBe  routes.LookupController.displayLookupResults().url
+      redirectLocation(result).get shouldBe  routes.LookupController.displayLookupResults.url
     }
 
     "submit pnn form with valid data and redirect when a NOT FOUND is returned" in new Setup  {
       keystoreFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSA REF")))
       plaConnectorReturn(HttpResponse(status = OK, json = plaReturnJson, headers = Map.empty))
 
-      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*)
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*).withMethod("POST")
 
       when(mockPlaConnector.psaLookup(any(), any())(any(), any()))
         .thenReturn(Future.failed(UpstreamErrorResponse("message", NOT_FOUND, NOT_FOUND)))
@@ -206,11 +206,11 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       val result = controller.submitProtectionNotificationNoForm.apply(request)
 
       status(result) shouldBe  SEE_OTHER
-      redirectLocation(result).get shouldBe  routes.LookupController.displayNotFoundResults().url
+      redirectLocation(result).get shouldBe  routes.LookupController.displayNotFoundResults.url
     }
 
     "display errors when invalid data entered for pnn form" in new Setup  {
-      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(invalidPNNForm: _*)
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(invalidPNNForm: _*).withMethod("POST")
 
       keystoreSaveCondition[PSALookupRequest](mockCacheMap)
 
@@ -220,14 +220,14 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
     }
 
     "redirect to the administrator reference form when PSA request data not found on submission" in new Setup  {
-      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*)
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*).withMethod("POST")
 
       keystoreFetchCondition[PSALookupRequest](None)
 
       val result = controller.submitProtectionNotificationNoForm.apply(request)
 
       status(result) shouldBe  SEE_OTHER
-      redirectLocation(result) shouldBe  Some(routes.LookupController.displaySchemeAdministratorReferenceForm().url)
+      redirectLocation(result) shouldBe  Some(routes.LookupController.displaySchemeAdministratorReferenceForm.url)
     }
 
     "return 200 with correct message on results page" in new Setup  {
@@ -246,7 +246,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       val result = controller.displayLookupResults.apply(request)
 
       status(result) shouldBe  SEE_OTHER
-      redirectLocation(result).get shouldBe  routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      redirectLocation(result).get shouldBe  routes.LookupController.displaySchemeAdministratorReferenceForm.url
     }
 
     "return 200 with correct message on not found results page" in new Setup  {
@@ -265,7 +265,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       val result = controller.displayLookupResults.apply(request)
 
       status(result) shouldBe  SEE_OTHER
-      redirectLocation(result).get shouldBe  routes.LookupController.displaySchemeAdministratorReferenceForm().url
+      redirectLocation(result).get shouldBe  routes.LookupController.displaySchemeAdministratorReferenceForm.url
     }
 
     "return 200 with correct message on protection type guidance page" in new Setup  {

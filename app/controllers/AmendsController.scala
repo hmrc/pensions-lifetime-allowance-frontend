@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -460,7 +460,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       model =>
         if (model.protection.notificationId.isDefined) {
           keyStoreConnector.saveData[AmendResponseModel]("amendResponseModel", model).map {
-            cacheMap => Redirect(routes.AmendsController.amendmentOutcome())
+            cacheMap => Redirect(routes.AmendsController.amendmentOutcome)
           }
         } else {
           logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package testHelpers
 
-import com.kenshoo.play.metrics.PlayModule
 import org.scalatest.{Matchers, OptionValues, WordSpecLike}
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
@@ -26,7 +25,5 @@ trait FakeApplication extends WordSpecLike with Matchers with OptionValues with 
 
   override def fakeApplication: Application = app
 
-  override lazy val app: Application = new GuiceApplicationBuilder()
-    .bindings(new PlayModule)
-    .configure(Map("metrics.enabled" -> false)).build()
+  override lazy val app: Application = new GuiceApplicationBuilder().build()
 }
