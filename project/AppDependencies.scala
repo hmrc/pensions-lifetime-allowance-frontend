@@ -43,7 +43,7 @@ object AppDependencies {
         "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "org.jsoup" % "jsoup" % "1.14.3" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
-        "com.vladsch.flexmark"    %   "flexmark-all"              % "0.35.10" % scope,
+        "com.vladsch.flexmark"    %   "flexmark-all"              % "0.35.10",
         "org.scalatestplus"       %%  "scalatestplus-mockito"     % "1.0.0-M2" % scope,
         "org.scalatestplus.play"  %%  "scalatestplus-play"        % "5.1.0" % scope,
         "org.scalatestplus"       %%  "scalatestplus-scalacheck"  % "3.1.0.0-RC2" % scope,
