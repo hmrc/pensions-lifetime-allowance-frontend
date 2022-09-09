@@ -64,12 +64,22 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
   private val contactFrontendService = servicesConfig.baseUrl("contact-frontend")
   private val contactHost = servicesConfig.getConfString("contact-frontend.www", "")
   private val baseUrl = "protect-your-lifetime-allowance"
+  lazy val signOutUrl = "/protect-your-lifetime-allowance/sign-out"
 
+  lazy val urBannerLink = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113"
   override lazy val betaFeedbackUrl = s"$baseUrl/feedback"
   override lazy val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
   override lazy val analyticsToken: String = configuration.getOptional[String](s"google-analytics.token").getOrElse("")
   override lazy val analyticsHost: String = configuration.getOptional[String](s"google-analytics.host").getOrElse("auto")
   override lazy val ssoUrl: Option[String] = configuration.getOptional[String](s"portal.ssoUrl")
+
+  lazy val ptaBaseUrl: String = servicesConfig.baseUrl("pertax-frontend")
+  lazy val ptaHomeUrl: String = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.home","/personal-account")}"
+  lazy val messagesUrl: String = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.messages","/messages")}"
+  lazy val paperlessSettingsUrl = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.paperlessSettings","/preferences")}"
+  lazy val personalDetailsUrl = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.personalDetails","/personal-details")}"
+  lazy val trackBaseUrl: String = servicesConfig.baseUrl("tracking-frontend")
+  lazy val trackingHomeUrl = s"$trackBaseUrl${servicesConfig.getConfString("tracking-frontend.urls.home","/track")}"
 
   override val contactFormServiceIdentifier = "PLA"
   override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"

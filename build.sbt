@@ -26,7 +26,7 @@ lazy val scoverageSettings = {
     // Semicolon-separated list of regexs matching classes to exclude
     ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models\\.data\\..*;views.html.*;uk.gov.hmrc.BuildInfo;app.*;prod.*;config.*",
     ScoverageKeys.coverageExcludedFiles := ".*/Routes.*;.*/RoutesPrefix.*;.*/PdfGeneratorConnector.*;",
-    ScoverageKeys.coverageMinimum := 90,
+    ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := false,
     ScoverageKeys.coverageHighlighting := true
   )
@@ -54,6 +54,18 @@ lazy val root = Project(appName, file("."))
       compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
       "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
     )
+  )
+  .settings(
+      TwirlKeys.templateImports ++= Seq(
+        "uk.gov.hmrc.play.views.html.helpers._",
+        "uk.gov.hmrc.play.views.html.layouts._",
+        "uk.gov.hmrc.play.views.html.layouts._",
+        "uk.gov.hmrc.govukfrontend.views.html.components._",
+        "uk.gov.hmrc.govukfrontend.views.html.helpers._",
+        "uk.gov.hmrc.hmrcfrontend.views.html.components._",
+        "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
+        "uk.gov.hmrc.govukfrontend.views.html.components.implicits._"
+      )
   )
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)

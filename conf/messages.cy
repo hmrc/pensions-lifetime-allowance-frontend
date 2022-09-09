@@ -1,4 +1,5 @@
 ## Base ##
+service.name                    = Diogelu''ch lwfans oes
 pla.base.appName                = Diogelu''ch lwfans oes
 pla.base.yes                    = Iawn
 pla.base.no                     = Na
@@ -17,6 +18,7 @@ pla.base.errors.invalidDate     = Nodwch ddyddiad yn y fformat cywir h.y. 14 6 2
 pla.base.errors.yearEmpty       = Nodwch flwyddyn
 pla.base.errors.monthEmpty      = Nodwch fis
 pla.base.errors.dayEmpty        = Nodwch ddiwrnod
+site.title.error                = Gwall: {0}
 pla.base.date.fields.day        = Diwrnod
 pla.base.date.fields.month      = Mis
 pla.base.date.fields.year       = Blwyddyn
