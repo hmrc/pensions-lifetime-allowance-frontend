@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import auth.AuthFunction
 import config._
 import config.wiring.PlaFormPartialRetriever
@@ -66,7 +66,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val materializer: Materializer = mock[Materializer]
   implicit val mockLang: Lang = mock[Lang]
   implicit val fakeRequest = FakeRequest()
   implicit val application = mock[Application]

@@ -16,10 +16,12 @@
 
 package common
 
-import org.scalatest.{Matchers, OptionValues, WordSpecLike}
+import org.scalatest.OptionValues
 import common.Validation._
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 
-class ValidationSpec extends WordSpecLike with Matchers with OptionValues {
+class ValidationSpec extends AnyWordSpecLike with Matchers with OptionValues {
 
   "Two decimal places check" should {
 

@@ -16,12 +16,14 @@
 
 package testHelpers
 
-import org.scalatest.{Matchers, OptionValues, WordSpecLike}
+import org.scalatest.OptionValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 
-trait FakeApplication extends WordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite {
+trait FakeApplication extends AnyWordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite {
 
   override def fakeApplication: Application = app
 

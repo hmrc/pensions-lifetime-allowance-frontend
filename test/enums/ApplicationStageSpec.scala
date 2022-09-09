@@ -16,9 +16,10 @@
 
 package enums
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ApplicationStageSpec extends FlatSpec with Matchers {
+class ApplicationStageSpec extends AnyFlatSpec with Matchers {
 
   import ApplicationStage._
 

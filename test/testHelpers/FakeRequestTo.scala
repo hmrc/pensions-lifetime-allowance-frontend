@@ -20,17 +20,20 @@ package testHelpers
 import akka.actor.ActorSystem
 import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty}
 import play.api.test.FakeRequest
-import org.scalatest.{Matchers, OptionValues, WordSpecLike}
+import org.scalatest.OptionValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import org.jsoup._
 import auth._
-import akka.stream.{ActorMaterializer, Materializer}
+import akka.stream.Materializer
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 
 class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: Option[String], data: (String, String)*)
-  extends WordSpecLike with Matchers with OptionValues {
+  extends AnyWordSpecLike with Matchers with OptionValues with MockitoSugar {
   implicit val system = ActorSystem("test")
-  implicit def mat: Materializer = ActorMaterializer()
+  implicit def mat:Materializer = mock[Materializer]
   val fakeRequest = constructRequest(url, sessionId)
   val result = controllerAction(fakeRequest)
   val jsoupDoc = Jsoup.parse(contentAsString(result))
@@ -43,9 +46,9 @@ class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId
   }
 }
 
-class AuthorisedFakeRequestTo(controllerAction: Action[AnyContent]) extends WordSpecLike with Matchers with OptionValues {
+class AuthorisedFakeRequestTo(controllerAction: Action[AnyContent]) extends AnyWordSpecLike with Matchers with OptionValues with MockitoSugar {
   implicit val system = ActorSystem("test")
-  implicit def mat: Materializer = ActorMaterializer()
+  implicit def mat: Materializer = mock[Materializer]
   val result = controllerAction(authenticatedFakeRequest())
   val jsoupDoc = Jsoup.parse(contentAsString(result))
 }
