@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 package testHelpers.ViewSpecHelpers.lookup
 
 trait PsaLookupSchemeAdminRefFormSpecMessages {
-  val titleText = "PSA Lookup"
+  val titleText = "PSA Lookup - Protect your lifetime allowance - GOV.UK"
   val headingText = "Enter the Scheme Administrator Reference"
   val hintText = "Example: PSA12345678A"
-  val errorSummaryText = "Something you've entered isn't valid"
+  val errorSummaryText = "There are errors on this page"
 }

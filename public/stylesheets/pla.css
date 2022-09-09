@@ -28,10 +28,6 @@
 #listProtections .protection-detail { margin-bottom: 20px; }
 #listProtections .protection-detail:last-child { margin-bottom: 0; }
 
-.summary-text {
-    width:50%;
-}
-
 .summary-data {
     padding-left: 5%;
 }
@@ -53,8 +49,6 @@
 }
 
 .grey-background {
-    border-top: 3px solid #ccc;
-    border-bottom: 3px solid #ccc;
     background-color: #F8F8F8;
 }
 
@@ -107,4 +101,25 @@ input[type=number]
 
 .banner--show {
     display: block;
+}
+
+@media (min-width: 40.0625em){
+
+    .govuk-summary-list__actions-list-item:not(:last-child){
+        border-right: 0;
+        padding-right: 0;
+        margin-right: 0;
+    }
+
+    .govuk-summary-list__actions-list-item:last-child {
+        border-left: 10px;
+        padding-left: 10px;
+        margin-left: 10px;
+        border-left: 1px solid #b1b4b6;
+    }
+
+    .govuk-summary-list__actions-list-item  {
+       /* display: block; */
+    }
+
 }

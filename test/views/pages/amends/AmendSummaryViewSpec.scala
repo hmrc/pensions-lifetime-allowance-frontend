@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,14 +21,13 @@ import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendSummary
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   lazy val tstPensionContributionPsoDisplaySections = Seq(
@@ -120,40 +119,29 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
     "have a properly structured table" when{
       "looking at the value of pensionsTakenBefore" in{
-        doc.select("td#PensionsTakenBefore-YesNo-question").text shouldBe plaSummaryQuestionsPensionsTakenBefore
-        doc.select("span#PensionsTakenBeforeYesNoDisplayValue0").text shouldBe plaBaseYes
-        doc.select("span#PensionsTakenBeforeAmtDisplayValue0").text shouldBe "£100,000"
-        doc.select("a#PensionsTakenBefore-YesNo-change-link.bold-xsmall").text shouldBe plaBaseChange
+        doc.select(".govuk-summary-list__key").eq(0).text shouldBe plaSummaryQuestionsPensionsTakenBefore
+        doc.select(".govuk-summary-list__value").eq(0).text shouldBe plaBaseYes
+        doc.select(".govuk-summary-list__value").eq(1).text shouldBe "£100,000"
+        doc.select(".govuk-summary-list__actions").eq(0).text shouldBe s"$plaBaseChange $plaSummaryQuestionsPensionsTakenBefore"
       }
 
       "looking at the YesNoValue and question for overseasPensions" in{
-        doc.select("td#OverseasPensions-YesNo-question").text shouldBe plaSummaryQuestionsOverseasPensions
-        doc.select("span#OverseasPensionsYesNoDisplayValue0").text shouldBe plaBaseYes
-        doc.select("a#OverseasPensions-YesNo-change-link.bold-xsmall").text shouldBe plaBaseChange
+        doc.select(".govuk-summary-list__key").eq(4).text shouldBe plaSummaryQuestionsOverseasPensions
+        doc.select(".govuk-summary-list__value").eq(4).text shouldBe plaBaseYes
+        doc.select(".govuk-summary-list__actions").eq(4).text shouldBe s"$plaBaseChange $plaSummaryQuestionsOverseasPensions"
       }
 
       "looking at the overseasPensionsAmt value and question" in{
-        doc.select("td#OverseasPensions-Amt-question").text shouldBe plaSummaryQuestionsOverseasPensionsAmt
-        doc.select("span#OverseasPensionsAmtDisplayValue0").text shouldBe "£100,000"
-        doc.select("a#OverseasPensions-Amt-change-link.bold-xsmall").text shouldBe plaBaseChange
+        doc.select(".govuk-summary-list__key").eq(5).text shouldBe plaSummaryQuestionsOverseasPensionsAmt
+        doc.select(".govuk-summary-list__value").eq(5).text shouldBe "£100,000"
+        doc.select(".govuk-summary-list__actions").eq(5).text shouldBe s"$plaBaseChange $plaSummaryQuestionsOverseasPensionsAmt"
       }
 
       "looking at the total value of pensions" in{
-        doc.select("td#total-message.total-font.summary-text").text shouldBe plaSummaryQuestionsTotalPensionsAmt
-        doc.select("td#total-amount").text shouldBe "£1,300,000.34"
+        doc.select(".govuk-summary-list__key").eq(9).text shouldBe plaSummaryQuestionsTotalPensionsAmt
+        doc.select(".govuk-summary-list__value").eq(9).text shouldBe "£1,300,000.34"
       }
 
-      "with the correct visually hidden text"in{
-        doc.select("span.visuallyhidden").eq(0).text shouldBe plaAmendsVisuallyHiddenTextPensionsTakenBeforeYesNo
-        doc.select("span.visuallyhidden").eq(1).text shouldBe plaAmendsVisuallyHiddenTextPensionsTakenBeforeAmt
-        doc.select("span.visuallyhidden").eq(2).text shouldBe plaAmendsVisuallyHiddenTextPensionsTakenBetweenYesNo
-        doc.select("span.visuallyhidden").eq(3).text shouldBe plaAmendsVisuallyHiddenTextPensionsTakenBetweenAmt
-        doc.select("span.visuallyhidden").eq(4).text shouldBe plaAmendsVisuallyHiddenTextOverseasPensionsYesNo
-        doc.select("span.visuallyhidden").eq(5).text shouldBe plaAmendsVisuallyHiddenTextOverseasPensionsAmt
-        doc.select("span.visuallyhidden").eq(6).text shouldBe plaAmendsVisuallyHiddenTextCurrentPensionsAmt
-        doc.select("span.visuallyhidden").eq(7).text shouldBe plaAmendsVisuallyHiddenTextRemoveText
-        doc.select("span.visuallyhidden").eq(8).text shouldBe plaAmendsVisuallyHiddenTextChangeText
-      }
     }
 
     "have an properly structured table for additional pension sharing orders" when {
@@ -162,25 +150,25 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       }
 
       "looking at the added pso details" in{
-        doc.select("td#pensionDebits-CurrentPsos-psoDetails-question").text shouldBe plaSummaryQuestionsPsoDetails
-        doc.select("span#pensionDebitsCurrentPsos-psoDetailsDisplayValue0").text shouldBe plaAmendsAdditionalPsoAmount
-        doc.select("span#pensionDebitsCurrentPsos-psoDetailsDisplayValue1").text shouldBe plaAmendsAdditionalPsoDate
+        doc.select(".govuk-summary-list__key").eq(10).text shouldBe plaSummaryQuestionsPsoDetails
+        doc.select(".govuk-summary-list__value").eq(10).text().contains(plaAmendsAdditionalPsoAmount) shouldBe true
+        doc.select(".govuk-summary-list__value").eq(10).text().contains(plaAmendsAdditionalPsoDate) shouldBe true
       }
 
       "looking at the change and remove links" in{
-        doc.select("a#pensionDebits-CurrentPsos-psoDetails-remove-link").text shouldBe plaBaseRemove
-        doc.select("a#pensionDebits-CurrentPsos-psoDetails-change-link").text shouldBe plaBaseChange
+        doc.select("a#pensionDebits-CurrentPsos-psoDetails-remove-link").text shouldBe s"$plaBaseRemove $plaSummaryQuestionsPsoDetails"
+        doc.select("a#pensionDebits-CurrentPsos-psoDetails-change-link").text shouldBe s"$plaBaseChange $plaSummaryQuestionsPsoDetails"
       }
     }
 
     "have a link to withdraw the protection" in{
-      doc.select("a").last().text shouldBe plaAmendsWithdrawProtectionText
-      doc.select("a").last().attr("href") shouldBe plaAmendsWithdrawProtectionLinkLocation
+      doc.select("p.govuk-body a.govuk-link").last().text shouldBe plaAmendsWithdrawProtectionText
+      doc.select("p.govuk-body a.govuk-link").last().attr("href") shouldBe plaAmendsWithdrawProtectionLinkLocation
 
     }
 
     "have an explanatory declaration paragraph before the submit button" in{
-      doc.select("p#declaration").text shouldBe plaAmendsDeclaration
+      doc.select("#declaration").text shouldBe plaAmendsDeclaration
     }
 
     "have a valid form submission" in{
@@ -190,7 +178,6 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
     "have a continue button" in{
       doc.select("button").text shouldBe plaAmendsSubmitButton
-      doc.select("button").attr("type") shouldBe "submit"
     }
   }
 }

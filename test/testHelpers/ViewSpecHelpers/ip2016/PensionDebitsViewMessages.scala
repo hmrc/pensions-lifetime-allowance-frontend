@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,10 @@ package testHelpers.ViewSpecHelpers.ip2016
 
 trait PensionDebitsViewMessages {
   val plaPensionDebitsTitle = "Have any of your pensions been shared in a divorce since 5 April 2016?"
+  val plaPensionDebitsTitleNew = "Have any of your pensions been shared in a divorce since 5 April 2016? - Protect your lifetime allowance - GOV.UK"
   val plaPensionDebitsParaOne = "This is called a pension sharing order and is issued by a court."
   val plaPensionDebitsMandatoryErr = "Please answer this question"
   val plaPensionsDebitLegendText = "Have any of your pensions been shared in a divorce since 5 April 2016?"
+  val plaMandatoryError = "Select yes if any of your pensions been shared in a divorce since 5 April 2016"
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,8 @@ import scala.concurrent.Future
 class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                                   val actionWithSessionId: ActionWithSessionId,
                                   pdfGeneratorConnector: PdfGeneratorConnector,
+                                  psaLookupNotFoundPrintView: psa_lookup_not_found_print,
+                                  psaLookupResultsPrintView: psa_lookup_results_print,
                                   mcc: MessagesControllerComponents)(
                                   implicit val partialRetriever: FormPartialRetriever,
                                   implicit val templateRenderer: LocalTemplateRenderer)
@@ -50,7 +52,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
     implicit request =>
       keyStoreConnector.fetchAndGetFormData[PSALookupResult](lookupResultID).flatMap {
         case Some(result) =>
-          val printPage = psa_lookup_results_print(result, buildTimestamp).toString
+          val printPage = psaLookupResultsPrintView(result, buildTimestamp).toString
           pdfGeneratorConnector.generatePdf(printPage).map {
             response =>
               createPdfResult(response)
@@ -71,7 +73,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
     implicit request =>
       keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
         case Some(req@PSALookupRequest(_, Some(_))) =>
-          val printPage = psa_lookup_not_found_print(req, buildTimestamp).toString
+          val printPage = psaLookupNotFoundPrintView(req, buildTimestamp).toString
 
           pdfGeneratorConnector.generatePdf(printPage).map {
             response =>

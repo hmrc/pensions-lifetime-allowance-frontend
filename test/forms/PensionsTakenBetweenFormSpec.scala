@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import utils.Constants
 class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
+  val messageKey = "pensionsTakenBetween"
+
   "The PensionsTakenBetweenForm" should {
     val validMap = Map("pensionsTakenBetween" -> "yes", "pensionsTakenBetweenAmt" -> "1")
 
@@ -38,11 +40,11 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
         result.data shouldBe validMap
       }
 
-      "provided with a valid map with no amount" in {
-        val map = Map("pensionsTakenBetween" -> "no")
-        val result = pensionsTakenBetweenForm.bind(map)
+      "provided with a valid model with no amount" in {
+        val model = PensionsTakenBetweenModel("no", None)
+        val result = pensionsTakenBetweenForm.fill(model)
 
-        result.value shouldBe Some(PensionsTakenBetweenModel("no", None))
+        result.data shouldBe Map("pensionsTakenBetween" -> "no", "pensionsTakenBetweenAmt" -> "")
       }
 
       "provided with a valid map with an amount with two decimal places" in {
@@ -76,7 +78,7 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
           val result = pensionsTakenBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("pensionsTakenBetween").get.message shouldBe errorRequired
+          result.error("pensionsTakenBetween").get.message shouldBe errorQuestion(messageKey)
         }
 
         "provided with a non-numeric amount" in {
@@ -84,7 +86,7 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
           val result = pensionsTakenBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("pensionsTakenBetweenAmt").get.message shouldBe errorReal
+          result.errors.head.message  shouldBe errorMissingAmount(messageKey)
         }
       }
 
@@ -93,19 +95,20 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
         "has one error with the correct error message" when {
 
           "not provided with an amount with a yes answer" in {
-            val map = validMap - "pensionsTakenBetweenAmt"
+            val map = Map("pensionsTakenBetween" -> "", "pensionsTakenBetweenAmt" -> "")
             val result = pensionsTakenBetweenForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("pensionsTakenBetweenAmt").get.message shouldBe errorMissingAmount
+            result.errors.head.message shouldBe errorQuestion(messageKey)
           }
 
           "provided with an amount greater than the maximum" in {
-            val map = validMap.updated("pensionsTakenBetweenAmt", Constants.npsMaxCurrency.toString)
+            val maxValue = Constants.npsMaxCurrency+1.toString
+            val map = Map("pensionsTakenBetween" -> "yes", "pensionsTakenBetweenAmt" -> maxValue)
             val result = pensionsTakenBetweenForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("pensionsTakenBetweenAmt").get.message shouldBe errorMaximum
+            result.errors.head.message shouldBe errorMaximum(messageKey)
           }
 
           "provided with an amount with over two decimal places" in {
@@ -113,7 +116,7 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
             val result = pensionsTakenBetweenForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("pensionsTakenBetweenAmt").get.message shouldBe errorDecimal
+            result.errors.head.message  shouldBe errorDecimal(messageKey)
           }
 
           "provided with a negative amount" in {
@@ -121,7 +124,7 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
             val result = pensionsTakenBetweenForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("pensionsTakenBetweenAmt").get.message shouldBe errorNegative
+            result.errors.head.message  shouldBe errorNegative(messageKey)
           }
         }
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package testHelpers.ViewSpecHelpers.amends
 import testHelpers.ViewSpecHelpers.ip2016.SummaryViewMessages
 
 trait AmendSummaryViewSpecMessages extends SummaryViewMessages{
-  val plaAmendsSummaryTitle = "Protection summary"
+  val plaAmendsSummaryTitle = "Protection summary - Protect your lifetime allowance - GOV.UK"
   val plaAmendsHeaderOne = "Check your answers and submit the changes"
   val plaAmendsSummaryPageHeading = "Your individual protection 2016 details"
   val plaAmendsVisuallyHiddenTextPensionsTakenBeforeYesNo = "Change whether you received an income from any of your pensions before 6 April 2006"

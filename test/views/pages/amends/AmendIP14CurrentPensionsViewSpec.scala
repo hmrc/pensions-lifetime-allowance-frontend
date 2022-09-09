@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,11 @@ import forms.AmendCurrentPensionForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14CurrentPensionsViewSpecMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14CurrentPensions
 
 class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP14CurrentPensionsViewSpecMessages {
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendIP14CurrentPensionsView" should{
@@ -43,11 +42,11 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaIp14CurrentPensionsTitle
+      doc.title() shouldBe plaIp14CurrentPensionsTitleNew
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaIp14CurrentPensionsTitle
+      doc.getElementsByClass("govuk-heading-xl").text shouldBe plaIp14CurrentPensionsTitle
     }
 
     "have some introductory text" in{
@@ -56,38 +55,36 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
 
     "have a hidden menu with the correct values" in{
       doc.select("summary").text shouldBe plaCurrentPensionsHiddenLink
-      doc.select("p").eq(2).text shouldBe plaIp14CurrentPensionsHiddenTextPara
-      doc.select("li").eq(0).text shouldBe plaHiddenMenuItemOne
-      doc.select("li").eq(1).text shouldBe plaHiddenMenuItemTwo
-      doc.select("li").eq(2).text shouldBe plaHiddenMenuItemThree
-      doc.select("li").eq(3).text shouldBe plaHiddenMenuItemFour
+      doc.select("#ip14-amend-current-pensions-help > div > p:nth-child(1)").text shouldBe plaIp14CurrentPensionsHiddenTextPara
+      doc.select("#ip14-amend-current-pensions-help > div > ul > li:nth-child(1)").text shouldBe plaHiddenMenuItemOne
+      doc.select("#ip14-amend-current-pensions-help > div > ul > li:nth-child(2)").text shouldBe plaHiddenMenuItemTwo
+      doc.select("#ip14-amend-current-pensions-help > div > ul > li:nth-child(3)").text shouldBe plaHiddenMenuItemThree
+      doc.select("#ip14-amend-current-pensions-help > div > ul > li:nth-child(4)").text shouldBe plaHiddenMenuItemFour
     }
 
     "have a help link redirecting to the right location" in{
-      doc.select("p").eq(3).text shouldBe plaHelpLinkCompleteMessage
-      doc.select("a").text shouldBe plaHelpLink
-      doc.select("a").attr("href") shouldBe plaHelpLinkExternalReference
+      doc.select("#ip14-amend-current-pensions-help > div > p:nth-child(3)").text shouldBe plaHelpLinkCompleteMessageNew
+      doc.select("#ip14-amend-current-pensions-help-link").text shouldBe plaHelpLinkNew
+      doc.select("#ip14-amend-current-pensions-help-link").attr("href") shouldBe plaHelpLinkExternalReference
     }
 
     "has a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendCurrentPension.url
-      form.select("legend.visually-hidden").text() shouldBe plaIp14CurrentPensionsTitle
+      doc.getElementsByClass("govuk-visually-hidden").eq(1).text() shouldBe plaIp14CurrentPensionsTitle
     }
 
     "have a £ symbol present" in{
-      doc.select(".poundSign").text shouldBe "£"
+      doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseChange
-      doc.select("button").attr("type") shouldBe "submit"
+      doc.getElementsByClass("govuk-button").text shouldBe plaBaseChange
+      doc.getElementsByClass("govuk-button").attr("id") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
-      errorDoc.select("h2").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select("a#amendedUKPensionAmt-error-summary").text shouldBe errorReal
-      errorDoc.select("span#amendedUKPensionAmt-error-message.error-notification").text shouldBe errorReal
+      errorDoc.select("#error-summary-title").text shouldBe plaBaseErrorSummaryLabel
     }
 
     "not have errors on valid pages" in{

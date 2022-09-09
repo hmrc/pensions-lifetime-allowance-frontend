@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,16 +26,8 @@ object MockConfig extends AppConfig {
   val NoConfiguration = null
 
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = "_"
-  override val betaFeedbackUrl: String = ""
-  override val betaFeedbackUnauthenticatedUrl = ""
-  override val analyticsToken: String = ""
-  override val analyticsHost: String = ""
   override val ssoUrl: Option[String] = None
   override val citizenAuthHost: Option[String] = None
-  override val contactFormServiceIdentifier: String = ""
-  override val contactFrontendPartialBaseUrl: String = ""
-  override val reportAProblemPartialUrl: String = ""
-  override val reportAProblemNonJSUrl: String = ""
   override val excludeCopeTab: Boolean = false
   override val identityVerification: Boolean = true
   override val confirmFPUrl: String = "/pla/apply-for-fp16"
@@ -52,7 +44,6 @@ object MockConfig extends AppConfig {
   override val invalidStatusMetric: String = ""
   override val notFoundStatusMetric: String = ""
   override val appName: String = ""
-  override val frontendTemplatePath: String = ""
   override val sessionMissingUpliftUrlPrefix: Option[String] = None
   override val configuration: Configuration = NoConfiguration
 }

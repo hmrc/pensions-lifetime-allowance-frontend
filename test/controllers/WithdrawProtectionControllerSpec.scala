@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, Materializer}
+import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
@@ -43,9 +43,9 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.fallback.technicalError
-import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdrawDate, withdrawImplications, withdrawSummary}
+import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdrawDate, withdrawImplications}
 
 import scala.concurrent.Future
 
@@ -54,7 +54,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
   implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val system: ActorSystem = ActorSystem()
-  implicit val mat: Materializer = ActorMaterializer()
+  implicit val mat: Materializer = mock[Materializer]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val application = mock[Application]
@@ -70,8 +70,6 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
   val mockWithdrawImplications: withdrawImplications = app.injector.instanceOf[withdrawImplications]
   val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
   val mockEnv: Environment = mock[Environment]
-  val mockWithdrawSummary: withdrawSummary = app.injector.instanceOf[withdrawSummary]
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   class Setup {
@@ -98,8 +96,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
       mockWithdrawConfirmation,
       mockWithdrawDate,
       mockWithdrawImplications,
-      mockTechnicalError,
-      mockWithdrawSummary
+      mockTechnicalError
     ) {
     }
   }
@@ -130,9 +127,9 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
   )
 
   val withdraw = Json.obj(
-    "withdrawDay" -> "0",
-    "withdrawMonth" -> "2",
-    "withdrawYear" -> "2017"
+    "withdrawDate.day" -> "0",
+    "withdrawDate.month" -> "2",
+    "withdrawDate.year" -> "2017"
   )
 
   val invalidWithdrawDateForm = WithdrawDateFormModel(
@@ -235,48 +232,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
     }
 
 
-    "In WithdrawProtectionController calling the withdrawSummary action" when {
-
-      "there is no stored protection model" should {
-        "return 500" in new Setup {
-          lazy val result = {
-            mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-            keystoreFetchCondition[ProtectionModel](None)
-            controller.withdrawSummary(fakeRequest)
-          }
-
-          status(result) shouldBe INTERNAL_SERVER_ERROR
-          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-        }
-      }
-
-      "there is a stored protection model" should {
-        "return 200" in new Setup {
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-
-          keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-          when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
-
-          val result = controller.withdrawSummary(fakeRequest)
-          status(result) shouldBe OK
-        }
-      }
-    }
-
     "In WithdrawProtectionController calling the getWithdrawDateInput action" when {
-
-      "there is no stored protection model" should {
-        "return 500" in new Setup {
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-
-          keystoreFetchCondition[ProtectionModel](None)
-          lazy val result = controller.withdrawSummary(fakeRequest)
-
-          keystoreFetchCondition[ProtectionModel](None)
-          status(result) shouldBe INTERNAL_SERVER_ERROR
-          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-        }
-      }
 
       "there is a stored protection model" should {
         "return 200" in new Setup {
@@ -309,7 +265,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
         keystoreSaveCondition[WithdrawDateFormModel](mockKeyStoreConnector)
 
 
-        val request = FakeRequest().withFormUrlEncodedBody(("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017")).withMethod("POST")
+        val request = FakeRequest().withFormUrlEncodedBody(("withdrawDate.day", "20"), ("withdrawDate.month", "7"), ("withdrawDate.year", "2017")).withMethod("POST")
 
         lazy val result = controller.postWithdrawDateInput(request)
         status(result) shouldBe SEE_OTHER
@@ -349,7 +305,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
         "return 200" in new Setup {
 
           object UserRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
-            ("withdrawDay", "20"), ("withdrawMonth", "7"), ("withdrawYear", "2017"))
+            ("withdrawDate.day", "20"), ("withdrawDate.month", "7"), ("withdrawDate.year", "2017"))
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
@@ -360,7 +316,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
          "return 400 Bad Request" in new Setup {
 
            object InvalidDayRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
-             ("withdrawDay", "20000"), ("withdrawMonth", "10"), ("withdrawYear", "2017"))
+             ("withdrawDate.day", "20000"), ("withdrawDate.month", "10"), ("withdrawDate.year", "2017"))
            mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
            keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
@@ -371,7 +327,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
            "return 400 Bad Request with single error" in new Setup {
 
              object InvalidMultipleErrorRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
-               ("withdrawDay", "20000"), ("withdrawMonth", "70000"), ("withdrawYear", "2010000007"))
+               ("withdrawDate.day", "20000"), ("withdrawDate.month", "70000"), ("withdrawDate.year", "2010000007"))
              mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
              keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
@@ -382,7 +338,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
         "return 400 Bad Request with date in past error" in new Setup {
 
           object BadRequestDateInPast extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
-            ("withdrawDay", "20"), ("withdrawMonth", "1"), ("withdrawYear", "2012"))
+            ("withdrawDate.day", "20"), ("withdrawDate.month", "1"), ("withdrawDate.year", "2012"))
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
           keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
@@ -406,7 +362,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
           when(mockKeyStoreConnector.saveFormData[WithdrawDateFormModel](ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
             .thenReturn(Future.successful(CacheMap("test", Map.empty)))
 
-          val requestWithFormInvalid = FakeRequest().withFormUrlEncodedBody(("withdrawDay", "5"), ("withdrawMonth", "9"), ("withdrawYear", "2017")).withMethod("POST")
+          val requestWithFormInvalid = FakeRequest().withFormUrlEncodedBody(("withdrawDate.day", "5"), ("withdrawDate.month", "9"), ("withdrawDate.year", "2017")).withMethod("POST")
           lazy val result = controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithFormInvalid)
 
           status(result) shouldBe SEE_OTHER

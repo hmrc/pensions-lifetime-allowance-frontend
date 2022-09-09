@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,56 +14,43 @@
  * limitations under the License.
  *@
 
-@import play.api.Application
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import config.FrontendAppConfig
-
 @this(
-    main_template: main_template)
+    layout: Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    errorSummary: playHelpers.templates.errorSummary,
+    formInputText: playHelpers.templates.formInputText,
+    submitButton: playHelpers.templates.submitButton,
+)
 
-@(pnnForm: Form[String])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(pnnForm: Form[String])(implicit request: Request[_], messages: Messages)
 
-@lc = @{
-    Application.instanceCache[PlaLanguageController].apply(application)
+@title = @{
+    if (pnnForm.errors.nonEmpty){
+        messages("site.title.error", messages("psa.lookup.title"))
+    } else {
+        messages("psa.lookup.title")
+    }
 }
 
-@main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
+@layout(
+    pageTitle = title,
+    backLinkEnabled = false
+) {
 
-    <h1> @Messages("psa.lookup.form.protection-notification-no-form.title")</h1>
-
-    @if(pnnForm("lifetimeAllowanceReference").hasErrors) {
-        @errorSummary(Messages("pla.lookup.form.error.summary"), pnnForm)
-    }
+    @errorSummary(pnnForm.errors, Some("lifetimeAllowanceReference"))
 
     @form(action = routes.LookupController.submitProtectionNotificationNoForm) {
 
-        <div class="form-group">
-            <fieldset class="form-field-group">
+        @formInputText(
+            field = pnnForm("lifetimeAllowanceReference"),
+            question = Messages("psa.lookup.form.protection-notification-no-form.title"),
+            hintText = Some(Messages("psa.lookup.form.pnn.hint"))
+        )
 
-                @if(pnnForm("lifetimeAllowanceReference").hasErrors) {
-                    <div class="form-field form-field--error fields-aligned">
-                    } else {
-                    <div class="form-field">
-                    }
-                <label>
-                    @if(pnnForm("lifetimeAllowanceReference").hasErrors) {
-                        <div class="error-notification" id="@{
-                            pnnForm("lifetimeAllowanceReference").errors.head.message
-                        }">
-                        @{
-                            pnnForm("lifetimeAllowanceReference").errors.head.message
-                        }
-                        </div>
-                    }
-                    <p class="form-field--hint">@Messages("psa.lookup.form.pnn.hint")</p>
-                    <input type="text" name="lifetimeAllowanceReference" id="lifetimeAllowanceReference"
-                    class="input--medium input--cleared caps" value="@pnnForm("lifetimeAllowanceReference").value.getOrElse("")"/>
-                </label>
-            </div>
-            </fieldset>
-        </div>
-        <button class="button" type="submit">@Messages("psa.lookup.form.button")</button>
+        @submitButton(Messages("psa.lookup.form.button"))
     }
-    <br/>
-    <a class="back-link" href="@routes.LookupController.displaySchemeAdministratorReferenceForm">@Messages("psa.lookup.form.pnn.back")</a>
+
+    <p class="govuk-body">
+        <a class="govuk-link" href="@routes.LookupController.displaySchemeAdministratorReferenceForm">@Messages("psa.lookup.form.pnn.back")</a>
+    </p>
 }

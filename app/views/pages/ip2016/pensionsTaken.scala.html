@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,32 +15,32 @@
  *@
 
 @import models.PensionsTakenModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.plaInputRadioGroup
 @import play.api.data._
-@import controllers.PlaLanguageController
 @import play.api.Application
 @import config.FrontendAppConfig
 
 @this(
-    main_template: main_template)
+    layout: Layout,
+    errorSummary: playHelpers.templates.errorSummary,
+    plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup
+)
 
-@(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, form: FormWithCSRF)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
+@title = @{
+ if(pensionsTakenForm.errors.nonEmpty) Messages("site.title.error", Messages("pla.pensionsTaken.title")) else Messages("pla.pensionsTaken.title")
+}
 
+@layout(
+    pageTitle = title,
+    backLinkEnabled = false
+) {
 
-@main_template(title = Messages("pla.pensionsTaken.title"), bodyClasses = None) {
+    @errorSummary(pensionsTakenForm.errors, Some("pensionsTaken"))
 
-    @if(pensionsTakenForm.hasErrors){
-    @errorSummary(
-        Messages("pla.base.errorSummaryLabel"), pensionsTakenForm
-    )
-    }
+    <h1 class="govuk-heading-xl">@Messages("pla.pensionsTaken.title")</h1>
 
-    <h1 class="heading-large">@Messages("pla.pensionsTaken.title")</h1>
-
-    <ul class="list list-bullet">
+    <ul class="govuk-list govuk-list--bullet">
         <li>@Messages("pla.pensionsTaken.bullet.1")</li>
         <li>@Messages("pla.pensionsTaken.bullet.2")</li>
         <li>@Messages("pla.pensionsTaken.bullet.3")</li>
@@ -48,20 +48,19 @@
 
     @form(action = routes.IP2016Controller.submitPensionsTaken) {
 
-        <div class="inline form-group">
-            @plaInputRadioGroup(
-                field = pensionsTakenForm("pensionsTaken"),
-                Seq(
-                    "yes"->Messages("pla.base.yes"),
-                    "no"->Messages("pla.base.no")),
-                '_labelAfter -> true,
-                '_labelClass -> "block-label",
-                '_legend -> Messages("pla.pensionsTaken.legend"),
-                '_legendID -> "pensionsTaken"
-            )
-        </div>
+        @plaInputRadioGroup(
+            legend = Messages("pla.pensionsTaken.legend"),
+            legendClass = Some("govuk-visually-hidden"),
+            items = Seq(
+                RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
+                RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+            ),
+            isPageHeading = true,
+            inLine = true,
+            field = pensionsTakenForm("pensionsTaken")
+        )
 
-        <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
+        <button class="govuk-button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
     }
 
 }

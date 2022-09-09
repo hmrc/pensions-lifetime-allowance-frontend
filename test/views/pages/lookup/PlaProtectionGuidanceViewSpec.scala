@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,14 +34,13 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
     "have a table" which {
 
       "has a heading row" which {
-        lazy val row = doc.select("tr").first()
 
         "has the correct left column heading" in {
-          row.select("th").get(0).text() shouldBe tableHeadingLeft
+          doc.select("#main-content > div > div > dl > div:nth-child(1) > dt").text() shouldBe tableHeadingLeft
         }
 
         "has the correct right column heading" in {
-          row.select("th").get(1).text() shouldBe tableHeadingRight
+          doc.select("#main-content > div > div > dl > div:nth-child(1) > dd").text() shouldBe tableHeadingRight
         }
       }
 
@@ -49,23 +48,23 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         lazy val row = doc.select("tr").get(1)
 
         "has the correct left element" in {
-          row.select("td").get(0).text() shouldBe rowOneLeft
+          doc.select("#main-content > div > div > dl > div:nth-child(2) > dt").text() shouldBe rowOneLeft
         }
 
         "has the correct right element" in {
-          row.select("td").get(1).text() shouldBe rowOneRight
+          doc.select("#main-content > div > div > dl > div:nth-child(2) > dd").text() shouldBe rowOneRight
         }
       }
 
       "has a second row" which {
-        lazy val row = doc.select("tr").get(2)
+        lazy val row = doc.select("div").get(3)
 
         "has the correct left element" in {
-          row.select("td").get(0).text() shouldBe rowTwoLeft
+          doc.select("#main-content > div > div > dl > div:nth-child(3) > dt").text() shouldBe rowTwoLeft
         }
 
         "has the correct right element" in {
-          row.select("td").get(1).text() shouldBe rowTwoRight
+          doc.select("#main-content > div > div > dl > div:nth-child(3) > dd").text() shouldBe rowTwoRight
         }
       }
 
@@ -73,11 +72,11 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         lazy val row = doc.select("tr").get(3)
 
         "has the correct left element" in {
-          row.select("td").get(0).text() shouldBe rowThreeLeft
+          doc.select("#main-content > div > div > dl > div:nth-child(4) > dt").text() shouldBe rowThreeLeft
         }
 
         "has the correct right element" in {
-          row.select("td").get(1).text() shouldBe rowThreeRight
+          doc.select("#main-content > div > div > dl > div:nth-child(4) > dd").text() shouldBe rowThreeRight
         }
       }
 
@@ -85,11 +84,11 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         lazy val row = doc.select("tr").get(4)
 
         "has the correct left element" in {
-          row.select("td").get(0).text() shouldBe rowFourLeft
+          doc.select("#main-content > div > div > dl > div:nth-child(5) > dt").text() shouldBe rowFourLeft
         }
 
         "has the correct right element" in {
-          row.select("td").get(1).text() shouldBe rowFourRight
+          doc.select("#main-content > div > div > dl > div:nth-child(5) > dd").text() shouldBe rowFourRight
         }
       }
 
@@ -97,11 +96,11 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         lazy val row = doc.select("tr").get(5)
 
         "has the correct left element" in {
-          row.select("td").get(0).text() shouldBe rowFiveLeft
+          doc.select("#main-content > div > div > dl > div:nth-child(6) > dt").text() shouldBe rowFiveLeft
         }
 
         "has the correct right element" which {
-          lazy val element = row.select("td").get(1)
+          lazy val element = doc.select("#main-content > div > div > dl > div:nth-child(6) > dd")
 
           "has the correct text" in {
             element.text() shouldBe rowFiveRight
@@ -118,14 +117,13 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
       }
 
       "has a sixth row" which {
-        lazy val row = doc.select("tr").get(6)
 
         "has the correct left element" in {
-          row.select("td").get(0).text() shouldBe rowSixLeft
+          doc.select("#main-content > div > div > dl > div:nth-child(7) > dt").text() shouldBe rowSixLeft
         }
 
         "has the correct right element" which {
-          lazy val element = row.select("td").get(1)
+          lazy val element = doc.select("#main-content > div > div > dl > div:nth-child(7) > dd")
 
           "has the correct text" in {
             element.text() shouldBe rowSixRight
@@ -142,27 +140,26 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
       }
 
       "has a seventh row" which {
-        lazy val row = doc.select("tr").get(7)
 
         "has the correct left element" in {
-          row.select("td").get(0).text() shouldBe rowSevenLeft
+          doc.select("#main-content > div > div > dl > div:nth-child(8) > dt").text() shouldBe rowSevenLeft
         }
 
         "has the correct right element" in {
-          row.select("td").get(1).text() shouldBe rowSevenRight
+          doc.select("#main-content > div > div > dl > div:nth-child(8) > dd").text() shouldBe rowSevenRight
         }
       }
     }
 
     "has a back link" which {
-      lazy val link = doc.select("div a.back-link")
+      lazy val link = doc.getElementsByClass("govuk-link govuk-body")
 
       "has the correct text" in {
         link.text() shouldBe plaBaseBack
       }
 
       "has a link to the correct location" in {
-       link.attr("href") shouldBe controllers.routes.LookupController.displayLookupResults.url
+        link.attr("href") shouldBe controllers.routes.LookupController.displayLookupResults.url
       }
     }
   }

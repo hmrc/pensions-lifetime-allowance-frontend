@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,71 +15,86 @@
  *@
 
 @import models.amendModels.AmendCurrentPensionModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.{moneyInputFormat,helpTextAccordion}
 @import play.api.data._
 @import views.html.helper
 @import common.Links
-@import controllers.PlaLanguageController
-@import play.api.Application
 @import config.FrontendAppConfig
 
-@this(main_template: main_template)
+@this(
+        layout: Layout,
+        errorSummary: playHelpers.templates.errorSummary,
+        form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+        helpTextAccordion: playHelpers.templates.helpTextAccordion,
+        formInputMoney: playHelpers.templates.formInputMoney,
+        submitButton: playHelpers.templates.submitButton
+)
 
-@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
-    <p>@Messages("pla.ip14CurrentPensions.hiddenTextPara")</p>
-    <ul class="list list-number">
+    <p class="govuk-body">@Messages("pla.ip14CurrentPensions.hiddenTextPara")</p>
+    <ul class="govuk-list govuk-list--number">
         <li>@Messages("pla.currentPensions.hiddenText1")</li>
         <li>@Messages("pla.currentPensions.hiddenText2")</li>
         <li>@Messages("pla.currentPensions.hiddenText3")</li>
         <li>@Messages("pla.currentPensions.hiddenText4")</li>
     </ul>
-    <p>@Html(
+    <p class="govuk-body">@Html(
         Messages(
             "pla.currentPensions.readGuidance",
             s"""
                     <a href="${Links.currentPensions}"
+                    class = "govuk-link"
                     id = "ip14-amend-current-pensions-help-link"
                     rel="external"
-                    target="_blank"
-                    onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'pensions-youve-not-taken-yet-amends-technical-guidance')">
-                        ${Messages("pla.currentPensions.helpLinkText")} (${Messages("pla.base.newWindow")})
+                    target="_blank">
+                        ${Messages("pla.currentPensions.helpLinkText")} (${Messages("pla.base.newTab")}).
                     </a>
                 """
         ))
     </p>
 }
 
-@main_template(title = Messages("pla.ip14CurrentPensions.title")) {
-
-    @if(amendCurrentPensionForm.hasErrors){
-    @errorSummary(Messages("pla.base.errorSummaryLabel"), amendCurrentPensionForm)
+    @title = @{
+        if(amendCurrentPensionForm.errors.nonEmpty) {
+            messages("site.title.error", messages("pla.ip14CurrentPensions.title"))
+        } else {
+            messages("pla.ip14CurrentPensions.title")
+        }
     }
 
-    <h1 class="heading-large">@Messages("pla.ip14CurrentPensions.title")</h1>
+    @layout(
+        pageTitle = title
+    ) {
 
-    <p>@Messages("pla.currentPensions.question")</p>
+    @if(amendCurrentPensionForm.hasErrors){
+    @errorSummary(amendCurrentPensionForm.errors, Some("amendedUKPensionAmt"))
+    }
 
-    @helpTextAccordion("ip14-amend-current-pensions-help", Messages("pla.currentPensions.hiddenLink"), helpTextAccordionContent)
+    <h1 class="govuk-heading-xl">@Messages("pla.ip14CurrentPensions.title")</h1>
+
+    <p class="govuk-body">@Messages("pla.currentPensions.question")</p>
+
+    @helpTextAccordion(
+        id = "ip14-amend-current-pensions-help",
+        summaryText = Messages("pla.currentPensions.hiddenLink"),
+        hiddenContent = helpTextAccordionContent
+    )
 
     @form(action = routes.AmendsController.submitAmendCurrentPension) {
-
-        <div class="form-group">
-        @moneyInputFormat(
-            amendCurrentPensionForm("amendedUKPensionAmt"),
-            '_legend -> s"${Messages("pla.ip14CurrentPensions.title")}"
+        <div class="inline form-group">
+        @formInputMoney(
+            field =  amendCurrentPensionForm("amendedUKPensionAmt"),
+            question = Messages("pla.ip14CurrentPensions.title"),
+            hideLabel = true
         )
         </div>
 
-        <button class="button" type="submit" id="continue-button">@Messages("pla.base.change")</button>
+    @submitButton(submitText = Messages("pla.base.change"))
 
         <div class="form-hidden">
-
             @helper.inputText(amendCurrentPensionForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
             @helper.inputText(amendCurrentPensionForm("status"), 'type -> "hidden", 'class -> "hidden")
-
         </div>
 
     }

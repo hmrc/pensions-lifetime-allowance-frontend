@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,11 @@ package enums
 
 import play.api.libs.json.{JsString, Json}
 import enums.IdentityVerificationResult.IdentityVerificationResult
-import org.scalatest.{Matchers, OptionValues, WordSpecLike}
+import org.scalatest.OptionValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 
-class IdentityVerificationResultSpec extends WordSpecLike with Matchers with OptionValues {
+class IdentityVerificationResultSpec extends AnyWordSpecLike with Matchers with OptionValues {
   "IdentityVerificationResult" when {
     "serialising to JSON" should {
       "return JSString" in {

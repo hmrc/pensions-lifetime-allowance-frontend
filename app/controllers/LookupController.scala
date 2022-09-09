@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ package controllers
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
-
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
+
 import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Application
@@ -29,10 +29,10 @@ import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
 import play.api.mvc._
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.Upstream4xxResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import utils.ActionWithSessionId
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -47,10 +47,9 @@ class LookupController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  psa_lookup_results: views.html.pages.lookup.psa_lookup_results,
                                  psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form)(
                                  implicit val partialRetriever: FormPartialRetriever,
-                                 implicit val templateRenderer:LocalTemplateRenderer,
+                                 implicit val templateRenderer: LocalTemplateRenderer,
                                  implicit val context: PlaContext,
                                  implicit val appConfig: FrontendAppConfig,
-                                 implicit val errorSummary: ErrorSummary,
                                  implicit val formWithCSRF: FormWithCSRF,
                                  implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
 

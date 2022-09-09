@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,79 +15,46 @@
  *@
 
 @import config.FrontendAppConfig
-@import controllers.PlaLanguageController
-@import helpers.templates.formInlineDateInput
 @import play.api.Application
 @import config.FrontendAppConfig
 
-@this(mainTemplate: main_template)
+@this(
+    layout: Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    errorSummary: playHelpers.templates.errorSummary,
+    formInlineDateInput: playHelpers.templates.formInlineDateInput,
+    submitButton: playHelpers.templates.submitButton
+)
 
-@(withdrawDateForm: Form[WithdrawDateFormModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(withdrawDateForm: Form[WithdrawDateFormModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
 
-@lc = @{
-    Application.instanceCache[PlaLanguageController].apply(application)
+@title = @{
+    if(withdrawDateForm.errors.nonEmpty){
+        messages("site.title.error", messages("pla.withdraw.date-input.title"))
+    } else {
+        messages("pla.withdraw.date-input.title")
+    }
 }
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.versioned("javascripts/pla.js")'></script>
-}
-
-@mainTemplate(title = Messages("pla.withdraw.date-input.title"), scriptElem = Some(scriptElement), bodyClasses = None) {
-
-    <a class="back-link" style="margin-bottom: 0px" href=@routes.WithdrawProtectionController.withdrawImplications>Back</a>
-
-
+@layout(
+    pageTitle = title
+) {
 
 @if(withdrawDateForm.hasErrors){
-@errorSummary(Messages("pla.base.errorSummaryLabel"), withdrawDateForm)
+    @errorSummary(withdrawDateForm.errors, Some("withdrawDate"))
 }
 
 @form(action = routes.WithdrawProtectionController.postWithdrawDateInput) {
 
-<div class="inline form-group">
+        @formInlineDateInput(
+            content = Messages("pla.withdraw.date-input.title"),
+            field = withdrawDateForm("withdrawDate"),
+            hintContent = Some(Messages("pla.psoDetails.dateHintText")),
+            largeText = true,
+            pageHeading = true
+        )
 
-    <div class="form-group">
-
-        <fieldset class="form-group form-date @if(withdrawDateForm.hasErrors) {form-field--error}" id="pso-fieldset">
-
-            <legend>
-                <h1 class="heading-large">@Messages("pla.withdraw.date-input.title")</h1>
-            </legend>
-
-
-            <span class="form-hint">@Messages("pla.withdraw.date-input.form-hint")</span>
-                    @withdrawDateForm.errors.map { error => <span class="error-notification">@Messages(error.message, error.args: _*)</span> }
-
-                    <label for="withdrawDay" class="form-group form-group-day">
-                        <span>@Messages("pla.withdraw.date-input.form-day")</span>
-
-                        <input type="number" class="input--xxsmall input--no-spinner @if(withdrawDateForm("withdrawDay").hasErrors) {error-field}"
-                        name="withdrawDay" id="withdrawDay" value="@withdrawDateForm("withdrawDay").value">
-
-                    </label>
-
-                    <label for="withdrawMonth" class="form-group form-group-month">
-
-                        <span>@Messages("pla.withdraw.date-input.form-month")</span>
-
-                        <input type="number" class="input--xxsmall input--no-spinner @if(withdrawDateForm("withdrawMonth").hasErrors) {error-field}"
-                        name="withdrawMonth" id="withdrawMonth" value="@withdrawDateForm("withdrawMonth").value">
-                    </label>
-
-                    <label for="withdrawYear" class="form-group form-group-year">
-                        <span>@Messages("pla.withdraw.date-input.form-year")</span>
-
-                        <input type="number" class="input--small input--no-spinner @if(withdrawDateForm("withdrawYear").hasErrors) {error-field}"
-                        name="withdrawYear" id="withdrawYear" value="@withdrawDateForm("withdrawYear").value">
-                    </label>
-
-                </fieldset>
-
-            </div>
-
-            <button class="button" type="submit" id="submit"> @Messages("pla.withdraw.date-input.form.continue") </button>
-
-        </div>
+        @submitButton()
 
 
     }

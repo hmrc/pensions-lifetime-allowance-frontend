@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,8 @@ import utils.Constants
 class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
+  val messageKey = "pensionsTakenBefore"
+
   "The PensionsTakenBeforeForm" should {
     val validMap = Map("pensionsTakenBefore" -> "yes", "pensionsTakenBeforeAmt" -> "1")
 
@@ -39,10 +41,10 @@ class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessag
       }
 
       "provided with a valid map with no amount" in {
-        val map = Map("pensionsTakenBefore" -> "no")
-        val result = pensionsTakenBeforeForm.bind(map)
+        val model = PensionsTakenBeforeModel("yes", None)
+        val result = pensionsTakenBeforeForm.fill(model)
 
-        result.value shouldBe Some(PensionsTakenBeforeModel("no", None))
+        result.data shouldBe Map("pensionsTakenBefore" -> "yes", "pensionsTakenBeforeAmt" -> "")
       }
 
       "provided with a valid map with an amount with two decimal places" in {
@@ -72,19 +74,11 @@ class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessag
       "has only one error with the correct message" when {
 
         "not provided with a value for pensionsTakenBefore" in {
-          val map = validMap - "pensionsTakenBefore"
+          val map = validMap.updated("pensionsTakenBefore", "")
           val result = pensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("pensionsTakenBefore").get.message shouldBe errorRequired
-        }
-
-        "provided with a non-numeric amount" in {
-          val map = validMap.updated("pensionsTakenBeforeAmt", "a")
-          val result = pensionsTakenBeforeForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("pensionsTakenBeforeAmt").get.message shouldBe errorReal
+          result.errors.head.message shouldBe errorQuestion(messageKey)
         }
       }
 
@@ -93,19 +87,19 @@ class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessag
         "has one error with the correct error message" when {
 
           "not provided with an amount with a yes answer" in {
-            val map = validMap - "pensionsTakenBeforeAmt"
+            val map = validMap.updated("pensionsTakenBeforeAmt", "")
             val result = pensionsTakenBeforeForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("pensionsTakenBeforeAmt").get.message shouldBe errorMissingAmount
+            result.errors.head.message  shouldBe errorMissingAmount(messageKey)
           }
 
           "provided with an amount greater than the maximum" in {
-            val map = validMap.updated("pensionsTakenBeforeAmt", Constants.npsMaxCurrency.toString)
+            val map = validMap.updated("pensionsTakenBeforeAmt", Constants.npsMaxCurrency+1.toString)
             val result = pensionsTakenBeforeForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("pensionsTakenBeforeAmt").get.message shouldBe errorMaximum
+            result.errors.head.message shouldBe errorMaximum(messageKey)
           }
 
           "provided with an amount with over two decimal places" in {
@@ -113,7 +107,7 @@ class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessag
             val result = pensionsTakenBeforeForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("pensionsTakenBeforeAmt").get.message shouldBe errorDecimal
+            result.errors.head.message shouldBe errorDecimal(messageKey)
           }
 
           "provided with a negative amount" in {
@@ -121,7 +115,7 @@ class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessag
             val result = pensionsTakenBeforeForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("pensionsTakenBeforeAmt").get.message shouldBe errorNegative
+            result.errors.head.message shouldBe errorNegative(messageKey)
           }
         }
       }

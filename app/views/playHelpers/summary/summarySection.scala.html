@@ -1,0 +1,89 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import config.FrontendAppConfig
+
+@this(
+    govukSummaryList : GovukSummaryList
+)
+
+@(section: SummarySectionModel, removeLinkDefined: Boolean)(implicit messages: Messages)
+
+@summaryRow(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], removeLinkCall: Option[Call], removeLinkDefined: Boolean, boldText: Boolean, firstRow: Boolean) = @{
+val firstRowClass = if(firstRow) "has-child-item" else ""
+val boldClass = if(boldText) "govuk-!-font-weight-bold" else ""
+val changeRemoveLinks = Seq(
+    removeLinkCall.map(removeLink =>
+        ActionItem(
+            href = removeLink.url,
+            content = Text(messages("pla.base.remove")),
+            visuallyHiddenText = Some(messages(s"pla.summary.questions.$rowID")),
+            attributes = Map("id" -> s"${rowID}-remove-link")
+        )
+    ),
+    changeLinkCall.map(changeLink =>
+        ActionItem(
+            href = changeLink.url,
+            content = Text(messages("pla.summary.change")),
+            visuallyHiddenText = Some(Messages(s"pla.summary.questions.$rowID")),
+            attributes = Map("id" -> s"${rowID}ChangeLink")
+        )
+    )
+).flatten
+
+    if(rowID == "totalPensionsAmt" || rowID == "ip14TotalPensionsAmt"){
+        SummaryListRow(
+            key = Key(
+                classes = s"govuk-!-width-one-half $boldClass",
+                content = Text(Messages("pla.summary.questions.totalPensionsAmt"))
+            ),
+            value = Value(
+                classes = s"govuk-!-width-one-half $boldClass",
+                content = Text(displayValues.head)
+            )
+        )
+    } else {
+        SummaryListRow(
+            key = Key(
+                classes = s"govuk-!-width-one-half $boldClass $firstRowClass",
+                content = Text(Messages(s"pla.summary.questions.$rowID"))
+            ),
+            value = Value(
+                classes = s"${if(changeRemoveLinks.nonEmpty)"govuk-!-width-one-quarter" else "govuk-!-width-one-half"} $boldClass $firstRowClass",
+                content = HtmlContent(displayValues.mkString("<br>"))
+            ),
+            actions = Some(Actions(
+                classes = s"govuk-!-width-one-quarter $boldClass $firstRowClass",
+                items = changeRemoveLinks
+            ))
+        )
+    }
+}
+
+@rows = @{
+    val topRow: Option[SummaryListRow] = section.rows.headOption.map { firstRow =>
+        summaryRow(firstRow.rowID, firstRow.displayValues, firstRow.changeLinkCall, firstRow.removeLinkCall, removeLinkDefined, firstRow.boldText, section.rows.tail.nonEmpty)
+    }
+    val otherRows: Seq[Option[SummaryListRow]] = section.rows.tail.map { otherRow =>
+        Some(summaryRow(otherRow.rowID, otherRow.displayValues, otherRow.changeLinkCall, otherRow.removeLinkCall, removeLinkDefined, otherRow.boldText, false))
+    }
+    topRow +: otherRows
+}
+
+
+@govukSummaryList(SummaryList(
+    rows = rows.flatten
+))

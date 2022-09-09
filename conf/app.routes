@@ -1,7 +1,9 @@
+->         /govuk-frontend                     govuk.Routes
+->         /hmrc-frontend                      hmrcfrontend.Routes
+
 # microservice specific routes
 
 GET         /assets/*file                                                                 controllers.Assets.versioned(path="/public", file: Asset)
-GET         /language/:lang                                                               @controllers.PlaLanguageController.switchToLanguage(lang: String)
 
 ## Auth ##
 GET         /timeout                                                                      @controllers.TimeoutController.timeout
@@ -66,7 +68,7 @@ GET         /result-fp16                                                        
 POST        /result-ip16                                                                  @controllers.ResultController.processIPApplication
 GET         /result-ip16                                                                  @controllers.ResultController.displayIP16
 
-    GET         /existing-protections                                                         @controllers.ReadProtectionsController.currentProtections
+GET         /existing-protections                                                         @controllers.ReadProtectionsController.currentProtections
 GET         /print-protection                                                             @controllers.PrintController.printView
 
 ## Amends ##

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,11 @@ import java.text.SimpleDateFormat
 
 import enums.ApplicationType
 import models._
+import play.api.data.{FieldMapping, FormError}
+import play.api.data.Forms.of
+import play.api.data.format.Formatter
 import uk.gov.hmrc.http.cache.client.CacheMap
+import utils.Constants.npsMaxCurrency
 
 object Validation {
 
@@ -36,6 +40,10 @@ object Validation {
       case checkAmount if checkAmount < 0 => false
       case _ => true
     }
+  }
+
+  def isLessThanMax(amount: BigDecimal): Boolean = {
+    amount <= npsMaxCurrency
   }
 
   def isLessThanDouble(amount: Double, target: Double): Boolean = {
@@ -88,5 +96,31 @@ object Validation {
     }
 
     validPensionData() && validPSOData()
+  }
+
+  val mandatoryCheck: String => Boolean = input => input.trim != ""
+
+  val yesNoCheck: String => Boolean = {
+    case "yes" => true
+    case "no" => true
+    case "" => true
+    case _ => false
+  }
+
+  def newText(errorKey: String = "error.required", optional: Boolean = false): FieldMapping[String] =
+    of(stringFormatter(errorKey, optional))
+
+  def stringFormatter(errorKey: String, optional: Boolean = false): Formatter[String] = new Formatter[String] {
+
+    def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
+      data.get(key) match {
+        case None => Left(Seq(FormError(key, errorKey)))
+        case Some(x) if x.trim.length == 0 && optional == false => Left(Seq(FormError(key, errorKey)))
+        case Some(x) if x.trim.length == 0 && optional == true => Right(x.trim)
+        case Some(s) => Right(s.trim)
+      }
+
+    def unbind(key: String, value: String): Map[String, String] =
+      Map(key -> value.trim)
   }
 }

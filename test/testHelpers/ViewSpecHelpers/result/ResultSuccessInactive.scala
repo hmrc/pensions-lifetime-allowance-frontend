@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers.result
 
 trait ResultSuccessInactive {
 
-  val  plaResultSuccessTitle                 = "Success"
+  val  plaResultSuccessTitle                 = "Success - Protect your lifetime allowance - GOV.UK"
   val  plaResultSuccessIPChangeDetails       = "Changing your protection details"
   val  plaResultSuccessIPPensionSharing      = "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
   val  plaResultSuccessFPAddToPension        = "If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days."

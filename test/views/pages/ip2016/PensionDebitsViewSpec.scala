@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,13 @@ import forms.PensionDebitsForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionDebitsViewMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.ip2016.pensionDebits
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class PensionDebitsViewSpec extends CommonViewSpecHelper with PensionDebitsViewMessages {
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PensionDebitsView" should{
@@ -42,43 +41,43 @@ class PensionDebitsViewSpec extends CommonViewSpecHelper with PensionDebitsViewM
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaPensionDebitsTitle
+      doc.title() shouldBe plaPensionDebitsTitleNew
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaPensionDebitsTitle
+      doc.select("h1.govuk-heading-xl").text shouldBe plaPensionDebitsTitle
     }
 
     "have some introductory text" in{
-      doc.select("p").first().text shouldBe plaPensionDebitsParaOne
+      doc.select("#main-content > div > div > p").text shouldBe plaPensionDebitsParaOne
     }
 
     "have a pair of yes/no buttons" in{
-      doc.select("[for=pensionDebits-yes]").text shouldBe plaBaseYes
-      doc.select("input#pensionDebits-yes").attr("type") shouldBe "radio"
-      doc.select("[for=pensionDebits-no]").text shouldBe plaBaseNo
-      doc.select("input#pensionDebits-no").attr("type") shouldBe "radio"
+      doc.select("[for=pensionDebits]").text shouldBe plaBaseYes
+      doc.select("input#pensionDebits").attr("type") shouldBe "radio"
+      doc.select("[for=pensionDebits-2]").text shouldBe plaBaseNo
+      doc.select("input#pensionDebits-2").attr("type") shouldBe "radio"
     }
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionDebits.url
-      form.select("legend.visually-hidden").text() shouldBe plaPensionsDebitLegendText
+      form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsDebitLegendText
     }
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
-      doc.select("button").attr("type") shouldBe "submit"
+      doc.select(".govuk-button").text shouldBe plaBaseContinue
+      doc.select(".govuk-button").attr("id") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
-      errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select("span.error-notification").text shouldBe plaBaseErrorsMandatoryError
+      errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
+      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 
     "not have errors on valid pages" in{
       pensionsForm.hasErrors shouldBe false
-      doc.select("span.error-notification").text shouldBe ""
+      doc.select(".govuk-error-message").text shouldBe ""
     }
   }
 }

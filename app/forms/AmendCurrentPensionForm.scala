@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,10 @@ object AmendCurrentPensionForm {
   def amendCurrentPensionForm = Form(
     mapping(
       "amendedUKPensionAmt" -> optional(bigDecimal)
-        .verifying("pla.base.errors.errorQuestion", currentPensionsAmt => currentPensionsAmt.isDefined)
-        .verifying("pla.base.errors.errorNegative", currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
-        .verifying("pla.base.errors.errorDecimalPlaces", currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))
-        .verifying("pla.base.errors.errorMaximum", currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency)),
+        .verifying("pla.currentPensions.amount.errors.mandatoryError", currentPensionsAmt => currentPensionsAmt.isDefined)
+        .verifying("pla.currentPensions.amount.errors.negative", currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
+        .verifying("pla.currentPensions.amount.errors.decimal", currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))
+        .verifying("pla.currentPensions.amount.errors.max", currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency)),
       "protectionType" -> text,
       "status" -> text
     )(AmendCurrentPensionModel.apply)(AmendCurrentPensionModel.unapply)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,11 @@ import forms.AmendmentTypeForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.RemovePsoDetailsViewMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.removePsoDebits
 
 class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages{
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the RemovePsoDetailsView" should{
@@ -38,7 +37,7 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaPsoDetailsTitle
+      doc.title() shouldBe plaPsoDetailsTitleNew
     }
 
     "have the right explanatory paragraph" in{
@@ -46,7 +45,7 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaPsoDetailsTitle
+      doc.select("h1.govuk-heading-xl").text shouldBe plaPsoDetailsTitle
     }
 
     "have a valid form" in{
@@ -55,13 +54,13 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
     }
 
     "have a functional cancellation link" in{
-      doc.select("a").text shouldBe plaPsoDetailsCancelRemove
-      doc.select("a").attr("href") shouldBe plaAmendsPsoDetailsCancellationLink
+      doc.select("#cancel-link").text shouldBe plaPsoDetailsCancelRemove
+      doc.select("#cancel-link").attr("href") shouldBe plaAmendsPsoDetailsCancellationLink
     }
 
     "have a remove button" in{
-      doc.select("button").text shouldBe plaBaseRemove
-      doc.select("button").attr("type") shouldBe "submit"
+      doc.select(".govuk-button").text shouldBe plaBaseRemove
+      doc.select(".govuk-button").attr("id") shouldBe "submit"
     }
   }
 }

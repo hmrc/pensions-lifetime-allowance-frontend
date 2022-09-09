@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,88 +20,90 @@ import forms.AmendPensionsTakenBeforeForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBeforeViewSpecMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14PensionsTakenBefore
 
 class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with AmendIP14PensionsTakenBeforeViewSpecMessages{
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendIP14PensionsTakenBeforeView" should{
-    val pensionsForm = AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "Yes",
+    val pensionsForm = AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "yes",
       "amendedPensionsTakenBeforeAmt" -> "12345",
       "protectionType" -> "ip2014",
       "status" -> "open"))
     lazy val view = application.injector.instanceOf[amendIP14PensionsTakenBefore]
     lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
-    val errorForm =  AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map.empty[String, String])
+    val errorForm =  AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "",
+      "amendedPensionsTakenBeforeAmt" -> "12345",
+      "protectionType" -> "ip2014",
+      "status" -> "open"))
     lazy val errorView = application.injector.instanceOf[amendIP14PensionsTakenBefore]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaPensionsTakenBeforeTitle
+      doc.title() shouldBe plaPensionsTakenBeforeTitleNew
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaPensionsTakenBeforeTitle
+      doc.select("h1.govuk-fieldset__heading").text shouldBe plaPensionsTakenBeforeTitle
     }
 
     "have the right explanatory messages" in{
-      doc.select("h2").text shouldBe plaIP14PensionsTakenBeforeQuestion
+      doc.select("h2.govuk-label--l").text shouldBe plaIP14PensionsTakenBeforeQuestion
       doc.select("summary").text shouldBe plaPensionsTakenBeforeHelp
-      doc.select("p").eq(1).text shouldBe plaPensionsTakenBeforeParaOne
-      doc.select("p").eq(2).text shouldBe plaPensionsTakenBeforeParaTwo
-      doc.select("p").eq(3).text shouldBe plaPensionsTakenBeforeParaThree
+      doc.select("#ip14-amend-pensions-taken-before-help > div > p:nth-child(1)").text shouldBe plaPensionsTakenBeforeParaOne
+      doc.select("#ip14-amend-pensions-taken-before-help > div > p:nth-child(3)").text shouldBe plaPensionsTakenBeforeParaTwo
+      doc.select("#ip14-amend-pensions-taken-before-help > div > p:nth-child(5)").text shouldBe plaPensionsTakenBeforeParaThreeNew
     }
 
     "have a hidden menu with the correct list values" in{
-      doc.select("li").eq(0).text shouldBe plaPensionsTakenBeforeStepOne
-      doc.select("li").eq(1).text shouldBe plaIP14PensionsTakenBeforeStepTwo
-      doc.select("li").eq(2).text shouldBe plaPensionsTakenBeforeStepThree
-      doc.select("li").eq(3).text shouldBe plaPensionsTakenBeforeBulletOne
-      doc.select("li").eq(4).text shouldBe plaPensionsTakenBeforeBulletTwo
+      doc.select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsTakenBeforeStepOne
+      doc.select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(2)").text shouldBe plaIP14PensionsTakenBeforeStepTwo
+      doc.select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsTakenBeforeStepThree
+      doc.select("#ip14-amend-pensions-taken-before-help > div > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBeforeBulletOne
+      doc.select("#ip14-amend-pensions-taken-before-help > div > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBeforeBulletTwo
     }
 
     "have a help link redirecting to the right place" in{
-      doc.getElementsByTag("a").text shouldBe plaPensionsTakenBeforeHelpLinkText
-      doc.getElementsByTag("a").attr("href") shouldBe plaPensionsTakenBeforeHelpLinkLocation
+      doc.getElementById("ip14-amend-pensions-taken-before-help-link").text shouldBe plaPensionsTakenBeforeHelpLinkTextNew
+      doc.getElementById("ip14-amend-pensions-taken-before-help-link").attr("href") shouldBe plaPensionsTakenBeforeHelpLinkLocation
     }
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPensionsTakenBefore.url
-      form.select("legend.visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
+      form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
     }
 
     "have a £ symbol present" in{
-      doc.select(".poundSign").text shouldBe "£"
+      doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
     "have a pair of yes/no buttons" in{
-      doc.select("[for=amendedPensionsTakenBefore-yes]").text shouldBe plaBaseYes
-      doc.select("input#amendedPensionsTakenBefore-yes").attr("type") shouldBe "radio"
-      doc.select("[for=amendedPensionsTakenBefore-no]").text shouldBe plaBaseNo
-      doc.select("input#amendedPensionsTakenBefore-no").attr("type") shouldBe "radio"
+      doc.select("[for=amendedPensionsTakenBefore]").text shouldBe plaBaseYes
+      doc.select("input#amendedPensionsTakenBefore").attr("type") shouldBe "radio"
+      doc.select("[for=amendedPensionsTakenBefore-2]").text shouldBe plaBaseNo
+      doc.select("input#amendedPensionsTakenBefore-2").attr("type") shouldBe "radio"
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseChange
-      doc.select("button").attr("type") shouldBe "submit"
+      doc.select(".govuk-button").text shouldBe plaBaseChange
+      doc.select(".govuk-button").attr("id") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
-      errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select("span.error-notification").text shouldBe errorRequired
+      errorDoc.select("#error-summary-title").text shouldBe plaBaseErrorSummaryLabel
+      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 
     "not have errors on valid pages" in{
       pensionsForm.hasErrors shouldBe false
-      doc.select("span.error-notification").text shouldBe ""
+      doc.select(".govuk-error-message").text shouldBe ""
     }
   }
 }

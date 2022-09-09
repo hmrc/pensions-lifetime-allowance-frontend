@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,20 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-
 @this(
- main_template: main_template)
+     layout: Layout
+)
 
-@()(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@()(implicit request: Request[_], messages: Messages)
 
-@main_template(title = Messages("pla.withdrawn.title"), bodyClasses = None) {
-<h1 class="heading-large" id="pageHeading">@Messages("pla.withdrawn.pageHeading")</h1>
+@layout(
+     pageTitle = Messages("pla.withdrawn.title"),
+     backLinkEnabled = false
+) {
+     <h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.withdrawn.pageHeading")</h1>
 
-<p id="startAgainText">@Html(Messages("pla.withdrawn.paraOne", controllers.routes.ReadProtectionsController.currentProtections))</p>
+     <p class="govuk-body" id="startAgainText">
+         @Messages("pla.withdrawn.paraOne")
+         <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.withdrawn.paraOne.linkText")</a>
+     </p>
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package testHelpers.ViewSpecHelpers.existingProtections
 trait ExistingProtections {
 
   val plaExistingProtectionsTitle = "View your existing protections"
+  val plaExistingProtectionsTitleNew = "View your existing protections - Protect your lifetime allowance - GOV.UK"
   val plaExistingProtectionsPageHeading = "Your lifetime allowance protection"
   val plaExistingProtectionsDetails = "Details"
   val plaExistingProtectionsPrint = "Print and save your details"

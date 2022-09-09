@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCor
 
     "have the first heading which" should {
 
-      lazy val h1Tag = doc.select("header h1")
+      lazy val h1Tag = doc.select("h1.govuk-heading-xl")
 
       s"have the heading text $plaMcNeededPageHeading" in {
       h1Tag.text shouldBe plaMcNeededPageHeading
@@ -53,9 +53,6 @@ class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCor
         p1.text shouldBe plaMcNeededNeedToSpeakToYou
       }
 
-      "have the lede class" in {
-        p1.hasClass("lede") shouldBe true
-      }
     }
 
     "have the second heading which" should {
@@ -69,26 +66,26 @@ class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCor
 
     "should contain a list of instructions which" should {
 
-      lazy val listOption = doc.select("ol li")
+      lazy val listOption = doc.select("#main-content > div > div > ol")
 
       s"include the list option $plaMcNeededTelephone" in {
-        listOption.get(0).text shouldBe plaMcNeededTelephone
+        listOption.select("li:nth-child(1)").text shouldBe plaMcNeededTelephone
       }
 
       s"include the list option $plaMcNeededSayCantLogIn" in {
-        listOption.get(1).text shouldBe plaMcNeededSayCantLogIn
+        listOption.select("li:nth-child(2)").text shouldBe plaMcNeededSayCantLogIn
       }
 
       s"include the list option $plaMcNeededSayYes" in {
-        listOption.get(2).text shouldBe plaMcNeededSayYes
+        listOption.select("li:nth-child(3)").text shouldBe plaMcNeededSayYes
       }
 
       s"include the list option $plaMcNeededAdvisorHelp" in {
-        listOption.get(3).text shouldBe plaMcNeededAdvisorHelp
+        listOption.select("li:nth-child(4)").text shouldBe plaMcNeededAdvisorHelp
       }
 
       s"include the list option $plaMcNeededTellAdvisor" in {
-        listOption.get(4).text shouldBe plaMcNeededTellAdvisor
+        listOption.select("li:nth-child(5)").text shouldBe plaMcNeededTellAdvisor
       }
     }
 
@@ -103,14 +100,14 @@ class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCor
 
     "should contain a list of other contact options which" should {
 
-      lazy val listOption = doc.select("ul li")
+      lazy val listOption = doc.select("#main-content > div > div > ul")
 
       s"include the list option $plaMcNeededTextphone" in {
-        listOption.get(0).text shouldBe plaMcNeededTextphone
+        listOption.select("li:nth-child(1)").text shouldBe plaMcNeededTextphone
       }
 
       s"include the list option $plaMcNeededNonUKPhone" in {
-        listOption.get(1).text shouldBe plaMcNeededNonUKPhone
+        listOption.select("li:nth-child(2)").text shouldBe plaMcNeededNonUKPhone
       }
     }
 
@@ -139,8 +136,8 @@ class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCor
         link.attr("href") shouldBe common.Links.callCharges
       }
 
-      s"have the link text $plaMcNeededcallCharges ($plaBaseNewWindow)" in {
-        link.text shouldBe s"$plaMcNeededcallCharges ($plaBaseNewWindow)"
+      s"have the link text $plaMcNeededcallCharges ($plaBaseNewTab)" in {
+        link.text shouldBe s"$plaMcNeededcallCharges ($plaBaseNewTab)"
       }
 
       "should specify a blank target" in {

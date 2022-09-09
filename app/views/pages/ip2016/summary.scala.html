@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,77 +15,66 @@
  *@
 
 @import models.SummaryModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.summary._
-@import helpers.templates.helpTextAccordion
-@import play.api.data._
 @import enums.ApplicationType
 @import common.Links
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
-@import scala.concurrent.ExecutionContext
 
-@this(full_width_template: full_width_template)
+@this(
+    layout: Layout,
+    govukInsetText : GovukInsetText,
+    govukButton : GovukButton,
+    govukSummaryList : GovukSummaryList,
+    summaryDetails: playHelpers.summary.summaryDetails,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    helpTextAccordion: playHelpers.templates.helpTextAccordion,
+)
 
-@(summary: SummaryModel)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
-
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
-
+@(summary: SummaryModel)(implicit request: Request[_], messages: Messages)
 
 @hiddenContent = {
-    <p>@Messages("pla.summary.hiddenPara.1")</p>
-    <p>@Html(
-        Messages(s"pla.summary.hiddenPara.2",
-            s"""
-                <a href="${Links.ipGuidance}"
-                id = "ip16-help-link"
-                rel="external"
-                target="_blank"
-                onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'ip16-technical-guidance')">
-                    ${Messages("pla.summary.hiddenPara.linkText")} (${Messages("pla.base.newWindow")})
-                </a>
-             """
-            )
-        )
+    <p class="govuk-body">@messages("pla.summary.hiddenPara.1")</p>
+    <p class="govuk-body">@messages("pla.summary.hiddenPara.2.nonInput")
+        <a href="@Links.ipGuidance" id="ip16-help-link" class="govuk-link" rel="noreferrer noopener" target="_blank">
+            @messages("pla.summary.hiddenPara.linkText") (@messages("pla.base.newTab"))</a>.
     </p>
 }
 
-@full_width_template(title = Messages("pla.summary.title"), bodyClasses = None) {
+@title = @{if(summary.invalidRelevantAmount) Messages("site.title.error", messages("pla.summary.title")) else messages("pla.summary.title")}
+
+@layout(
+    pageTitle = title
+){
 
     @summaryDetails(summary)
 
-    <div class="form-group">
-        <h1>@Messages("pla.summary.getIP16")</h1>
+    <h2 class="govuk-heading-l">@Messages("pla.summary.getIP16")</h2>
 
-        <p>@Messages("pla.summary.mustAgree")</p>
-        <p>@Messages("pla.summary.confirmation")</p>
-        <ul class="list list-number">
-            <li>@Messages("pla.summary.confirm1")</li>
-            <li>@Messages("pla.summary.confirm2")</li>
-            <ul class="list list-bullet">
-                <li>@Messages("pla.summary.confirmBullet1")</li>
-                <li>@Messages("pla.summary.confirmBullet2")</li>
-            </ul>
+    <p class="govuk-body">@Messages("pla.summary.mustAgree")</p>
+    <p class="govuk-body">@Messages("pla.summary.confirmation")</p>
+    <ol class="govuk-list govuk-list--number">
+        <li>@Messages("pla.summary.confirm1")</li>
+        <li>@Messages("pla.summary.confirm2")</li>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>@Messages("pla.summary.confirmBullet1")</li>
+            <li>@Messages("pla.summary.confirmBullet2")</li>
         </ul>
-        @helpTextAccordion("ip16Help", Messages("pla.summary.help"), hiddenContent)
-        <p>@Messages("pla.summary.confirmation2")</p>
-    </div>
+    </ol>
+    @helpTextAccordion("ip16Help", messages("pla.summary.help"), hiddenContent)
+    <p class="govuk-body">@Messages("pla.summary.confirmation2")</p>
 
-    <div class="form-group">
-        <p class="panel-indent">
-            <strong class="bold-small">
-                @if(summary.protectionType == ApplicationType.IP2016){
-                    @Messages("pla.summary.declaration")
-                } else {
-                    @Messages("pla.summary.ip14Declaration")
-                }
-            </strong>
-        </p>
-    </div>
+    @govukInsetText(InsetText(
+        classes = "govuk-!-font-weight-bold",
+        content = Text(if(summary.protectionType == ApplicationType.IP2016){
+                messages("pla.summary.declaration")
+            } else {
+                messages("pla.summary.ip14Declaration")
+            })
+    ))
 
     @form(action = routes.ResultController.processIPApplication) {
-        
-        <button class="button" type="submit" id="apply" @if(summary.invalidRelevantAmount) {disabled}>@Messages("pla.base.submitApplication")</button>
+        @govukButton(Button(
+            disabled = summary.invalidRelevantAmount,
+            content = Text(messages("pla.base.submitApplication")),
+            attributes = Map("id" -> "apply")
+        ))
     }
 }

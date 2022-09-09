@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package controllers
 
 import java.time.LocalDateTime
-
 import auth.AuthFunction
 import common.{Dates, Strings}
 import config._
@@ -25,6 +24,7 @@ import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.WithdrawDateForm._
+
 import javax.inject.Inject
 import models.{ProtectionModel, WithdrawDateFormModel}
 import play.api.data.{Form, FormError}
@@ -32,10 +32,10 @@ import play.api.i18n.{I18nSupport, Lang, Messages}
 import play.api.mvc._
 import play.api.Application
 import play.api.Logging
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -49,34 +49,18 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
                                              withdrawConfirmation: views.html.pages.withdraw.withdrawConfirmation,
                                              withdrawDate: views.html.pages.withdraw.withdrawDate,
                                              withdrawImplications: views.html.pages.withdraw.withdrawImplications,
-                                             technicalError: views.html.pages.fallback.technicalError,
-                                             withdrawSummary: views.html.pages.withdraw.withdrawSummary
+                                             technicalError: views.html.pages.fallback.technicalError
                                             )
                                             (implicit val appConfig: FrontendAppConfig,
                                              implicit val partialRetriever: FormPartialRetriever,
-                                             implicit val templateRenderer:LocalTemplateRenderer,
+                                             implicit val templateRenderer: LocalTemplateRenderer,
                                              implicit val plaContext: PlaContext,
-                                             implicit val errorSummary: ErrorSummary,
                                              implicit val formWithCSRF: FormWithCSRF,
                                              implicit val application: Application)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
-
-  /** Withdraw protections journey **/
-  def withdrawSummary: Action[AnyContent] = Action.async {
-    implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
-          case Some(currentProtection) =>
-            Ok(withdrawSummary(displayConstructors.createWithdrawSummaryTable(currentProtection)))
-          case _ =>
-            logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
-            InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-        }
-      }
-  }
 
   def withdrawImplications: Action[AnyContent] = Action.async {
     implicit request =>
@@ -109,24 +93,17 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   }
 
   private[controllers] def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) = {
-    validateWithdrawDate(
-      withdrawDateForm.bindFromRequest(),
-      LocalDateTime.parse(protection.certificateDate.get)
-    ).fold(
-      formWithErrors =>
-        Future.successful(
-          BadRequest(
-            withdrawDate(buildInvalidForm(formWithErrors),
-              Strings.protectionTypeString(protection.protectionType),
-              Strings.statusString(protection.status))
-          )
-        ),
-      success =>
-        keyStoreConnector.saveFormData[WithdrawDateFormModel]("withdrawProtectionForm", success) map {
-          _  =>
-            Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput)
+    validateWithdrawDate(withdrawDateForm.bindFromRequest, LocalDateTime.parse(protection.certificateDate.get)).fold(
+        errors => {
+          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
+          Future.successful(BadRequest(withdrawDate(form, Strings.protectionTypeString(protection.protectionType), Strings.statusString(protection.status))))
+        },
+        form => {
+          keyStoreConnector.saveFormData(s"withdrawProtectionForm", form).flatMap {
+            _ => Future.successful(Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput))
+          }
         }
-    )
+      )
   }
 
   def postWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
@@ -229,8 +206,8 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   private def buildInvalidForm(errorForm: Form[WithdrawDateFormModel])(implicit messages: Messages): Form[WithdrawDateFormModel] = {
     if (errorForm.errors.size > 1) {
       val formFields: Seq[String] = errorForm.errors map (field => field.key)
-      val formFieldsWithErrors: Seq[FormError] = formFields map (key => FormError(key, ""))
-      val finalErrors: Seq[FormError] = formFieldsWithErrors ++ Seq(FormError("", Messages("pla.withdraw.date-input-form.date-invalid")))
+      val formFieldsWithErrors: Seq[FormError] = formFields map (key => FormError(key, "withdrawDate.day"))
+      val finalErrors: Seq[FormError] = formFieldsWithErrors ++ Seq(FormError("withdrawDate.day", Messages("pla.withdraw.date-input-form.date-invalid")))
       withdrawDateForm.copy(errors = finalErrors, data = errorForm.data)
     }
     else errorForm

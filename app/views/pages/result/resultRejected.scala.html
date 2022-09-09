@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,35 @@
  *@
 
 @import models.RejectionDisplayModel
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
 @this(
-    main_template: main_template)
+    layout: Layout
+)
 
-@(res: RejectionDisplayModel, showUserResearchPanel: Boolean)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(res: RejectionDisplayModel, showUserResearchPanel: Boolean)(implicit request: Request[_], messages: Messages)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
+@layout(
+    pageTitle = Messages("pla.resultRejection.title"),
+    isUserResearchBannerVisible = showUserResearchPanel
+) {
 
-@main_template(title = Messages("pla.resultRejection.title"), bodyClasses = None, isUserResearchBannerVisible = showUserResearchPanel) {
+	<h1 class="govuk-heading-xl" id="resultPageHeading">@Messages("pla.resultRejection.pageHeading")</h1>
 
-	<h1 class="heading-large" id="resultPageHeading">@Messages("pla.resultRejection.pageHeading")</h1>
-
-	<p id="resultOutcome">@Messages("resultCode."+res.notificationId+".heading")</p>
+	<p class="govuk-body" id="resultOutcome">@Messages("resultCode."+res.notificationId+".heading")</p>
 
     @for(infoNum <- res.additionalInfo) {
-    	<p id=@{s"additionalInfo$infoNum"}>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
+    	<p class="govuk-body" id=@{s"additionalInfo$infoNum"}>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
     }
 
-    <h2>@Messages("pla.resultSuccess.IPChangeDetails")</h2>
+    <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.IPChangeDetails")</h2>
 
-    <p>@Html(Messages("pla.resultRejection.viewDetails",controllers.routes.ReadProtectionsController.currentProtections))</p>
+    <p class="govuk-body">@Html(Messages("pla.resultRejection.viewDetails",controllers.routes.ReadProtectionsController.currentProtections))</p>
 
-    <h2>@Messages("pla.resultSuccess.giveFeedback")</h2>
+    <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.giveFeedback")</h2>
 
-    <p><a id="submit-survey-button" href=@controllers.routes.AccountController.signOut class="button--link-style" role="button" onclick="submitExitSurvey()">
+    <p class="govuk-body"><a class="govuk-body govuk-link" id="submit-survey-button" href=@controllers.routes.AccountController.signOut role="button" onclick="submitExitSurvey()">
         @Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Messages("pla.resultSuccess.exitSurvey")</p>
+
+    <br><br>
 
 }

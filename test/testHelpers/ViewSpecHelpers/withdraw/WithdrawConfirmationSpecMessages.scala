@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package testHelpers.ViewSpecHelpers.withdraw
 
 trait WithdrawConfirmationSpecMessages {
 
+  def plaWithdrawConfirmationTitle(protectionType: String)             = s"Your $protectionType has been removed - Protect your lifetime allowance - GOV.UK"
   def plaWithdrawConfirmationMessage(protectionType: String)             = s"Your $protectionType has been removed"
   val plaWithdrawProtectionIP2014label                                   = "individual protection 2014"
   val plaWithdrawConfirmationCheckDetails                                = "You can check the details of your pension in your personal tax account."

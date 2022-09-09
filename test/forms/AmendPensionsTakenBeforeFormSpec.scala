@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,8 +28,10 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
   with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
+  val messageKey = "pensionsTakenBefore"
+
   "The AmendPensionsTakenBeforeForm" should {
-    val validMap = Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "1000.0", "protectionType" -> "type", "status" -> "status")
+    val validMap = Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "1000.00", "protectionType" -> "type", "status" -> "status")
 
     "produce a valid form with additional validation" when {
 
@@ -40,11 +42,11 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
         result.data shouldBe validMap
       }
 
-      "provided with a valid map with no amount" in {
-        val map = Map("amendedPensionsTakenBefore" -> "no", "protectionType" -> "anotherType", "status" -> "anotherStatus")
-        val result = amendPensionsTakenBeforeForm.bind(map)
+      "provided with a valid form with no amount" in {
+        val model = AmendPensionsTakenBeforeModel("no", None, "anotherType", "anotherStatus")
+        val result = amendPensionsTakenBeforeForm.fill(model)
 
-        result.value shouldBe Some(AmendPensionsTakenBeforeModel("no", None, "anotherType", "anotherStatus"))
+        result.data shouldBe Map("amendedPensionsTakenBefore" -> "no", "amendedPensionsTakenBeforeAmt" -> "", "protectionType" -> "anotherType", "status" -> "anotherStatus")
       }
 
       "provided with a valid map with the maximum amount" in {
@@ -80,7 +82,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBefore").get.message shouldBe errorRequired
+          result.error("amendedPensionsTakenBefore").get.message shouldBe errorQuestion(messageKey)
         }
 
         "not provided with a value for protectionType" in {
@@ -104,7 +106,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBeforeAmt").get.message shouldBe errorReal
+          result.errors.head.message shouldBe errorMissingAmount(messageKey)
         }
       }
     }
@@ -114,19 +116,19 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
       "has one error with the correct error message" when {
 
         "provided an answer of yes for amendedPensionsTakenBefore with no value for amendedPensionsTakenBeforeAmt" in {
-          val map = validMap - "amendedPensionsTakenBeforeAmt"
+          val map = validMap.updated("amendedPensionsTakenBeforeAmt", "")
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBeforeAmt").get.message shouldBe errorMissingAmount
+          result.errors.head.message shouldBe errorMissingAmount(messageKey)
         }
 
         "provided an answer of yes for amendedPensionsTakenBefore with a value for amendedPensionsTakenBeforeAmt larger than the maximum" in {
-          val map = validMap.updated("amendedPensionsTakenBeforeAmt", Constants.npsMaxCurrency.toString)
+          val map = validMap.updated("amendedPensionsTakenBeforeAmt", Constants.npsMaxCurrency+1.toString)
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBeforeAmt").get.message shouldBe errorMaximum
+          result.errors.head.message shouldBe errorMaximum(messageKey)
         }
 
         "provided an answer of yes for amendedPensionsTakenBefore with a value for amendedPensionsTakenBeforeAmt that is negative" in {
@@ -134,7 +136,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBeforeAmt").get.message shouldBe errorNegative
+          result.errors.head.message shouldBe errorNegative(messageKey)
         }
 
         "provided an answer of yes for amendedPensionsTakenBefore with a value for amendedPensionsTakenBeforeAmt that has more than two decimal places" in {
@@ -143,7 +145,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBeforeAmt").get.message shouldBe errorDecimal
+          result.errors.head.message shouldBe errorDecimal(messageKey)
         }
       }
 

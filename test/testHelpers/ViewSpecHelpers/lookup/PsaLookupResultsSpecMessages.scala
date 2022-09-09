@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ trait PsaLookupResultsSpecMessages {
   val logoText = "GOV.UK"
   val hmrcText = "HM Revenue & Customs"
   val copyrightText = "© Crown Copyright"
-  val titleText = "PSA Lookup"
+  val titleText = "PSA Lookup - Protect your lifetime allowance - GOV.UK"
   val headingText = "Results of lifetime allowance protection check"
   val schemeAdministratorRowTitleText = "Scheme Administrator Reference:"
   val statusRowTitleText = "Status:"
