@@ -18,19 +18,30 @@
 @import play.api.data._
 @import views.html.helpers._
 
-@(inputForm: Form[_], fieldName: String, questionText: String, helpText: Option[String] = None, additionalHelp: Option[Html]= None)(implicit messages: Messages)
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-    <style>
 
-    </style>
+@this(govukInput : GovukInput)
 
-    <div class="form-group">
-        @moneyInputFormat(
-            inputForm(fieldName),
-            '_label -> questionText,
-            '_labelHighlight -> true,
-            '_inputHint -> Html(helpText.getOrElse("")),
-            '_additionalHelp -> additionalHelp.getOrElse("")
-        )
+@(
+    field: Field,
+    question: String,
+    hideLabel: Boolean = false,
+    pageHeading:Boolean = true,
+    labelClass: Option[String] = None,
+    hintText: Option[String] = None
+)(implicit messages: Messages)
 
-    </div>
+@govukInput(Input(
+    label = Label(
+        isPageHeading = pageHeading,
+        classes = if(hideLabel) "govuk-visually-hidden" else labelClass.getOrElse("govuk-label--xl"),
+        content = Text(question)
+    ),
+    hint = hintText.map(text => (Hint(content = Text(text)))),
+    classes = "govuk-input--width-10",
+    spellcheck = Some(false),
+    prefix = Some(PrefixOrSuffix(
+        content = Text("£")
+    ))
+).withFormField(field))

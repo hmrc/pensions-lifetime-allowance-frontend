@@ -1003,9 +1003,9 @@ class AmendsControllerSpec extends FakeApplication
       status(result) shouldBe 200
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-      jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
-      jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
-      jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual ""
     }
 
     "there is an empty PSO list stored in the AmendProtectionModel" in new Setup {
@@ -1018,9 +1018,9 @@ class AmendsControllerSpec extends FakeApplication
 
       status(result) shouldBe 200
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-      jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
-      jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
-      jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual ""
     }
 
 
@@ -1034,9 +1034,9 @@ class AmendsControllerSpec extends FakeApplication
       status(DataItem.result) shouldBe 200
 
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-      DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual "23"
-      DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual "12"
-      DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual "2016"
+      DataItem.jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual "23"
+      DataItem.jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual "12"
+      DataItem.jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual "2016"
       DataItem.jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "1000"
     }
 
@@ -1062,9 +1062,9 @@ class AmendsControllerSpec extends FakeApplication
     "submitting valid data for IP14" in new Setup {
 
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
-        ("psoDay", "6"),
-        ("psoMonth", "4"),
-        ("psoYear", "2014"),
+        ("pso.day", "6"),
+        ("pso.month", "4"),
+        ("pso.year", "2014"),
         ("psoAmt", "100000"),
         ("protectionType", "ip2014"),
         ("status", "open"),
@@ -1083,9 +1083,9 @@ class AmendsControllerSpec extends FakeApplication
     "submitting valid data for IP16" in new Setup {
 
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
-        ("psoDay", "6"),
-        ("psoMonth", "4"),
-        ("psoYear", "2016"),
+        ("pso.day", "6"),
+        ("pso.month", "4"),
+        ("pso.year", "2016"),
         ("psoAmt", "100000"),
         ("protectionType", "ip2016"),
         ("status", "open"),
@@ -1104,9 +1104,9 @@ class AmendsControllerSpec extends FakeApplication
     "submitting invalid data" in new Setup {
 
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
-        ("psoDay", ""),
-        ("psoMonth", "1"),
-        ("psoYear", "2015"),
+        ("pso.day", ""),
+        ("pso.month", "1"),
+        ("pso.year", "2015"),
         ("psoAmt", "100000"),
         ("protectionType", "ip2014"),
         ("status", "open"),
@@ -1120,9 +1120,9 @@ class AmendsControllerSpec extends FakeApplication
     "submitting data which fails additional validation" in new Setup {
 
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
-        ("psoDay", "36"),
-        ("psoMonth", "1"),
-        ("psoYear", "2015"),
+        ("pso.day", "36"),
+        ("pso.month", "1"),
+        ("pso.year", "2015"),
         ("psoAmt", "100000"),
         ("protectionType", "ip2014"),
         ("status", "open"),

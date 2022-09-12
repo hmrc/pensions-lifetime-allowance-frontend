@@ -140,15 +140,15 @@ trait CommonBinders {
   private def psoDateStringToIntFormatter = new Formatter[Int] {
     override def bind(key: String, data: Map[String, String]) = {
       val groupedIntsWithCustomErrors: Either[Seq[FormError], (Int, Int, Int)] = for {
-        day   <- stringToIntFormatter("dayEmpty").bind("psoDay", data).right
-        month <- stringToIntFormatter("monthEmpty").bind("psoMonth", data).right
-        year  <- stringToIntFormatter("yearEmpty").bind("psoYear", data).right
+        day   <- stringToIntFormatter("dayEmpty").bind("pso.day", data).right
+        month <- stringToIntFormatter("monthEmpty").bind("pso.month", data).right
+        year  <- stringToIntFormatter("yearEmpty").bind("pso.year", data).right
       } yield {
         (day, month, year)
       }
 
       val returnValue = groupedIntsWithCustomErrors fold (
-        errs => stringToIntFormatter("dayEmpty").bind("psoDay", data),
+        errs => stringToIntFormatter("dayEmpty").bind("pso.day", data),
         success => {
           val (day, month, year) = (success._1, success._2, success._3)
           validateCompleteDate(key,Constants.minIP16PSODate,"IP16PsoDetails",day,month,year)
@@ -163,16 +163,16 @@ trait CommonBinders {
   private def dateStringToOptionalIntFormatter = new Formatter[Option[Int]] {
     override def bind(key: String, data: Map[String, String]) = {
       val groupedIntsWithCustomErrors: Either[Seq[FormError], (Int, Int, Int, String)] = for {
-        day   <- stringToOptionalIntFormatter("dayEmpty").bind("psoDay", data).right
-        month <- stringToOptionalIntFormatter("monthEmpty").bind("psoMonth", data).right
-        year  <- stringToOptionalIntFormatter("yearEmpty").bind("psoYear", data).right
+        day   <- stringToOptionalIntFormatter("dayEmpty").bind("pso.day", data).right
+        month <- stringToOptionalIntFormatter("monthEmpty").bind("pso.month", data).right
+        year  <- stringToOptionalIntFormatter("yearEmpty").bind("pso.year", data).right
         protectionType <- protectionFormatter.bind("protectionType", data).right
       } yield {
         (day.get, month.get, year.get, protectionType)
       }
 
       val returnValue: Either[Seq[FormError], Option[Int]] = groupedIntsWithCustomErrors.fold(
-        errs => stringToOptionalIntFormatter("dayEmpty").bind("psoDay", data),
+        errs => stringToOptionalIntFormatter("dayEmpty").bind("pso.day", data),
         success => {
           val (day, month, year, protectionType) = (success._1, success._2, success._3, success._4)
           val protectionTypeErrorMsg = if (protectionType.toLowerCase.equals("ip2016")) "IP16PsoDetails" else "IP14PsoDetails"

@@ -25,9 +25,9 @@ import utils.Constants
 object AmendPSODetailsForm  extends CommonBinders{
   def amendPsoDetailsForm = Form(
     mapping(
-      "psoDay"    -> dateFormatterFromInt,
-      "psoMonth"  -> psoPartialDateBinder("monthEmpty"),
-      "psoYear"   -> psoPartialDateBinder("yearEmpty"),
+      "pso.day"    -> dateFormatterFromInt,
+      "pso.month"  -> psoPartialDateBinder("monthEmpty"),
+      "pso.year"   -> psoPartialDateBinder("yearEmpty"),
       "psoAmt"    -> optional(bigDecimal)
         .verifying("pla.base.errors.errorMaximum", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
         .verifying("pla.base.errors.errorNegative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))

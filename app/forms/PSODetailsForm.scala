@@ -26,9 +26,9 @@ object PSODetailsForm extends CommonBinders {
 
   def psoDetailsForm: Form[PSODetailsModel] = Form(
   mapping(
-    "psoDay"    -> psoDateFormatterFromString,
-    "psoMonth"  -> intWithCustomError("monthEmpty"),
-    "psoYear"   -> intWithCustomError("yearEmpty"),
+    "pso.day"    -> psoDateFormatterFromString,
+    "pso.month"  -> intWithCustomError("monthEmpty"),
+    "pso.year"   -> intWithCustomError("yearEmpty"),
     "psoAmt"    -> bigDecimal
       .verifying("pla.base.errors.errorMaximum", psoAmt => isLessThanDouble(psoAmt.toDouble, Constants.npsMaxCurrency))
       .verifying("pla.base.errors.errorNegative", psoAmt => isPositive(psoAmt.toDouble))

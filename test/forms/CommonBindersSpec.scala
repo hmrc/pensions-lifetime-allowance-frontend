@@ -32,9 +32,9 @@ class CommonBindersSpec extends FakeApplication with PSODetailsMessages with Moc
     "return a form error" when{
       "given an incorrect data type" in{
         val testMap = Map(
-          "psoDay" -> "P",
-          "psoMonth" -> "5",
-          "psoYear" -> "2016",
+          "pso.day" -> "P",
+          "pso.month" -> "5",
+          "pso.year" -> "2016",
           "psoAmt" -> "0.0",
           "protectionType" -> "ip2016",
           "status" -> "status",
@@ -44,7 +44,7 @@ class CommonBindersSpec extends FakeApplication with PSODetailsMessages with Moc
         val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(testMap)
 
         result.errors.size shouldBe 1
-        result.error("psoDay").get.message shouldBe errorReal
+        result.error("pso.day").get.message shouldBe errorReal
       }
     }
   }

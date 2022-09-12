@@ -37,7 +37,7 @@
     @if(hintText.isDefined) {<span class="form-hint">@hintText</span>}
 
     @simpleNoErrorInput(
-    formItem(s"${fieldName}Day"),
+    formItem(s"${fieldName}.day"),
     '_label -> Messages("pla.base.date.fields.day"),
     '_labelClass -> "form-group form-group-day",
     '_type -> "number",
@@ -46,7 +46,7 @@
     )
 
     @simpleNoErrorInput(
-    formItem(s"${fieldName}Month"),
+    formItem(s"${fieldName}.month"),
     '_label -> Messages("pla.base.date.fields.month"),
     '_labelClass -> "form-group form-group-month",
     '_type -> "number",
@@ -55,7 +55,7 @@
     )
 
     @simpleNoErrorInput(
-    formItem(s"${fieldName}Year"),
+    formItem(s"${fieldName}.year"),
     '_label -> Messages("pla.base.date.fields.year"),
     '_labelClass -> "form-group form-group-year",
     '_type -> "number",
