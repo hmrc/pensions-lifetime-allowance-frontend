@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
@@ -91,7 +91,7 @@ class AmendsControllerSpec extends FakeApplication
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val materializer: Materializer = mock[Materializer]
   implicit val mockLang: Lang = mock[Lang]
   implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]

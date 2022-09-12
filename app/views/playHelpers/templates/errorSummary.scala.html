@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,25 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package testHelpers
+@this(
+    govukErrorSummary : GovukErrorSummary
+)
 
-import org.scalatest.OptionValues
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpecLike
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
+@(
+    errors: Seq[FormError],
+    errorKey: Option[String] = None
+)(implicit messages: Messages)
 
-trait FakeApplication extends AnyWordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite {
-
-  override def fakeApplication: Application = app
-
-  override lazy val app: Application = new GuiceApplicationBuilder().build()
+@if(errors.nonEmpty) {
+    @govukErrorSummary(ErrorSummary(
+        title       = Text(messages("error.summary.title")),
+        errorList   = for(error <- errors) yield {
+            ErrorLink(
+                href    = if(error.key.equals("")) Some(s"#${errorKey.get}") else Some(s"#${error.key}"),
+                content = Text(messages(error.message, error.args:_*))
+            )
+        }
+    ))
 }

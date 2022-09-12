@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, Materializer}
+import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
@@ -54,7 +54,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
   implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val system: ActorSystem = ActorSystem()
-  implicit val mat: Materializer = ActorMaterializer()
+  implicit val mat: Materializer = mock[Materializer]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val application = mock[Application]

@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,18 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package testHelpers
+@(summaryId: String, linkText: String, hiddenContent: Html)
 
-import org.scalatest.OptionValues
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpecLike
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
+<details role="group">
+    <summary id=@{s"${summaryId}"} role="button">
+        <span class="summary">@linkText</span>
+    </summary>
 
-trait FakeApplication extends AnyWordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite {
-
-  override def fakeApplication: Application = app
-
-  override lazy val app: Application = new GuiceApplicationBuilder().build()
-}
+    <div class="panel-indent">
+        <p id=@{s"${summaryId}-content"}>
+            @hiddenContent
+        </p>
+    </div>
+</details>

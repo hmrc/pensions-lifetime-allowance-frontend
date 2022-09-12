@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,15 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package testHelpers
+@import config.FrontendAppConfig
 
-import org.scalatest.OptionValues
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpecLike
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
+@(section: SummarySectionModel, removeLinkDefined: Boolean)(implicit messages: Messages, appConfig: FrontendAppConfig)
 
-trait FakeApplication extends AnyWordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite {
-
-  override def fakeApplication: Application = app
-
-  override lazy val app: Application = new GuiceApplicationBuilder().build()
+@section.rows.headOption.map { firstRow =>
+    @summaryRow(firstRow.rowID, firstRow.displayValues, firstRow.changeLinkCall, firstRow.removeLinkCall, removeLinkDefined, firstRow.boldText, section.rows.tail.nonEmpty)
+}
+@section.rows.tail.map { otherRow =>
+    @summaryRow(otherRow.rowID, otherRow.displayValues, otherRow.changeLinkCall, otherRow.removeLinkCall, removeLinkDefined, otherRow.boldText, false)
 }

@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer}
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
@@ -64,7 +64,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val materializer: Materializer = mock[Materializer]
 
   class Setup {
 

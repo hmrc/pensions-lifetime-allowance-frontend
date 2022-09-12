@@ -17,7 +17,7 @@
 package auth
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import mocks.AuthMock
@@ -46,7 +46,7 @@ class AuthFunctionSpec extends FakeApplication
   with AuthMock {
 
   implicit val system: ActorSystem                        = ActorSystem()
-  implicit val materializer:ActorMaterializer             = ActorMaterializer()
+  implicit val materializer:Materializer                  = mock[Materializer]
   implicit val templateRenderer: LocalTemplateRenderer    = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever  = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig           = fakeApplication.injector.instanceOf[FrontendAppConfig]

@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
@@ -55,7 +55,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val materializer: Materializer = mock[Materializer]
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
 
 

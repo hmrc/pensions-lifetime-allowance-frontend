@@ -17,7 +17,8 @@
 package testHelpers.ViewSpecHelpers.ip2016
 
 trait PensionsTakenViewMessages {
-  val plaPensionsTakenTitle = "Did any of the following happen before 6 April 2016?"
+  val plaPensionsTakenTitle = "Did any of the following happen before 6 April 2016? - Protect your lifetime allowance - GOV.UK"
+  val plaPensionsTakenHeading = "Did any of the following happen before 6 April 2016?"
   val plaPensionsTakenBulletOne = "you got money from your pensions"
   val plaPensionsTakenBulletTwo = "you transferred a pension to a scheme held overseas"
   val plaPensionsTakenBulletThree = "you turned 75 with pension savings that you hadn't yet taken"

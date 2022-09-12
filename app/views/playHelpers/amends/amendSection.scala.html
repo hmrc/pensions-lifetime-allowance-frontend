@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package testHelpers
+@import models.AmendDisplaySectionModel
+@import config.FrontendAppConfig
 
-import org.scalatest.OptionValues
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpecLike
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
-import play.api.inject.guice.GuiceApplicationBuilder
+@(model: AmendDisplaySectionModel, protectionType: String)(implicit messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig: FrontendAppConfig)
 
-trait FakeApplication extends AnyWordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite {
 
-  override def fakeApplication: Application = app
-
-  override lazy val app: Application = new GuiceApplicationBuilder().build()
+@model.rows.headOption.map { firstRow =>
+    @amendRow(firstRow, protectionType, model.sectionId, model.rows.tail.nonEmpty)
+}
+@model.rows.tail.map { otherRow =>
+    @amendRow(otherRow, protectionType, model.sectionId, false)
 }

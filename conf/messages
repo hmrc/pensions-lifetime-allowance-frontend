@@ -1,4 +1,5 @@
 ## Base ##
+service.name                    = Protect your lifetime allowance
 pla.base.appName                = Protect your lifetime allowance
 pla.base.yes                    = Yes
 pla.base.no                     = No
@@ -17,6 +18,7 @@ pla.base.errors.invalidDate     = Enter a date in the correct format eg 14 6 201
 pla.base.errors.yearEmpty       = Enter a year
 pla.base.errors.monthEmpty      = Enter a month
 pla.base.errors.dayEmpty        = Enter a day
+site.title.error                = Error: {0}
 pla.base.date.fields.day        = Day
 pla.base.date.fields.month      = Month
 pla.base.date.fields.year       = Year

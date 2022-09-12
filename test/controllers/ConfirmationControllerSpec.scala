@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
@@ -42,7 +42,7 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     implicit val mockAppConfig: FrontendAppConfig              = fakeApplication.injector.instanceOf[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext                    = mock[PlaContext]
     implicit val system: ActorSystem                           = ActorSystem()
-    implicit val materializer: ActorMaterializer               = ActorMaterializer()
+    implicit val materializer: Materializer                    = mock[Materializer]
     implicit val application: Application                      = mock[Application]
     implicit val mockTechnicalError: technicalError            = app.injector.instanceOf[technicalError]
     implicit val mockConfirmFP: confirmFP                      = app.injector.instanceOf[confirmFP]

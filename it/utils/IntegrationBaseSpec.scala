@@ -17,7 +17,9 @@
 package utils
 
 import akka.util.Timeout
-import org.scalatest._
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.{Application, Configuration}
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -26,7 +28,7 @@ import play.api.test.DefaultAwaitTimeout
 import scala.concurrent.duration._
 
 trait IntegrationBaseSpec
-  extends WordSpecLike with Matchers with OptionValues
+  extends AnyWordSpecLike with Matchers with OptionValues
     with GuiceOneServerPerSuite
     with WiremockHelper
     with BeforeAndAfterEach
