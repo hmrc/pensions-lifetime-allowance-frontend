@@ -14,23 +14,13 @@
  * limitations under the License.
  *@
 
-@this(
-    govukErrorSummary : GovukErrorSummary
-)
+@this(govukButton : GovukButton)
 
-@(
-    errors: Seq[FormError],
-    errorKey: Option[String] = None
-)(implicit messages: Messages)
+@(submitText: String = "pla.base.continue")(implicit messages: Messages)
 
-@if(errors.nonEmpty) {
-    @govukErrorSummary(ErrorSummary(
-        title       = Text(messages("pla.base.errorSummaryLabel")),
-        errorList   = for(error <- errors) yield {
-            ErrorLink(
-                href    = if(error.key.equals("")) Some(s"#${errorKey.get}") else Some(s"#${error.key}"),
-                content = Text(messages(error.message, error.args:_*))
-            )
-        }
-    ))
-}
+@govukButton(Button(
+    content = Text(messages(submitText)),
+    attributes = Map(
+        "id" -> "submit"
+    )
+))

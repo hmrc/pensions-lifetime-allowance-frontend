@@ -671,9 +671,9 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitPSODetails,
 
-                    ("psoDay", "6"),
-                    ("psoMonth", "4"),
-                    ("psoYear", "2016"),
+                    ("pso.day", "6"),
+                    ("pso.month", "4"),
+                    ("pso.year", "2016"),
                     ("psoAmt", "100000")
                 )
 
@@ -689,9 +689,9 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitPSODetails,
 
-                    ("psoDay", ""),
-                    ("psoMonth", "1"),
-                    ("psoYear", "2015"),
+                    ("pso.day", ""),
+                    ("pso.month", "1"),
+                    ("pso.year", "2015"),
                     ("psoAmt", "100000")
                 )
                 mockAuthConnector(Future.successful({}))
@@ -704,9 +704,9 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             "return 400" in new Setup {
 
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitPSODetails,
-                    ("psoDay", "35"),
-                    ("psoMonth", "1"),
-                    ("psoYear", "2015"),
+                    ("pso.day", "35"),
+                    ("pso.month", "1"),
+                    ("pso.year", "2015"),
                     ("psoAmt", "100000")
                 )
                 mockAuthConnector(Future.successful({}))

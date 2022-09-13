@@ -15,48 +15,53 @@
  *@
 
 @import models.PSODetailsModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.{plaInputRadioGroup, formInputMoney, formInlineDateInput}
 @import play.api.data._
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
 @this(
-    main_template: main_template)
+    layout:Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    submitButton: playHelpers.templates.submitButton,
+    formInputMoney: playHelpers.templates.formInputMoney,
+    formInlineDateInput: playHelpers.templates.formInlineDateInput,
+    errorSummary: playHelpers.templates.errorSummary
+)
 
-@(psoDetailsForm: Form[PSODetailsModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(psoDetailsForm: Form[PSODetailsModel])(implicit request: Request[_], messages: Messages)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
-
-
-@main_template(title = Messages("pla.psoDetails.title"), bodyClasses = None) {
-
-    @if(psoDetailsForm.hasErrors){
-    @errorSummary(
-        Messages("pla.base.errorSummaryLabel"), psoDetailsForm
-    )
+@title = @{
+    if(psoDetailsForm.errors.nonEmpty){
+        messages("site.title.error", messages("pla.psoDetails.title"))
+    } else {
+        messages("pla.psoDetails.title")
     }
+}
 
-    <h1 class="heading-large">@Messages(s"pla.psoDetails.title")</h1>
+
+@layout(
+    pageTitle = title
+) {
+    @errorSummary(psoDetailsForm.errors)
+    <h1 class="govuk-heading-xl">@Messages(s"pla.psoDetails.title")</h1>
 
     @form(action = routes.IP2016Controller.submitPSODetails) {
 
-        <div class="inline form-group">
+        @formInlineDateInput(
+            content = Messages("pla.psoDetails.dateQuestionText"),
+            field = psoDetailsForm("pso"),
+            hintContent = Some(Messages("pla.psoDetails.dateHintText")),
+            pageHeading = false,
+            labelClass = Some("govuk-label--m"))
 
-            @formInlineDateInput(psoDetailsForm, "pso", Messages("pla.psoDetails.dateQuestionText"), Some(Messages("pla.psoDetails.dateHintText")))
+        @formInputMoney(
+            field = psoDetailsForm("psoAmt"),
+            Messages("pla.psoDetails.psoAmountQuestion"),
+            pageHeading = false,
+            labelClass = Some("govuk-label--m")
+        )
 
-            @formInputMoney(
-                psoDetailsForm,
-                "psoAmt",
-                Messages("pla.psoDetails.psoAmountQuestion")
-            )
+        <p class="govuk-body">@Messages("pla.psoDetails.visitPTA")</p>
 
-        </div>
-
-        <p>@Messages("pla.psoDetails.visitPTA")</p>
-
-        <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
+        @submitButton()
     }
 
 }

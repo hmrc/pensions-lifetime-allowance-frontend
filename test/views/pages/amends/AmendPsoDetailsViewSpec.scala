@@ -30,9 +30,9 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
 
   "the AmendPsoDetailsView" should{
     val pensionsForm = AmendPSODetailsForm.amendPsoDetailsForm.bind(Map(
-      "psoDay" -> "1",
-      "psoMonth" -> "2",
-      "psoYear" -> "2017",
+      "pso.day" -> "1",
+      "pso.month" -> "2",
+      "pso.year" -> "2017",
       "psoAmt" -> "12345",
       "protectionType" -> "ip2016",
       "status"         -> "open",
@@ -42,9 +42,9 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
     lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
     lazy val errorForm =  AmendPSODetailsForm.amendPsoDetailsForm.bind(Map(
-      "psoDay" -> "",
-      "psoMonth" -> "",
-      "psoYear" -> "",
+      "pso.day" -> "",
+      "pso.month" -> "",
+      "pso.year" -> "",
       "psoAmt" -> "a",
       "protectionType" -> "ip2016",
       "status"         -> "",
@@ -70,14 +70,14 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
 
     "have the right date hint message" in{
 
-      doc.select("span.form-hint").text shouldBe plaPsoDetailsDateHintText
-      errorDoc.select("span.form-hint").text shouldBe plaPsoDetailsDateHintText
+      doc.select("span.form-hint").text shouldBe s"$plaPsoDetailsDateHintText "
+      errorDoc.select("span.form-hint").text shouldBe s"$plaPsoDetailsDateHintText "
     }
 
     "have the right text above each textbox" in{
-      doc.select("[for=psoDay]").text shouldBe plaBaseDateFieldsDay
-      doc.select("[for=psoMonth]").text shouldBe plaBaseDateFieldsMonth
-      doc.select("[for=psoYear]").text shouldBe plaBaseDateFieldsYear
+      doc.select("[for=pso.day]").text shouldBe plaBaseDateFieldsDay
+      doc.select("[for=pso.month]").text shouldBe plaBaseDateFieldsMonth
+      doc.select("[for=pso.year]").text shouldBe plaBaseDateFieldsYear
     }
 
     "have a valid form" in{
