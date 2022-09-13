@@ -212,7 +212,7 @@ pla.psoDetails.psoAmountQuestion            = Swm y gorchymyn rhannu pensiwn
 pla.psoDetails.visitPTA                     = Unwaith eich bod wedi cwblhau''r gwasanaeth, gallwch ychwanegu gorchymyn rhannu pensiwn ar unrhyw adeg drwy ymweld â''ch cyfrif treth personol.
 pla.psoDetails.errorQuestion                = Nodwch rif heb comas, er enghraifft 10000.00
 pla.psoDetails.removePso                    = Bydd hyn yn dileu''ch gorchymyn rhannu pensiwn
-pla.psoDetails.cancelRemove                 = <a href="{0}" id="{1}">Peidiwch â dileu</a>
+pla.psoDetails.cancelRemove                 = Peidiwch â dileu
 
 pla.IP14PsoDetails.errorDateOutOfRange      = Nodwch ddyddiad rhwng 5 Ebrill 2014 a heddiw
 pla.IP16PsoDetails.errorDateOutOfRange      = Nodwch ddyddiad rhwng 5 Ebrill 2016 a heddiw

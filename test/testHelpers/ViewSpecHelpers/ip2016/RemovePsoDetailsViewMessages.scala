@@ -17,6 +17,7 @@
 package testHelpers.ViewSpecHelpers.ip2016
 
 trait RemovePsoDetailsViewMessages{
+  val plaPsoDetailsTitleNew = "Pension sharing order - Protect your lifetime allowance - GOV.UK"
   val plaPsoDetailsTitle = "Pension sharing order"
   val plaPsoDetailsRemovePso = "This will remove your pension sharing order."
   val plaPsoDetailsCancelRemove = "Do not remove"
