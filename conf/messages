@@ -268,6 +268,7 @@ pla.summary.confirmBullet2                          = individual protection 2014
 pla.summary.help                                    = Help with these conditions
 pla.summary.hiddenPara.1                            = Speak to your pension scheme administrator to get professional help understanding these conditions.
 pla.summary.hiddenPara.2                            = HMRC''s Pensions Tax Manual has {0}
+pla.summary.hiddenPara.2.nonInput                   = HMRC''s Pensions Tax Manual has
 pla.summary.hiddenPara.linkText                     = technical guidance about individual protection 2016
 pla.summary.hiddenPara.ip14LinkText                 = technical guidance about individual protection 2014
 pla.summary.confirmation2                           = I declare that the information I have provided is true and complete to the best of my knowledge and belief.

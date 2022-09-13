@@ -266,6 +266,7 @@ pla.summary.confirmBullet2                          = diogelwch unigol 2014
 pla.summary.help                                    = Help gyda''r amodau hyn
 pla.summary.hiddenPara.1                            = Siaradwch â gweinyddwr eich cynllun pensiwn i gael help proffesiynol i ddeall yr amodau hyn.
 pla.summary.hiddenPara.2                            = Mae gan Lawlyfr Treth Pensiwn CThEM {0}
+pla.summary.hiddenPara.2.nonInput                   = Mae gan Lawlyfr Treth Pensiwn CThEM
 pla.summary.hiddenPara.linkText                     = arweiniad technegol ynghylch diogelwch unigol 2016
 pla.summary.hiddenPara.ip14LinkText                 = arweiniad technegol ynghylch diogelwch unigol 2014
 pla.summary.confirmation2                           = Rwy''n datgan bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.

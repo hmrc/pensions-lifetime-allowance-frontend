@@ -110,10 +110,11 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
 
     lazy val errorView = application.injector.instanceOf[summary]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorModel).body)
+    lazy val pageTitle = s"$plaSummaryTitle - $plaBaseAppName - GOV.UK"
 
     lazy val form = doc.select("form")
     "have the correct title" in{
-      doc.title() shouldBe plaSummaryTitle
+      doc.title() shouldBe pageTitle
     }
 
     "have the correct and properly formatted header"in{
@@ -122,69 +123,56 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
 
     "have a properly structured table" when{
       "looking at the value of pensions" in{
-        doc.select("span#pensionsTakenQuestionText.small").text shouldBe plaSummaryQuestionsPensionsTaken
-        doc.select("span#pensionsTakenDisplayValue0.medium").text shouldBe plaBaseYes
-        doc.select("a#pensionsTakenChangeLink.bold-xsmall").text shouldBe plaBaseChange
+        doc.select(".govuk-summary-list__key").get(0).text shouldBe plaSummaryQuestionsPensionsTaken
+        doc.select(".govuk-summary-list__value").get(0).text shouldBe plaBaseYes
+        doc.select(".govuk-summary-list__actions").get(0).text shouldBe s"$plaBaseChange $plaSummaryQuestionsPensionsTaken"
       }
 
       "looking at the total value of pensions" in{
-        doc.select("td#total-message.total-font.summary-text").text shouldBe plaSummaryQuestionsTotalPensionsAmt
-        doc.select("td#totalPensionsAmtDisplayValue0").text shouldBe "£1,004,111"
+        doc.select(".govuk-summary-list__key").get(8).text shouldBe plaSummaryQuestionsTotalPensionsAmt
+        doc.select(".govuk-summary-list__value").get(8).text shouldBe "£1,004,111"
       }
 
       "looking at the value of pension sharing orders" in{
-        doc.select("span#pensionDebitsQuestionText.small").text shouldBe plaSummaryQuestionsPensionDebits
-        doc.select("span#pensionDebitsDisplayValue0.medium").text shouldBe plaBaseYes
-      }
-
-      "with the correct visually hidden text"in{
-        doc.select("span.visuallyhidden").eq(0).text shouldBe plaSummaryHiddenLinkTextPensionsTaken
-        doc.select("span.visuallyhidden").eq(1).text shouldBe plaSummaryHiddenLinkTextPensionsTakenBefore
-        doc.select("span.visuallyhidden").eq(2).text shouldBe plaSummaryHiddenLinkTextPensionsTakenBeforeAmt
-        doc.select("span.visuallyhidden").eq(3).text shouldBe plaSummaryHiddenLinkTextPensionsTakenBetween
-        doc.select("span.visuallyhidden").eq(4).text shouldBe plaSummaryHiddenLinkTextPensionsTakenBetweenAmt
-        doc.select("span.visuallyhidden").eq(5).text shouldBe plaSummaryHiddenLinkTextOverseasPensions
-        doc.select("span.visuallyhidden").eq(6).text shouldBe plaSummaryHiddenLinkTextOverseasPensionsAmt
-        doc.select("span.visuallyhidden").eq(7).text shouldBe plaSummaryHiddenLinkTextCurrentPensionsAmt
-        doc.select("span.visuallyhidden").eq(8).text shouldBe plaSummaryHiddenLinkTextPensionDebits
-        doc.select("span.visuallyhidden").eq(10).text shouldBe plaSummaryHiddenLinkTextPsoDetails
+        doc.select(".govuk-summary-list__key").get(9).text() shouldBe plaSummaryQuestionsPensionDebits
+        doc.select(".govuk-summary-list__value").get(9).text() shouldBe plaBaseYes
       }
 
       "that works with different values" in{
-        docTwo.select("span#pensionsTakenQuestionText.small").text shouldBe plaSummaryQuestionsPensionsTaken
-        docTwo.select("span#pensionsTakenDisplayValue0.medium").text shouldBe plaBaseNo
-        docTwo.select("a#pensionsTakenChangeLink.bold-xsmall").text shouldBe plaBaseChange
-        docTwo.select("td#total-message.total-font.summary-text").text shouldBe plaSummaryQuestionsTotalPensionsAmt
-        docTwo.select("td#totalPensionsAmtDisplayValue0").text shouldBe "£123,456"
-        docTwo.select("span#pensionDebitsQuestionText.small").text shouldBe plaSummaryQuestionsPensionDebits
-        docTwo.select("span#pensionDebitsDisplayValue0.medium").text shouldBe plaBaseNo
+        docTwo.select(".govuk-summary-list__key").get(0).text shouldBe plaSummaryQuestionsPensionsTaken
+        docTwo.select(".govuk-summary-list__value").get(0).text shouldBe plaBaseNo
+        docTwo.select(".govuk-summary-list__actions").get(0).text shouldBe s"$plaBaseChange $plaSummaryQuestionsPensionsTaken"
+        docTwo.select(".govuk-summary-list__key").get(4).text shouldBe plaSummaryQuestionsTotalPensionsAmt
+        docTwo.select(".govuk-summary-list__value").get(4).text shouldBe "£123,456"
+        docTwo.select(".govuk-summary-list__key").get(5).text() shouldBe plaSummaryQuestionsPensionDebits
+        docTwo.select(".govuk-summary-list__value").get(5).text() shouldBe plaBaseNo
       }
     }
 
     "have the right headers" in{
-      doc.select("h1").eq(1).text shouldBe plaSummaryGetIP16
-      doc.select("caption").get(0).text shouldBe plaSummaryPensionsHeading
-      doc.select("caption").get(1).text shouldBe plaSummaryPsosHeading
+      doc.select("h2.govuk-heading-l").eq(0).text shouldBe plaSummaryGetIP16
+      doc.select("h2.govuk-heading-m").get(0).text shouldBe plaSummaryPensionsHeading
+      doc.select("h2.govuk-heading-m").get(1).text shouldBe plaSummaryPsosHeading
     }
 
     "have the right explanatory text" in{
-      doc.select("p").first().text shouldBe plaSummaryMustAgree
-      doc.select("p").eq(1).text shouldBe plaSummaryConfirmation
-      doc.select("p").eq(6).text shouldBe plaSummaryConfirmation2
-      doc.select("p").last().text shouldBe plaSummaryDeclaration
+      doc.select("p.govuk-body").first().text shouldBe plaSummaryMustAgree
+      doc.select("p.govuk-body").eq(1).text shouldBe plaSummaryConfirmation
+      doc.select("p.govuk-body").eq(4).text shouldBe plaSummaryConfirmation2
+      doc.select("div.govuk-inset-text").text shouldBe plaSummaryDeclaration
     }
 
     "have the correct bullet point messages" in{
-      doc.select("li").eq(0).text shouldBe plaSummaryConfirm1
-      doc.select("li").eq(1).text shouldBe plaSummaryConfirm2
-      doc.select("li").eq(2).text shouldBe plaSummaryConfirmBullet1
-      doc.select("li").eq(3).text shouldBe plaSummaryConfirmBullet2
+      doc.select("ol li").eq(0).text shouldBe plaSummaryConfirm1
+      doc.select("ol li").eq(1).text shouldBe plaSummaryConfirm2
+      doc.select("ol ul li").eq(0).text shouldBe plaSummaryConfirmBullet1
+      doc.select("ol ul li").eq(1).text shouldBe plaSummaryConfirmBullet2
     }
 
     "have a hidden drop menu with the correct values" in{
       doc.select("summary").text shouldBe plaSummaryHelp
-      doc.select("p").eq(3).text shouldBe plaSummaryHiddenParaOne
-      doc.select("p").eq(4).text shouldBe plaSummaryHiddenParaTwo
+      doc.select(".govuk-details__text p").eq(0).text shouldBe plaSummaryHiddenParaOne
+      doc.select(".govuk-details__text p").eq(1).text shouldBe plaSummaryHiddenParaTwo
     }
 
     "have a help link redirecting to the right location" in{
@@ -199,7 +187,6 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
 
     "have a continue button" in{
       doc.select("button").text shouldBe plaBaseSubmitApplication
-      doc.select("button").attr("type") shouldBe "submit"
     }
 
     "have the right error messages" in{
