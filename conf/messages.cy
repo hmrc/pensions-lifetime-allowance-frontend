@@ -13,6 +13,7 @@ pla.base.remove                 = Dileu
 pla.base.add                    = Ychwanegu
 pla.base.readMore               = Darllen mwy
 pla.base.newWindow              = yn agor ffenestr newydd
+pla.base.newTab                 = yn agor tab newydd
 pla.base.errorSummaryLabel      = Mae gwallau ar y dudalen hon.
 pla.base.errors.invalidDate     = Nodwch ddyddiad yn y fformat cywir h.y. 14 6 2016
 pla.base.errors.yearEmpty       = Nodwch flwyddyn
@@ -183,6 +184,7 @@ pla.currentPensions.hiddenText2             = Lluoswch yr incwm blynyddol o''r p
 pla.currentPensions.hiddenText3             = Adiwch unrhyw gyfandaliadau y cewch yn ogystal â''r incwm blynyddol hwn.
 pla.currentPensions.hiddenText4             = Adiwch y cyfanswm yr ydych wedi''i gronni yn eich cronfeydd pensiwn eraill.
 pla.currentPensions.readGuidance            = Darllenwch arweiniad technegol ar {0}
+pla.currentPensions.readGuidance.nonInput   = Darllenwch arweiniad technegol ar
 pla.currentPensions.helpLinkText            = sut i werthuso pensiynau nad ydych wedi''u cymryd hyd yn hyn?
 pla.currentPensions.question                = Peidiwch â chynnwys pensiynau yr ydych eisoes wedi''u cymryd na Phensiwn y Wladwriaeth.
 

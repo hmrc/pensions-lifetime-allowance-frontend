@@ -43,7 +43,7 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaCurrentPensionsTitle
+      doc.select("h1.govuk-heading-xl").text shouldBe plaCurrentPensionsHeading
     }
 
     "have some introductory text" in{
@@ -51,44 +51,44 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
     }
 
     "have a hidden menu with the correct values" in{
-      doc.select("summary").text shouldBe plaCurrentPensionsHiddenLink
-      doc.select("li").eq(0).text shouldBe plaHiddenMenuItemOne
-      doc.select("li").eq(1).text shouldBe plaHiddenMenuItemTwo
-      doc.select("li").eq(2).text shouldBe plaHiddenMenuItemThree
-      doc.select("li").eq(3).text shouldBe plaHiddenMenuItemFour
+      doc.select(".govuk-details__summary-text").text shouldBe plaCurrentPensionsHiddenLink
+      doc.select("#ip16-current-pensions-help > div > ol > li:nth-child(1)").text shouldBe plaHiddenMenuItemOne
+      doc.select("#ip16-current-pensions-help > div > ol > li:nth-child(2)").text shouldBe plaHiddenMenuItemTwo
+      doc.select("#ip16-current-pensions-help > div > ol > li:nth-child(3)").text shouldBe plaHiddenMenuItemThree
+      doc.select("#ip16-current-pensions-help > div > ol > li:nth-child(4)").text shouldBe plaHiddenMenuItemFour
     }
 
     "have a help link redirecting to the right location" in{
-      doc.select("p").eq(3).text shouldBe plaHelpLinkCompleteMessage
-      doc.select("a").text shouldBe plaHelpLink
-      doc.select("a").attr("href") shouldBe plaHelpLinkExternalReference
+      doc.select("#ip16-current-pensions-help > div > p:nth-child(3)").text shouldBe plaHelpLinkCompleteMessageNew
+      doc.select("#ip16-current-pensions-help-link").text shouldBe plaHelpLinkNew
+      doc.select("#ip16-current-pensions-help-link").attr("href") shouldBe plaHelpLinkExternalReference
     }
 
     "has a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitCurrentPensions.url
-      form.select("legend.visually-hidden").text() shouldBe plaCurrentPensionsLegendText
+      doc.select("#main-content > div > div > form > div > h1 > label").text() shouldBe plaCurrentPensionsLegendText
     }
 
     "have a £ symbol present" in{
-      doc.select(".poundSign").text shouldBe "£"
+      doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
-      doc.select("button").attr("type") shouldBe "submit"
+      doc.select(".govuk-button").text shouldBe plaBaseContinue
+      doc.select(".govuk-button").attr("id") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
-      errorDoc.select("h2").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select("a#currentPensionsAmt-error-summary").text shouldBe errorReal
-      errorDoc.select("span#currentPensionsAmt-error-message.error-notification").text shouldBe errorReal
+      errorDoc.select("#error-summary-title").text shouldBe plaBaseErrorSummaryLabel
+      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe errorReal
+      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $errorReal"
     }
 
     "not have errors on valid pages" in{
       currentPensionsForm.hasErrors shouldBe false
-      doc.select("a#currentPensionsAmt-error-summary").text shouldBe ""
-      doc.select("span#currentPensionsAmt-error-message.error-notification").text shouldBe ""
+      doc.select(".govuk-list govuk-error-summary__list").text shouldBe ""
+      doc.select(".currentPensionsAmt-error").text shouldBe ""
     }
   }
 }

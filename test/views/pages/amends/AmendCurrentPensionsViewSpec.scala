@@ -43,11 +43,11 @@ class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPens
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaCurrentPensionsTitle
+      doc.title() shouldBe plaCurrentPensionsHeading
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaCurrentPensionsTitle
+      doc.select("h1").text shouldBe plaCurrentPensionsHeading
     }
 
     "have some introductory text" in{
