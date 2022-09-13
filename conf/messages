@@ -13,6 +13,7 @@ pla.base.remove                 = Remove
 pla.base.add                    = Add
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
+pla.base.newTab                 = opens in new tab
 pla.base.errorSummaryLabel      = There are errors on this page
 pla.base.errors.invalidDate     = Enter a date in the correct format eg 14 6 2016
 pla.base.errors.yearEmpty       = Enter a year
@@ -185,6 +186,7 @@ pla.currentPensions.hiddenText2             = Multiply the annual income from th
 pla.currentPensions.hiddenText3             = Add the amount of any lump sum payments you''ll get on top of this annual income.
 pla.currentPensions.hiddenText4             = Add the total amount you''ve built up in your other pension pots.
 pla.currentPensions.readGuidance            = Read technical guidance on {0}
+pla.currentPensions.readGuidance.nonInput   = Read technical guidance on
 pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
 pla.currentPensions.question                = Do not include pensions you''ve already taken or the State Pension.
 
