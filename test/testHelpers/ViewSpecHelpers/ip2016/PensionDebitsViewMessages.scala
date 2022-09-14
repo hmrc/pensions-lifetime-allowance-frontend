@@ -18,6 +18,7 @@ package testHelpers.ViewSpecHelpers.ip2016
 
 trait PensionDebitsViewMessages {
   val plaPensionDebitsTitle = "Have any of your pensions been shared in a divorce since 5 April 2016?"
+  val plaPensionDebitsTitleNew = "Have any of your pensions been shared in a divorce since 5 April 2016? - Protect your lifetime allowance - GOV.UK"
   val plaPensionDebitsParaOne = "This is called a pension sharing order and is issued by a court."
   val plaPensionDebitsMandatoryErr = "Please answer this question"
   val plaPensionsDebitLegendText = "Have any of your pensions been shared in a divorce since 5 April 2016?"
