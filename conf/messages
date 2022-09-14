@@ -216,7 +216,7 @@ pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
 pla.psoDetails.visitPTA                     = Once you''ve completed this service, you can add a pension sharing order at any time by visiting your personal tax account.
 pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
 pla.psoDetails.removePso                    = This will remove your pension sharing order.
-pla.psoDetails.cancelRemove                 = <a href="{0}" id="{1}">Do not remove</a>
+pla.psoDetails.cancelRemove                 = Do not remove
 
 pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2014 and today
 pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2016 and today
