@@ -39,52 +39,52 @@ class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPension
 
     lazy val form = doc.select("form")
     "have the correct title" in{
-      doc.title() shouldBe plaOverseasPensionsTitle
+      doc.title() shouldBe plaOverseasPensionsTitleNew
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaOverseasPensionsTitle
+      doc.select("h1.govuk-heading-xl").text shouldBe plaOverseasPensionsTitle
     }
 
     "have some introductory text" in{
-      doc.select("p").first().text shouldBe plaOverseasPensionsQuestion
+      doc.select("p.govuk-body").first().text shouldBe plaOverseasPensionsQuestion
     }
 
     "have a question above the textbox"in{
-      doc.select("h2").text shouldBe plaOverseasPensionsQuestionTwo
+      doc.select("#conditional-overseasPensions > div > label").text shouldBe plaOverseasPensionsQuestionTwo
     }
 
     "have a pair of yes/no buttons" in{
-      doc.select("[for=overseasPensions-yes]").text shouldBe plaBaseYes
-      doc.select("input#overseasPensions-yes").attr("type") shouldBe "radio"
-      doc.select("[for=overseasPensions-no]").text shouldBe plaBaseNo
-      doc.select("input#overseasPensions-no").attr("type") shouldBe "radio"
+      doc.select("[for=overseasPensions]").text shouldBe plaBaseYes
+      doc.select("input#overseasPensions").attr("type") shouldBe "radio"
+      doc.select("[for=overseasPensions-2]").text shouldBe plaBaseNo
+      doc.select("input#overseasPensions-2").attr("type") shouldBe "radio"
     }
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitOverseasPensions.url
-      form.select("legend.visually-hidden").text() shouldBe plaOverseasPensionsLegendText
+      form.select("legend.govuk-visually-hidden").text() shouldBe plaOverseasPensionsLegendText
     }
 
     "have a £ symbol present" in{
-      doc.select(".poundSign").text shouldBe "£"
+      doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
-      doc.select("button").attr("type") shouldBe "submit"
+      doc.select(".govuk-button").text shouldBe plaBaseContinue
+      doc.select(".govuk-button").attr("id") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
-      errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select("span.error-notification").text shouldBe errorRequired
+      errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
+        errorDoc.select(".govuk-error-message").text shouldBe s"Error: $errorRequired"
     }
 
     "not have errors on valid pages" in{
       oPensionsForm.hasErrors shouldBe false
-      doc.select("span.error-notification").text shouldBe ""
+      doc.select(".govuk-error-message").text shouldBe ""
     }
 
   }
