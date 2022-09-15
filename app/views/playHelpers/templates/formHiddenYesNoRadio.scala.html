@@ -15,36 +15,36 @@
  *@
 
 @this(
-    govukRadios: GovukRadios
+        govukRadios: GovukRadios
 )
 
 @(
-    field: Field,
-    question: String,
-    hiddenQuestion: Boolean = false,
-    pageHeading: Boolean = true,
-    yesHiddencontent: Option[Html] = None,
-    noHiddenContent: Option[Html] = None,
+        field: Field,
+        question: String,
+        hiddenQuestion: Boolean = false,
+        pageHeading: Boolean = true,
+        yesHiddencontent: Option[Html] = None,
+        noHiddenContent: Option[Html] = None,
 )(implicit messages: Messages)
 
 @govukRadios(Radios(
-    fieldset = Some(Fieldset(
-        legend = Some(Legend(
-            content = Text(question),
-            classes = if(hiddenQuestion) "govuk-visually-hidden" else "govuk-fieldset__legend--l",
-            isPageHeading = pageHeading
-        ))
-    )),
-    items = Seq(
-        RadioItem(
-        content = Text(Messages("pla.base.yes")),
-        value = Some("yes"),
-        conditionalHtml = if (yesHiddencontent.nonEmpty) yesHiddencontent else None
-    ),
-    RadioItem(
-        content = Text(Messages("pla.base.no")),
-        value = Some("no"),
-        conditionalHtml = if (noHiddenContent.nonEmpty) noHiddenContent else None
-    )
-    )
+ fieldset = Some(Fieldset(
+  legend = Some(Legend(
+   content = Text(question),
+   classes = if(hiddenQuestion) "govuk-visually-hidden" else "govuk-fieldset__legend--l",
+   isPageHeading = pageHeading
+  ))
+ )),
+ items = Seq(
+  RadioItem(
+   content = Text(Messages("pla.base.yes")),
+   value = Some("yes"),
+   conditionalHtml = if (yesHiddencontent.nonEmpty) yesHiddencontent else None
+  ),
+  RadioItem(
+   content = Text(Messages("pla.base.no")),
+   value = Some("no"),
+   conditionalHtml = if (noHiddenContent.nonEmpty) noHiddenContent else None
+  )
+ )
 ).withFormField(field))
