@@ -14,32 +14,28 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import config.FrontendAppConfig
-
 @this(
-    main_template: main_template)
+    layout: Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    submitButton: playHelpers.templates.submitButton
+)
 
-@()(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@()(implicit request: Request[_], messages: Messages)
 
-@main_template(title = Messages("pla.psoDetails.title"), scriptElem=None, bodyClasses = None) {
+@layout(
+    pageTitle = Messages("pla.psoDetails.title")
+) {
 
-<header class ="page-header">
-    <h1 class="heading-large" id="page-heading">
-        @Messages("pla.psoDetails.title")
-    </h1>
-</header>
+    <h1 class="govuk-heading-xl" id="page-heading">@Messages("pla.psoDetails.title")</h1>
 
-    <p class="icon-min-height">@Messages("pla.psoDetails.removePso")</p>
+    <p class="govuk-body">@Messages("pla.psoDetails.removePso")</p>
 
-<div class="form-group">
     @form(action = routes.IP2016Controller.submitRemovePsoDetails) {
-    <p>
-        <button id="submit" class="button" type="submit">@Messages("pla.base.remove")</button>
-    </p>
 
-    @Html(Messages("pla.psoDetails.cancelRemove", routes.SummaryController.summaryIP16, "cancel-link"))
+        <button id="submit" class="govuk-button" type="submit">@Messages("pla.base.remove")</button>
+
+        <p class="govuk-body">
+            <a class="govuk-link" href="@routes.SummaryController.summaryIP16" id="cancel-link">@Messages("pla.psoDetails.cancelRemove")</a>
+        </p>
     }
-</div>
 }

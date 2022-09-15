@@ -33,15 +33,15 @@ class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetail
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaPsoDetailsTitle
+      doc.title() shouldBe plaPsoDetailsTitleNew
     }
 
     "have the right explanatory paragraph" in{
-      doc.select("p").eq(0).text shouldBe plaPsoDetailsRemovePso
+      doc.select("p.govuk-body").eq(0).text shouldBe plaPsoDetailsRemovePso
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaPsoDetailsTitle
+      doc.select("h1.govuk-heading-xl").text shouldBe plaPsoDetailsTitle
     }
 
     "have a valid form" in{
@@ -50,13 +50,13 @@ class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetail
     }
 
     "have a functional cancellation link" in{
-      doc.select("a").text shouldBe plaPsoDetailsCancelRemove
-      doc.select("a").attr("href") shouldBe plaPsoDetailsCancellationLink
+      doc.select("#cancel-link").text shouldBe plaPsoDetailsCancelRemove
+      doc.select("#cancel-link").attr("href") shouldBe plaPsoDetailsCancellationLink
     }
 
     "have a remove button" in{
-      doc.select("button").text shouldBe plaBaseRemove
-      doc.select("button").attr("type") shouldBe "submit"
+      doc.select(".govuk-button").text shouldBe plaBaseRemove
+      doc.select(".govuk-button").attr("id") shouldBe "submit"
     }
   }
 }
