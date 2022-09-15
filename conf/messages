@@ -13,6 +13,7 @@ pla.base.remove                 = Remove
 pla.base.add                    = Add
 pla.base.readMore               = Read more
 pla.base.newWindow              = opens in a new window
+pla.base.newTab                 = opens in new tab
 pla.base.errorSummaryLabel      = There are errors on this page
 pla.base.errors.invalidDate     = Enter a date in the correct format eg 14 6 2016
 pla.base.errors.yearEmpty       = Enter a year

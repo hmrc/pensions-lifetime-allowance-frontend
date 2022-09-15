@@ -13,6 +13,7 @@ pla.base.remove                 = Dileu
 pla.base.add                    = Ychwanegu
 pla.base.readMore               = Darllen mwy
 pla.base.newWindow              = yn agor ffenestr newydd
+pla.base.newTab                 = yn agor tab newydd
 pla.base.errorSummaryLabel      = Mae gwallau ar y dudalen hon.
 pla.base.errors.invalidDate     = Nodwch ddyddiad yn y fformat cywir h.y. 14 6 2016
 pla.base.errors.yearEmpty       = Nodwch flwyddyn
