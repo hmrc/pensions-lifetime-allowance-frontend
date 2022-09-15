@@ -16,7 +16,11 @@
 
 @(heading: String, content: String, id: String)
 
-<div class="protection-detail" id="@{id}Heading">
-	@heading
-	<span class="font-small block" id="@{id}Content">@content</span>
+<div class="govuk-grid-row" id="@{id}Heading">
+    <div class="govuk-grid-column-two-thirds">
+         <h3 class="govuk-heading-s">@heading</h3>
+    </div>
+    <div class="govuk-grid-column-one-third">
+	    <p class="govuk-body" id="@{id}Content">@content</p>
+    </div>
 </div>

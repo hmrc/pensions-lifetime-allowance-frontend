@@ -17,53 +17,41 @@
 @import play.api.i18n._
 @import models.ExistingProtectionDisplayModel
 
+@this()
+
 @(protection: ExistingProtectionDisplayModel, statusGroup: String, protectionNum: Int)(implicit messages: Messages)
 
-<section class="form-group">
-<div class="item">
-    <div class="grid-wrapper">
-            <div class="grid grid-1-3">
-                <div class="title bold-medium" id="activeProtection">@Messages("pla.protection.types." + protection.protectionType)</div>
-            </div>
-            <div class="grid grid-2-3">
-                <div class="inner-block">
-                    <a
-                    class="print-link"
-                    id="printLink"
-                    href="@controllers.routes.PrintController.printView"
-                    target="_blank"
-                    onclick="ga('send', 'event', 'print-active-protection', 'print-@{protection.protectionType.toString}', 'existing');">
-                        @{s"${Messages("pla.existingProtections.print")} (${Messages("pla.base.newWindow")})"}
-                    </a>
-                </div>
-            </div>
-        <div class="grid-wrapper">
-            <div class="grid">
-                <div class="panel-indent">
-                    @protection.protectedAmount.map { amt =>
-                        @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount")
-                    }
-
-                    @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, "activeProtectionReference")
-
-                    @protection.psaCheckReference.map { checkRef =>
-                        @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, "activePSACheckRef")
-                    }
-
-                    @protection.certificateDate.map{ cDate =>
-                        @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, "activeCertificateDate")
-                    }
-
-
-                    @protection.amendCall.map{ call =>
-                        <a href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>
-                    }
-                </div>
-            </div>
-        </div>
-
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-third">
+        <h3 class="govuk-heading-m" id="activeProtection">@Messages("pla.protection.types." + protection.protectionType)</h3>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+        <a class="govuk-body govuk-link" id="printLink" href="@controllers.routes.PrintController.printView" target="_blank"
+            onclick="ga('send', 'event', 'print-active-protection', 'print-@{protection.protectionType.toString}', 'existing');">
+                @Messages("pla.existingProtections.print") (@Messages("pla.base.newTab"))
+        </a>
     </div>
 </div>
+<div class="govuk-grid-row">
+    <div class="govuk-inset-text">
+        @protection.protectedAmount.map { amt =>
+            @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount")
+        }
 
-</section>
+        @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, "activeProtectionReference")
+
+        @protection.psaCheckReference.map { checkRef =>
+            @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, "activePSACheckRef")
+        }
+
+        @protection.certificateDate.map{ cDate =>
+            @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, "activeCertificateDate")
+        }
+
+
+        @protection.amendCall.map{ call =>
+            <a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>
+        }
+    </div>
+</div>
 
