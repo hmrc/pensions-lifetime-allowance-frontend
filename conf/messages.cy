@@ -151,6 +151,7 @@ pla.pensionsTakenBetween.step.2             = Lluoswch werth eich lwfans oes ar 
 pla.pensionsTakenBetween.step.3             = Lluoswch ganlyniad cam 1 gyda chanlyniad cam 2.
 pla.pensionsTakenBetween.step.4             = Ail wnewch hyn ar gyfer pob digwyddiad ac adiwch y symiau at ei gilydd.
 pla.pensionsTakenBetween.para.3             = Darllenwch arweiniad technegol ar {0}
+pla.pensionsTakenBetween.para.3.nonInput    = Darllenwch arweiniad technegol ar
 pla.pensionsTakenBetween.helpLinkText       = cyfrifo faint o lwfans oes yr ydych wedi''i ddefnyddio
 
 pla.pensionsTakenBetween.legend             = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?

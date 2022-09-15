@@ -153,6 +153,7 @@ pla.pensionsTakenBetween.step.2             = Multiply the value of your lifetim
 pla.pensionsTakenBetween.step.3             = Take the result from step 1 and multiply by the result of step 2.
 pla.pensionsTakenBetween.step.4             = Repeat for each event and total the amounts together.
 pla.pensionsTakenBetween.para.3             = Read technical guidance on {0}
+pla.pensionsTakenBetween.para.3.nonInput    = Read technical guidance on
 pla.pensionsTakenBetween.helpLinkText       = working out how much lifetime allowance you''ve used
 
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
