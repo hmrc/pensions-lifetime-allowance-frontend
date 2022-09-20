@@ -315,8 +315,9 @@ pla.existingProtections.psaRef                          = Scheme administrator r
 pla.existingProtections.backToHome                      = Back to account home
 pla.existingProtections.amendLinkText                   = View or change your protection details
 pla.existingProtections.withdrawLinkText                = Withdraw your open protection
-pla.existingProtections.other.protections.link          = View <a href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance">details about individual and fixed protections and how to apply</a> on GOV.UK.
-
+pla.existingProtections.other.protections.link          = details about individual and fixed protections and how to apply
+pla.existingProtections.other.protections.linkText.before = View
+pla.existingProtections.other.protections.linkText.after  = on GOV.UK.
 
 ## PROTECTION INFORMATION ##
 pla.protection.statuses.open                            = Open
