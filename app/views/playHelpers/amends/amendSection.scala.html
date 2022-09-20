@@ -14,15 +14,57 @@
  * limitations under the License.
  *@
 
-@import models.AmendDisplaySectionModel
-@import config.FrontendAppConfig
+@this(
+    govukSummaryList : GovukSummaryList
+)
 
-@(model: AmendDisplaySectionModel, protectionType: String)(implicit messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig: FrontendAppConfig)
+@(model: AmendDisplaySectionModel, protectionType: String)(implicit messages: Messages)
 
+@amendRow(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean) = @{
+    val firstRowClass = if(firstRow) "has-child-item" else ""
+    val changeRemoveLinks = Seq(
+        model.removeLinkCall.map(removeLink =>
+            ActionItem(
+                href = removeLink.url,
+                content = Text(messages("pla.base.remove")),
+                visuallyHiddenText = Some(messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}")),
+                attributes = Map("id" -> s"${sectionId}-${model.rowId}-remove-link")
+            )
+        ),
+        model.changeLinkCall.map(changeLink =>
+            ActionItem(
+                href = changeLink.url,
+                content = Text(messages("pla.base.change")),
+                visuallyHiddenText = Some(Messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}")),
+                attributes = Map("id" -> s"${sectionId}-${model.rowId}-change-link")
+        ))).flatten
 
-@model.rows.headOption.map { firstRow =>
-    @amendRow(firstRow, protectionType, model.sectionId, model.rows.tail.nonEmpty)
+    SummaryListRow(
+        key = Key(
+            classes = s"govuk-!-width-one-half $firstRowClass",
+            content = Text(messages(s"pla.amends.${sectionId}.${protectionType}.${model.rowId}"))
+        ),
+        value = Value(
+            classes  = s"${if(changeRemoveLinks.nonEmpty)"govuk-!-width-one-quarter" else "govuk-!-width-one-half"} $firstRowClass",
+            content = HtmlContent(model.displayValue.mkString("<br>"))
+        ),
+        actions = Some(Actions(
+            classes = s"govuk-!-width-one-quarter $firstRowClass",
+            items = changeRemoveLinks
+        ))
+    )
 }
-@model.rows.tail.map { otherRow =>
-    @amendRow(otherRow, protectionType, model.sectionId, false)
+
+@rows = @{
+    val topRow: Option[SummaryListRow] = model.rows.headOption.map { firstRow =>
+        amendRow(firstRow, protectionType, model.sectionId, model.rows.tail.nonEmpty)
+    }
+    val otherRows: Seq[Option[SummaryListRow]] = model.rows.tail.map { otherRow =>
+        Some(amendRow(otherRow, protectionType, model.sectionId, false))
+    }
+    topRow +: otherRows
 }
+
+@govukSummaryList(SummaryList(
+    rows = rows.flatten
+))

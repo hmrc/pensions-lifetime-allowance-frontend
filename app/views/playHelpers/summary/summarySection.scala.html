@@ -25,6 +25,24 @@
 @summaryRow(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], removeLinkCall: Option[Call], removeLinkDefined: Boolean, boldText: Boolean, firstRow: Boolean) = @{
 val firstRowClass = if(firstRow) "has-child-item" else ""
 val boldClass = if(boldText) "govuk-!-font-weight-bold" else ""
+val changeRemoveLinks = Seq(
+    removeLinkCall.map(removeLink =>
+        ActionItem(
+            href = removeLink.url,
+            content = Text(messages("pla.base.remove")),
+            visuallyHiddenText = Some(messages(s"pla.summary.questions.$rowID")),
+            attributes = Map("id" -> s"${rowID}-remove-link")
+        )
+    ),
+    changeLinkCall.map(changeLink =>
+        ActionItem(
+            href = changeLink.url,
+            content = Text(messages("pla.summary.change")),
+            visuallyHiddenText = Some(Messages(s"pla.summary.questions.$rowID")),
+            attributes = Map("id" -> s"${rowID}ChangeLink")
+        )
+    )
+).flatten
 
     if(rowID == "totalPensionsAmt" || rowID == "ip14TotalPensionsAmt"){
         SummaryListRow(
@@ -39,36 +57,18 @@ val boldClass = if(boldText) "govuk-!-font-weight-bold" else ""
         )
     } else {
         SummaryListRow(
-            classes = s"$firstRowClass",
             key = Key(
-                classes = s"govuk-!-width-one-half $boldClass",
+                classes = s"govuk-!-width-one-half $boldClass $firstRowClass",
                 content = Text(Messages(s"pla.summary.questions.$rowID"))
             ),
             value = Value(
-                classes = s"govuk-!-width-one-quarter $boldClass",
+                classes = s"${if(changeRemoveLinks.nonEmpty)"govuk-!-width-one-quarter" else "govuk-!-width-one-half"} $boldClass $firstRowClass",
                 content = HtmlContent(displayValues.mkString("<br>"))
             ),
             actions = Some(Actions(
-                classes = s"govuk-!-width-one-quarter $boldClass",
-                items = Seq(
-                    removeLinkCall.map(removeLink =>
-                        ActionItem(
-                            href = removeLink.url,
-                            content = Text(messages("pla.base.remove")),
-                            visuallyHiddenText = Some(messages(s"pla.summary.hiddenLinkText.removePsoHint")),
-                            attributes = Map("id" -> s"${rowID}-remove-link")
-                        )
-                    ),
-                    changeLinkCall.map(changeLink =>
-                        ActionItem(
-                            href = changeLink.url,
-                            content = Text(messages("pla.summary.change")),
-                            visuallyHiddenText = Some(Messages(s"pla.summary.questions.$rowID")),
-                            attributes = Map("id" -> s"${rowID}ChangeLink")
-                        )
-                    )
-                ).flatten)
-            )
+                classes = s"govuk-!-width-one-quarter $boldClass $firstRowClass",
+                items = changeRemoveLinks
+            ))
         )
     }
 }

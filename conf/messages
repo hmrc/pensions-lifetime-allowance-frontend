@@ -414,7 +414,9 @@ pla.amends.heading.IP2014.noChanges                         = Your individual pr
 pla.amends.heading.IP2016.changed                           = Check your answers and submit the changes
 pla.amends.heading.IP2014.changed                           = Check your answers and submit the changes
 
-pla.amends.cancelPara                                       = Alternatively, you can <a href="{0}" id="{1}">cancel the changes</a> and go back.
+pla.amends.cancelPara.1                                     = Alternatively, you can
+pla.amends.cancelPara.link                                  = cancel the changes
+pla.amends.cancelPara.2                                     = and go back.
 
 pla.amends.CurrentPensions.IP2016.Amt                       = What were your UK pensions worth on 5 April 2016?
 pla.amends.CurrentPensions.IP2016.Amt.changeHint            = Change the amount that your pensions were worth on 5 April 2016
