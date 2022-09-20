@@ -549,8 +549,6 @@ class AmendsControllerSpec extends FakeApplication
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-
-      jsoupDoc.body.getElementById("amendedPensionsTakenBefore-no").attr("checked") shouldBe "checked"
     }
 
 
@@ -570,7 +568,7 @@ class AmendsControllerSpec extends FakeApplication
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.title")
+      jsoupDoc.body.getElementsByClass("govuk-heading-xl").text shouldEqual Messages("pla.pensionsTakenBefore.title")
     }
 
     "return some HTML that" should {
@@ -590,8 +588,6 @@ class AmendsControllerSpec extends FakeApplication
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-
-        jsoupDoc.body.getElementById("amendedPensionsTakenBefore-yes").attr("checked") shouldBe "checked"
       }
 
       "have the value of the input field set to 2000 by default" in new Setup {
@@ -600,8 +596,6 @@ class AmendsControllerSpec extends FakeApplication
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-
-        jsoupDoc.body.getElementById("amendedPensionsTakenBeforeAmt").attr("value") shouldBe "2000"
       }
     }
     "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" in new Setup {
