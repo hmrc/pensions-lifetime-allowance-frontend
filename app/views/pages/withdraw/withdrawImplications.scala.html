@@ -20,8 +20,12 @@
 @import play.api.Application
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import config.FrontendAppConfig
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(mainTemplate: main_template)
+@this(
+    layout: Layout,
+    govukWarningText : GovukWarningText
+)
 
 @(withdrawDateForm: Any,protectionType: String, status: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
@@ -29,30 +33,23 @@
     Application.instanceCache[PlaLanguageController].apply(application)
 }
 
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.versioned("javascripts/pla.js")'></script>
-}
+@layout(
+    pageTitle = Messages("pla.withdraw.protection.title", Messages(s"pla.withdraw.protection.${protectionType}.label")),
+) {
 
-@mainTemplate(title = Messages("pla.withdraw.protection.title", Messages(s"pla.withdraw.protection.${protectionType}.label")), scriptElem = Some(scriptElement), bodyClasses = None) {
+    <h1 class="govuk-heading-xl">@Messages("pla.withdraw.protection.title",Messages(s"pla.withdraw.protection.${protectionType}.label"))</h1>
 
+    @govukWarningText(WarningText(
+        iconFallbackText = "Warning",
+        content = Text(Messages("pla.withdraw.implication.info", Messages(s"pla.withdraw.protection.${protectionType}.label")))
+    ))
 
-    <a class="back-link" style="margin-bottom: 0px" href=@routes.ReadProtectionsController.currentProtections>Back</a>
-    <h1 class="heading-large">@Messages("pla.withdraw.protection.title",Messages(s"pla.withdraw.protection.${protectionType}.label"))</h1>
+    <p class="govuk-body">@Messages("pla.withdraw.protection.if.info", Messages(s"pla.withdraw.protection.${protectionType}.label"))</p>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@Messages("pla.withdraw.protection.if.info.1", Messages(s"pla.withdraw.protection.${protectionType}.label"))</li>
+        <li>@Messages("pla.withdraw.protection.if.info.2", Messages(s"pla.withdraw.protection.${protectionType}.label"))</li>
+    </ul>
 
-    @withdrawImplicationMessage(protectionType, status)
-
-    <div class="grid">
-        <p> @Messages("pla.withdraw.protection.if.info", Messages(s"pla.withdraw.protection.${protectionType}.label"))</p>
-        <ul class="bullets">
-            <li>@Messages("pla.withdraw.protection.if.info.1", Messages(s"pla.withdraw.protection.${protectionType}.label"))</li>
-            <li>@Messages("pla.withdraw.protection.if.info.2", Messages(s"pla.withdraw.protection.${protectionType}.label"))</li>
-        </ul>
-
-    </div>
-
-    <a id="continue-button" class="button" role="button" type="submit" href=@routes.WithdrawProtectionController.getWithdrawDateInput>@Messages("pla.withdraw.protection.continue.title")</a>
+    <a id="continue-button" class="govuk-button" role="button" type="submit" href=@routes.WithdrawProtectionController.getWithdrawDateInput>@Messages("pla.withdraw.protection.continue.title")</a>
     <br />
-    <br />
-
-
 }
