@@ -680,7 +680,7 @@ class AmendsControllerSpec extends FakeApplication
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-        jsoupDoc.body.getElementById("amendedPensionsTakenBetween-no").attr("checked") shouldBe "checked"
+        jsoupDoc.body.getElementById("conditional-amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__conditional govuk-radios__conditional--hidden"
       }
     }
 
@@ -719,7 +719,7 @@ class AmendsControllerSpec extends FakeApplication
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
-          jsoupDoc.body.getElementById("amendedPensionsTakenBetween-yes").attr("checked") shouldBe "checked"
+          jsoupDoc.body.getElementById("conditional-amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__conditional"
         }
 
         "have the value of the input field set to 2000 by default" in new Setup {

@@ -43,73 +43,73 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaPensionsTakenBetweenTitle
+      doc.title() shouldBe plaPensionsTakenBetweenTitleNew
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaPensionsTakenBetweenTitle
+      doc.select("h1.govuk-heading-xl").text shouldBe plaPensionsTakenBetweenTitle
     }
 
     "have the right sub-headers and summary text" in{
-      doc.select("h2").text shouldBe plaPensionsTakenBetweenQuestionTwo
-      doc.select("summary").text shouldBe plaPensionsTakenBetweenHelp
+      doc.select("h2.govuk-label--l").text shouldBe plaPensionsTakenBetweenQuestionTwo
+      doc.select(".govuk-details__summary-text").text shouldBe plaPensionsTakenBetweenHelp
     }
 
     "have the right explanatory paragraphs" in{
-      doc.select("p").eq(0).text shouldBe plaPensionsTakenBetweenParaOne
-      doc.select("p").eq(2).text shouldBe plaPensionsTakenBetweenParaTwo
-      doc.select("p").eq(3).text shouldBe plaPensionsTakenBetweenParaThree
+      doc.select("#conditional-amendedPensionsTakenBetween > p").text shouldBe plaPensionsTakenBetweenParaOne
+      doc.select("#ip16-amend-pensions-taken-between-help > div > p:nth-child(1)").text shouldBe plaPensionsTakenBetweenParaTwo
+      doc.select("#ip16-amend-pensions-taken-between-help > div > p:nth-child(3)").text shouldBe plaPensionsTakenBetweenParaThreeNew
     }
 
     "have a visible menu with a correct list values" in{
-      doc.select("li").eq(0).text shouldBe plaPensionsTakenBetweenBulletOne
-      doc.select("li").eq(1).text shouldBe plaPensionsTakenBetweenBulletTwo
-      doc.select("li").eq(2).text shouldBe plaPensionsTakenBetweenBulletThree
+      doc.select("#main-content > div > div > form > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBetweenBulletOne
+      doc.select("#main-content > div > div > form > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBetweenBulletTwo
+      doc.select("#main-content > div > div > form > ul > li:nth-child(3)").text shouldBe plaPensionsTakenBetweenBulletThree
     }
 
     "have a hidden drop-down menu with the correct list values" in{
-      doc.select("li").eq(3).text shouldBe plaPensionsTakenBetweenStepOne
-      doc.select("li").eq(4).text shouldBe plaPensionsTakenBetweenStepTwo
-      doc.select("li").eq(5).text shouldBe plaPensionsTakenBetweenStepThree
-      doc.select("li").eq(6).text shouldBe plaPensionsTakenBetweenStepFour
+      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsTakenBetweenStepOne
+      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(2)").text shouldBe plaPensionsTakenBetweenStepTwo
+      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsTakenBetweenStepThree
+      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(4)").text shouldBe plaPensionsTakenBetweenStepFour
     }
 
     "have a help link redirecting to the right location" in{
-      doc.select("a").text shouldBe plaPensionsTakenBetweenHelpLinkText
-      doc.select("a").attr("href") shouldBe plaPensionsTakenBetweenHelpLinkLocation
+      doc.select("a#ip16-amend-pensions-taken-between-help-link").text shouldBe plaPensionsTakenBetweenHelpLinkTextNew
+      doc.select("a#ip16-amend-pensions-taken-between-help-link").attr("href") shouldBe plaPensionsTakenBetweenHelpLinkLocation
     }
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPensionsTakenBetween.url
-      form.select("legend.visually-hidden").text() shouldBe plaPensionsTakenBetweenLegendText
+      form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBetweenLegendText
     }
 
     "have a £ symbol present" in{
-      doc.select(".poundSign").text shouldBe "£"
+      doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
     "have a pair of yes/no buttons" in{
-      doc.select("[for=amendedPensionsTakenBetween-yes]").text shouldBe plaBaseYes
-      doc.select("input#amendedPensionsTakenBetween-yes").attr("type") shouldBe "radio"
-      doc.select("[for=amendedPensionsTakenBetween-no]").text shouldBe plaBaseNo
-      doc.select("input#amendedPensionsTakenBetween-no").attr("type") shouldBe "radio"
+      doc.select("[for=amendedPensionsTakenBetween]").text shouldBe plaBaseYes
+      doc.select("input#amendedPensionsTakenBetween").attr("type") shouldBe "radio"
+      doc.select("[for=amendedPensionsTakenBetween-2]").text shouldBe plaBaseNo
+      doc.select("input#amendedPensionsTakenBetween-2").attr("type") shouldBe "radio"
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseChange
-      doc.select("button").attr("type") shouldBe "submit"
+      doc.select(".govuk-button").text shouldBe plaBaseChange
+      doc.select(".govuk-button").attr("id") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
-      errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select("span.error-notification").text shouldBe errorRequired
+      errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
+      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $errorRequired"
     }
 
     "not have errors on valid pages" in{
       pensionsForm.hasErrors shouldBe false
-      doc.select("span.error-notification").text shouldBe ""
+      doc.select(".govuk-error-message").text shouldBe ""
     }
   }
 }
