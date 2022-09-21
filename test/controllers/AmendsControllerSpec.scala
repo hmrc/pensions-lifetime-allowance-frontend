@@ -817,7 +817,7 @@ class AmendsControllerSpec extends FakeApplication
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
 
-        jsoupDoc.body.getElementById("amendedOverseasPensions-no").attr("checked") shouldBe "checked"
+        jsoupDoc.body.getElementById("conditional-amendedOverseasPensions").attr("class") shouldBe "govuk-radios__conditional govuk-radios__conditional--hidden"
       }
 
 
@@ -861,7 +861,7 @@ class AmendsControllerSpec extends FakeApplication
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          jsoupDoc.body.getElementById("amendedOverseasPensions-yes").attr("checked") shouldBe "checked"
+          jsoupDoc.body.getElementById("conditional-amendedOverseasPensions").attr("class") shouldBe "govuk-radios__conditional"
         }
 
         "have the value of the input field set to 2000 by default" in new Setup {
@@ -937,7 +937,7 @@ class AmendsControllerSpec extends FakeApplication
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
         status(DataItem.result) shouldBe 400
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
+        DataItem.jsoupDoc.getElementsByClass("govuk-error-message").text should include(Messages("pla.base.errors.errorQuestion"))
       }
     }
 
