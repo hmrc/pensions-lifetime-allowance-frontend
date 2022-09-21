@@ -22,47 +22,61 @@
 @import play.api.Application
 @import config.FrontendAppConfig
 
-@this(main_template: main_template)
+@this(
+    layout: Layout,
+    errorSummary: playHelpers.templates.errorSummary,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    formInlineDateInput: playHelpers.templates.formInlineDateInput,
+    formInputMoney: playHelpers.templates.formInputMoney,
+    submitButton: playHelpers.templates.submitButton
+)
 
-@(psoDetailsForm: Form[AmendPSODetailsModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(psoDetailsForm: Form[AmendPSODetailsModel])(implicit request: Request[_], messages: Messages)
 
-@main_template(title = Messages("pla.psoDetails.title"), bodyClasses = None) {
-
-    @if(psoDetailsForm.hasErrors){
-    @errorSummary(Messages("pla.base.errorSummaryLabel"), psoDetailsForm)
+@title = @{
+    if(psoDetailsForm.errors.nonEmpty){
+        messages("site.title.error", messages("pla.psoDetails.title"))
+    } else {
+        messages("pla.psoDetails.title")
     }
+}
 
-    <h1 class="heading-large">@Messages("pla.psoDetails.title")</h1>
+@layout(
+    pageTitle = title
+) {
+
+    @errorSummary(psoDetailsForm.errors)
+
+    <h1 class="govuk-heading-xl">@Messages("pla.psoDetails.title")</h1>
 
     @form(action = routes.AmendsController.submitAmendPsoDetails) {
 
-    <div class="inline form-group">
-
-        @formInlineDateInput(psoDetailsForm, "pso", Messages("pla.psoDetails.dateQuestionText"), Some(Messages("pla.psoDetails.dateHintText")))
-
-        @formInputMoney(
-        psoDetailsForm,
-        "psoAmt",
-        Messages("pla.psoDetails.psoAmountQuestion")
+        @formInlineDateInput(
+            content = Messages("pla.psoDetails.dateQuestionText"),
+            field = psoDetailsForm("pso"),
+            hintContent = Some(Messages("pla.psoDetails.dateHintText")),
+            pageHeading = false,
+            labelClass = Some("govuk-label--m")
         )
 
-    </div>
+        @formInputMoney(
+        field = psoDetailsForm("psoAmt"),
+        Messages("pla.psoDetails.psoAmountQuestion"),
+        pageHeading = false,
+        labelClass = Some("govuk-label--m")
+        )
 
-    <button class="button" type="submit" id="continue-button">
-        @if(psoDetailsForm("existingPSO").value.getOrElse("false") == "true") {
-            @Messages("pla.base.update")
-        } else {
-            @Messages("pla.base.add")
-        }
-    </button>
+        @submitButton(
+            submitText = if(psoDetailsForm("existingPSO").value.getOrElse("false") == "true") Messages("pla.base.update") else Messages("pla.base.add")
+        )
 
-    <div class="form-hidden">
+        <div class="govuk-visually-hidden">
 
-        @helper.inputText(psoDetailsForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-        @helper.inputText(psoDetailsForm("status"), 'type -> "hidden", 'class -> "hidden")
-        @helper.inputText(psoDetailsForm("existingPSO"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(psoDetailsForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(psoDetailsForm("status"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(psoDetailsForm("existingPSO"), 'type -> "hidden", 'class -> "hidden")
 
-    </div>
+        </div>
 
     }
 
