@@ -407,7 +407,9 @@ pla.amends.heading.IP2014.noChanges                         = Manylion eich diog
 pla.amends.heading.IP2016.changed                           = Gwiriwch eich atebion a chyflwynwch y newidiadau
 pla.amends.heading.IP2014.changed                           = Gwiriwch eich atebion a chyflwynwch y newidiadau
 
-pla.amends.cancelPara                                       = Fel arall, gallwch <a href="{0}" id="{1}">ganslo''r newidiadau</a> a mynd yn ôl.
+pla.amends.cancelPara.1                                     = Fel arall, gallwch
+pla.amends.cancelPara.link                                  = ganslo''r newidiadau
+pla.amends.cancelPara.2                                     = a mynd yn ôl.
 
 pla.amends.CurrentPensions.IP2016.Amt                       = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016?
 pla.amends.CurrentPensions.IP2016.Amt.changeHint            = Newidiwch beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016
