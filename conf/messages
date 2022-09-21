@@ -857,7 +857,8 @@ pla.withdraw.protection.title                         = Withdraw from {0}
 
 
 pla.withdraw.date-input.form.continue                 = Continue
-pla.withdraw.protection.what-happens.info.1           = Without any protection your pension will not be protected from <br>{0} and will be taxed when you start using it.
+pla.withdraw.protection.what-happens.info.1.p1        = Without any protection your pension will not be protected from
+pla.withdraw.protection.what-happens.info.1.p2        = and will be taxed when you start using it.
 pla.withdraw.protection.what-happens.info.2           = You may be able to apply for a new protection in the future, but it might cover less than the amount you are covered for now.
 pla.withdraw.protection.what-happens.info.3           = If you have a dormant protection it will protect your pension from its application date. This might mean that your pension is unprotected between {0} and the application date of the dormant protection.
 pla.withdraw.protection.what-happens.info.4           = You might be asked to provide evidence that your protection was valid and eligible to be withdrawn on {0}.

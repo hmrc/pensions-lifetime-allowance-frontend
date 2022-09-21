@@ -39,19 +39,15 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
     lazy val doc = Jsoup.parse(view.apply(withdrawDate,"ip14", "dormant").body)
 
     s"have a title ${"pla.withdraw.what-happens.info-heading"}" in {
-      doc.title() shouldBe plaWithdrawWhatHappensInfoHeading
+      doc.title() shouldBe s"$plaWithdrawWhatHappensInfoHeading - Protect your lifetime allowance - GOV.UK"
     }
 
     s"have a question of ${"pla.withdraw.what-happens.info-heading"}" in {
-      doc.select("h1.heading-large").text() shouldBe plaWithdrawWhatHappensInfoHeading
+      doc.select("h1.govuk-heading-xl").text() shouldBe plaWithdrawWhatHappensInfoHeading
     }
 
     s"have a back link with text 'back' " in {
-      doc.select("a").text() shouldBe plaBaseBack
-    }
-
-    "have a back with href" in {
-      doc.select("a").attr("href") shouldBe routes.WithdrawProtectionController.getWithdrawDateInput.url
+      doc.select("a#back-link").text() shouldBe plaBaseBack
     }
 
     "have a form action of 'getAction'" in {
@@ -69,32 +65,28 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
         submitButton.text shouldBe plaWithdrawImplicationsSubmit
       }
 
-      "be of type submit" in {
-        submitButton.attr("type") shouldBe "submit"
-      }
     }
 
     "have a div tag that" should {
-      lazy val grid = doc.select("div.grid")
 
       s"has the first paragraph of ${"pla.withdraw.protection.what-happens.info.1"}" in {
-        grid.select("p").get(0).text shouldBe plaWithdrawProtectionWhatHappensInfo1(withdrawDatePretty)
+        doc.select("p.govuk-body").get(0).text shouldBe plaWithdrawProtectionWhatHappensInfo1(withdrawDatePretty)
       }
 
       s"has the second paragraph of $plaWithdrawProtectionWhatHappensInfo2" in {
-        grid.select("p").get(1).text shouldBe plaWithdrawProtectionWhatHappensInfo2
+        doc.select("p.govuk-body").get(1).text shouldBe plaWithdrawProtectionWhatHappensInfo2
       }
 
       s"has the third paragraph of ${"pla.withdraw.protection.what-happens.info.3"}" in {
-        grid.select("p").get(2).text shouldBe plaWithdrawProtectionWhatHappensInfo3(withdrawDatePretty)
+        doc.select("p.govuk-body").get(2).text shouldBe plaWithdrawProtectionWhatHappensInfo3(withdrawDatePretty)
       }
 
       s"has the fourth paragraph of ${"pla.withdraw.protection.what-happens.info.4"}" in {
-        grid.select("p").get(3).text shouldBe plaWithdrawProtectionWhatHappensInfo4(withdrawDatePretty)
+        doc.select("p.govuk-body").get(3).text shouldBe plaWithdrawProtectionWhatHappensInfo4(withdrawDatePretty)
       }
 
       s"has the fifth paragraph of $plaWithdrawProtectionWhatHappensInfo5" in {
-        grid.select("p").get(4).text shouldBe plaWithdrawProtectionWhatHappensInfo5
+        doc.select("p.govuk-body").get(4).text shouldBe plaWithdrawProtectionWhatHappensInfo5
       }
 
     }

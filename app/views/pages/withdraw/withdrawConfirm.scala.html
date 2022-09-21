@@ -14,48 +14,30 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-@import controllers.PlaLanguageController
-@import helpers.templates.formInlineDateInput
-@import play.api.Application
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import config.FrontendAppConfig
 @import common.Dates._
 
-@this(mainTemplate:main_template)
+@this(
+    layout: Layout,
+    submitButton: playHelpers.templates.submitButton,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
+)
 
-@(withdrawDate: String, protectionType: String, status: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, lang: Lang, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(withdrawDate: String, protectionType: String, status: String)(implicit request: Request[_], messages: Messages, lang: Lang)
 
-@lc = @{
-    Application.instanceCache[PlaLanguageController].apply(application)
-}
-
-@scriptElement = {
-    <script type="text/javascript" src='@controllers.routes.Assets.versioned("javascripts/pla.js")'></script>
-}
-
-@mainTemplate(title = Messages("pla.withdraw.what-happens.info-heading"), scriptElem = Some(scriptElement), bodyClasses = None) {
+@layout(pageTitle = Messages("pla.withdraw.what-happens.info-heading")) {
 
     @form(action = routes.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)) {
 
+        <h1 class="govuk-heading-xl">@Messages(s"pla.withdraw.what-happens.info-heading")</h1>
 
-        <a class="back-link" style="margin-bottom: 0px" href=@routes.WithdrawProtectionController.getWithdrawDateInput>Back</a>
+        <p class="govuk-body">@Messages("pla.withdraw.protection.what-happens.info.1.p1")
+            <br>@withDrawDateString(withdrawDate)
+            @Messages("pla.withdraw.protection.what-happens.info.1.p2")</p>
+        <p class="govuk-body">@Messages("pla.withdraw.protection.what-happens.info.2")</p>
+        <p class="govuk-body">@Messages("pla.withdraw.protection.what-happens.info.3",withDrawDateString(withdrawDate))</p>
+        <p class="govuk-body">@Messages("pla.withdraw.protection.what-happens.info.4",withDrawDateString(withdrawDate))</p>
+        <p class="govuk-body">@Messages("pla.withdraw.protection.what-happens.info.5")</p>
 
-
-        <h1 class="heading-large">@Messages(s"pla.withdraw.what-happens.info-heading")</h1>
-
-        <div class="grid">
-            <p>@Html(Messages("pla.withdraw.protection.what-happens.info.1", withDrawDateString(withdrawDate)))</p>
-            <p>@Messages("pla.withdraw.protection.what-happens.info.2",Messages(s"pla.withdraw.protection.${protectionType}.label"),Messages(s"pla.withdraw.protection.${protectionType}.label"))</p>
-            <p>@Messages("pla.withdraw.protection.what-happens.info.3",withDrawDateString(withdrawDate))</p>
-            <p>@Messages("pla.withdraw.protection.what-happens.info.4",withDrawDateString(withdrawDate))</p>
-            <p>@Messages("pla.withdraw.protection.what-happens.info.5")</p>
-        </div>
-
-
-
-        <button class="button" type="submit" id="submit">@Messages("pla.withdraw.implications.submit")</button>
-        <br />
-        <br />
+        @submitButton("pla.withdraw.implications.submit")
     }
 }
