@@ -53,25 +53,25 @@ class CommonBindersSpec extends FakeApplication with PSODetailsMessages with Moc
     "return a form error" when {
       "given an invalid key" in {
         val postData = Json.obj(
-          "withdrawDay" -> "20",
-          "withdrawMonth" -> "2",
+          "withdrawDate.day" -> "20",
+          "withdrawDate.month" -> "2",
           "incorrectKey" -> "2017"
         )
         val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
         assert(validatedForm.errors.size == 1)
-        assert(validatedForm.errors.contains(FormError("withdrawYear",
+        assert(validatedForm.errors.contains(FormError("withdrawDate.year",
           List(errorEmptyYear))))
       }
 
       "given an incorrect data type" in {
         val postData = Json.obj(
-          "withdrawDay" -> "20",
-          "withdrawMonth" -> "2",
-          "withdrawYear" -> "X"
+          "withdrawDate.day" -> "20",
+          "withdrawDate.month" -> "2",
+          "withdrawDate.year" -> "X"
         )
         val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
         assert(validatedForm.errors.size == 1)
-        assert(validatedForm.errors.contains(FormError("withdrawYear",
+        assert(validatedForm.errors.contains(FormError("withdrawDate.year",
           List(errorReal))))
       }
     }
@@ -80,25 +80,25 @@ class CommonBindersSpec extends FakeApplication with PSODetailsMessages with Moc
       "return a form error" when {
         "given an future date" in {
           val postData = Json.obj(
-            "withdrawDay" -> "20",
-            "withdrawMonth" -> "2",
-            "withdrawYear" -> s"${LocalDate.now.getYear + 1}"
+            "withdrawDate.day" -> "20",
+            "withdrawDate.month" -> "2",
+            "withdrawDate.year" -> s"${LocalDate.now.getYear + 1}"
           )
           val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
           assert(validatedForm.errors.size == 1)
-          assert(validatedForm.errors.contains(FormError("withdrawDay",
+          assert(validatedForm.errors.contains(FormError("withdrawDate.day",
             List(errorFutureDate))))
         }
 
         "given an invalid date" in {
           val postData = Json.obj(
-            "withdrawDay" -> "20",
-            "withdrawMonth" -> "2",
-            "withdrawYear" -> "0000"
+            "withdrawDate.day" -> "20",
+            "withdrawDate.month" -> "2",
+            "withdrawDate.year" -> "0000"
           )
           val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
           assert(validatedForm.errors.size == 1)
-          assert(validatedForm.errors.contains(FormError("withdrawDay",
+          assert(validatedForm.errors.contains(FormError("withdrawDate.day",
             List(errorDate))))
         }
       }
@@ -113,17 +113,19 @@ class CommonBindersSpec extends FakeApplication with PSODetailsMessages with Moc
     }
 
     "return a valid Map for the withdrawDateValidationFormatter" in{
-      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testWithdrawDay", Some(31)) shouldBe Map("testWithdrawDay" -> "31")
-      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testWithdrawMonth", Some(10)) shouldBe Map("testWithdrawMonth" -> "10")
-      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testWithdrawYear", Some(2016)) shouldBe Map("testWithdrawYear" -> "2016")
-      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testWithdrawYear", None) shouldBe Map("testWithdrawYear" -> "")
+      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testwithdrawDate.day", Some(31)) shouldBe Map("testwithdrawDate.day" -> "31")
+      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testwithdrawDate.month", Some(10)) shouldBe Map("testwithdrawDate.month" -> "10")
+      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testwithdrawDate.year", Some(2016)) shouldBe Map("testwithdrawDate.year" -> "2016")
+      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testwithdrawDate.year", None) shouldBe Map("testwithdrawDate.year" -> "")
     }
 
     "return a valid Map for the withdrawDateStringToIntFormatter" in{
-      testForm.withdrawDateStringToIntFormatter.unbind("testWithdrawDay", Some(31)) shouldBe Map("testWithdrawDay" -> "31")
-      testForm.withdrawDateStringToIntFormatter.unbind("testWithdrawMonth", Some(10)) shouldBe Map("testWithdrawMonth" -> "10")
-      testForm.withdrawDateStringToIntFormatter.unbind("testWithdrawYear", Some(2016)) shouldBe Map("testWithdrawYear" -> "2016")
-      testForm.withdrawDateStringToIntFormatter.unbind("testWithdrawYear", None) shouldBe Map("testWithdrawYear" -> "")
+      testForm.withdrawDateStringToIntFormatter.unbind("testwithdrawDate.day", Some(31)) shouldBe Map("testwithdrawDate.day" -> "31")
+      testForm.withdrawDateStringToIntFormatter.unbind("testwithdrawDate.month", Some(10)) shouldBe Map("testwithdrawDate.month" -> "10")
+      testForm.withdrawDateStringToIntFormatter.unbind("testwithdrawDate.year", Some(2016)) shouldBe Map("testwithdrawDate.year" -> "2016")
+      testForm.withdrawDateStringToIntFormatter.unbind("testwithdrawDate.year", None) shouldBe Map("testwithdrawDate.year" -> "")
     }
   }
 }
+
+//List(FormError(withdrawDate.day,List(pla.withdraw.date-input.form.date-in-future),List()))
