@@ -14,41 +14,35 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-@import controllers.PlaLanguageController
-@import helpers.amends.amendSection
-@import play.api.Application
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import config.FrontendAppConfig
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
-@this(mainTemplate: main_template)
+@this(
+    layout: Layout,
+    govukPanel : GovukPanel
+)
 
-@(protectionType: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
-
-@lc = @{
-    Application.instanceCache[PlaLanguageController].apply(application)
-}
-
-@mainTemplate(title = Messages("pla.withdraw.confirmation.message", Messages(s"pla.withdraw.protection.${protectionType}.label"))) {
+@(protectionType: String)(implicit request: Request[_], messages: Messages)
 
 
+@layout(
+    pageTitle = Messages("pla.withdraw.confirmation.message", Messages(s"pla.withdraw.protection.${protectionType}.label"))
+) {
 
-    <div class="grid-row">
-        <div class="transaction-banner--complete">
-            <h1 class="heading-large" id="amendmentOutcome">@Messages("pla.withdraw.confirmation.message", Messages(s"pla.withdraw.protection.${protectionType}.label"))</h1>
-        </div>
+    @govukPanel(Panel(
+        title = Text(Messages("pla.withdraw.confirmation.message", Messages(s"pla.withdraw.protection.${protectionType}.label")))
+    ))
 
+    <p class="govuk-body">@Messages("pla.withdraw.confirmation.contact.you.if.needed")</p>
+    <p class="govuk-body">
+        @Messages("pla.withdraw.confirmation.other.protections.beforeLink")
+        <a class="govuk-link" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance">@Messages("pla.withdraw.confirmation.other.protections.link")</a>
+        @Messages("pla.withdraw.confirmation.other.protections.afterLink")
+    </p>
 
-        <div class="grid">
-            <p>@Messages("pla.withdraw.confirmation.contact.you.if.needed")</p>
-            <p>@Html(Messages("pla.withdraw.confirmation.other.protections.link")) </p>
-        </div>
+    <h2 class="govuk-heading-m">@Messages("pla.withdraw.confirm.feedback-heading")</h2>
 
-
-        <h2>@Messages("pla.withdraw.confirm.feedback-heading")</h2>
-
-        <p><a id="submit-survey-button" href=@controllers.routes.AccountController.signOut class="button--link-style" role="button" onclick="submitExitSurvey()">
-            @Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Messages("pla.resultSuccess.exitSurvey")</p>
-
-    </div>
+    <p class="govuk-body">
+        <a id="submit-survey-button" href=@controllers.routes.AccountController.signOut class="govuk-link" role="button" onclick="submitExitSurvey()">
+            @Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Messages("pla.resultSuccess.exitSurvey")
+    </p>
 }
