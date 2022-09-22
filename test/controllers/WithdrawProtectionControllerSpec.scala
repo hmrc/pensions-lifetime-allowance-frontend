@@ -45,7 +45,7 @@ import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 import views.html.pages.fallback.technicalError
-import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdrawDate, withdrawImplications, withdrawSummary}
+import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdrawDate, withdrawImplications}
 
 import scala.concurrent.Future
 
@@ -70,7 +70,6 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
   val mockWithdrawImplications: withdrawImplications = app.injector.instanceOf[withdrawImplications]
   val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
   val mockEnv: Environment = mock[Environment]
-  val mockWithdrawSummary: withdrawSummary = app.injector.instanceOf[withdrawSummary]
   implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
@@ -98,8 +97,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
       mockWithdrawConfirmation,
       mockWithdrawDate,
       mockWithdrawImplications,
-      mockTechnicalError,
-      mockWithdrawSummary
+      mockTechnicalError
     ) {
     }
   }
@@ -235,48 +233,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
     }
 
 
-    "In WithdrawProtectionController calling the withdrawSummary action" when {
-
-      "there is no stored protection model" should {
-        "return 500" in new Setup {
-          lazy val result = {
-            mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-            keystoreFetchCondition[ProtectionModel](None)
-            controller.withdrawSummary(fakeRequest)
-          }
-
-          status(result) shouldBe INTERNAL_SERVER_ERROR
-          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-        }
-      }
-
-      "there is a stored protection model" should {
-        "return 200" in new Setup {
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-
-          keystoreFetchCondition[ProtectionModel](Some(ip2016Protection))
-          when(mockDisplayConstructors.createWithdrawSummaryTable(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
-
-          val result = controller.withdrawSummary(fakeRequest)
-          status(result) shouldBe OK
-        }
-      }
-    }
-
     "In WithdrawProtectionController calling the getWithdrawDateInput action" when {
-
-      "there is no stored protection model" should {
-        "return 500" in new Setup {
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-
-          keystoreFetchCondition[ProtectionModel](None)
-          lazy val result = controller.withdrawSummary(fakeRequest)
-
-          keystoreFetchCondition[ProtectionModel](None)
-          status(result) shouldBe INTERNAL_SERVER_ERROR
-          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-        }
-      }
 
       "there is a stored protection model" should {
         "return 200" in new Setup {
