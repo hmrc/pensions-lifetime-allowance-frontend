@@ -46,61 +46,50 @@
         <li>@Messages("pla.pensionsTakenBefore.bullet.1")</li>
         <li>@Messages("pla.pensionsTakenBefore.bullet.2")</li>
     </ul>
-    <p class="govuk-body">@Html(
-        Messages(
-            "pla.pensionsTakenBefore.para.3",
-            s"""
-               <a href="${Links.pensionsTakenBefore}"
-                    class = "govuk-link"
-                    id = "ip16-pensions-taken-before-help-link"
-                    rel="external"
-                    target="_blank"
+    <p class="govuk-body">
+        @Messages("pla.pensionsTakenBefore.para.3")
+        <a href="@Links.pensionsTakenBefore" class ="govuk-link" id ="ip16-pensions-taken-before-help-link" rel="noreferrer noopener" target="_blank"
                     onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'ip16-pensions-taken-before-technical-guidance')">
-                        ${Messages("pla.pensionsTakenBefore.helpLinkText")} (${Messages("pla.base.newTab")})
-                    </a>
-             """.stripMargin
-        ))
+            @Messages("pla.pensionsTakenBefore.helpLinkText") (@Messages("pla.base.newTab")).
+        </a>
     </p>
 }
 
 @hiddenYesNoContent = {
-@helpTextAccordion(
-    id = "ip16-pensions-taken-before-help",
-    summaryText =  Messages("pla.pensionsTakenBefore.help"),
-    hiddenContent = helpTextAccordionContent
-)
 
-@formInputMoney(
-    field = pensionsTakenBeforeForm("pensionsTakenBeforeAmt"),
-    question = Messages("pla.pensionsTakenBefore.question"),
-    pageHeading = false,
-    labelClass = Some("govuk-label--l")
-)
+    <h2 class="govuk-label--l">@Messages("pla.pensionsTakenBefore.question")</h2>
+
+    @helpTextAccordion(
+        id = "ip16-pensions-taken-before-help",
+        summaryText =  Messages("pla.pensionsTakenBefore.help"),
+        hiddenContent = helpTextAccordionContent
+    )
+
+    @formInputMoney(
+        field = pensionsTakenBeforeForm("pensionsTakenBeforeAmt"),
+        question = Messages("pla.pensionsTakenBefore.question"),
+        hideLabel = true,
+        pageHeading = false
+    )
 }
 
 @layout(
     pageTitle = title
 ) {
-
-    @if(pensionsTakenBeforeForm.hasErrors){
-    @errorSummary(
-        pensionsTakenBeforeForm.errors, Some("pensionsTakenBefore")
-    )
-    }
+    @errorSummary(pensionsTakenBeforeForm.errors, Some("pensionsTakenBefore"))
 
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBefore.title")</h1>
 
     @form(action = routes.IP2016Controller.submitPensionsTakenBefore) {
-        <div class="inline form-group">
-            @formHiddenYesNoRadio(
-                field =  pensionsTakenBeforeForm("pensionsTakenBefore"),
-                question = Messages("pla.pensionsTakenBefore.title"),
-                hiddenQuestion = true,
-                yesHiddencontent = Some(hiddenYesNoContent)
-            )
-        </div>
+
+        @formHiddenYesNoRadio(
+            field =  pensionsTakenBeforeForm("pensionsTakenBefore"),
+            question = Messages("pla.pensionsTakenBefore.title"),
+            hiddenQuestion = true,
+            yesHiddencontent = Some(hiddenYesNoContent)
+        )
 
         @submitButton()
-        }
     }
+}
 

@@ -129,7 +129,7 @@ pla.pensionsTakenBefore.step.3              = Lluoswch y ffigur hwn â 25.
 pla.pensionsTakenBefore.para.2              = Bydd angen i chi wneud cyfrifiad gwahanol os yw''r naill neu''r llall o''r canlynol yn gymwys:
 pla.pensionsTakenBefore.bullet.1            = rydych wedi cael incwm o bensiynau eraill er 6 Ebrill 2006
 pla.pensionsTakenBefore.bullet.2            = mae gennych bensiwn a godir o''r gronfa
-pla.pensionsTakenBefore.para.3              = Darganfyddwch sut yn {0}
+pla.pensionsTakenBefore.para.3              = Darganfyddwch sut yn
 pla.pensionsTakenBefore.helpLinkText        = yr arweiniad technegol hwn ar werthuso''ch pensiynau
 
 ## IP14 Pensions Taken Before ##
