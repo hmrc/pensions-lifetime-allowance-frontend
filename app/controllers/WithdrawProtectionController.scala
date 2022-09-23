@@ -49,8 +49,7 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
                                              withdrawConfirmation: views.html.pages.withdraw.withdrawConfirmation,
                                              withdrawDate: views.html.pages.withdraw.withdrawDate,
                                              withdrawImplications: views.html.pages.withdraw.withdrawImplications,
-                                             technicalError: views.html.pages.fallback.technicalError,
-                                             withdrawSummary: views.html.pages.withdraw.withdrawSummary
+                                             technicalError: views.html.pages.fallback.technicalError
                                             )
                                             (implicit val appConfig: FrontendAppConfig,
                                              implicit val partialRetriever: FormPartialRetriever,
@@ -63,20 +62,6 @@ extends FrontendController(mcc) with I18nSupport with Logging {
 
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
-
-  /** Withdraw protections journey **/
-  def withdrawSummary: Action[AnyContent] = Action.async {
-    implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
-          case Some(currentProtection) =>
-            Ok(withdrawSummary(displayConstructors.createWithdrawSummaryTable(currentProtection)))
-          case _ =>
-            logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
-            InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-        }
-      }
-  }
 
   def withdrawImplications: Action[AnyContent] = Action.async {
     implicit request =>
