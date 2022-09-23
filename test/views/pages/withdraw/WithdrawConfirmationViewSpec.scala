@@ -28,7 +28,7 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
     lazy val doc = Jsoup.parse(view("IP2014").body)
 
     s"have a title ${"pla.withdraw.confirmation.message"}" in {
-      doc.title() shouldBe plaWithdrawConfirmationMessage(plaWithdrawProtectionIP2014label)
+      doc.title() shouldBe plaWithdrawConfirmationTitle(plaWithdrawProtectionIP2014label)
     }
 
     s"have a question of ${"pla.withdraw.confirmation.message"}" in {
@@ -36,43 +36,37 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
     }
 
     "have a div tag that" should {
-      lazy val grid = doc.select("div.grid-row > div.grid")
 
-
-      s"has the first paragraph of ${"pla.withdraw.confirmation.contact.you.if.needed"}" in {
-        grid.select("p").get(0).text shouldBe plaWithdrawConfirmationContactYouIfNeeded
+      s"have the first paragraph of ${"pla.withdraw.confirmation.contact.you.if.needed"}" in {
+        doc.select("#main-content > div > div > p:nth-child(2)").text shouldBe plaWithdrawConfirmationContactYouIfNeeded
       }
 
       s"have a question of ${"pla.withdraw.confirmation.other.protections.link"}" in {
-        doc.select("div.grid > p").get(1).text shouldBe plaWithdrawConfirmationOtherProtections
+        doc.select("#main-content > div > div > p:nth-child(3)").text shouldBe plaWithdrawConfirmationOtherProtections
       }
 
       "Other protections link " in {
-        doc.select("div.grid > p a").text() shouldBe plaWithdrawConfirmationOtherProtectionsLink
+        doc.select("p:nth-child(3) > a").text() shouldBe plaWithdrawConfirmationOtherProtectionsLink
       }
 
       "Other protections link href" in {
-        doc.select("div.grid > p a").attr("href") shouldBe plaWithdrawConfirmationOtherProtectionsUrl
+        doc.select("#main-content > div > div > p:nth-child(3) > a").attr("href") shouldBe plaWithdrawConfirmationOtherProtectionsUrl
 
-      }
-
-      "have a div tag size" in {
-        grid.size() shouldBe 1
       }
     }
 
     s"have a message of ${"pla.withdraw.confirm.feedback-heading"}" in {
-      doc.select("div.grid-row > h2").text shouldBe plaWithdrawConfirmFeedbackHeading
+      doc.select("h2.govuk-heading-m").text shouldBe plaWithdrawConfirmFeedbackHeading
     }
 
     s"feedback message of ${"pla.withdraw.confirm.feedback-text"}" in {
-      doc.select("div.grid-row > p").text shouldBe plaWithdrawConfirmFeedbackText
+      doc.select("#main-content > div > div > p:nth-child(5)").text shouldBe plaWithdrawConfirmFeedbackText
     }
     "feedback link " in {
-      doc.select("div.grid-row > p a").text() shouldBe plaWithdrawConfirmFeedbackLink
+      doc.select("#submit-survey-button").text() shouldBe plaWithdrawConfirmFeedbackLink
     }
     "feedback link href" in {
-      doc.select("div.grid-row > p a").attr("href")  shouldBe plaWithdrawConfirmFeedbackUrl
+      doc.select("#submit-survey-button").attr("href")  shouldBe plaWithdrawConfirmFeedbackUrl
     }
 
   }

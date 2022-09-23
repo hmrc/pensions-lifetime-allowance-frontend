@@ -845,7 +845,9 @@ pla.withdraw.protection.what-happens.info.4           = Mae''n bosibl y gofynnir
 pla.withdraw.protection.what-happens.info.5           = Ni fyddwch yn gallu dileu na diwygio''r cais hwn ar ôl i chi ei gyflwyno.
 pla.withdraw.confirmation.message                     = Mae''ch {0} wedi cael ei (d)dileu
 pla.withdraw.confirmation.contact.you.if.needed       = Efallai y bydd yn rhaid i ni gysylltu â chi i gadarnhau''r wybodaeth rydych wedi''i rhoi i ni.
-pla.withdraw.confirmation.other.protections.link      = Gweler <a href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance.cy">manylion diogelwch arall a sut i wneud cais</a> ar GOV.UK.
+pla.withdraw.confirmation.other.protections.beforeLink = Gweler
+pla.withdraw.confirmation.other.protections.link      = manylion diogelwch arall a sut i wneud cais
+pla.withdraw.confirmation.other.protections.afterLink = ar GOV.UK.
 pla.withdraw.confirmation.check.details               = Gallwch wirio manylion eich pensiwn yn eich <a href="{0}">cyfrif treth personol</a>.
 pla.existingProtections.withdrawnDate                 = Dyddiad y tynnwyd yn ôl
 

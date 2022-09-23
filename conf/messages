@@ -865,7 +865,9 @@ pla.withdraw.protection.what-happens.info.4           = You might be asked to pr
 pla.withdraw.protection.what-happens.info.5           = You will not be able to cancel or amend this request once you submit.
 pla.withdraw.confirmation.message                     = Your {0} has been removed
 pla.withdraw.confirmation.contact.you.if.needed       = We may need to contact you to confirm the information you''ve given us.
-pla.withdraw.confirmation.other.protections.link      = View <a href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance">details about other protections and how to apply</a> on GOV.UK.
+pla.withdraw.confirmation.other.protections.beforeLink = View
+pla.withdraw.confirmation.other.protections.link      = details about other protections and how to apply
+pla.withdraw.confirmation.other.protections.afterLink = on GOV.UK.
 pla.withdraw.confirmation.check.details               = You can check the details of your pension in your <a href="{0}">personal tax account</a>.
 pla.existingProtections.withdrawnDate                 = Withdrawn date
 
