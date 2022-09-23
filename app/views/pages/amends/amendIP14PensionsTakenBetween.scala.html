@@ -16,91 +16,87 @@
 
 @import models.amendModels.AmendPensionsTakenBetweenModel
 @import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.{formInputMoney,formHiddenYesNoRadio, helpTextAccordion}
-@import play.api.data._
 @import common.Links
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
-@this(main_template: main_template)
+@this(
+    layout: Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    submitButton: playHelpers.templates.submitButton,
+    formInputMoney: playHelpers.templates.formInputMoney,
+    helpTextAccordion: playHelpers.templates.helpTextAccordion,
+    errorSummary: playHelpers.templates.errorSummary,
+    formHiddenYesNoRadio: playHelpers.templates.formHiddenYesNoRadio
+)
 
-@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
-    <p>@Messages("pla.ip14PensionsTakenBetween.para.2")</p>
-    <ol>
+    <p class="govuk-body">@Messages("pla.ip14PensionsTakenBetween.para.2")</p>
+    <ol class="govuk-list govuk-list--number">
         <li>@Messages("pla.ip14PensionsTakenBetween.step.1")</li>
         <li>@Messages("pla.pensionsTakenBetween.step.2")</li>
         <li>@Messages("pla.pensionsTakenBetween.step.3")</li>
         <li>@Messages("pla.pensionsTakenBetween.step.4")</li>
     </ol>
-    <p>@Html(
-        Messages(
-            "pla.pensionsTakenBetween.para.3",
-            s"""
-               <a href="${Links.pensionsTakenBetween}"
-                    id = "ip14-amend-pensions-taken-between-help-link"
-                    rel="external"
-                    target="_blank"
-                    onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'ip14-amend-pensions-taken-between-technical-guidance')">
-                        ${Messages("pla.pensionsTakenBetween.helpLinkText")} (${Messages("pla.base.newWindow")})
-                    </a>
-             """.stripMargin
-        ))
+    <p class="govuk-body">@Messages("pla.pensionsTakenBetween.para.3.nonInput")
+        <a href="@Links.pensionsTakenBetween"
+           id="ip14-amend-pensions-taken-between-help-link"
+           class="govuk-link"
+           rel="noreferrer noopener"
+           target="_blank">@Messages("pla.pensionsTakenBetween.helpLinkText") (@Messages("pla.base.newTab"))</a>.
     </p>
 }
 
 @hiddenYesNoContent = {
-@formInputMoney(
-    amendPensionsTakenBetweenForm,
-    "amendedPensionsTakenBetweenAmt",
-    Messages("pla.pensionsTakenBetween.questionTwo"),
-    None,
-    Some(
-        Html(s"""<p>
-                    ${Messages("pla.pensionsTakenBetween.para.1")}
-                 </p>""".stripMargin +
-                helpTextAccordion("ip14-amend-pensions-taken-between-help", Messages("pla.pensionsTakenBetween.help"), helpTextAccordionContent)))
-)
-
+    @formInputMoney(
+        field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetweenAmt"),
+        question = Messages("pla.pensionsTakenBetween.questionTwo"),
+        labelClass = Some("govuk-label--m"),
+        hideLabel = false,
+        pageHeading = false
+    )
+     <p class="govuk-body govuk-!-margin-top-4">@Messages("pla.pensionsTakenBetween.para.1")</p>
+     @helpTextAccordion(
+        id = "ip14-amend-pensions-taken-between-help",
+        summaryText = Messages("pla.pensionsTakenBetween.help"),
+        hiddenContent = helpTextAccordionContent
+    )
 }
 
-
-@main_template(title=Messages("pla.ip14PensionsTakenBetween.title")) {
-
-@if(amendPensionsTakenBetweenForm.hasErrors){
-@errorSummary(
-Messages("pla.base.errorSummaryLabel"), amendPensionsTakenBetweenForm
-)
+@title = @{
+    if(amendPensionsTakenBetweenForm.errors.nonEmpty){
+        messages("site.title.error", messages("pla.ip14PensionsTakenBetween.title"))
+    } else {
+        messages("pla.ip14PensionsTakenBetween.title")
+    }
 }
 
-<h1 class="heading-large">@Messages("pla.ip14PensionsTakenBetween.title")</h1>
+@layout(
+    pageTitle = title
+){
+    @errorSummary(amendPensionsTakenBetweenForm.errors, Some("amendPensionsTakenBetween"))
+    <h1 class="govuk-heading-xl">@Messages("pla.ip14PensionsTakenBetween.title")</h1>
 
-@form(action = routes.AmendsController.submitAmendPensionsTakenBetween) {
+    @form(action = routes.AmendsController.submitAmendPensionsTakenBetween) {
 
-    <legend>
-        <ul class="list list-bullet">
+        <ul class="govuk-list govuk-list--bullet">
             <li>@Messages("pla.pensionsTakenBetween.bullet.1")</li>
             <li>@Messages("pla.pensionsTakenBetween.bullet.2")</li>
             <li>@Messages("pla.pensionsTakenBetween.bullet.3")</li>
         </ul>
-    </legend>
-<div class="inline form-group">
-    @formHiddenYesNoRadio(
-    amendPensionsTakenBetweenForm,
-    "amendedPensionsTakenBetween",
-    Messages("pla.ip14PensionsTakenBetween.legend"),
-    hiddenYesNoContent
-    )
 
-</div>
-<button class="button" type="submit" id="continue-button" >@Messages("pla.base.change")</button>
-<div class="form-hidden">
+        @formHiddenYesNoRadio(
+            field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetween"),
+            question = Messages("pla.ip14PensionsTakenBetween.legend"),
+            pageHeading = false,
+            hiddenQuestion = true,
+            yesHiddencontent = Some(hiddenYesNoContent)
+        )
 
-    @helper.inputText(amendPensionsTakenBetweenForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-    @helper.inputText(amendPensionsTakenBetweenForm("status"), 'type -> "hidden", 'class -> "hidden")
-
-</div>
-}
+        @submitButton(Messages("pla.base.change"))
+        <div class="govuk-visually-hidden">
+            @helper.inputText(amendPensionsTakenBetweenForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(amendPensionsTakenBetweenForm("status"), 'type -> "hidden", 'class -> "hidden")
+        </div>
+    }
 }
