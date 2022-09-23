@@ -16,9 +16,11 @@
 
 @import models.ProtectionDetailsDisplayModel
 
+@this()
+
 @(details: ProtectionDetailsDisplayModel)(implicit messages: Messages)
 
-<ul class="list list-bullet">
+<ul class="govuk-list govuk-list--bullet">
     <li id="yourFullName">@Messages("pla.resultSuccess.yourName")</li>
     <li id="yourNino">@Messages("pla.resultSuccess.yourNino")</li>
     @if(details.protectionReference.isDefined) {<li id="protectionRef">@Messages("pla.resultSuccess.protectionRef"): @details.protectionReference.get</li>}

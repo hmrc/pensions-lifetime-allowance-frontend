@@ -64,28 +64,28 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
 
   "the OutcomeActiveView" should{
     "have the correct title" in{
-      docIP16.title() shouldBe plaResultSuccessOutcomeActiveTitle
+      docIP16.title() shouldBe plaResultSuccessOutcomeActiveTitleNew
     }
 
     "have the right success message displayed for IP16" in{
-      docIP16.select("span#amendmentOutcome").text() shouldBe plaResultSuccessIP16Heading
-      docIP16.select("p#amendedAllowanceText").text() shouldBe plaResultSuccessAllowanceSubHeading
-      docIP16.select("span#protectedAmount").text() shouldBe "£1,350,000.45"
+      docIP16.select("h1.govuk-panel__title").text() shouldBe plaResultSuccessIP16Heading
+      docIP16.select("#amendedAllowanceText").text() shouldBe plaResultSuccessAllowanceSubHeading
+      docIP16.select("strong#protectedAmount").text() shouldBe "£1,350,000.45"
     }
 
     "have the right success message displayed for IP14" in{
-      docIP14.select("span#amendmentOutcome").text() shouldBe plaResultSuccessIP14Heading
-      docIP14.select("p#amendedAllowanceText").text() shouldBe plaResultSuccessAllowanceSubHeading
-      docIP14.select("span#protectedAmount").text() shouldBe "£1,350,000.11"
+      docIP14.select("h1.govuk-panel__title").text() shouldBe plaResultSuccessIP14Heading
+      docIP14.select("#amendedAllowanceText").text() shouldBe plaResultSuccessAllowanceSubHeading
+      docIP14.select("strong#protectedAmount").text() shouldBe "£1,350,000.11"
     }
 
     "have a properly structured 'Your protection details' section" when{
       "looking at the header" in{
-        docIP16.select("h2").eq(0).text() shouldBe plaResultSuccessProtectionDetails
+        docIP16.select("h2.govuk-heading-m").eq(0).text() shouldBe plaResultSuccessProtectionDetails
       }
 
       "looking at the explanatory paragraph" in{
-        docIP16.select("p").eq(1).text() shouldBe plaResultSuccessDetailsContent
+        docIP16.select("#main-content > div > div > p:nth-child(8)").text() shouldBe plaResultSuccessDetailsContent
       }
 
       "looking at the bullet point list" in{
@@ -98,38 +98,38 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
       }
 
       "have the right print message" in{
-        docIP16.select("a#printPage").text() shouldBe plaResultSuccessPrint
+        docIP16.select("a#printPage").text() shouldBe plaResultSuccessPrintNew
         docIP16.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
       }
     }
 
     "have a properly structured 'Changing your protection details' section" when{
       "looking at the header" in{
-        docIP16.select("h2").eq(1).text() shouldBe plaResultSuccessIPChangeDetails
+        docIP16.select("h2.govuk-heading-m").eq(1).text() shouldBe plaResultSuccessIPChangeDetails
       }
 
       "looking at the explanatory paragraph" in{
-        docIP16.select("p").eq(3).text() shouldBe plaResultSuccessIPPensionSharing
-        docIP16.select("p").eq(4).text() shouldBe plaResultSuccessViewDetails
+        docIP16.select("p#ipPensionSharing").text() shouldBe plaResultSuccessIPPensionSharing
+        docIP16.select("#main-content > div > div > p:nth-child(13)").text() shouldBe plaResultSuccessViewDetails
       }
 
       "using the links" in{
-        docIP16.select("a").eq(1).text() shouldBe plaResultSuccessIPPensionSharingLinkText
-        docIP16.select("a").eq(1).attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
-        docIP16.select("a").eq(2).text() shouldBe plaResultSuccessViewDetailsLinkText
-        docIP16.select("a").eq(2).attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
+        docIP16.select("#ipPensionSharing > a").text() shouldBe plaResultSuccessIPPensionSharingLinkText
+        docIP16.select("#ipPensionSharing > a").attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
+        docIP16.select("#main-content > div > div > p:nth-child(13) > a").text() shouldBe plaResultSuccessViewDetailsLinkText
+        docIP16.select("#main-content > div > div > p:nth-child(13) > a").attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
       }
     }
 
     "have a properly structured 'Give us feedback' section" when{
       "looking at the header" in{
-        docIP16.select("h2").eq(2).text() shouldBe plaResultSuccessGiveFeedback
+        docIP16.select("h2.govuk-heading-m").eq(2).text() shouldBe plaResultSuccessGiveFeedback
       }
       "looking at the explanatory paragraph" in{
-        docIP16.select("p").eq(5).text() shouldBe plaResultSuccessExitSurvey
+        docIP16.select("#main-content > div > div > p:nth-child(15)").text() shouldBe plaResultSuccessExitSurvey
       }
       "using the feedback link" in{
-        docIP16.select("a").eq(3).text() shouldBe plaResultSuccessExitSurveyLinkText
+        docIP16.select("#submit-survey-button").text() shouldBe plaResultSuccessExitSurveyLinkText
       }
     }
 
