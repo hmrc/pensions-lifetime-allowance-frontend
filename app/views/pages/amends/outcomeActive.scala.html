@@ -16,7 +16,6 @@
 
 @import models.ActiveAmendResultDisplayModel
 @import models.amendModels.AmendsGAModel
-@import helpers.templates.resultDetails
 @import play.api.i18n._
 @import enums.ApplicationType
 @import utils.Constants
@@ -25,48 +24,60 @@
 @import config.FrontendAppConfig
 
 @this(
-    main_template: main_template)
+    layout: Layout,
+    resultDetails: playHelpers.templates.resultDetails
+)
 
 @(model: ActiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
-@main_template(title = Messages("pla.activeAmend.title"), bodyClasses = None) {
+@layout(
+    pageTitle = Messages("pla.activeAmend.title")
+) {
 
-@gaModel.map{ gaModel =>
-<div @if(gaModel.current.isDefined){data-metrics = "activeAmends:@gaModel.current:amendCurrentPensions"}></div>
-<div @if(gaModel.before.isDefined){data-metrics = "activeAmends:@gaModel.before:amendPTBefore"}></div>
-<div @if(gaModel.between.isDefined){data-metrics = "activeAmends:@gaModel.between:amendPTBetween"}></div>
-<div @if(gaModel.overseas.isDefined){data-metrics = "activeAmends:@gaModel.overseas:amendOverseasPensions"}></div>
-<div @if(gaModel.pso.isDefined){data-metrics = "activeAmends:@gaModel.pso:amendPSOs"}></div>
-}
+    @gaModel.map{ gaModel =>
+        <div @if(gaModel.current.isDefined){data-metrics = "activeAmends:@gaModel.current:amendCurrentPensions"}></div>
+        <div @if(gaModel.before.isDefined){data-metrics = "activeAmends:@gaModel.before:amendPTBefore"}></div>
+        <div @if(gaModel.between.isDefined){data-metrics = "activeAmends:@gaModel.between:amendPTBetween"}></div>
+        <div @if(gaModel.overseas.isDefined){data-metrics = "activeAmends:@gaModel.overseas:amendOverseasPensions"}></div>
+        <div @if(gaModel.pso.isDefined){data-metrics = "activeAmends:@gaModel.pso:amendPSOs"}></div>
+    }
 
-<div class="grid-row">
-    <div class="transaction-banner--complete">
-        <span class="heading-large" id="amendmentOutcome">@Messages(s"amendResultCode.${model.notificationId}.heading")</span>
-        <p class="medium" id="amendedAllowanceText">@Messages("pla.resultSuccess.allowanceSubHeading")</p>
-        <span class="bold-medium" id="protectedAmount">@model.protectedAmount</span>
+    <div class="govuk-panel govuk-panel--confirmation">
+        <h1 class="govuk-panel__title">
+            @Messages(s"amendResultCode.${model.notificationId}.heading")
+        </h1>
+        <div class="govuk-panel__body">
+            <div id="amendedAllowanceText">@Messages("pla.resultSuccess.allowanceSubHeading")</div><strong id="protectedAmount">@model.protectedAmount</strong>
+        </div>
     </div>
 
-    <h2>@Messages("pla.resultSuccess.protectionDetails")</h2>
-    <p>@Messages("pla.resultSuccess.detailsContent")</p>
+    <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.protectionDetails")</h2>
+    <p class="govuk-body">@Messages("pla.resultSuccess.detailsContent")</p>
 
     @model.details.map{ details =>
         @resultDetails(details)
     }
 
-    <p class="print-link"><a id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" onclick="ga('send', 'event', 'print-amended-protection', 'print-@{model.protectionType.toString}', 'result');">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newWindow"))</a></p>
+    <p class="govuk-body"><a class="govuk-link" id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" onclick="ga('send', 'event', 'print-amended-protection', 'print-@{model.protectionType.toString}', 'result');">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newTab"))</a></p>
 
-    <h2>@Messages("pla.resultSuccess.IPChangeDetails")</h2>
+    <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.IPChangeDetails")</h2>
 
-    <p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
+    <p class="govuk-body" id="ipPensionSharing">
+        @Messages("pla.resultSuccess.IPPensionSharing.beforeLink")
+        <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">@Messages("pla.resultSuccess.IPPensionSharing.linkText")</a>
+        @Messages("pla.resultSuccess.IPPensionSharing.afterLink")
+    </p>
 
-    <p>@Html(Messages("pla.activeAmend.viewDetails",controllers.routes.ReadProtectionsController.currentProtections))</p>
+    <p class="govuk-body">
+        @Messages("pla.activeAmend.viewDetails.beforeLink")
+        <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.activeAmend.viewDetails.linkText")</a>
+        @Messages("pla.activeAmend.viewDetails.afterLink")
+    </p>
 
-    <h2>@Messages("pla.resultSuccess.giveFeedback")</h2>
+    <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.giveFeedback")</h2>
 
-    <p><a id="submit-survey-button" href=@controllers.routes.AccountController.signOut class="button--link-style" role="button" onclick="submitExitSurvey()">
+    <p class="govuk-body"><a class="govuk-link" id="submit-survey-button" href=@controllers.routes.AccountController.signOut role="button" onclick="submitExitSurvey()">
         @Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Messages("pla.resultSuccess.exitSurvey")</p>
-
-</div>
 
 }
 

@@ -18,6 +18,7 @@ package testHelpers.ViewSpecHelpers.amends
 
 trait OutcomeActiveViewSpecMessages {
   val plaResultSuccessOutcomeActiveTitle    = "Protection amended"
+  val plaResultSuccessOutcomeActiveTitleNew = "Protection amended - Protect your lifetime allowance - GOV.UK"
   val plaResultSuccessIP16Heading           = "You've amended individual protection 2016"
   val plaResultSuccessIP14Heading           = "You've amended individual protection 2014"
   val plaResultSuccessAllowanceSubHeading   = "Your protected lifetime allowance is"
@@ -29,6 +30,7 @@ trait OutcomeActiveViewSpecMessages {
   val plaResultSuccessPsaRef                = "scheme administrator reference"
   val plaResultSuccessApplicationDate       = "application date"
   val plaResultSuccessPrint                 = "Print and save your details (opens in a new window)"
+  val plaResultSuccessPrintNew              = "Print and save your details (opens in new tab)"
   val plaResultSuccessIPChangeDetails       = "Changing your protection details"
   val plaResultSuccessIPPensionSharing      = "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
   val plaResultSuccessIPPensionSharingLinkText  = "HMRC Pension Schemes Services"
