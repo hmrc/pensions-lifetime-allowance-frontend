@@ -99,8 +99,8 @@ trait CommonBinders {
         case EMPTY_STRING => Left(Seq(FormError(key,s"pla.withdraw.date-input.form.$errorLabel-empty", Nil )))
         case str => Try(str.toInt) match {
           case Success(result) =>
-            if (key.equals("withdrawDay")) dateBoundaryValidation(key,result,errorLabel, DAY_LIMIT)
-            else if(key.equals("withdrawMonth")) dateBoundaryValidation(key,result,errorLabel, MONTH_LIMIT)
+            if (key.equals("withdrawDate.day")) dateBoundaryValidation(key,result,errorLabel, DAY_LIMIT)
+            else if(key.equals("withdrawDate.month")) dateBoundaryValidation(key,result,errorLabel, MONTH_LIMIT)
             else Right(Some(result))
           case Failure(_) => Left(Seq(FormError(key, "error.real")))
         }
@@ -115,15 +115,15 @@ trait CommonBinders {
     override def bind(key: String, data: Map[String, String]) = {
 
       val groupedIntsWithCustomErrors: Either[Seq[FormError], (Int, Int, Int)] = for {
-        day   <- withdrawDateValidationFormatter("day").bind("withdrawDay", data).right
-        month <- withdrawDateValidationFormatter("month").bind("withdrawMonth", data).right
-        year  <- withdrawDateValidationFormatter("year").bind("withdrawYear", data).right
+        day   <- withdrawDateValidationFormatter("day").bind("withdrawDate.day", data).right
+        month <- withdrawDateValidationFormatter("month").bind("withdrawDate.month", data).right
+        year  <- withdrawDateValidationFormatter("year").bind("withdrawDate.year", data).right
       } yield {
         (day.get, month.get, year.get)
       }
 
       val returnValue: Either[Seq[FormError], Option[Int]] = groupedIntsWithCustomErrors fold(
-        errs => withdrawDateValidationFormatter("day").bind("withdrawDay", data),
+        errs => withdrawDateValidationFormatter("day").bind("withdrawDate.day", data),
         success => {
           val (day, month, year) = (success._1, success._2, success._3)
           validateWithdrawDate(key, day, month, year)

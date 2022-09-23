@@ -94,24 +94,17 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   }
 
   private[controllers] def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) = {
-    validateWithdrawDate(
-      withdrawDateForm.bindFromRequest(),
-      LocalDateTime.parse(protection.certificateDate.get)
-    ).fold(
-      formWithErrors =>
-        Future.successful(
-          BadRequest(
-            withdrawDate(buildInvalidForm(formWithErrors),
-              Strings.protectionTypeString(protection.protectionType),
-              Strings.statusString(protection.status))
-          )
-        ),
-      success =>
-        keyStoreConnector.saveFormData[WithdrawDateFormModel]("withdrawProtectionForm", success) map {
-          _  =>
-            Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput)
+    validateWithdrawDate(withdrawDateForm.bindFromRequest, LocalDateTime.parse(protection.certificateDate.get)).fold(
+        errors => {
+          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
+          Future.successful(BadRequest(withdrawDate(form, Strings.protectionTypeString(protection.protectionType), Strings.statusString(protection.status))))
+        },
+        form => {
+          keyStoreConnector.saveFormData(s"withdrawProtectionForm", form).flatMap {
+            _ => Future.successful(Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput))
+          }
         }
-    )
+      )
   }
 
   def postWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
@@ -214,8 +207,8 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   private def buildInvalidForm(errorForm: Form[WithdrawDateFormModel])(implicit messages: Messages): Form[WithdrawDateFormModel] = {
     if (errorForm.errors.size > 1) {
       val formFields: Seq[String] = errorForm.errors map (field => field.key)
-      val formFieldsWithErrors: Seq[FormError] = formFields map (key => FormError(key, ""))
-      val finalErrors: Seq[FormError] = formFieldsWithErrors ++ Seq(FormError("", Messages("pla.withdraw.date-input-form.date-invalid")))
+      val formFieldsWithErrors: Seq[FormError] = formFields map (key => FormError(key, "withdrawDate.day"))
+      val finalErrors: Seq[FormError] = formFieldsWithErrors ++ Seq(FormError("withdrawDate.day", Messages("pla.withdraw.date-input-form.date-invalid")))
       withdrawDateForm.copy(errors = finalErrors, data = errorForm.data)
     }
     else errorForm
