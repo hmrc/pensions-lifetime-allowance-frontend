@@ -15,56 +15,63 @@
  *@
 
 @import models.amendModels.AmendOverseasPensionsModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.{formInputMoney,formHiddenYesNoRadio}
 @import play.api.data._
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
-@this(main_template: main_template)
+@this(
+    layout: Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    errorSummary: playHelpers.templates.errorSummary,
+    submitButton: playHelpers.templates.submitButton,
+    formInputMoney: playHelpers.templates.formInputMoney,
+    formHiddenYesNoRadio: playHelpers.templates.formHiddenYesNoRadio
+)
 
-@(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel])(implicit request: Request[_], messages: Messages)
 
 @hiddenYesNoContent = {
-
-@formInputMoney(
-amendOverseasPensionsForm,
-"amendedOverseasPensionsAmt",
-Messages("pla.overseasPensions.questionTwo")
-)
-}
-
-
-@main_template(title=Messages("pla.overseasPensions.title")) {
-
-@if(amendOverseasPensionsForm.hasErrors){
-@errorSummary(
-Messages("pla.base.errorSummaryLabel"), amendOverseasPensionsForm
-)
-}
-
-<h1 class="heading-large">@Messages("pla.overseasPensions.title")</h1>
-
-@form(action = routes.AmendsController.submitAmendOverseasPensions) {
-
-    <p>@Messages("pla.ip14OverseasPensions.question")</p>
-
-<div class="inline form-group">
-    @formHiddenYesNoRadio(
-    amendOverseasPensionsForm,
-    "amendedOverseasPensions",
-    Messages("pla.ip14OverseasPensions.legend"),
-    hiddenYesNoContent
+    @formInputMoney(
+        field = amendOverseasPensionsForm("amendedOverseasPensionsAmt"),
+        question = Messages("pla.overseasPensions.questionTwo"),
+        pageHeading = false,
+        labelClass = Some("govuk-label--m")
     )
-</div>
+}
 
-<button class="button" type="submit" id="continue-button" >@Messages("pla.base.change")</button>
-<div class="form-hidden">
+@title = @{
+    if(amendOverseasPensionsForm.errors.nonEmpty){
+        messages("site.title.error", messages("pla.overseasPensions.title"))
+    } else {
+        messages("pla.overseasPensions.title")
+    }
+}
 
-    @helper.inputText(amendOverseasPensionsForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-    @helper.inputText(amendOverseasPensionsForm("status"), 'type -> "hidden", 'class -> "hidden")
+@layout(
+    pageTitle = title
+) {
 
-</div>
+    @errorSummary(amendOverseasPensionsForm.errors, Some("amendedOverseasPensionsAmt"))
+
+    <h1 class="govuk-heading-xl">@Messages("pla.overseasPensions.title")</h1>
+
+    @form(action = routes.AmendsController.submitAmendOverseasPensions) {
+
+        <p class="govuk-body">@Messages("pla.ip14OverseasPensions.question")</p>
+
+        @formHiddenYesNoRadio(
+            field = amendOverseasPensionsForm("amendedOverseasPensions"),
+            question = Messages("pla.ip14OverseasPensions.legend"),
+            hiddenQuestion = true,
+            pageHeading = false,
+            yesHiddencontent = Some(hiddenYesNoContent)
+        )
+
+        @submitButton(submitText = Messages("pla.base.change"))
+
+        <div class="govuk-visually-hidden">
+
+            @helper.inputText(amendOverseasPensionsForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(amendOverseasPensionsForm("status"), 'type -> "hidden", 'class -> "hidden")
+
+        </div>
 }
 }
