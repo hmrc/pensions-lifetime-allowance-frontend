@@ -348,6 +348,9 @@ pla.resultSuccess.applicationDate       = dyddiad y cais
 pla.resultSuccess.print                 = Argraffu a chadw''ch manylion
 pla.resultSuccess.IPChangeDetails       = Newid eich manylion diogelwch
 pla.resultSuccess.IPPensionSharing      = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn</a> cyn pen 60 diwrnod.
+pla.resultSuccess.IPPensionSharing.beforeLink = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â
+pla.resultSuccess.IPPensionSharing.linkText = Gwasanaethau Cynlluniau Pensiwn
+pla.resultSuccess.IPPensionSharing.afterLink = cyn pen 60 diwrnod.
 pla.resultSuccess.FPAddToPension        = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a> cyn pen 90 diwrnod.
 pla.resultSuccess.viewDetails           = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
 pla.resultSuccess.giveFeedback          = Rhoi adborth i ni
@@ -463,6 +466,9 @@ pla.amends.addPsoLink                                       = Ychwanegu gorchymy
 ### AMENDS RESULTS MESSAGES ###
 pla.activeAmend.title                                       = Diogelwch wedi''i ddiwygio
 pla.activeAmend.viewDetails                                 = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
+pla.activeAmend.viewDetails.beforeLink                      = Gallwch
+pla.activeAmend.viewDetails.linkText                        = fwrw golwg ar fanylion eich diogelwch, neu eu newid
+pla.activeAmend.viewDetails.afterLink                       = ar unrhyw adeg.
 
 pla.inactiveAmend.title                                     = Diogelwch wedi''i ddiwygio
 

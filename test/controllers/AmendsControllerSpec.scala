@@ -430,7 +430,7 @@ class AmendsControllerSpec extends FakeApplication
         when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(ArgumentMatchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
 
         status(result) shouldBe 200
-        jsoupDoc.body.getElementById("amendmentOutcome").text shouldEqual Messages("amendResultCode.33.heading")
+        jsoupDoc.body.getElementsByClass("govuk-panel__title").text shouldEqual Messages("amendResultCode.33.heading")
       }
     }
 

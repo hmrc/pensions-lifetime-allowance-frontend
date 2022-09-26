@@ -347,7 +347,11 @@ pla.resultSuccess.psaRef                = scheme administrator reference
 pla.resultSuccess.applicationDate       = application date
 pla.resultSuccess.print                 = Print and save your details
 pla.resultSuccess.IPChangeDetails       = Changing your protection details
+
 pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 60 days.
+pla.resultSuccess.IPPensionSharing.beforeLink = If your pension gets shared in a divorce or civil partnership split, contact
+pla.resultSuccess.IPPensionSharing.linkText = HMRC Pension Schemes Services
+pla.resultSuccess.IPPensionSharing.afterLink = within 60 days.
 pla.resultSuccess.FPAddToPension        = If you or your employer adds to your pension, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 90 days.
 pla.resultSuccess.viewDetails           = You can <a href="{0}">view or change details of your protections</a> at any time.
 
@@ -480,6 +484,9 @@ pla.amends.addPsoLink                                       = Add a pension shar
 ### AMENDS RESULTS MESSAGES ###
 pla.activeAmend.title                                       = Protection amended
 pla.activeAmend.viewDetails                                 = You can <a href="{0}">view or change details of your protections</a> at any time.
+pla.activeAmend.viewDetails.beforeLink                      = You can
+pla.activeAmend.viewDetails.linkText                        = view or change details of your protections
+pla.activeAmend.viewDetails.afterLink                       = at any time.
 pla.inactiveAmend.title                                     = Protection amended
 
 amendResultCode.25.heading  = You''re no longer entitled to individual protection 2014
