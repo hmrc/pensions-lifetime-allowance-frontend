@@ -469,7 +469,7 @@ pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails.removeHint   = Remove you
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails.changeHint   = Change the details of your pension sharing order
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Date and amount of pension sharing order
 pla.amends.pensionDebits.removePso                          = This will remove your pension sharing order.
-pla.amends.pensionDebits.cancelRemove                        = <a href="{0}" id="{1}">Do not remove</a>
+pla.amends.pensionDebits.cancelRemove                        = Do not remove
 
 pla.amends.CurrentPsos.IP2014.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2014?
 pla.amends.CurrentPsos.IP2014.Amt                           = Value of pension sharing orders

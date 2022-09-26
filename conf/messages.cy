@@ -452,7 +452,7 @@ pla.amends.CurrentPsos.IP2016.YesNo                         = A oes unrhyw un o'
 pla.amends.CurrentPsos.IP2016.Amt                           = Gwerth gorchmynion rhannu pensiwn
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails      = Dyddiad a swm y gorchymyn rhannu pensiwn
 pla.amends.pensionDebits.removePso                          = Bydd hyn yn dileu''ch gorchymyn rhannu pensiwn
-pla.amends.pensionDebits.cancelRemove                        = <a href="{0}" id="{1}">Peidiwch â dileu</a>
+pla.amends.pensionDebits.cancelRemove                        = Peidiwch â dileu
 
 pla.amends.CurrentPsos.IP2014.YesNo                         = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?
 pla.amends.CurrentPsos.IP2014.Amt                           = Gwerth gorchmynion rhannu pensiwn

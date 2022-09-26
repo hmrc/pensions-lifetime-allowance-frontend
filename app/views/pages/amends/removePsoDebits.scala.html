@@ -15,44 +15,37 @@
  *@
 
 @import models.amendModels.AmendmentTypeModel
-@import config.FrontendAppConfig
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.{formInputMoney,hiddenText}
 @import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
 
 @this(
-    main_template: main_template)
+    layout: Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    submitButton: playHelpers.templates.submitButton
+)
 
-@(amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages)
 
-@main_template(title = Messages("pla.psoDetails.title")) {
+@layout(
+    pageTitle = Messages("pla.psoDetails.title")
+) {
 
-<header class ="page-header">
-    <h1 class="heading-large" id="page-heading">
-        @Messages("pla.psoDetails.title")
-    </h1>
-</header>
+    <h1 class="govuk-heading-xl" id="page-heading">@Messages("pla.psoDetails.title")</h1>
 
-    <p class="icon-min-height">@Messages("pla.amends.pensionDebits.removePso")</p>
+    <p class="govuk-body">@Messages("pla.amends.pensionDebits.removePso")</p>
 
 
-<div class="form-group">
-@form(action = routes.AmendsController.submitRemovePso) {
-    <p>
-        <button id="submit" class="button" type="submit">@Messages("pla.base.remove")</button>
-    </p>
+    @form(action = routes.AmendsController.submitRemovePso) {
 
-    @Html(Messages("pla.amends.pensionDebits.cancelRemove", routes.AmendsController.amendsSummary(amendmentTypeForm("protectionType").value.getOrElse(""), amendmentTypeForm("status").value.getOrElse("")), "cancel-link"))
-    <div class ="form-hidden">
+        @submitButton(Messages("pla.base.remove"))
 
-        @helper.inputText(amendmentTypeForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-        @helper.inputText(amendmentTypeForm("status"), 'type -> "hidden", 'class -> "hidden")
+        <p class="govuk-body"><a class="govuk-link" href="@routes.AmendsController.amendsSummary(amendmentTypeForm("protectionType").value.getOrElse(""), amendmentTypeForm("status").value.getOrElse(""))" id="cancel-link">@Messages("pla.amends.pensionDebits.cancelRemove")</a></p>
 
-    </div>
+        <div class ="govuk-visually-hidden">
+            @helper.inputText(amendmentTypeForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(amendmentTypeForm("status"), 'type -> "hidden", 'class -> "hidden")
+
+        </div>
 
     }
-</div>
 }
