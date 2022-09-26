@@ -43,36 +43,31 @@
         <li>@Messages("pla.pensionsTakenBefore.bullet.1")</li>
         <li>@Messages("pla.pensionsTakenBefore.bullet.2")</li>
     </ul>
-    <p class="govuk-body">@Html(
-        Messages(
-            "pla.pensionsTakenBefore.para.3",
-            s"""
-               <a href="${Links.pensionsTakenBefore}"
-                    class = "govuk-link"
-                    id = "ip16-amend-pensions-taken-before-help-link"
-                    rel="external"
-                    target="_blank"
+    <p class="govuk-body">
+        @Messages( "pla.pensionsTakenBefore.para.3")
+        <a href="@Links.pensionsTakenBefore" class ="govuk-link" id ="ip16-amend-pensions-taken-before-help-link" rel="noreferrer noopener" target="_blank"
                     onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'ip16-amend-pensions-taken-before-technical-guidance')">
-                        ${Messages("pla.pensionsTakenBefore.helpLinkText")} (${Messages("pla.base.newTab")})
-                    </a>
-             """.stripMargin
-        ))
+            @Messages("pla.pensionsTakenBefore.helpLinkText") (@Messages("pla.base.newTab")).
+        </a>
     </p>
 }
 
 @hiddenYesNoContent = {
-@helpTextAccordion(
-    id = "ip16-amend-pensions-taken-before-help",
-    summaryText =  Messages("pla.pensionsTakenBefore.help"),
-    hiddenContent = helpTextAccordionContent
-)
 
-@formInputMoney(
-    field = amendPensionsTakenBeforeForm("amendedPensionsTakenBeforeAmt"),
-    question = Messages("pla.pensionsTakenBefore.question"),
-    pageHeading = false,
-    labelClass = Some("govuk-label--l")
-)
+    <h2 class="govuk-label--l">@Messages("pla.pensionsTakenBefore.question")</h2>
+
+    @helpTextAccordion(
+        id = "ip16-amend-pensions-taken-before-help",
+        summaryText =  Messages("pla.pensionsTakenBefore.help"),
+        hiddenContent = helpTextAccordionContent
+    )
+
+    @formInputMoney(
+        field = amendPensionsTakenBeforeForm("amendedPensionsTakenBeforeAmt"),
+        question = Messages("pla.pensionsTakenBefore.question"),
+        hideLabel = true,
+        pageHeading = false
+    )
 }
 
  @title = @{
@@ -83,25 +78,24 @@
     pageTitle = title
 ) {
 
-@errorSummary(amendPensionsTakenBeforeForm.errors, Some("amendPensionsTakenBefore"))
+    @errorSummary(amendPensionsTakenBeforeForm.errors, Some("amendPensionsTakenBefore"))
 
-<h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBefore.title")</h1>
+    <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBefore.title")</h1>
 
-@form(action = routes.AmendsController.submitAmendPensionsTakenBefore) {
-    <div class="inline form-group">
+    @form(action = routes.AmendsController.submitAmendPensionsTakenBefore) {
+
         @formHiddenYesNoRadio(
             field =  amendPensionsTakenBeforeForm("amendedPensionsTakenBefore"),
             question = Messages("pla.pensionsTakenBefore.title"),
             hiddenQuestion = true,
             yesHiddencontent = Some(hiddenYesNoContent)
         )
-    </div>
 
-    @submitButton(Messages("pla.base.change"))
+        @submitButton(Messages("pla.base.change"))
 
-<div class="govuk-visually-hidden">
-    @helper.inputText(amendPensionsTakenBeforeForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-    @helper.inputText(amendPensionsTakenBeforeForm("status"), 'type -> "hidden", 'class -> "hidden")
-</div>
-}
+        <div class="govuk-visually-hidden">
+            @helper.inputText(amendPensionsTakenBeforeForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(amendPensionsTakenBeforeForm("status"), 'type -> "hidden", 'class -> "hidden")
+        </div>
+    }
 }
