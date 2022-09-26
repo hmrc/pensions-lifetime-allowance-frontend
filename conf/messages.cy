@@ -66,7 +66,7 @@ pla.confirmFP16.bullet.3    = er 6 Ebrill 2016 nid wyf wedi cael ''digwyddiad sy
 pla.confirmFP16.para.3      = Rwy''n datgan bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
 pla.confirmFP16.help        = Help gyda''r amodau hyn
 pla.confirmFP16.hiddenPara.1 = Siaradwch â gweinyddwr eich cynllun pensiwn i gael help proffesiynol i ddeall yr amodau hyn.
-pla.confirmFP16.hiddenPara.2 = Mae gan Lawlyfr Treth Pensiwn CThEM {0}
+pla.confirmFP16.hiddenPara.2 = Mae gan Lawlyfr Treth Pensiwn CThEM
 
 pla.confirmFP16.hiddenPara.linkText = arweiniad technegol ynghylch diogelwch sefydlog
 pla.confirmFP16.declaration = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am ddiogelwch sefydlog 2016 yn awtomatig.

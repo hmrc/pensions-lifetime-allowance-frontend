@@ -59,7 +59,7 @@ pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ''protection ce
 pla.confirmFP16.para.3      = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
 pla.confirmFP16.help        = Help with these conditions
 pla.confirmFP16.hiddenPara.1 = Speak to your pension scheme administrator to get professional help understanding these conditions.
-pla.confirmFP16.hiddenPara.2 = HMRC''s Pensions Tax Manual has {0}
+pla.confirmFP16.hiddenPara.2 = HMRC''s Pensions Tax Manual has
 
 pla.confirmFP16.hiddenPara.linkText = technical guidance about fixed protection
 pla.confirmFP16.declaration = By confirming, you will automatically submit your application for fixed protection 2016.
