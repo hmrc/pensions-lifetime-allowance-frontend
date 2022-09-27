@@ -18,42 +18,57 @@
 @import models.amendModels.AmendsGAModel
 @import utils.Constants
 @import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
 @this(
-    main_template: main_template)
+    layout: Layout
+)
 
-@(model: InactiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(model: InactiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], messages: Messages)
 
-@main_template(title = Messages("pla.inactiveAmend.title"), bodyClasses = None) {
+@layout(
+    pageTitle = Messages("pla.inactiveAmend.title")
+) {
 
-@gaModel.map{ gaModel =>
-<div @if(gaModel.current.isDefined){data-metrics = "inactiveAmends:@gaModel.current:amendCurrentPensions"}></div>
-<div @if(gaModel.before.isDefined){data-metrics = "inactiveAmends:@gaModel.before:amendPTBefore"}></div>
-<div @if(gaModel.between.isDefined){data-metrics = "inactiveAmends:@gaModel.between:amendPTBetween"}></div>
-<div @if(gaModel.overseas.isDefined){data-metrics = "inactiveAmends:@gaModel.overseas:amendOverseasPensions"}></div>
-<div @if(gaModel.pso.isDefined){data-metrics = "inactiveAmends:@gaModel.pso:amendPSOs"}></div>
-}
-
-<h1 class="heading-large" id="resultPageHeading">@Messages(s"amendResultCode.${model.notificationId}.heading")</h1>
-
-@for(infoNum <- model.additionalInfo) {
-    <p id=@{s"additionalInfo$infoNum"}>@Html(Messages("amendResultCode." + model.notificationId+ "." + infoNum))</p>
-}
-
-    <h2>@Messages("pla.resultSuccess.IPChangeDetails")</h2>
-
-    @if(Constants.inactiveSuccessCodes.contains(model.notificationId.toInt)) {
-        <p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
+    @gaModel.map{ gaModel =>
+        <div @if(gaModel.current.isDefined){data-metrics = "inactiveAmends:@gaModel.current:amendCurrentPensions"}></div>
+        <div @if(gaModel.before.isDefined){data-metrics = "inactiveAmends:@gaModel.before:amendPTBefore"}></div>
+        <div @if(gaModel.between.isDefined){data-metrics = "inactiveAmends:@gaModel.between:amendPTBetween"}></div>
+        <div @if(gaModel.overseas.isDefined){data-metrics = "inactiveAmends:@gaModel.overseas:amendOverseasPensions"}></div>
+        <div @if(gaModel.pso.isDefined){data-metrics = "inactiveAmends:@gaModel.pso:amendPSOs"}></div>
     }
 
-<p>@Html(Messages("pla.resultRejection.viewDetails",controllers.routes.ReadProtectionsController.currentProtections))</p>
+    <h1 class="govuk-heading-xl" id="resultPageHeading">@Messages(s"amendResultCode.${model.notificationId}.heading")</h1>
 
-    <h2>@Messages("pla.resultSuccess.giveFeedback")</h2>
+    @for(infoNum <- model.additionalInfo) {
+        <p class="govuk-body" id=@{s"additionalInfo$infoNum"}>@Html(Messages("amendResultCode." + model.notificationId+ "." + infoNum))</p>
+    }
 
-<p><a id="submit-survey-button" href=@controllers.routes.AccountController.signOut class="button--link-style" role="button" onclick="submitExitSurvey()">
-    @Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Messages("pla.resultSuccess.exitSurvey")</p>
+    <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.IPChangeDetails")</h2>
+
+    @if(Constants.inactiveSuccessCodes.contains(model.notificationId.toInt)) {
+        <p class="govuk-body" id="ipPensionSharing">
+            @Messages("pla.resultSuccess.IPPensionSharing.beforeLink")
+            <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">
+                @Messages("pla.resultSuccess.IPPensionSharing.linkText")
+            </a>
+            @Messages("pla.resultSuccess.IPPensionSharing.afterLink")
+        </p>
+    }
+
+    <p class="govuk-body">
+        @Messages("pla.resultRejection.viewDetails.beforeLink")
+        <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections" id="viewChangeDetails">@Messages("pla.resultRejection.viewDetails.linkText")</a>
+        @Messages("pla.resultRejection.viewDetails.afterLink")
+    </p>
+
+    <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.giveFeedback")</h2>
+
+    <p class="govuk-body">
+        <a class="govuk-link" id="submit-survey-button" href=@controllers.routes.AccountController.signOut class="button--link-style" role="button" onclick="submitExitSurvey()">
+            @Messages("pla.resultSuccess.exitSurveyLinkText")
+        </a>
+        @Messages("pla.resultSuccess.exitSurvey")
+    </p>
 
 
 }
