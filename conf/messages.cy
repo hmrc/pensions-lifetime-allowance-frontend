@@ -102,7 +102,9 @@ pla.error.InternalServerError500.message = Rhowch gynnig arall arni yn nes ymlae
 
 ## No notification ID returned ##
 pla.noNotificationId.title                  = Gwirio''ch diogelwch
-pla.noNotificationId.paraOne                = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
+pla.noNotificationId.paraOne.beforeLink     = Gallwch
+pla.noNotificationId.paraOne.linkText       = fwrw golwg ar fanylion eich diogelwch, neu eu newid
+pla.noNotificationId.paraOne.afterLink      = ar unrhyw adeg.
 
 
 ## Pensions Taken ##

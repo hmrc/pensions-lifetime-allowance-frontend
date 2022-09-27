@@ -388,7 +388,7 @@ class AmendsControllerSpec extends FakeApplication
 
       status(DataItem.result) shouldBe 500
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.noNotificationId.title")
-      DataItem.jsoupDoc.body.getElementsByTag("a").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
+      DataItem.jsoupDoc.body.getElementsByClass("govuk-link").get(1).attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
       await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
