@@ -103,8 +103,9 @@ pla.error.InternalServerError500.message=Try again later. Your pension allowance
 
 ## No notification ID returned ##
 pla.noNotificationId.title                  = Check your protection
-pla.noNotificationId.paraOne                = You can <a href="{0}">view or change details of your protections</a> at any time.
-
+pla.noNotificationId.paraOne.beforeLink     = You can
+pla.noNotificationId.paraOne.linkText       = view or change details of your protections
+pla.noNotificationId.paraOne.afterLink      = at any time.
 
 
 ## Pensions Taken ##
