@@ -60,15 +60,15 @@ class ConfirmFPSpec extends CommonViewSpecHelper with ConfirmFP {
       "has a list of bullet points that" should {
 
         s"have the first bullet of $plaConfirmFP16Bullet1" in {
-          doc.body.select("ul li").get(0).text shouldBe plaConfirmFP16Bullet1
+          doc.body.select("#main-content > div > div > ul > li:nth-child(1)").text shouldBe plaConfirmFP16Bullet1
         }
 
         s"have the second bullet of $plaConfirmFP16Bullet2" in {
-          doc.body.select("ul li").get(1).text shouldBe plaConfirmFP16Bullet2
+          doc.body.select("#main-content > div > div > ul > li:nth-child(2)").text shouldBe plaConfirmFP16Bullet2
         }
 
         s"have the third bullet of $plaConfirmFP16Bullet3" in {
-          doc.body.select("ul li").get(2).text shouldBe plaConfirmFP16Bullet3
+          doc.body.select("#main-content > div > div > ul > li:nth-child(3)").text shouldBe plaConfirmFP16Bullet3
         }
       }
 
@@ -92,17 +92,17 @@ class ConfirmFPSpec extends CommonViewSpecHelper with ConfirmFP {
 
       "has help paragraphs which" should {
 
-        lazy val accordionText = doc.body.select("details div p")
+        lazy val accordionText = doc.body.select(".govuk-details__text")
 
         s"have the text $plaConfirmFP16HiddenPara1" in {
-          accordionText.get(1).text shouldBe plaConfirmFP16HiddenPara1
+          accordionText.select("p").get(0).text shouldBe plaConfirmFP16HiddenPara1
         }
 
         s"have the text $plaConfirmFP16HiddenPara2" in {
-          accordionText.get(2).text shouldBe s"$plaConfirmFP16HiddenPara2 $plaConfirmFP16HiddenParaLinkText ($plaBaseNewWindow)"
+          accordionText.select("p").get(1).text shouldBe s"$plaConfirmFP16HiddenPara2 $plaConfirmFP16HiddenParaLinkText ($plaBaseNewTab)."
         }
 
-        s"have the class 'visuallyhidden'" in {
+        s"have the class 'govuk-details__text'" in {
           doc.body.select("details div").size shouldBe 1
         }
       }
@@ -112,7 +112,7 @@ class ConfirmFPSpec extends CommonViewSpecHelper with ConfirmFP {
         lazy val accordionLink = doc.select("a#fp16-help-link")
 
         s"have the link text $plaConfirmFP16HiddenParaLinkText ($plaBaseNewWindow)" in {
-          doc.body.select("details div p a").get(0).text shouldBe s"$plaConfirmFP16HiddenParaLinkText ($plaBaseNewWindow)"
+          accordionLink.text shouldBe s"$plaConfirmFP16HiddenParaLinkText ($plaBaseNewTab)."
         }
 
         "have the correct link destination" in {
@@ -124,7 +124,7 @@ class ConfirmFPSpec extends CommonViewSpecHelper with ConfirmFP {
         }
 
         "should specify external link" in {
-          accordionLink.attr("rel") shouldBe "external"
+          accordionLink.attr("rel") shouldBe "noopener noreferrer"
         }
 
         "should specify a blank target" in {
@@ -135,8 +135,6 @@ class ConfirmFPSpec extends CommonViewSpecHelper with ConfirmFP {
       "have declaration text that" should {
 
         lazy val declarationText = doc.body.select("div p strong").text
-        lazy val declarationStrong = doc.select("div p strong")
-        lazy val declarationElement = doc.select("div")
 
         s"contain the text $plaConfirmFP16Declaration" in {
           declarationText shouldBe plaConfirmFP16Declaration
@@ -152,11 +150,11 @@ class ConfirmFPSpec extends CommonViewSpecHelper with ConfirmFP {
         }
 
         "be of type submit" in {
-          submitButton.attr("type") shouldBe "submit"
+          submitButton.attr("id") shouldBe "submit"
         }
 
         "have the class 'button'" in {
-          submitButton.hasClass("button") shouldBe true
+          submitButton.hasClass("govuk-button") shouldBe true
         }
       }
   }

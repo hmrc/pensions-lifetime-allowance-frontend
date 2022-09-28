@@ -14,68 +14,61 @@
  * limitations under the License.
  *@
 
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
 @import common.Links
-@import helpers.templates.helpTextAccordion
 @import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
 @this(
-    main_template: main_template)
+    layout: Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    helpTextAccordion: playHelpers.templates.helpTextAccordion,
+    submitButton: playHelpers.templates.submitButton
+)
 
-@()(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
-
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
+@()(implicit request: Request[_], messages: Messages)
 
 @hiddenContent = {
-    <p>@Messages("pla.confirmFP16.hiddenPara.1")</p>
-    <p>@Html(
-            Messages(s"pla.confirmFP16.hiddenPara.2",
-                s"""
-                    <a href="${Links.fpGuidance}"
-                    id = "fp16-help-link"
-                    rel="external"
-                    target="_blank"
-                    onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'fp16-technical-guidance')">
-                        ${Messages("pla.confirmFP16.hiddenPara.linkText")} (${Messages("pla.base.newWindow")})
-                    </a>
-                 """
-                )
-            )
+    <p class="govuk-body">@Messages("pla.confirmFP16.hiddenPara.1")</p>
+    <p class="govuk-body">
+        @Messages("pla.confirmFP16.hiddenPara.2")
+        <a class="govuk-link" href="@Links.fpGuidance" id = "fp16-help-link" rel="noopener noreferrer" target="_blank"
+           onclick="ga('send', 'event', 'read-more-link', 'get-external-link', 'fp16-technical-guidance')">
+            @Messages("pla.confirmFP16.hiddenPara.linkText") (@Messages("pla.base.newTab")).
+        </a>
     </p>
-
-
 }
 
-@main_template(title = Messages("pla.confirmFP16.title"), bodyClasses = None) {
+@layout(
+    pageTitle = Messages("pla.confirmFP16.title")
+) {
 
-    <h1 class="heading-large">@Messages("pla.confirmFP16.pageHeading")</h1>
+    <h1 class="govuk-heading-xl">@Messages("pla.confirmFP16.pageHeading")</h1>
 
-    <p>@Messages("pla.confirmFP16.para.1")</p>
-    <p>@Messages("pla.confirmFP16.para.2")</p>
+    <p class="govuk-body">@Messages("pla.confirmFP16.para.1")</p>
+    <p class="govuk-body">@Messages("pla.confirmFP16.para.2")</p>
 
-    <ul class="list list-bullet">
+    <ul class="govuk-list govuk-list--bullet">
         <li>@Messages("pla.confirmFP16.bullet.1")</li>
         <li>@Messages("pla.confirmFP16.bullet.2")</li>
         <li>@Messages("pla.confirmFP16.bullet.3")</li>
     </ul>
-    <p>@Messages("pla.confirmFP16.para.3")</p>
+    <p class="govuk-body">@Messages("pla.confirmFP16.para.3")</p>
 
-    @helpTextAccordion("fp16Help", Messages("pla.confirmFP16.help"), hiddenContent)
+    @helpTextAccordion(
+        id = "fp16Help",
+        summaryText = Messages("pla.confirmFP16.help"),
+        hiddenContent = hiddenContent
+    )
 
 
-    <div class="form-group">
-        <p class="panel-indent">
-            <strong class="bold-small">
-                @Messages("pla.confirmFP16.declaration")
-            </strong>
-        </p>
-    </div>
+    <p class="govuk-inset-text">
+        <strong>
+            @Messages("pla.confirmFP16.declaration")
+        </strong>
+    </p>
 
     @form(action = routes.ResultController.processFPApplication) {
         
-        <button class="button" type="submit" id="apply">@Messages("pla.base.submitApplication")</button>
+        @submitButton(submitText = Messages("pla.base.submitApplication"))
     }
 
 }
