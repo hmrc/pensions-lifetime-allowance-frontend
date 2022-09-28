@@ -69,8 +69,8 @@ pla.confirmFP16.declaration = By confirming, you will automatically submit your 
 pla.notAuthorised.title         = Not Authorised
 pla.notAuthorised.pageHeading   = We cannot confirm your identity
 pla.notAuthorised.paraOne       = You can:
-pla.notAuthorised.paraTwo       = <p><a href="{0}" target="_blank">contact HM Revenue and Customs for help</a></p>
-pla.notAuthorised.tryAgain      = <a href="{0}">try to confirm your identity again</a>
+pla.notAuthorised.paraTwo       = contact HM Revenue and Customs for help
+pla.notAuthorised.tryAgain      = try to confirm your identity again
 pla.lockedOut.title             = Locked Out
 pla.lockedOut.pageHeading       = You have tried to confirm your identity too many times
 pla.lockedOut.paraOne           = You can try again in 24 hours.
