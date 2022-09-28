@@ -15,24 +15,22 @@
  *@
 
 @import common.Links
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
 @this(
- main_template: main_template)
+    layout: Layout
+)
 
-@()(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@()(implicit request: Request[_], messages: Messages)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
+@layout(
+    pageTitle = Messages("pla.notAuthorised.title")
+) {
 
-@main_template(title = Messages("pla.notAuthorised.title"), bodyClasses = None, showLogout = false) {
+    <h1 class="govuk-heading-xl">@Messages("pla.notAuthorised.pageHeading")</h1>
+    <p class="govuk-body">@messages("pla.notAuthorised.paraOne")</p>
 
-<h1 class="heading-large">@Messages("pla.notAuthorised.pageHeading")</h1>
- <p>@messages("pla.notAuthorised.paraOne")</p>
-
- <ul class="list-bullet">
-   <li>@Html(Messages("pla.notAuthorised.tryAgain", Links.plaMain))</li>
-   <li>@Html(Messages("pla.notAuthorised.paraTwo", Links.contactHMRC))</li>
- </ul>
+    <ul class="govuk-list govuk-list--bullet">
+        <li><a class="govuk-body govuk-link" href="@Links.plaMain">@Messages("pla.notAuthorised.tryAgain")</a></li>
+        <li><a class="govuk-body govuk-link" href="@Links.contactHMRC" target="_blank" rel="noopener noreferrer">@Messages("pla.notAuthorised.paraTwo") (@Messages("pla.base.newTab"))</a></li>
+     </ul>
 }

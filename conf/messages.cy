@@ -76,8 +76,8 @@ pla.confirmFP16.declaration = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am dd
 pla.notAuthorised.title         = Heb ei awdurdodi
 pla.notAuthorised.pageHeading   = Ni allwn gadarnhau pwy ydych
 pla.notAuthorised.paraOne       = Gallwch wneud y canlynol:
-pla.notAuthorised.paraTwo       = <p><a href="{0}" target="_blank">cysylltu â Chyllid a Thollau EM am help</a></p>
-pla.notAuthorised.tryAgain      = <a href="{0}">ceisio cadarnhau pwy ydych eto</a>
+pla.notAuthorised.paraTwo       = cysylltu â Chyllid a Thollau EM am help
+pla.notAuthorised.tryAgain      = ceisio cadarnhau pwy ydych eto
 pla.lockedOut.title             = Wedi cloi allan
 pla.lockedOut.pageHeading       = Rydych wedi ceisio rhoi prawf o bwy ydych gormod o weithiau.
 pla.lockedOut.paraOne           = Gallwch roi cynnig arall arni ar ôl 24 awr.
