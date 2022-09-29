@@ -79,7 +79,9 @@ pla.technicalIssue.title        = Technical Issues
 pla.technicalIssue.pageHeading  = There is a technical problem
 pla.technicalIssue.paraOne      = This online service is experiencing difficulties.
 pla.technicalIssue.paraTwo      = Please try again in 5 minutes.
-pla.technicalIssue.tryAgain     = Return to the <a href="{0}" rel="external">protect your lifetime allowance</a> page to try again.
+pla.technicalIssue.tryAgain.p1 = Return to the
+pla.technicalIssue.tryAgain.linkText = protect your lifetime allowance
+pla.technicalIssue.tryAgain.p2 = page to try again.
 
 ## Technical Error ##
 pla.techError.title                         = Technical Error

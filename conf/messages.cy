@@ -86,7 +86,9 @@ pla.technicalIssue.title        = Problemau Technegol
 pla.technicalIssue.pageHeading  = Mae problem dechnegol wedi codi
 pla.technicalIssue.paraOne      = Mae problemau wedi codi gyda''r gwasanaeth ar-lein hwn.
 pla.technicalIssue.paraTwo      = Rhowch gynnig arall arni mewn 5 munud.
-pla.technicalIssue.tryAgain     = Yn ôl i''r dudalen <a href="{0}" rel="external">diogelu''ch lwfans oes</a> i roi cynnig arall arni.
+pla.technicalIssue.tryAgain.p1 = Yn ôl i''r dudalen
+pla.technicalIssue.tryAgain.linkText = diogelu''ch lwfans oes
+pla.technicalIssue.tryAgain.p2 = i roi cynnig arall arni.
 
 ## Technical Error ##
 pla.techError.title                         = Gwall technegol
