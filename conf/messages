@@ -730,7 +730,8 @@ resultCode.44.heading   =   You''ve added individual protection 2016
 ## 2014 Application Period Ended ##
 pla.withdrawn.title                         = Sorry, applications for 2014 protection have ended
 pla.withdrawn.pageHeading                   = Sorry, applications for 2014 protection have ended
-pla.withdrawn.paraOne                       = You can still <a href="{0}">view existing applications</a>.
+pla.withdrawn.paraOne                       = You can still
+pla.withdrawn.paraOne.linkText              = view existing applications.
 
 ## PSA Lookup form
 psa.lookup.form.scheme-admin-ref-form.title = Enter the Scheme Administrator Reference

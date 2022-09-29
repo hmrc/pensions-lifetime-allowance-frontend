@@ -869,7 +869,8 @@ pla.resultSuccess.userResearchLink.title                            = Help impro
 pla.resultSuccess.userResearchLink.text                             = Help improve this digital service by joining the HMRC user panel (opens in new window)
 pla.resultSuccess.userResearchLink                                  = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113
 pla.withdrawn.pageHeading                                           = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
-pla.withdrawn.paraOne                                               = Gallwch dal i <a href="{0}">weld ceisiadau sy''n bodoli eisoes</a>.
+pla.withdrawn.paraOne                                               = Gallwch dal i
+pla.withdrawn.paraOne.linkText                                      = weld ceisiadau sy''n bodoli eisoes.
 pla.withdrawn.title                                                 = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
 psa.lookup.protection-guidance.protection-type-primary-value        = £1,500,000 neu uwch
 pla.views.heading.FP2016                                   = Manylion eich diogelwch penodol 2016
