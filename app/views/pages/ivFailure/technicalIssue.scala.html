@@ -23,7 +23,8 @@
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = Messages("pla.technicalIssue.title")
+    pageTitle = Messages("pla.technicalIssue.title"),
+    backLinkEnabled = false
 ) {
 
     <h1 class="govuk-heading-xl">@Messages("pla.technicalIssue.pageHeading")</h1>
