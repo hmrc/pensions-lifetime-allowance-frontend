@@ -81,7 +81,9 @@ pla.notAuthorised.tryAgain      = ceisio cadarnhau pwy ydych eto
 pla.lockedOut.title             = Wedi cloi allan
 pla.lockedOut.pageHeading       = Rydych wedi ceisio rhoi prawf o bwy ydych gormod o weithiau.
 pla.lockedOut.paraOne           = Gallwch roi cynnig arall arni ar ôl 24 awr.
-pla.lockedOut.paraTwo           = <p>Os oes gennych gwestiwn, gallwch <a href="{0}ʺ target="_blank">gysylltu â Chyllid a Thollau EM (yn agor ffenestr newydd)</a> i gael help.</p>
+pla.lockedOut.paraTwoP1         = Os oes gennych gwestiwn, gallwch
+pla.lockedOut.paraTwoLinkText   = gysylltu â Chyllid a Thollau EM (yn agor tab newydd)
+pla.lockedOut.paraTwoP2         = i gael help.
 pla.technicalIssue.title        = Problemau Technegol
 pla.technicalIssue.pageHeading  = Mae problem dechnegol wedi codi
 pla.technicalIssue.paraOne      = Mae problemau wedi codi gyda''r gwasanaeth ar-lein hwn.
