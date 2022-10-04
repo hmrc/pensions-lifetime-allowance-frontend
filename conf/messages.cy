@@ -24,6 +24,11 @@ pla.base.date.fields.day        = Diwrnod
 pla.base.date.fields.month      = Mis
 pla.base.date.fields.year       = Blwyddyn
 
+pla.license.1    = Mae''r holl gynnwys ar gael dan y
+pla.license.link = Drwydded Llywodraeth Agored, fersiwn 3.0
+pla.license.2    = , oni nodir yn wahanol
+pla.copyright    = Hawlfraint y Goron
+
 pla.base.errors.errorQuestion           = Nodwch swm yn y fformat cywir h.y. £500000
 pla.base.errors.errorNegative           = Nodwch swm sy''n £0 neu''n fwy
 pla.base.errors.errorMaximum            = Nodwch swm sy''n llai na £99,999,999,999,999.98
