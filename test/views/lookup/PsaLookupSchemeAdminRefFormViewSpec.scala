@@ -64,7 +64,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       }
 
       "have a hint with the correct text" in {
-        doc.select("p.form-field--hint").text() shouldBe hintText
+        doc.select("#pensionSchemeAdministratorCheckReference-hint").text() shouldBe hintText
       }
 
       "have a text input with the data pre-populated" in {
@@ -76,10 +76,6 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
         "has the correct text" in {
           doc.select("button").text() shouldBe plaBaseContinue
         }
-
-        "has the correct type" in {
-          doc.select("button").attr("type") shouldBe "submit"
-        }
       }
     }
 
@@ -89,12 +85,11 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       lazy val doc = Jsoup.parse(view.apply(form).body)
 
       "have an error summary" in {
-        doc.select("div.error-summary").size() shouldBe 1
+        doc.select("ul.govuk-error-summary__list").size() shouldBe 1
       }
 
       "have a fieldset with error classes" in {
-        doc.select("fieldset div.form-field--error").size() shouldBe 1
-        doc.select("fieldset div.error-notification").size() shouldBe 1
+        doc.select("#pensionSchemeAdministratorCheckReference-error").size() shouldBe 1
       }
 
       "have a text input with the data pre-populated" in {

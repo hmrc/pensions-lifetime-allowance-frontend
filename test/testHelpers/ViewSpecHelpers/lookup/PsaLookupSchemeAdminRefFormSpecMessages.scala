@@ -17,8 +17,8 @@
 package testHelpers.ViewSpecHelpers.lookup
 
 trait PsaLookupSchemeAdminRefFormSpecMessages {
-  val titleText = "PSA Lookup"
+  val titleText = "PSA Lookup - Protect your lifetime allowance - GOV.UK"
   val headingText = "Enter the Scheme Administrator Reference"
   val hintText = "Example: PSA12345678A"
-  val errorSummaryText = "Something you've entered isn't valid"
+  val errorSummaryText = "There are errors on this page"
 }
