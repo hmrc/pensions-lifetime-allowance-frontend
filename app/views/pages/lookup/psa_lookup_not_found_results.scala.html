@@ -14,50 +14,54 @@
  * limitations under the License.
  *@
 
-@import play.api.Application
-@import config.FrontendAppConfig
+@import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
-    main_template: main_template)
+    layout: Layout,
+    govukButton : GovukButton
+)
 
-@(lookupRequest: PSALookupRequest, timestamp: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(lookupRequest: PSALookupRequest, timestamp: String)(implicit request: Request[_], messages: Messages)
 
-@lc = @{
-    Application.instanceCache[PlaLanguageController].apply(application)
-}
+@layout(
+    pageTitle = Messages("psa.lookup.title")
+) {
 
-@main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
+    <h1 class="govuk-heading-xl">@Messages("psa.lookup.not-found.results.title")</h1>
 
-    <h1>@Messages("psa.lookup.not-found.results.title")</h1>
-
-    <table>
-        <tbody>
-            <tr>
-                <td class="font-small">@Messages("psa.lookup.not-found.results.table.row.1")</td>
-                <td class="font-small">@lookupRequest.pensionSchemeAdministratorCheckReference</td>
+    <table class="govuk-table">
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@Messages("psa.lookup.not-found.results.table.row.1")</th>
+                <td class="govuk-table__cell">@lookupRequest.pensionSchemeAdministratorCheckReference</td>
             </tr>
-            <tr>
-                <td class="font-small">@Messages("psa.lookup.not-found.results.table.row.2")</td>
-                <td class="font-small">@lookupRequest.lifetimeAllowanceReference.get</td>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@Messages("psa.lookup.not-found.results.table.row.2")</th>
+                <td class="govuk-table__cell">@lookupRequest.lifetimeAllowanceReference.get</td>
             </tr>
-            <tr>
-                <td class="font-small">@Messages("psa.lookup.results.table.row.6")</td>
-                <td class="font-small">@timestamp</td>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@Messages("psa.lookup.results.table.row.6")</th>
+                <td class="govuk-table__cell">@timestamp</td>
             </tr>
         </tbody>
     </table>
-    <p>@Messages("psa.lookup.not-found.results.detail")</p>
 
-    <p>@Messages("psa.lookup.not-found.results.possible-causes")</p>
-    <ul class="bullets">
+    <p class="govuk-body">@Messages("psa.lookup.not-found.results.detail")</p>
+
+    <p class="govuk-body">@Messages("psa.lookup.not-found.results.possible-causes")</p>
+    <ul class="govuk-list govuk-list--bullet">
         <li>@Messages("psa.lookup.not-found.results.possible-causes.bullet1")</li>
         <li>@Messages("psa.lookup.not-found.results.possible-causes.bullet2")</li>
     </ul>
-    <p>@Messages("psa.lookup.not-found.results.suggested-resolution")</p>
+    <p class="govuk-body">@Messages("psa.lookup.not-found.results.suggested-resolution")</p>
+
+    <a class="govuk-button govuk-button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printNotFoundPDF">@Messages("psa.lookup.results.save")</a>
 
     <br>
-    <a class="section--branded button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printNotFoundPDF">@Messages("psa.lookup.results.save")</a>
-    <p>
-        <a class="button button--get-started" href=@routes.LookupController.redirectToStart>@Messages("psa.lookup.not-found.results.table.try-again")</a>
-    </p>
+    @govukButton(Button(
+        href = Some(routes.LookupController.redirectToStart.toString),
+        isStartButton = true,
+        content = Text(Messages("psa.lookup.not-found.results.table.try-again"))
+    ))
+    <br>
 }

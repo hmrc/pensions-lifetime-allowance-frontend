@@ -30,90 +30,90 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
     lazy val doc = Jsoup.parse(view.apply(psaLookupRequest,"timestamp").body)
 
     "have the correct header text" in {
-      doc.select("h1").text() shouldBe checkDetailsText
+      doc.select("h1.govuk-heading-xl").text() shouldBe checkDetailsText
     }
 
     "include a table" which {
 
       "has the correct first row" which {
-        lazy val row = doc.select("tr").get(0)
+        lazy val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(1)")
 
         "contains the correct first element text" in {
-          row.select("td").get(0).text shouldBe tableRowOneElementOneText
+          row.select("th").get(0).text shouldBe tableRowOneElementOneText
         }
 
         "contains the correct second element text" in {
-          row.select("td").get(1).text shouldBe tableRowOneElementTwoText
+          row.select("td").get(0).text shouldBe tableRowOneElementTwoText
         }
       }
 
       "has the correct second row" which {
-        lazy val row = doc.select("tr").get(1)
+        lazy val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(2)")
 
         "contains the correct first element text" in {
-          row.select("td").get(0).text shouldBe tableRowTwoElementOneText
+          row.select("th").get(0).text shouldBe tableRowTwoElementOneText
         }
 
         "contains the correct second element text" in {
-          row.select("td").get(1).text shouldBe tableRowTwoElementTwoText
+          row.select("td").get(0).text shouldBe tableRowTwoElementTwoText
         }
       }
 
       "has the correct third row" which {
-        lazy val row = doc.select("tr").get(2)
+        lazy val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(3)")
 
         "contains the correct first element text" in {
-          row.select("td").get(0).text shouldBe tableRowThreeElementOneText
+          row.select("th").get(0).text shouldBe tableRowThreeElementOneText
         }
 
         "contains the correct second element text" in {
-          row.select("td").get(1).text shouldBe tableRowThreeElementTwoText
+          row.select("td").get(0).text shouldBe tableRowThreeElementTwoText
         }
       }
     }
 
     "have a paragraph describing details of the failed lookup" in {
-      doc.select("article p").get(0).text() shouldBe detailsText
+      doc.select("#main-content > div > div > p:nth-child(3)").text() shouldBe detailsText
     }
 
     "have a paragraph describing possible causes" in {
-      doc.select("article p").get(1).text() shouldBe causesText
+      doc.select("#main-content > div > div > p:nth-child(4)").text() shouldBe causesText
     }
 
     "include a list" which {
 
       "has the first cause listed" in {
-        doc.select("article li").get(0).text() shouldBe causeOneText
+        doc.select("#main-content > div > div > ul > li:nth-child(1)").text() shouldBe causeOneText
       }
 
       "has the second cause listed" in {
-        doc.select("article li").get(1).text() shouldBe causeTwoText
+        doc.select("#main-content > div > div > ul > li:nth-child(2)").text() shouldBe causeTwoText
       }
     }
 
     "have a paragraph describing a possible resolution" in {
-      doc.select("article p").get(2).text() shouldBe suggestionsText
+      doc.select("#main-content > div > div > p:nth-child(6)").text() shouldBe suggestionsText
     }
 
     "have a save pdf link" which {
 
       "has the correct text" in {
-        doc.select("a.button--secondary").text() shouldBe pdfLinkText
+        doc.getElementsByClass("govuk-button govuk-button--secondary").text() shouldBe pdfLinkText
       }
 
       "links to the pdf page" in {
-        doc.select("a.button--secondary").attr("href") shouldBe controllers.routes.PrintPdfController.printNotFoundPDF.url
+        doc.getElementsByClass("govuk-button govuk-button--secondary").attr("href") shouldBe controllers.routes.PrintPdfController.printNotFoundPDF.url
       }
     }
 
     "have a start again link" which {
 
       "has the correct text" in {
-        doc.select("a.button--get-started").text() shouldBe startAgainText
+        doc.getElementsByClass("govuk-button govuk-button--start").text() shouldBe startAgainText
       }
 
       "links to the start point" in {
-        doc.select("a.button--get-started").attr("href") shouldBe controllers.routes.LookupController.redirectToStart.url
+        doc.getElementsByClass("govuk-button govuk-button--start").attr("href") shouldBe controllers.routes.LookupController.redirectToStart.url
       }
     }
   }
