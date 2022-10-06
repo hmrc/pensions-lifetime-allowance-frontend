@@ -18,9 +18,9 @@ package testHelpers.ViewSpecHelpers.lookup
 
 trait PsaLookupProtectionNotificationNoFormSpecMessages {
 
-  val titleText = "PSA Lookup"
+  val titleText = "PSA Lookup - Protect your lifetime allowance - GOV.UK"
   val headingText = "Enter the Protection Notification Number"
   val hintText = "Example: IP141000000000A"
   val buttonText = "Submit"
-  val errorSummaryText = "Something you've entered isn't valid"
+  val errorSummaryText = "There are errors on this page"
 }

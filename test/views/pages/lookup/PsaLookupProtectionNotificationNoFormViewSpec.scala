@@ -44,7 +44,7 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
       }
 
       "not have an error summary" in {
-        doc.select("div.error-summary").size() shouldBe 0
+        doc.select("div.govuk-error-summary").size() shouldBe 0
       }
 
       "have a form" which {
@@ -58,16 +58,12 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
         }
       }
 
-      "have a fieldset with a div without error classes" in {
-        doc.select("fieldset div").first().attr("class") shouldBe "form-field"
-      }
-
       "not have error notifications" in {
-        doc.select("fieldset div.error-notification").size() shouldBe 0
+        doc.select("#lifetimeAllowanceReference-error").size() shouldBe 0
       }
 
       "have a hint with the correct text" in {
-        doc.select("p.form-field--hint").text() shouldBe hintText
+        doc.select("div.govuk-hint").text() shouldBe hintText
       }
 
       "have a text input with the data pre-populated" in {
@@ -77,22 +73,22 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
       "have a button" which {
 
         "has the correct text" in {
-          doc.select("button").text() shouldBe buttonText
+          doc.select("button.govuk-button").text() shouldBe buttonText
         }
 
         "has the correct type" in {
-          doc.select("button").attr("type") shouldBe "submit"
+          doc.select("button.govuk-button").attr("id") shouldBe "submit"
         }
       }
 
       "have a back-link" which {
 
         "has the correct text" in {
-          doc.select("a.back-link").text() shouldBe plaBaseBack
+          doc.select("#main-content > div > div > p > a").text() shouldBe plaBaseBack
         }
 
         "has the correct destination" in {
-          doc.select("a.back-link").attr("href") shouldBe controllers.routes.LookupController.displaySchemeAdministratorReferenceForm.url
+          doc.select("#main-content > div > div > p > a").attr("href") shouldBe controllers.routes.LookupController.displaySchemeAdministratorReferenceForm.url
         }
       }
     }
@@ -103,15 +99,15 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
       lazy val doc = Jsoup.parse(view.apply(form).body)
 
       "have an error summary" in {
-        doc.select("div.error-summary").size() shouldBe 1
+        doc.select("div.govuk-error-summary").size() shouldBe 1
       }
 
       "should have error summary text" in {
-        doc.select("h2").text() shouldBe errorSummaryText
+        doc.select("h2.govuk-error-summary__title").text() shouldBe errorSummaryText
       }
 
       "have error notifications" in {
-        doc.select("fieldset div.error-notification").size() shouldBe 1
+        doc.select(".govuk-error-message").size() shouldBe 1
       }
 
       "have a text input with the data pre-populated" in {
@@ -125,11 +121,11 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
       lazy val doc = Jsoup.parse(view.apply(form).body)
 
       "not have an error summary" in {
-        doc.select("div.error-summary").size() shouldBe 0
+        doc.select("div.govuk-error-summary").size() shouldBe 0
       }
 
       "not have error notifications" in {
-        doc.select("fieldset div.error-notification").size() shouldBe 0
+        doc.select(".govuk-error-message").size() shouldBe 0
       }
 
       "have a text input with no data pre-populated" in {

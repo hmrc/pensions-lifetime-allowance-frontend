@@ -24,7 +24,8 @@
 @(lookupRequest: PSALookupRequest, timestamp: String)(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = Messages("psa.lookup.title")
+    pageTitle = Messages("psa.lookup.title"),
+    backLinkEnabled = false
 ) {
 
     <h1 class="govuk-heading-xl">@Messages("psa.lookup.not-found.results.title")</h1>
