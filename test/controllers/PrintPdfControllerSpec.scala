@@ -38,6 +38,7 @@ import play.shaded.ahc.org.asynchttpclient.uri.Uri
 import testHelpers.{FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import utils.ActionWithSessionId
+import views.html.pages.lookup.psa_lookup_not_found_print
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,6 +48,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = fakeApplication.injector.instanceOf[ExecutionContext]
   lazy val ws: WSClient = fakeApplication.injector.instanceOf[WSClient]
+  lazy val psaLookupNotFoundPrintView: psa_lookup_not_found_print = fakeApplication.injector.instanceOf[psa_lookup_not_found_print]
 
   val mockPdfGeneratorConnector: PdfGeneratorConnector = mock[PdfGeneratorConnector]
   private val sessionId = SessionKeys.sessionId -> "pdf-test"
@@ -72,6 +74,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
       mockKeyStoreConnector,
       mockActionWithSessionId,
       mockPdfGeneratorConnector,
+      psaLookupNotFoundPrintView,
       mockMCC) {
       override val lookupRequestID = "psa-lookup-request"
       override val lookupResultID = "psa-lookup-result"

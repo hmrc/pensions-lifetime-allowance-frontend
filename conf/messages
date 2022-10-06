@@ -24,6 +24,11 @@ pla.base.date.fields.day        = Day
 pla.base.date.fields.month      = Month
 pla.base.date.fields.year       = Year
 
+pla.license.1    = All content is available under the
+pla.license.link = Open Government Licence v3.0
+pla.license.2    = , except where otherwise stated
+pla.copyright    = Crown Copyright
+
 pla.base.errors.errorQuestion           = Enter an amount in the correct format eg £500000
 pla.base.errors.errorNegative           = Enter an amount that''s £0 or more
 pla.base.errors.errorMaximum            = Enter an amount less than £99,999,999,999,999.98
