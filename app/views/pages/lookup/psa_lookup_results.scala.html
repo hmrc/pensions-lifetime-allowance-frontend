@@ -18,13 +18,11 @@
 @import config.FrontendAppConfig
 
 @this(
-    main_template: main_template)
+    layout: Layout,
+    govukButton: GovukButton)
 
-@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever,  templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, frontendAppConfig: FrontendAppConfig)
+@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, application: Application, frontendAppConfig: FrontendAppConfig)
 
-@lc = @{
-    Application.instanceCache[PlaLanguageController].apply(application)
-}
 
 @metrics = {
 @if(lookupResult.psaCheckResult == 0) {
@@ -34,26 +32,29 @@
 }
 }
 
-@main_template(title = Messages("psa.lookup.title"), bodyClasses = None, showLogout = false) {
+@layout(
+    pageTitle = Messages("psa.lookup.title"),
+    backLinkEnabled = false
+) {
 
-    <h1> @Messages("psa.lookup.results.title")</h1>
+    <h1 class="govuk-heading-xl"> @Messages("psa.lookup.results.title")</h1>
     <br>
-    <table>
-        <tbody>
-            <tr>
-                <td class="font-small">@Messages("psa.lookup.results.table.row.1")</td>
-                <td id="scheme-administrator-reference-value" class="font-small">@lookupResult.pensionSchemeAdministratorCheckReference</td>
+    <table class="govuk-table">
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.1")</td>
+                <td id="scheme-administrator-reference-value" class="govuk-table__cell">@lookupResult.pensionSchemeAdministratorCheckReference</td>
             </tr>
             @if(lookupResult.protectionNotificationNumber.isDefined) {
-                <tr>
-                    <td class="font-small">@Messages("psa.lookup.results.table.row.2")</td>
-                    <td id="protection-notification-number-value" class="font-small">@lookupResult.protectionNotificationNumber</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.2")</td>
+                    <td id="protection-notification-number-value" class="govuk-table__cell">@lookupResult.protectionNotificationNumber</td>
                 </tr>
             }
             @if(lookupResult.psaCheckResult == 1) {
-                <tr>
-                    <td class="font-small">@Messages("psa.lookup.results.table.row.3")</td>
-                    <td id="protection-type-value" class="font-small"><a href="@routes.LookupController.displayProtectionTypeGuidance">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.3")</td>
+                    <td id="protection-type-value" class="govuk-table__cell"><a href="@routes.LookupController.displayProtectionTypeGuidance">
                     @lookupResult.ltaType match {
                         case 1 => {
                             @Messages("psa.lookup.results.ltatype.1")
@@ -82,33 +83,37 @@
                     case x if 2 until 4 contains x => {
                         @if(lookupResult.protectedAmount.isDefined) {
                             <tr>
-                                <td class="font-small">@Messages("psa.lookup.results.table.row.4")</td>
-                                <td id="protected-amount-value" class="font-small">£@lookupResult.protectedAmount.get.formatted("%,1.0f")</td>
+                                <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.4")</td>
+                                <td id="protected-amount-value" class="govuk-table__cell">£@lookupResult.protectedAmount.get.formatted("%,1.0f")</td>
                             </tr>
                         }
                     }
                     case _ => {}
                 }
-                <tr>
-                    <td class="font-small">@Messages("psa.lookup.results.table.row.5")</td>
-                    <td id="protection-status-valid" class="font-small">@Messages("psa.lookup.results.table.row.5.valid")</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.5")</td>
+                    <td id="protection-status-valid" class="govuk-table__cell">@Messages("psa.lookup.results.table.row.5.valid")</td>
             } else {
-                <tr>
-                    <td class="font-small">@Messages("psa.lookup.results.table.row.5")</td>
-                    <td id="protection-status-invalid" class="font-small">@Messages("psa.lookup.results.table.row.5.invalid")</td>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.5")</td>
+                    <td id="protection-status-invalid" class="govuk-table__cell">@Messages("psa.lookup.results.table.row.5.invalid")</td>
                 </tr>
             }
-            <tr>
-                <td class="font-small">@Messages("psa.lookup.results.table.row.6")</td>
-                <td id="checked-on-value" class="font-small">@timestamp</td>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.6")</td>
+                <td id="checked-on-value" class="govuk-table__cell">@timestamp</td>
             </tr>
         </tbody>
     </table>
 
     <div>
-        <a class="subsection button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printResultsPDF">@Messages("psa.lookup.results.save")</a>
-        <p>
-        <a class="button button--get-started" role="button" onclick="ga('send', 'event', 'ResultsPage', 'click', 'Check another certificate')" href="@routes.LookupController.redirectToStart">@Messages("psa.lookup.results.check-another")</a>
-        </p>
+        <a class="govuk-button govuk-button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printResultsPDF">@Messages("psa.lookup.results.save")</a>
+
+        <br>
+        @govukButton(Button(
+            href = Some(routes.LookupController.redirectToStart.toString),
+            isStartButton = true,
+            content = Text(Messages("psa.lookup.results.check-another"))
+        ))
     </div>
 }
