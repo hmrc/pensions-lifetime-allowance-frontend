@@ -19,16 +19,17 @@
 @import config.FrontendAppConfig
 
 
-@this(main_template: main_template)
+@this(
+   layout: Layout
+)
 
 @()(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
 
 @lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
-@main_template(title = Messages("pla.timeout.title"), bodyClasses = None, showLogout = false) {
+@layout(pageTitle = messages("pla.timeout.title"), backLinkEnabled = false) {
 
-    <h1 class="heading-large">@Messages("pla.timeout.pageHeading")</h1>
+   <h1 class="govuk-heading-xl">@messages("pla.timeout.pageHeading")</h1>
 
-    <p>@Html(Messages("pla.timeout.returnToPTA", Links.plaMain))</p>
-
+   <p class="govuk-body">@Html(messages("pla.timeout.returnToPTA", Links.plaMain))</p>
 }
