@@ -363,7 +363,12 @@ pla.resultSuccess.IPPensionSharing.beforeLink = Os yw''ch pensiwn yn cael ei ran
 pla.resultSuccess.IPPensionSharing.linkText = Gwasanaethau Cynlluniau Pensiwn
 pla.resultSuccess.IPPensionSharing.afterLink = cyn pen 60 diwrnod.
 pla.resultSuccess.FPAddToPension        = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a> cyn pen 90 diwrnod.
-pla.resultSuccess.viewDetails           = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
+pla.resultSuccess.FPAddToPension.beforeLink  = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â
+pla.resultSuccess.FPAddToPension.linkText  = Gwasanaethau Cynlluniau Pensiwn CThEM
+pla.resultSuccess.FPAddToPension.afterLink  = cyn pen 90 diwrnod.
+pla.resultSuccess.viewDetails.beforeLink= Gallwch
+pla.resultSuccess.viewDetails.linkText  = fwrw golwg ar fanylion eich diogelwch, neu eu newid
+pla.resultSuccess.viewDetails.afterLink = ar unrhyw adeg.
 pla.resultSuccess.giveFeedback          = Rhoi adborth i ni
 pla.resultSuccess.exitSurveyLinkText    = Beth oedd eich barn am y gwasanaeth hwn?
 pla.resultSuccess.exitSurvey            = Rydym yn defnyddio''ch adborth i wella ein gwasanaethau.
