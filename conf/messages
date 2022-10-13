@@ -363,7 +363,12 @@ pla.resultSuccess.IPPensionSharing.beforeLink = If your pension gets shared in a
 pla.resultSuccess.IPPensionSharing.linkText = HMRC Pension Schemes Services
 pla.resultSuccess.IPPensionSharing.afterLink = within 60 days.
 pla.resultSuccess.FPAddToPension        = If you or your employer adds to your pension, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 90 days.
-pla.resultSuccess.viewDetails           = You can <a href="{0}">view or change details of your protections</a> at any time.
+pla.resultSuccess.FPAddToPension.beforeLink  = If you or your employer adds to your pension, contact
+pla.resultSuccess.FPAddToPension.linkText  = HMRC Pension Schemes Services
+pla.resultSuccess.FPAddToPension.afterLink  = within 90 days.
+pla.resultSuccess.viewDetails.beforeLink= You can
+pla.resultSuccess.viewDetails.linkText  = view or change details of your protections
+pla.resultSuccess.viewDetails.afterLink = at any time.
 
 pla.resultSuccess.giveFeedback          = Give us feedback
 pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
