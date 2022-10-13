@@ -46,7 +46,7 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
     "have a results section which" should {
 
       lazy val firstPara = ip2016Doc.select("p").get(0)
-      lazy val protecAmount = ip2016Doc.select("span").get(0)
+      lazy val protecAmount = ip2016Doc.select("strong")
 
       "have an initial heading with the text" in {
         ip2016Doc.select("h1").text shouldBe "You've added fixed protection 2016"
@@ -99,63 +99,62 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
     "have a list of result details which are mapped and" should {
 
       "have a name line(protection ref defined)" in {
-        fp2016Doc.select("ul li").get(0).attr("id") shouldBe "yourFullName"
-        fp2016Doc.select("ul li").get(0).text shouldBe plaResultSuccessYourName
+        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(1)").attr("id") shouldBe "yourFullName"
+        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(1)").text shouldBe plaResultSuccessYourName
       }
 
       "have a nino line(protection ref defined)" in {
-        fp2016Doc.select("ul li").get(1).attr("id") shouldBe "yourNino"
-        fp2016Doc.select("ul li").get(1).text shouldBe plaResultSuccessYourNino
+        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(2)").attr("id") shouldBe "yourNino"
+        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(2)").text shouldBe plaResultSuccessYourNino
       }
 
       "have a protection reference line(protection ref defined)" in {
-        fp2016Doc.select("ul li").get(2).attr("id") shouldBe "protectionRef"
-        fp2016Doc.select("ul li").get(2).text shouldBe s"$plaResultSuccessProtectionRef: None"
+        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(3)").attr("id") shouldBe "protectionRef"
+        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(3)").text shouldBe s"$plaResultSuccessProtectionRef: None"
       }
 
       "have a psa line(protection ref defined)" in {
-        fp2016Doc.select("ul li").get(3).attr("id") shouldBe "psaRef"
-        fp2016Doc.select("ul li").get(3).text shouldBe s"$plaResultSuccessPsaRef: PSA33456789"
+        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(4)").attr("id") shouldBe "psaRef"
+        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(4)").text shouldBe s"$plaResultSuccessPsaRef: PSA33456789"
       }
 
       "have an application date line(protection ref defined)" in {
-        fp2016Doc.select("ul li").get(4).attr("id") shouldBe "applicationDate"
-        fp2016Doc.select("ul li").get(4).text shouldBe s"$plaResultSuccessApplicationDate: 15/07/2015"
+        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(5)").attr("id") shouldBe "applicationDate"
+        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(5)").text shouldBe s"$plaResultSuccessApplicationDate: 15/07/2015"
       }
 
 
       "have a name line(protection ref not defined)" in {
-        ip2016Doc.select("ul li").get(0).attr("id") shouldBe "yourFullName"
-        ip2016Doc.select("ul li").get(0).text shouldBe plaResultSuccessYourName
+        ip2016Doc.select("#main-content > div > div > ul >li:nth-child(1)").attr("id") shouldBe "yourFullName"
+        ip2016Doc.select("#main-content > div > div > ul >li:nth-child(1)").text shouldBe plaResultSuccessYourName
       }
 
       "have a nino line(protection ref not defined)" in {
-        ip2016Doc.select("ul li").get(1).attr("id") shouldBe "yourNino"
-        ip2016Doc.select("ul li").get(1).text shouldBe plaResultSuccessYourNino
+        ip2016Doc.select("#main-content > div > div > ul >li:nth-child(2)").attr("id") shouldBe "yourNino"
+        ip2016Doc.select("#main-content > div > div > ul >li:nth-child(2)").text shouldBe plaResultSuccessYourNino
       }
 
       "have a psa line(protection ref not defined)" in {
-        ip2016Doc.select("ul li").get(3).attr("id") shouldBe "psaRef"
-        ip2016Doc.select("ul li").get(3).text shouldBe s"$plaResultSuccessPsaRef:"
+        ip2016Doc.select("#main-content > div > div > ul >li:nth-child(4)").attr("id") shouldBe "psaRef"
+        ip2016Doc.select("#main-content > div > div > ul >li:nth-child(4)").text shouldBe s"$plaResultSuccessPsaRef:"
       }
 
     }
 
     "have a print page link which" should {
 
-      lazy val printLink = ip2016Doc.body.select("p a")
-      lazy val linkPara = ip2016Doc.body.select("div p").get(4)
+      lazy val printLink = ip2016Doc.body.select("#printPage")
 
       "have the paragraph class" in {
-        linkPara.attr("class") shouldBe "print-link"
+        printLink.attr("class") shouldBe "govuk-link"
       }
 
-      s"have the link text $plaResultSuccessPrint ($plaBaseNewWindow)" in {
-        linkPara.text shouldBe s"$plaResultSuccessPrint ($plaBaseNewWindow)"
+      s"have the link text $plaResultSuccessPrint ($plaBaseNewTab)" in {
+        printLink.text shouldBe s"$plaResultSuccessPrint ($plaBaseNewTab)"
       }
 
       "have the destination" in {
-        ip2016Doc.select("p a").get(1).attr("href") shouldBe "/protect-your-lifetime-allowance/print-protection"
+        printLink.attr("href") shouldBe "/protect-your-lifetime-allowance/print-protection"
       }
 
       "have the link id" in {
