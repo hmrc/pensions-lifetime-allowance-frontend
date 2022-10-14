@@ -56,7 +56,7 @@
     </ul>
     <p class="govuk-body">@Messages("psa.lookup.not-found.results.suggested-resolution")</p>
 
-    <a class="govuk-button govuk-button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printNotFoundPDF">@Messages("psa.lookup.results.save")</a>
+    <a class="govuk-button govuk-button--secondary" role="button" href="@routes.PrintPdfController.printNotFoundPDF">@Messages("psa.lookup.results.save")</a>
 
     <br>
     @govukButton(Button(

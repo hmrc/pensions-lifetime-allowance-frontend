@@ -31,8 +31,7 @@
                     class="print-link"
                     id="printLink"
                     href="@controllers.routes.PrintController.printView"
-                    target="_blank"
-                    onclick="ga('send', 'event', 'print-active-protection', 'print-@{protection.protectionType.toString}', 'existing');">
+                    target="_blank">
                         @{s"${Messages("pla.existingProtections.print")} (${Messages("pla.base.newWindow")})"}
                     </a>
                 </div>

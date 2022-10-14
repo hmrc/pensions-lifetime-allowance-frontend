@@ -63,7 +63,6 @@ var submitExitSurvey = function() {
                         "satisfaction-very_dissatisfied"];
     for(i = 0; i < eSRadioArray.length; i++){
         if(document.getElementById(eSRadioArray[i]).checked){
-            ga('send', 'event', 'radio', 'selected', eSRadioArray[i]);
         }
     }
 
@@ -76,7 +75,6 @@ var submitExitSurvey = function() {
                         "anythingElse-something_else",]
     for(i = 0; i < eSCheckArray.length; i++){
         if(document.getElementById(eSCheckArray[i]).checked){
-            ga('send', 'event', 'checkbox', 'selected', eSCheckArray[i]);
         }
     }
 };
