@@ -51,7 +51,7 @@
 		}
 
 		@if(res.printable) {
-			<p class="print-link"><a id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" onclick="ga('send', 'event', 'print-active-protection', 'print-@{res.protectionType.toString}', 'result');">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newWindow"))</a></p>
+			<p class="print-link"><a id="printPage" href="@controllers.routes.PrintController.printView" target="_blank">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newWindow"))</a></p>
 		}
 
 		<h2>@Messages("pla.resultSuccess.IPChangeDetails")</h2>

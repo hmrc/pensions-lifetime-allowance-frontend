@@ -26,8 +26,7 @@
         <h3 class="govuk-heading-m" id="activeProtection">@Messages("pla.protection.types." + protection.protectionType)</h3>
     </div>
     <div class="govuk-grid-column-two-thirds">
-        <a class="govuk-body govuk-link" id="printLink" href="@controllers.routes.PrintController.printView" target="_blank"
-            onclick="ga('send', 'event', 'print-active-protection', 'print-@{protection.protectionType.toString}', 'existing');">
+        <a class="govuk-body govuk-link" id="printLink" href="@controllers.routes.PrintController.printView" target="_blank">
                 @Messages("pla.existingProtections.print") (@Messages("pla.base.newTab"))
         </a>
     </div>
