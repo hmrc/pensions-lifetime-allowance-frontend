@@ -51,7 +51,7 @@
 		}
 
 		@if(res.printable) {
-			<p class="govuk-body"><a class="govuk-link" id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" rel="noreferrer noopener" onclick="ga('send', 'event', 'print-active-protection', 'print-@{res.protectionType.toString}', 'result');">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newTab"))</a></p>
+			<p class="govuk-body"><a class="govuk-link" id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" rel="noreferrer noopener">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newTab"))</a></p>
 		}
 
 		<h2 class="govuk-heading-l">@Messages("pla.resultSuccess.IPChangeDetails")</h2>

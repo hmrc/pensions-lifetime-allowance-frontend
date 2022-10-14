@@ -56,7 +56,7 @@
         @resultDetails(details)
     }
 
-    <p class="govuk-body"><a class="govuk-link" id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" rel="noopener noreferrer" onclick="ga('send', 'event', 'print-amended-protection', 'print-@{model.protectionType.toString}', 'result');">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newTab"))</a></p>
+    <p class="govuk-body"><a class="govuk-link" id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" rel="noopener noreferrer">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newTab"))</a></p>
 
     <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.IPChangeDetails")</h2>
 

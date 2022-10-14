@@ -26,9 +26,9 @@
 
 @metrics = {
 @if(lookupResult.psaCheckResult == 0) {
-    @ga_metrics(frontendAppConfig.invalidStatusMetric)
+    frontendAppConfig.invalidStatusMetric
 } else {
-    @ga_metrics(frontendAppConfig.validStatusMetric)
+    frontendAppConfig.validStatusMetric
 }
 }
 
@@ -107,7 +107,7 @@
     </table>
 
     <div>
-        <a class="govuk-button govuk-button--secondary" onclick="ga('send', 'event', 'File', 'save-pdf')" role="button" href="@routes.PrintPdfController.printResultsPDF">@Messages("psa.lookup.results.save")</a>
+        <a class="govuk-button govuk-button--secondary" role="button" href="@routes.PrintPdfController.printResultsPDF">@Messages("psa.lookup.results.save")</a>
 
         <br>
         @govukButton(Button(
