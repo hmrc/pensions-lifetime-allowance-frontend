@@ -27,12 +27,14 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+import views.html.pages.result.resultPrint
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 val citizenDetailsConnector: CitizenDetailsConnector,
                                 displayConstructors: DisplayConstructors,
+                                resultPrintView: resultPrint,
                                 mcc: MessagesControllerComponents,
                                 authFunction: AuthFunction)
                                (implicit val appConfig: FrontendAppConfig,
@@ -60,7 +62,7 @@ class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
     protectionModel match {
       case Some(model) =>
         val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
-        Ok(views.html.pages.result.resultPrint(displayModel))
+        Ok(resultPrintView(displayModel))
       case _ =>
         logger.warn(s"Forced redirect to PrintView for $nino")
         Redirect(routes.ReadProtectionsController.currentProtections)
