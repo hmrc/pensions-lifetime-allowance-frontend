@@ -15,18 +15,25 @@
  *@
 
 @import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import controllers.PlaLanguageController
 @import play.api.Application
 @import scala.concurrent.ExecutionContext
 
 
 
 @import config.FrontendAppConfig
-@this(partialUrl: String, redirectUrl: String)(implicit request: Request[_],main_template: main_template, messages: Messages, cachedStaticHtmlPartialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext)
+@this(
+        partialUrl: String,
+        redirectUrl: String,
+        layout: Layout,
+        submitButton: playHelpers.templates.submitButton
+)(
+        implicit request: Request[_], messages: Messages, context: config.PlaContext, cachedStaticHtmlPartialRetriever: uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, ec: ExecutionContext)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
-
-@main_template(Messages("feedback.thankyou.title")) {
+@layout(
+ pageTitle = Messages("feedback.thankyou.title")
+) {
     @cachedStaticHtmlPartialRetriever.getPartialContent(partialUrl)
+
+    @submitButton()
     <a id="back" href='@redirectUrl' role="button" tabindex="0" class="button">@Messages("pla.base.back")</a>
 }
