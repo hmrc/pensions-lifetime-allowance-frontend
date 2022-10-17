@@ -37,6 +37,7 @@ import testHelpers.{FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import views.html.pages.fallback.technicalError
+import views.html.pages.result.resultPrint
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -49,6 +50,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   val fakeRequest = FakeRequest()
   val mockEnv: Environment = mock[Environment]
+  val resultPrintView: resultPrint = fakeApplication.injector.instanceOf[resultPrint]
 
   implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
@@ -76,7 +78,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   }
 
 
-  val TestPrintController = new PrintController(mockKeyStoreConnector, mockCitizenDetailsConnector, mockDisplayConstructors, mockMCC, authFunction) {
+  val TestPrintController = new PrintController(mockKeyStoreConnector, mockCitizenDetailsConnector, mockDisplayConstructors, resultPrintView, mockMCC, authFunction) {
   }
 
   override def beforeEach(): Unit = {

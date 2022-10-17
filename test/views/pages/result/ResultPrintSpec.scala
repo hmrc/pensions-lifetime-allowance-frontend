@@ -21,36 +21,37 @@ import org.jsoup.Jsoup
 import play.api.i18n.Messages
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultPrint
-import views.html.pages.result.{resultPrint => views}
+import views.html.pages.result.resultPrint
 
 class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
 
   "The Print Result Page" should {
 
     lazy val model = PrintDisplayModel("Jim", "Davis", "nino", "IP2016", "active", "PSA33456789", Messages("pla.protection.protectionReference"), Some("100.00"), Some("23/02/2015"))
-    lazy val view = views(model)
+    lazy val resultPrintView = fakeApplication.injector.instanceOf[resultPrint]
+    lazy val view = resultPrintView(model)
     lazy val doc = Jsoup.parse(view.body)
     lazy val model2 = PrintDisplayModel("Jim", "Davis", "nino", "FP2014", "dormant", "PSA33456789", Messages("pla.protection.protectionReference"), Some("100.00"), Some("23/02/2015"))
-    lazy val view2 = views(model2)
+    lazy val view2 = resultPrintView(model2)
     lazy val doc2 = Jsoup.parse(view2.body)
 
     "have the correct title" in {
       doc.title() shouldBe plaPrintTitle
     }
 
-    "have a primary heading which" should {
+    "have a service name which" should {
 
-      lazy val p0 = doc.select("p").get(0)
+      lazy val serviceName = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
 
       "contain the text" in {
-        p0.text shouldBe plaPrintHmrc
+        serviceName.text shouldBe plaPrintServiceName
       }
-    }
+  }
 
     "have a second heading which" should {
 
       lazy val h1Tag = doc.select("h1")
-      lazy val p1 = doc.select("p").get(1)
+      lazy val p1 = doc.select("p").get(0)
 
       s"contain the text" in {
         h1Tag.text shouldBe "Jim Davis"
@@ -78,30 +79,32 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
 
     "contain a table which" should {
 
-      lazy val tableHeading = doc.select("tr td")
+      lazy val tableHeading = doc.select("tr th")
 
       "contain the following title message information" in {
         tableHeading.get(0).text shouldBe plaPrintApplicationDate
-        tableHeading.get(2).text shouldBe plaPrintProtectionType
-        tableHeading.get(4).text shouldBe plaPrintPla
-        tableHeading.get(6).text shouldBe plaPrintProtectionNotificationNumber
-        tableHeading.get(8).text shouldBe plaPrintSchemeAdministratorReference
+        tableHeading.get(1).text shouldBe plaPrintProtectionType
+        tableHeading.get(2).text shouldBe plaPrintPla
+        tableHeading.get(3).text shouldBe plaPrintProtectionNotificationNumber
+        tableHeading.get(4).text shouldBe plaPrintSchemeAdministratorReference
       }
 
+      lazy val tableData = doc.select("tr td")
+
       "contain the following id information" in {
-        tableHeading.get(1).attr("id") shouldBe "applicationDate"
-        tableHeading.get(3).attr("id") shouldBe "protectionType"
-        tableHeading.get(5).attr("id") shouldBe "protectedAmount"
-        tableHeading.get(7).attr("id") shouldBe "protectionRef"
-        tableHeading.get(9).attr("id") shouldBe "psaRef"
+        tableData.get(0).attr("id") shouldBe "applicationDate"
+        tableData.get(1).attr("id") shouldBe "protectionType"
+        tableData.get(2).attr("id") shouldBe "protectedAmount"
+        tableData.get(3).attr("id") shouldBe "protectionRef"
+        tableData.get(4).attr("id") shouldBe "psaRef"
       }
 
       "contain the following table information" in {
-        tableHeading.get(1).text shouldBe "23/02/2015"
-        tableHeading.get(3).text shouldBe "Individual protection 2016"
-        tableHeading.get(5).text shouldBe "100.00"
-        tableHeading.get(7).text shouldBe Messages("pla.protection.protectionReference")
-        tableHeading.get(9).text shouldBe "PSA33456789"
+        tableData.get(0).text shouldBe "23/02/2015"
+        tableData.get(1).text shouldBe "Individual protection 2016"
+        tableData.get(2).text shouldBe "100.00"
+        tableData.get(3).text shouldBe Messages("pla.protection.protectionReference")
+        tableData.get(4).text shouldBe "PSA33456789"
       }
     }
 
