@@ -57,13 +57,13 @@ pla.confirmFP16.title       = Gwneud cais am FP 2016
 pla.confirmFP16.pageHeading = Cael diogelwch sefydlog 2016 ar gyfer eich lwfans oes
 pla.confirmFP16.para.1      = I gael y diogelwch hwn mae''n rhaid i chi gytuno ar y datganiadau hyn.
 pla.confirmFP16.para.2      = Rwy''n datgan:
-pla.confirmFP16.bullet.1    = ar 6 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEM, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau sydd ddim yn y DU
+pla.confirmFP16.bullet.1    = ar 6 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEF, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau sydd ddim yn y DU
 pla.confirmFP16.bullet.2    = ar 6 Ebrill 2016 nid oedd gennyf lefel uwch o ddiogelwch, diogelwch sylfaenol, diogelwch sefydlog , neu ddiogelwch sefydlog 2014
 pla.confirmFP16.bullet.3    = er 6 Ebrill 2016 nid wyf wedi cael ''digwyddiad sy''n dod â diogelwch i ben'' (digwyddiadau penodol yw''r rhain sy''n eich gwneud yn anghymwys ar gyfer diogelwch sefydlog)
 pla.confirmFP16.para.3      = Rwy''n datgan bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
 pla.confirmFP16.help        = Help gyda''r amodau hyn
 pla.confirmFP16.hiddenPara.1 = Siaradwch â gweinyddwr eich cynllun pensiwn i gael help proffesiynol i ddeall yr amodau hyn.
-pla.confirmFP16.hiddenPara.2 = Mae gan Lawlyfr Treth Pensiwn CThEM {0}
+pla.confirmFP16.hiddenPara.2 = Mae gan Lawlyfr Treth Pensiwn CThEF {0}
 
 pla.confirmFP16.hiddenPara.linkText = arweiniad technegol ynghylch diogelwch sefydlog
 pla.confirmFP16.declaration = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am ddiogelwch sefydlog 2016 yn awtomatig.
@@ -73,12 +73,12 @@ pla.confirmFP16.declaration = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am dd
 pla.notAuthorised.title         = Heb ei awdurdodi
 pla.notAuthorised.pageHeading   = Ni allwn gadarnhau pwy ydych
 pla.notAuthorised.paraOne       = Gallwch wneud y canlynol:
-pla.notAuthorised.paraTwo       = <p><a href="{0}" target="_blank">cysylltu â Chyllid a Thollau EM am help</a></p>
+pla.notAuthorised.paraTwo       = <p><a href="{0}" target="_blank">cysylltu â Chyllid a Thollau EF am help</a></p>
 pla.notAuthorised.tryAgain      = <a href="{0}">ceisio cadarnhau pwy ydych eto</a>
 pla.lockedOut.title             = Wedi cloi allan
 pla.lockedOut.pageHeading       = Rydych wedi ceisio rhoi prawf o bwy ydych gormod o weithiau.
 pla.lockedOut.paraOne           = Gallwch roi cynnig arall arni ar ôl 24 awr.
-pla.lockedOut.paraTwo           = <p>Os oes gennych gwestiwn, gallwch <a href="{0}ʺ target="_blank">gysylltu â Chyllid a Thollau EM (yn agor ffenestr newydd)</a> i gael help.</p>
+pla.lockedOut.paraTwo           = <p>Os oes gennych gwestiwn, gallwch <a href="{0}ʺ target="_blank">gysylltu â Chyllid a Thollau EF (yn agor ffenestr newydd)</a> i gael help.</p>
 pla.technicalIssue.title        = Problemau Technegol
 pla.technicalIssue.pageHeading  = Mae problem dechnegol wedi codi
 pla.technicalIssue.paraOne      = Mae problemau wedi codi gyda''r gwasanaeth ar-lein hwn.
@@ -252,15 +252,15 @@ pla.summary.getIP14                                 = Cael diogelwch unigol 2014
 
 pla.summary.mustAgree                               = I gael y diogelwch hwn mae''n rhaid i chi gytuno ar y datganiadau hyn.
 pla.summary.confirmation                            = Rwy''n datgan:
-pla.summary.confirm1                                = Ar 5 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEM, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau nad yw yn y DU.
+pla.summary.confirm1                                = Ar 5 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEF, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau nad yw yn y DU.
 pla.summary.confirm2                                = Ar 6 Ebrill 2016 nid oedd gennyf unrhyw un o''r diogelwch yma:
-pla.summary.ip14Confirm1                            = Ar 5 Ebrill 2014 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEM, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau nad yw yn y DU.
+pla.summary.ip14Confirm1                            = Ar 5 Ebrill 2014 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEF, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau nad yw yn y DU.
 pla.summary.ip14Confirm2                            = Ar 6 Ebrill 2014 nid oedd gennyf ddiogelwch sylfaenol.
 pla.summary.confirmBullet1                          = diogelwch sylfaenol
 pla.summary.confirmBullet2                          = diogelwch unigol 2014
 pla.summary.help                                    = Help gyda''r amodau hyn
 pla.summary.hiddenPara.1                            = Siaradwch â gweinyddwr eich cynllun pensiwn i gael help proffesiynol i ddeall yr amodau hyn.
-pla.summary.hiddenPara.2                            = Mae gan Lawlyfr Treth Pensiwn CThEM {0}
+pla.summary.hiddenPara.2                            = Mae gan Lawlyfr Treth Pensiwn CThEF {0}
 pla.summary.hiddenPara.linkText                     = arweiniad technegol ynghylch diogelwch unigol 2016
 pla.summary.hiddenPara.ip14LinkText                 = arweiniad technegol ynghylch diogelwch unigol 2014
 pla.summary.confirmation2                           = Rwy''n datgan bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
@@ -341,7 +341,7 @@ pla.resultSuccess.applicationDate       = dyddiad y cais
 pla.resultSuccess.print                 = Argraffu a chadw''ch manylion
 pla.resultSuccess.IPChangeDetails       = Newid eich manylion diogelwch
 pla.resultSuccess.IPPensionSharing      = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn</a> cyn pen 60 diwrnod.
-pla.resultSuccess.FPAddToPension        = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a> cyn pen 90 diwrnod.
+pla.resultSuccess.FPAddToPension        = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a> cyn pen 90 diwrnod.
 pla.resultSuccess.viewDetails           = Gallwch <a href="{0}">fwrw golwg ar fanylion eich diogelwch, neu eu newid</a> ar unrhyw adeg.
 pla.resultSuccess.giveFeedback          = Rhoi adborth i ni
 pla.resultSuccess.exitSurveyLinkText    = Beth oedd eich barn am y gwasanaeth hwn?
@@ -379,7 +379,7 @@ pla.exitSurvey.sendFeedback                             = Anfon adborth
 
 ## Printing ##
 pla.print.title                             = Argraffu''ch diogelwch sydd ar waith
-pla.print.hmrc                              = Cyllid a Thollau EM
+pla.print.hmrc                              = Cyllid a Thollau EF
 pla.print.nino                              = Rhif Yswiriant Gwladol
 pla.print.protectionDetails                 = Manylion diogelwch
 pla.print.applicationDate                   = Dyddiad y cais
@@ -388,9 +388,9 @@ pla.print.pla                               = Lwfans oes sydd wedi''i ddiogelu
 pla.print.protectionNotificationNumber      = Rhif hysbysu diogelwch
 pla.print.schemeAdministratorReference      = Cyfeirnod gweinyddwr y cynllun
 pla.print.giveToPensionProvider             = Rhowch y manylion hyn i''ch darparwr pensiwn pan fyddwch yn penderfynu cymryd arian o''ch pensiwn.
-pla.print.IP2014.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEM cyn pen 60 diwrnod.
-pla.print.IP2016.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEM cyn pen 60 diwrnod.
-pla.print.FP2016.contactHMRC                = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEM cyn pen 90 diwrnod.
+pla.print.IP2014.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
+pla.print.IP2016.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
+pla.print.FP2016.contactHMRC                = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 90 diwrnod.
 
 ## Amends ##
 pla.amends.title                                            = Crynodeb o ddiogelwch
@@ -467,28 +467,28 @@ amendResultCode.26.2        = Fodd bynnag, mae eisoes gennych ddiogelwch uwch a 
 
 amendResultCode.27.heading  = Nid oes gennych hawl i ddiogelwch unigol 2014 erbyn hyn
 amendResultCode.27.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
-amendResultCode.27.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.27.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.28.heading  = Nid oes gennych hawl i ddiogelwch unigol 2014 erbyn hyn
 amendResultCode.28.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
-amendResultCode.28.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.28.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.29.heading  = Nid oes gennych hawl i ddiogelwch unigol 2014 erbyn hyn
 amendResultCode.29.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
 amendResultCode.29.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2016 sydd nawr ar waith. Gallwch fwrw golwg ar fanylion y diogelwch hwn yn eich cyfrif treth personol.
-amendResultCode.29.3        = Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.29.3        = Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.30.heading  = Rydych wedi diwygio diogelwch unigol 2014
 amendResultCode.30.1        = Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
-amendResultCode.30.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.30.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.31.heading  = Rydych wedi diwygio diogelwch unigol 2014
 amendResultCode.31.1        = Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog.
-amendResultCode.31.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.31.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.32.heading  = Rydych wedi diwygio diogelwch unigol 2014
 amendResultCode.32.1        = Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
-amendResultCode.32.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.32.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.33.heading  = Rydych wedi diwygio diogelwch unigol 2014
 
@@ -501,35 +501,35 @@ amendResultCode.35.2        = Os ydych eisoes wedi dechrau cymryd eich pensiwn, 
 
 amendResultCode.36.heading  = Nid oes gennych hawl i ddiogelwch unigol 2016 erbyn hyn
 amendResultCode.36.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
-amendResultCode.36.2        = Fodd bynnag, mae eisoes gennych ddiogelwch uwch a fydd yn aros ar waith. Os ydych yn rhoi''r gorau i ddiogelwch uwch, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.36.2        = Fodd bynnag, mae eisoes gennych ddiogelwch uwch a fydd yn aros ar waith. Os ydych yn rhoi''r gorau i ddiogelwch uwch, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.37.heading  = Nid oes gennych hawl i ddiogelwch unigol 2016 erbyn hyn
 amendResultCode.37.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
-amendResultCode.37.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.37.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.38.heading  = Nid oes gennych hawl i ddiogelwch unigol 2016 erbyn hyn
 amendResultCode.38.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
-amendResultCode.38.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.38.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.39.heading  = Nid oes gennych hawl i ddiogelwch unigol 2016 erbyn hyn
 amendResultCode.39.1        = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
-amendResultCode.39.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2016 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.39.2        = Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2016 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.40.heading  = Rydych wedi diwygio diogelwch unigol 2016
 amendResultCode.40.1        = Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2016 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
-amendResultCode.40.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.40.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.41.heading  = Rydych wedi diwygio diogelwch unigol 2016
 amendResultCode.41.1        = Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog.
-amendResultCode.41.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.41.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.42.heading  = Rydych wedi diwygio diogelwch unigol 2016
 amendResultCode.42.1        = Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
-amendResultCode.42.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.42.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.43.heading  = Rydych wedi diwygio diogelwch unigol 2016
 amendResultCode.43.1        = Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2016.
-amendResultCode.43.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+amendResultCode.43.2        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 amendResultCode.44.heading  = Rydych wedi diwygio diogelwch unigol 2016
 amendResultCode.12.heading  = Rydych wedi diwygio diogelwch unigol 2016
@@ -541,7 +541,7 @@ amendResultCode.12.heading  = Rydych wedi diwygio diogelwch unigol 2016
 ### RESULTS MESSAGES ###
 
 resultCode.1.heading    =   Mae''ch cais am ddiogelwch unigol 2014 wedi bod yn aflwyddiannus gan fod diogelwch sylfaenol gennych ar 5 Ebrill 2014.
-resultCode.1.1          =   Os ydych wedi colli prif ddiogelwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.1.1          =   Os ydych wedi colli prif ddiogelwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.2.heading    =   Mae''ch cais am ddiogelwch unigol 2014 wedi''i wrthod gan fod hyn gennych eisoes.
 
@@ -552,22 +552,22 @@ resultCode.4.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
 
 resultCode.5.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
 resultCode.5.1          =   Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
-resultCode.5.2          =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.5.2          =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.6.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
 resultCode.6.1          =   Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog.
-resultCode.6.2          =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.6.2          =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.7.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
 resultCode.7.1          =   Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
-resultCode.7.2          =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.7.2          =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.8.heading    =   Rydych wedi ychwanegu diogelwch unigol 2014
 resultCode.8.1          =   Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, mae diogelwch sefydlog 2016 wedi''i wneud yn anweithredol. Bydd yn dod ar waith eto os ydych yn colli diogelwch unigol 2014.
-resultCode.8.2          =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.8.2          =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.9.heading    =   Mae''ch cais am ddiogelwch unigol 2016 wedi bod yn aflwyddiannus gan fod prif ddiogelwch gennych ar 5 Ebrill 2016.
-resultCode.9.1          =   Os ydych wedi colli prif ddiogelwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.9.1          =   Os ydych wedi colli prif ddiogelwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.10.heading   =   Mae''ch cais am ddiogelwch unigol 2016 wedi bod yn aflwyddiannus gan fod diogelwch unigol 2014 gennych eisoes.
 
@@ -577,32 +577,32 @@ resultCode.12.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 
 resultCode.13.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 resultCode.13.1         =   Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
-resultCode.13.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.13.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.14.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 resultCode.14.1         =   Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog.
-resultCode.14.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.14.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.15.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 resultCode.15.1         =   Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
-resultCode.15.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.15.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.16.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 resultCode.16.1         =   Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2016.
-resultCode.16.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.16.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.17.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod diogelwch uwch gennych eisoes.
 resultCode.17.1         =   Os rhoddir gorau i ddiogelwch uwch, gallwch ail-wneud eich cais am ddiogelwch sefydlog 2016.
-resultCode.17.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.17.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.18.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod prif ddiogelwch gennych ar 5 Ebrill 2016.
-resultCode.18.1         =   Os colloch brif ddiogelwch cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.18.1         =   Os colloch brif ddiogelwch cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.19.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod diogelwch sefydlog gennych eisoes.
-resultCode.19.1         =   Os colloch ddiogelwch sefydlog cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>. Gallwch wedyn ail-wneud eich cais am ddiogelwch sefydlog 2016
+resultCode.19.1         =   Os colloch ddiogelwch sefydlog cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>. Gallwch wedyn ail-wneud eich cais am ddiogelwch sefydlog 2016
 
 resultCode.20.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod diogelwch sefydlog 2014 gennych eisoes.
-resultCode.20.1         =   Os colloch ddiogelwch sefydlog 2014 cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>. Gallwch wedyn ail-wneud eich cais am ddiogelwch sefydlog 2016
+resultCode.20.1         =   Os colloch ddiogelwch sefydlog 2014 cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>. Gallwch wedyn ail-wneud eich cais am ddiogelwch sefydlog 2016
 
 resultCode.21.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi''i wrthod gan fod hyn gennych eisoes.
 
@@ -610,47 +610,47 @@ resultCode.22.heading   =   Rydych wedi ychwanegu diogelwch sefydlog 2016
 
 resultCode.23.heading   =   Rydych wedi ychwanegu diogelwch sefydlog 2016
 resultCode.23.1         =   Gan fod diogelwch unigol 2016 wedi''i sefydlu gennych eisoes, mae diogelwch unigol 2016 wedi''i wneud yn anweithredol. Bydd yn dod ar waith eto os ydych yn colli diogelwch sefydlog 2016.
-resultCode.23.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.23.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.24.heading   =   Rydych wedi ychwanegu diogelwch sefydlog 2016
 resultCode.24.1         =   Gan fod diogelwch unigol 2014 wedi''i sefydlu gennych eisoes, daw diogelwch sefydlog 2016 ar waith dim ond os ydych yn colli diogelwch unigol 2014.
-resultCode.24.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.24.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.25.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2014
 resultCode.25.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
 
 resultCode.26.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2014
 resultCode.26.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
-resultCode.26.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch uwch a fydd yn aros ar waith. Os ydych yn rhoi''r gorau i ddiogelwch uwch, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.26.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch uwch a fydd yn aros ar waith. Os ydych yn rhoi''r gorau i ddiogelwch uwch, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.27.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2014
 resultCode.27.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
-resultCode.27.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.27.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.28.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2014
 resultCode.28.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
-resultCode.28.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.28.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.29.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2014
 resultCode.29.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,250,001.
 resultCode.29.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2016 sydd nawr ar waith. Dangosir isod manylion eich diogelwch sefydlog 2016. Gallwch fwrw golwg ar fanylion y diogelwch hwn yn eich cyfrif treth personol.
-resultCode.29.3         =   Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.29.3         =   Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.30.heading   =   Rydych wedi ychwanegu diogelwch unigol 2014
 resultCode.30.1         =   Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
-resultCode.30.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.30.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.31.heading   =   Rydych wedi ychwanegu diogelwch unigol 2014
 resultCode.31.1         =   Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog.
-resultCode.31.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.31.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.32.heading   =   Rydych wedi ychwanegu diogelwch unigol 2014
 resultCode.32.1         =   Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw diogelwch unigol 2014 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
-resultCode.32.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.32.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.33.heading   =   Rydych wedi ychwanegu diogelwch unigol 2014
 resultCode.33.1         =   Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, mae diogelwch sefydlog 2016 wedi''i wneud yn anweithredol. Bydd yn dod ar waith eto os ydych yn colli diogelwch unigol 2014.
-resultCode.33.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.33.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.34.heading   =   Rydych wedi ychwanegu diogelwch unigol 2014
 
@@ -659,35 +659,35 @@ resultCode.35.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn 
 
 resultCode.36.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2016
 resultCode.36.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
-resultCode.36.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch uwch a fydd yn aros ar waith. Os ydych yn rhoi''r gorau i ddiogelwch uwch, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.36.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch uwch a fydd yn aros ar waith. Os ydych yn rhoi''r gorau i ddiogelwch uwch, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.37.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2016
 resultCode.37.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
-resultCode.37.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.37.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.38.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2016
 resultCode.38.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
-resultCode.38.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.38.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2014 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2014, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.39.heading   =   Nid oes gennych hawl i ddiogelwch unigol 2016
 resultCode.39.1         =   Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
-resultCode.39.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2016 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.39.2         =   Fodd bynnag, mae eisoes gennych ddiogelwch sefydlog 2016 a fydd yn aros ar waith. Os ydych yn colli diogelwch sefydlog 2016, mae''n rhaid i chi roi gwybod i <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Wasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.40.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 resultCode.40.1         =   Gan fod diogelwch uwch wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn rhoi''r gorau i ddiogelwch uwch.
-resultCode.40.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.40.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.41.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 resultCode.41.1         =   Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog.
-resultCode.41.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.41.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.42.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 resultCode.42.1         =   Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
-resultCode.42.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.42.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.43.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 resultCode.43.1         =   Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2016.
-resultCode.43.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEM</a>.
+resultCode.43.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
 
 resultCode.44.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 
@@ -738,7 +738,7 @@ psa.lookup.results.title.print.1        = Canlyniadau lwfans oes
 psa.lookup.results.title.print.2        = gwiriad diogelwch
 psa.lookup.results.copyright.print      = © Hawlfraint y Goron
 psa.lookup.results.header.gov.uk        = GOV.UK
-psa.lookup.results.logo.text.print      = Cyllid a Thollau EM
+psa.lookup.results.logo.text.print      = Cyllid a Thollau EF
 
 psa.lookup.not-found.results.title                          = Gwiriwch y manylion a nodwyd gennych
 psa.lookup.not-found.results.title.2                        = Nodwyd y canlynol gennych:
