@@ -16,7 +16,6 @@ object AppDependencies {
   private val mongoCachingVersion = "7.0.0-play-28"
   private val localTemplateRendererVersion = "2.15.0-play-28"
   private val wireMockVersion = "2.26.3"
-  private val reactiveMongoVersion = "8.0.0-play-28"
 
   val compile = Seq(
     ws,
@@ -27,7 +26,6 @@ object AppDependencies {
     "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion excludeAll(ExclusionRule(organization="org.scalactic")),
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
-    "uk.gov.hmrc" %% "simple-reactivemongo" % reactiveMongoVersion
   )
 
   trait TestDependencies {
