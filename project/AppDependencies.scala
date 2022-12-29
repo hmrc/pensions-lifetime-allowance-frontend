@@ -13,21 +13,19 @@ object AppDependencies {
   private val scalaTestPlusVersion = "5.1.0"
   private val pegdownVersion = "1.6.0"
   private val cachingClientVersion = "9.5.0-play-28"
-  private val mongoCachingVersion = "7.0.0-play-28"
   private val localTemplateRendererVersion = "2.15.0-play-28"
   private val wireMockVersion = "2.26.3"
-  private val reactiveMongoVersion = "8.0.0-play-28"
+  private val timeVersion = "3.8.0"
 
   val compile = Seq(
     ws,
     "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % bootstrapVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "http-caching-client" % cachingClientVersion,
-    "uk.gov.hmrc" %% "mongo-caching" % mongoCachingVersion,
     "uk.gov.hmrc" %% "local-template-renderer" % localTemplateRendererVersion excludeAll(ExclusionRule(organization="org.scalactic")),
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion,
-    "uk.gov.hmrc" %% "simple-reactivemongo" % reactiveMongoVersion
+    "uk.gov.hmrc" %% "time" % timeVersion
   )
 
   trait TestDependencies {
