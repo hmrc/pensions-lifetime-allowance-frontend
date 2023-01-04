@@ -81,13 +81,13 @@ pla.confirmFP16.declaration = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am dd
 pla.notAuthorised.title         = Heb ei awdurdodi
 pla.notAuthorised.pageHeading   = Ni allwn gadarnhau pwy ydych
 pla.notAuthorised.paraOne       = Gallwch wneud y canlynol:
-pla.notAuthorised.paraTwo       = cysylltu â Chyllid a Thollau EM am help
+pla.notAuthorised.paraTwo       = cysylltu â Chyllid a Thollau EF am help
 pla.notAuthorised.tryAgain      = ceisio cadarnhau pwy ydych eto
 pla.lockedOut.title             = Wedi cloi allan
 pla.lockedOut.pageHeading       = Rydych wedi ceisio rhoi prawf o bwy ydych gormod o weithiau.
 pla.lockedOut.paraOne           = Gallwch roi cynnig arall arni ar ôl 24 awr.
 pla.lockedOut.paraTwoP1         = Os oes gennych gwestiwn, gallwch
-pla.lockedOut.paraTwoLinkText   = gysylltu â Chyllid a Thollau EM (yn agor tab newydd)
+pla.lockedOut.paraTwoLinkText   = gysylltu â Chyllid a Thollau EF (yn agor tab newydd)
 pla.lockedOut.paraTwoP2         = i gael help.
 pla.technicalIssue.title        = Problemau Technegol
 pla.technicalIssue.pageHeading  = Mae problem dechnegol wedi codi
@@ -409,7 +409,7 @@ pla.exitSurvey.sendFeedback                             = Anfon adborth
 
 ## Printing ##
 pla.print.title                             = Argraffu''ch diogelwch sydd ar waith
-pla.print.hmrc                              = Cyllid a Thollau EM
+pla.print.hmrc                              = Cyllid a Thollau EF
 pla.print.nino                              = Rhif Yswiriant Gwladol
 pla.print.protectionDetails                 = Manylion diogelwch
 pla.print.applicationDate                   = Dyddiad y cais
@@ -773,7 +773,7 @@ psa.lookup.results.title.print.1        = Canlyniadau lwfans oes
 psa.lookup.results.title.print.2        = gwiriad diogelwch
 psa.lookup.results.copyright.print      = © Hawlfraint y Goron
 psa.lookup.results.header.gov.uk        = GOV.UK
-psa.lookup.results.logo.text.print      = Cyllid a Thollau EM
+psa.lookup.results.logo.text.print      = Cyllid a Thollau EF
 
 psa.lookup.not-found.results.title                          = Gwiriwch y manylion a nodwyd gennych
 psa.lookup.not-found.results.title.2                        = Nodwyd y canlynol gennych:
