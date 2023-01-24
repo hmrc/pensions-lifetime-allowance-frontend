@@ -19,12 +19,11 @@ package views.pages.confirmation
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.confirmation.ConfirmFP
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.confirmation.confirmFP
 
 class ConfirmFPSpec extends CommonViewSpecHelper with ConfirmFP {
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "The FP 2016 page" should {

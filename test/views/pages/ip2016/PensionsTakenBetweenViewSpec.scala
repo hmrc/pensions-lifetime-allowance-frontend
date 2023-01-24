@@ -20,12 +20,11 @@ import forms.PensionsTakenBetweenForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBetweenViewMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.ip2016.pensionsTakenBetween
 
 class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTakenBetweenViewMessages {
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PensionsTakenBetweenView" should {

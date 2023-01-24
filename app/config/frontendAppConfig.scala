@@ -20,8 +20,6 @@ import javax.inject.Inject
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.play.config.AccessibilityStatementConfig
-
 
 trait AppConfig {
   val betaFeedbackUrl: String

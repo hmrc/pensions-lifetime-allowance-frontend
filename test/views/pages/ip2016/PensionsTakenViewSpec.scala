@@ -20,12 +20,11 @@ import forms.PensionsTakenForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenViewMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.ip2016.pensionsTaken
 
 class PensionsTakenViewSpec extends CommonViewSpecHelper with PensionsTakenViewMessages {
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PensionsTakenView" should{

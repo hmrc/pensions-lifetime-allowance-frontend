@@ -7,7 +7,6 @@ import sbt.Keys._
 import sbt._
 import uk.gov.hmrc._
 import DefaultBuildSettings._
-import sbt.Tests.{Group, SubProcess}
 import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning
@@ -37,17 +36,16 @@ lazy val root = Project(appName, file("."))
   .disablePlugins(JUnitXmlReportPlugin)
   .settings(playSettings ++ scoverageSettings: _*)
   .settings(scalaSettings: _*)
-  .settings(publishingSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
     targetJvm := "jvm-1.8",
     scalaVersion := "2.12.12",
     libraryDependencies ++= AppDependencies(),
-    parallelExecution in Test := false,
-    fork in Test := false,
+    Test / parallelExecution := false,
+    Test / fork := false,
     retrieveManaged := true,
-    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    pipelineStages in Assets := Seq(digest),
+    update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
+    Assets / pipelineStages := Seq(digest),
     // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
     scalacOptions += "-P:silencer:pathFilters=views;routes;",
     libraryDependencies ++= Seq(
@@ -57,9 +55,6 @@ lazy val root = Project(appName, file("."))
   )
   .settings(
       TwirlKeys.templateImports ++= Seq(
-        "uk.gov.hmrc.play.views.html.helpers._",
-        "uk.gov.hmrc.play.views.html.layouts._",
-        "uk.gov.hmrc.play.views.html.layouts._",
         "uk.gov.hmrc.govukfrontend.views.html.components._",
         "uk.gov.hmrc.govukfrontend.views.html.helpers._",
         "uk.gov.hmrc.hmrcfrontend.views.html.components._",
@@ -70,10 +65,9 @@ lazy val root = Project(appName, file("."))
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
   .settings(
-    Keys.fork in IntegrationTest := false,
-    unmanagedSourceDirectories in IntegrationTest := (baseDirectory in IntegrationTest) (base => Seq(base / "it")).value,
+    IntegrationTest / Keys.fork := false,
+    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory) (base => Seq(base / "it")).value,
     addTestReportOption(IntegrationTest, "int-test-reports"),
-    parallelExecution in IntegrationTest := false)
-  .settings(resolvers ++= Seq(Resolver.bintrayRepo("hmrc", "releases"), Resolver.jcenterRepo))
+    IntegrationTest / parallelExecution := false)
   .settings(majorVersion := 2)
   PlayKeys.playDefaultPort := 9010

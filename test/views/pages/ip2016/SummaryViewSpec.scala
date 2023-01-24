@@ -21,11 +21,10 @@ import models.{SummaryModel, SummaryRowModel, SummarySectionModel}
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.SummaryViewMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.ip2016.summary
 
 import scala.concurrent.ExecutionContext.Implicits.global
-
 
 class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
 
@@ -33,7 +32,6 @@ class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
 
   val psoDetailsSummaryRow = SummaryRowModel("psoDetails", Some(controllers.routes.IP2016Controller.psoDetails), Some(controllers.routes.IP2016Controller.removePsoDetails), false, "£10,000", "1 February 2016")
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the SummaryView" should{

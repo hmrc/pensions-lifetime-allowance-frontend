@@ -20,12 +20,11 @@ import forms.PSODetailsForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PsoDetailsViewMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.ip2016.psoDetails
 
 class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessages {
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PsoDetailsView" should{
