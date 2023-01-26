@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,13 +43,13 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
-import java.util.UUID
 
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import java.util.UUID
 import views.html.pages.result.manualCorrespondenceNeeded
 
 import scala.concurrent.Future
@@ -93,7 +93,6 @@ class AmendsControllerSpec extends FakeApplication
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
   implicit val mockLang: Lang = mock[Lang]
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   override def beforeEach(): Unit = {
@@ -544,9 +543,6 @@ class AmendsControllerSpec extends FakeApplication
     }
 
     "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" in new Setup {
-      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
     }
@@ -583,17 +579,11 @@ class AmendsControllerSpec extends FakeApplication
       }
 
       "have the value of the check box set as 'Yes' by default" in new Setup {
-        lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
-        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
       }
 
       "have the value of the input field set to 2000 by default" in new Setup {
-        lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
-        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
       }

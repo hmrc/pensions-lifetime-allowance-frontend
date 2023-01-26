@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package controllers
 
 import java.time.LocalDateTime
-
 import auth.AuthFunction
 import common.{Dates, Strings}
 import config._
@@ -25,6 +24,7 @@ import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.WithdrawDateForm._
+
 import javax.inject.Inject
 import models.{ProtectionModel, WithdrawDateFormModel}
 import play.api.data.{Form, FormError}
@@ -32,10 +32,10 @@ import play.api.i18n.{I18nSupport, Lang, Messages}
 import play.api.mvc._
 import play.api.Application
 import play.api.Logging
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -53,9 +53,8 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
                                             )
                                             (implicit val appConfig: FrontendAppConfig,
                                              implicit val partialRetriever: FormPartialRetriever,
-                                             implicit val templateRenderer:LocalTemplateRenderer,
+                                             implicit val templateRenderer: LocalTemplateRenderer,
                                              implicit val plaContext: PlaContext,
-                                             implicit val errorSummary: ErrorSummary,
                                              implicit val formWithCSRF: FormWithCSRF,
                                              implicit val application: Application)
 extends FrontendController(mcc) with I18nSupport with Logging {

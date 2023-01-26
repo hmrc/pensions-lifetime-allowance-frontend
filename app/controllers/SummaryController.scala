@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,16 @@ import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import connectors.KeyStoreConnector
 import constructors.SummaryConstructor
 import enums.ApplicationType
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import play.api.Application
 import play.api.Logging
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
 import views.html._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -42,7 +43,7 @@ class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  )
                                  (implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: FormPartialRetriever,
-                                  implicit val templateRenderer:LocalTemplateRenderer,
+                                  implicit val templateRenderer: LocalTemplateRenderer,
                                   implicit val plaContext: PlaContext,
                                   implicit val formWithCSRF: FormWithCSRF,
                                   implicit val application: Application)

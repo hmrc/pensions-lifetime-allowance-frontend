@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,17 @@
  */
 
 package views.pages.withdraw
-import controllers.routes
 import forms.WithdrawDateForm._
-import models.WithdrawDateFormModel
 import org.jsoup.Jsoup
-import play.api.data.Form
-import play.api.libs.json.Json
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawDateSpecMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.withdraw.withdrawDate
 
 class WithdrawDateSpec extends CommonViewSpecHelper with WithdrawDateSpecMessages {
   val withdrawDateForModelAllGood = withdrawDateForm.bind(Map[String,String]("withdrawDate.day" -> "19", "withdrawDate.month" -> "1", "withdrawDate.year" -> "2018"))
   val withdrawDateForModelInError = withdrawDateForm.bind(Map[String,String]("withdrawDate.date" -> "", "withdrawDate.month" -> "", "withdrawDate.year" -> "2018"))
   lazy val view = application.injector.instanceOf[withdrawDate]
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "Withdraw Date view with form without errors" when {

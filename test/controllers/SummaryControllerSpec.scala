@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
 import java.util.UUID
 
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.fallback.technicalError
 import views.html.pages.ip2016.summary
 
@@ -65,7 +65,6 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
   implicit val application = mock[Application]
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
   implicit val mockSummary: summary = app.injector.instanceOf[summary]
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
 
@@ -88,7 +87,6 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
       override implicit val plaContext: PlaContext = mockPlaContext
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError
-      implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
       implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
       override def authConnector: AuthConnector = mockAuthConnector
