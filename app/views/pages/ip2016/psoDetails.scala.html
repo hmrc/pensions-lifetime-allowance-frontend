@@ -40,7 +40,8 @@
 @layout(
     pageTitle = title
 ) {
-    @errorSummary(psoDetailsForm.errors)
+    @errorSummary(psoDetailsForm.errors, Some("psoAmt"))
+
     <h1 class="govuk-heading-xl">@Messages(s"pla.psoDetails.title")</h1>
 
     @form(action = routes.IP2016Controller.submitPSODetails) {

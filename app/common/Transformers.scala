@@ -14,16 +14,26 @@
  * limitations under the License.
  */
 
-package forms
+package common
 
-import models._
-import play.api.data.Forms._
-import play.api.data._
+import scala.util.{Failure, Success, Try}
 
-object PensionsTakenForm {
-  def pensionsTakenForm = Form(
-    mapping(
-      "pensionsTaken" -> optional(text).verifying("pla.pensionsTaken.errors.mandatoryError", {_.isDefined})
-    )(PensionsTakenModel.apply)(PensionsTakenModel.unapply)
-  )
+object Transformers {
+
+  val stringToOptionalBigDecimal: String => Option[BigDecimal] = (input) => {
+    Try(BigDecimal(input.trim)) match {
+      case Success(value) => Some(value)
+      case Failure(_) => None
+    }
+  }
+
+  val optionalBigDecimalToString: Option[BigDecimal] => String = (input) =>
+    if (input.isEmpty) ""
+    else {
+      input.get.scale match {
+        case 1 => input.getOrElse(BigDecimal(0.0)).setScale(2).toString()
+        case _ => input.getOrElse(BigDecimal(0.0)).toString
+      }
+    }
+
 }

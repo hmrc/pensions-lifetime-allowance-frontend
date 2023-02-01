@@ -20,14 +20,19 @@ trait CommonErrorMessages {
   val errorRequired = "error.required"
   val errorReal ="error.real"
   val errorMissingAmount = "pla.base.errors.errorQuestion"
+  def errorMissingAmount(errorKey: String) = s"pla.$errorKey.amount.errors.mandatoryError"
   val errorNegative = "pla.base.errors.errorNegative"
+  def errorNegative(errorKey: String) = s"pla.$errorKey.amount.errors.negative"
   val errorDecimal = "pla.base.errors.errorDecimalPlaces"
+  def errorDecimal(errorKey: String) = s"pla.$errorKey.amount.errors.decimal"
   val errorMaximum = "pla.base.errors.errorMaximum"
+  def errorMaximum(errorKey: String) = s"pla.$errorKey.amount.errors.max"
   val errorMissingDay = "pla.base.errors.dayEmpty"
   val errorMissingMonth = "pla.base.errors.monthEmpty"
   val errorMissingYear = "pla.base.errors.yearEmpty"
   val errorDate = "pla.base.errors.invalidDate"
   val errorQuestion = "pla.base.errors.mandatoryError"
+  def errorQuestion(errorKey: String) = s"pla.$errorKey.errors.mandatoryError"
   val errorEmptyDay = "pla.withdraw.date-input.form.day-empty"
   val errorEmptyMonth = "pla.withdraw.date-input.form.month-empty"
   val errorEmptyYear = "pla.withdraw.date-input.form.year-empty"
@@ -39,6 +44,6 @@ trait CommonErrorMessages {
 }
 
 trait PSODetailsMessages extends CommonErrorMessages {
-  val errorAmendPsoDetailsMissingAmount = "pla.psoDetails.errorQuestion"
+  val errorAmendPsoDetailsMissingAmount = "pla.psoDetails.amount.errors.mandatoryError"
   val errorDateRange = "pla.IP16PsoDetails.errorDateOutOfRange"
 }

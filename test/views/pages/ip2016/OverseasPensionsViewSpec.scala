@@ -28,11 +28,11 @@ class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPension
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the OverseasPensionsView" should{
-    val oPensionsForm = OverseasPensionsForm.overseasPensionsForm.bind(Map("overseasPensions" -> "Yes", "overseasPensionsAmt" -> "1234"))
+    val oPensionsForm = OverseasPensionsForm.overseasPensionsForm.bind(Map("overseasPensions" -> "yes", "overseasPensionsAmt" -> "1234"))
     lazy val view = application.injector.instanceOf[overseasPensions]
     lazy val doc = Jsoup.parse(view.apply(oPensionsForm).body)
 
-    val errorForm = OverseasPensionsForm.overseasPensionsForm.bind(Map.empty[String, String])
+    val errorForm = OverseasPensionsForm.overseasPensionsForm.bind(Map("overseasPensions" -> "", "overseasPensionsAmt" -> "123"))
     lazy val errorView = application.injector.instanceOf[overseasPensions]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
@@ -78,7 +78,7 @@ class OverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPension
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
-        errorDoc.select(".govuk-error-message").text shouldBe s"Error: $errorRequired"
+      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 
     "not have errors on valid pages" in{

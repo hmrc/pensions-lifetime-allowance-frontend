@@ -22,5 +22,6 @@ trait PensionDebitsViewMessages {
   val plaPensionDebitsParaOne = "This is called a pension sharing order and is issued by a court."
   val plaPensionDebitsMandatoryErr = "Please answer this question"
   val plaPensionsDebitLegendText = "Have any of your pensions been shared in a divorce since 5 April 2016?"
+  val plaMandatoryError = "Select yes if any of your pensions been shared in a divorce since 5 April 2016"
 
 }

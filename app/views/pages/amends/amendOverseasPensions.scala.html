@@ -28,13 +28,20 @@
 
 @(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel])(implicit request: Request[_], messages: Messages)
 
+@errorMessage = @{
+    for(error <- amendOverseasPensionsForm.errors) yield {
+        if(error.key.equals("amendedOverseasPensions")) "" else messages(error.message, error.args:_*)
+    }
+}
+
 @hiddenYesNoContent = {
 
     @formInputMoney(
         field = amendOverseasPensionsForm("amendedOverseasPensionsAmt"),
         question = Messages("pla.overseasPensions.questionTwo"),
         labelClass = Some("govuk-label--l"),
-        pageHeading = false
+        pageHeading = false,
+        errorMessage = if (amendOverseasPensionsForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
     )
 }
 
@@ -50,7 +57,7 @@
     pageTitle = title
 ) {
 
-    @errorSummary(amendOverseasPensionsForm.errors, Some("amendedOverseasPensions"))
+    @errorSummary(amendOverseasPensionsForm.errors, Some("amendedOverseasPensionsAmt"))
 
     <h1 class="govuk-heading-xl">@Messages("pla.overseasPensions.title")</h1>
 

@@ -28,13 +28,15 @@ import java.time.LocalDate
 class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
+  val messageKey = "psoDetails"
+
   "PSODetailsForm" should {
     val validMap = Map("pso.day" -> "1", "pso.month" -> "2", "pso.year" -> "2017", "psoAmt" -> "0.01")
 
     "return a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = PSODetailsModel(1, 2, 2017, 0.01)
+        val model = PSODetailsModel(1, 2, 2017, Some(0.01))
         val result = psoDetailsForm.fill(model)
 
         result.data shouldBe validMap
@@ -43,14 +45,14 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       "provided with a valid map with a value for psoAmt which has two decimal places" in {
         val result = psoDetailsForm.bind(validMap)
 
-        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, 0.01))
+        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, Some(0.01)))
       }
 
       "provided with a valid map with a value for psoAmt which is zero" in {
         val map = validMap.updated("psoAmt", "0")
         val result = psoDetailsForm.bind(map)
 
-        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, 0))
+        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, Some(0.0)))
       }
 
       "provided with a valid map with a value for psoAmt which is the maximum value" in {
@@ -59,7 +61,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         }.toString)
         val result = psoDetailsForm.bind(map)
 
-        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, Constants.npsMaxCurrency - 1))
+        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, Some(Constants.npsMaxCurrency - 1)))
       }
     }
 
@@ -94,7 +96,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoAmt").get.message shouldBe errorRequired
+        result.error("psoAmt").get.message shouldBe errorMissingAmount(messageKey)
       }
 
       "provided an amount with over two decimal places" in {
@@ -102,7 +104,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoAmt").get.message shouldBe errorDecimal
+        result.error("psoAmt").get.message shouldBe errorDecimal(messageKey)
       }
 
       "provided an amount with a negative value" in {
@@ -110,7 +112,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoAmt").get.message shouldBe errorNegative
+        result.error("psoAmt").get.message shouldBe errorNegative(messageKey)
       }
 
       "provided an amount with over the maximum value" in {
@@ -118,7 +120,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoAmt").get.message shouldBe errorMaximum
+        result.error("psoAmt").get.message shouldBe errorMaximum(messageKey)
       }
 
       "provided with an empty string for psoDay" in {

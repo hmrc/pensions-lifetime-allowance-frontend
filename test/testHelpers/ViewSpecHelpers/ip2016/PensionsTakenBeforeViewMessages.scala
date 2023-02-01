@@ -34,4 +34,5 @@ trait PensionsTakenBeforeViewMessages {
   val plaPensionsTakenBeforeHelpLinkTextNew = "technical guidance on valuing your pensions (opens in new tab)."
   val plaPensionsTakenBeforeHelpLinkLocation = "https://www.gov.uk/guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection#income-taken-from-pensions-before-6-april-2006"
   val plaPensionsTakenBeforeLegendText = "Did you get an income from any of your pensions before 6 April 2006?"
+  val plaMandatoryError = "Select yes if you got an income from any of your pensions before 6 April 2006"
 }

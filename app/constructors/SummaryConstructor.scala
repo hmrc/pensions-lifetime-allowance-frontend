@@ -196,7 +196,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
         val changeCall = CallMap.get(name)
         val removeCall = CallMap.get("remove"+name.capitalize)
         val date = dateDisplayString(constructDate(m.psoDay, m.psoMonth, m.psoYear))
-        val amt = currencyDisplayString(m.psoAmt)
+        val amt = currencyDisplayString(m.psoAmt.getOrElse(BigDecimal(0.0)))
         SummarySectionModel(List(
           SummaryRowModel(name, changeCall, removeCall, boldText = false, amt, date)
         ))

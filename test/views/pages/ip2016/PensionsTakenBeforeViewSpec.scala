@@ -28,11 +28,11 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PensionsTakenBeforeView" should{
-    val pensionsForm = PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> "Yes", "pensionsTakenBeforeAmt" -> "12345"))
+    val pensionsForm = PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> "yes", "pensionsTakenBeforeAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[pensionsTakenBefore]
     lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
-    val errorForm =  PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map.empty[String, String])
+    val errorForm =  PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> "", "pensionsTakenBeforeAmt" -> "12345"))
     lazy val errorView = application.injector.instanceOf[pensionsTakenBefore]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
@@ -91,7 +91,7 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $errorRequired"
+      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 
     "not have errors on valid pages" in{

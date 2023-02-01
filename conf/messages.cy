@@ -123,6 +123,7 @@ pla.pensionsTaken.bullet.2                  = trosglwyddwyd pensiwn gennych i gy
 pla.pensionsTaken.bullet.3                  = cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny
 pla.pensionsTaken.mandatoryErr              = Atebwch y cwestiwn hwn
 pla.pensionsTaken.legend                    = Cyn 6 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
+pla.pensionsTaken.errors.mandatoryError     = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016
 
 ## IP14 Pensions Taken ##
 pla.ip14PensionsTaken.title                 = A ddigwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2014?
@@ -142,6 +143,11 @@ pla.pensionsTakenBefore.bullet.1            = rydych wedi cael incwm o bensiynau
 pla.pensionsTakenBefore.bullet.2            = mae gennych bensiwn a godir o''r gronfa
 pla.pensionsTakenBefore.para.3              = Darganfyddwch sut yn
 pla.pensionsTakenBefore.helpLinkText        = yr arweiniad technegol hwn ar werthuso''ch pensiynau
+pla.pensionsTakenBefore.errors.mandatoryError = Dewiswch ''Iawn'' os cawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
+pla.pensionsTakenBefore.amount.errors.mandatoryError = Nodwch werth y pensiynau hyn ar 5 Ebrill 2016
+pla.pensionsTakenBefore.amount.errors.decimal = Mae gwerth y pensiynau hyn ar 5 Ebrill 2016 yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.pensionsTakenBefore.amount.errors.negative = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £0 neu fwy
+pla.pensionsTakenBefore.amount.errors.max = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
 
 ## IP14 Pensions Taken Before ##
 pla.ip14PensionsTakenBefore.question        = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2014?
@@ -153,6 +159,7 @@ pla.pensionsTakenBetween.bullet.1           = cawsoch arian o''ch pensiynau
 pla.pensionsTakenBetween.bullet.2           = trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor
 pla.pensionsTakenBetween.bullet.3           = cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny
 pla.pensionsTakenBetween.para.1             = Os yw unrhyw un o''r digwyddiadau hyn wedi digwydd, byddech wedi defnyddio peth o''ch lwfans oes.
+pla.pensionsTakenBetween.errors.mandatoryError = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r digwyddiadau hyn rhwng 6 Ebrill 2006 a 5 Ebrill 2016
 
 pla.pensionsTakenBetween.questionTwo        = Faint o lwfans oes a ydych wedi''i ddefnyddio?
 pla.pensionsTakenBetween.help               = Sut wyf yn cyfrifo''r gwerth?
@@ -164,6 +171,10 @@ pla.pensionsTakenBetween.step.4             = Ail wnewch hyn ar gyfer pob digwyd
 pla.pensionsTakenBetween.para.3             = Darllenwch arweiniad technegol ar {0}
 pla.pensionsTakenBetween.para.3.nonInput    = Darllenwch arweiniad technegol ar
 pla.pensionsTakenBetween.helpLinkText       = cyfrifo faint o lwfans oes yr ydych wedi''i ddefnyddio
+pla.pensionsTakenBetween.amount.errors.mandatoryError = Nodwch faint o lwfans oes yr ydych wedi''i ddefnyddio
+pla.pensionsTakenBetween.amount.errors.decimal = Mae ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.pensionsTakenBetween.amount.errors.negative = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
+pla.pensionsTakenBetween.amount.errors.max = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
 
 pla.pensionsTakenBetween.legend             = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
@@ -180,6 +191,11 @@ pla.overseasPensions.title                  = A ydych wedi rhoi arian mewn cynll
 pla.overseasPensions.question               = Dim ond cyfraniadau a wnaed rhwng 6 Ebrill 2006 a 5 Ebrill 2016 y cawsoch ryddhad treth y DU arnynt, y dylech eu cynnwys.
 pla.overseasPensions.questionTwo            = Faint gwnaethoch gyfrannu?
 pla.overseasPensions.legend                 = A wnaethoch roi arian i mewn i gynllun pensiwn dramor rhwng 6 Ebrill 2006 a 5 Ebrill 2016?
+pla.overseasPensions.errors.mandatoryError  = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.overseasPensions.amount.errors.mandatoryError = Nodwch faint y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.decimal = Mae ''Faint y gwnaethoch ei gyfrannu?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.overseasPensions.amount.errors.negative = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £0 neu fwy
+pla.overseasPensions.amount.errors.max = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £1,000,000,000 neu lai
 
 ## IP14 Overseas Pensions ##
 pla.ip14OverseasPensions.question           = Dim ond cyfraniadau a wnaed rhwng 6 Ebrill 2006 a 5 Ebrill 2014 y cawsoch ryddhad treth y DU arnynt, y dylech eu cynnwys.
@@ -199,6 +215,10 @@ pla.currentPensions.readGuidance            = Darllenwch arweiniad technegol ar 
 pla.currentPensions.readGuidance.nonInput   = Darllenwch arweiniad technegol ar
 pla.currentPensions.helpLinkText            = sut i werthuso pensiynau nad ydych wedi''u cymryd hyd yn hyn?
 pla.currentPensions.question                = Peidiwch â chynnwys pensiynau yr ydych eisoes wedi''u cymryd na Phensiwn y Wladwriaeth.
+pla.currentPensions.amount.errors.mandatoryError = Nodwch werth eich pensiynau yn y DU ar 5 Ebrill 2016
+pla.currentPensions.amount.errors.decimal = Mae gwerth eich pensiynau yn y DU ar 5 Ebrill 2016 yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.currentPensions.amount.errors.negative = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn £0 neu fwy
+pla.currentPensions.amount.errors.max = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
 
 
 ## IP14 CURRENT PENSIONS ##
@@ -211,7 +231,7 @@ pla.ip14CurrentPensions.hiddenTextPara      = Defnyddiwch ffigurau a oedd yn gyw
 ## PENSION DEBITS ##
 pla.pensionDebits.title                     = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?
 pla.pensionDebits.paraOne                   = Gelwir hynny''n orchymyn rhannu pensiwn a gyhoeddir gan lys.
-pla.pensionDebits.mandatoryErr              = Atebwch y cwestiwn hwn
+pla.pensionDebits.errors.mandatoryError     = Dewiswch ''Iawn'' os oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad ers 5 Ebrill 2016
 
 ## IP14 PENSION DEBITS ##
 pla.ip14PensionDebits.title                 = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?
@@ -227,6 +247,10 @@ pla.psoDetails.visitPTA                     = Unwaith eich bod wedi cwblhau''r g
 pla.psoDetails.errorQuestion                = Nodwch rif heb comas, er enghraifft 10000.00
 pla.psoDetails.removePso                    = Bydd hyn yn dileu''ch gorchymyn rhannu pensiwn
 pla.psoDetails.cancelRemove                 = Peidiwch â dileu
+pla.psoDetails.amount.errors.mandatoryError = Nodwch swm y gorchymyn rhannu pensiwn
+pla.psoDetails.amount.errors.decimal = Mae swm y gorchymyn rhannu pensiwn yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.psoDetails.amount.errors.negative = Mae''n rhaid i swm y gorchymyn rhannu pensiwn fod yn £0 neu fwy
+pla.psoDetails.amount.errors.max = Mae''n rhaid i swm y gorchymyn rhannu pensiwn fod yn £1,000,000,000 neu lai
 
 pla.IP14PsoDetails.errorDateOutOfRange      = Nodwch ddyddiad rhwng 5 Ebrill 2014 a heddiw
 pla.IP16PsoDetails.errorDateOutOfRange      = Nodwch ddyddiad rhwng 5 Ebrill 2016 a heddiw

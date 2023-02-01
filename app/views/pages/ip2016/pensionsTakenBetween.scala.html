@@ -45,6 +45,12 @@
 
 }
 
+@errorMessage = @{
+    for(error <- pensionsTakenBetweenForm.errors) yield {
+        if(error.key.equals("pensionsTakenBetween")) "" else messages(error.message, error.args:_*)
+    }
+}
+
 @hiddenYesNoContent = {
 
     <h2 class="govuk-heading-m">@Messages("pla.pensionsTakenBetween.questionTwo")</h2>
@@ -54,11 +60,13 @@
         summaryText = Messages("pla.pensionsTakenBetween.help"),
         hiddenContent = helpTextAccordionContent
     )
+
     @formInputMoney(
         field = pensionsTakenBetweenForm("pensionsTakenBetweenAmt"),
         question = Messages("pla.pensionsTakenBetween.questionTwo"),
         hideLabel = true,
-        pageHeading = false
+        pageHeading = false,
+        errorMessage = if (pensionsTakenBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
     )
 }
 
@@ -73,7 +81,7 @@
     pageTitle = title
 ) {
 
-    @errorSummary(pensionsTakenBetweenForm.errors, Some("pensionsTakenBetween"))
+    @errorSummary(pensionsTakenBetweenForm.errors, Some("pensionsTakenBetweenAmt"))
 
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBetween.title")</h1>
 

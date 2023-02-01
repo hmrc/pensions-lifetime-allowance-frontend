@@ -927,7 +927,7 @@ class AmendsControllerSpec extends FakeApplication
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
         status(DataItem.result) shouldBe 400
-        DataItem.jsoupDoc.getElementsByClass("govuk-error-message").text should include(Messages("pla.base.errors.errorQuestion"))
+        DataItem.jsoupDoc.getElementsByClass("govuk-error-message").text should include(Messages("pla.overseasPensions.amount.errors.mandatoryError"))
       }
     }
 

@@ -16,18 +16,47 @@
 
 package forms
 
+import common.Transformers.{optionalBigDecimalToString, stringToOptionalBigDecimal}
 import models.amendModels.AmendPensionsTakenBetweenModel
 import play.api.data.Forms._
 import play.api.data._
+import common.Validation._
 
 object AmendPensionsTakenBetweenForm extends CommonBinders {
 
+  val verifyMandatory: AmendPensionsTakenBetweenModel => Boolean = {
+    case AmendPensionsTakenBetweenModel("yes", value, _,_) => value.isDefined
+    case _ => true
+  }
+
+  val verifyDecimal: AmendPensionsTakenBetweenModel => Boolean = {
+    case AmendPensionsTakenBetweenModel("yes", Some(value), _,_) => isMaxTwoDecimalPlaces(value)
+    case _ => true
+  }
+
+  val verifyPositive: AmendPensionsTakenBetweenModel => Boolean = {
+    case AmendPensionsTakenBetweenModel("yes", Some(value), _,_) => isPositive(value)
+    case _ => true
+  }
+
+  val verifyMax: AmendPensionsTakenBetweenModel => Boolean = {
+    case AmendPensionsTakenBetweenModel("yes", Some(value), _,_) => isLessThanMax(value)
+    case _ => true
+  }
+
   def amendPensionsTakenBetweenForm = Form (
     mapping(
-      "amendedPensionsTakenBetween" -> nonEmptyText,
-      "amendedPensionsTakenBetweenAmt" -> yesNoOptionalBigDecimal,
+      "amendedPensionsTakenBetween" -> common.Validation.newText("pla.pensionsTakenBetween.errors.mandatoryError")
+        .verifying("pla.pensionsTakenBetween.errors.mandatoryError", mandatoryCheck)
+        .verifying("pla.pensionsTakenBetween.errors.mandatoryError", yesNoCheck),
+      "amendedPensionsTakenBetweenAmt" -> text
+        .transform(stringToOptionalBigDecimal, optionalBigDecimalToString),
       "protectionType" -> text,
       "status" -> text
     )(AmendPensionsTakenBetweenModel.apply)(AmendPensionsTakenBetweenModel.unapply)
+      .verifying("pla.pensionsTakenBetween.amount.errors.mandatoryError", verifyMandatory)
+      .verifying("pla.pensionsTakenBetween.amount.errors.decimal", verifyDecimal)
+      .verifying("pla.pensionsTakenBetween.amount.errors.negative", verifyPositive)
+      .verifying("pla.pensionsTakenBetween.amount.errors.max", verifyMax)
   )
 }

@@ -26,6 +26,8 @@ import utils.Constants
 class OverseasPensionsFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
+  val messageKey = "overseasPensions"
+
   "The OverseasPensionsForm" should {
     val validMap = Map("overseasPensions" -> "yes", "overseasPensionsAmt" -> "1")
 
@@ -39,7 +41,7 @@ class OverseasPensionsFormSpec extends FakeApplication with CommonErrorMessages 
       }
 
       "provided with a valid map with no amount" in {
-        val map = Map("overseasPensions" -> "no")
+        val map = Map("overseasPensions" -> "no", "overseasPensionsAmt" -> "")
         val result = overseasPensionsForm.bind(map)
 
         result.value shouldBe Some(OverseasPensionsModel("no", None))
@@ -76,7 +78,7 @@ class OverseasPensionsFormSpec extends FakeApplication with CommonErrorMessages 
           val result = overseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("overseasPensions").get.message shouldBe errorRequired
+          result.error("overseasPensions").get.message shouldBe errorQuestion(messageKey)
         }
 
         "provided with a non-numeric amount" in {
@@ -84,7 +86,7 @@ class OverseasPensionsFormSpec extends FakeApplication with CommonErrorMessages 
           val result = overseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("overseasPensionsAmt").get.message shouldBe errorReal
+          result.errors.head.message shouldBe errorMissingAmount(messageKey)
         }
       }
 
@@ -93,19 +95,19 @@ class OverseasPensionsFormSpec extends FakeApplication with CommonErrorMessages 
         "has one error with the correct error message" when {
 
           "not provided with an amount with a yes answer" in {
-            val map = validMap - "overseasPensionsAmt"
+            val map = validMap.updated("overseasPensionsAmt", "")
             val result = overseasPensionsForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("overseasPensionsAmt").get.message shouldBe errorMissingAmount
+            result.errors.head.message shouldBe errorMissingAmount(messageKey)
           }
 
           "provided with an amount greater than the maximum" in {
-            val map = validMap.updated("overseasPensionsAmt", Constants.npsMaxCurrency.toString)
+            val map = validMap.updated("overseasPensionsAmt", Constants.npsMaxCurrency+1.toString)
             val result = overseasPensionsForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("overseasPensionsAmt").get.message shouldBe errorMaximum
+            result.errors.head.message shouldBe errorMaximum(messageKey)
           }
 
           "provided with an amount with over two decimal places" in {
@@ -113,7 +115,7 @@ class OverseasPensionsFormSpec extends FakeApplication with CommonErrorMessages 
             val result = overseasPensionsForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("overseasPensionsAmt").get.message shouldBe errorDecimal
+            result.errors.head.message shouldBe errorDecimal(messageKey)
           }
 
           "provided with a negative amount" in {
@@ -121,7 +123,7 @@ class OverseasPensionsFormSpec extends FakeApplication with CommonErrorMessages 
             val result = overseasPensionsForm.bind(map)
 
             result.errors.size shouldBe 1
-            result.error("overseasPensionsAmt").get.message shouldBe errorNegative
+            result.errors.head.message shouldBe errorNegative(messageKey)
           }
         }
       }
