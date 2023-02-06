@@ -28,7 +28,7 @@ class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Am
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendIP14PensionsTakenBetweenView" should {
-    val pensionsForm = AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "Yes",
+    val pensionsForm = AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "yes",
       "amendedPensionsTakenBetweenAmt" -> "12345",
       "protectionType" -> "ip2014",
       "status" -> "open"))
@@ -103,7 +103,7 @@ class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Am
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select(".govuk-error-summary__body li").get(0).text shouldBe errorRequired
+      errorDoc.select(".govuk-error-summary__body li").get(0).text shouldBe plaMandatoryError
     }
 
     "not have errors on valid pages" in{

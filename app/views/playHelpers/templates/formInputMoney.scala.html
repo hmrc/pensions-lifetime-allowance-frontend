@@ -27,7 +27,8 @@
     hideLabel: Boolean = false,
     pageHeading:Boolean = true,
     labelClass: Option[String] = None,
-    hintText: Option[String] = None
+    hintText: Option[String] = None,
+    errorMessage: Option[String] = Some("")
 )(implicit messages: Messages)
 
 @govukInput(Input(
@@ -41,5 +42,6 @@
     spellcheck = Some(false),
     prefix = Some(PrefixOrSuffix(
         content = Text("£")
-    ))
+    )),
+    errorMessage = if (errorMessage.get != "") Some(ErrorMessage(content = Text(errorMessage.get))) else None
 ).withFormField(field))

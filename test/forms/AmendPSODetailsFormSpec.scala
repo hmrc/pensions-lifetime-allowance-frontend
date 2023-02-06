@@ -29,6 +29,8 @@ import java.time.LocalDate
 class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
+  val messageKey = "psoDetails"
+
   "The AmendPensionsTakenBetweenForm" should {
     val validMap = Map(
       "pso.day" -> "1",
@@ -136,7 +138,7 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
           val result = amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoAmt").get.message shouldBe errorNegative
+          result.error("psoAmt").get.message shouldBe errorNegative(messageKey)
         }
 
         "provided with a psoAmt value above the maximum" in {
@@ -144,7 +146,7 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
           val result = amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoAmt").get.message shouldBe errorMaximum
+          result.error("psoAmt").get.message shouldBe errorMaximum(messageKey)
         }
 
         "provided with a psoAmt value with more than two decimal places" in {
@@ -152,7 +154,7 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
           val result = amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoAmt").get.message shouldBe errorDecimal
+          result.error("psoAmt").get.message shouldBe errorDecimal(messageKey)
         }
       }
     }

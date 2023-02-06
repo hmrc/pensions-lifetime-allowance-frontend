@@ -51,7 +51,7 @@ class PensionDebitsFormSpec extends FakeApplication with CommonErrorMessages wit
         val result = pensionDebitsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("pensionDebits").get.message shouldBe errorQuestion
+        result.error("pensionDebits").get.message shouldBe errorQuestion("pensionDebits")
       }
     }
   }

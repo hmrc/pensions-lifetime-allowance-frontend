@@ -124,6 +124,7 @@ pla.pensionsTaken.bullet.2                  = you transferred a pension to a sch
 pla.pensionsTaken.bullet.3                  = you turned 75 with pension savings that you hadn''t yet taken
 pla.pensionsTaken.mandatoryErr              = Please answer this question
 pla.pensionsTaken.legend                    = Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.pensionsTaken.errors.mandatoryError     = Select yes if any of the following happened before 6 April 2016
 
 ## IP14 Pensions Taken ##
 pla.ip14PensionsTaken.title                 = Did any of the following happen before 6 April 2014?
@@ -143,6 +144,13 @@ pla.pensionsTakenBefore.bullet.1            = you did receive an income from oth
 pla.pensionsTakenBefore.bullet.2            = you have a drawdown pension
 pla.pensionsTakenBefore.para.3              = Find out how in this
 pla.pensionsTakenBefore.helpLinkText        = technical guidance on valuing your pensions
+pla.pensionsTakenBefore.errors.mandatoryError = Select yes if you got an income from any of your pensions before 6 April 2006
+pla.pensionsTakenBefore.amount.errors.mandatoryError = Enter what these pensions were worth on 5 April 2016
+pla.pensionsTakenBefore.amount.errors.decimal = What these pensions were worth on 5 April 2016 has too many numbers after the decimal point
+pla.pensionsTakenBefore.amount.errors.negative = What these pensions were worth on 5 April 2016 must be £0 or more
+pla.pensionsTakenBefore.amount.errors.max = What these pensions were worth on 5 April 2016 must be £1,000,000,000 or less
+
+
 
 ## IP14 Pensions Taken Before ##
 pla.ip14PensionsTakenBefore.question        = What were these pensions worth on 5 April 2014?
@@ -154,6 +162,7 @@ pla.pensionsTakenBetween.bullet.1           = you got money from your pensions
 pla.pensionsTakenBetween.bullet.2           = you transferred a pension to a scheme held overseas
 pla.pensionsTakenBetween.bullet.3           = you turned 75 with pension savings which you hadn''t yet taken
 pla.pensionsTakenBetween.para.1             = You''ll have used some of your lifetime allowance if any of these events happened.
+pla.pensionsTakenBetween.errors.mandatoryError = Select yes if any of these events happened between 6 April 2006 and 5 April 2016
 
 pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance have you used?
 pla.pensionsTakenBetween.help               = How do I work out the value?
@@ -165,6 +174,11 @@ pla.pensionsTakenBetween.step.4             = Repeat for each event and total th
 pla.pensionsTakenBetween.para.3             = Read technical guidance on {0}
 pla.pensionsTakenBetween.para.3.nonInput    = Read technical guidance on
 pla.pensionsTakenBetween.helpLinkText       = working out how much lifetime allowance you''ve used
+pla.pensionsTakenBetween.amount.errors.mandatoryError = Enter how much lifetime allowance you have used
+pla.pensionsTakenBetween.amount.errors.decimal = How much lifetime allowance you have used has too many numbers after the decimal point
+pla.pensionsTakenBetween.amount.errors.negative = How much lifetime allowance you have used must be £0 or more
+pla.pensionsTakenBetween.amount.errors.max = How much lifetime allowance you have used must be £1,000,000,000 or less
+
 
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
@@ -181,6 +195,11 @@ pla.overseasPensions.title                  = Have you put money into a pension 
 pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on.
 pla.overseasPensions.questionTwo            = How much did you contribute?
 pla.overseasPensions.legend                 = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2016?
+pla.overseasPensions.errors.mandatoryError  = Select yes if you have put money into a pension scheme held overseas
+pla.overseasPensions.amount.errors.mandatoryError = Enter how much you contributed
+pla.overseasPensions.amount.errors.decimal = How much you contributed has too many numbers after the decimal point
+pla.overseasPensions.amount.errors.negative = How much you contributed must be £0 or more
+pla.overseasPensions.amount.errors.max = How much you contributed must be £1,000,000,000 or less
 
 ## IP14 Overseas Pensions ##
 pla.ip14OverseasPensions.question           = Only include contributions you made between 6 April 2006 and 5 April 2014 that you got UK tax relief on.
@@ -200,7 +219,10 @@ pla.currentPensions.readGuidance            = Read technical guidance on {0}
 pla.currentPensions.readGuidance.nonInput   = Read technical guidance on
 pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
 pla.currentPensions.question                = Do not include pensions you''ve already taken or the State Pension.
-
+pla.currentPensions.amount.errors.mandatoryError = Enter what your UK pensions were worth on 5 April 2016
+pla.currentPensions.amount.errors.decimal = What your UK pensions were worth on 5 April 2016 has too many numbers after the decimal point
+pla.currentPensions.amount.errors.negative = What your UK pensions were worth on 5 April 2016 must be £0 or more
+pla.currentPensions.amount.errors.max = What your UK pensions were worth on 5 April 2016 must be £1,000,000,000 or less
 
 ## IP14 CURRENT PENSIONS ##
 pla.ip14CurrentPensions.title               = What were your UK pensions worth on 5 April 2014?
@@ -212,7 +234,7 @@ pla.ip14CurrentPensions.hiddenTextPara      = Use figures that were correct at 5
 ## PENSION DEBITS ##
 pla.pensionDebits.title                     = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.pensionDebits.paraOne                   = This is called a pension sharing order and is issued by a court.
-pla.pensionDebits.mandatoryErr              = Please answer this question
+pla.pensionDebits.errors.mandatoryError     = Select yes if any of your pensions been shared in a divorce since 5 April 2016
 
 ## IP14 PENSION DEBITS ##
 pla.ip14PensionDebits.title                 = Have any of your pensions been shared in a divorce since 5 April 2014?
@@ -228,6 +250,10 @@ pla.psoDetails.visitPTA                     = Once you''ve completed this servic
 pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
 pla.psoDetails.removePso                    = This will remove your pension sharing order.
 pla.psoDetails.cancelRemove                 = Do not remove
+pla.psoDetails.amount.errors.mandatoryError = Enter the amount of pension sharing order
+pla.psoDetails.amount.errors.decimal = The amount of pension sharing order has too many numbers after the decimal point
+pla.psoDetails.amount.errors.negative = The amount of pension sharing order must be £0 or more
+pla.psoDetails.amount.errors.max = The amount of pension sharing order must be £1,000,000,000 or less
 
 pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2014 and today
 pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2016 and today

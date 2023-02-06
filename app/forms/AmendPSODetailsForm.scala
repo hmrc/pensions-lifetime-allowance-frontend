@@ -29,10 +29,10 @@ object AmendPSODetailsForm  extends CommonBinders{
       "pso.month"  -> psoPartialDateBinder("monthEmpty"),
       "pso.year"   -> psoPartialDateBinder("yearEmpty"),
       "psoAmt"    -> optional(bigDecimal)
-        .verifying("pla.base.errors.errorMaximum", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
-        .verifying("pla.base.errors.errorNegative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying("pla.base.errors.errorDecimalPlaces", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying("pla.psoDetails.errorQuestion", _.isDefined),
+        .verifying("pla.psoDetails.amount.errors.max", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
+        .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying("pla.psoDetails.amount.errors.decimal", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined),
 
       "protectionType" -> protectionTypeFormatter,
       "status"         -> text,

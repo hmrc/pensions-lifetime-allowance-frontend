@@ -90,7 +90,7 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
       errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaBaseErrorsDayEmpty
       errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe plaBaseErrorsMonthEmpty
       errorDoc.select(".govuk-error-summary__list li").eq(2).text shouldBe plaBaseErrorsYearEmpty
-      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe errorRequired
+      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe plaMandatoryError
     }
 
     "not have errors on valid pages" in{

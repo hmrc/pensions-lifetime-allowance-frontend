@@ -40,4 +40,5 @@ trait PensionsTakenBetweenViewMessages {
   val plaPensionsTakenBetweenHelpLinkTextNew = "working out how much lifetime allowance you've used (opens in new tab)."
   val plaPensionsTakenBetweenHelpLinkLocation = "https://www.gov.uk/guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
   val plaPensionsTakenBetweenLegendText = "Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?"
+  val plaMandatoryError = "Select yes if any of these events happened between 6 April 2006 and 5 April 2016"
 }

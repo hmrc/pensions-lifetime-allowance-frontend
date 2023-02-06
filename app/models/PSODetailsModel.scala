@@ -18,7 +18,7 @@ package models
 
 import play.api.libs.json._
 
-case class PSODetailsModel (psoDay: Int, psoMonth: Int, psoYear: Int, psoAmt: BigDecimal)
+case class PSODetailsModel (psoDay: Int, psoMonth: Int, psoYear: Int, psoAmt: Option[BigDecimal])
 
 object PSODetailsModel {
   implicit val format = Json.format[PSODetailsModel]

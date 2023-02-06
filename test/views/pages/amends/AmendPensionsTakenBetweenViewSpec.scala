@@ -28,14 +28,17 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendPensionsTakenBetweenView" should {
-    val pensionsForm = AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "Yes",
+    val pensionsForm = AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "yes",
                                                                                             "amendedPensionsTakenBetweenAmt" -> "12345",
                                                                                             "protectionType" -> "ip2016",
                                                                                             "status" -> "open"))
     lazy val view = application.injector.instanceOf[amendPensionsTakenBetween]
     lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
-    val errorForm =  AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map.empty[String, String])
+    val errorForm =  AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "",
+      "amendedPensionsTakenBetweenAmt" -> "12345",
+      "protectionType" -> "ip2016",
+      "status" -> "open"))
     lazy val errorView = application.injector.instanceOf[amendPensionsTakenBetween]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
@@ -103,7 +106,7 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $errorRequired"
+      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 
     "not have errors on valid pages" in{

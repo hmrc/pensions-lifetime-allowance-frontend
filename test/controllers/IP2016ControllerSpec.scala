@@ -639,7 +639,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "supplied with a stored test model" should {
             "return 200" in new Setup {
-                val testModel = PSODetailsModel(1, 8, 2016, BigDecimal(1234))
+                val testModel = PSODetailsModel(1, 8, 2016, Some(BigDecimal(1234)))
                 lazy val result = controller.psoDetails(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
@@ -650,7 +650,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
             "return some HTML that" should {
                 "contain some text and use the character set utf-8" in new Setup {
-                    val testModel = PSODetailsModel(1, 8, 2016, BigDecimal(1234))
+                    val testModel = PSODetailsModel(1, 8, 2016, Some(BigDecimal(1234)))
                     lazy val result = controller.psoDetails(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))

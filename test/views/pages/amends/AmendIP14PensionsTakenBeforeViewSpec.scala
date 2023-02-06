@@ -28,14 +28,17 @@ class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendIP14PensionsTakenBeforeView" should{
-    val pensionsForm = AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "Yes",
+    val pensionsForm = AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "yes",
       "amendedPensionsTakenBeforeAmt" -> "12345",
       "protectionType" -> "ip2014",
       "status" -> "open"))
     lazy val view = application.injector.instanceOf[amendIP14PensionsTakenBefore]
     lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
-    val errorForm =  AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map.empty[String, String])
+    val errorForm =  AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "",
+      "amendedPensionsTakenBeforeAmt" -> "12345",
+      "protectionType" -> "ip2014",
+      "status" -> "open"))
     lazy val errorView = application.injector.instanceOf[amendIP14PensionsTakenBefore]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
@@ -95,7 +98,7 @@ class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select("#error-summary-title").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $errorRequired"
+      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 
     "not have errors on valid pages" in{
