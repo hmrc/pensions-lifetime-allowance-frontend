@@ -70,10 +70,10 @@ trait SummaryConstructor {
 
     val overseasPensionsSection = Some(helper.createYesNoAmountSection("overseasPensions", overseasPensionsModel, boldText = false))
     val currentPensionsSection = Some(helper.createAmountSection("currentPensions", currentPensionsModel, boldText = false))
-
+    
     val totalPensionsSection = Some(
       SummarySectionModel(List(
-        SummaryRowModel(nameString("totalPensionsAmt"), None, None, boldText = true, currencyDisplayString(relevantAmount))
+        SummaryRowModel(nameString("totalPensionsAmt"), None, None, boldText = false, currencyDisplayString(relevantAmount))
       ))
     )
 

@@ -28,8 +28,7 @@
 @(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = Messages("pla.amends.title"),
-    fullGrid = true
+    pageTitle = Messages("pla.amends.title")
 ) {
 
     <h1 class="govuk-heading-xl" id="page-heading">
@@ -60,7 +59,7 @@
             content = Text(messages("pla.amends.totalValueOfPensions"))
         ),
         value = Value(
-            classes  = "govuk-!-width-one-half govuk-!-font-weight-bold",
+            classes  = "govuk-!-width-one-half",
             content = Text(model.totalAmount)
         )
         ))

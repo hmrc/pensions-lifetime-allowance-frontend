@@ -47,11 +47,11 @@ val changeRemoveLinks = Seq(
     if(rowID == "totalPensionsAmt" || rowID == "ip14TotalPensionsAmt"){
         SummaryListRow(
             key = Key(
-                classes = s"govuk-!-width-one-half total-font $boldClass",
+                classes = s"govuk-!-width-one-half $boldClass",
                 content = Text(Messages("pla.summary.questions.totalPensionsAmt"))
             ),
             value = Value(
-                classes = s"govuk-!-width-one-half total-font $boldClass",
+                classes = s"govuk-!-width-one-half $boldClass",
                 content = Text(displayValues.head)
             )
         )

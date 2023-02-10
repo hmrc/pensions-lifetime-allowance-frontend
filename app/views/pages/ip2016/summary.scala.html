@@ -41,8 +41,7 @@
 @title = @{if(summary.invalidRelevantAmount) Messages("site.title.error", messages("pla.summary.title")) else messages("pla.summary.title")}
 
 @layout(
-    pageTitle = title,
-    fullGrid = true
+    pageTitle = title
 ){
 
     @summaryDetails(summary)

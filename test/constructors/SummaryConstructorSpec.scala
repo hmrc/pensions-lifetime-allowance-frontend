@@ -69,7 +69,7 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
     val negativePensionDebitsSummaryRow = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits), None,  false, "No")
     val positivePensionDebitsSummaryRow = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits), None,  false, "Yes")
 
-    def totalPensionsAmountSummaryRow(totalAmount: String) = SummaryRowModel("totalPensionsAmt", None, None, true, totalAmount)
+    def totalPensionsAmountSummaryRow(totalAmount: String) = SummaryRowModel("totalPensionsAmt", None, None, false, totalAmount)
 
     val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(1, 2, 2016, Some(BigDecimal(10000))))
 
