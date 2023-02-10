@@ -240,7 +240,7 @@ pla.ip14PensionDebits.title                 = A oes unrhyw un o''ch pensiynau we
 ## Pension Sharing Order Details ##
 pla.psoDetails.title                        = Gorchymyn rhannu pensiwn
 pla.psoDetails.dateQuestionText             = Dyddiad y gorchymyn rhannu pensiwn
-pla.psoDetails.dateHintText                 = Er enghraifft, 18 4 2016
+pla.psoDetails.dateHintText                 = Er enghraifft, 18 4 2021
 pla.psoDetails.dateHintText14               = Er enghraifft, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Swm y gorchymyn rhannu pensiwn
 pla.psoDetails.visitPTA                     = Unwaith eich bod wedi cwblhau''r gwasanaeth, gallwch ychwanegu gorchymyn rhannu pensiwn ar unrhyw adeg drwy ymweld â''ch cyfrif treth personol.

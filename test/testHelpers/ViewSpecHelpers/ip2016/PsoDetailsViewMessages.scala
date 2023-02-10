@@ -20,7 +20,7 @@ trait PsoDetailsViewMessages {
   val plaPsoDetailsTitle = "Pension sharing order"
   val plaPsoDetailsDateQuestionText = "Date of pension sharing order"
   val plaPsoDetailsPsoAmountQuestion = "Amount of pension sharing order"
-  val plaPsoDetailsDateHintText = "For example, 18 4 2016"
+  val plaPsoDetailsDateHintText = "For example, 18 4 2021"
   val plaPsoDetailsVisitPTA = "Once you've completed this service, you can add a pension sharing order at any time by visiting your personal tax account."
   val plaMandatoryError = "Enter the amount of pension sharing order"
 }

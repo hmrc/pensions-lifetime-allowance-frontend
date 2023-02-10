@@ -243,7 +243,7 @@ pla.ip14PensionDebits.title                 = Have any of your pensions been sha
 ## Pension Sharing Order Details ##
 pla.psoDetails.title                        = Pension sharing order
 pla.psoDetails.dateQuestionText             = Date of pension sharing order
-pla.psoDetails.dateHintText                 = For example, 18 4 2016
+pla.psoDetails.dateHintText                 = For example, 18 4 2021
 pla.psoDetails.dateHintText14               = For example, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
 pla.psoDetails.visitPTA                     = Once you''ve completed this service, you can add a pension sharing order at any time by visiting your personal tax account.
