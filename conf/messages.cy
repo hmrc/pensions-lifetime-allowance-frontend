@@ -662,34 +662,6 @@ resultCode.19.1         =   Os colloch ddiogelwch sefydlog cyn 6 Ebrill 2016, cy
 
 resultCode.20.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod diogelwch sefydlog 2014 gennych eisoes.
 resultCode.20.1         =   Os colloch ddiogelwch sefydlog 2014 cyn 6 Ebrill 2016, cysylltwch â <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>. Gallwch wedyn ail-wneud eich cais am ddiogelwch sefydlog 2016
-resultCode.13.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
-
-resultCode.14.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
-resultCode.14.1         =   Gan fod diogelwch sefydlog wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog.
-resultCode.14.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
-
-resultCode.15.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
-resultCode.15.1         =   Gan fod diogelwch sefydlog 2014 wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2014.
-resultCode.15.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
-
-resultCode.16.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
-resultCode.16.1         =   Gan fod diogelwch sefydlog 2016 wedi''i sefydlu gennych eisoes, daw eich diogelwch unigol 2016 ar waith dim ond os ydych yn colli diogelwch sefydlog 2016.
-resultCode.16.2         =   Os yw hyn yn digwydd, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
-
-resultCode.17.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod diogelwch uwch gennych eisoes.
-resultCode.17.1         =   Os rhoddir gorau i ddiogelwch uwch, gallwch ail-wneud eich cais am ddiogelwch sefydlog 2016.
-resultCode.17.2         =   I roi''r gorau i ddiogelwch uwch, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
-
-resultCode.18.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod prif ddiogelwch gennych ar 5 Ebrill 2016.
-resultCode.18.1         =   Os colloch brif ddiogelwch cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>.
-
-resultCode.19.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod diogelwch sefydlog gennych eisoes.
-resultCode.19.1         =   Os colloch ddiogelwch sefydlog cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>. Gallwch wedyn ail-wneud eich cais am ddiogelwch sefydlog 2016
-
-resultCode.20.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi bod yn aflwyddiannus gan fod diogelwch sefydlog 2014 gennych eisoes.
-resultCode.20.1         =   Os colloch ddiogelwch sefydlog 2014 cyn 6 Ebrill 2016, cysylltwch â <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">Gwasanaethau Cynlluniau Pensiwn CThEF</a>. Gallwch wedyn ail-wneud eich cais am ddiogelwch sefydlog 2016
-  
-
 resultCode.21.heading   =   Mae''ch cais am ddiogelwch sefydlog 2016 wedi''i wrthod gan fod hyn gennych eisoes.
 
 resultCode.22.heading   =   Rydych wedi ychwanegu diogelwch sefydlog 2016
