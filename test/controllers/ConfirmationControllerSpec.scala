@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
@@ -29,7 +29,7 @@ import play.api.test.Helpers.{defaultAwaitTimeout, status}
 import play.api.{Application, Configuration, Environment}
 import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.fallback.technicalError
 import views.html.pages.confirmation.confirmFP
 
@@ -42,11 +42,10 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     implicit val mockAppConfig: FrontendAppConfig              = fakeApplication.injector.instanceOf[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext                    = mock[PlaContext]
     implicit val system: ActorSystem                           = ActorSystem()
-    implicit val materializer: ActorMaterializer               = ActorMaterializer()
+    implicit val materializer: Materializer                    = mock[Materializer]
     implicit val application: Application                      = mock[Application]
     implicit val mockTechnicalError: technicalError            = app.injector.instanceOf[technicalError]
     implicit val mockConfirmFP: confirmFP                      = app.injector.instanceOf[confirmFP]
-    implicit val errorSummary: ErrorSummary                    = app.injector.instanceOf[ErrorSummary]
     implicit val formWithCSRF: FormWithCSRF                    = app.injector.instanceOf[FormWithCSRF]
 
 

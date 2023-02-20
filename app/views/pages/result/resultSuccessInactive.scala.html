@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,43 +17,54 @@
 @import models.RejectionDisplayModel
 @import enums.ApplicationType
 @import utils.Constants
-@import controllers.PlaLanguageController
 @import play.api.Application
 @import config.FrontendAppConfig
 
 @this(
-    main_template: main_template)
+    layout: Layout
+)
 
-@(res: SuccessDisplayModel, showUserResearchPanel: Boolean)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(res: SuccessDisplayModel, showUserResearchPanel: Boolean)(implicit request: Request[_], messages: Messages)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
+@layout(
+    pageTitle = Messages("pla.resultSuccess.title"),
+    isUserResearchBannerVisible = showUserResearchPanel
+) {
 
-@main_template(title = Messages("pla.resultSuccess.title"), bodyClasses = None, isUserResearchBannerVisible = showUserResearchPanel) {
-
-    <h1 id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</h1>
+    <h1 class="govuk-heading-xl" id="resultOutcome">@Messages(s"resultCode.${res.notificationId}.heading")</h1>
 
     @for(infoNum <- res.additionalInfo) {
-        <p id=@{s"additionalInfo$infoNum"}>@Html(Messages(s"resultCode.${res.notificationId}.$infoNum"))</p>
+        <p class="govuk-body" id=@{s"additionalInfo$infoNum"}>@Html(Messages(s"resultCode.${res.notificationId}.$infoNum"))</p>
     }
 
-
-
-    <h2>@Messages("pla.resultSuccess.IPChangeDetails")</h2>
+    <h2 class="govuk-heading-l">@Messages("pla.resultSuccess.IPChangeDetails")</h2>
 
     @if(res.protectionType == ApplicationType.IP2016 || res.protectionType == ApplicationType.IP2014 || Constants.fpShowPensionSharing.contains(res.notificationId.toInt)) {
-        <p id="ipPensionSharing">@Html(Messages("pla.resultSuccess.IPPensionSharing"))</p>
+        <p class="govuk-body" id="ipPensionSharing">
+            @Messages("pla.resultSuccess.IPPensionSharing.beforeLink")
+            <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">@Messages("pla.resultSuccess.IPPensionSharing.linkText")</a>
+            @Messages("pla.resultSuccess.IPPensionSharing.afterLink")
+        </p>
     }
 
     @if(res.protectionType == ApplicationType.FP2016 || Constants.ipShowAddToPension.contains(res.notificationId.toInt)) {
-        <p id="fpAddToPension">@Html(Messages("pla.resultSuccess.FPAddToPension"))</p>
+        <p class="govuk-body" id="fpAddToPension">
+            @Messages("pla.resultSuccess.FPAddToPension.beforeLink")
+            <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">@Messages("pla.resultSuccess.FPAddToPension.linkText")</a>
+            @Messages("pla.resultSuccess.FPAddToPension.afterLink")
+        </p>
     }
 
-    <p>@Html(Messages("pla.resultRejection.viewDetails",controllers.routes.ReadProtectionsController.currentProtections))</p>
+    <p class="govuk-body">
+        @Messages("pla.resultRejection.viewDetails.beforeLink")
+        <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.resultRejection.viewDetails.linkText")</a>
+        @Messages("pla.resultRejection.viewDetails.afterLink")
+    </p>
 
 
-    <h2>@Messages("pla.resultSuccess.giveFeedback")</h2>
+    <h2 class="govuk-heading-l">@Messages("pla.resultSuccess.giveFeedback")</h2>
 
-    <p><a id="submit-survey-button" href=@controllers.routes.AccountController.signOut class="button--link-style" role="button" onclick="submitExitSurvey()">
+    <p class="govuk-body"><a id="submit-survey-button" href=@controllers.routes.AccountController.signOut class="govuk-link" role="button" onclick="submitExitSurvey()">
         @Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Messages("pla.resultSuccess.exitSurvey")</p>
 
 }

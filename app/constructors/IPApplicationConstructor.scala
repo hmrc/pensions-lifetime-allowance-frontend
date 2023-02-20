@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,7 +97,7 @@ object IPApplicationConstructor {
     }
 
     def createPensionDebit(model: PSODetailsModel): PensionDebit = {
-      PensionDebit(apiDateFormat(model.psoDay, model.psoMonth, model.psoYear), model.psoAmt.toDouble)
+      PensionDebit(apiDateFormat(model.psoDay, model.psoMonth, model.psoYear), model.psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
     }
 
     val protectionString = protectionType match {

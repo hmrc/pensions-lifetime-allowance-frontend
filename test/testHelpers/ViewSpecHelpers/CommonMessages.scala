@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ trait CommonMessages{
   val  plaBaseAdd                    = "Add"
   val  plaBaseReadMore               = "Read more"
   val  plaBaseNewWindow              = "opens in a new window"
+  val  plaBaseNewTab                 = "opens in new tab"
   val  plaBaseErrorSummaryLabel      = "There are errors on this page"
   val  plaBaseErrorsInvalidDate      = "Enter a date in the correct format eg 14 6 2016"
   val  plaBaseErrorsYearEmpty        = "Enter a year"

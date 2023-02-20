@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,13 +28,15 @@ import java.time.LocalDate
 class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
+  val messageKey = "psoDetails"
+
   "PSODetailsForm" should {
-    val validMap = Map("psoDay" -> "1", "psoMonth" -> "2", "psoYear" -> "2017", "psoAmt" -> "0.01")
+    val validMap = Map("pso.day" -> "1", "pso.month" -> "2", "pso.year" -> "2017", "psoAmt" -> "0.01")
 
     "return a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = PSODetailsModel(1, 2, 2017, 0.01)
+        val model = PSODetailsModel(1, 2, 2017, Some(0.01))
         val result = psoDetailsForm.fill(model)
 
         result.data shouldBe validMap
@@ -43,14 +45,14 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       "provided with a valid map with a value for psoAmt which has two decimal places" in {
         val result = psoDetailsForm.bind(validMap)
 
-        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, 0.01))
+        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, Some(0.01)))
       }
 
       "provided with a valid map with a value for psoAmt which is zero" in {
         val map = validMap.updated("psoAmt", "0")
         val result = psoDetailsForm.bind(map)
 
-        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, 0))
+        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, Some(0.0)))
       }
 
       "provided with a valid map with a value for psoAmt which is the maximum value" in {
@@ -59,34 +61,34 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         }.toString)
         val result = psoDetailsForm.bind(map)
 
-        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, Constants.npsMaxCurrency - 1))
+        result.value shouldBe Some(PSODetailsModel(1, 2, 2017, Some(Constants.npsMaxCurrency - 1)))
       }
     }
 
     "produce an invalid form has one error with the correct error message" when {
 
       "not provided with a value for psoDay" in {
-        val map = validMap - "psoDay"
+        val map = validMap - "pso.day"
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoDay").get.message shouldBe errorMissingDay
+        result.error("pso.day").get.message shouldBe errorMissingDay
       }
 
       "not provided with a value for psoMonth" in {
-        val map = validMap - "psoMonth"
+        val map = validMap - "pso.month"
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoMonth").get.message shouldBe errorMissingMonth
+        result.error("pso.month").get.message shouldBe errorMissingMonth
       }
 
       "not provided with a value for psoYear" in {
-        val map = validMap - "psoYear"
+        val map = validMap - "pso.year"
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoYear").get.message shouldBe errorMissingYear
+        result.error("pso.year").get.message shouldBe errorMissingYear
       }
 
       "not provided with a value for psoAmt" in {
@@ -94,7 +96,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoAmt").get.message shouldBe errorRequired
+        result.error("psoAmt").get.message shouldBe errorMissingAmount(messageKey)
       }
 
       "provided an amount with over two decimal places" in {
@@ -102,7 +104,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoAmt").get.message shouldBe errorDecimal
+        result.error("psoAmt").get.message shouldBe errorDecimal(messageKey)
       }
 
       "provided an amount with a negative value" in {
@@ -110,7 +112,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoAmt").get.message shouldBe errorNegative
+        result.error("psoAmt").get.message shouldBe errorNegative(messageKey)
       }
 
       "provided an amount with over the maximum value" in {
@@ -118,55 +120,55 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoAmt").get.message shouldBe errorMaximum
+        result.error("psoAmt").get.message shouldBe errorMaximum(messageKey)
       }
 
       "provided with an empty string for psoDay" in {
-        val map = validMap.updated("psoDay","")
+        val map = validMap.updated("pso.day","")
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoDay").get.message shouldBe errorMissingDay
+        result.error("pso.day").get.message shouldBe errorMissingDay
       }
 
       "provided with an empty string for psoMonth" in {
-        val map = validMap.updated("psoMonth","")
+        val map = validMap.updated("pso.month","")
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoMonth").get.message shouldBe errorMissingMonth
+        result.error("pso.month").get.message shouldBe errorMissingMonth
       }
 
       "provided with an empty string for psoYear" in {
-        val map = validMap.updated("psoYear","")
+        val map = validMap.updated("pso.year","")
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoYear").get.message shouldBe errorMissingYear
+        result.error("pso.year").get.message shouldBe errorMissingYear
       }
 
       "provided with a non integer equivalent string for psoDay" in {
-        val map = validMap.updated("psoDay","a")
+        val map = validMap.updated("pso.day","a")
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoDay").get.message shouldBe errorReal
+        result.error("pso.day").get.message shouldBe errorReal
       }
 
       "provided with a non integer equivalent string for psoMonth" in {
-        val map = validMap.updated("psoMonth","b")
+        val map = validMap.updated("pso.month","b")
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoMonth").get.message shouldBe errorReal
+        result.error("pso.month").get.message shouldBe errorReal
       }
 
       "provided with a non integer equivalent string for psoYear" in {
-        val map = validMap.updated("psoYear","c")
+        val map = validMap.updated("pso.year","c")
         val result = psoDetailsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("psoYear").get.message shouldBe errorReal
+        result.error("pso.year").get.message shouldBe errorReal
       }
     }
 
@@ -175,47 +177,47 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       "has one error with the correct error message" when {
 
         "provided with an invalid date" in {
-          val map = validMap.updated("psoDay", "50")
+          val map = validMap.updated("pso.day", "50")
           val result = psoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoDay").get.message shouldBe errorDate
+          result.error("pso.day").get.message shouldBe errorDate
         }
 
         "provided with a future data" in {
           val date = LocalDate.now().plusDays(1)
           val map = validMap
-            .updated("psoDay", date.getDayOfMonth.toString)
-            .updated("psoMonth", date.getMonthValue.toString)
-            .updated("psoYear", date.getYear.toString)
+            .updated("pso.day", date.getDayOfMonth.toString)
+            .updated("pso.month", date.getMonthValue.toString)
+            .updated("pso.year", date.getYear.toString)
           val result = psoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoDay").get.message shouldBe errorDateRange
+          result.error("pso.day").get.message shouldBe errorDateRange
         }
 
         "provided with a date before the minimum for ip2016" in {
           val date = Constants.minIP16PSODate.minusDays(1)
           val map = validMap
-            .updated("psoDay", date.getDayOfMonth.toString)
-            .updated("psoMonth", date.getMonthValue.toString)
-            .updated("psoYear", date.getYear.toString)
+            .updated("pso.day", date.getDayOfMonth.toString)
+            .updated("pso.month", date.getMonthValue.toString)
+            .updated("pso.year", date.getYear.toString)
           val result = psoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoDay").get.message shouldBe errorDateRange
+          result.error("pso.day").get.message shouldBe errorDateRange
         }
 
         "provided with a date before the minimum for ip2014" in {
           val date = Constants.minIP14PSODate.minusDays(1)
           val map = validMap
-            .updated("psoDay", date.getDayOfMonth.toString)
-            .updated("psoMonth", date.getMonthValue.toString)
-            .updated("psoYear", date.getYear.toString)
+            .updated("pso.day", date.getDayOfMonth.toString)
+            .updated("pso.month", date.getMonthValue.toString)
+            .updated("pso.year", date.getYear.toString)
           val result = psoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoDay").get.message shouldBe errorDateRange
+          result.error("pso.day").get.message shouldBe errorDateRange
         }
       }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,11 @@ import forms.PensionsTakenForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenViewMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.ip2016.pensionsTaken
 
 class PensionsTakenViewSpec extends CommonViewSpecHelper with PensionsTakenViewMessages {
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PensionsTakenView" should{
@@ -43,43 +42,43 @@ class PensionsTakenViewSpec extends CommonViewSpecHelper with PensionsTakenViewM
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1").text shouldBe plaPensionsTakenTitle
+      doc.select("h1.govuk-heading-xl").text shouldBe plaPensionsTakenHeading
     }
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTaken.url
-      form.select("legend.visually-hidden").text() shouldBe plaPensionsTakenLegendText
+      form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenLegendText
 
     }
 
     "have some introductory text" in{
-      doc.select("li").eq(0).text shouldBe plaPensionsTakenBulletOne
-      doc.select("li").eq(1).text shouldBe plaPensionsTakenBulletTwo
-      doc.select("li").eq(2).text shouldBe plaPensionsTakenBulletThree
+      doc.select("#main-content > div > div > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBulletOne
+      doc.select("#main-content > div > div > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBulletTwo
+      doc.select("#main-content > div > div > ul > li:nth-child(3)").text shouldBe plaPensionsTakenBulletThree
     }
 
     "have a pair of yes/no buttons" in{
-      doc.select("[for=pensionsTaken-yes]").text shouldBe plaBaseYes
-      doc.select("input#pensionsTaken-yes").attr("type") shouldBe "radio"
-      doc.select("[for=pensionsTaken-no]").text shouldBe plaBaseNo
-      doc.select("input#pensionsTaken-no").attr("type") shouldBe "radio"
+      doc.select("[for=pensionsTaken]").text shouldBe plaBaseYes
+      doc.select("input#pensionsTaken").attr("type") shouldBe "radio"
+      doc.select("[for=pensionsTaken-2]").text shouldBe plaBaseNo
+      doc.select("input#pensionsTaken-2").attr("type") shouldBe "radio"
     }
 
     "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
-      doc.select("button").attr("type") shouldBe "submit"
+      doc.select(".govuk-button").text shouldBe plaBaseContinue
+      doc.select(".govuk-button").attr("type") shouldBe "submit"
     }
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
-      errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select("span.error-notification").text shouldBe plaBaseErrorsMandatoryError
+      errorDoc.select(".govuk-error-summary").size() shouldBe 1
+      errorDoc.select(".govuk-error-message").size() shouldBe 1
     }
 
     "not have errors on valid pages" in{
       pensionsForm.hasErrors shouldBe false
-      doc.select("span.error-notification").text shouldBe ""
+      doc.select(".govuk-error-summary").text shouldBe ""
     }
   }
 }

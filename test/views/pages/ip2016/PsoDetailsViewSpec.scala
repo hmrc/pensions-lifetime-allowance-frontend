@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,19 +20,18 @@ import forms.PSODetailsForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PsoDetailsViewMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.ip2016.psoDetails
 
 class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessages {
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PsoDetailsView" should{
     val pensionsForm = PSODetailsForm.psoDetailsForm.bind(Map(
-      "psoDay" -> "1",
-      "psoMonth" -> "2",
-      "psoYear" -> "2017",
+      "pso.day" -> "1",
+      "pso.month" -> "2",
+      "pso.year" -> "2017",
       "psoAmt" -> "12345"))
 
     lazy val view = application.injector.instanceOf[psoDetails]
@@ -41,11 +40,12 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
     val errorForm =  PSODetailsForm.psoDetailsForm.bind(Map.empty[String, String])
     lazy val errorView = application.injector.instanceOf[psoDetails]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val pageTitle = s"$plaPsoDetailsTitle - $plaBaseAppName - GOV.UK"
 
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaPsoDetailsTitle
+      doc.title() shouldBe pageTitle
     }
 
     "have the correct and properly formatted header"in{
@@ -53,12 +53,12 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
     }
 
     "have the right headers for the PSO date and PSO amount" in{
-      doc.select("h2").eq(0).text shouldBe plaPsoDetailsDateQuestionText
-      doc.select("h2").eq(1).text shouldBe plaPsoDetailsPsoAmountQuestion
+      doc.select(".govuk-label--m").eq(0).text shouldBe plaPsoDetailsDateQuestionText
+      doc.select(".govuk-label--m").eq(1).text shouldBe plaPsoDetailsPsoAmountQuestion
     }
 
     "have the right date hint message" in{
-      doc.select("span.form-hint").text shouldBe plaPsoDetailsDateHintText
+      doc.select("#pso-hint").text shouldBe plaPsoDetailsDateHintText
     }
 
     "have the right explanatory paragraph" in{
@@ -66,9 +66,9 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
     }
 
     "have the right text above each textbox" in{
-      doc.select("[for=psoDay]").text shouldBe plaBaseDateFieldsDay
-      doc.select("[for=psoMonth]").text shouldBe plaBaseDateFieldsMonth
-      doc.select("[for=psoYear]").text shouldBe plaBaseDateFieldsYear
+      doc.select("[for=pso.day]").text shouldBe plaBaseDateFieldsDay
+      doc.select("[for=pso.month]").text shouldBe plaBaseDateFieldsMonth
+      doc.select("[for=pso.year]").text shouldBe plaBaseDateFieldsYear
     }
 
     "have a valid form" in{
@@ -77,21 +77,20 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
     }
 
     "have a £ symbol present" in{
-      doc.select(".poundSign").text shouldBe "£"
+      doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
-    "have a continue button" in{
-      doc.select("button").text shouldBe plaBaseContinue
-      doc.select("button").attr("type") shouldBe "submit"
+    "have a continue button" in {
+      doc.select("#submit").text shouldBe plaBaseContinue
     }
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
-      errorDoc.select("h2.h3-heading").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select("span.error-notification").eq(0).text shouldBe plaBaseErrorsDayEmpty
-      errorDoc.select("span.error-notification").eq(1).text shouldBe plaBaseErrorsMonthEmpty
-      errorDoc.select("span.error-notification").eq(2).text shouldBe plaBaseErrorsYearEmpty
-      errorDoc.select("span.error-notification").eq(3).text shouldBe errorRequired
+      errorDoc.select("#error-summary-title").text shouldBe plaBaseErrorSummaryLabel
+      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaBaseErrorsDayEmpty
+      errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe plaBaseErrorsMonthEmpty
+      errorDoc.select(".govuk-error-summary__list li").eq(2).text shouldBe plaBaseErrorsYearEmpty
+      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe plaMandatoryError
     }
 
     "not have errors on valid pages" in{

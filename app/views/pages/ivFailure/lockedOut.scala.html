@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,24 @@
  *@
 
 @import common.Links
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
 @this(
- main_template: main_template)
+ layout: Layout)
 
-@()(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@()(implicit request: Request[_], messages: Messages)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
+@layout(
+ pageTitle = Messages("pla.lockedOut.title"),
+ backLinkEnabled = false
+) {
 
-@main_template(title = Messages("pla.lockedOut.title"), bodyClasses = None, showLogout = false) {
+<h1 class="govuk-heading-xl">@Messages("pla.lockedOut.pageHeading")</h1>
 
-<h1 class="heading-large">@Messages("pla.lockedOut.pageHeading")</h1>
+<p class="govuk-body">@Messages("pla.lockedOut.paraOne")</p>
 
-<p>@Messages("pla.lockedOut.paraOne")</p>
-
-@Html(Messages("pla.lockedOut.paraTwo", Links.contactInfo))
+ <p class="govuk-body">@messages("pla.lockedOut.paraTwoP1")
+  <a class="govuk-link" href="@Links.contactInfo" rel="noopener noreferrer">@messages("pla.lockedOut.paraTwoLinkText")</a>
+  @messages("pla.lockedOut.paraTwoP2")
+ </p>
 
 }

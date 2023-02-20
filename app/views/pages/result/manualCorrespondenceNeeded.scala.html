@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,45 +15,42 @@
  *@
 
 @import common.Links
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
 @this(
-    main_template: main_template)
+    layout: Layout
+)
 
-@()(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@()(implicit request: Request[_], messages: Messages)
 
-@main_template(title = Messages("pla.mcNeeded.title"), bodyClasses = None) {
+@layout(
+    pageTitle = Messages("pla.mcNeeded.title"),
+    backLinkEnabled = false
+) {
 
-    <div class="grid-row pertax-error">
-        <div class="column-two-thirds">
-            <header class="heading-large">
-                <h1 class="heading-xlarge" id="pageHeading" data-metrics="result:manual-correspondence:mc-needed">@Messages("pla.mcNeeded.pageHeading")</h1>
-            </header>
-            <p class="lede">@Html(Messages("pla.mcNeeded.needToSpeakToYou"))</p>
-            <div class="section-border">
-                <h2 class="heading-large">@Messages("pla.mcNeeded.howToFix")</h2>
-            </div>
-            <ol>
-                <li>@Messages("pla.mcNeeded.telephone")</li>
-                <li>@Messages("pla.mcNeeded.sayCantLogIn")</li>
-                <li>@Messages("pla.mcNeeded.sayYes")</li>
-                <li>@Messages("pla.mcNeeded.advisorHelp")</li>
-                <li>@Messages("pla.mcNeeded.tellAdvisor")</li>
-            </ol>
-            <div class="section-border">
-                <h2 class="heading-large">@Messages("pla.mcNeeded.otherContact")</h2>
-            </div>
-            <ul class="list list-bullet">
-                <li>@Messages("pla.mcNeeded.textphone")</li>
-                <li>@Messages("pla.mcNeeded.nonUKPhone")</li>
-            </ul>
-            <p>@Messages("pla.mcNeeded.linesOpen")</p>
-            <p>@Messages("pla.mcNeeded.linesClosed")</p>
-            <p>@Messages("pla.mcNeeded.linesBusy")</p>
-            <p><a href=@Links.callCharges target="_blank">@Messages("pla.mcNeeded.callCharges") (@Messages("pla.base.newWindow"))</a></p>
-        </div>
+    <h1 class="govuk-heading-xl" id="pageHeading" data-metrics="result:manual-correspondence:mc-needed">@Messages("pla.mcNeeded.pageHeading")</h1>
+
+    <p class="govuk-body">@Html(Messages("pla.mcNeeded.needToSpeakToYou"))</p>
+
+    <h2 class="govuk-heading-l">@Messages("pla.mcNeeded.howToFix")</h2>
+    <ol class="govuk-list govuk-list--number">
+        <li>@Messages("pla.mcNeeded.telephone")</li>
+        <li>@Messages("pla.mcNeeded.sayCantLogIn")</li>
+        <li>@Messages("pla.mcNeeded.sayYes")</li>
+        <li>@Messages("pla.mcNeeded.advisorHelp")</li>
+        <li>@Messages("pla.mcNeeded.tellAdvisor")</li>
+    </ol>
+
+    <h2 class="govuk-heading-l">@Messages("pla.mcNeeded.otherContact")</h2>
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@Messages("pla.mcNeeded.textphone")</li>
+        <li>@Messages("pla.mcNeeded.nonUKPhone")</li>
+    </ul>
+
+    <div class="govuk-body">
+        <p>@Messages("pla.mcNeeded.linesOpen")</p>
+        <p>@Messages("pla.mcNeeded.linesClosed")</p>
+        <p>@Messages("pla.mcNeeded.linesBusy")</p>
+        <p><a class="govuk-link" href=@Links.callCharges target="_blank">@Messages("pla.mcNeeded.callCharges") (@Messages("pla.base.newTab"))</a></p>
     </div>
 
 }

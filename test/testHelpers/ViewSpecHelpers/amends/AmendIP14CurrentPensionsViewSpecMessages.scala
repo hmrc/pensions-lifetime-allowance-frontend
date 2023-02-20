@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,5 +20,6 @@ import testHelpers.ViewSpecHelpers.ip2016.CurrentPensionsViewMessages
 
 trait AmendIP14CurrentPensionsViewSpecMessages extends CurrentPensionsViewMessages{
   val plaIp14CurrentPensionsTitle               = "What were your UK pensions worth on 5 April 2014?"
+  val plaIp14CurrentPensionsTitleNew               = "What were your UK pensions worth on 5 April 2014? - Protect your lifetime allowance - GOV.UK"
   val plaIp14CurrentPensionsHiddenTextPara      = "Use figures that were correct at 5 April 2014."
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,15 +51,15 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
 
   "the OutcomeInactiveView" should{
     "have the correct title" in{
-      docIP16.title() shouldBe plaResultSuccessOutcomeActiveTitle
+      docIP16.title() shouldBe s"$plaResultSuccessOutcomeActiveTitle - Protect your lifetime allowance - GOV.UK"
     }
 
     "have the correct header for IP16" in{
-      docIP16.select("h1").text() shouldBe plaResultSuccessIP16Heading
+      docIP16.select("h1.govuk-heading-xl").text() shouldBe plaResultSuccessIP16Heading
     }
 
     "have the correct header for IP14" in{
-      docIP14.select("h1").text() shouldBe plaResultSuccessIP14Heading
+      docIP14.select("h1.govuk-heading-xl").text() shouldBe plaResultSuccessIP14Heading
     }
 
     "have the correct structure for IP16" when{
@@ -69,8 +69,8 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
       }
 
       "checking the 'HMRC Pensions Schemes Services' link" in{
-        docIP16.select("a").eq(0).text() shouldBe plaResultSuccessIPPensionSharingLinkText
-        docIP16.select("a").attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
+        docIP16.select("#ipPensionSharing a").text() shouldBe plaResultSuccessIPPensionSharingLinkText
+        docIP16.select("#ipPensionSharing a").attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
       }
     }
 
@@ -81,14 +81,14 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
       }
 
       "checking the 'HMRC Pensions Schemes Services' link" in{
-        docIP14.select("a").eq(0).text() shouldBe plaResultSuccessIPPensionSharingLinkText
-        docIP14.select("a").attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
+        docIP14.select("#ipPensionSharing a").text() shouldBe plaResultSuccessIPPensionSharingLinkText
+        docIP14.select("#ipPensionSharing a").attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
       }
     }
 
     "have a properly structured 'Changing your protection details' section" when{
       "looking at the header" in{
-        docIP16.select("h2").eq(0).text() shouldBe plaResultSuccessIPChangeDetails
+        docIP16.select("h2.govuk-heading-m").eq(0).text() shouldBe plaResultSuccessIPChangeDetails
       }
 
       "looking at the explanatory paragraph" in{
@@ -97,21 +97,21 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
       }
 
       "using the links" in{
-        docIP16.select("a").eq(0).text() shouldBe plaResultSuccessIPPensionSharingLinkText
-        docIP16.select("a").eq(0).attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
-        docIP16.select("a").eq(2).text() shouldBe plaResultSuccessViewDetailsLinkText
-        docIP16.select("a").eq(2).attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
+        docIP16.select("#ipPensionSharing a").text() shouldBe plaResultSuccessIPPensionSharingLinkText
+        docIP16.select("#ipPensionSharing a").attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
+        docIP16.select("#viewChangeDetails").text() shouldBe plaResultSuccessViewDetailsLinkText
+        docIP16.select("#viewChangeDetails").attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
       }
     }
     "have a properly structured 'Give us feedback' section" when{
       "looking at the header" in{
-        docIP16.select("h2").eq(1).text() shouldBe plaResultSuccessGiveFeedback
+        docIP16.select("h2.govuk-heading-m").eq(1).text() shouldBe plaResultSuccessGiveFeedback
       }
       "looking at the explanatory paragraph" in{
         docIP16.select("p").eq(4).text() shouldBe plaResultSuccessExitSurvey
       }
       "using the feedback link" in{
-        docIP16.select("a").eq(3).text() shouldBe plaResultSuccessExitSurveyLinkText
+        docIP16.select("#submit-survey-button").text() shouldBe plaResultSuccessExitSurveyLinkText
       }
     }
   }

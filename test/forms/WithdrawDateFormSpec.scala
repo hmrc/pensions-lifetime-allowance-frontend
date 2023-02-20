@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,88 +26,88 @@ class WithdrawDateFormSpec extends FakeApplication with CommonErrorMessages {
   "Withdraw date form" should {
     "return no errors with valid date" in {
       val postData = Json.obj(
-        "withdrawDay" -> "20",
-        "withdrawMonth" -> "2",
-        "withdrawYear" -> "2017"
+        "withdrawDate.day" -> "20",
+        "withdrawDate.month" -> "2",
+        "withdrawDate.year" -> "2017"
       )
       val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.isEmpty)
     }
     "return errors when no day provided" in {
       val postData = Json.obj(
-        "withdrawDay" -> "",
-        "withdrawMonth" -> "2",
-        "withdrawYear" -> "2017"
+        "withdrawDate.day" -> "",
+        "withdrawDate.month" -> "2",
+        "withdrawDate.year" -> "2017"
       )
       val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("withdrawDay",
+      assert(validatedForm.errors.contains(FormError("withdrawDate.day",
         List(errorEmptyDay))))
     }
     "return errors when no month provided" in {
       val postData = Json.obj(
-        "withdrawDay" -> "20",
-        "withdrawMonth" -> "",
-        "withdrawYear" -> "2017"
+        "withdrawDate.day" -> "20",
+        "withdrawDate.month" -> "",
+        "withdrawDate.year" -> "2017"
       )
       val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("withdrawMonth",
+      assert(validatedForm.errors.contains(FormError("withdrawDate.month",
         List(errorEmptyMonth))))
     }
     "return errors when no year provided" in {
       val postData = Json.obj(
-        "withdrawDay" -> "20",
-        "withdrawMonth" -> "2",
-        "withdrawYear" -> ""
+        "withdrawDate.day" -> "20",
+        "withdrawDate.month" -> "2",
+        "withdrawDate.year" -> ""
       )
       val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("withdrawYear",
+      assert(validatedForm.errors.contains(FormError("withdrawDate.year",
         List(errorEmptyYear))))
     }
     "return errors when day greater than 31 provided" in {
       val postData = Json.obj(
-        "withdrawDay" -> "35",
-        "withdrawMonth" -> "2",
-        "withdrawYear" -> "2017"
+        "withdrawDate.day" -> "35",
+        "withdrawDate.month" -> "2",
+        "withdrawDate.year" -> "2017"
       )
       val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("withdrawDay",
+      assert(validatedForm.errors.contains(FormError("withdrawDate.day",
         List(errorHighDay))))
     }
     "return errors when month greater than 12 provided" in {
       val postData = Json.obj(
-        "withdrawDay" -> "20",
-        "withdrawMonth" -> "62",
-        "withdrawYear" -> "2017"
+        "withdrawDate.day" -> "20",
+        "withdrawDate.month" -> "62",
+        "withdrawDate.year" -> "2017"
       )
       val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("withdrawMonth",
+      assert(validatedForm.errors.contains(FormError("withdrawDate.month",
         List(errorHighMonth))))
     }
     "return errors when day lower than 1 provided" in {
       val postData = Json.obj(
-        "withdrawDay" -> "0",
-        "withdrawMonth" -> "2",
-        "withdrawYear" -> "2017"
+        "withdrawDate.day" -> "0",
+        "withdrawDate.month" -> "2",
+        "withdrawDate.year" -> "2017"
       )
       val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("withdrawDay",
+      assert(validatedForm.errors.contains(FormError("withdrawDate.day",
         List(errorLowDay))))
     }
     "return errors when month lower than 1 provided" in {
       val postData = Json.obj(
-        "withdrawDay" -> "20",
-        "withdrawMonth" -> "0",
-        "withdrawYear" -> "2017"
+        "withdrawDate.day" -> "20",
+        "withdrawDate.month" -> "0",
+        "withdrawDate.year" -> "2017"
       )
       val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("withdrawMonth",
+      assert(validatedForm.errors.contains(FormError("withdrawDate.month",
         List(errorLowMonth))))
     }
   }

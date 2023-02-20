@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers.confirmation
 
 trait ConfirmFP {
 
-val plaConfirmFP16Title       = "Apply for FP 2016"
+val plaConfirmFP16Title       = "Apply for FP 2016 - Protect your lifetime allowance - GOV.UK"
 val plaConfirmFP16PageHeading = "Get fixed protection 2016 for your lifetime allowance"
 val plaConfirmFP16Para1       = "To get this protection you must agree to these declarations."
 val plaConfirmFP16Para2       = "I declare:"

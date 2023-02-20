@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@ package controllers
 
 import auth.AuthFunction
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+
 import javax.inject.Inject
 import play.api.Application
 import play.api.mvc._
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import uk.gov.hmrc.play.views.html.helpers.FormWithCSRF
 import views.html.pages._
 
 import scala.concurrent.Future
@@ -34,7 +35,7 @@ class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
                                       (implicit val application: Application,
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val partialRetriever: FormPartialRetriever,
-                                       implicit val templateRenderer:LocalTemplateRenderer,
+                                       implicit val templateRenderer: LocalTemplateRenderer,
                                        implicit val formWithCSRF: FormWithCSRF,
                                        implicit val plaContext: PlaContext) extends FrontendController(mcc) {
 

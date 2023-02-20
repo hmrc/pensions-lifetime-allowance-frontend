@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,21 +15,17 @@
  *@
 
 @import uk.gov.hmrc.play.partials.FormPartialRetriever
-@import uk.gov.hmrc.play.partials.CachedStaticHtmlPartialRetriever
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 @import scala.concurrent.ExecutionContext
 
 
 @this(
- main_template: main_template)
+ layout: Layout
+)
 
-@(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], messages: Messages, formPartialRetriever: FormPartialRetriever,
-  partialRetriever: CachedStaticHtmlPartialRetriever, lang: Lang, application: Application, context: config.PlaContext, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext)
+@(partialUrl: String, formBody: Option[Html])(implicit request: Request[_], messages: Messages, formPartialRetriever: FormPartialRetriever, ec: ExecutionContext)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
-
-@main_template(Messages("feedback.title")) {
+@layout(
+pageTitle = messages("feedback.title")
+) {
     @formBody.getOrElse(formPartialRetriever.getPartialContent(partialUrl))
 }

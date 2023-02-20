@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,9 @@ import testHelpers.ViewSpecHelpers.CommonMessages
 
 trait WithdrawDateSpecMessages extends CommonMessages {
 
-  val plaWithdrawDateInputTitle             = "Enter the withdrawal date"
-  val plaWithdrawDateInputFormHint          = "Example: 18 4 2016"
+  val plaWithdrawDateInputTitle             = "Enter the withdrawal date - Protect your lifetime allowance - GOV.UK"
+  val plaWithdrawDateInputHeading           = "Enter the withdrawal date"
+  val plaWithdrawDateInputFormHint          = "For example, 18 4 2021"
   val plaWithdrawDateInputFormDay           = "Day"
   val plaWithdrawDateInputFormMonth         = "Month"
   val plaWithdrawDateInputFormYear          = "Year"

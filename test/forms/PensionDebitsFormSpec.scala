@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ class PensionDebitsFormSpec extends FakeApplication with CommonErrorMessages wit
         val result = pensionDebitsForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("pensionDebits").get.message shouldBe errorQuestion
+        result.error("pensionDebits").get.message shouldBe errorQuestion("pensionDebits")
       }
     }
   }

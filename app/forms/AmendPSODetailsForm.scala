@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,14 @@ import utils.Constants
 object AmendPSODetailsForm  extends CommonBinders{
   def amendPsoDetailsForm = Form(
     mapping(
-      "psoDay"    -> dateFormatterFromInt,
-      "psoMonth"  -> psoPartialDateBinder("monthEmpty"),
-      "psoYear"   -> psoPartialDateBinder("yearEmpty"),
+      "pso.day"    -> dateFormatterFromInt,
+      "pso.month"  -> psoPartialDateBinder("monthEmpty"),
+      "pso.year"   -> psoPartialDateBinder("yearEmpty"),
       "psoAmt"    -> optional(bigDecimal)
-        .verifying("pla.base.errors.errorMaximum", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
-        .verifying("pla.base.errors.errorNegative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying("pla.base.errors.errorDecimalPlaces", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying("pla.psoDetails.errorQuestion", _.isDefined),
+        .verifying("pla.psoDetails.amount.errors.max", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
+        .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying("pla.psoDetails.amount.errors.decimal", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined),
 
       "protectionType" -> protectionTypeFormatter,
       "status"         -> text,

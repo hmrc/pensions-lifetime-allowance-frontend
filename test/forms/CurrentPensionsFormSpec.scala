@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import utils.Constants
 
 class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
+
+  val messageKey = "currentPensions"
 
   "The CurrentPensionsForm" should {
 
@@ -68,7 +70,7 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
           val result = currentPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("currentPensionsAmt").get.message shouldBe errorMissingAmount
+          result.error("currentPensionsAmt").get.message shouldBe errorMissingAmount(messageKey)
         }
 
         "provided with an amount value with over two decimal places" in {
@@ -76,7 +78,7 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
           val result = currentPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("currentPensionsAmt").get.message shouldBe errorDecimal
+          result.error("currentPensionsAmt").get.message shouldBe errorDecimal(messageKey)
         }
 
         "provided with a negative amount value" in {
@@ -84,7 +86,7 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
           val result = currentPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("currentPensionsAmt").get.message shouldBe errorNegative
+          result.error("currentPensionsAmt").get.message shouldBe errorNegative(messageKey)
         }
 
         "provided with an amount value above the maximum" in {
@@ -92,7 +94,7 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
           val result = currentPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("currentPensionsAmt").get.message shouldBe errorMaximum
+          result.error("currentPensionsAmt").get.message shouldBe errorMaximum(messageKey)
         }
       }
     }

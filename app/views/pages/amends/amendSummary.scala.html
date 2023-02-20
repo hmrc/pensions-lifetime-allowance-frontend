@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,24 @@
  * limitations under the License.
  *@
 
-@import models.AmendDisplayModel
-@import helpers.amends.amendSection
-@import config.FrontendAppConfig
 @import models.amendModels.AmendmentTypeModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import views.html.helper
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
-@import scala.concurrent.ExecutionContext
 
-@this(full_width_template: full_width_template)
+@this(
+    layout: Layout,
+    amendSection: playHelpers.amends.amendSection,
+    govukSummaryList: GovukSummaryList,
+    govukInsetText: GovukInsetText,
+    submitButton: playHelpers.templates.submitButton,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
+)
 
-@(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(model: AmendDisplayModel, status: String, amendmentTypeForm: Form[AmendmentTypeModel])(implicit request: Request[_], messages: Messages)
 
-@full_width_template(title = Messages("pla.amends.title")) {
+@layout(
+    pageTitle = Messages("pla.amends.title")
+) {
 
-    <h1 class="heading-large" id="page-heading">
+    <h1 class="govuk-heading-xl" id="page-heading">
         @if(model.amended) {
             @Messages(s"pla.amends.heading.${model.protectionType}.changed")
         } else {
@@ -40,70 +40,62 @@
     </h1>
 
     @if(model.amended) {
-        <p>@Html(Messages("pla.amends.cancelPara", controllers.routes.ReadProtectionsController.currentProtections, "cancelLink"))</p>
-
+        <p class="govuk-body">@messages("pla.amends.cancelPara.1")
+            <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections" id="cancelLink">@messages("pla.amends.cancelPara.link")</a>
+            @messages("pla.amends.cancelPara.2")
+        </p>
     }
 
-    <table >
-        <thead>
-            <tr>
-                <th colspan="4">
-                    <h2>@Messages("pla.summary.pensionsHeading")</h2>
-                </th>
-            </tr>
-        </thead>
+    <h2 class="govuk-heading-m">@Messages("pla.summary.pensionsHeading")</h2>
 
+    @model.pensionContributionSections.map { section =>
+        @amendSection(section, model.protectionType)
+    }
 
-            @model.pensionContributionSections.map { section =>
-                @amendSection(section, model.protectionType)
-            }
+    @govukSummaryList(SummaryList(
+    rows = Seq(SummaryListRow(
+        key = Key(
+            classes = s"govuk-!-width-one-half",
+            content = Text(messages("pla.amends.totalValueOfPensions"))
+        ),
+        value = Value(
+            classes  = "govuk-!-width-one-half",
+            content = Text(model.totalAmount)
+        )
+        ))
+    ))
 
-        <tr class="grey-background">
-            <td class="total-font summary-text" id="total-message">@Messages("pla.amends.totalValueOfPensions")</td>
-            <td class="total-font summary-data" id="total-amount">@model.totalAmount</td>
-            <td colspan="2"></td>
-        </tr>
-
-        @if(model.psoSections.nonEmpty){
-
-            <thead>
-                <tr>
-                    <th colspan="4" class="table-divider">
-                        <h2>@Messages("pla.summary.psosHeading")</h2>
-                    </th>
-                </tr>
-            </thead>
-
-            @model.psoSections.map { section =>
-                @amendSection(section, model.protectionType)
-            }
+    @if(model.psoSections.nonEmpty){
+        <h2 class="govuk-heading-m">@Messages("pla.summary.psosHeading")</h2>
+        @model.psoSections.map { section =>
+            @amendSection(section, model.protectionType)
         }
-
-    </table>
+    }
 
     @if(status == "open") {
-        <a href="@routes.WithdrawProtectionController.withdrawImplications">@Messages("pla.existingProtections.withdrawLinkText")</a><br>
+        <p class="govuk-body">
+            <a class="govuk-link" href="@routes.WithdrawProtectionController.withdrawImplications">@Messages("pla.existingProtections.withdrawLinkText")</a>
+        </p>
+
     }
 
     @if(!model.psoAdded){
-        <div class="form-group">
-            <a href="@routes.AmendsController.amendPsoDetails(model.protectionType.toLowerCase(), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
-        </div>
+        <p class="govuk-body">
+            <a class="govuk-link" href="@routes.AmendsController.amendPsoDetails(model.protectionType.toLowerCase(), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
+        </p>
     }
 
     @form(action = routes.AmendsController.amendProtection) {
-        <div class="form-hidden">
-
-            @helper.inputText(amendmentTypeForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-            @helper.inputText(amendmentTypeForm("status"), 'type -> "hidden", 'class -> "hidden")
-
-        </div>
+        <input type="hidden" id="protectionType" name="@amendmentTypeForm("protectionType").name" value="@amendmentTypeForm("protectionType").value" class="hidden">
+        <input type="hidden" id="status" name="@amendmentTypeForm("status").name" value="@amendmentTypeForm("status").value" class="hidden">
 
         @if(model.amended) {
-            <div class="form-group">
-                <p class="panel-indent" id="declaration">@Messages("pla.amends.declaration")</p>
-            </div>
-            <button id="submit" class="button" type="submit">@Messages("pla.amends.submit")</button>
+            @govukInsetText(InsetText(
+                id = Some("declaration"),
+                classes = "govuk-!-font-weight-bold",
+                content = Text(Messages("pla.amends.declaration"))
+            ))
+            @submitButton(messages("pla.amends.submit"))
         }
     }
 

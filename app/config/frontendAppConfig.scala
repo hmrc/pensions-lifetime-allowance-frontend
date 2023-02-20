@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,20 +20,10 @@ import javax.inject.Inject
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import play.api.mvc.RequestHeader
-import uk.gov.hmrc.play.config.AccessibilityStatementConfig
-
 
 trait AppConfig {
-  val betaFeedbackUrl: String
-  val betaFeedbackUnauthenticatedUrl: String
-  val analyticsToken: String
-  val analyticsHost: String
   val ssoUrl: Option[String]
   val citizenAuthHost: Option[String]
-  val contactFormServiceIdentifier: String
-  val contactFrontendPartialBaseUrl: String
-  val reportAProblemPartialUrl: String
-  val reportAProblemNonJSUrl: String
   val excludeCopeTab: Boolean
   val identityVerification: Boolean
   val confirmFPUrl: String
@@ -50,7 +40,6 @@ trait AppConfig {
   val invalidStatusMetric: String
   val notFoundStatusMetric: String
   val appName : String
-  val frontendTemplatePath: String
   val sessionMissingUpliftUrlPrefix: Option[String]
   val configuration: Configuration
   def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String
@@ -61,20 +50,19 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  private val contactFrontendService = servicesConfig.baseUrl("contact-frontend")
-  private val contactHost = servicesConfig.getConfString("contact-frontend.www", "")
-  private val baseUrl = "protect-your-lifetime-allowance"
+  lazy val signOutUrl = "/protect-your-lifetime-allowance/sign-out"
 
-  override lazy val betaFeedbackUrl = s"$baseUrl/feedback"
-  override lazy val betaFeedbackUnauthenticatedUrl = betaFeedbackUrl
-  override lazy val analyticsToken: String = configuration.getOptional[String](s"google-analytics.token").getOrElse("")
-  override lazy val analyticsHost: String = configuration.getOptional[String](s"google-analytics.host").getOrElse("auto")
+  lazy val urBannerLink = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113"
   override lazy val ssoUrl: Option[String] = configuration.getOptional[String](s"portal.ssoUrl")
 
-  override val contactFormServiceIdentifier = "PLA"
-  override lazy val contactFrontendPartialBaseUrl = s"$contactFrontendService"
-  override lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  override lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  lazy val ptaBaseUrl: String = servicesConfig.baseUrl("pertax-frontend")
+  lazy val ptaHomeUrl: String = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.home","/personal-account")}"
+  lazy val messagesUrl: String = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.messages","/messages")}"
+  lazy val paperlessSettingsUrl = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.paperlessSettings","/preferences")}"
+  lazy val personalDetailsUrl = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.personalDetails","/personal-details")}"
+  lazy val trackBaseUrl: String = servicesConfig.baseUrl("tracking-frontend")
+  lazy val trackingHomeUrl = s"$trackBaseUrl${servicesConfig.getConfString("tracking-frontend.urls.home","/track")}"
+
   override val excludeCopeTab: Boolean = configuration.getOptional[Boolean](s"microservice.services.exclusions.copetab").getOrElse(true)
   override val identityVerification: Boolean = configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)
 
@@ -97,9 +85,6 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
   override val notFoundStatusMetric: String = servicesConfig.getString("not-found-protection-status")
 
   override lazy val appName: String = loadConfig("appName")
-
-  lazy val frontendTemplatePath: String = configuration.getOptional[String]("microservice.services.frontend-template-provider.path")
-    .getOrElse("/template/mustache")
 
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = accessibilityStatementConfig.url.getOrElse("")
 }

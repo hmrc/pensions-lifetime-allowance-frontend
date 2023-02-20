@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-
 @this(
-    main_template: main_template)
+    layout: Layout
+)
 
-@(pType: String)(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@(pType: String)(implicit request: Request[_], messages: Messages)
 
 @restartTarget = @{
     pType match {
@@ -34,16 +33,18 @@
     else Messages("pla.techError.retry")
 }
 
-@main_template(title = Messages("pla.techError.title"), bodyClasses = None) {
+@layout(
+    pageTitle = Messages("pla.techError.title")
+    ) {
 
-<h1 class="heading-large" id="pageHeading">@Messages("pla.techError.pageHeading")</h1>
+<h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.techError.pageHeading")</h1>
 
 @if(pType != "existingProtections") {
-    <p id="startAgainText">@Messages("pla.techError.paraOne")</p>
+    <p class="govuk-body" id="startAgainText">@Messages("pla.techError.paraOne")</p>
 }
 
-<ul>
-    <li><a href=@restartTarget id="tryAgainLink">@linkText</a></li>
-</ul>
+<p>
+    <a class="govuk-body govuk-link" href=@restartTarget id="tryAgainLink">@linkText</a>
+</p>
 
 }

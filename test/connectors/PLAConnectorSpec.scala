@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
   val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010.1234567891))))
   val validCurrentPensionsTuple2 = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001.1234567891))))
   val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
-  val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(1, 2, 2016, BigDecimal(10000.1234567891)))
+  val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(1, 2, 2016, Some(BigDecimal(10000.1234567891))))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 

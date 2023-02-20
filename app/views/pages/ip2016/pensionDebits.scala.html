@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,49 +15,49 @@
  *@
 
 @import models.PensionDebitsModel
-@import uk.gov.hmrc.play.views.html.{helpers => govHelpers}
-@import helpers.templates.plaInputRadioGroup
 @import play.api.data._
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
-@import scala.concurrent.ExecutionContext
 
-@this(full_width_template: full_width_template)
+@this(
+    layout: Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    errorSummary: playHelpers.templates.errorSummary,
+    plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup,
+    submitButton: playHelpers.templates.submitButton,
+)
 
-@(pensionDebitsForm: Form[PensionDebitsModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext, errorSummary: uk.gov.hmrc.play.views.html.helpers.ErrorSummary, form: uk.gov.hmrc.play.views.html.helpers.FormWithCSRF)
+@(pensionDebitsForm: Form[PensionDebitsModel])(implicit request: Request[_], messages: Messages)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
+@title = @{
+    if(pensionDebitsForm.errors.nonEmpty){
+        messages("site.title.error", messages("pla.pensionDebits.title"))
+    } else {
+        messages("pla.pensionDebits.title")
+}
+}
+@layout(
+    pageTitle = title
+) {
 
+    @errorSummary(pensionDebitsForm.errors, Some("pensionDebits"))
 
-@full_width_template(Messages("pla.pensionDebits.title")) {
+    <h1 class="govuk-heading-xl">@Messages("pla.pensionDebits.title")</h1>
 
+    <p class="govuk-body">@Messages("pla.pensionDebits.paraOne")</p>
 
-    @if(pensionDebitsForm.hasErrors){
-    @errorSummary(Messages("pla.base.errorSummaryLabel"), pensionDebitsForm)
+    @form(action = routes.IP2016Controller.submitPensionDebits) {
+
+    @plaInputRadioGroup(
+        legend = Messages("pla.pensionDebits.title"),
+        legendClass = Some("govuk-visually-hidden"),
+        items = Seq(
+            RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
+            RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+        ),
+        isPageHeading = false,
+        inLine = true,
+        field = pensionDebitsForm("pensionDebits")
+    )
+
+        @submitButton()
     }
-
-    <div class="grid grid-2-3">
-        <h1 class="heading-large">@Messages("pla.pensionDebits.title")</h1>
-
-        <p>@Messages("pla.pensionDebits.paraOne")</p>
-
-        @form(action = routes.IP2016Controller.submitPensionDebits) {
-
-            <div class="inline form-group">
-                @plaInputRadioGroup(
-                    field = pensionDebitsForm("pensionDebits"),
-                    Seq(
-                        "yes"->Messages("pla.base.yes"),
-                        "no"->Messages("pla.base.no")),
-                    '_labelAfter -> true,
-                    '_labelClass -> "block-label",
-                    '_legend -> Messages("pla.pensionDebits.title"),
-                    '_legendID -> "pensionsDebits"
-                )
-            </div>
-
-            <button class="button" type="submit" id="continue-button">@Messages("pla.base.continue")</button>
-        }
-    </div>
 }

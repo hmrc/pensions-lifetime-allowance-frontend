@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,16 @@ package testHelpers
 
 import auth._
 import org.jsoup._
-import org.scalatest.{Matchers, OptionValues, WordSpecLike}
+import org.scalatest.OptionValues
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 import play.api.mvc.{Action, AnyContent}
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.SessionKeys
 import play.api.test.Helpers._
 
 class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*)
-  extends WordSpecLike with Matchers with OptionValues with TestConfigHelper {
+  extends AnyWordSpecLike with Matchers with OptionValues with TestConfigHelper {
   val fakeRequest = FakeRequest("POST", "/protect-your-lifetime-allowance/" + url)
     .withSession(SessionKeys.sessionId -> s"session-$sessionId")
     .withFormUrlEncodedBody(data:_*).withMethod("POST")

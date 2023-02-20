@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,10 +70,10 @@ trait SummaryConstructor {
 
     val overseasPensionsSection = Some(helper.createYesNoAmountSection("overseasPensions", overseasPensionsModel, boldText = false))
     val currentPensionsSection = Some(helper.createAmountSection("currentPensions", currentPensionsModel, boldText = false))
-
+    
     val totalPensionsSection = Some(
       SummarySectionModel(List(
-        SummaryRowModel(nameString("totalPensionsAmt"), None, None, boldText = true, currencyDisplayString(relevantAmount))
+        SummaryRowModel(nameString("totalPensionsAmt"), None, None, boldText = false, currencyDisplayString(relevantAmount))
       ))
     )
 
@@ -196,7 +196,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
         val changeCall = CallMap.get(name)
         val removeCall = CallMap.get("remove"+name.capitalize)
         val date = dateDisplayString(constructDate(m.psoDay, m.psoMonth, m.psoYear))
-        val amt = currencyDisplayString(m.psoAmt)
+        val amt = currencyDisplayString(m.psoAmt.getOrElse(BigDecimal(0.0)))
         SummarySectionModel(List(
           SummaryRowModel(name, changeCall, removeCall, boldText = false, amt, date)
         ))

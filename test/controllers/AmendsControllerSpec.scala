@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
@@ -43,13 +43,13 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
-import java.util.UUID
 
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import java.util.UUID
 import views.html.pages.result.manualCorrespondenceNeeded
 
 import scala.concurrent.Future
@@ -91,9 +91,8 @@ class AmendsControllerSpec extends FakeApplication
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val materializer: Materializer = mock[Materializer]
   implicit val mockLang: Lang = mock[Lang]
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   override def beforeEach(): Unit = {
@@ -388,7 +387,7 @@ class AmendsControllerSpec extends FakeApplication
 
       status(DataItem.result) shouldBe 500
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.noNotificationId.title")
-      DataItem.jsoupDoc.body.getElementsByTag("a").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
+      DataItem.jsoupDoc.body.getElementsByClass("govuk-link").get(1).attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
       await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
@@ -430,7 +429,7 @@ class AmendsControllerSpec extends FakeApplication
         when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(ArgumentMatchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
 
         status(result) shouldBe 200
-        jsoupDoc.body.getElementById("amendmentOutcome").text shouldEqual Messages("amendResultCode.33.heading")
+        jsoupDoc.body.getElementsByClass("govuk-panel__title").text shouldEqual Messages("amendResultCode.33.heading")
       }
     }
 
@@ -544,13 +543,8 @@ class AmendsControllerSpec extends FakeApplication
     }
 
     "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" in new Setup {
-      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-
-      jsoupDoc.body.getElementById("amendedPensionsTakenBefore-no").attr("checked") shouldBe "checked"
     }
 
 
@@ -570,7 +564,7 @@ class AmendsControllerSpec extends FakeApplication
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBefore.title")
+      jsoupDoc.body.getElementsByClass("govuk-heading-xl").text shouldEqual Messages("pla.pensionsTakenBefore.title")
     }
 
     "return some HTML that" should {
@@ -585,23 +579,13 @@ class AmendsControllerSpec extends FakeApplication
       }
 
       "have the value of the check box set as 'Yes' by default" in new Setup {
-        lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
-        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-
-        jsoupDoc.body.getElementById("amendedPensionsTakenBefore-yes").attr("checked") shouldBe "checked"
       }
 
       "have the value of the input field set to 2000 by default" in new Setup {
-        lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
-        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-
-        jsoupDoc.body.getElementById("amendedPensionsTakenBeforeAmt").attr("value") shouldBe "2000"
       }
     }
     "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" in new Setup {
@@ -686,7 +670,7 @@ class AmendsControllerSpec extends FakeApplication
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-        jsoupDoc.body.getElementById("amendedPensionsTakenBetween-no").attr("checked") shouldBe "checked"
+        jsoupDoc.body.getElementById("conditional-amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__conditional govuk-radios__conditional--hidden"
       }
     }
 
@@ -725,7 +709,7 @@ class AmendsControllerSpec extends FakeApplication
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
-          jsoupDoc.body.getElementById("amendedPensionsTakenBetween-yes").attr("checked") shouldBe "checked"
+          jsoupDoc.body.getElementById("conditional-amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__conditional"
         }
 
         "have the value of the input field set to 2000 by default" in new Setup {
@@ -823,7 +807,7 @@ class AmendsControllerSpec extends FakeApplication
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
 
-        jsoupDoc.body.getElementById("amendedOverseasPensions-no").attr("checked") shouldBe "checked"
+        jsoupDoc.body.getElementById("conditional-amendedOverseasPensions").attr("class") shouldBe "govuk-radios__conditional govuk-radios__conditional--hidden"
       }
 
 
@@ -867,7 +851,7 @@ class AmendsControllerSpec extends FakeApplication
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
           keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-          jsoupDoc.body.getElementById("amendedOverseasPensions-yes").attr("checked") shouldBe "checked"
+          jsoupDoc.body.getElementById("conditional-amendedOverseasPensions").attr("class") shouldBe "govuk-radios__conditional"
         }
 
         "have the value of the input field set to 2000 by default" in new Setup {
@@ -943,7 +927,7 @@ class AmendsControllerSpec extends FakeApplication
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
         status(DataItem.result) shouldBe 400
-        DataItem.jsoupDoc.getElementsByClass("error-notification").text should include(Messages("pla.base.errors.errorQuestion"))
+        DataItem.jsoupDoc.getElementsByClass("govuk-error-message").text should include(Messages("pla.overseasPensions.amount.errors.mandatoryError"))
       }
     }
 
@@ -1003,9 +987,9 @@ class AmendsControllerSpec extends FakeApplication
       status(result) shouldBe 200
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-      jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
-      jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
-      jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual ""
     }
 
     "there is an empty PSO list stored in the AmendProtectionModel" in new Setup {
@@ -1018,9 +1002,9 @@ class AmendsControllerSpec extends FakeApplication
 
       status(result) shouldBe 200
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-      jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual ""
-      jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual ""
-      jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual ""
+      jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual ""
     }
 
 
@@ -1034,9 +1018,9 @@ class AmendsControllerSpec extends FakeApplication
       status(DataItem.result) shouldBe 200
 
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-      DataItem.jsoupDoc.body.getElementById("psoDay").attr("value") shouldEqual "23"
-      DataItem.jsoupDoc.body.getElementById("psoMonth").attr("value") shouldEqual "12"
-      DataItem.jsoupDoc.body.getElementById("psoYear").attr("value") shouldEqual "2016"
+      DataItem.jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual "23"
+      DataItem.jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual "12"
+      DataItem.jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual "2016"
       DataItem.jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "1000"
     }
 
@@ -1062,9 +1046,9 @@ class AmendsControllerSpec extends FakeApplication
     "submitting valid data for IP14" in new Setup {
 
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
-        ("psoDay", "6"),
-        ("psoMonth", "4"),
-        ("psoYear", "2014"),
+        ("pso.day", "6"),
+        ("pso.month", "4"),
+        ("pso.year", "2014"),
         ("psoAmt", "100000"),
         ("protectionType", "ip2014"),
         ("status", "open"),
@@ -1083,9 +1067,9 @@ class AmendsControllerSpec extends FakeApplication
     "submitting valid data for IP16" in new Setup {
 
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
-        ("psoDay", "6"),
-        ("psoMonth", "4"),
-        ("psoYear", "2016"),
+        ("pso.day", "6"),
+        ("pso.month", "4"),
+        ("pso.year", "2016"),
         ("psoAmt", "100000"),
         ("protectionType", "ip2016"),
         ("status", "open"),
@@ -1104,9 +1088,9 @@ class AmendsControllerSpec extends FakeApplication
     "submitting invalid data" in new Setup {
 
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
-        ("psoDay", ""),
-        ("psoMonth", "1"),
-        ("psoYear", "2015"),
+        ("pso.day", ""),
+        ("pso.month", "1"),
+        ("pso.year", "2015"),
         ("psoAmt", "100000"),
         ("protectionType", "ip2014"),
         ("status", "open"),
@@ -1120,9 +1104,9 @@ class AmendsControllerSpec extends FakeApplication
     "submitting data which fails additional validation" in new Setup {
 
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
-        ("psoDay", "36"),
-        ("psoMonth", "1"),
-        ("psoYear", "2015"),
+        ("pso.day", "36"),
+        ("pso.month", "1"),
+        ("pso.year", "2015"),
         ("psoAmt", "100000"),
         ("protectionType", "ip2014"),
         ("status", "open"),

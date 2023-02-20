@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,54 +15,49 @@
  *@
 
 @import models.ExistingProtectionsDisplayModel
-@import helpers.templates.existingProtections.{activeExistingProtection, inactiveExistingProtection}
-@import controllers.PlaLanguageController
 @import play.api.Application
-@import config.FrontendAppConfig
 @import scala.concurrent.ExecutionContext
 
-@this(full_width_template: full_width_template)
+@this(
+    layout: Layout,
+    inactiveExistingProtection : playHelpers.templates.existingProtections.inactiveExistingProtection,
+    activeExistingProtection: playHelpers.templates.existingProtections.activeExistingProtection
+)
 
-@(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig, ec: ExecutionContext)
+@(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], messages: Messages)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
 
-@import config.FrontendAppConfig
+@layout(
+    pageTitle = Messages("pla.existingProtections.title"),
+    backLinkEnabled = false
+) {
 
-@full_width_template(title = Messages("pla.existingProtections.title"), bodyClasses = None) {
-
-    <div class="grid">
-        <h1 class="heading-xlarge">@Messages("pla.existingProtections.pageHeading")</h1>
-    </div>
+    <h1 class="govuk-heading-xl">@Messages("pla.existingProtections.pageHeading")</h1>
 
     <div id="listProtections">
         @if(protections.activeProtection.isEmpty) {
-            <p>@Messages("pla.existingProtections.noActiveProtections")</p>
+            <p class="govuk-body">@Messages("pla.existingProtections.noActiveProtections")</p>
         } else {
             @protections.activeProtection.map { protection =>
                 <div class="protection-detail">
                     @activeExistingProtection(protection, "active", 1)
                 </div>
             }
-            <span class="inline-space"></span>
 
         }
 
         @if(protections.otherProtections.size == 0) {
-            <p>@Messages("pla.existingProtections.noOtherProtections")</p>
+            <p class="govuk-body">@Messages("pla.existingProtections.noOtherProtections")</p>
         } else {
             @for((protection, index) <- protections.otherProtections.zipWithIndex) {
-                <section>
                     @inactiveExistingProtection(protection, "other", index + 1)
-                </section>
             }
-            <span class="inline-space"></span>
 
         }
     </div>
 
-    <section>
-        <p>@Html(Messages("pla.existingProtections.other.protections.link")) </p>
-    </section>
+    <p class="govuk-body">
+        @Messages("pla.existingProtections.other.protections.linkText.before") <a class="govuk-link" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance">@Messages("pla.existingProtections.other.protections.link")</a> @Messages("pla.existingProtections.other.protections.linkText.after")
+    </p>
 
 }

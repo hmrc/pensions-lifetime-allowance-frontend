@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,9 +69,9 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
     val negativePensionDebitsSummaryRow = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits), None,  false, "No")
     val positivePensionDebitsSummaryRow = SummaryRowModel("pensionDebits", Some(controllers.routes.IP2016Controller.pensionDebits), None,  false, "Yes")
 
-    def totalPensionsAmountSummaryRow(totalAmount: String) = SummaryRowModel("totalPensionsAmt", None, None, true, totalAmount)
+    def totalPensionsAmountSummaryRow(totalAmount: String) = SummaryRowModel("totalPensionsAmt", None, None, false, totalAmount)
 
-    val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(1, 2, 2016, BigDecimal(10000)))
+    val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(1, 2, 2016, Some(BigDecimal(10000))))
 
     val psoDetailsSummaryRow = SummaryRowModel("psoDetails", Some(controllers.routes.IP2016Controller.psoDetails), Some(controllers.routes.IP2016Controller.removePsoDetails), false, "£10,000", "1 February 2016")
 

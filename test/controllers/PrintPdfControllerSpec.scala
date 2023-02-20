@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer}
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
@@ -38,6 +38,8 @@ import play.shaded.ahc.org.asynchttpclient.uri.Uri
 import testHelpers.{FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import utils.ActionWithSessionId
+import views.html.pages.lookup.psa_lookup_not_found_print
+import views.html.pages.lookup.psa_lookup_results_print
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,6 +49,8 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
   implicit val hc: HeaderCarrier = HeaderCarrier()
   implicit val ec: ExecutionContext = fakeApplication.injector.instanceOf[ExecutionContext]
   lazy val ws: WSClient = fakeApplication.injector.instanceOf[WSClient]
+  lazy val psaLookupNotFoundPrintView: psa_lookup_not_found_print = fakeApplication.injector.instanceOf[psa_lookup_not_found_print]
+  lazy val psaLookupResultsPrintView: psa_lookup_results_print = fakeApplication.injector.instanceOf[psa_lookup_results_print]
 
   val mockPdfGeneratorConnector: PdfGeneratorConnector = mock[PdfGeneratorConnector]
   private val sessionId = SessionKeys.sessionId -> "pdf-test"
@@ -64,7 +68,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val materializer: Materializer = mock[Materializer]
 
   class Setup {
 
@@ -72,6 +76,8 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
       mockKeyStoreConnector,
       mockActionWithSessionId,
       mockPdfGeneratorConnector,
+      psaLookupNotFoundPrintView,
+      psaLookupResultsPrintView,
       mockMCC) {
       override val lookupRequestID = "psa-lookup-request"
       override val lookupResultID = "psa-lookup-result"

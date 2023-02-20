@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ import utils.Constants
 
 class AmendCurrentPensionFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
 implicit val lang: Lang = mock[Lang]
+
+  val messageKey = "currentPensions"
 
   "Amend current pensions form" should {
     val validMap = Map(
@@ -73,7 +75,7 @@ implicit val lang: Lang = mock[Lang]
           val result = amendCurrentPensionForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedUKPensionAmt").get.message shouldBe errorMissingAmount
+          result.error("amendedUKPensionAmt").get.message shouldBe errorMissingAmount(messageKey)
         }
       }
 
@@ -84,7 +86,7 @@ implicit val lang: Lang = mock[Lang]
           val result = amendCurrentPensionForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedUKPensionAmt").get.message shouldBe errorMissingAmount
+          result.error("amendedUKPensionAmt").get.message shouldBe errorMissingAmount(messageKey)
         }
       }
 
@@ -104,7 +106,7 @@ implicit val lang: Lang = mock[Lang]
           val result = amendCurrentPensionForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedUKPensionAmt").get.message shouldBe errorNegative
+          result.error("amendedUKPensionAmt").get.message shouldBe errorNegative(messageKey)
         }
       }
 
@@ -113,7 +115,7 @@ implicit val lang: Lang = mock[Lang]
         val result = amendCurrentPensionForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("amendedUKPensionAmt").get.message shouldBe errorDecimal
+        result.error("amendedUKPensionAmt").get.message shouldBe errorDecimal(messageKey)
       }
 
       "supplied with an amount above the maximum" in {
@@ -121,7 +123,7 @@ implicit val lang: Lang = mock[Lang]
         val result = amendCurrentPensionForm.bind(map)
 
         result.errors.size shouldBe 1
-        result.error("amendedUKPensionAmt").get.message shouldBe errorMaximum
+        result.error("amendedUKPensionAmt").get.message shouldBe errorMaximum(messageKey)
       }
 
       "not supplied with a type" which {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,48 @@
 
 package forms
 
+import common.Transformers.{optionalBigDecimalToString, stringToOptionalBigDecimal}
 import models.amendModels.AmendPensionsTakenBeforeModel
 import play.api.data.Form
 import play.api.data.Forms._
+import common.Validation._
 
 
 object AmendPensionsTakenBeforeForm extends CommonBinders{
 
+  val verifyMandatory: AmendPensionsTakenBeforeModel => Boolean = {
+    case AmendPensionsTakenBeforeModel("yes", value, _,_) => value.isDefined
+    case _ => true
+  }
+
+  val verifyDecimal: AmendPensionsTakenBeforeModel => Boolean = {
+    case AmendPensionsTakenBeforeModel("yes", Some(value), _,_) => isMaxTwoDecimalPlaces(value)
+    case _ => true
+  }
+
+  val verifyPositive: AmendPensionsTakenBeforeModel => Boolean = {
+    case AmendPensionsTakenBeforeModel("yes", Some(value), _,_) => isPositive(value)
+    case _ => true
+  }
+
+  val verifyMax: AmendPensionsTakenBeforeModel => Boolean = {
+    case AmendPensionsTakenBeforeModel("yes", Some(value), _,_) => isLessThanMax(value)
+    case _ => true
+  }
+
   def amendPensionsTakenBeforeForm = Form (
     mapping(
-      "amendedPensionsTakenBefore" -> nonEmptyText,
-      "amendedPensionsTakenBeforeAmt" -> yesNoOptionalBigDecimal,
+      "amendedPensionsTakenBefore" -> common.Validation.newText("pla.pensionsTakenBefore.errors.mandatoryError")
+        .verifying("pla.pensionsTakenBefore.errors.mandatoryError", mandatoryCheck)
+        .verifying("pla.pensionsTakenBefore.errors.mandatoryError", yesNoCheck),
+      "amendedPensionsTakenBeforeAmt" -> text
+        .transform(stringToOptionalBigDecimal, optionalBigDecimalToString),
       "protectionType" -> text,
       "status" -> text
     )(AmendPensionsTakenBeforeModel.apply)(AmendPensionsTakenBeforeModel.unapply)
+      .verifying("pla.pensionsTakenBefore.amount.errors.mandatoryError", verifyMandatory)
+      .verifying("pla.pensionsTakenBefore.amount.errors.decimal", verifyDecimal)
+      .verifying("pla.pensionsTakenBefore.amount.errors.negative", verifyPositive)
+      .verifying("pla.pensionsTakenBefore.amount.errors.max", verifyMax)
   )
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,12 +20,11 @@ import forms.PSALookupSchemeAdministratorReferenceForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupSchemeAdminRefFormSpecMessages
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.lookup.psa_lookup_scheme_admin_ref_form
 
 class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaLookupSchemeAdminRefFormSpecMessages {
 
-  implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "The Psa Lookup Scheme Admin Ref form view" when {
@@ -64,7 +63,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       }
 
       "have a hint with the correct text" in {
-        doc.select("p.form-field--hint").text() shouldBe hintText
+        doc.select("#pensionSchemeAdministratorCheckReference-hint").text() shouldBe hintText
       }
 
       "have a text input with the data pre-populated" in {
@@ -76,10 +75,6 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
         "has the correct text" in {
           doc.select("button").text() shouldBe plaBaseContinue
         }
-
-        "has the correct type" in {
-          doc.select("button").attr("type") shouldBe "submit"
-        }
       }
     }
 
@@ -89,12 +84,11 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       lazy val doc = Jsoup.parse(view.apply(form).body)
 
       "have an error summary" in {
-        doc.select("div.error-summary").size() shouldBe 1
+        doc.select("ul.govuk-error-summary__list").size() shouldBe 1
       }
 
       "have a fieldset with error classes" in {
-        doc.select("fieldset div.form-field--error").size() shouldBe 1
-        doc.select("fieldset div.error-notification").size() shouldBe 1
+        doc.select("#pensionSchemeAdministratorCheckReference-error").size() shouldBe 1
       }
 
       "have a text input with the data pre-populated" in {

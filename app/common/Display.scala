@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,18 @@ import java.time.format.DateTimeFormatter
 import java.time.LocalDate
 
 import play.api.i18n.{Lang, Messages}
-import uk.gov.hmrc.play.views.helpers.MoneyPounds
+
+case class MoneyPounds(value: BigDecimal, decimalPlaces: Int = 2, roundUp: Boolean = false) {
+
+  def isNegative = value < 0
+
+  def quantity =
+    s"%,.${decimalPlaces}f".format(
+      value
+        .setScale(decimalPlaces, if (roundUp) BigDecimal.RoundingMode.CEILING else BigDecimal.RoundingMode.FLOOR)
+        .abs
+    )
+}
 
 object Display {
 

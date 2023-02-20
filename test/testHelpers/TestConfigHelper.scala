@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package testHelpers
 
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, Materializer}
+import akka.stream.Materializer
 import config.LocalTemplateRenderer
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
@@ -29,7 +29,7 @@ trait TestConfigHelper extends FakeApplication with MockitoSugar {
   val config = mock[Configuration]
   val env = mock[Environment]
   implicit lazy val system: ActorSystem = ActorSystem("test")
-  implicit val mat: Materializer = ActorMaterializer()
+  implicit val mat: Materializer = mock[Materializer]
 }
 
 trait TestControllerHelper extends MockitoSugar with TestConfigHelper{

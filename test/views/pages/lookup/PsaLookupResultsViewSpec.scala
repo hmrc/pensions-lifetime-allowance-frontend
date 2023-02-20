@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,22 +86,22 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "has a pdf link" which {
 
         "has the correct text" in {
-          doc.select("a.button--secondary").text() shouldBe pdfLinkText
+          doc.getElementsByClass("govuk-button govuk-button--secondary").text() shouldBe pdfLinkText
         }
 
         "has the correct destination" in {
-          doc.select("a.button--secondary").attr("href") shouldBe controllers.routes.PrintPdfController.printResultsPDF.url
+          doc.getElementsByClass("govuk-button govuk-button--secondary").attr("href") shouldBe controllers.routes.PrintPdfController.printResultsPDF.url
         }
       }
 
       "has a start again link" which {
 
         "has the correct text" in {
-          doc.select("a.button--get-started").text() shouldBe startAgainLinkText
+          doc.getElementsByClass("govuk-button govuk-button--start").text() shouldBe startAgainLinkText
         }
 
         "has the correct destination" in {
-          doc.select("a.button--get-started").attr("href") shouldBe controllers.routes.LookupController.redirectToStart.url
+          doc.getElementsByClass("govuk-button govuk-button--start").attr("href") shouldBe controllers.routes.LookupController.redirectToStart.url
         }
       }
     }

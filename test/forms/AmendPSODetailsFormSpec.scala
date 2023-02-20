@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,13 @@ import java.time.LocalDate
 class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
+  val messageKey = "psoDetails"
+
   "The AmendPensionsTakenBetweenForm" should {
     val validMap = Map(
-      "psoDay" -> "1",
-      "psoMonth" -> "5",
-      "psoYear" -> "2016",
+      "pso.day" -> "1",
+      "pso.month" -> "5",
+      "pso.year" -> "2016",
       "psoAmt" -> "0.0",
       "protectionType" -> "ip2016",
       "status" -> "status",
@@ -50,9 +52,9 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
 
       "provided with a valid map and an amount of 0" in {
         val map = Map(
-          "psoDay" -> "2",
-          "psoMonth" -> "6",
-          "psoYear" -> "2017",
+          "pso.day" -> "2",
+          "pso.month" -> "6",
+          "pso.year" -> "2017",
           "psoAmt" -> "0.0",
           "protectionType" -> "ip2014",
           "status" -> "anotherStatus",
@@ -85,27 +87,27 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
       "has one error with the correct error message" when {
 
         "not provided with a value for psoDay" in {
-          val map = validMap - "psoDay"
+          val map = validMap - "pso.day"
           val result = amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoDay").get.message shouldBe errorMissingDay
+          result.error("pso.day").get.message shouldBe errorMissingDay
         }
 
         "not provided with a value for psoMonth" in {
-          val map = validMap - "psoMonth"
+          val map = validMap - "pso.month"
           val result = amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoMonth").get.message shouldBe errorMissingMonth
+          result.error("pso.month").get.message shouldBe errorMissingMonth
         }
 
         "not provided with a value for psoYear" in {
-          val map = validMap - "psoYear"
+          val map = validMap - "pso.year"
           val result = amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoYear").get.message shouldBe errorMissingYear
+          result.error("pso.year").get.message shouldBe errorMissingYear
         }
 
         "not provided with a value for psoAmt" in {
@@ -136,7 +138,7 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
           val result = amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoAmt").get.message shouldBe errorNegative
+          result.error("psoAmt").get.message shouldBe errorNegative(messageKey)
         }
 
         "provided with a psoAmt value above the maximum" in {
@@ -144,7 +146,7 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
           val result = amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoAmt").get.message shouldBe errorMaximum
+          result.error("psoAmt").get.message shouldBe errorMaximum(messageKey)
         }
 
         "provided with a psoAmt value with more than two decimal places" in {
@@ -152,7 +154,7 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
           val result = amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoAmt").get.message shouldBe errorDecimal
+          result.error("psoAmt").get.message shouldBe errorDecimal(messageKey)
         }
       }
     }
@@ -162,47 +164,47 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
       "has one error with the correct error message" when {
 
         "provided with an invalid date" in {
-          val map = validMap.updated("psoDay", "50")
+          val map = validMap.updated("pso.day", "50")
           val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoDay").get.message shouldBe errorDate
+          result.error("pso.day").get.message shouldBe errorDate
         }
 
         "provided with a future data" in {
           val date = LocalDate.now().plusDays(1)
           val map = validMap
-            .updated("psoDay", date.getDayOfMonth.toString)
-            .updated("psoMonth", date.getMonthValue.toString)
-            .updated("psoYear", date.getYear.toString)
+            .updated("pso.day", date.getDayOfMonth.toString)
+            .updated("pso.month", date.getMonthValue.toString)
+            .updated("pso.year", date.getYear.toString)
           val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoDay").get.message shouldBe errorDateRange
+          result.error("pso.day").get.message shouldBe errorDateRange
         }
 
         "provided with a date before the minimum for ip2016" in {
           val date = Constants.minIP16PSODate.minusDays(1)
           val map = validMap
-            .updated("psoDay", date.getDayOfMonth.toString)
-            .updated("psoMonth", date.getMonthValue.toString)
-            .updated("psoYear", date.getYear.toString)
+            .updated("pso.day", date.getDayOfMonth.toString)
+            .updated("pso.month", date.getMonthValue.toString)
+            .updated("pso.year", date.getYear.toString)
           val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoDay").get.message shouldBe errorDateRange
+          result.error("pso.day").get.message shouldBe errorDateRange
         }
 
         "provided with a date before the minimum for ip2014" in {
           val date = Constants.minIP14PSODate.minusDays(1)
           val map = validMap
-            .updated("psoDay", date.getDayOfMonth.toString)
-            .updated("psoMonth", date.getMonthValue.toString)
-            .updated("psoYear", date.getYear.toString)
+            .updated("pso.day", date.getDayOfMonth.toString)
+            .updated("pso.month", date.getMonthValue.toString)
+            .updated("pso.year", date.getYear.toString)
           val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("psoDay").get.message shouldBe errorDateRange
+          result.error("pso.day").get.message shouldBe errorDateRange
         }
       }
     }

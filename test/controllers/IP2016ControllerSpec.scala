@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
@@ -37,11 +37,11 @@ import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment}
 import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.CacheMap
-import java.util.UUID
 
-import uk.gov.hmrc.play.views.html.helpers.{ErrorSummary, FormWithCSRF}
+import java.util.UUID
 import views.html.pages.fallback.technicalError
 import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionDebits, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, psoDetails, removePsoDetails}
 
@@ -65,7 +65,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     implicit val mockPlaContext: PlaContext = mock[PlaContext]
     implicit val mockMessages: Messages = mock[Messages]
     implicit val system: ActorSystem = ActorSystem()
-    implicit val materializer: ActorMaterializer = ActorMaterializer()
+    implicit val materializer: Materializer = mock[Materializer]
     implicit val application = mock[Application]
     implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
     implicit val mockPensionsTaken: pensionsTaken = app.injector.instanceOf[pensionsTaken]
@@ -76,7 +76,6 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     implicit val mockPsoDetails: psoDetails = app.injector.instanceOf[psoDetails]
     implicit val mockRemovePsoDetails: removePsoDetails = app.injector.instanceOf[removePsoDetails]
     implicit val mockPensionDebits: pensionDebits = app.injector.instanceOf[pensionDebits]
-    implicit val errorSummary: ErrorSummary = app.injector.instanceOf[ErrorSummary]
     implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
 
@@ -640,7 +639,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "supplied with a stored test model" should {
             "return 200" in new Setup {
-                val testModel = PSODetailsModel(1, 8, 2016, BigDecimal(1234))
+                val testModel = PSODetailsModel(1, 8, 2016, Some(BigDecimal(1234)))
                 lazy val result = controller.psoDetails(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
@@ -651,7 +650,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
             "return some HTML that" should {
                 "contain some text and use the character set utf-8" in new Setup {
-                    val testModel = PSODetailsModel(1, 8, 2016, BigDecimal(1234))
+                    val testModel = PSODetailsModel(1, 8, 2016, Some(BigDecimal(1234)))
                     lazy val result = controller.psoDetails(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
@@ -671,9 +670,9 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitPSODetails,
 
-                    ("psoDay", "6"),
-                    ("psoMonth", "4"),
-                    ("psoYear", "2016"),
+                    ("pso.day", "6"),
+                    ("pso.month", "4"),
+                    ("pso.year", "2016"),
                     ("psoAmt", "100000")
                 )
 
@@ -689,9 +688,9 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitPSODetails,
 
-                    ("psoDay", ""),
-                    ("psoMonth", "1"),
-                    ("psoYear", "2015"),
+                    ("pso.day", ""),
+                    ("pso.month", "1"),
+                    ("pso.year", "2015"),
                     ("psoAmt", "100000")
                 )
                 mockAuthConnector(Future.successful({}))
@@ -704,9 +703,9 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             "return 400" in new Setup {
 
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitPSODetails,
-                    ("psoDay", "35"),
-                    ("psoMonth", "1"),
-                    ("psoYear", "2015"),
+                    ("pso.day", "35"),
+                    ("pso.month", "1"),
+                    ("pso.year", "2015"),
                     ("psoAmt", "100000")
                 )
                 mockAuthConnector(Future.successful({}))

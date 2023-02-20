@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
 
 
     "have the correct title" in {
-      doc.title() shouldBe plaExistingProtectionsTitle
+      doc.title() shouldBe plaExistingProtectionsTitleNew
     }
 
     "have the correct heading which" should {
@@ -71,7 +71,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     "have a protections section display which if no active protections are present" should {
 
       "have the id" in {
-        doc2.select("div").get(1).attr("id") shouldBe "listProtections"
+        doc2.select("#listProtections").size() shouldBe 1
       }
 
       "have the message" in {
@@ -87,7 +87,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
 
       "contain the correct data" in {
-        doc.select("div#activeProtection").text shouldBe "Individual protection 2016"
+        doc.select("#activeProtection").text shouldBe "Individual protection 2016"
         doc.select("#activeProtectedAmountContent").text shouldBe "250.00"
       }
     }
@@ -96,7 +96,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     "have another protections list which if no other protections are present" should {
 
       "have the message" in {
-        doc3.select("div p").get(0).text shouldBe plaExistingProtectionsNoOtherProtections
+        doc3.select("#listProtections > p:nth-child(2)").text shouldBe plaExistingProtectionsNoOtherProtections
       }
     }
 
@@ -108,7 +108,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
 
       "contain the data" in {
-        doc2b.select("div#inactiveProtection1").text shouldBe "Individual protection 2014"
+        doc2b.select("#inactiveProtection1").text shouldBe "Individual protection 2014"
         doc2b.select("#inactiveProtectedAmount1Content").text shouldBe "100.00"
       }
     }
@@ -116,18 +116,18 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
 
     "have a view details about other protections and how to apply link which" should {
 
-      lazy val link = doc.select("section a").get(3)
+      lazy val link = doc.select("#main-content > div > div > p > a")
 
       s"have a link destination of view details about other protections and how to apply" in {
         link.attr("href") shouldBe plaExistingProtectionsHref
       }
 
       s"have the link text $plaExistingProtectionsLinkText" in {
-       doc.select("section a").get(3).text shouldBe plaExistingProtectionsLinkText
+       link.text shouldBe plaExistingProtectionsLinkText
       }
 
       s"have a question of ${"pla.existingProtections.other.protections.link"}" in {
-      doc.select("section a, p").get(3).text shouldBe plaExistingProtectionOtherText
+      doc.select("#main-content > div > div > p").text shouldBe plaExistingProtectionOtherText
         }
       }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
 
   val withdrawDateForModel = withdrawDateForm: Form[WithdrawDateFormModel]
 
-  "Withdraw Implication view" when {
+  "Withdraw Implication view for IP2014" when {
     lazy val view = application.injector.instanceOf[withdrawImplications]
     lazy val doc = Jsoup.parse(view.apply(withdrawDateForModel, "IP2014", "dormant").body)
 
@@ -38,27 +38,84 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
     }
 
     s"have a back link with text back " in {
-      doc.select("a.back-link").text() shouldBe "Back"
+      doc.select("#back-link").text() shouldBe "Back"
     }
 
     s"have a back link with href" in {
-      doc.select("a.back-link").attr("href") shouldBe routes.ReadProtectionsController.currentProtections.url
+      doc.select("#back-link").attr("href") shouldBe "javascript:history.back()"
     }
 
     s"have the question of the page ${"pla.withdraw.protection.title"}" in {
-      doc.select("h1.heading-large").text shouldEqual plaWithdrawProtectionTitle(plaWithdrawProtectionIP2014label)
+      doc.select("h1.govuk-heading-xl").text shouldEqual plaWithdrawProtectionHeading(plaWithdrawProtectionIP2014label)
+    }
+
+    s"have a alert of ${"pla.withdraw.implication.info"}" in {
+      doc.select("#main-content > div > div > div > strong").text() shouldBe s"Warning ${plaWithdrawImplicationInfo(plaWithdrawProtectionIP2014label)}"
     }
 
     "have a div tag that" should {
       "have a heading label" in {
-        doc.select("div.grid > p").text() shouldBe plaWithdrawProtectionIfInfo(plaWithdrawProtectionIP2014label)
+        doc.select("#main-content > div > div > p").text() shouldBe plaWithdrawProtectionIfInfo(plaWithdrawProtectionIP2014label)
       }
       s"has first paragraph of ${"pla.withdraw.protection.if.info.1"}" in {
-        doc.select("li").get(0).text() shouldBe plaWithdrawProtectionIfInfo1(plaWithdrawProtectionIP2014label)
+        doc.select("#main-content > div > div > ul > li:nth-child(1)").text() shouldBe plaWithdrawProtectionIfInfo1(plaWithdrawProtectionIP2014label)
       }
 
       s"has second paragraph of ${"pla.withdraw.protection.if.info.1"}" in {
-        doc.select("li").get(1).text() shouldBe plaWithdrawProtectionIfInfo2(plaWithdrawProtectionIP2014label)
+        doc.select("#main-content > div > div > ul > li:nth-child(2)").text() shouldBe plaWithdrawProtectionIfInfo2(plaWithdrawProtectionIP2014label)
+      }
+    }
+
+
+    "have a continue button that" should {
+      lazy val button = doc.getElementById("continue-button")
+
+      s"have text of ${"pla.withdraw.protection.continue.title"}" in {
+        button.text() shouldBe plaWithdrawProtectionContinueTitle
+      }
+
+      s"have a href" in {
+        button.attr("href") shouldBe routes.WithdrawProtectionController.getWithdrawDateInput.url
+      }
+
+    }
+
+  }
+
+  "Withdraw Implication view for IP2016" when {
+    lazy val view = application.injector.instanceOf[withdrawImplications]
+    lazy val doc = Jsoup.parse(view.apply(withdrawDateForModel, "IP2016", "dormant").body)
+
+    s"have a title ${"pla.withdraw.protection.title"}" in {
+      doc.title() shouldBe plaWithdrawProtectionTitle(plaWithdrawProtectionIP2016label)
+    }
+
+    s"have a back link with text back " in {
+      doc.select("#back-link").text() shouldBe "Back"
+    }
+
+    s"have a back link with href" in {
+      doc.select("#back-link").attr("href") shouldBe "javascript:history.back()"
+    }
+
+    s"have the question of the page ${"pla.withdraw.protection.title"}" in {
+      doc.select("h1.govuk-heading-xl").text shouldEqual plaWithdrawProtectionHeading(plaWithdrawProtectionIP2016label)
+    }
+
+    s"have a alert of ${"pla.withdraw.implication.info"}" in {
+      doc.select("#main-content > div > div > div > strong").text() shouldBe s"Warning ${plaWithdrawImplicationInfo(plaWithdrawProtectionIP2016label)}"
+    }
+
+    "have a div tag that" should {
+      "have a heading label" in {
+        doc.select("#main-content > div > div > p").text() shouldBe plaWithdrawProtectionIfInfo(plaWithdrawProtectionIP2016label)
+      }
+      s"has first paragraph of ${"pla.withdraw.protection.if.info.1"}" in {
+        doc.select("#main-content > div > div > ul > li:nth-child(1)").text() shouldBe plaWithdrawProtectionIfInfo1(plaWithdrawProtectionIP2016label)
+      }
+
+      s"has second paragraph of ${"pla.withdraw.protection.if.info.1"}" in {
+        doc.select("#main-content > div > div > ul > li:nth-child(2)").text() shouldBe plaWithdrawProtectionIfInfo2(plaWithdrawProtectionIP2016label)
       }
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package controllers
 
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
 import org.scalatestplus.mockito.MockitoSugar
@@ -38,7 +38,7 @@ class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
     implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext = mock[PlaContext]
     implicit val system: ActorSystem = ActorSystem()
-    implicit val materializer: ActorMaterializer = ActorMaterializer()
+    implicit val materializer: Materializer = mock[Materializer]
     implicit val application = mock[Application]
     implicit val mockTimeout: timeout = app.injector.instanceOf[timeout]
 

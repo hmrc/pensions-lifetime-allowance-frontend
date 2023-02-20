@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package controllers
 
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
@@ -37,6 +37,7 @@ import testHelpers.{FakeApplication, MockTemplateRenderer}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import views.html.pages.fallback.technicalError
+import views.html.pages.result.resultPrint
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -49,13 +50,14 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   val fakeRequest = FakeRequest()
   val mockEnv: Environment = mock[Environment]
+  val resultPrintView: resultPrint = fakeApplication.injector.instanceOf[resultPrint]
 
   implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: ActorMaterializer = ActorMaterializer()
+  implicit val materializer: Materializer = mock[Materializer]
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
 
 
@@ -76,7 +78,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   }
 
 
-  val TestPrintController = new PrintController(mockKeyStoreConnector, mockCitizenDetailsConnector, mockDisplayConstructors, mockMCC, authFunction) {
+  val TestPrintController = new PrintController(mockKeyStoreConnector, mockCitizenDetailsConnector, mockDisplayConstructors, resultPrintView, mockMCC, authFunction) {
   }
 
   override def beforeEach(): Unit = {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers.result
 
 trait ResultRejected {
 
-  val plaResultRejectionTitle                 = "Unsuccessful"
+  val plaResultRejectionTitle                 = "Unsuccessful - Protect your lifetime allowance - GOV.UK"
   val plaResultRejectionPageHeading           = "Your application was unsuccessful"
   val plaResultRejectionViewDetails           = "You can view or change details of your protections at any time."
   val plaResultRejectionViewDetailsLinkText   = "view or change details of your protections"

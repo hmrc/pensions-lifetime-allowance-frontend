@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,20 +26,21 @@ object WithdrawDateForm extends CommonBinders{
 
   def withdrawDateForm: Form[WithdrawDateFormModel] = Form(
     mapping(
-      "withdrawDay" -> withdrawDateFormatter,
-      "withdrawMonth" -> withdrawDatePartialFormatter("month"),
-      "withdrawYear" -> withdrawDatePartialFormatter("year")
+      "withdrawDate.day" -> withdrawDateFormatter,
+      "withdrawDate.month" -> withdrawDatePartialFormatter("month"),
+      "withdrawDate.year" -> withdrawDatePartialFormatter("year")
     )(WithdrawDateFormModel.apply)(WithdrawDateFormModel.unapply)
   )
 
   def validateWithdrawDate(form: Form[WithdrawDateFormModel],
                            protectionStartDate: LocalDateTime): Form[WithdrawDateFormModel] = {
-    if (form.hasErrors) form else {
+    if (form.hasErrors) form
+    else {
       val day = form.get.withdrawDay.get
       val month = form.get.withdrawMonth.get
       val year = form.get.withdrawYear.get
       if (LocalDate.of(year, month, day) isBefore protectionStartDate.toLocalDate)
-        form.withError("", "pla.withdraw.date-input.form.date-before-start-date")
+        form.withError("withdrawDate.day", "pla.withdraw.date-input.form.date-before-start-date")
       else form
     }
   }

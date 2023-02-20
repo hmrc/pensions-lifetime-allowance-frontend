@@ -1,5 +1,5 @@
 @*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,26 @@
  *@
 
 @import common.Links
-@import controllers.PlaLanguageController
-@import play.api.Application
-@import config.FrontendAppConfig
 
 @this(
- main_template: main_template)
+    layout: Layout
+)
 
-@()(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, templateRenderer: uk.gov.hmrc.renderer.TemplateRenderer, appConfig: FrontendAppConfig)
+@()(implicit request: Request[_], messages: Messages)
 
-@lc = @{Application.instanceCache[PlaLanguageController].apply(application) }
+@layout(
+    pageTitle = Messages("pla.technicalIssue.title"),
+    backLinkEnabled = false
+) {
 
-@main_template(title = Messages("pla.technicalIssue.title"), bodyClasses = None, showLogout = false) {
+    <h1 class="govuk-heading-xl">@Messages("pla.technicalIssue.pageHeading")</h1>
 
-<h1 class="heading-large">@Messages("pla.technicalIssue.pageHeading")</h1>
+    <p class="govuk-body">@Messages("pla.technicalIssue.paraOne")</p>
 
-<p>@Messages("pla.technicalIssue.paraOne")</p>
+    <p class="govuk-body">@Messages("pla.technicalIssue.paraTwo")</p>
 
-<p>@Messages("pla.technicalIssue.paraTwo")</p>
-
-@Html(Messages("pla.technicalIssue.tryAgain", Links.plaMain))
-
+    <p class="govuk-body">@messages("pla.technicalIssue.tryAgain.p1")
+        <a class="govuk-link" href="@Links.plaMain" rel="external">@messages("pla.technicalIssue.tryAgain.linkText")</a>
+        @messages("pla.technicalIssue.tryAgain.p2")
+    </p>
 }

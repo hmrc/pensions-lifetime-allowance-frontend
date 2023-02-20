@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,10 @@ import utils.Constants
 class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
+  val messageKey = "pensionsTakenBetween"
+
   "The AmendPensionsTakenBetweenForm" should {
-    val validMap = Map("amendedPensionsTakenBetween" -> "yes", "amendedPensionsTakenBetweenAmt" -> "1000.0", "protectionType" -> "type", "status" -> "status")
+    val validMap = Map("amendedPensionsTakenBetween" -> "yes", "amendedPensionsTakenBetweenAmt" -> "1000.00", "protectionType" -> "type", "status" -> "status")
 
     "produce a valid form with additional validation" when {
 
@@ -39,7 +41,7 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
       }
 
       "provided with a valid map with no amount" in {
-        val map = Map("amendedPensionsTakenBetween" -> "no", "protectionType" -> "anotherType", "status" -> "anotherStatus")
+        val map = Map("amendedPensionsTakenBetween" -> "no", "amendedPensionsTakenBetweenAmt" -> "", "protectionType" -> "anotherType", "status" -> "anotherStatus")
         val result = amendPensionsTakenBetweenForm.bind(map)
 
         result.value shouldBe Some(AmendPensionsTakenBetweenModel("no", None, "anotherType", "anotherStatus"))
@@ -76,7 +78,7 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
           val result = amendPensionsTakenBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBetween").get.message shouldBe errorRequired
+          result.error("amendedPensionsTakenBetween").get.message shouldBe errorQuestion(messageKey)
         }
 
         "not provided with a value for protectionType" in {
@@ -96,11 +98,11 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
         }
 
         "provided with an invalid value for amendedPensionsTakenBetweenAmt" in {
-          val map = validMap.updated("amendedPensionsTakenBetweenAmt", "a")
+          val map = validMap.updated("amendedPensionsTakenBetweenAmt", "-1")
           val result = amendPensionsTakenBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBetweenAmt").get.message shouldBe errorReal
+          result.errors.head.message shouldBe errorNegative(messageKey)
         }
       }
     }
@@ -110,19 +112,20 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
       "has one error with the correct error message" when {
 
         "provided an answer of yes for amendedPensionsTakenBetween with no value for amendedPensionsTakenBetweenAmt" in {
-          val map = validMap - "amendedPensionsTakenBetweenAmt"
+          val map = validMap.updated("amendedPensionsTakenBetweenAmt", "")
           val result = amendPensionsTakenBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBetweenAmt").get.message shouldBe errorMissingAmount
+          result.errors.head.message shouldBe errorMissingAmount(messageKey)
         }
 
         "provided an answer of yes for amendedPensionsTakenBetween with a value for amendedPensionsTakenBetweenAmt larger than the maximum" in {
-          val map = validMap.updated("amendedPensionsTakenBetweenAmt", Constants.npsMaxCurrency.toString)
+          val map = validMap.updated("amendedPensionsTakenBetweenAmt", Constants.npsMaxCurrency+1.toString)
+
           val result = amendPensionsTakenBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBetweenAmt").get.message shouldBe errorMaximum
+          result.errors.head.message shouldBe errorMaximum(messageKey)
         }
 
         "provided an answer of yes for amendedPensionsTakenBetween with a value for amendedPensionsTakenBetweenAmt that is negative" in {
@@ -130,7 +133,7 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
           val result = amendPensionsTakenBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBetweenAmt").get.message shouldBe errorNegative
+          result.errors.head.message shouldBe errorNegative(messageKey)
         }
 
         "provided an answer of yes for amendedPensionsTakenBetween with a value for amendedPensionsTakenBetweenAmt that has more than two decimal places" in {
@@ -138,7 +141,7 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
           val result = amendPensionsTakenBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBetweenAmt").get.message shouldBe errorDecimal
+          result.errors.head.message shouldBe errorDecimal(messageKey)
         }
       }
 
