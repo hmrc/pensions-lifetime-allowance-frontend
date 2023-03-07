@@ -24,7 +24,6 @@ object AppDependencies {
     "uk.gov.hmrc" %% "play-partials"              % playPartialsVersion,
     "uk.gov.hmrc" %% "http-caching-client"        % cachingClientVersion,
     "uk.gov.hmrc" %% "local-template-renderer"    % localTemplateRendererVersion excludeAll(ExclusionRule(organization="org.scalactic")),
-    "uk.gov.hmrc" %% "govuk-template"             % govukTemplateVersion,
     "uk.gov.hmrc" %% "time" % timeVersion
   )
 
