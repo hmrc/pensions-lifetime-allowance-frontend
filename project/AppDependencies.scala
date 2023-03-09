@@ -35,6 +35,7 @@ object AppDependencies {
   object Test {
     def apply(): Seq[sbt.ModuleID] = new TestDependencies {
       override lazy val test = Seq(
+        "org.scalatest"            %% "scalatest"                   % scalaTestVersion     % scope,
         "org.scalatest"            %%   "scalatest"                 % scalaTestVersion     % scope,
         "org.scalatestplus.play"   %%   "scalatestplus-play"        % scalaTestPlusVersion % scope,
         "org.pegdown"               %   "pegdown"                   % pegdownVersion       % scope,
@@ -55,7 +56,6 @@ object AppDependencies {
       override lazy val scope: String = "it"
 
       override lazy val test = Seq(
-        "org.scalatest"          %% "scalatest"          % scalaTestVersion     % scope,
         "org.pegdown"             % "pegdown"            % pegdownVersion       % scope,
         "org.jsoup"               % "jsoup"              % "1.13.1"             % scope,
         "com.typesafe.play"      %% "play-test"          % PlayVersion.current  % scope,
