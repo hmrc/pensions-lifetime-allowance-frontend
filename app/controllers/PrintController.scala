@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages.result.resultPrint
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 val citizenDetailsConnector: CitizenDetailsConnector,
@@ -37,7 +37,8 @@ class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 resultPrintView: resultPrint,
                                 mcc: MessagesControllerComponents,
                                 authFunction: AuthFunction)
-                               (implicit val appConfig: FrontendAppConfig,
+                               (implicit val executionContext: ExecutionContext,
+                                implicit val appConfig: FrontendAppConfig,
                                 implicit val partialRetriever: FormPartialRetriever,
                                 implicit val templateRenderer:LocalTemplateRenderer,
                                 implicit val plaContext: PlaContext)

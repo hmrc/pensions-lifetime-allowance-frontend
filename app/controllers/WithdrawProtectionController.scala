@@ -37,8 +37,7 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContext}
 
 class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnector,
                                              plaConnector: PLAConnector,
@@ -51,7 +50,8 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
                                              withdrawImplications: views.html.pages.withdraw.withdrawImplications,
                                              technicalError: views.html.pages.fallback.technicalError
                                             )
-                                            (implicit val appConfig: FrontendAppConfig,
+                                            (implicit val executionContext: ExecutionContext,
+                                             implicit val appConfig: FrontendAppConfig,
                                              implicit val partialRetriever: FormPartialRetriever,
                                              implicit val templateRenderer: LocalTemplateRenderer,
                                              implicit val plaContext: PlaContext,

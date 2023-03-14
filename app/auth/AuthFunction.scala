@@ -29,13 +29,13 @@ import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContext}
 class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                  authClientConnector: AuthConnector,
                                  val technicalError: views.html.pages.fallback.technicalError,
                                  val env: Environment
                                 )(
+                                  implicit val executionContext: ExecutionContext,
                                   implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: FormPartialRetriever,
                                   implicit val templateRenderer:LocalTemplateRenderer,

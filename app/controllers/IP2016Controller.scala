@@ -38,8 +38,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContext}
 
 class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  mcc: MessagesControllerComponents,
@@ -52,7 +51,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  psoDetails: pages.ip2016.psoDetails,
                                  RemovePsoDetails: pages.ip2016.removePsoDetails,
                                  pensionDebits: pages.ip2016.pensionDebits)
-                                (implicit val appConfig: FrontendAppConfig,
+                                (implicit val executionContext: ExecutionContext,
+                                 implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer: LocalTemplateRenderer,
                                  implicit val plaContext: PlaContext,

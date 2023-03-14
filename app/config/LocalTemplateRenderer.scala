@@ -28,12 +28,12 @@ import uk.gov.hmrc.renderer.TemplateRenderer
 import uk.gov.hmrc.http.HttpReads.Implicits._
 
 import scala.language.postfixOps
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContext}
 import scala.concurrent.duration._
 
-class LocalTemplateRenderer @Inject()(appConfig: FrontendAppConfig,
-                                     WSHttp: DefaultHttpClient)
+class LocalTemplateRenderer @Inject()(implicit executionContext: ExecutionContext,
+                                      appConfig: FrontendAppConfig,
+                                      WSHttp: DefaultHttpClient)
                                       extends TemplateRenderer {
   override lazy val templateServiceBaseUrl = appConfig.servicesConfig.baseUrl("frontend-template-provider")
   override val refreshAfter: Duration = 10 minutes

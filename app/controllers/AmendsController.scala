@@ -43,8 +43,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
 import views.html.pages
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  val plaConnector: PLAConnector,
@@ -68,7 +67,8 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  outcomeInactive: views.html.pages.amends.outcomeInactive,
                                  removePsoDebits: pages.amends.removePsoDebits,
                                  amendSummary: views.html.pages.amends.amendSummary)
-                                (implicit val appConfig: FrontendAppConfig,
+                                (implicit val executionContext: ExecutionContext,
+                                 implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val formWithCSRF: FormWithCSRF,

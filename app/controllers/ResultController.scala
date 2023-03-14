@@ -33,8 +33,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContext}
 import scala.util.Random
 
 class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
@@ -49,7 +48,8 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  resultRejected: views.html.pages.result.resultRejected,
                                  resultSuccess: views.html.pages.result.resultSuccess,
                                  resultSuccessInactive: views.html.pages.result.resultSuccessInactive)
-                                (implicit val appConfig: FrontendAppConfig,
+                                (implicit val executionContext: ExecutionContext,
+                                 implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val plaContext: PlaContext,

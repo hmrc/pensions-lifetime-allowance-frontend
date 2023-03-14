@@ -22,12 +22,13 @@ import javax.inject.Inject
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 
 class TestSetupController @Inject()(connector: StubConnector,
                                     implicit val partialRetriever: FormPartialRetriever,
+                                    implicit val executionContext: ExecutionContext,
                                     implicit val templateRenderer:LocalTemplateRenderer,
                                     mcc: MessagesControllerComponents) extends FrontendController(mcc) {
 

@@ -33,15 +33,16 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
-                                 mcc: MessagesControllerComponents,
+                                  mcc: MessagesControllerComponents,
                                   authFunction: AuthFunction,
                                   technicalError: views.html.pages.fallback.technicalError,
                                   summary: pages.ip2016.summary
                                  )
-                                 (implicit val appConfig: FrontendAppConfig,
+                                 (implicit val executionContext: ExecutionContext,
+                                  implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: FormPartialRetriever,
                                   implicit val templateRenderer: LocalTemplateRenderer,
                                   implicit val plaContext: PlaContext,

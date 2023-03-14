@@ -36,8 +36,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContext}
 
 class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                           val keyStoreConnector: KeyStoreConnector,
@@ -49,7 +48,8 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                           manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
                                           existingProtections: pages.existingProtections.existingProtections
                                          )
-                                         (implicit val appConfig: FrontendAppConfig,
+                                         (implicit val executionContext: ExecutionContext,
+                                          implicit val appConfig: FrontendAppConfig,
                                           implicit val partialRetriever: FormPartialRetriever,
                                           implicit val templateRenderer:LocalTemplateRenderer,
                                           implicit val plaContext: PlaContext,

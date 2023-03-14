@@ -18,9 +18,9 @@ package controllers
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
-
 import config.LocalTemplateRenderer
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
+
 import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Logging
@@ -32,8 +32,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
 import views.html.pages.lookup.{psa_lookup_not_found_print, psa_lookup_results_print}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Future, ExecutionContext}
 
 class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                                   val actionWithSessionId: ActionWithSessionId,
@@ -41,6 +40,7 @@ class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                                   psaLookupNotFoundPrintView: psa_lookup_not_found_print,
                                   psaLookupResultsPrintView: psa_lookup_results_print,
                                   mcc: MessagesControllerComponents)(
+                                  implicit val executionContext: ExecutionContext,
                                   implicit val partialRetriever: FormPartialRetriever,
                                   implicit val templateRenderer: LocalTemplateRenderer)
 extends FrontendController(mcc) with I18nSupport with Logging {
