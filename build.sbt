@@ -39,7 +39,7 @@ lazy val root = Project(appName, file("."))
   .settings(defaultSettings(): _*)
   .settings(
     targetJvm := "jvm-1.8",
-    scalaVersion := "2.12.13",
+    scalaVersion := "2.12.12",
     libraryDependencies ++= AppDependencies(),
     Test / parallelExecution := false,
     Test / fork := false,

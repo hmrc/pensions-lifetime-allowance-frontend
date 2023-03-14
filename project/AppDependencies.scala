@@ -13,7 +13,7 @@ object AppDependencies {
   private val cachingClientVersion = "10.0.0-play-28"
   private val localTemplateRendererVersion = "2.17.0-play-28"
   private val timeVersion = "3.25.0"
-  private val mockitoCoreVersion = "5.2.0"
+  private val mockitoCoreVersion = "4.1.0"
 
   val compile = Seq(
     ws,
