@@ -83,7 +83,7 @@ class DatesSpec extends FakeApplication {
   }
 
   "withDrawDateString" should {
-    val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi
+    val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi
 
     def createLangMessages(languageCode: Locale): (Lang, Messages) = {
       val lang = new Lang(languageCode)

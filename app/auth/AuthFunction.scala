@@ -15,7 +15,7 @@
  */
 
 package auth
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import javax.inject.Inject
 import play.api.i18n.Messages
 import play.api.mvc.Results._
@@ -38,7 +38,6 @@ class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                 )(
                                   implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: FormPartialRetriever,
-                                  implicit val templateRenderer:LocalTemplateRenderer,
                                   implicit val plaContext: PlaContext)
   extends FrontendController(mcc) with AuthFunction with Logging{
   override def config: Configuration = appConfig.configuration
@@ -46,7 +45,6 @@ class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
 }
 trait AuthFunction extends AuthRedirects with AuthorisedFunctions with Logging {
   implicit val partialRetriever: FormPartialRetriever
-  implicit val templateRenderer: LocalTemplateRenderer
   implicit val plaContext: PlaContext
   implicit val appConfig: FrontendAppConfig
   val technicalError: views.html.pages.fallback.technicalError
@@ -77,8 +75,8 @@ trait AuthFunction extends AuthRedirects with AuthorisedFunctions with Logging {
       Redirect(appConfig.ggSignInUrl,
         Map("continue" -> Seq(upliftUrl), "origin" -> Seq(appConfig.appName)))
     }
-    case _: InsufficientEnrolments => Redirect(IVUpliftURL)
-    case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL)
+    case _: InsufficientEnrolments => Redirect(IVUpliftURL())
+    case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL())
     case e: AuthorisationException =>
       logger.error("Unexpected auth exception ", e)
       InternalServerError(technicalError(pType))

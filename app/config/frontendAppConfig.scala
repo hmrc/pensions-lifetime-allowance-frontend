@@ -55,14 +55,6 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
   lazy val urBannerLink = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113"
   override lazy val ssoUrl: Option[String] = configuration.getOptional[String](s"portal.ssoUrl")
 
-  lazy val ptaBaseUrl: String = servicesConfig.baseUrl("pertax-frontend")
-  lazy val ptaHomeUrl: String = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.home","/personal-account")}"
-  lazy val messagesUrl: String = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.messages","/messages")}"
-  lazy val paperlessSettingsUrl = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.paperlessSettings","/preferences")}"
-  lazy val personalDetailsUrl = s"$ptaBaseUrl${servicesConfig.getConfString("pertax-frontend.urls.personalDetails","/personal-details")}"
-  lazy val trackBaseUrl: String = servicesConfig.baseUrl("tracking-frontend")
-  lazy val trackingHomeUrl = s"$trackBaseUrl${servicesConfig.getConfString("tracking-frontend.urls.home","/track")}"
-
   override val excludeCopeTab: Boolean = configuration.getOptional[Boolean](s"microservice.services.exclusions.copetab").getOrElse(true)
   override val identityVerification: Boolean = configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)
 

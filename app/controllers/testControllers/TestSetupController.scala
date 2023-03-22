@@ -16,7 +16,6 @@
 
 package controllers.testControllers
 
-import config.LocalTemplateRenderer
 import connectors.StubConnector
 import javax.inject.Inject
 import play.api.libs.json._
@@ -28,7 +27,6 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 class TestSetupController @Inject()(connector: StubConnector,
                                     implicit val partialRetriever: FormPartialRetriever,
-                                    implicit val templateRenderer:LocalTemplateRenderer,
                                     mcc: MessagesControllerComponents) extends FrontendController(mcc) {
 
   def insertProtections(): Action[JsValue] = Action.async(parse.json) { implicit request =>

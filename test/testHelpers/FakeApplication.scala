@@ -25,7 +25,7 @@ import play.api.inject.guice.GuiceApplicationBuilder
 
 trait FakeApplication extends AnyWordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite {
 
-  override def fakeApplication: Application = app
+  override def fakeApplication(): Application = app
 
   override lazy val app: Application = new GuiceApplicationBuilder().build()
 }

@@ -103,7 +103,7 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
           }
 
           "provided with an amount greater than the maximum" in {
-            val maxValue = Constants.npsMaxCurrency+1.toString
+            val maxValue = s"${Constants.npsMaxCurrency+1}"
             val map = Map("pensionsTakenBetween" -> "yes", "pensionsTakenBetweenAmt" -> maxValue)
             val result = pensionsTakenBetweenForm.bind(map)
 

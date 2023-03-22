@@ -1,5 +1,4 @@
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, scalaSettings, targetJvm}
-import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 import com.typesafe.sbt.web.Import.pipelineStages
 import com.typesafe.sbt.web.Import.Assets
 import com.typesafe.sbt.digest.Import.digest
@@ -17,7 +16,7 @@ val appName = "pensions-lifetime-allowance-frontend"
 lazy val appDependencies: Seq[ModuleID] = Seq.empty
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
-val silencerVersion = "1.7.1"
+val silencerVersion = "1.7.12"
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
@@ -39,7 +38,7 @@ lazy val root = Project(appName, file("."))
   .settings(defaultSettings(): _*)
   .settings(
     targetJvm := "jvm-1.8",
-    scalaVersion := "2.12.12",
+    scalaVersion := "2.13.8",
     libraryDependencies ++= AppDependencies(),
     Test / parallelExecution := false,
     Test / fork := false,
@@ -56,7 +55,6 @@ lazy val root = Project(appName, file("."))
   .settings(
       TwirlKeys.templateImports ++= Seq(
         "uk.gov.hmrc.govukfrontend.views.html.components._",
-        "uk.gov.hmrc.govukfrontend.views.html.helpers._",
         "uk.gov.hmrc.hmrcfrontend.views.html.components._",
         "uk.gov.hmrc.hmrcfrontend.views.html.helpers._",
         "uk.gov.hmrc.govukfrontend.views.html.components.implicits._"

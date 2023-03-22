@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.KeyStoreConnector
 import constructors.SummaryConstructor
 import enums.ApplicationType
@@ -43,7 +43,6 @@ class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  )
                                  (implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: FormPartialRetriever,
-                                  implicit val templateRenderer: LocalTemplateRenderer,
                                   implicit val plaContext: PlaContext,
                                   implicit val formWithCSRF: FormWithCSRF,
                                   implicit val application: Application)

@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
 import enums.IdentityVerificationResult
 import javax.inject.Inject
@@ -42,7 +42,6 @@ class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVe
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val plaContext: PlaContext,
                                        implicit val partialRetriever: FormPartialRetriever,
-                                       implicit val templateRenderer:LocalTemplateRenderer,
                                        implicit val application: Application)
 extends FrontendController(mcc) with I18nSupport with Logging {
 

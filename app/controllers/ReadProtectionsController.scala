@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common.{Helpers, Strings}
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
@@ -51,7 +51,6 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                          )
                                          (implicit val appConfig: FrontendAppConfig,
                                           implicit val partialRetriever: FormPartialRetriever,
-                                          implicit val templateRenderer:LocalTemplateRenderer,
                                           implicit val plaContext: PlaContext,
                                           implicit val application: Application)
 extends FrontendController(mcc) with I18nSupport with Logging {

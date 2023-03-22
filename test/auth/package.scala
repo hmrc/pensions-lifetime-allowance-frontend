@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
+import org.joda.time.DateTimeUtils
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.SessionKeys
 
 package object auth {
-
-  import uk.gov.hmrc.time.DateTimeUtils
 
   import java.util.UUID
 
@@ -41,7 +40,7 @@ package object auth {
                                userId: String = mockUserId) =
     FakeRequest().withSession(
       FakeRequestKeyConsts.SessionId -> s"session-${UUID.randomUUID()}",
-      FakeRequestKeyConsts.LastRequestTimestamp -> DateTimeUtils.now.getMillis.toString,
+      FakeRequestKeyConsts.LastRequestTimestamp -> DateTimeUtils.currentTimeMillis.toString,
       FakeRequestKeyConsts.Token -> "ANYOLDTOKEN",
       FakeRequestKeyConsts.AuthProvider -> provider
     )

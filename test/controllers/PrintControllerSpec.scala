@@ -20,7 +20,7 @@ import akka.actor.ActorSystem
 import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import constructors.DisplayConstructors
 import mocks.AuthMock
@@ -33,7 +33,7 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
-import testHelpers.{FakeApplication, MockTemplateRenderer}
+import testHelpers.FakeApplication
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import views.html.pages.fallback.technicalError
@@ -46,15 +46,14 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
-  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   val fakeRequest = FakeRequest()
   val mockEnv: Environment = mock[Environment]
-  val resultPrintView: resultPrint = fakeApplication.injector.instanceOf[resultPrint]
+  val resultPrintView: resultPrint = fakeApplication().injector.instanceOf[resultPrint]
 
-  implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
@@ -67,7 +66,6 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
 
   val authFunction = new AuthFunction {
     override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
-    override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
     override implicit val plaContext: PlaContext = mockPlaContext
     override implicit val appConfig: FrontendAppConfig = mockAppConfig
     override implicit val technicalError: technicalError = mockTechnicalError

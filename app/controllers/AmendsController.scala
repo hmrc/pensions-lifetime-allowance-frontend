@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.{AmendsGAConstructor, DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
@@ -70,7 +70,6 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  amendSummary: views.html.pages.amends.amendSummary)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
-                                 implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val formWithCSRF: FormWithCSRF,
                                  implicit val plaContext: PlaContext)
 extends FrontendController(mcc) with I18nSupport with Logging{
@@ -79,7 +78,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   val amendProtection = Action.async { implicit request =>
      authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendmentTypeForm.bindFromRequest.fold(
+      amendmentTypeForm.bindFromRequest().fold(
         errors => {
           logger.warn(s"Couldn't bind protection type or status to amend request for user with nino $nino")
           Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
@@ -96,7 +95,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   val submitAmendPensionsTakenBefore = Action.async {
     implicit request =>
        authFunction.genericAuthWithNino("existingProtections") { nino =>
-        amendPensionsTakenBeforeForm.bindFromRequest.fold(
+        amendPensionsTakenBeforeForm.bindFromRequest().fold(
           errors => {
             val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
             Future.successful(BadRequest(amendPensionsTakenBefore(form)))
@@ -126,7 +125,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       }
   }
   val submitAmendPensionsTakenBetween = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendPensionsTakenBetweenForm.bindFromRequest.fold(
+      amendPensionsTakenBetweenForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
           Future.successful(BadRequest(amendPensionsTakenBetween(form)))
@@ -158,7 +157,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   val submitAmendOverseasPensions = Action.async {
     implicit request =>
        authFunction.genericAuthWithNino("existingProtections") { nino =>
-        amendOverseasPensionsForm.bindFromRequest.fold(
+        amendOverseasPensionsForm.bindFromRequest().fold(
           errors => {
             val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
             Future.successful(BadRequest(amendOverseasPensions(form)))
@@ -188,7 +187,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   }
   val submitAmendCurrentPension = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
 
-      amendCurrentPensionForm.bindFromRequest.fold(
+      amendCurrentPensionForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
           Future.successful(BadRequest(amendCurrentPensions(form)))
@@ -214,7 +213,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     }
   }
   val submitRemovePso = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendmentTypeForm.bindFromRequest.fold(
+      amendmentTypeForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
           Future.successful(BadRequest(removePsoDebits(form)))
@@ -239,7 +238,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     }
   }
   val submitAmendPsoDetails = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendPsoDetailsForm.bindFromRequest.fold(
+      amendPsoDetailsForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
           Future.successful(BadRequest(amendPsoDetails(form)))

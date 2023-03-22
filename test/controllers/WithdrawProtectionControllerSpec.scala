@@ -20,7 +20,7 @@ import akka.actor.ActorSystem
 import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import forms.WithdrawDateForm
@@ -38,7 +38,7 @@ import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment}
-import testHelpers.{AuthorisedFakeRequestToPost, FakeApplication, MockTemplateRenderer}
+import testHelpers.{AuthorisedFakeRequestToPost, FakeApplication}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.cache.client.CacheMap
@@ -51,18 +51,17 @@ import scala.concurrent.Future
 
 class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach {
 
-  implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val system: ActorSystem = ActorSystem()
   implicit val mat: Materializer = mock[Materializer]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val application = mock[Application]
 
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
-  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction = mock[AuthFunction]
   val mockWithdrawConfirm: withdrawConfirm = app.injector.instanceOf[withdrawConfirm]
   val mockWithdrawConfirmation: withdrawConfirmation = app.injector.instanceOf[withdrawConfirmation]
@@ -76,7 +75,6 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
 
     val authFunction = new AuthFunction {
       override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
-      override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
       override implicit val plaContext: PlaContext = mockPlaContext
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError

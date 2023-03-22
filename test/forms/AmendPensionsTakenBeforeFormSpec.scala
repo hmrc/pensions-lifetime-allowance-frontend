@@ -124,7 +124,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
         }
 
         "provided an answer of yes for amendedPensionsTakenBefore with a value for amendedPensionsTakenBeforeAmt larger than the maximum" in {
-          val map = validMap.updated("amendedPensionsTakenBeforeAmt", Constants.npsMaxCurrency+1.toString)
+          val map = validMap.updated("amendedPensionsTakenBeforeAmt", s"${Constants.npsMaxCurrency+1}")
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1

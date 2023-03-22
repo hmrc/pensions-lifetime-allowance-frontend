@@ -115,9 +115,9 @@ trait CommonBinders {
     override def bind(key: String, data: Map[String, String]) = {
 
       val groupedIntsWithCustomErrors: Either[Seq[FormError], (Int, Int, Int)] = for {
-        day   <- withdrawDateValidationFormatter("day").bind("withdrawDate.day", data).right
-        month <- withdrawDateValidationFormatter("month").bind("withdrawDate.month", data).right
-        year  <- withdrawDateValidationFormatter("year").bind("withdrawDate.year", data).right
+        day   <- withdrawDateValidationFormatter("day").bind("withdrawDate.day", data)
+        month <- withdrawDateValidationFormatter("month").bind("withdrawDate.month", data)
+        year  <- withdrawDateValidationFormatter("year").bind("withdrawDate.year", data)
       } yield {
         (day.get, month.get, year.get)
       }
@@ -140,9 +140,9 @@ trait CommonBinders {
   private def psoDateStringToIntFormatter = new Formatter[Int] {
     override def bind(key: String, data: Map[String, String]) = {
       val groupedIntsWithCustomErrors: Either[Seq[FormError], (Int, Int, Int)] = for {
-        day   <- stringToIntFormatter("dayEmpty").bind("pso.day", data).right
-        month <- stringToIntFormatter("monthEmpty").bind("pso.month", data).right
-        year  <- stringToIntFormatter("yearEmpty").bind("pso.year", data).right
+        day   <- stringToIntFormatter("dayEmpty").bind("pso.day", data)
+        month <- stringToIntFormatter("monthEmpty").bind("pso.month", data)
+        year  <- stringToIntFormatter("yearEmpty").bind("pso.year", data)
       } yield {
         (day, month, year)
       }
@@ -163,10 +163,10 @@ trait CommonBinders {
   private def dateStringToOptionalIntFormatter = new Formatter[Option[Int]] {
     override def bind(key: String, data: Map[String, String]) = {
       val groupedIntsWithCustomErrors: Either[Seq[FormError], (Int, Int, Int, String)] = for {
-        day   <- stringToOptionalIntFormatter("dayEmpty").bind("pso.day", data).right
-        month <- stringToOptionalIntFormatter("monthEmpty").bind("pso.month", data).right
-        year  <- stringToOptionalIntFormatter("yearEmpty").bind("pso.year", data).right
-        protectionType <- protectionFormatter.bind("protectionType", data).right
+        day   <- stringToOptionalIntFormatter("dayEmpty").bind("pso.day", data)
+        month <- stringToOptionalIntFormatter("monthEmpty").bind("pso.month", data)
+        year  <- stringToOptionalIntFormatter("yearEmpty").bind("pso.year", data)
+        protectionType <- protectionFormatter.bind("protectionType", data)
       } yield {
         (day.get, month.get, year.get, protectionType)
       }

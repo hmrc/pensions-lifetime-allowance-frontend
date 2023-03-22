@@ -83,7 +83,7 @@ class AmendIP14OverseasPensionsViewSpec extends CommonViewSpecHelper with AmendI
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
-      errorDoc.select("#error-summary-title").text shouldBe plaBaseErrorSummaryLabel
+      errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 

@@ -26,8 +26,8 @@ import testHelpers._
 
 class AccountControllerSpec extends FakeApplication with MockitoSugar {
 
-  val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
-  val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
   class Setup {
     val controller = new AccountController(mockAppConfig, mockMCC)

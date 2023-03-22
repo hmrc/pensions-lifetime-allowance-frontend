@@ -20,7 +20,7 @@ import akka.actor.ActorSystem
 import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import mocks.AuthMock
 import models._
@@ -54,14 +54,13 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
     val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
     val mockPlaConnector: PLAConnector = mock[PLAConnector]
-    val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
-    val mockAuthFunction: AuthFunction = fakeApplication.injector.instanceOf[AuthFunction]
+    val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+    val mockAuthFunction: AuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
     val mockEnv: Environment = mock[Environment]
 
 
-    implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
     implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
-    implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+    implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext = mock[PlaContext]
     implicit val mockMessages: Messages = mock[Messages]
     implicit val system: ActorSystem = ActorSystem()
@@ -83,7 +82,6 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         val authFunction = new AuthFunction {
             override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
-            override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
             override implicit val plaContext: PlaContext = mockPlaContext
             override implicit val appConfig: FrontendAppConfig = mockAppConfig
             override implicit val technicalError: technicalError = mockTechnicalError
@@ -108,13 +106,13 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         )
     }
 
-    override def beforeEach = {
+    override def beforeEach() = {
         reset(mockKeyStoreConnector, mockAuthConnector, mockPlaConnector)
     }
 
     implicit val hc = HeaderCarrier()
 
-    //    lazy val TestIP2016Controller = fakeApplication.injector.instanceOf[IP2016Controller]
+    //    lazy val TestIP2016Controller = fakeApplication().injector.instanceOf[IP2016Controller]
     object TestIP2016Controller extends IP2016Controller(mockKeyStoreConnector, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsTakenBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails, mockPensionDebits) {
         lazy val authConnector = mockAuthConnector
     }

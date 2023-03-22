@@ -26,7 +26,6 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 class PlaFrontendErrorHandler @Inject()(errorTemplate: views.html.error_template
                                        )(implicit val messagesApi: MessagesApi,
                                        implicit val PlaFormPartialRetriever: FormPartialRetriever,
-                                       implicit val localTemplateRenderer: LocalTemplateRenderer,
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val plaContext: PlaContext) extends FrontendErrorHandler {
 

@@ -103,7 +103,7 @@ class OverseasPensionsFormSpec extends FakeApplication with CommonErrorMessages 
           }
 
           "provided with an amount greater than the maximum" in {
-            val map = validMap.updated("overseasPensionsAmt", Constants.npsMaxCurrency+1.toString)
+            val map = validMap.updated("overseasPensionsAmt", s"${Constants.npsMaxCurrency+1}")
             val result = overseasPensionsForm.bind(map)
 
             result.errors.size shouldBe 1

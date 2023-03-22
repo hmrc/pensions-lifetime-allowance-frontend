@@ -31,7 +31,7 @@ import scala.concurrent.Future
 
 class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
 
-  val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   val mockHttp = mock[DefaultHttpClient]
 
   val tstDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))

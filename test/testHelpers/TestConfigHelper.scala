@@ -18,7 +18,6 @@ package testHelpers
 
 import akka.actor.ActorSystem
 import akka.stream.Materializer
-import config.LocalTemplateRenderer
 import config.wiring.PlaFormPartialRetriever
 import connectors.{KeyStoreConnector, PLAConnector}
 import org.scalatestplus.mockito.MockitoSugar
@@ -36,6 +35,5 @@ trait TestControllerHelper extends MockitoSugar with TestConfigHelper{
   val keyStoreConnector = mock[KeyStoreConnector]
   val plaConnector = mock[PLAConnector]
   implicit val partialRetriever = mock[PlaFormPartialRetriever]
-  implicit val templateRenderer = mock[LocalTemplateRenderer]
 }
 

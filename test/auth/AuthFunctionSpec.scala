@@ -19,7 +19,7 @@ package auth
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import mocks.AuthMock
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -30,7 +30,7 @@ import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment, Mode}
-import testHelpers.{FakeApplication, KeystoreTestHelper, MockTemplateRenderer}
+import testHelpers.{FakeApplication, KeystoreTestHelper}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
 import java.net.URLEncoder
@@ -47,18 +47,17 @@ class AuthFunctionSpec extends FakeApplication
 
   implicit val system: ActorSystem                        = ActorSystem()
   implicit val materializer:Materializer                  = mock[Materializer]
-  implicit val templateRenderer: LocalTemplateRenderer    = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever  = mock[PlaFormPartialRetriever]
-  implicit val mockAppConfig: FrontendAppConfig           = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig           = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext                 = mock[PlaContext]
   implicit val hc: HeaderCarrier                          = HeaderCarrier()
 
   val mockPlayAuthConnector                 = mock[PlayAuthConnector]
-  implicit val mockMessages: Messages       = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit val mockMessages: Messages       = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
   val mockEnv: Environment                  = mock[Environment]
-  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
-  override def beforeEach() {
+  override def beforeEach(): Unit = {
     reset(mockPlayAuthConnector,
       mockAuthConnector,
       mockPlaContext)
@@ -78,7 +77,6 @@ class AuthFunctionSpec extends FakeApplication
     override def upliftEnvironmentUrl(requestUri: String): String = requestUri
 
     override implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
-    override implicit val templateRenderer: LocalTemplateRenderer = mock[LocalTemplateRenderer]
     override implicit val technicalError: technicalError = app.injector.instanceOf[technicalError]
     }
 

@@ -53,7 +53,6 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
                                             )
                                             (implicit val appConfig: FrontendAppConfig,
                                              implicit val partialRetriever: FormPartialRetriever,
-                                             implicit val templateRenderer: LocalTemplateRenderer,
                                              implicit val plaContext: PlaContext,
                                              implicit val formWithCSRF: FormWithCSRF,
                                              implicit val application: Application)
@@ -93,7 +92,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   }
 
   private[controllers] def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) = {
-    validateWithdrawDate(withdrawDateForm.bindFromRequest, LocalDateTime.parse(protection.certificateDate.get)).fold(
+    validateWithdrawDate(withdrawDateForm.bindFromRequest(), LocalDateTime.parse(protection.certificateDate.get)).fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(withdrawDate(form, Strings.protectionTypeString(protection.protectionType), Strings.statusString(protection.status))))

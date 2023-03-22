@@ -57,7 +57,7 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
   }
 
   protected def getReads(fields: List[Symbol], props: Map[String, Any]) = {
-    val t = (__ \ 'amount).json.update(roundDown)
+    val t = (__ \ Symbol("amount")).json.update(roundDown)
     fields.map { s =>
       props.get(s.name).flatMap { value =>
         value match {
@@ -73,17 +73,17 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
   }
 
   protected def transformer(application: IPApplicationModel) = {
-    val fields = List('uncrystallisedRights, 'preADayPensionInPayment, 'postADayBenefitCrystallisationEvents, 'nonUKRights, 'pensionDebits)
+    val fields = List(Symbol("uncrystallisedRights"), Symbol("preADayPensionInPayment"), Symbol("postADayBenefitCrystallisationEvents"), Symbol("nonUKRights"), Symbol("pensionDebits"))
     val jsonTransformerList = getReads(fields, getProperties(application))
-    jsonTransformerList.filter(_.isDefined).foldLeft((__ \ 'relevantAmount).json.update(roundDown)) { (combined, reads) =>
+    jsonTransformerList.filter(_.isDefined).foldLeft((__ \ Symbol("relevantAmount")).json.update(roundDown)) { (combined, reads) =>
       combined andThen reads.get
     }
   }
 
   protected def transformer(model: ProtectionModel) = {
-    val fields = List('protectedAmount, 'relevantAmount, 'postADayBenefitCrystallisationEvents, 'preADayPensionInPayment,
-      'uncrystallisedRights, 'nonUKRights, 'pensionDebitAmount, 'pensionDebitEnteredAmount,
-      'pensionDebitTotalAmount, 'pensionDebits)
+    val fields = List(Symbol("protectedAmount"), Symbol("relevantAmount"), Symbol("postADayBenefitCrystallisationEvents"), Symbol("preADayPensionInPayment"),
+      Symbol("uncrystallisedRights"), Symbol("nonUKRights"), Symbol("pensionDebitAmount"), Symbol("pensionDebitEnteredAmount"),
+      Symbol("pensionDebitTotalAmount"), Symbol("pensionDebits"))
     val jsonTransformerList = getReads(fields, getProperties(model))
 
     val list = jsonTransformerList.filter(_.isDefined)
