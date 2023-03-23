@@ -32,7 +32,7 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
 
   lazy implicit val fakeRequest = FakeRequest()
 
-  implicit lazy val mockMessage = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit lazy val mockMessage = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   object TestSummaryConstructor extends SummaryConstructor
   val tstId = "testUserID"

@@ -73,7 +73,7 @@ trait SummaryConstructor {
     
     val totalPensionsSection = Some(
       SummarySectionModel(List(
-        SummaryRowModel(nameString("totalPensionsAmt"), None, None, boldText = false, currencyDisplayString(relevantAmount))
+        SummaryRowModel(nameString("totalPensionsAmt"), None, None, boldText = false, currencyDisplayString(relevantAmount()))
       ))
     )
 
@@ -105,7 +105,7 @@ trait SummaryConstructor {
 
     if(!Validation.validIPData(data)) {
       None
-    } else {Some(helper.createSummaryModel(relevantAmount, pensionContributions, pensionDebits))}
+    } else {Some(helper.createSummaryModel(relevantAmount(), pensionContributions, pensionDebits))}
 
   }
 

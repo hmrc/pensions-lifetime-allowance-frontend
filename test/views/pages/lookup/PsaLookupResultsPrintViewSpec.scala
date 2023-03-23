@@ -28,7 +28,7 @@ class PsaLookupResultsPrintViewSpec extends CommonViewSpecHelper with PsaLookupR
 
     "provided with no optional values" should {
       val model = PSALookupResult("reference", 1, 0, None, None)
-      lazy val psaLookupResultsPrint = fakeApplication.injector.instanceOf[psa_lookup_results_print]
+      lazy val psaLookupResultsPrint = fakeApplication().injector.instanceOf[psa_lookup_results_print]
       lazy val view =  psaLookupResultsPrint(model, "timestamp")
       lazy val doc = Jsoup.parse(view.body)
 
@@ -97,7 +97,7 @@ class PsaLookupResultsPrintViewSpec extends CommonViewSpecHelper with PsaLookupR
 
     "provided with all optional values" should {
       val model = PSALookupResult("reference", 1, 0, Some(3), Some("data"))
-      lazy val psaLookupResultsPrint = fakeApplication.injector.instanceOf[psa_lookup_results_print]
+      lazy val psaLookupResultsPrint = fakeApplication().injector.instanceOf[psa_lookup_results_print]
       lazy val view =  psaLookupResultsPrint(model, "timestamp")
       lazy val doc = Jsoup.parse(view.body)
 
@@ -156,7 +156,7 @@ class PsaLookupResultsPrintViewSpec extends CommonViewSpecHelper with PsaLookupR
 
     "provided with a valid result of FP2016" should {
       val model = PSALookupResult("reference", 1, 1, None, None)
-      lazy val psaLookupResultsPrint = fakeApplication.injector.instanceOf[psa_lookup_results_print]
+      lazy val psaLookupResultsPrint = fakeApplication().injector.instanceOf[psa_lookup_results_print]
       lazy val view = psaLookupResultsPrint(model, "timestamp")
       lazy val doc = Jsoup.parse(view.body)
 
@@ -213,7 +213,7 @@ class PsaLookupResultsPrintViewSpec extends CommonViewSpecHelper with PsaLookupR
 
       "provided with a valid result of IP2016 with a value" should {
         val model = PSALookupResult("reference", 3, 1, Some(2), None)
-        lazy val psaLookupResultsPrint = fakeApplication.injector.instanceOf[psa_lookup_results_print]
+        lazy val psaLookupResultsPrint = fakeApplication().injector.instanceOf[psa_lookup_results_print]
         lazy val view = psaLookupResultsPrint(model, "timestamp")
         lazy val doc = Jsoup.parse(view.body)
 
@@ -271,7 +271,7 @@ class PsaLookupResultsPrintViewSpec extends CommonViewSpecHelper with PsaLookupR
 
       "provided with a valid result of Primary" should {
         val model = PSALookupResult("reference", 4, 1, None, None)
-        lazy val psaLookupResultsPrint = fakeApplication.injector.instanceOf[psa_lookup_results_print]
+        lazy val psaLookupResultsPrint = fakeApplication().injector.instanceOf[psa_lookup_results_print]
         lazy val view = psaLookupResultsPrint(model, "timestamp")
         lazy val doc = Jsoup.parse(view.body)
 
@@ -294,7 +294,7 @@ class PsaLookupResultsPrintViewSpec extends CommonViewSpecHelper with PsaLookupR
 
     "provided with a valid result of Enhanced" should {
       val model = PSALookupResult("reference", 5, 1, None, None)
-      lazy val psaLookupResultsPrint = fakeApplication.injector.instanceOf[psa_lookup_results_print]
+      lazy val psaLookupResultsPrint = fakeApplication().injector.instanceOf[psa_lookup_results_print]
       lazy val view =  psaLookupResultsPrint(model, "timestamp")
       lazy val doc = Jsoup.parse(view.body)
 
@@ -316,7 +316,7 @@ class PsaLookupResultsPrintViewSpec extends CommonViewSpecHelper with PsaLookupR
 
     "provided with a valid result of FP2012" should {
       val model = PSALookupResult("reference", 6, 1, None, None)
-      lazy val psaLookupResultsPrint = fakeApplication.injector.instanceOf[psa_lookup_results_print]
+      lazy val psaLookupResultsPrint = fakeApplication().injector.instanceOf[psa_lookup_results_print]
       lazy val view =  psaLookupResultsPrint(model, "timestamp")
       lazy val doc = Jsoup.parse(view.body)
 
@@ -338,7 +338,7 @@ class PsaLookupResultsPrintViewSpec extends CommonViewSpecHelper with PsaLookupR
 
     "provided with a valid result of" should {
       val model = PSALookupResult("reference", 7, 1, None, None)
-      lazy val psaLookupResultsPrint = fakeApplication.injector.instanceOf[psa_lookup_results_print]
+      lazy val psaLookupResultsPrint = fakeApplication().injector.instanceOf[psa_lookup_results_print]
       lazy val view =  psaLookupResultsPrint(model, "timestamp")
       lazy val doc = Jsoup.parse(view.body)
 

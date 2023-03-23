@@ -21,20 +21,19 @@ import config.{FrontendAppConfig, PlaContext}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
-import testHelpers.{FakeApplication, MockTemplateRenderer}
+import testHelpers.FakeApplication
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
 trait CommonViewSpecHelper extends FakeApplication with CommonMessages with MockitoSugar {
 
-  implicit val application = fakeApplication
+  implicit val application = fakeApplication()
   val http = mock[DefaultHttpClient]
   val sessionCookieCryptoFilterWrapper = mock[SessionCookieCryptoFilterWrapper]
   implicit lazy val fakeRequest = FakeRequest()
-  implicit lazy val renderer = MockTemplateRenderer.renderer
   implicit val partialRetriever = mock[PlaFormPartialRetriever]
 
-  implicit val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
-  implicit val mockMessage = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockMessage = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
   implicit val plaContext = mock[PlaContext]
 
 }

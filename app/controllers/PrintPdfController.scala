@@ -19,7 +19,6 @@ package controllers
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
 
-import config.LocalTemplateRenderer
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
 import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
@@ -41,8 +40,7 @@ class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                                   psaLookupNotFoundPrintView: psa_lookup_not_found_print,
                                   psaLookupResultsPrintView: psa_lookup_results_print,
                                   mcc: MessagesControllerComponents)(
-                                  implicit val partialRetriever: FormPartialRetriever,
-                                  implicit val templateRenderer: LocalTemplateRenderer)
+                                  implicit val partialRetriever: FormPartialRetriever)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
   val lookupRequestID = "psa-lookup-request"

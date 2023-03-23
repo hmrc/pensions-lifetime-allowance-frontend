@@ -59,13 +59,13 @@ class AmendsControllerSpec extends FakeApplication
   with KeystoreTestHelper
   with BeforeAndAfterEach with AuthMock with I18nSupport {
 
-  implicit lazy val mockMessage = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit lazy val mockMessage = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   val mockDisplayConstructors: DisplayConstructors   = mock[DisplayConstructors]
   val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
   val mockKeystoreConnector: KeyStoreConnector       = mock[KeyStoreConnector]
   val mockPlaConnector: PLAConnector                 = mock[PLAConnector]
-  val mockMCC: MessagesControllerComponents          = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents          = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction                 = mock[AuthFunction]
   val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded = app.injector.instanceOf[manualCorrespondenceNeeded]
   val mockNoNotificationID: noNotificationId         = app.injector.instanceOf[noNotificationId]
@@ -86,16 +86,15 @@ class AmendsControllerSpec extends FakeApplication
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
-  implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
   implicit val mockLang: Lang = mock[Lang]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
-  override def beforeEach(): Unit = {
+  override def beforeEach() = {
     reset(
       mockKeystoreConnector,
       mockPlaConnector,

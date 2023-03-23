@@ -34,3 +34,4 @@ tmp
 bin
 ExternalLibraries
 *.sublime*
+/.bsp

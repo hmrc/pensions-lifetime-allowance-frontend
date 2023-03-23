@@ -97,7 +97,7 @@ class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
 
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
-      errorDoc.select("#error-summary-title").text shouldBe plaBaseErrorSummaryLabel
+      errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 

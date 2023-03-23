@@ -88,7 +88,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       }
 
       "should have error summary text" in {
-        doc.select("h2#error-summary-title").text() shouldBe errorSummaryText
+        doc.select("h2.govuk-error-summary__title").text() shouldBe errorSummaryText
       }
 
       "have a fieldset with error classes" in {

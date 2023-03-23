@@ -83,7 +83,7 @@ class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPens
     }
 
     "display the correct errors appropriately" in{
-      errorDoc.select("#error-summary-title").text shouldBe plaBaseErrorSummaryLabel
+      errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe errorReal
       errorDoc.select(".govuk-error-message").text shouldBe s"Error: $errorReal"
     }

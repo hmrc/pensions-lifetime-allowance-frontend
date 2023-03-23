@@ -21,7 +21,7 @@ import akka.actor.ActorSystem
 import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.SummaryConstructor
 import enums.ApplicationType
@@ -53,11 +53,10 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
 
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
-  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
-  implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val mockMessages: Messages = mock[Messages]
   implicit val system: ActorSystem = ActorSystem()
@@ -70,7 +69,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
 
   val mockSummaryConstructor: SummaryConstructor = mock[SummaryConstructor]
   val fakeRequest = FakeRequest()
-  val mockAuthFunction: AuthFunction = fakeApplication.injector.instanceOf[AuthFunction]
+  val mockAuthFunction: AuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
   val mockEnv: Environment = mock[Environment]
 
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
@@ -83,7 +82,6 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
 
     val authFunction = new AuthFunction {
       override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
-      override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
       override implicit val plaContext: PlaContext = mockPlaContext
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError

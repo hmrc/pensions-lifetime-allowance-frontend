@@ -35,9 +35,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
 
   val mockEnv       = mock[Environment]
-  val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   val mockHttp      = mock[DefaultHttpClient]
-  implicit val executionContext = fakeApplication.injector.instanceOf[ExecutionContext]
+  implicit val executionContext = fakeApplication().injector.instanceOf[ExecutionContext]
 
   class Setup {
     val connector = new PLAConnector(mockAppConfig, mockHttp)
@@ -72,7 +72,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  override def beforeEach() {
+  override def beforeEach() =  {
     reset(mockHttp)
   }
 

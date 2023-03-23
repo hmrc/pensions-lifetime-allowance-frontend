@@ -122,7 +122,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
         }
 
         "provided an answer of yes for amendedOverseasPensions with a value for amendedOverseasPensionsAmt larger than the maximum" in {
-          val map = validMap.updated("amendedOverseasPensionsAmt", Constants.npsMaxCurrency+1.toString)
+          val map = validMap.updated("amendedOverseasPensionsAmt", s"${Constants.npsMaxCurrency+1}")
           val result = amendOverseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1

@@ -19,7 +19,7 @@ package controllers
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{IdentityVerificationConnector, KeyStoreConnector}
 import enums.IdentityVerificationResult
 import org.mockito.ArgumentMatchers
@@ -46,20 +46,19 @@ import scala.io.Source
 
 class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
 
-  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
   val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
   val fakeRequest = FakeRequest("GET", "/")
   val mockKeystoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
-  val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   val mockIdentityVerificationConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
 
-  implicit val mockImplAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockImplAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
   implicit val hc: HeaderCarrier = mock[HeaderCarrier]
-  implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val application = mock[Application]
   implicit val mockLockedOut: lockedOut = app.injector.instanceOf[lockedOut]

@@ -22,7 +22,7 @@ import play.api.libs.json.{JsValue, Json}
 import testHelpers.FakeApplication
 class ResponseConstructorsSpec extends FakeApplication with MockitoSugar {
 
-  val mockResponseConstructor = fakeApplication.injector.instanceOf[ResponseConstructors]
+  val mockResponseConstructor = fakeApplication().injector.instanceOf[ResponseConstructors]
 
   val testFPSuccessProtectionModel = ProtectionModel (
     Some("testPSARef"),

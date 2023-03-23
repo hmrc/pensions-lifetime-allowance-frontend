@@ -31,8 +31,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
   implicit val mockLang   = mock[Lang]
   implicit val mockMessagesProvider = mock[MessagesProvider]
   implicit val controllerComponents = mock[ControllerComponents]
-  val displayConstructor: DisplayConstructors  = fakeApplication.injector.instanceOf[DisplayConstructors]
-  implicit lazy val mockMessage = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  val displayConstructor: DisplayConstructors  = fakeApplication().injector.instanceOf[DisplayConstructors]
+  implicit lazy val mockMessage = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   lazy val tstPSACheckRef = "PSA33456789"
 

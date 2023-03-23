@@ -18,7 +18,7 @@ package controllers
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
 
@@ -47,7 +47,6 @@ class LookupController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  psa_lookup_results: views.html.pages.lookup.psa_lookup_results,
                                  psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form)(
                                  implicit val partialRetriever: FormPartialRetriever,
-                                 implicit val templateRenderer: LocalTemplateRenderer,
                                  implicit val context: PlaContext,
                                  implicit val appConfig: FrontendAppConfig,
                                  implicit val formWithCSRF: FormWithCSRF,

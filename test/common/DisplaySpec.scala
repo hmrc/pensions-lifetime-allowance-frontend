@@ -28,7 +28,7 @@ import java.util.Locale
 class DisplaySpec extends FakeApplication with MockitoSugar {
 
   implicit val mockMessages = mock[Messages]
-  val mockMCC = fakeApplication.injector.instanceOf[MessagesControllerComponents].messagesApi
+  val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi
 
   "currencyDisplayString" should {
 

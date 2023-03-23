@@ -39,7 +39,6 @@ import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.http.HttpClient
 import utils.{ActionWithSessionId, ActionWithSessionImpl}
-import uk.gov.hmrc.renderer.TemplateRenderer
 
 
 class Module extends AbstractModule {
@@ -54,7 +53,6 @@ class Module extends AbstractModule {
     bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
     bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
     bind(classOf[AuthFunction]).to(classOf[AuthFunctionImpl])
-    bind(classOf[TemplateRenderer]).to(classOf[LocalTemplateRenderer])
 
   }
 }

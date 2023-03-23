@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.KeyStoreConnector
 import forms.CurrentPensionsForm.currentPensionsForm
 import forms.OverseasPensionsForm.overseasPensionsForm
@@ -54,7 +54,6 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  pensionDebits: pages.ip2016.pensionDebits)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
-                                 implicit val templateRenderer: LocalTemplateRenderer,
                                  implicit val plaContext: PlaContext,
                                  implicit val formWithCSRF: FormWithCSRF,
                                  implicit val application: Application) extends FrontendController(mcc) {
@@ -74,7 +73,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   def submitPensionsTaken: Action[AnyContent] = Action.async {
     implicit request =>
         authFunction.genericAuthWithoutNino("IP2016") {
-        pensionsTakenForm.bindFromRequest.fold(
+        pensionsTakenForm.bindFromRequest().fold(
           errors => {
             val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
             Future.successful(BadRequest(pensionsTaken(form)))
@@ -105,7 +104,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
 
   def submitPensionsTakenBefore: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      pensionsTakenBeforeForm.bindFromRequest.fold(
+      pensionsTakenBeforeForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(pensionsTakenBefore(form)))
@@ -132,7 +131,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
 
   def submitPensionsTakenBetween: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      pensionsTakenBetweenForm.bindFromRequest.fold(
+      pensionsTakenBetweenForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(pensionsTakenBetween(form)))
@@ -159,7 +158,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
 
   def submitOverseasPensions: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      overseasPensionsForm.bindFromRequest.fold(
+      overseasPensionsForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(overseasPensions(form)))
@@ -186,7 +185,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
 
   def submitCurrentPensions: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      currentPensionsForm.bindFromRequest.fold(
+      currentPensionsForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(currentPensions(form)))
@@ -213,7 +212,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
 
   def submitPensionDebits: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      pensionDebitsForm.bindFromRequest.fold(
+      pensionDebitsForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(pensionDebits(form)))
@@ -244,7 +243,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
 
   def submitPSODetails: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      psoDetailsForm.bindFromRequest.fold(
+      psoDetailsForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(psoDetails(form)))

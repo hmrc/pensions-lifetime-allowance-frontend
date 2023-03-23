@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 
 import javax.inject.Inject
 import play.api.Application
@@ -35,7 +35,6 @@ class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
                                       (implicit val application: Application,
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val partialRetriever: FormPartialRetriever,
-                                       implicit val templateRenderer: LocalTemplateRenderer,
                                        implicit val formWithCSRF: FormWithCSRF,
                                        implicit val plaContext: PlaContext) extends FrontendController(mcc) {
 

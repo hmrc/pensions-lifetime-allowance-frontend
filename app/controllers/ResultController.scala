@@ -51,7 +51,6 @@ class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  resultSuccessInactive: views.html.pages.result.resultSuccessInactive)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
-                                 implicit val templateRenderer:LocalTemplateRenderer,
                                  implicit val plaContext: PlaContext,
                                  implicit val application: Application)
 extends FrontendController(mcc) with I18nSupport with Logging{

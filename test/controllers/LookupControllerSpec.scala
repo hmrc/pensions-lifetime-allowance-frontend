@@ -19,7 +19,7 @@ package controllers
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{KeyStoreConnector, PLAConnector}
 import views.html.pages.lookup.{pla_protection_guidance, psa_lookup_not_found_results, psa_lookup_protection_notification_no_form, psa_lookup_results, psa_lookup_scheme_admin_ref_form}
 import models.{PSALookupRequest, PSALookupResult}
@@ -33,7 +33,7 @@ import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import testHelpers.{FakeApplication, MockTemplateRenderer}
+import testHelpers.FakeApplication
 import uk.gov.hmrc.http.cache.client.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
@@ -47,13 +47,12 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
   private val sessionId = SessionKeys.sessionId -> "lookup-test"
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
-  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
-  val mockActionWithSessionId: ActionWithSessionId = fakeApplication.injector.instanceOf[ActionWithSessionId]
+  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
 
   val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
-  implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val mockMessages: Messages = mock[Messages]
   implicit val system: ActorSystem = ActorSystem()
@@ -81,7 +80,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
     )
   }
 
-  override def beforeEach() {
+  override def beforeEach(): Unit = {
     reset(mockPlaConnector)
   }
 

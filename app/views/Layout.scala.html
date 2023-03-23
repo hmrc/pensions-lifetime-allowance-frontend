@@ -15,6 +15,8 @@
  *@
 
 @import config.FrontendAppConfig
+@import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
+@import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
 
 @this(
     govukLayout: GovukLayout,
@@ -28,7 +30,7 @@
     hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
     appConfig: FrontendAppConfig,
     backLink: playHelpers.templates.backLink
-)
+)(implicit accountMenuConfig: AccountMenuConfig)
 
 @(
     pageTitle: String,
@@ -45,21 +47,8 @@
 @accountMenu = {
     @if(request.session.get("authToken")){
         @hmrcAccountMenu(AccountMenu(
-            accountHome = AccountHome(
-                href = appConfig.ptaHomeUrl
-            ),
-            messages = AccountMessages(
-                href = appConfig.messagesUrl,
-                messageCount = None
-            ),
-            checkProgress = CheckProgress(
-                href = appConfig.trackingHomeUrl
-            ),
-            paperlessSettings = PaperlessSettings(appConfig.paperlessSettingsUrl),
-            personalDetails = PersonalDetails(appConfig.personalDetailsUrl),
-            signOut = SignOut(appConfig.signOutUrl),
-            language = if (messages.lang.code == "cy") Cy else En
-        ))
+            signOut = SignOut(appConfig.signOutUrl)
+        ).withUrlsFromConfig())
     }
 
     @hmrcLanguageSelectHelper()

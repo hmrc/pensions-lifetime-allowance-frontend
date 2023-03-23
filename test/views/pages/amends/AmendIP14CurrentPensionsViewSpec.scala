@@ -84,7 +84,7 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
     }
 
     "display the correct errors appropriately" in{
-      errorDoc.select("#error-summary-title").text shouldBe plaBaseErrorSummaryLabel
+      errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
     }
 
     "not have errors on valid pages" in{

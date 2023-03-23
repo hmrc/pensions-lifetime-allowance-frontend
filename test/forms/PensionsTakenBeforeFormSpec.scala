@@ -95,7 +95,7 @@ class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessag
           }
 
           "provided with an amount greater than the maximum" in {
-            val map = validMap.updated("pensionsTakenBeforeAmt", Constants.npsMaxCurrency+1.toString)
+            val map = validMap.updated("pensionsTakenBeforeAmt", s"${Constants.npsMaxCurrency+1}")
             val result = pensionsTakenBeforeForm.bind(map)
 
             result.errors.size shouldBe 1

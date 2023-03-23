@@ -19,7 +19,7 @@ package controllers
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
-import config.{FrontendAppConfig, LocalTemplateRenderer}
+import config.FrontendAppConfig
 import connectors.{KeyStoreConnector, PdfGeneratorConnector}
 import models.{PSALookupRequest, PSALookupResult}
 import org.mockito.ArgumentMatchers._
@@ -35,7 +35,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.shaded.ahc.org.asynchttpclient.Response
 import play.shaded.ahc.org.asynchttpclient.uri.Uri
-import testHelpers.{FakeApplication, MockTemplateRenderer}
+import testHelpers.FakeApplication
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import utils.ActionWithSessionId
 import views.html.pages.lookup.psa_lookup_not_found_print
@@ -47,16 +47,16 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
 
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
-  implicit val ec: ExecutionContext = fakeApplication.injector.instanceOf[ExecutionContext]
-  lazy val ws: WSClient = fakeApplication.injector.instanceOf[WSClient]
-  lazy val psaLookupNotFoundPrintView: psa_lookup_not_found_print = fakeApplication.injector.instanceOf[psa_lookup_not_found_print]
-  lazy val psaLookupResultsPrintView: psa_lookup_results_print = fakeApplication.injector.instanceOf[psa_lookup_results_print]
+  implicit val ec: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
+  lazy val ws: WSClient = fakeApplication().injector.instanceOf[WSClient]
+  lazy val psaLookupNotFoundPrintView: psa_lookup_not_found_print = fakeApplication().injector.instanceOf[psa_lookup_not_found_print]
+  lazy val psaLookupResultsPrintView: psa_lookup_results_print = fakeApplication().injector.instanceOf[psa_lookup_results_print]
 
   val mockPdfGeneratorConnector: PdfGeneratorConnector = mock[PdfGeneratorConnector]
   private val sessionId = SessionKeys.sessionId -> "pdf-test"
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
-  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
-  val mockActionWithSessionId: ActionWithSessionId = fakeApplication.injector.instanceOf[ActionWithSessionId]
+  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
   val mockEnv: Environment = mock[Environment]
   val response: Future[WSResponse] = {
     val responseBuilder = new Response.ResponseBuilder()
@@ -64,9 +64,8 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
     Future(new AhcWSResponse(responseBuilder.build()))
   }
 
-  implicit val templateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
-  implicit val mockAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
 

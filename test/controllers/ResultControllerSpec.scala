@@ -37,7 +37,7 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment}
-import testHelpers.{FakeApplication, MockTemplateRenderer}
+import testHelpers.FakeApplication
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
@@ -56,14 +56,13 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
-  val mockMCC: MessagesControllerComponents = fakeApplication.injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
   val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
   val mockEnv: Environment = mock[Environment]
 
-  implicit val mockTemplateRenderer: LocalTemplateRenderer = MockTemplateRenderer.renderer
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication.injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
@@ -82,7 +81,6 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
 
   val authFunction = new AuthFunction {
     override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
-    override implicit val templateRenderer: LocalTemplateRenderer = mockTemplateRenderer
     override implicit val plaContext: PlaContext = mockPlaContext
     override implicit val appConfig: FrontendAppConfig = mockAppConfig
     override implicit val technicalError: technicalError = mockTechnicalError

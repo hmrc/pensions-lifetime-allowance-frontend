@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import config.{FrontendAppConfig, LocalTemplateRenderer, PlaContext}
+import config.{FrontendAppConfig, PlaContext}
 import connectors.{CitizenDetailsConnector, KeyStoreConnector}
 import constructors.DisplayConstructors
 import javax.inject.Inject
@@ -39,7 +39,6 @@ class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 authFunction: AuthFunction)
                                (implicit val appConfig: FrontendAppConfig,
                                 implicit val partialRetriever: FormPartialRetriever,
-                                implicit val templateRenderer:LocalTemplateRenderer,
                                 implicit val plaContext: PlaContext)
   extends FrontendController(mcc) with I18nSupport with Logging {
 

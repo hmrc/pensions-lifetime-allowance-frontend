@@ -36,7 +36,7 @@ class KeyStoreConnectorSpec extends FakeApplication with MockitoSugar {
   val mockSessionCache     = mock[PLASessionCache]
   val sessionId            = UUID.randomUUID.toString
   val mockEnv: Environment = mock[Environment]
-  implicit val executionContext = fakeApplication.injector.instanceOf[ExecutionContext]
+  implicit val executionContext = fakeApplication().injector.instanceOf[ExecutionContext]
 
   object TestKeyStoreConnector extends KeyStoreConnector(mockSessionCache)
 

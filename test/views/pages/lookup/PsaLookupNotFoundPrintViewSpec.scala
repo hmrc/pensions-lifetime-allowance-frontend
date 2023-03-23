@@ -26,7 +26,7 @@ class PsaLookupNotFoundPrintViewSpec extends CommonViewSpecHelper with PsaLookup
 
   "The Psa Lookup Not Found Print view" should {
     val model = PSALookupRequest("check", Some("ref"))
-    lazy val psaLookupNotFoundPrintView = fakeApplication.injector.instanceOf[psa_lookup_not_found_print]
+    lazy val psaLookupNotFoundPrintView = fakeApplication().injector.instanceOf[psa_lookup_not_found_print]
     lazy val view = psaLookupNotFoundPrintView(model, "timestamp")
     lazy val doc = Jsoup.parse(view.body)
 
