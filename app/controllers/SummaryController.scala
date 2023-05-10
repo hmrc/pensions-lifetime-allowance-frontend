@@ -21,7 +21,6 @@ import config.{FrontendAppConfig, PlaContext}
 import connectors.KeyStoreConnector
 import constructors.SummaryConstructor
 import enums.ApplicationType
-
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
@@ -33,7 +32,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
                                  mcc: MessagesControllerComponents,
@@ -45,7 +44,8 @@ class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
                                   implicit val partialRetriever: FormPartialRetriever,
                                   implicit val plaContext: PlaContext,
                                   implicit val formWithCSRF: FormWithCSRF,
-                                  implicit val application: Application)
+                                  implicit val application: Application,
+                                  implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
   lazy val postSignInRedirectUrl = appConfig.ipStartUrl

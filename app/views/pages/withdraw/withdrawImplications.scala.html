@@ -33,7 +33,7 @@
     <h1 class="govuk-heading-xl">@Messages("pla.withdraw.protection.title",Messages(s"pla.withdraw.protection.${protectionType}.label"))</h1>
 
     @govukWarningText(WarningText(
-        iconFallbackText = "Warning",
+        iconFallbackText = Some("Warning"),
         content = Text(Messages("pla.withdraw.implication.info", Messages(s"pla.withdraw.protection.${protectionType}.label")))
     ))
 

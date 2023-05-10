@@ -46,8 +46,7 @@ import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.fallback.technicalError
 import views.html.pages.ip2016.summary
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthMock {
 
@@ -55,6 +54,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
+  implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
@@ -86,6 +86,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError
       implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+      override implicit val ec: ExecutionContext = executionContext
 
       override def authConnector: AuthConnector = mockAuthConnector
       override def config: Configuration = mockAppConfig.configuration

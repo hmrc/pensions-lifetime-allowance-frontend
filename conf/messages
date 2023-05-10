@@ -340,16 +340,18 @@ pla.summary.hiddenLinkText.ip14PsoDetails               = Change the details of 
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = View your existing protections
 pla.existingProtections.pageHeading                     = Your lifetime allowance protection
+pla.existingProtections.active.heading                  = Active protection
 pla.existingProtections.details                         = Details
 pla.existingProtections.print                           = Print and save your details
 pla.existingProtections.applicationDate                 = Application date
-pla.existingProtections.noActiveProtections             = You currently have no open protections.
+pla.existingProtections.noProtections                   = You currently have no protections.
+pla.existingProtections.noActiveProtections             = You currently have no active protection.
 pla.existingProtections.noOtherProtections              = You have no other protections.
 pla.existingProtections.protectedAmount                 = Protected lifetime allowance
 pla.existingProtections.protectionRef                   = Protection notification number
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
-pla.existingProtections.amendLinkText                   = View or change your protection details
+pla.existingProtections.amendLinkText                   = View or change
 pla.existingProtections.withdrawLinkText                = Withdraw your open protection
 pla.existingProtections.other.protections.link          = details about individual and fixed protections and how to apply
 pla.existingProtections.other.protections.linkText.before = View
@@ -357,11 +359,11 @@ pla.existingProtections.other.protections.linkText.after  = on GOV.UK.
 
 ## PROTECTION INFORMATION ##
 pla.protection.statuses.open                            = Open
-pla.protection.statuses.dormant                         = Dormant
-pla.protection.statuses.withdrawn                       = Withdrawn
-pla.protection.statuses.expired                         = Expired
-pla.protection.statuses.unsuccessful                    = Unsuccessful
-pla.protection.statuses.rejected                        = Rejected
+pla.protection.statuses.dormant                         = Dormant protections
+pla.protection.statuses.withdrawn                       = Withdrawn protections
+pla.protection.statuses.expired                         = Expired applications
+pla.protection.statuses.unsuccessful                    = Unsuccessful applications
+pla.protection.statuses.rejected                        = Rejected applications
 pla.protection.statuses.notRecorded                     = None
 pla.protection.types.FP2016                             = Fixed protection 2016
 pla.protection.types.FP2014                             = Fixed protection 2014
@@ -372,6 +374,15 @@ pla.protection.types.enhanced                           = Enhanced protection
 pla.protection.types.fixed                              = Fixed protection
 pla.protection.types.notRecorded                        = None
 pla.protection.protectionReference                      = None
+
+## Visually Hidden Content
+
+pla.hidden.activeProtection                             = for active protection
+pla.hidden.dormant                                      = for dormant protections
+pla.hidden.withdrawn                                    = for withdrawn protections
+pla.hidden.unsuccessful                                 = for unsuccessful applications
+pla.hidden.rejected                                     = for rejected applications
+pla.hidden.expired                                      = for expired applications
 
 ## Result Success ##
 pla.resultSuccess.title                 = Success

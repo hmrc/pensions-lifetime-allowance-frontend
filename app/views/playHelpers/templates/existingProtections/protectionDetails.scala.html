@@ -14,13 +14,12 @@
  * limitations under the License.
  *@
 
-@(heading: String, content: String, id: String)
+@(heading: String, content: String, id: String, action: Option[Html] = None)
 
-<div class="govuk-grid-row" id="@{id}Heading">
-    <div class="govuk-grid-column-two-thirds">
-         <h3 class="govuk-heading-s">@heading</h3>
-    </div>
-    <div class="govuk-grid-column-one-third">
-	    <p class="govuk-body" id="@{id}Content">@content</p>
-    </div>
-</div>
+<tbody class="govuk-table__body">
+    <tr class="govuk-table__row" id="@{id}Heading">
+        <th scope="row" class="govuk-table__header">@heading</th>
+        <td class="govuk-table__cell" id="@{id}Content">@content</td>
+        <td class="govuk-table__cell">@action</td>
+    </tr>
+</tbody>

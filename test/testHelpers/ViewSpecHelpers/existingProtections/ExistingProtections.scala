@@ -24,7 +24,7 @@ trait ExistingProtections {
   val plaExistingProtectionsDetails = "Details"
   val plaExistingProtectionsPrint = "Print and save your details"
   val plaExistingProtectionsApplicationDate = "Application date"
-  val plaExistingProtectionsNoActiveProtections = "You currently have no open protections."
+  val plaExistingProtectionsNoActiveProtections = "You currently have no active protection."
   val plaExistingProtectionsNoOtherProtections = "You have no other protections."
   val plaExistingProtectionsProtectedAmount = "Protected lifetime allowance"
   val plaExistingProtectionsProtectionRef = "Protection notification number"

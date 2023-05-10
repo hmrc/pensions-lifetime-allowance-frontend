@@ -31,8 +31,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
 import views.html.pages.lookup.{psa_lookup_not_found_print, psa_lookup_results_print}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                                   val actionWithSessionId: ActionWithSessionId,
@@ -40,7 +39,8 @@ class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
                                   psaLookupNotFoundPrintView: psa_lookup_not_found_print,
                                   psaLookupResultsPrintView: psa_lookup_results_print,
                                   mcc: MessagesControllerComponents)(
-                                  implicit val partialRetriever: FormPartialRetriever)
+                                  implicit val partialRetriever: FormPartialRetriever,
+                                  implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
   val lookupRequestID = "psa-lookup-request"

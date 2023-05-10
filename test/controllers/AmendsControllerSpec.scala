@@ -48,11 +48,11 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.http.cache.client.CacheMap
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
-
 import java.util.UUID
+
 import views.html.pages.result.manualCorrespondenceNeeded
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsControllerSpec extends FakeApplication
   with MockitoSugar
@@ -93,6 +93,7 @@ class AmendsControllerSpec extends FakeApplication
   implicit val materializer: Materializer = mock[Materializer]
   implicit val mockLang: Lang = mock[Lang]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   override def beforeEach() = {
     reset(

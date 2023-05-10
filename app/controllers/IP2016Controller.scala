@@ -26,7 +26,6 @@ import forms.PensionDebitsForm.pensionDebitsForm
 import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.PensionsTakenForm.pensionsTakenForm
-
 import javax.inject.Inject
 import models._
 import play.api.Application
@@ -38,8 +37,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  mcc: MessagesControllerComponents,
@@ -56,7 +54,8 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val plaContext: PlaContext,
                                  implicit val formWithCSRF: FormWithCSRF,
-                                 implicit val application: Application) extends FrontendController(mcc) {
+                                 implicit val application: Application,
+                                 implicit val ec: ExecutionContext) extends FrontendController(mcc) {
 
   lazy val postSignInRedirectUrl = appConfig.ipStartUrl
 

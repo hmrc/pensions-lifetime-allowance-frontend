@@ -39,8 +39,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import views.html.pages.fallback.technicalError
 import views.html.pages.result.resultPrint
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach {
 
@@ -52,6 +51,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   val mockEnv: Environment = mock[Environment]
   val resultPrintView: resultPrint = fakeApplication().injector.instanceOf[resultPrint]
 
+  implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
@@ -69,6 +69,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     override implicit val plaContext: PlaContext = mockPlaContext
     override implicit val appConfig: FrontendAppConfig = mockAppConfig
     override implicit val technicalError: technicalError = mockTechnicalError
+    override implicit val ec: ExecutionContext = executionContext
 
     override def authConnector: AuthConnector = mockAuthConnector
     override def config: Configuration = mockAppConfig.configuration

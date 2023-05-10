@@ -24,6 +24,7 @@ import play.api.test.FakeRequest
 import testHelpers.FakeApplication
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
+
 trait CommonViewSpecHelper extends FakeApplication with CommonMessages with MockitoSugar {
 
   implicit val application = fakeApplication()

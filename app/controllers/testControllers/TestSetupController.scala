@@ -21,13 +21,14 @@ import javax.inject.Inject
 import play.api.libs.json._
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import scala.concurrent.ExecutionContext.Implicits.global
 import uk.gov.hmrc.play.partials.FormPartialRetriever
+
+import scala.concurrent.ExecutionContext
 
 
 class TestSetupController @Inject()(connector: StubConnector,
                                     implicit val partialRetriever: FormPartialRetriever,
-                                    mcc: MessagesControllerComponents) extends FrontendController(mcc) {
+                                    mcc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends FrontendController(mcc) {
 
   def insertProtections(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     val payload: JsValue = request.body

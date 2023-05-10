@@ -28,8 +28,7 @@ import uk.gov.hmrc.http.Upstream4xxResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 
 class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
@@ -42,7 +41,8 @@ class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVe
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val plaContext: PlaContext,
                                        implicit val partialRetriever: FormPartialRetriever,
-                                       implicit val application: Application)
+                                       implicit val application: Application,
+                                       implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
   val issuesKey = "previous-technical-issues"

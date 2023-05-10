@@ -37,7 +37,7 @@ import java.net.URLEncoder
 
 import views.html.pages.fallback.technicalError
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class AuthFunctionSpec extends FakeApplication
   with MockitoSugar
@@ -78,7 +78,8 @@ class AuthFunctionSpec extends FakeApplication
 
     override implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
     override implicit val technicalError: technicalError = app.injector.instanceOf[technicalError]
-    }
+    override implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  }
 
   lazy val requestUrl = "http://www.pla-frontend.gov.uk/ip16-start-page"
   lazy val fakeRequest = FakeRequest(GET, requestUrl)

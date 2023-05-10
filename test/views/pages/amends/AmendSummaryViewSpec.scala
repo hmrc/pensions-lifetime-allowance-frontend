@@ -24,7 +24,6 @@ import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendSummary
 
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
 

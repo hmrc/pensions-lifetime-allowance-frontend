@@ -29,7 +29,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages.result.resultPrint
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
 
 class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 val citizenDetailsConnector: CitizenDetailsConnector,
@@ -39,7 +39,9 @@ class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 authFunction: AuthFunction)
                                (implicit val appConfig: FrontendAppConfig,
                                 implicit val partialRetriever: FormPartialRetriever,
-                                implicit val plaContext: PlaContext)
+                                implicit val plaContext: PlaContext,
+                                implicit val ec: ExecutionContext
+                               )
   extends FrontendController(mcc) with I18nSupport with Logging {
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl

@@ -33,7 +33,7 @@ import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.fallback.technicalError
 import views.html.pages.confirmation.confirmFP
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with AuthMock {
 
@@ -46,6 +46,7 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     implicit val mockTechnicalError: technicalError            = app.injector.instanceOf[technicalError]
     implicit val mockConfirmFP: confirmFP                      = app.injector.instanceOf[confirmFP]
     implicit val formWithCSRF: FormWithCSRF                    = app.injector.instanceOf[FormWithCSRF]
+    implicit val executionContext: ExecutionContext                          = app.injector.instanceOf[ExecutionContext]
 
 
     val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents]
@@ -57,6 +58,7 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
         override implicit val plaContext: PlaContext = mockPlaContext
         override implicit val appConfig: FrontendAppConfig = mockAppConfig
         override implicit val technicalError: technicalError = mockTechnicalError
+        override implicit val ec: ExecutionContext = executionContext
 
         override def authConnector: AuthConnector = mockAuthConnector
         override def config: Configuration = mockAppConfig.configuration

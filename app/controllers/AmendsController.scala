@@ -28,7 +28,6 @@ import forms.AmendPSODetailsForm._
 import forms.AmendPensionsTakenBeforeForm._
 import forms.AmendPensionsTakenBetweenForm._
 import forms.AmendmentTypeForm._
-
 import javax.inject.Inject
 import models.amendModels._
 import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
@@ -43,8 +42,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
 import views.html.pages
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                  val plaConnector: PLAConnector,
@@ -71,7 +69,8 @@ class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val formWithCSRF: FormWithCSRF,
-                                 implicit val plaContext: PlaContext)
+                                 implicit val plaContext: PlaContext,
+                                 implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging{
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl

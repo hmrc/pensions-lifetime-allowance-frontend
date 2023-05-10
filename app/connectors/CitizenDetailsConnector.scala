@@ -24,12 +24,11 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.http.HttpReads.Implicits._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class CitizenDetailsConnector @Inject()(appConfig: FrontendAppConfig,
                                             http: DefaultHttpClient
-                                          ) extends Logging {
+                                          )(implicit ec: ExecutionContext) extends Logging {
 
    val serviceUrl = appConfig.servicesConfig.baseUrl("citizen-details")
 
