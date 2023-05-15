@@ -6,7 +6,25 @@
 
 This is the repository for the pensions lifetime allowance frontend. This service provides clients with a way to view and manage their pension protections.
 
-To run the project clone the repository and in terminal $sbt "run $PORT"
+#### Included scripts
+
+##### `run.sh`
+
+* Starts the Play! server on [localhost:9010](http://localhost:9010) with test routes enabled.
+
+##### `start-dependencies.sh`
+
+* Starts required dependencies with [`service-manager`](https://github.com/hmrc/service-manager/)
+
+
+### Start dependencies via Service Manager
+
+To start all dependencies and services for pensions lifetime allowance, use one of the following commands:
+
+>sm --start PLA_ALL -r
+
+>sm --start PLA_DEP -r (starts only dependencies).
+
 
 ### License
 
