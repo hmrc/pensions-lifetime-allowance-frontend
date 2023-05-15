@@ -21,42 +21,34 @@
 
 @(protection: ExistingProtectionDisplayModel, statusGroup: String, protectionNum: Int)(implicit messages: Messages)
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-        <h3 class="govuk-heading-m" id="inactiveProtection@{protectionNum}">@Messages("pla.protection.types." + protection.protectionType)</h3>
-    </div>
-    <div class="govuk-grid-column-two-thirds">
-        <strong class="govuk-tag govuk-tag--grey" id="inactiveProtectionStatus@{protectionNum}">@Messages("pla.protection.statuses." + protection.status)</strong>
-    </div>
-</div>
+@changeLink = {
+    @protection.amendCall.map{ call =>
+        <a class="govuk-link" href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>
+            @Messages("pla.existingProtections.amendLinkText")
+            <span class="govuk-visually-hidden">
+                @Messages("pla.protection.types." + protection.protectionType) @protection.protectionReference
+            </span>
+        </a>
+    }
+}
 
-<details role="group" class="govuk-details" data-module="govuk-details">
-    <summary class="govuk-details__summary" id="summaryDetailLink@{protectionNum}" role="button">
-        <span class="govuk-details__summary-text">@Messages("pla.existingProtections.details")</span>
-    </summary>
-
-    <div class="govuk-details__text">
-        @protection.protectedAmount.map { amt =>
-            @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, s"inactiveProtectedAmount$protectionNum")
+<table class="govuk-table">
+    @protection.protectedAmount.map { amt =>
+        @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, s"inactiveProtectedAmount$protectionNum", Some(changeLink))
         }
         @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, s"inactiveProtectionReference$protectionNum")
 
         @protection.psaCheckReference.map { checkRef =>
-            @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, s"inactivePSACheckRef$protectionNum")
+        @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, s"inactivePSACheckRef$protectionNum")
         }
 
         @protection.certificateDate.map{ cDate =>
-            @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, s"inactiveCertificateDate$protectionNum")
+        @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, s"inactiveCertificateDate$protectionNum")
         }
 
         @protection.withdrawnDate.map{ wDate =>
-            @protectionDetails(Messages("pla.existingProtections.withdrawnDate"), wDate, s"inactiveWithdrawnDate$protectionNum")
-        }
-
-        @protection.amendCall.map{ call =>
-            <a class="govuk-link" href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>
-        }
-    </div>
-</details>
+        @protectionDetails(Messages("pla.existingProtections.withdrawnDate"), wDate, s"inactiveWithdrawnDate$protectionNum")
+    }
+</table>
 
 

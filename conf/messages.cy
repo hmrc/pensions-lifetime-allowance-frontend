@@ -337,16 +337,18 @@ pla.summary.hiddenLinkText.ip14PsoDetails               = Newidiwch fanylion eic
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = Bwrw golwg ar fanylion eich diogelwch presennol
 pla.existingProtections.pageHeading                     = Eich diogelwch lwfans oes
+pla.existingProtections.active.heading                  = Diogelwch sydd ar waith
 pla.existingProtections.details                         = Manylion
 pla.existingProtections.print                           = Argraffu a chadw''ch manylion
 pla.existingProtections.applicationDate                 = Dyddiad y cais
-pla.existingProtections.noActiveProtections             = Ar hyn o bryd nid oes gennych ddiogelwch ar agor.
+pla.existingProtections.noProtections                   = Ar hyn o bryd nid oes gennych unrhyw ddiogelwch.
+pla.existingProtections.noActiveProtections             = Ar hyn o bryd nid oes gennych ddiogelwch sydd ar waith.
 pla.existingProtections.noOtherProtections              = Nid oes gennych unrhyw ddiogelwch arall.
 pla.existingProtections.protectedAmount                 = Lwfans oes sydd wedi''i ddiogelu
 pla.existingProtections.protectionRef                   = Rhif hysbysu diogelwch
 pla.existingProtections.psaRef                          = Cyfeirnod gweinyddwr y cynllun
 pla.existingProtections.backToHome                      = Yn ôl i hafan y cyfrif
-pla.existingProtections.amendLinkText                   = fwrw golwg ar fanylion eich diogelwch, neu eu newid
+pla.existingProtections.amendLinkText                   = bwrw golwg drosto neu ei newid
 pla.existingProtections.withdrawLinkText                = Tynnu''n ôl eich diogelwch sydd ar agor
 pla.existingProtections.other.protections.link          = manylion diogelwch arall a sut i wneud cais
 pla.existingProtections.other.protections.linkText.before = Gweler
@@ -356,21 +358,30 @@ pla.existingProtections.other.protections.linkText.after  = ar GOV.UK.
 
 ## PROTECTION INFORMATION ##
 pla.protection.statuses.open                            = Agor
-pla.protection.statuses.dormant                         = Segur
-pla.protection.statuses.withdrawn                       = Wedi''i dynnu''n ôl
-pla.protection.statuses.expired                         = Wedi darfod
-pla.protection.statuses.unsuccessful                    = Aflwyddiannus
-pla.protection.statuses.rejected                        = Wedi''i wrthod
+pla.protection.statuses.dormant                         = Diogelwch segur
+pla.protection.statuses.withdrawn                       = Diogelwch sydd wedi''i dynnu''n ôl
+pla.protection.statuses.expired                         = Ceisiadau sydd wedi dod i ben
+pla.protection.statuses.unsuccessful                    = Ceisiadau aflwyddiannus
+pla.protection.statuses.rejected                        = Ceisiadau wedi''u gwrthod
 pla.protection.statuses.notRecorded                     = Dim un
-pla.protection.types.FP2016                             = Diogelwch sefydlog 2016
-pla.protection.types.FP2014                             = Diogelwch sefydlog 2014
+pla.protection.types.FP2016                             = Diogelwch penodol 2016
+pla.protection.types.FP2014                             = Diogelwch penodol 2014
 pla.protection.types.IP2016                             = Diogelwch unigol 2016
 pla.protection.types.IP2014                             = Diogelwch unigol 2014
 pla.protection.types.primary                            = Prif ddiogelwch
-pla.protection.types.enhanced                           = Lefel uwch o ddiogelwch
-pla.protection.types.fixed                              = Diogelwch sefydlog
+pla.protection.types.enhanced                           = Diogelwch uwch
+pla.protection.types.fixed                              = Diogelwch penodol
 pla.protection.types.notRecorded                        = Dim un
 pla.protection.protectionReference                      = Dim un
+
+## Visually Hidden Content
+
+pla.hidden.activeProtection                             = ar gyfer diogelwch sydd ar waith
+pla.hidden.dormant                                      = ar gyfer diogelwch segur
+pla.hidden.withdrawn                                    = ar gyfer diogelwch sydd wedi''i dynnu''n ôl
+pla.hidden.unsuccessful                                 = ar gyfer ceisiadau aflwyddiannus
+pla.hidden.rejected                                     = ar gyfer ceisiadau aflwyddiannus
+pla.hidden.expired                                      = ar gyfer ceisiadau sydd wedi dod i ben
 
 ## Result Success ##
 pla.resultSuccess.title                 = Wedi llwyddo

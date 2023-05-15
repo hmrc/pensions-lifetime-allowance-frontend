@@ -17,6 +17,7 @@
 package controllers
 
 import java.time.LocalDateTime
+
 import auth.AuthFunction
 import common.{Dates, Strings}
 import config._
@@ -24,7 +25,6 @@ import connectors.{KeyStoreConnector, PLAConnector}
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.WithdrawDateForm._
-
 import javax.inject.Inject
 import models.{ProtectionModel, WithdrawDateFormModel}
 import play.api.data.{Form, FormError}
@@ -37,8 +37,7 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnector,
                                              plaConnector: PLAConnector,
@@ -55,7 +54,8 @@ class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnecto
                                              implicit val partialRetriever: FormPartialRetriever,
                                              implicit val plaContext: PlaContext,
                                              implicit val formWithCSRF: FormWithCSRF,
-                                             implicit val application: Application)
+                                             implicit val application: Application,
+                                             implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
 

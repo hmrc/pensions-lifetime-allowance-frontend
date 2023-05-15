@@ -27,9 +27,11 @@ import testHelpers.FakeApplication
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
+
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   val mockHttp = mock[DefaultHttpClient]

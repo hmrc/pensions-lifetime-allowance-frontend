@@ -47,7 +47,7 @@ import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.fallback.technicalError
 import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdrawDate, withdrawImplications}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach {
 
@@ -57,6 +57,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val application = mock[Application]
+  implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
@@ -78,6 +79,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
       override implicit val plaContext: PlaContext = mockPlaContext
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError
+      override implicit val ec: ExecutionContext = executionContext
 
       override def authConnector: AuthConnector = mockAuthConnector
       override def config: Configuration = mockAppConfig.configuration

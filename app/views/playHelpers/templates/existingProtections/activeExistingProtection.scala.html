@@ -21,36 +21,40 @@
 
 @(protection: ExistingProtectionDisplayModel, statusGroup: String, protectionNum: Int)(implicit messages: Messages)
 
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-third">
-        <h3 class="govuk-heading-m" id="activeProtection">@Messages("pla.protection.types." + protection.protectionType)</h3>
-    </div>
-    <div class="govuk-grid-column-two-thirds">
-        <a class="govuk-body govuk-link" id="printLink" href="@controllers.routes.PrintController.printView" target="_blank">
-                @Messages("pla.existingProtections.print") (@Messages("pla.base.newTab"))
+@changeLink = {
+    @protection.amendCall.map{ call =>
+        <a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>
+            @Messages("pla.existingProtections.amendLinkText")
+            <span class="govuk-visually-hidden">
+                @Messages("pla.protection.types." + protection.protectionType) @protection.protectionReference
+            </span>
         </a>
-    </div>
-</div>
-<div class="govuk-grid-row">
-    <div class="govuk-inset-text">
-        @protection.protectedAmount.map { amt =>
-            @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount")
-        }
+    }
+}
 
-        @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, "activeProtectionReference")
+<h3 class="govuk-heading-m" id="activeProtection">
+    @Messages("pla.protection.types." + protection.protectionType)
+    <span class="govuk-visually-hidden">
+        @Messages("pla.hidden.activeProtection")
+    </span>
+</h3>
+<table class="govuk-table">
+    @protection.protectedAmount.map { amt =>
+    @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount", Some(changeLink))
+    }
 
-        @protection.psaCheckReference.map { checkRef =>
-            @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, "activePSACheckRef")
-        }
+    @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, "activeProtectionReference")
 
-        @protection.certificateDate.map{ cDate =>
-            @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, "activeCertificateDate")
-        }
+    @protection.psaCheckReference.map { checkRef =>
+    @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, "activePSACheckRef")
+    }
 
+    @protection.certificateDate.map{ cDate =>
+    @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, "activeCertificateDate")
+    }
+</table>
 
-        @protection.amendCall.map{ call =>
-            <a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link"}>@Messages("pla.existingProtections.amendLinkText")</a>
-        }
-    </div>
-</div>
+<a class="govuk-body govuk-link" id="printLink" href="@controllers.routes.PrintController.printView" target="_blank">
+    @Messages("pla.existingProtections.print") (@Messages("pla.base.newTab"))
+</a>
 

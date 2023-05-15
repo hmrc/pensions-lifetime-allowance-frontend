@@ -40,8 +40,7 @@ import utils.ActionWithSessionId
 import views.html.pages.ivFailure.{lockedOut, technicalIssue, unauthorised}
 import views.html.pages.timeout
 
-
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 
 class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
@@ -54,6 +53,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
   val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   val mockIdentityVerificationConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
 
+  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val mockImplAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()

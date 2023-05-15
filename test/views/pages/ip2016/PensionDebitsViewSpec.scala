@@ -23,7 +23,6 @@ import testHelpers.ViewSpecHelpers.ip2016.PensionDebitsViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.ip2016.pensionDebits
 
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class PensionDebitsViewSpec extends CommonViewSpecHelper with PensionDebitsViewMessages {
 

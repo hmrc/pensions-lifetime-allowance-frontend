@@ -23,7 +23,6 @@ import play.api.mvc.Call
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.existingProtections.ExistingProtections
 import views.html.pages.existingProtections.existingProtections
-import scala.concurrent.ExecutionContext.Implicits.global
 
 class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtections {
 
@@ -87,7 +86,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
 
       "contain the correct data" in {
-        doc.select("#activeProtection").text shouldBe "Individual protection 2016"
+        doc.select("#listProtections > div > h3").text shouldBe "Individual protection 2016 for active protection"
         doc.select("#activeProtectedAmountContent").text shouldBe "250.00"
       }
     }
@@ -96,7 +95,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     "have another protections list which if no other protections are present" should {
 
       "have the message" in {
-        doc3.select("#listProtections > p:nth-child(2)").text shouldBe plaExistingProtectionsNoOtherProtections
+        doc3.getElementById("noOtherProtections").text shouldBe plaExistingProtectionsNoOtherProtections
       }
     }
 
@@ -108,7 +107,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
 
       "contain the data" in {
-        doc2b.select("#inactiveProtection1").text shouldBe "Individual protection 2014"
+        doc2b.select("#listProtections > h3").text shouldBe "Individual protection 2014 for dormant protections"
         doc2b.select("#inactiveProtectedAmount1Content").text shouldBe "100.00"
       }
     }

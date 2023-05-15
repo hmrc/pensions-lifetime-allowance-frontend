@@ -24,9 +24,7 @@ import testHelpers.ViewSpecHelpers.ip2016.SummaryViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.ip2016.summary
 
-import scala.concurrent.ExecutionContext.Implicits.global
-
-class SummaryViewSpec  extends CommonViewSpecHelper with SummaryViewMessages {
+class SummaryViewSpec extends CommonViewSpecHelper with SummaryViewMessages {
 
   def totalPensionsAmountSummaryRow(totalAmount: String) = SummaryRowModel("totalPensionsAmt", None, None, true, totalAmount)
 

@@ -29,8 +29,7 @@ import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                  authClientConnector: AuthConnector,
                                  val technicalError: views.html.pages.fallback.technicalError,
@@ -38,7 +37,8 @@ class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                 )(
                                   implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: FormPartialRetriever,
-                                  implicit val plaContext: PlaContext)
+                                  implicit val plaContext: PlaContext,
+                                  implicit val ec: ExecutionContext)
   extends FrontendController(mcc) with AuthFunction with Logging{
   override def config: Configuration = appConfig.configuration
   override def authConnector: AuthConnector = authClientConnector
@@ -47,6 +47,7 @@ trait AuthFunction extends AuthRedirects with AuthorisedFunctions with Logging {
   implicit val partialRetriever: FormPartialRetriever
   implicit val plaContext: PlaContext
   implicit val appConfig: FrontendAppConfig
+  implicit val ec: ExecutionContext
   val technicalError: views.html.pages.fallback.technicalError
   val enrolmentKey: String = "HMRC-NI"
   val originString: String = "origin="

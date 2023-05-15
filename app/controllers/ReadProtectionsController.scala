@@ -36,8 +36,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                           val keyStoreConnector: KeyStoreConnector,
@@ -52,7 +51,8 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                          (implicit val appConfig: FrontendAppConfig,
                                           implicit val partialRetriever: FormPartialRetriever,
                                           implicit val plaContext: PlaContext,
-                                          implicit val application: Application)
+                                          implicit val application: Application,
+                                          implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
 

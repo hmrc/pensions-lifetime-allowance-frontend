@@ -47,7 +47,7 @@ import utils.ActionWithSessionId
 import views.html.pages.fallback.{noNotificationId, technicalError}
 import views.html.pages.result.{manualCorrespondenceNeeded, resultRejected, resultSuccess, resultSuccessInactive}
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class ResultControllerSpec extends FakeApplication with MockitoSugar
   with BeforeAndAfter with AuthMock with BeforeAndAfterEach {
@@ -61,6 +61,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
   val mockEnv: Environment = mock[Environment]
 
+  implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
@@ -84,6 +85,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
     override implicit val plaContext: PlaContext = mockPlaContext
     override implicit val appConfig: FrontendAppConfig = mockAppConfig
     override implicit val technicalError: technicalError = mockTechnicalError
+    override implicit val ec: ExecutionContext = executionContext
 
     override def authConnector: AuthConnector = mockAuthConnector
     override def config: Configuration = mockAppConfig.configuration

@@ -40,13 +40,12 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.cache.client.CacheMap
-
 import java.util.UUID
+
 import views.html.pages.fallback.technicalError
 import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionDebits, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, psoDetails, removePsoDetails}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class IP2016ControllerSpec extends FakeApplication with MockitoSugar
   with BeforeAndAfterEach with KeystoreTestHelper with AuthMock {
@@ -58,7 +57,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     val mockAuthFunction: AuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
     val mockEnv: Environment = mock[Environment]
 
-
+    implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
     implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
     implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext = mock[PlaContext]
@@ -85,6 +84,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             override implicit val plaContext: PlaContext = mockPlaContext
             override implicit val appConfig: FrontendAppConfig = mockAppConfig
             override implicit val technicalError: technicalError = mockTechnicalError
+            override implicit val ec : ExecutionContext = executionContext
 
             override def authConnector: AuthConnector = mockAuthConnector
             override def config: Configuration = mockAppConfig.configuration
