@@ -91,23 +91,23 @@
                 <p class="govuk-body" id="noOtherProtections">@Messages("pla.existingProtections.noOtherProtections")</p>
             } else {
                 @if(dormantProtections.size != 0){
-                    <h2 class="govuk-heading-l" id="dormant">@Messages("pla.protection.statuses.dormant")</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="dormant">@Messages("pla.protection.statuses.dormant")</h2>
                     @getAllProtectionsFor(dormantProtections)
                 }
                 @if(withdrawnProtections.size != 0){
-                    <h2 class="govuk-heading-l" id="withdraw">@Messages("pla.protection.statuses.withdrawn")</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="withdraw">@Messages("pla.protection.statuses.withdrawn")</h2>
                     @getAllProtectionsFor(withdrawnProtections)
                 }
                 @if(unsuccessfulProtections.size != 0){
-                    <h2 class="govuk-heading-l" id="unsuccessful">@Messages("pla.protection.statuses.unsuccessful")</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="unsuccessful">@Messages("pla.protection.statuses.unsuccessful")</h2>
                     @getAllProtectionsFor(unsuccessfulProtections)
                 }
                 @if(rejectedProtections.size != 0){
-                    <h2 class="govuk-heading-l" id="rejected">@Messages("pla.protection.statuses.rejected")</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="rejected">@Messages("pla.protection.statuses.rejected")</h2>
                     @getAllProtectionsFor(rejectedProtections)
                 }
                 @if(expiredProtections.size != 0){
-                    <h2 class="govuk-heading-l" id="expired">@Messages("pla.protection.statuses.expired")</h2>
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="expired">@Messages("pla.protection.statuses.expired")</h2>
                     @getAllProtectionsFor(expiredProtections)
                 }
             }

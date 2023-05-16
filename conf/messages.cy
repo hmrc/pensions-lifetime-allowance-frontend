@@ -53,7 +53,7 @@ pla.links.signout                       = Allgofnodi
 ## Timeout ##
 pla.timeout.title       = Mae''r sesiwn wedi dod i ben o ganlyniad i anweithgarwch
 pla.timeout.pageHeading = Rydych wedi''ch allgofnodi o ganlyniad i anweithgarwch
-pla.timeout.returnToPTA = Gallwch ddechrau eto o''r dudalen <a href="{0}" rel="external">diogelu''ch lwfans oes</a>.
+pla.timeout.returnToPTA = Gallwch ddechrau eto o''r dudalen <a href="{0}" class="govuk-link" rel="external">diogelu''ch lwfans oes</a>.
 
 ## Not Found ##
 pla.notFound.title          = Heb ddod o hyd i''r dudalen – 404

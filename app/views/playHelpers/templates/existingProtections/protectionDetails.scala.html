@@ -16,10 +16,17 @@
 
 @(heading: String, content: String, id: String, action: Option[Html] = None)
 
-<tbody class="govuk-table__body">
-    <tr class="govuk-table__row" id="@{id}Heading">
-        <th scope="row" class="govuk-table__header">@heading</th>
-        <td class="govuk-table__cell" id="@{id}Content">@content</td>
-        <td class="govuk-table__cell">@action</td>
-    </tr>
-</tbody>
+@getActionBoolean = @{if(action != None) true else false}
+<div class="govuk-summary-list__row @if(!getActionBoolean){govuk-summary-list__row--no-actions}">
+    <dt class="govuk-summary-list__key govuk-!-width-one-half" id="@{id}Heading">
+        @heading
+    </dt>
+    <dd class="govuk-summary-list__value" id="@{id}Content">
+        @content
+    </dd>
+    @if(getActionBoolean){
+        <dd class="govuk-summary-list__actions">
+            @action
+        </dd>
+    }
+</div>

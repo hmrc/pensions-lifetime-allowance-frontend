@@ -32,7 +32,7 @@
     }
 }
 
-<table class="govuk-table">
+<dl class="govuk-summary-list">
     @protection.protectedAmount.map { amt =>
         @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, s"inactiveProtectedAmount$protectionNum", Some(changeLink))
         }
@@ -49,6 +49,6 @@
         @protection.withdrawnDate.map{ wDate =>
         @protectionDetails(Messages("pla.existingProtections.withdrawnDate"), wDate, s"inactiveWithdrawnDate$protectionNum")
     }
-</table>
+</dl>
 
 
