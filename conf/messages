@@ -46,7 +46,7 @@ pla.links.signout                       = Sign out
 ## Timeout ##
 pla.timeout.title       = Session closed due to inactivity
 pla.timeout.pageHeading = You''ve been signed out due to inactivity
-pla.timeout.returnToPTA = You can start again from the <a href="{0}" rel="external">protect your lifetime allowance</a> page.
+pla.timeout.returnToPTA = You can start again from the <a href="{0}" class="govuk-link" rel="external">protect your lifetime allowance</a> page.
 
 ## Not Found ##
 pla.notFound.title          = Page not found - 404

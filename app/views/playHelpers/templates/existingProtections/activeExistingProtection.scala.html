@@ -38,7 +38,7 @@
         @Messages("pla.hidden.activeProtection")
     </span>
 </h3>
-<table class="govuk-table">
+<dl class="govuk-summary-list">
     @protection.protectedAmount.map { amt =>
     @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount", Some(changeLink))
     }
@@ -52,7 +52,7 @@
     @protection.certificateDate.map{ cDate =>
     @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, "activeCertificateDate")
     }
-</table>
+</dl>
 
 <a class="govuk-body govuk-link" id="printLink" href="@controllers.routes.PrintController.printView" target="_blank">
     @Messages("pla.existingProtections.print") (@Messages("pla.base.newTab"))
