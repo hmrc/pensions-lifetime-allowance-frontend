@@ -21,11 +21,11 @@ import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
-import connectors.{KeyStoreConnector, PLAConnector}
+import connectors.PLAConnector
 import mocks.AuthMock
 import models._
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.anyString
+import org.mockito.Matchers
+import org.mockito.Matchers.anyString
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -35,11 +35,12 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Configuration, Environment}
+import services.SessionCacheService
 import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.cache.client.CacheMap
+import models.cache.CacheMap
 import java.util.UUID
 
 import views.html.pages.fallback.technicalError
@@ -48,10 +49,10 @@ import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionDebits
 import scala.concurrent.{ExecutionContext, Future}
 
 class IP2016ControllerSpec extends FakeApplication with MockitoSugar
-  with BeforeAndAfterEach with KeystoreTestHelper with AuthMock {
+  with BeforeAndAfterEach with SessionCacheTestHelper with AuthMock {
 
 
-    val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
+    val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
     val mockPlaConnector: PLAConnector = mock[PLAConnector]
     val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
     val mockAuthFunction: AuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
@@ -92,7 +93,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         }
 
         val controller = new IP2016Controller(
-            mockKeyStoreConnector,
+            mockSessionCacheService,
             mockMCC,
             authFunction,
             mockPensionsTaken,
@@ -107,13 +108,13 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     }
 
     override def beforeEach() = {
-        reset(mockKeyStoreConnector, mockAuthConnector, mockPlaConnector)
+        reset(mockSessionCacheService, mockAuthConnector, mockPlaConnector)
     }
 
     implicit val hc = HeaderCarrier()
 
     //    lazy val TestIP2016Controller = fakeApplication().injector.instanceOf[IP2016Controller]
-    object TestIP2016Controller extends IP2016Controller(mockKeyStoreConnector, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsTakenBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails, mockPensionDebits) {
+    object TestIP2016Controller extends IP2016Controller(mockSessionCacheService, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsTakenBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails, mockPensionDebits) {
         lazy val authConnector = mockAuthConnector
     }
 
@@ -123,19 +124,19 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     val mockUsername = "mockuser"
     val mockUserId = "/auth/oid/" + mockUsername
 
-    def keystoreFetchCondition[T](data: Option[T]): Unit = {
-        when(mockKeyStoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    def cacheFetchCondition[T](data: Option[T]): Unit = {
+        when(mockSessionCacheService.fetchAndGetFormData[T](Matchers.anyString())(Matchers.any(), Matchers.any()))
           .thenReturn(Future.successful(data))
     }
 
 
-    def psoDetailsKeystoreSetup(data: Option[PSODetailsModel]) = {
-        when(mockKeyStoreConnector.fetchAndGetFormData[PSODetailsModel](ArgumentMatchers.eq(s"psoDetails"))(ArgumentMatchers.any(), ArgumentMatchers.any()))
+    def psoDetailsCacheSetup(data: Option[PSODetailsModel]) = {
+        when(mockSessionCacheService.fetchAndGetFormData[PSODetailsModel](Matchers.eq(s"psoDetails"))(Matchers.any(), Matchers.any()))
           .thenReturn(Future.successful(data))
     }
 
     def pensionsDebitsSaveData(data: Option[PensionDebitsModel]) = {
-        when(mockKeyStoreConnector.saveData(anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        when(mockSessionCacheService.saveFormData(anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
           .thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
     }
 
@@ -150,7 +151,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 mockAuthConnector(Future.successful({}))
 
 
-                keystoreFetchCondition[PensionsTakenModel](None)
+                cacheFetchCondition[PensionsTakenModel](None)
                 status(result) shouldBe 200
             }
         }
@@ -162,7 +163,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 lazy val result = controller.pensionsTaken(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionsTakenModel](Some(testModel))
+                cacheFetchCondition[PensionsTakenModel](Some(testModel))
                 status(result) shouldBe 200
             }
 
@@ -172,7 +173,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                     val testModel = new PensionsTakenModel(Some("yes"))
                     lazy val result = controller.pensionsTaken(fakeRequest)
 
-                    keystoreFetchCondition[PensionsTakenModel](Some(testModel))
+                    cacheFetchCondition[PensionsTakenModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
                 }
@@ -188,7 +189,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTaken, ("pensionsTaken", "yes"))
 
                 mockAuthConnector(Future.successful({}))
-                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                cacheSaveCondition[PensionsTakenModel](mockSessionCacheService)
                 status(DataItem.result) shouldBe 303
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBefore}")
             }
@@ -200,7 +201,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTaken, ("pensionsTaken", "no"))
 
                 mockAuthConnector(Future.successful({}))
-                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                cacheSaveCondition[PensionsTakenModel](mockSessionCacheService)
                 status(DataItem.result) shouldBe 303
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}")
             }
@@ -228,13 +229,13 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 lazy val result = controller.pensionsTakenBefore(fakeRequest)
                 mockAuthConnector(Future.successful({}))
 
-                keystoreFetchCondition[PensionsTakenBeforeModel](None)
+                cacheFetchCondition[PensionsTakenBeforeModel](None)
                 status(result) shouldBe 200
             }
 
             "take the user to the pensions taken before page" in {
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionsTakenBeforeModel](None)
+                cacheFetchCondition[PensionsTakenBeforeModel](None)
             }
         }
 
@@ -244,13 +245,13 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 lazy val result = controller.pensionsTakenBefore(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
+                cacheFetchCondition[PensionsTakenBeforeModel](Some(testModel))
                 status(result) shouldBe 200
             }
 
             "take the user to the pensions taken before page" in {
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionsTakenBeforeModel](None)
+                cacheFetchCondition[PensionsTakenBeforeModel](None)
             }
 
             "return some HTML that" should {
@@ -260,7 +261,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                     lazy val result = controller.pensionsTakenBefore(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
+                    cacheFetchCondition[PensionsTakenBeforeModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
                 }
@@ -268,13 +269,13 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 "have the radio option `yes` selected by default" in new Setup {
                     val testModel = new PensionsTakenBeforeModel("yes", Some(1))
                     mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
+                    cacheFetchCondition[PensionsTakenBeforeModel](Some(testModel))
                 }
 
                 "have the amount £1 completed by default" in new Setup {
                     val testModel = new PensionsTakenBeforeModel("yes", Some(1))
                     mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[PensionsTakenBeforeModel](Some(testModel))
+                    cacheFetchCondition[PensionsTakenBeforeModel](Some(testModel))
                 }
             }
         }
@@ -291,7 +292,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                     mockAuthConnector(Future.successful({}))
 
-                    keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                    cacheSaveCondition[PensionsTakenModel](mockSessionCacheService)
                     status(DataItem.result) shouldBe 303
                     redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsTakenBetween}")
                 }
@@ -329,7 +330,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             "return 200" in new Setup {
                 lazy val result = controller.pensionsTakenBetween(fakeRequest)
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionsTakenBetweenModel](None)
+                cacheFetchCondition[PensionsTakenBetweenModel](None)
                 status(result) shouldBe 200
             }
         }
@@ -340,7 +341,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 lazy val result = controller.pensionsTakenBetween(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
+                cacheFetchCondition[PensionsTakenBetweenModel](Some(testModel))
                 status(result) shouldBe 200
             }
 
@@ -351,7 +352,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                     lazy val result = controller.pensionsTakenBetween(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[PensionsTakenBetweenModel](Some(testModel))
+                    cacheFetchCondition[PensionsTakenBetweenModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
                 }
@@ -369,7 +370,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                     object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "1"))
 
                     mockAuthConnector(Future.successful({}))
-                    keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                    cacheSaveCondition[PensionsTakenModel](mockSessionCacheService)
                     status(DataItem.result) shouldBe 303
                     redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}")
                 }
@@ -408,7 +409,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 lazy val result = controller.overseasPensions(fakeRequest)
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[OverseasPensionsModel](None)
+                cacheFetchCondition[OverseasPensionsModel](None)
                 status(result) shouldBe 200
             }
         }
@@ -419,7 +420,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 lazy val result = controller.overseasPensions(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
+                cacheFetchCondition[OverseasPensionsModel](Some(testModel))
                 status(result) shouldBe 200
             }
 
@@ -430,7 +431,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                     lazy val result = controller.overseasPensions(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[OverseasPensionsModel](Some(testModel))
+                    cacheFetchCondition[OverseasPensionsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
                 }
@@ -447,7 +448,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitOverseasPensions, ("overseasPensions", "no"), ("overseasPensionsAmt", ""))
 
                 mockAuthConnector(Future.successful({}))
-                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                cacheSaveCondition[PensionsTakenModel](mockSessionCacheService)
                 status(DataItem.result) shouldBe 303
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.currentPensions}")
             }
@@ -485,7 +486,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 lazy val result = controller.currentPensions(fakeRequest)
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[CurrentPensionsModel](None)
+                cacheFetchCondition[CurrentPensionsModel](None)
                 status(result) shouldBe 200
             }
         }
@@ -496,7 +497,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 lazy val result = controller.currentPensions(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
+                cacheFetchCondition[CurrentPensionsModel](Some(testModel))
                 status(result) shouldBe 200
             }
 
@@ -508,7 +509,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                     lazy val result = controller.currentPensions(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[CurrentPensionsModel](Some(testModel))
+                    cacheFetchCondition[CurrentPensionsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
                 }
@@ -525,7 +526,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitCurrentPensions, ("currentPensionsAmt", "100000"))
 
                 mockAuthConnector(Future.successful({}))
-                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                cacheSaveCondition[PensionsTakenModel](mockSessionCacheService)
                 status(DataItem.result) shouldBe 303
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionDebits}")
             }
@@ -552,7 +553,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             "return 200" in new Setup {
                 lazy val result = controller.pensionDebits(fakeRequest)
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionDebitsModel](None)
+                cacheFetchCondition[PensionDebitsModel](None)
                 status(result) shouldBe 200
             }
 
@@ -564,7 +565,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 lazy val result = controller.pensionDebits(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PensionDebitsModel](Some(testModel))
+                cacheFetchCondition[PensionDebitsModel](Some(testModel))
                 status(result) shouldBe 200
             }
 
@@ -575,7 +576,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                     lazy val result = controller.pensionDebits(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[PensionDebitsModel](Some(testModel))
+                    cacheFetchCondition[PensionDebitsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
                 }
@@ -591,7 +592,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionDebits, ("pensionDebits", "yes"))
 
                 mockAuthConnector(Future.successful({}))
-                keystoreSaveCondition[PensionDebitsModel](mockKeyStoreConnector)
+                cacheSaveCondition[PensionDebitsModel](mockSessionCacheService)
                 status(DataItem.result) shouldBe 303
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.psoDetails}")
             }
@@ -603,7 +604,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionDebits, ("pensionDebits", "no"))
 
                 mockAuthConnector(Future.successful({}))
-                keystoreSaveCondition[PensionDebitsModel](mockKeyStoreConnector)
+                cacheSaveCondition[PensionDebitsModel](mockSessionCacheService)
                 status(DataItem.result) shouldBe 303
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16}")
             }
@@ -630,7 +631,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 lazy val result = controller.psoDetails(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PSODetailsModel](None)
+                cacheFetchCondition[PSODetailsModel](None)
                 status(result) shouldBe 200
             }
         }
@@ -641,7 +642,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 lazy val result = controller.psoDetails(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
-                keystoreFetchCondition[PSODetailsModel](Some(testModel))
+                cacheFetchCondition[PSODetailsModel](Some(testModel))
                 status(result) shouldBe 200
             }
 
@@ -652,7 +653,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                     lazy val result = controller.psoDetails(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
-                    keystoreFetchCondition[PSODetailsModel](Some(testModel))
+                    cacheFetchCondition[PSODetailsModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
                     charset(result) shouldBe Some("utf-8")
                 }
@@ -675,7 +676,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 )
 
                 mockAuthConnector(Future.successful({}))
-                keystoreSaveCondition[PensionsTakenModel](mockKeyStoreConnector)
+                cacheSaveCondition[PensionsTakenModel](mockSessionCacheService)
                 status(DataItem.result) shouldBe 303
                 redirectLocation(DataItem.result) shouldBe Some(s"${routes.SummaryController.summaryIP16}")
             }

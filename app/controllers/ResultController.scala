@@ -19,7 +19,7 @@ package controllers
 import auth.AuthFunction
 import common.Exceptions
 import config._
-import connectors.{KeyStoreConnector, PLAConnector}
+import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.{ApplicationOutcome, ApplicationType}
 import javax.inject.Inject
@@ -28,6 +28,7 @@ import play.api.i18n.I18nSupport
 import play.api.mvc._
 import play.api.Application
 import play.api.Logging
+import services.SessionCacheService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
@@ -36,7 +37,7 @@ import utils.Constants
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
-class ResultController @Inject()(keyStoreConnector: KeyStoreConnector,
+class ResultController @Inject()(sessionCacheService: SessionCacheService,
                                  plaConnector: PLAConnector,
                                  displayConstructors: DisplayConstructors,
                                  mcc: MessagesControllerComponents,
@@ -71,7 +72,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       authFunction.genericAuthWithNino("IP2016") { nino =>
         implicit val protectionType = ApplicationType.IP2016
         for {
-          userData <- keyStoreConnector.fetchAllUserData
+          userData <- sessionCacheService.fetchAllUserData
           applicationResult <- plaConnector.applyIP16(nino, userData.get)
           response <- routeViaMCNeededCheck(applicationResult, nino)
         } yield response
@@ -94,7 +95,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
           logger.warn(s"No notification ID found in the ApplyResponseModel for user with nino $nino")
           Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
         } else {
-          keyStoreConnector.saveData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
+          sessionCacheService.saveFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel"), model).map {
             cacheMap =>
               protectionType match {
                 case ApplicationType.IP2016 => Redirect(routes.ResultController.displayIP16)
@@ -119,7 +120,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         val showUserResearchPanel = setURPanelFlag
         val errorResponse = InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-        keyStoreConnector.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
+        sessionCacheService.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
           case Some(model) =>
             val notificationId = model.protection.notificationId.getOrElse {
               throw new Exceptions.OptionNotDefinedException("applicationOutcome", "notificationId", protectionType.toString)
@@ -127,7 +128,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
             applicationOutcome(notificationId) match {
 
               case ApplicationOutcome.Successful =>
-                keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
+                sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
                 val displayModel = displayConstructors.createSuccessDisplayModel(model)
                 Ok(resultSuccess(displayModel, showUserResearchPanel))
 
@@ -140,7 +141,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                 Ok(resultRejected(displayModel, showUserResearchPanel))
             }
           case _ =>
-            logger.warn(s"Could not retrieve ApplyResponseModel from keystore for user with nino: $nino")
+            logger.warn(s"Could not retrieve ApplyResponseModel from cache for user with nino: $nino")
             errorResponse
         }
       }

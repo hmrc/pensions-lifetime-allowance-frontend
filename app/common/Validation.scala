@@ -23,7 +23,7 @@ import models._
 import play.api.data.{FieldMapping, FormError}
 import play.api.data.Forms.of
 import play.api.data.format.Formatter
-import uk.gov.hmrc.http.cache.client.CacheMap
+import models.cache.CacheMap
 import utils.Constants.npsMaxCurrency
 
 object Validation {

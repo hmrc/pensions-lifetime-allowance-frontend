@@ -25,17 +25,17 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
 
   "nameString" should {
 
-    "correctly create an IP14 keystore name string" in {
+    "correctly create an IP14 cache name string" in {
       implicit val protectionType = ApplicationType.IP2014
       Strings.nameString("testString") shouldBe "ip14TestString"
     }
 
-    "leave an IP16 keystore name string unchanged" in {
+    "leave an IP16 cache name string unchanged" in {
       implicit val protectionType = ApplicationType.IP2016
       Strings.nameString("testString") shouldBe "testString"
     }
 
-    "correctly create an FP16 keystore name string" in {
+    "correctly create an FP16 cache name string" in {
       implicit val protectionType = ApplicationType.FP2016
       Strings.nameString("testString") shouldBe "fp16TestString"
     }

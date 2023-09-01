@@ -22,7 +22,7 @@ import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
 import config.wiring.PlaFormPartialRetriever
-import connectors.{KeyStoreConnector, PLAConnector}
+import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import forms.{AmendCurrentPensionForm, AmendOverseasPensionsForm, AmendPensionsTakenBeforeForm, AmendPensionsTakenBetweenForm}
@@ -30,7 +30,6 @@ import mocks.AuthMock
 import models._
 import models.amendModels._
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -41,29 +40,31 @@ import play.api.libs.json.{JsNull, Json}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.SessionCacheService
 import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
-import uk.gov.hmrc.http.cache.client.CacheMap
+import models.cache.CacheMap
+import org.mockito.Matchers
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
-import java.util.UUID
 
+import java.util.UUID
 import views.html.pages.result.manualCorrespondenceNeeded
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsControllerSpec extends FakeApplication
   with MockitoSugar
-  with KeystoreTestHelper
+  with SessionCacheTestHelper
   with BeforeAndAfterEach with AuthMock with I18nSupport {
 
   implicit lazy val mockMessage = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   val mockDisplayConstructors: DisplayConstructors   = mock[DisplayConstructors]
   val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
-  val mockKeystoreConnector: KeyStoreConnector       = mock[KeyStoreConnector]
+  val mockSessionCacheService: SessionCacheService       = mock[SessionCacheService]
   val mockPlaConnector: PLAConnector                 = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents          = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction                 = mock[AuthFunction]
@@ -97,7 +98,7 @@ class AmendsControllerSpec extends FakeApplication
 
   override def beforeEach() = {
     reset(
-      mockKeystoreConnector,
+      mockSessionCacheService,
       mockPlaConnector,
       mockDisplayConstructors,
       mockAuthConnector,
@@ -117,7 +118,7 @@ class AmendsControllerSpec extends FakeApplication
       mockEnv)
 
     val controller = new AmendsController(
-      mockKeystoreConnector,
+      mockSessionCacheService,
       mockPlaConnector,
       mockDisplayConstructors,
       mockMCC,
@@ -269,8 +270,8 @@ class AmendsControllerSpec extends FakeApplication
   )
 
 
-  def keystoreFetchCondition[T](data: Option[T]): Unit = {
-    when(mockKeystoreConnector.fetchAndGetFormData[T](ArgumentMatchers.anyString())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+  def cacheFetchCondition[T](data: Option[T]): Unit = {
+    when(mockSessionCacheService.fetchAndGetFormData[T](Matchers.anyString())(Matchers.any(), Matchers.any()))
       .thenReturn(Future.successful(data))
   }
 
@@ -279,7 +280,7 @@ class AmendsControllerSpec extends FakeApplication
   "In AmendsController calling the amendsSummary action" when {
     "there is no stored amends model" in new Setup {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](None)
+      cacheFetchCondition[AmendProtectionModel](None)
 
       val result = controller.amendsSummary("ip2016", "open")(fakeRequest)
       val jsoupDoc = Jsoup.parse(contentAsString(result))
@@ -293,8 +294,8 @@ class AmendsControllerSpec extends FakeApplication
 
     "there is a stored, updated amends model" in new Setup {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockDisplayConstructors.createAmendDisplayModel(ArgumentMatchers.any())(ArgumentMatchers.any())).thenReturn(tstAmendDisplayModel)
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      when(mockDisplayConstructors.createAmendDisplayModel(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
 
       val result = controller.amendsSummary("ip2014", "dormant")(fakeRequest)
       val jsoupDoc = Jsoup.parse(contentAsString(result))
@@ -312,7 +313,7 @@ class AmendsControllerSpec extends FakeApplication
       object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection, ("protectionTypez", "stuff"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
 
       status(DataItem.result) shouldBe 500
@@ -326,9 +327,9 @@ class AmendsControllerSpec extends FakeApplication
       object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockKeystoreConnector.saveData(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
-      when(mockPlaConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(409, "")))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      when(mockSessionCacheService.saveFormData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+      when(mockPlaConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(409, "")))
 
       status(DataItem.result) shouldBe 500
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
@@ -340,9 +341,9 @@ class AmendsControllerSpec extends FakeApplication
       object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockKeystoreConnector.saveData(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
-      when(mockPlaConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(HttpResponse(423, "")))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      when(mockSessionCacheService.saveFormData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+      when(mockPlaConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(423, "")))
 
       status(DataItem.result) shouldBe 423
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.mcNeeded.pageHeading")
@@ -355,12 +356,12 @@ class AmendsControllerSpec extends FakeApplication
 
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockKeystoreConnector.saveData(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      when(mockSessionCacheService.saveFormData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
-      when(mockPlaConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(),ArgumentMatchers.any()))
+      when(mockPlaConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any(),Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(status = 200, json = Json.parse("""{"result":"doesNotMatter"}"""), headers = Map.empty)))
-      when(mockResponseConstructors.createAmendResponseModelFromJson(ArgumentMatchers.any()))
+      when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any()))
         .thenReturn(None)
 
       status(result) shouldBe 500
@@ -376,13 +377,13 @@ class AmendsControllerSpec extends FakeApplication
       object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
-      when(mockPlaConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      when(mockPlaConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(HttpResponse(status = 200, json = Json.parse("""{"result":"doesNotMatter"}"""), headers = Map.empty)))
-      when(mockResponseConstructors.createAmendResponseModelFromJson(ArgumentMatchers.any()))
+      when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any()))
         .thenReturn(Some(AmendResponseModel(noNotificationIdProtection)))
-      when(mockKeystoreConnector.saveData(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+      when(mockSessionCacheService.saveFormData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
 
 
       status(DataItem.result) shouldBe 500
@@ -394,25 +395,25 @@ class AmendsControllerSpec extends FakeApplication
     "the microservice returns a valid response" in new Setup {
       lazy val result = controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("status", "dormant")).withMethod("POST"))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
-        when(mockPlaConnector.amendProtection(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        when(mockPlaConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
           .thenReturn(Future.successful(HttpResponse(status = 200, json = Json.parse("""{"result":"doesNotMatter"}"""), headers = Map.empty)))
-        when(mockResponseConstructors.createAmendResponseModelFromJson(ArgumentMatchers.any())).thenReturn(Some(tstActiveAmendResponseModel))
-        when(mockKeystoreConnector.saveData(ArgumentMatchers.anyString(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
-          .thenReturn(Future.successful(CacheMap("keyStoreId", Map.empty)))
+        when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any())).thenReturn(Some(tstActiveAmendResponseModel))
+        when(mockSessionCacheService.saveFormData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+          .thenReturn(Future.successful(CacheMap("cacheId", Map.empty)))
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendmentOutcome}")
     }
 
   "Calling the amendmentOutcome action" when {
-    "there is no outcome object stored in keystore" in new Setup {
+    "there is no outcome object stored in cache" in new Setup {
       lazy val result = controller.amendmentOutcome()(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendResponseModel](None)
-        keystoreFetchCondition[AmendsGAModel](None)
+        cacheFetchCondition[AmendResponseModel](None)
+        cacheFetchCondition[AmendsGAModel](None)
 
         status(result) shouldBe 500
         jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
@@ -420,13 +421,13 @@ class AmendsControllerSpec extends FakeApplication
         await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
-    "there is an active protection outcome in keystore" in new Setup {
+    "there is an active protection outcome in cache" in new Setup {
       lazy val result = controller.amendmentOutcome()(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        when(mockKeystoreConnector.fetchAndGetFormData[AmendResponseModel](ArgumentMatchers.startsWith("amendResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
-        when(mockKeystoreConnector.fetchAndGetFormData[AmendsGAModel](ArgumentMatchers.startsWith("AmendsGA"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(Some("updatedValue"),Some("changedToYes"),Some("changedToNo"),None,Some("addedPSO")))))
-        when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(ArgumentMatchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
+        when(mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
+        when(mockSessionCacheService.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(Some("updatedValue"),Some("changedToYes"),Some("changedToNo"),None,Some("addedPSO")))))
+        when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
 
         status(result) shouldBe 200
         jsoupDoc.body.getElementsByClass("govuk-panel__title").text shouldEqual Messages("amendResultCode.33.heading")
@@ -434,13 +435,13 @@ class AmendsControllerSpec extends FakeApplication
     }
 
 
-    "there is an inactive protection outcome in keystore" in new Setup {
+    "there is an inactive protection outcome in cache" in new Setup {
       lazy val result = controller.amendmentOutcome()(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        when(mockKeystoreConnector.fetchAndGetFormData[AmendResponseModel](ArgumentMatchers.startsWith("amendResponseModel"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
-        when(mockKeystoreConnector.fetchAndGetFormData[AmendsGAModel](ArgumentMatchers.startsWith("AmendsGA"))(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(None,Some("changedToNo"),Some("changedToYes"),None,None))))
-        when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(ArgumentMatchers.any())).thenReturn(tstInactiveAmendResponseDisplayModel)
+        when(mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
+        when(mockSessionCacheService.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(None,Some("changedToNo"),Some("changedToYes"),None,None))))
+        when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstInactiveAmendResponseDisplayModel)
 
         status(result) shouldBe 200
         jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
@@ -451,7 +452,7 @@ class AmendsControllerSpec extends FakeApplication
 
     "not supplied with a stored model" in new Setup {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](None)
+      cacheFetchCondition[AmendProtectionModel](None)
 
       val result = controller.amendCurrentPensions("ip2016", "open")(fakeRequest)
       status(result) shouldBe 500
@@ -463,10 +464,10 @@ class AmendsControllerSpec extends FakeApplication
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testModel))
+      cacheFetchCondition[AmendProtectionModel](Some(testModel))
       status(result) shouldBe 200
 
-      keystoreFetchCondition[AmendProtectionModel](Some(testModel))
+      cacheFetchCondition[AmendProtectionModel](Some(testModel))
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
     }
 
@@ -476,7 +477,7 @@ class AmendsControllerSpec extends FakeApplication
           val testModel = new AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, uncrystallisedRights = Some(100000)))
           lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          keystoreFetchCondition[AmendProtectionModel](Some(testModel))
+          cacheFetchCondition[AmendProtectionModel](Some(testModel))
 
           contentType(result) shouldBe Some("text/html")
           charset(result) shouldBe Some("utf-8")
@@ -488,7 +489,7 @@ class AmendsControllerSpec extends FakeApplication
           val testModel = new AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, uncrystallisedRights = Some(100000)))
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          keystoreFetchCondition[AmendProtectionModel](Some(testModel))
+          cacheFetchCondition[AmendProtectionModel](Some(testModel))
 
           jsoupDoc.body.getElementById("amendedUKPensionAmt").attr("value") shouldBe "100000"
         }
@@ -498,7 +499,7 @@ class AmendsControllerSpec extends FakeApplication
     "supplied with a stored test model (£100000, IP2014, dormant)" in new Setup {
       lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
         status(result) shouldBe 200
     }
@@ -510,8 +511,8 @@ class AmendsControllerSpec extends FakeApplication
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendCurrentPension, ("amendedUKPensionAmt", "100000"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreSaveCondition[AmendProtectionModel](mockKeystoreConnector)
-        keystoreFetchCondition[AmendProtectionModel](Some(testIP16DormantModel))
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+        cacheFetchCondition[AmendProtectionModel](Some(testIP16DormantModel))
 
         status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
@@ -523,10 +524,10 @@ class AmendsControllerSpec extends FakeApplication
         status(DataItem.result) shouldBe 400
       }
 
-    "the model can't be fetched from keyStore" in new Setup {
+    "the model can't be fetched from cache" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendCurrentPension, ("amendedUKPensionAmt", "1000000"), ("protectionType", "IP2016"), ("status", "dormant"))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](None)
+        cacheFetchCondition[AmendProtectionModel](None)
 
         status(DataItem.result) shouldBe 500
       }
@@ -537,14 +538,14 @@ class AmendsControllerSpec extends FakeApplication
     "not supplied with a stored model" in new Setup {
       lazy val result = controller.amendPensionsTakenBefore("ip2016", "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](None)
+      cacheFetchCondition[AmendProtectionModel](None)
 
       status(result) shouldBe 500
     }
 
     "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" in new Setup {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
     }
 
 
@@ -552,7 +553,7 @@ class AmendsControllerSpec extends FakeApplication
 
       lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
       status(result) shouldBe 200
     }
@@ -562,7 +563,7 @@ class AmendsControllerSpec extends FakeApplication
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
       jsoupDoc.body.getElementsByClass("govuk-heading-xl").text shouldEqual Messages("pla.pensionsTakenBefore.title")
     }
@@ -572,7 +573,7 @@ class AmendsControllerSpec extends FakeApplication
       "contain some text and use the character set utf-8" in new Setup {
         lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -580,18 +581,18 @@ class AmendsControllerSpec extends FakeApplication
 
       "have the value of the check box set as 'Yes' by default" in new Setup {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
       }
 
       "have the value of the input field set to 2000 by default" in new Setup {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
       }
     }
     "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" in new Setup {
       lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
       status(result) shouldBe 200
     }
@@ -619,12 +620,12 @@ class AmendsControllerSpec extends FakeApplication
       }
 
 
-    "the model can't be fetched from keyStore" in new Setup {
+    "the model can't be fetched from cache" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
         ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](None)
+        cacheFetchCondition[AmendProtectionModel](None)
 
         status(DataItem.result) shouldBe 500
     }
@@ -634,8 +635,8 @@ class AmendsControllerSpec extends FakeApplication
         ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreSaveCondition[PensionsTakenBeforeModel](mockKeystoreConnector)
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
         status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
@@ -646,9 +647,9 @@ class AmendsControllerSpec extends FakeApplication
         ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        keystoreSaveCondition[PensionsTakenBeforeModel](mockKeystoreConnector)
-        keystoreSaveCondition[AmendProtectionModel](mockKeystoreConnector)
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
@@ -659,7 +660,7 @@ class AmendsControllerSpec extends FakeApplication
 
       lazy val result = controller.amendPensionsTakenBetween("ip2016", "open")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](None)
+        cacheFetchCondition[AmendProtectionModel](None)
 
         status(result) shouldBe 500
 
@@ -669,7 +670,7 @@ class AmendsControllerSpec extends FakeApplication
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
         jsoupDoc.body.getElementById("conditional-amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__conditional govuk-radios__conditional--hidden"
       }
     }
@@ -678,7 +679,7 @@ class AmendsControllerSpec extends FakeApplication
 
       lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         status(result) shouldBe 200
       }
 
@@ -687,7 +688,7 @@ class AmendsControllerSpec extends FakeApplication
         lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.title")
       }
 
@@ -696,7 +697,7 @@ class AmendsControllerSpec extends FakeApplication
         "contain some text and use the character set utf-8" in new Setup {
           lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
           contentType(result) shouldBe Some("text/html")
           charset(result) shouldBe Some("utf-8")
@@ -707,7 +708,7 @@ class AmendsControllerSpec extends FakeApplication
           lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
           jsoupDoc.body.getElementById("conditional-amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__conditional"
         }
@@ -717,7 +718,7 @@ class AmendsControllerSpec extends FakeApplication
           lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
           jsoupDoc.body.getElementById("amendedPensionsTakenBetweenAmt").attr("value") shouldBe "2000"
         }
@@ -726,19 +727,19 @@ class AmendsControllerSpec extends FakeApplication
     "supplied with the stored test model for (dormant, IP2014, preADay = £2000))" in new Setup {
       lazy val result = controller.amendPensionsTakenBetween("ip2014", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
         status(result) shouldBe 200
       }
 
   "Submitting Amend IP16 Pensions Taken Between data" when {
 
-    "the model can't be fetched from keyStore" in new Setup {
+    "the model can't be fetched from cache" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
         ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](None)
+        cacheFetchCondition[AmendProtectionModel](None)
 
         status(DataItem.result) shouldBe 500
       }
@@ -749,8 +750,8 @@ class AmendsControllerSpec extends FakeApplication
         ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        keystoreSaveCondition[AmendProtectionModel](mockKeystoreConnector)
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
 
@@ -763,8 +764,8 @@ class AmendsControllerSpec extends FakeApplication
 
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        keystoreSaveCondition[AmendProtectionModel](mockKeystoreConnector)
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
 
@@ -795,7 +796,7 @@ class AmendsControllerSpec extends FakeApplication
     "not supplied with a stored model" in new Setup {
       lazy val result = controller.amendOverseasPensions("ip2016", "open")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](None)
+        cacheFetchCondition[AmendProtectionModel](None)
 
         status(result) shouldBe 500
       }
@@ -805,7 +806,7 @@ class AmendsControllerSpec extends FakeApplication
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
 
         jsoupDoc.body.getElementById("conditional-amendedOverseasPensions").attr("class") shouldBe "govuk-radios__conditional govuk-radios__conditional--hidden"
       }
@@ -815,7 +816,7 @@ class AmendsControllerSpec extends FakeApplication
 
       lazy val result = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
         status(result) shouldBe 200
       }
@@ -825,9 +826,9 @@ class AmendsControllerSpec extends FakeApplication
         lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.overseasPensions.title")
       }
 
@@ -836,7 +837,7 @@ class AmendsControllerSpec extends FakeApplication
         "contain some text and use the character set utf-8" in new Setup {
           lazy val result = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
           contentType(result) shouldBe Some("text/html")
           charset(result) shouldBe Some("utf-8")
@@ -848,9 +849,9 @@ class AmendsControllerSpec extends FakeApplication
           lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
-          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
           jsoupDoc.body.getElementById("conditional-amendedOverseasPensions").attr("class") shouldBe "govuk-radios__conditional"
         }
 
@@ -859,9 +860,9 @@ class AmendsControllerSpec extends FakeApplication
           lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
-          keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
           jsoupDoc.body.getElementById("amendedOverseasPensionsAmt").attr("value") shouldBe "2000"
         }
       }
@@ -869,7 +870,7 @@ class AmendsControllerSpec extends FakeApplication
     "supplied with the stored test model for (dormant, IP2014, nonUKRights = £2000)" in new Setup {
       lazy val result = controller.amendOverseasPensions("ip2014", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
         status(result) shouldBe 200
       }
@@ -884,12 +885,12 @@ class AmendsControllerSpec extends FakeApplication
       status(result) shouldBe 400
       }
 
-    "the model can't be fetched from keyStore" in new Setup {
+    "the model can't be fetched from cache" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions,
         ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](None)
+        cacheFetchCondition[AmendProtectionModel](None)
 
         status(DataItem.result) shouldBe 500
       }
@@ -900,8 +901,8 @@ class AmendsControllerSpec extends FakeApplication
         ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-      keystoreSaveCondition[AmendProtectionModel](mockKeystoreConnector)
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
         status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
@@ -912,8 +913,8 @@ class AmendsControllerSpec extends FakeApplication
         ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        keystoreSaveCondition[AmendProtectionModel](mockKeystoreConnector)
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
         status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
@@ -957,11 +958,11 @@ class AmendsControllerSpec extends FakeApplication
       pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0), PensionDebitModel("2016-12-27", 11322.75)))
     )
 
-    "there is no amendment model fetched from keystore" in new Setup {
+    "there is no amendment model fetched from cache" in new Setup {
 
       lazy val result = controller.amendPsoDetails("ip2014", "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](None)
+      cacheFetchCondition[AmendProtectionModel](None)
 
       status(result) shouldBe 500
     }
@@ -970,7 +971,7 @@ class AmendsControllerSpec extends FakeApplication
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](None)
+      cacheFetchCondition[AmendProtectionModel](None)
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
       jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
@@ -983,7 +984,7 @@ class AmendsControllerSpec extends FakeApplication
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionNoPsoList, testProtectionNoPsoList)))
+      cacheFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionNoPsoList, testProtectionNoPsoList)))
       status(result) shouldBe 200
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
@@ -998,7 +999,7 @@ class AmendsControllerSpec extends FakeApplication
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionEmptyPsoList, testProtectionEmptyPsoList)))
+      cacheFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionEmptyPsoList, testProtectionEmptyPsoList)))
 
       status(result) shouldBe 200
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
@@ -1013,7 +1014,7 @@ class AmendsControllerSpec extends FakeApplication
       object DataItem extends AuthorisedFakeRequestTo(controller.amendPsoDetails("ip2016", "open"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
+      cacheFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
 
       status(DataItem.result) shouldBe 200
 
@@ -1031,7 +1032,7 @@ class AmendsControllerSpec extends FakeApplication
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionMultiplePsoList, testProtectionMultiplePsoList)))
+      cacheFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionMultiplePsoList, testProtectionMultiplePsoList)))
 
       status(result) shouldBe 500
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
@@ -1056,8 +1057,8 @@ class AmendsControllerSpec extends FakeApplication
       )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockKeystoreConnector.saveData(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      when(mockSessionCacheService.saveFormData(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
           .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
       status(DataItem.result) shouldBe 303
@@ -1077,8 +1078,8 @@ class AmendsControllerSpec extends FakeApplication
       )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-      when(mockKeystoreConnector.saveData(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+      when(mockSessionCacheService.saveFormData(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
       status(DataItem.result) shouldBe 303
@@ -1127,10 +1128,10 @@ class AmendsControllerSpec extends FakeApplication
       pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
     )
 
-    "there is no amend protection model fetched from keystore" in new Setup {
+    "there is no amend protection model fetched from cache" in new Setup {
       lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      keystoreFetchCondition[AmendProtectionModel](None)
+      cacheFetchCondition[AmendProtectionModel](None)
       status(result) shouldBe 500
     }
       "show the technical error page for existing protections" in new Setup {
@@ -1138,7 +1139,7 @@ class AmendsControllerSpec extends FakeApplication
         lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](None)
+        cacheFetchCondition[AmendProtectionModel](None)
 
         jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
         jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
@@ -1146,15 +1147,15 @@ class AmendsControllerSpec extends FakeApplication
       "have the correct cache control" in new Setup {
         lazy val result = await(controller.removePso("ip2016", "open")(fakeRequest))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](None)
+        cacheFetchCondition[AmendProtectionModel](None)
 
         result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
       }
 
-    "a valid amend protection model is fetched from keystore" in new Setup {
+    "a valid amend protection model is fetched from cache" in new Setup {
       lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
+        cacheFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
         status(result) shouldBe 200
       }
 
@@ -1163,7 +1164,7 @@ class AmendsControllerSpec extends FakeApplication
         lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
+        cacheFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
 
         jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
         jsoupDoc.body.getElementById("protectionType").`val`() shouldEqual "ip2016"
@@ -1177,13 +1178,13 @@ class AmendsControllerSpec extends FakeApplication
         status(result) shouldEqual 400
       }
 
-      "return 500 if the an amend protection model could not be retrieved from keystore" in new Setup {
+      "return 500 if the an amend protection model could not be retrieved from cache" in new Setup {
         object DataItem extends AuthorisedFakeRequestToPost(controller.submitRemovePso,
           ("protectionType", "ip2016"),
           ("status", "open")
         )
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](None)
+        cacheFetchCondition[AmendProtectionModel](None)
 
         status(DataItem.result) shouldEqual 500
       }
@@ -1209,8 +1210,8 @@ class AmendsControllerSpec extends FakeApplication
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitRemovePso, ("protectionType", "ip2016"), ("status", "open"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        keystoreFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        keystoreSaveCondition[AmendProtectionModel](mockKeystoreConnector)
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "open")}")
@@ -1241,10 +1242,10 @@ class AmendsControllerSpec extends FakeApplication
       val modelGA = Some(AmendsGAModel(None, None, None, None, None))
       val model = AmendResponseModel(ProtectionModel(Some("ref"), Some(33), notificationId = Some(33)))
 
-      when(mockKeystoreConnector.saveData(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      when(mockSessionCacheService.saveFormData(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
-      when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(ArgumentMatchers.any()))
+      when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(Matchers.any()))
         .thenReturn(ActiveAmendResultDisplayModel(ApplicationType.IP2014, "33", "£1,100,000", None))
 
       lazy val result = controller.amendmentOutcomeResult(Some(model), modelGA, "")
@@ -1258,10 +1259,10 @@ class AmendsControllerSpec extends FakeApplication
       val model = AmendResponseModel(ProtectionModel(Some("ref"), Some(1), notificationId = Some(41)))
       lazy val result = controller.amendmentOutcomeResult(Some(model), modelGA, "")
 
-      when(mockKeystoreConnector.saveData(ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+      when(mockSessionCacheService.saveFormData(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
         .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
-      when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(ArgumentMatchers.any()))
+      when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(Matchers.any()))
         .thenReturn(InactiveAmendResultDisplayModel("41", Seq()))
 
         status(result) shouldBe OK

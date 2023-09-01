@@ -30,7 +30,7 @@ import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment, Mode}
-import testHelpers.{FakeApplication, KeystoreTestHelper}
+import testHelpers.{FakeApplication, SessionCacheTestHelper}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
 import java.net.URLEncoder
@@ -41,7 +41,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AuthFunctionSpec extends FakeApplication
   with MockitoSugar
-  with KeystoreTestHelper
+  with SessionCacheTestHelper
   with BeforeAndAfterEach
   with AuthMock {
 

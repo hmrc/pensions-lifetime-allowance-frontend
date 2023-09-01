@@ -18,7 +18,6 @@ package controllers
 
 import auth.AuthFunction
 import config.{FrontendAppConfig, PlaContext}
-import connectors.KeyStoreConnector
 import constructors.SummaryConstructor
 import enums.ApplicationType
 import javax.inject.Inject
@@ -26,15 +25,16 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import play.api.Application
 import play.api.Logging
+import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.cache.client.CacheMap
+import models.cache.CacheMap
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
 import scala.concurrent.ExecutionContext
 
-class SummaryController @Inject()(keyStoreConnector: KeyStoreConnector,
+class SummaryController @Inject()(sessionCacheService: SessionCacheService,
                                  mcc: MessagesControllerComponents,
                                   authFunction: AuthFunction,
                                   technicalError: views.html.pages.fallback.technicalError,
@@ -54,10 +54,10 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   val summaryIP16 = Action.async { implicit request =>
     implicit val protectionType = ApplicationType.IP2016
     authFunction.genericAuthWithNino("IP2016") { nino =>
-      keyStoreConnector.fetchAllUserData.map {
+      sessionCacheService.fetchAllUserData.map {
         case Some(data) => routeIP2016SummaryFromUserData(data, nino)
         case None => {
-          logger.warn(s"unable to fetch summary IP16 data from keystore for user nino $nino")
+          logger.warn(s"unable to fetch summary IP16 data from cache for user nino $nino")
           InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }

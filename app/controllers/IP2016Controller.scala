@@ -18,7 +18,6 @@ package controllers
 
 import auth.AuthFunction
 import config.{FrontendAppConfig, PlaContext}
-import connectors.KeyStoreConnector
 import forms.CurrentPensionsForm.currentPensionsForm
 import forms.OverseasPensionsForm.overseasPensionsForm
 import forms.PSODetailsForm.psoDetailsForm
@@ -32,6 +31,7 @@ import play.api.Application
 import play.api.data.FormError
 import play.api.i18n.Messages
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents}
+import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
@@ -39,7 +39,7 @@ import views.html._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
+class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
                                  mcc: MessagesControllerComponents,
                                  authFunction: AuthFunction,
                                  pensionsTaken: pages.ip2016.pensionsTaken,
@@ -62,7 +62,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   //PENSIONS TAKEN
   def pensionsTaken: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      keyStoreConnector.fetchAndGetFormData[PensionsTakenModel]("pensionsTaken").map {
+      sessionCacheService.fetchAndGetFormData[PensionsTakenModel]("pensionsTaken").map {
         case Some(data) => Ok(pensionsTaken(pensionsTakenForm.fill(data)))
         case None => Ok(pensionsTaken(pensionsTakenForm))
       }
@@ -78,7 +78,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
             Future.successful(BadRequest(pensionsTaken(form)))
           },
           success => {
-            keyStoreConnector.saveFormData("pensionsTaken", success).map {
+            sessionCacheService.saveFormData("pensionsTaken", success).map {
               _ =>
                 success.pensionsTaken.get match {
                   case "yes" => Redirect(routes.IP2016Controller.pensionsTakenBefore)
@@ -94,7 +94,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   //PENSIONS TAKEN BEFORE
   def pensionsTakenBefore: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      keyStoreConnector.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").map {
+      sessionCacheService.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").map {
         case Some(data) => Ok(pensionsTakenBefore(pensionsTakenBeforeForm.fill(data)))
         case _ => Ok(pensionsTakenBefore(pensionsTakenBeforeForm))
       }
@@ -109,7 +109,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
           Future.successful(BadRequest(pensionsTakenBefore(form)))
         },
         success => {
-          keyStoreConnector.saveFormData("pensionsTakenBefore", success).flatMap {
+          sessionCacheService.saveFormData("pensionsTakenBefore", success).flatMap {
             _ => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
           }
         }
@@ -121,7 +121,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   //PENSIONS TAKEN BETWEEN
   def pensionsTakenBetween: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      keyStoreConnector.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").map {
+      sessionCacheService.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").map {
         case Some(data) => Ok(pensionsTakenBetween(pensionsTakenBetweenForm.fill(data)))
         case _ => Ok(pensionsTakenBetween(pensionsTakenBetweenForm))
       }
@@ -136,7 +136,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
           Future.successful(BadRequest(pensionsTakenBetween(form)))
         },
         success => {
-          keyStoreConnector.saveFormData("pensionsTakenBetween", success).flatMap {
+          sessionCacheService.saveFormData("pensionsTakenBetween", success).flatMap {
             _ => Future.successful(Redirect(routes.IP2016Controller.overseasPensions))
           }
         }
@@ -148,7 +148,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   //OVERSEAS PENSIONS
   def overseasPensions: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      keyStoreConnector.fetchAndGetFormData[OverseasPensionsModel]("overseasPensions").map {
+      sessionCacheService.fetchAndGetFormData[OverseasPensionsModel]("overseasPensions").map {
         case Some(data) => Ok(overseasPensions(overseasPensionsForm.fill(data)))
         case _ => Ok(overseasPensions(overseasPensionsForm))
       }
@@ -163,7 +163,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
           Future.successful(BadRequest(overseasPensions(form)))
         },
         success => {
-          keyStoreConnector.saveFormData("overseasPensions", success).flatMap {
+          sessionCacheService.saveFormData("overseasPensions", success).flatMap {
             _ => Future.successful(Redirect(routes.IP2016Controller.currentPensions))
           }
         }
@@ -175,7 +175,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   //CURRENT PENSIONS
   def currentPensions: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      keyStoreConnector.fetchAndGetFormData[CurrentPensionsModel]("currentPensions").map {
+      sessionCacheService.fetchAndGetFormData[CurrentPensionsModel]("currentPensions").map {
         case Some(data) => Ok(currentPensions(currentPensionsForm.fill(data)))
         case _ => Ok(currentPensions(currentPensionsForm))
       }
@@ -190,7 +190,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
           Future.successful(BadRequest(currentPensions(form)))
         },
         success => {
-          keyStoreConnector.saveFormData("currentPensions", success).flatMap {
+          sessionCacheService.saveFormData("currentPensions", success).flatMap {
             _ => Future.successful(Redirect(routes.IP2016Controller.pensionDebits))
           }
         }
@@ -202,7 +202,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   //PENSION DEBITS
   def pensionDebits: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      keyStoreConnector.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").map {
+      sessionCacheService.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").map {
         case Some(data) => Ok(pensionDebits(pensionDebitsForm.fill(data)))
         case None => Ok(pensionDebits(pensionDebitsForm))
       }
@@ -217,7 +217,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
           Future.successful(BadRequest(pensionDebits(form)))
         },
         success => {
-          keyStoreConnector.saveFormData("pensionDebits", success).map {
+          sessionCacheService.saveFormData("pensionDebits", success).map {
             _ =>
               success.pensionDebits.get match {
                 case "yes" => Redirect(routes.IP2016Controller.psoDetails)
@@ -233,7 +233,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   //PENSION SHARING ORDER DETAILS
   def psoDetails: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      keyStoreConnector.fetchAndGetFormData[PSODetailsModel]("psoDetails").map {
+      sessionCacheService.fetchAndGetFormData[PSODetailsModel]("psoDetails").map {
         case Some(data) => Ok(psoDetails(psoDetailsForm.fill(data)))
         case _ => Ok(psoDetails(psoDetailsForm))
       }
@@ -248,7 +248,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
           Future.successful(BadRequest(psoDetails(form)))
         },
         form => {
-          keyStoreConnector.saveFormData(s"psoDetails", form).flatMap {
+          sessionCacheService.saveFormData(s"psoDetails", form).flatMap {
             _ => Future.successful(Redirect(routes.SummaryController.summaryIP16))
           }
         }
@@ -265,7 +265,7 @@ class IP2016Controller @Inject()(val keyStoreConnector: KeyStoreConnector,
   def submitRemovePsoDetails: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       val updatedModel = PensionDebitsModel(Some("no"))
-      keyStoreConnector.saveData[PensionDebitsModel]("pensionDebits", updatedModel).map {
+      sessionCacheService.saveFormData[PensionDebitsModel]("pensionDebits", updatedModel).map {
         _ => Redirect(routes.SummaryController.summaryIP16)
       }
     }

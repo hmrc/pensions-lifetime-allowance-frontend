@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import testHelpers.FakeApplication
-import uk.gov.hmrc.http.cache.client.CacheMap
+import models.cache.CacheMap
 import utils.CallMap
 class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
 

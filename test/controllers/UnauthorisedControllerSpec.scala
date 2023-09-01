@@ -20,20 +20,21 @@ import akka.actor.ActorSystem
 import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
-import connectors.{IdentityVerificationConnector, KeyStoreConnector}
+import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
-import org.mockito.ArgumentMatchers
+import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.http.Status
 import play.api.libs.json.{Format, Json}
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{MessagesControllerComponents, Request}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import services.SessionCacheService
 import testHelpers._
-import uk.gov.hmrc.http.cache.client.CacheMap
+import models.cache.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import utils.ActionWithSessionId
@@ -49,7 +50,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
   val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
   val fakeRequest = FakeRequest("GET", "/")
-  val mockKeystoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
+  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   val mockIdentityVerificationConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
 
@@ -84,7 +85,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
 
     def mockJourneyId(journeyId: String): Unit = {
       val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-      when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId))(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).
+      when(mockHttp.GET[HttpResponse](Matchers.contains(journeyId))(Matchers.any(), Matchers.any(), Matchers.any())).
         thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
     }
 
@@ -94,7 +95,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
   class Setup {
     val controller = new UnauthorisedController(
       mockIdentityVerificationConnector,
-      mockKeystoreConnector,
+      mockSessionCacheService,
       mockMCC,
       mockLockedOut,
       mockTechnicalIssue,
@@ -104,18 +105,18 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
 
   override def beforeEach(): Unit = {
     reset(
-      mockKeystoreConnector,
+      mockSessionCacheService,
       mockIdentityVerificationConnector
     )
     super.beforeEach()
   }
 
-  def setupKeystoreMocks(data: Option[Boolean]): Unit = {
-    when(mockKeystoreConnector
-      .fetchAndGetFormData[Boolean](ArgumentMatchers.eq("previous-technical-issues"))(ArgumentMatchers.any[HeaderCarrier], ArgumentMatchers.any[Format[Boolean]]))
+  def setupCacheMocks(data: Option[Boolean]): Unit = {
+    when(mockSessionCacheService
+      .fetchAndGetFormData[Boolean](Matchers.eq("previous-technical-issues"))(Matchers.any[Request[_]], Matchers.any[Format[Boolean]]))
       .thenReturn(Future.successful(data))
-    when(mockKeystoreConnector
-      .saveFormData(ArgumentMatchers.eq("previous-technical-issues"), ArgumentMatchers.any[Boolean])(ArgumentMatchers.any[HeaderCarrier], ArgumentMatchers.any[Format[Boolean]]))
+    when(mockSessionCacheService
+      .saveFormData(Matchers.eq("previous-technical-issues"), Matchers.any[Boolean])(Matchers.any[Request[_]], Matchers.any[Format[Boolean]]))
       .thenReturn(Future.successful(mock[CacheMap]))
   }
 
@@ -127,7 +128,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
       }
 
       "show generic not_authorised template for FailedMatching journey" in new Setup {
-        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier]))
+        when(mockIdentityVerificationConnector.identityVerificationResponse(Matchers.any())(Matchers.any[HeaderCarrier]))
           .thenReturn(Future.successful(IdentityVerificationResult.FailedMatching))
         val result = controller.showNotAuthorised(Some("failed-matching-journey-id"))(fakeRequest)
         contentAsString(result) should include("We cannot confirm your identity")
@@ -135,7 +136,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
       }
 
       "show generic not_authorised template for InsufficientEvidence journey" in new Setup {
-        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier]))
+        when(mockIdentityVerificationConnector.identityVerificationResponse(Matchers.any())(Matchers.any[HeaderCarrier]))
           .thenReturn(Future.successful(IdentityVerificationResult.InsufficientEvidence))
         val result = controller.showNotAuthorised(Some("insufficient-evidence-journey-id"))(fakeRequest)
         contentAsString(result) should include("We cannot confirm your identity")
@@ -143,7 +144,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
       }
 
       "show generic not_authorised template for Incomplete journey" in new Setup {
-        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier]))
+        when(mockIdentityVerificationConnector.identityVerificationResponse(Matchers.any())(Matchers.any[HeaderCarrier]))
           .thenReturn(Future.successful(IdentityVerificationResult.Incomplete))
         val result = controller.showNotAuthorised(Some("incomplete-journey-id"))(fakeRequest)
         contentAsString(result) should include("We cannot confirm your identity")
@@ -151,7 +152,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
       }
 
       "show generic not_authorised template for PreconditionFailed journey" in new Setup {
-        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier]))
+        when(mockIdentityVerificationConnector.identityVerificationResponse(Matchers.any())(Matchers.any[HeaderCarrier]))
           .thenReturn(Future.successful(IdentityVerificationResult.PreconditionFailed))
         val result = controller.showNotAuthorised(Some("precondition-failed-journey-id"))(fakeRequest)
         contentAsString(result) should include("We cannot confirm your identity")
@@ -159,7 +160,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
       }
 
       "show generic not_authorised template for UserAborted journey" in new Setup {
-        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier]))
+        when(mockIdentityVerificationConnector.identityVerificationResponse(Matchers.any())(Matchers.any[HeaderCarrier]))
           .thenReturn(Future.successful(IdentityVerificationResult.UserAborted))
         val result = controller.showNotAuthorised(Some("user-aborted-journey-id"))(fakeRequest)
         contentAsString(result) should include("We cannot confirm your identity")
@@ -170,10 +171,10 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
   "show technical_issue template for TechnicalIssue journey" which {
 
     "returns an INTERNAL_SERVER_ERROR on the first attempt" in new Setup {
-      when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      when(mockIdentityVerificationConnector.identityVerificationResponse(Matchers.any())(Matchers.any()))
         .thenReturn(Future.successful(IdentityVerificationResult.TechnicalIssue))
 
-      setupKeystoreMocks(None)
+      setupCacheMocks(None)
 
       val result = controller.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
       contentAsString(result) should include("There is a technical problem")
@@ -181,10 +182,10 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
     }
 
     "returns an OK on any attempt after the first" in new Setup {
-      when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
+      when(mockIdentityVerificationConnector.identityVerificationResponse(Matchers.any())(Matchers.any()))
         .thenReturn(Future.successful(IdentityVerificationResult.TechnicalIssue))
 
-      setupKeystoreMocks(Some(true))
+      setupCacheMocks(Some(true))
       val result = controller.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
 
       contentAsString(result) should include("There is a technical problem")
@@ -192,9 +193,9 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
     }
 
      "returns an INTERNAL_SERVER_ERROR if a false is returned" in new Setup {
-       when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
+       when(mockIdentityVerificationConnector.identityVerificationResponse(Matchers.any())(Matchers.any()))
          .thenReturn(Future.successful(IdentityVerificationResult.TechnicalIssue))
-       setupKeystoreMocks(Some(false))
+       setupCacheMocks(Some(false))
        val result = controller.showNotAuthorised(Some("technical-issue-journey-id"))(fakeRequest)
        contentAsString(result) should include("There is a technical problem")
        status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -202,7 +203,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
    }
 
      "show locked_out template for LockedOut journey" in new Setup {
-       when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
+       when(mockIdentityVerificationConnector.identityVerificationResponse(Matchers.any())(Matchers.any()))
          .thenReturn(Future.successful(IdentityVerificationResult.LockedOut))
 
        val result = controller.showNotAuthorised(Some("locked-out-journey-id"))(fakeRequest)
@@ -211,7 +212,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
      }
 
       "show timeout template for Timeout journey" in new Setup {
-        when(mockIdentityVerificationConnector.identityVerificationResponse(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockIdentityVerificationConnector.identityVerificationResponse(Matchers.any())(Matchers.any()))
           .thenReturn(Future.successful(IdentityVerificationResult.Timeout))
 
         val result = controller.showNotAuthorised(Some("timeout-journey-id"))(fakeRequest)

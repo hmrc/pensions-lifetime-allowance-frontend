@@ -19,7 +19,7 @@ package controllers
 import auth.AuthFunction
 import common.{Helpers, Strings}
 import config.{FrontendAppConfig, PlaContext}
-import connectors.{KeyStoreConnector, PLAConnector}
+import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import javax.inject.Inject
@@ -30,7 +30,8 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.libs.json.Json
 import play.api.mvc._
-import uk.gov.hmrc.http.cache.client.CacheMap
+import services.SessionCacheService
+import models.cache.CacheMap
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
@@ -39,7 +40,7 @@ import views.html._
 import scala.concurrent.{ExecutionContext, Future}
 
 class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
-                                          val keyStoreConnector: KeyStoreConnector,
+                                          val sessionCacheService: SessionCacheService,
                                           displayConstructors: DisplayConstructors,
                                           mcc: MessagesControllerComponents,
                                           responseConstructors: ResponseConstructors,
@@ -99,7 +100,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
 
   def saveActiveProtection(activeModel: Option[ProtectionModel])(implicit request: Request[AnyContent]): Future[Boolean] = {
     activeModel.map { model =>
-      keyStoreConnector.saveData[ProtectionModel]("openProtection", model).map { cacheMap =>
+      sessionCacheService.saveFormData[ProtectionModel]("openProtection", model).map { cacheMap =>
         true
       }
     }.getOrElse(Future.successful(true))
@@ -114,7 +115,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   }
 
   def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]): Future[CacheMap] = {
-    keyStoreConnector.saveData[AmendProtectionModel](Strings.keyStoreProtectionName(protection), AmendProtectionModel(protection, protection))
+    sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(protection), AmendProtectionModel(protection, protection))
   }
 
   def saveNonAmendableProtections(model: TransformedReadResponseModel)(implicit request: Request[AnyContent]): Future[Seq[CacheMap]] = {
@@ -126,7 +127,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   }
 
   def saveNonAmendableProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]): Future[CacheMap] = {
-    keyStoreConnector.saveData[ProtectionModel](Strings.keyStoreNonAmendableProtectionName(protection), protection)
+    sessionCacheService.saveFormData[ProtectionModel](Strings.cacheNonAmendableProtectionName(protection), protection)
   }
 
 }

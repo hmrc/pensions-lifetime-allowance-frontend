@@ -26,7 +26,7 @@ import play.api.Logging
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import uk.gov.hmrc.http._
-import uk.gov.hmrc.http.cache.client.CacheMap
+import models.cache.CacheMap
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
 import scala.concurrent.{ExecutionContext, Future}

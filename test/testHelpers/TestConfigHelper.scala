@@ -19,9 +19,10 @@ package testHelpers
 import akka.actor.ActorSystem
 import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
-import connectors.{KeyStoreConnector, PLAConnector}
+import connectors.PLAConnector
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
+import services.SessionCacheService
 
 trait TestConfigHelper extends FakeApplication with MockitoSugar {
 
@@ -32,7 +33,7 @@ trait TestConfigHelper extends FakeApplication with MockitoSugar {
 }
 
 trait TestControllerHelper extends MockitoSugar with TestConfigHelper{
-  val keyStoreConnector = mock[KeyStoreConnector]
+  val sessionCacheService = mock[SessionCacheService]
   val plaConnector = mock[PLAConnector]
   implicit val partialRetriever = mock[PlaFormPartialRetriever]
 }

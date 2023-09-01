@@ -19,13 +19,14 @@ package controllers
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
 
-import connectors.{KeyStoreConnector, PdfGeneratorConnector}
+import connectors.PdfGeneratorConnector
 import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.libs.ws.WSResponse
 import play.api.mvc.{Action, AnyContent, MessagesControllerComponents, Result}
+import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
@@ -33,7 +34,7 @@ import views.html.pages.lookup.{psa_lookup_not_found_print, psa_lookup_results_p
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PrintPdfController@Inject()(val keyStoreConnector: KeyStoreConnector,
+class PrintPdfController@Inject()(val sessionCacheService: SessionCacheService,
                                   val actionWithSessionId: ActionWithSessionId,
                                   pdfGeneratorConnector: PdfGeneratorConnector,
                                   psaLookupNotFoundPrintView: psa_lookup_not_found_print,
@@ -48,7 +49,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
 
   def printResultsPDF: Action[AnyContent] = actionWithSessionId.async {
     implicit request =>
-      keyStoreConnector.fetchAndGetFormData[PSALookupResult](lookupResultID).flatMap {
+      sessionCacheService.fetchAndGetFormData[PSALookupResult](lookupResultID).flatMap {
         case Some(result) =>
           val printPage = psaLookupResultsPrintView(result, buildTimestamp).toString
           pdfGeneratorConnector.generatePdf(printPage).map {
@@ -69,7 +70,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
 
   def printNotFoundPDF: Action[AnyContent] = actionWithSessionId.async {
     implicit request =>
-      keyStoreConnector.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
+      sessionCacheService.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
         case Some(req@PSALookupRequest(_, Some(_))) =>
           val printPage = psaLookupNotFoundPrintView(req, buildTimestamp).toString
 

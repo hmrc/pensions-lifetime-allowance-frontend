@@ -18,20 +18,21 @@ package controllers
 
 import auth.AuthFunction
 import config.{FrontendAppConfig, PlaContext}
-import connectors.{CitizenDetailsConnector, KeyStoreConnector}
+import connectors.CitizenDetailsConnector
 import constructors.DisplayConstructors
 import javax.inject.Inject
 import models.{PersonalDetailsModel, ProtectionModel}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
+import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages.result.resultPrint
 
 import scala.concurrent.ExecutionContext
 
-class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
+class PrintController @Inject()(val sessionCacheService: SessionCacheService,
                                 val citizenDetailsConnector: CitizenDetailsConnector,
                                 displayConstructors: DisplayConstructors,
                                 resultPrintView: resultPrint,
@@ -51,7 +52,7 @@ class PrintController @Inject()(val keyStoreConnector: KeyStoreConnector,
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
         personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
-        protectionModel <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
+        protectionModel <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
       } yield routePrintView(personalDetailsModel, protectionModel, nino)
     }
   }
