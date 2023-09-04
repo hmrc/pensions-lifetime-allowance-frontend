@@ -19,7 +19,7 @@ package controllers
 import auth.AuthFunction
 import common._
 import config.{FrontendAppConfig, PlaContext}
-import connectors.{KeyStoreConnector, PLAConnector}
+import connectors.PLAConnector
 import constructors.{AmendsGAConstructor, DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
@@ -34,7 +34,8 @@ import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import play.api.Logging
 import play.api.data.FormError
 import play.api.i18n.I18nSupport
-import play.api.mvc.{Action, AnyContent, Result, _}
+import play.api.mvc._
+import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -44,7 +45,7 @@ import views.html.pages
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendsController @Inject()(val keyStoreConnector: KeyStoreConnector,
+class AmendsController @Inject()(val sessionCacheService: SessionCacheService,
                                  val plaConnector: PLAConnector,
                                  displayConstructors: DisplayConstructors,
                                  mcc: MessagesControllerComponents,
@@ -83,8 +84,8 @@ extends FrontendController(mcc) with I18nSupport with Logging{
           Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
         },
         success => for {
-          protectionAmendment <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
-          saveAmendsGA <- keyStoreConnector.saveData[AmendsGAModel]("AmendsGA", AmendsGAConstructor.identifyAmendsChanges(protectionAmendment.get.updatedProtection, protectionAmendment.get.originalProtection))
+          protectionAmendment <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status))
+          saveAmendsGA <- sessionCacheService.saveFormData[AmendsGAModel]("AmendsGA", AmendsGAConstructor.identifyAmendsChanges(protectionAmendment.get.updatedProtection, protectionAmendment.get.originalProtection))
           response <- plaConnector.amendProtection(nino, protectionAmendment.get.updatedProtection)
           result <- routeViaMCNeededCheck(response, nino)
         } yield result
@@ -100,7 +101,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
             Future.successful(BadRequest(amendPensionsTakenBefore(form)))
           },
           success => {
-              keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
+              sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
                 case Some(model) =>
                   val updatedAmount = success.amendedPensionsTakenBefore match {
                     case "yes" => success.amendedPensionsTakenBeforeAmt.get.toDouble
@@ -110,7 +111,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                   val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                   val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                  keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel).map {
+                  sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
                     _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
                   }
 
@@ -130,7 +131,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
           Future.successful(BadRequest(amendPensionsTakenBetween(form)))
         },
         success => {
-            keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
+            sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
               case Some(model) =>
                 val updatedAmount = success.amendedPensionsTakenBetween match {
                   case "yes" => success.amendedPensionsTakenBetweenAmt.get.toDouble
@@ -140,7 +141,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                 val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                 val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel).map {
+                sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
                   _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
                 }
 
@@ -162,7 +163,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
             Future.successful(BadRequest(amendOverseasPensions(form)))
           },
           success => {
-              keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
+              sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
                 case Some(model) =>
                   val updatedAmount = success.amendedOverseasPensions match {
                     case "yes" => success.amendedOverseasPensionsAmt.get.toDouble
@@ -172,7 +173,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                   val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                   val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                  keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel).map {
+                  sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
                     _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
                   }
 
@@ -192,13 +193,13 @@ extends FrontendController(mcc) with I18nSupport with Logging{
           Future.successful(BadRequest(amendCurrentPensions(form)))
         },
         success => {
-          keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
+          sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
             case Some(model) =>
               val updated = model.updatedProtection.copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
               val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
               val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-              keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel).map {
+              sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
                 _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
               }
 
@@ -218,12 +219,12 @@ extends FrontendController(mcc) with I18nSupport with Logging{
           Future.successful(BadRequest(removePsoDebits(form)))
         },
         success => {
-          keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status)).flatMap {
+          sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
             case Some(model) =>
               val updated = model.updatedProtection.copy(pensionDebits = None)
               val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
               val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
-              keyStoreConnector.saveFormData[AmendProtectionModel](Strings.keyStoreProtectionName(updated), amendProtModel).map {
+              sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
                 _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
               }
 
@@ -245,8 +246,8 @@ extends FrontendController(mcc) with I18nSupport with Logging{
         success => {
             val details = createPsoDetailsList(success)
             for {
-              amendModel <- keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(success.protectionType, success.status))
-              storedModel <- updateAndSaveAmendModelWithPso(details, amendModel, Strings.keyStoreAmendFetchString(success.protectionType, success.status))
+              amendModel <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status))
+              storedModel <- updateAndSaveAmendModelWithPso(details, amendModel, Strings.cacheAmendFetchString(success.protectionType, success.status))
             } yield Redirect(routes.AmendsController.amendsSummary(success.protectionType.toLowerCase, success.status.toLowerCase))
         }
       )
@@ -256,8 +257,8 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     implicit val lang = mcc.messagesApi.preferred(request).lang
      authFunction.genericAuthWithNino("existingProtections") { nino =>
-      val protectionKey = Strings.keyStoreAmendFetchString(protectionType, status)
-      keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
+      val protectionKey = Strings.cacheAmendFetchString(protectionType, status)
+      sessionCacheService.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
         case Some(amendModel) =>
             Ok(amendSummary(
             displayConstructors.createAmendDisplayModel(amendModel),
@@ -274,8 +275,8 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
      authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
-        modelAR <- keyStoreConnector.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
-        modelGA <- keyStoreConnector.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
+        modelAR <- sessionCacheService.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
+        modelGA <- sessionCacheService.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
         result <- amendmentOutcomeResult(modelAR, modelGA, nino)
       } yield result
     }
@@ -284,7 +285,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel], nino: String)
                             (implicit request:Request[AnyContent]):Future[Result] = {
     if (modelGA.isEmpty) {
-        logger.warn(s"Unable to retrieve amendsGAModel from keyStore for user nino :$nino")
+        logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
       }
       Future(modelAR.map {
         case model => {
@@ -292,14 +293,14 @@ extends FrontendController(mcc) with I18nSupport with Logging{
             throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
           }
           if (Constants.activeAmendmentCodes.contains(id)) {
-            keyStoreConnector.saveData[ProtectionModel]("openProtection", model.protection)
+            sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
             Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
           } else {
             Ok(outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
           }
         }
       }.getOrElse {
-        logger.warn(s"Unable to retrieve amendment outcome model from keyStore for user nino :$nino")
+        logger.warn(s"Unable to retrieve amendment outcome model from cache for user nino :$nino")
         InternalServerError(technicalError(ApplicationType.existingProtections.toString))
           .withHeaders(CACHE_CONTROL -> "no-cache")
       })
@@ -325,7 +326,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   private def amendRoute(journey: AmendJourney.Value, protectionType: String, status: String, nino: String) = Action.async { implicit request =>
     import AmendJourney._
-    keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
+    sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).map {
 
       case Some(data) =>
         getRouteUsingModel(
@@ -392,7 +393,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   def amendPsoDetails(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
+      sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).map {
         case Some(amendProtectionModel) =>
           amendProtectionModel.updatedProtection.pensionDebits match {
             case Some(debits) =>
@@ -429,7 +430,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   def removePso(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      keyStoreConnector.fetchAndGetFormData[AmendProtectionModel](Strings.keyStoreAmendFetchString(protectionType, status)).map {
+      sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).map {
         case Some(model) =>
           Ok(removePsoDebits(amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))))
         case _ =>
@@ -457,7 +458,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     responseConstructors.createAmendResponseModelFromJson(response.json).map {
       model =>
         if (model.protection.notificationId.isDefined) {
-          keyStoreConnector.saveData[AmendResponseModel]("amendResponseModel", model).map {
+          sessionCacheService.saveFormData[AmendResponseModel]("amendResponseModel", model).map {
             cacheMap => Redirect(routes.AmendsController.amendmentOutcome)
           }
         } else {
@@ -480,7 +481,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   private def updateAndSaveAmendModelWithPso(debits: Option[List[PensionDebitModel]], amendModelOption: Option[AmendProtectionModel], key: String)(implicit request: Request[AnyContent]) = {
     val amendModel = amendModelOption.getOrElse {throw new Exceptions.RequiredValueNotDefinedException("updateAndSaveAmendModelWithPso", "amendModel")}
     val newUpdatedProtection = amendModel.updatedProtection.copy(pensionDebits = debits)
-    keyStoreConnector.saveData[AmendProtectionModel](key, amendModel.copy(updatedProtection = newUpdatedProtection))
+    sessionCacheService.saveFormData[AmendProtectionModel](key, amendModel.copy(updatedProtection = newUpdatedProtection))
   }
 
   private object AmendJourney extends Enumeration {

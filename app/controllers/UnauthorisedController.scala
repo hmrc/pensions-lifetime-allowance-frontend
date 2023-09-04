@@ -17,13 +17,14 @@
 package controllers
 
 import config.{FrontendAppConfig, PlaContext}
-import connectors.{IdentityVerificationConnector, KeyStoreConnector}
+import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
 import javax.inject.Inject
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import play.api.Application
 import play.api.Logging
+import services.SessionCacheService
 import uk.gov.hmrc.http.Upstream4xxResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
@@ -32,7 +33,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 
 class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
-                                       keystoreConnector: KeyStoreConnector,
+                                       sessionCacheService: SessionCacheService,
                                        mcc: MessagesControllerComponents,
                                        lockedOut: views.html.pages.ivFailure.lockedOut,
                                        technicalIssue: views.html.pages.ivFailure.technicalIssue,
@@ -53,10 +54,10 @@ extends FrontendController(mcc) with I18nSupport with Logging {
       identityVerificationResult.flatMap {
         case IdentityVerificationResult.TechnicalIssue =>
           logger.warn("Technical Issue relating to Identity verification, user directed to technical issue page")
-          keystoreConnector.fetchAndGetFormData[Boolean](issuesKey).flatMap {
+          sessionCacheService.fetchAndGetFormData[Boolean](issuesKey).flatMap {
             case Some(true) => Future.successful(Ok(technicalIssue()))
             case _ =>
-              keystoreConnector.saveFormData(issuesKey, true).map { map =>
+              sessionCacheService.saveFormData(issuesKey, true).map { map =>
                 InternalServerError(technicalIssue())
               }
           }

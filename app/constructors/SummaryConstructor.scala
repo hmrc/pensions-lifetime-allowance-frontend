@@ -23,7 +23,7 @@ import common.Validation
 import enums.ApplicationType
 import models._
 import play.api.i18n.{Lang, MessagesProvider}
-import uk.gov.hmrc.http.cache.client.CacheMap
+import models.cache.CacheMap
 import utils.{CallMap, Constants}
 
 object SummaryConstructor extends SummaryConstructor {

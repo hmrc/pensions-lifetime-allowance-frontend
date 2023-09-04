@@ -20,7 +20,7 @@ import enums.ApplicationType
 import models._
 import play.api.libs.json.Json
 import testHelpers.FakeApplication
-import uk.gov.hmrc.http.cache.client.CacheMap
+import models.cache.CacheMap
 class IPApplicationConstructorSpec extends FakeApplication {
 
   val tstId = "testUserID"

@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 import auth.AuthFunction
 import common.{Dates, Strings}
 import config._
-import connectors.{KeyStoreConnector, PLAConnector}
+import connectors.PLAConnector
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.WithdrawDateForm._
@@ -32,6 +32,7 @@ import play.api.i18n.{I18nSupport, Lang, Messages}
 import play.api.mvc._
 import play.api.Application
 import play.api.Logging
+import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -39,7 +40,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class WithdrawProtectionController @Inject()(keyStoreConnector: KeyStoreConnector,
+class WithdrawProtectionController @Inject()(sessionCacheService: SessionCacheService,
                                              plaConnector: PLAConnector,
                                              displayConstructors: DisplayConstructors,
                                              mcc: MessagesControllerComponents,
@@ -64,7 +65,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   def withdrawImplications: Action[AnyContent] = Action.async {
     implicit request =>
       authFunction.genericAuthWithNino("existingProtections") { nino =>
-        keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
+        sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(currentProtection) =>
             Ok(withdrawImplications(withdrawDateForm,
               Strings.protectionTypeString(currentProtection.protectionType),
@@ -79,7 +80,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   def getWithdrawDateInput: Action[AnyContent] = Action.async {
     implicit request =>
       authFunction.genericAuthWithNino("existingProtections") { nino =>
-        keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
+        sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(currentProtection) =>
             Ok(withdrawDate(withdrawDateForm,
               Strings.protectionTypeString(currentProtection.protectionType),
@@ -98,7 +99,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
           Future.successful(BadRequest(withdrawDate(form, Strings.protectionTypeString(protection.protectionType), Strings.statusString(protection.status))))
         },
         form => {
-          keyStoreConnector.saveFormData(s"withdrawProtectionForm", form).flatMap {
+          sessionCacheService.saveFormData(s"withdrawProtectionForm", form).flatMap {
             _ => Future.successful(Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput))
           }
         }
@@ -107,7 +108,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
 
   def postWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("existingProtections") {
-      keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap {
+      sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap {
         case Some(protection) => validateAndSaveWithdrawDateForm(protection)
         case _ =>
           logger.error(s"Could not retrieve protection data for user when loading the withdraw date input page")
@@ -118,7 +119,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
 
 
   private[controllers] def fetchWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_], lang: Lang) = {
-    keyStoreConnector.fetchAndGetFormData[WithdrawDateFormModel]("withdrawProtectionForm") map  {
+    sessionCacheService.fetchAndGetFormData[WithdrawDateFormModel]("withdrawProtectionForm") map  {
       case Some(form) =>
         Ok(withdrawConfirm(
           getWithdrawDateModel(form), Strings.protectionTypeString(protection.protectionType),
@@ -133,7 +134,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
     implicit request =>
       implicit val lang = mcc.messagesApi.preferred(request).lang
       authFunction.genericAuthWithNino("existingProtections") { nino =>
-        keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap  {
+        sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap  {
           case Some(protection) =>
             fetchWithdrawDateForm(protection)
           case _ =>
@@ -147,7 +148,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
     implicit request =>
       implicit val lang = mcc.messagesApi.preferred(request).lang
       authFunction.genericAuthWithNino("existingProtections") { nino =>
-        keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection") map {
+        sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(protection) =>
             validateWithdrawDate(withdrawDateForm.bindFromRequest(),
             LocalDateTime.parse(protection.certificateDate.get)).fold(
@@ -171,7 +172,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
     implicit request =>
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         for {
-          protectionAmendment <- keyStoreConnector.fetchAndGetFormData[ProtectionModel]("openProtection")
+          protectionAmendment <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
           response <- plaConnector.amendProtection(nino, protectionAmendment.get.copy(withdrawnDate = Some(withdrawDate), status = Some("Withdrawn")))
           result <- routeToWithdrawConfirmation(protectionAmendment.get.protectionType, response, nino)
         } yield result
@@ -195,7 +196,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   def showWithdrawConfirmation(protectionType: String): Action[AnyContent] = Action.async {
     implicit request =>
       authFunction.genericAuthWithoutNino("existingProtections") {
-        keyStoreConnector.remove.map {
+        sessionCacheService.remove.map {
           _ => Ok(withdrawConfirmation(protectionType))
         }
       }

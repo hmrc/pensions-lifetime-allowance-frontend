@@ -18,12 +18,13 @@ package connectors
 
 import config.FrontendAppConfig
 import enums.IdentityVerificationResult
-import org.mockito.ArgumentMatchers
+import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.Status
 import play.api.libs.json.Json
+import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
@@ -37,7 +38,7 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
   implicit val executionContext = fakeApplication().injector.instanceOf[ExecutionContext]
   val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   val mockHttp = mock[DefaultHttpClient]
-  val mockKeyStoreConnector = mock[KeyStoreConnector]
+  val mockSessionCacheService = mock[SessionCacheService]
 
 
   val identityVerficationConstructor = new IdentityVerificationConnector(mockAppConfig, mockHttp)
@@ -59,7 +60,7 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
 
     def mockJourneyId(journeyId: String): Unit = {
       val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-      when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())).
+      when(mockHttp.GET[HttpResponse](Matchers.contains(journeyId), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).
         thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
     }
     possibleJournies.keys.foreach(mockJourneyId)

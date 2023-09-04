@@ -20,9 +20,9 @@ import akka.actor.ActorSystem
 import akka.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
 import config.FrontendAppConfig
-import connectors.{KeyStoreConnector, PdfGeneratorConnector}
+import connectors.PdfGeneratorConnector
 import models.{PSALookupRequest, PSALookupResult}
-import org.mockito.ArgumentMatchers._
+import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -35,6 +35,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.shaded.ahc.org.asynchttpclient.Response
 import play.shaded.ahc.org.asynchttpclient.uri.Uri
+import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import utils.ActionWithSessionId
@@ -54,7 +55,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
 
   val mockPdfGeneratorConnector: PdfGeneratorConnector = mock[PdfGeneratorConnector]
   private val sessionId = SessionKeys.sessionId -> "pdf-test"
-  val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
+  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
   val mockEnv: Environment = mock[Environment]
@@ -72,7 +73,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
   class Setup {
 
     val controller = new PrintPdfController(
-      mockKeyStoreConnector,
+      mockSessionCacheService,
       mockActionWithSessionId,
       mockPdfGeneratorConnector,
       psaLookupNotFoundPrintView,
@@ -86,7 +87,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
   "printResultsPDF" should {
     "return a 303 (redirect) when unable to print a Results PDF" in new Setup {
       val request = FakeRequest().withSession(sessionId)
-      keystoreFetchCondition[PSALookupRequest](None)
+      cacheFetchCondition[PSALookupRequest](None)
       val result = controller.printResultsPDF.apply(request)
 
       status(result) shouldBe SEE_OTHER
@@ -106,7 +107,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
 
       val request = FakeRequest().withSession(sessionId)
 
-      keystoreFetchCondition[PSALookupResult](Option(testPsaLookupResult))
+      cacheFetchCondition[PSALookupResult](Option(testPsaLookupResult))
       when(mockPdfGeneratorConnector.generatePdf(any())).thenReturn(response)
 
       val result = controller.printResultsPDF.apply(request)
@@ -121,7 +122,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
   "printNotFoundPDF" should {
     "return a 303 (redirect) when unable to print a NotFound PDF" in new Setup {
       val request = FakeRequest().withSession(sessionId)
-      keystoreFetchCondition[PSALookupRequest](None)
+      cacheFetchCondition[PSALookupRequest](None)
       val result = controller.printNotFoundPDF.apply(request)
 
       status(result) shouldBe SEE_OTHER
@@ -135,7 +136,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
       )
 
       val request = FakeRequest().withSession(sessionId)
-      keystoreFetchCondition[PSALookupRequest](Option(testPsaLookupRequest))
+      cacheFetchCondition[PSALookupRequest](Option(testPsaLookupRequest))
       val result = controller.printNotFoundPDF.apply(request)
 
       status(result) shouldBe SEE_OTHER
@@ -150,7 +151,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
 
       val request = FakeRequest().withSession(sessionId)
 
-      keystoreFetchCondition[PSALookupRequest](Option(testPsaLookupRequest))
+      cacheFetchCondition[PSALookupRequest](Option(testPsaLookupRequest))
       when(mockPdfGeneratorConnector.generatePdf(any())).thenReturn(response)
 
       val result = controller.printNotFoundPDF.apply(request)
@@ -163,7 +164,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
   }
 
 
-    def keystoreFetchCondition[T](data: Option[T]): Unit = when(mockKeyStoreConnector.fetchAndGetFormData[T](any())(any(), any()))
+    def cacheFetchCondition[T](data: Option[T]): Unit = when(mockSessionCacheService.fetchAndGetFormData[T](any())(any(), any()))
       .thenReturn(Future.successful(data))
 
   }

@@ -34,15 +34,15 @@ object Strings {
     }
   }
 
-  def keyStoreProtectionName(protection: ProtectionModel): String = {
+  def cacheProtectionName(protection: ProtectionModel): String = {
     statusString(protection.status) + protectionTypeString(protection.protectionType) + "Amendment"
   }
 
-  def keyStoreNonAmendableProtectionName(protection: ProtectionModel): String = {
+  def cacheNonAmendableProtectionName(protection: ProtectionModel): String = {
     statusString(protection.status).toLowerCase + protectionTypeString(protection.protectionType).toUpperCase
   }
 
-  def keyStoreAmendFetchString(protectionType: String, status: String): String = {
+  def cacheAmendFetchString(protectionType: String, status: String): String = {
     status.toLowerCase + protectionType.toUpperCase + "Amendment"
   }
 

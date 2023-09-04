@@ -16,21 +16,21 @@
 
 package testHelpers
 
-import connectors.KeyStoreConnector
-import org.mockito.ArgumentMatchers
+import models.cache.CacheMap
+import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.cache.client.CacheMap
+import play.api.mvc.Request
+import services.SessionCacheService
 
 import scala.concurrent.Future
 
-trait KeystoreTestHelper {
+trait SessionCacheTestHelper {
 
-  def keystoreSaveCondition[T](mockKeyStoreConnector: KeyStoreConnector, key: Option[String] = None, returnedData: Option[CacheMap] = None): OngoingStubbing[Future[CacheMap]] = {
-    val keyMatcher = key.map(ArgumentMatchers.contains).getOrElse(ArgumentMatchers.anyString())
+  def cacheSaveCondition[T](mockSessionCacheService: SessionCacheService, key: Option[String] = None, returnedData: Option[CacheMap] = None): OngoingStubbing[Future[CacheMap]] = {
+    val keyMatcher = key.map(Matchers.contains).getOrElse(Matchers.anyString())
 
-    when(mockKeyStoreConnector.saveFormData[T](keyMatcher, ArgumentMatchers.any())(ArgumentMatchers.any[HeaderCarrier](), ArgumentMatchers.any()))
+    when(mockSessionCacheService.saveFormData[T](keyMatcher, Matchers.any())(Matchers.any[Request[_]](), Matchers.any()))
       .thenReturn(Future.successful(returnedData.getOrElse(CacheMap("", Map.empty))))
   }
 

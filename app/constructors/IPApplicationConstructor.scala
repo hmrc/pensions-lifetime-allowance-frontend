@@ -21,7 +21,7 @@ import common.Strings.nameString
 import common.Validation
 import enums.ApplicationType
 import models._
-import uk.gov.hmrc.http.cache.client.CacheMap
+import models.cache.CacheMap
 
 object IPApplicationConstructor {
 

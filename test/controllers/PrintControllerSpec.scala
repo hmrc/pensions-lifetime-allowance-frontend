@@ -21,11 +21,11 @@ import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
-import connectors.{CitizenDetailsConnector, KeyStoreConnector}
+import connectors.CitizenDetailsConnector
 import constructors.DisplayConstructors
 import mocks.AuthMock
 import models._
-import org.mockito.ArgumentMatchers
+import org.mockito.Matchers
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -33,6 +33,7 @@ import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Configuration, Environment}
+import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
@@ -44,7 +45,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach {
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
-  val mockKeyStoreConnector: KeyStoreConnector = mock[KeyStoreConnector]
+  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   val fakeRequest = FakeRequest()
@@ -77,12 +78,12 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   }
 
 
-  val TestPrintController = new PrintController(mockKeyStoreConnector, mockCitizenDetailsConnector, mockDisplayConstructors, resultPrintView, mockMCC, authFunction) {
+  val TestPrintController = new PrintController(mockSessionCacheService, mockCitizenDetailsConnector, mockDisplayConstructors, resultPrintView, mockMCC, authFunction) {
   }
 
   override def beforeEach(): Unit = {
     reset(mockDisplayConstructors,
-      mockKeyStoreConnector,
+      mockSessionCacheService,
       mockCitizenDetailsConnector,
       mockPlaContext)
     super.beforeEach()
@@ -93,11 +94,11 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
       "Valid data is provided" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-        when(mockCitizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockCitizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
-        when(mockKeyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        when(mockSessionCacheService.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any()))
           .thenReturn(Future.successful(Some(testProtectionModel)))
-        when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockDisplayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
           .thenReturn(testPrintDisplayModel)
 
         val result = TestPrintController.printView(fakeRequest)
@@ -107,11 +108,11 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
 
     "return a 303 redirect" when {
       "InValid data is provided" in {
-        when(mockCitizenDetailsConnector.getPersonDetails(ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockCitizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any()))
           .thenReturn(Future(Some(testPersonalDetails)))
-        when(mockKeyStoreConnector.fetchAndGetFormData[ProtectionModel](ArgumentMatchers.any())(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        when(mockSessionCacheService.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any()))
           .thenReturn(Future(None))
-        when(mockDisplayConstructors.createPrintDisplayModel(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())(ArgumentMatchers.any()))
+        when(mockDisplayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
           .thenReturn(testPrintDisplayModel)
 
         val result = TestPrintController.printView(fakeRequest)
