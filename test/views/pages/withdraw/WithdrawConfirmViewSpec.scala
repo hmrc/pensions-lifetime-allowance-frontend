@@ -46,7 +46,7 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
     }
 
     s"have a back link with text 'back' " in {
-      doc.select("a#back-link").text() shouldBe plaBaseBack
+      doc.select(".govuk-back-link").text() shouldBe plaBaseBack
     }
 
     "have a form action of 'getAction'" in {

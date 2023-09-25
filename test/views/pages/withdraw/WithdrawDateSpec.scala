@@ -37,10 +37,10 @@ class WithdrawDateSpec extends CommonViewSpecHelper with WithdrawDateSpecMessage
       doc.select("h1.govuk-fieldset__heading").text shouldEqual plaWithdrawDateInputHeading
     }
     s"have a back link with text back " in {
-      doc.select("a.govuk-back-link").text() shouldBe plaBaseBack
+      doc.select(".govuk-back-link").text() shouldBe plaBaseBack
     }
     s"have a back link with href" in {
-      doc.select("a.govuk-back-link").attr("href") shouldBe "javascript:history.back()"
+      doc.select(".govuk-back-link").attr("href") shouldBe "#"
     }
     s"have a hint of $plaWithdrawDateInputFormHint" in {
       doc.select(".govuk-hint").text() shouldBe plaWithdrawDateInputFormHint

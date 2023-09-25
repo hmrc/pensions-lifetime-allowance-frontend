@@ -15,6 +15,7 @@
  *@
 
 @import models.PrintDisplayModel
+@import views.html.helper.CSPNonce
 
 @this()
 
@@ -22,11 +23,16 @@
 
 <!DOCTYPE html>
 <html class="govuk-template " lang="en">
+<script @CSPNonce.attr>
+    window.addEventListener("load", function() {
+        window.print();
+    });
+</script>
 <head>
     <link href="/protect-your-lifetime-allowance/hmrc-frontend/assets/hmrc-frontend-ie8-2.0.0.min.css" media="all" rel="stylesheet" type="text/css" />
     <title>@Messages("pla.print.title") - @messages("service.name") - GOV.UK</title>
 </head>
-<body class="govuk-template__body" onload="window.print()">
+<body class="govuk-template__body">
 <header role="banner">
     <div class="govuk-header hmrc-header " data-module="header">
         <div class="govuk-header__container  govuk-width-container">
