@@ -38,11 +38,11 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
     }
 
     s"have a back link with text back " in {
-      doc.select("#back-link").text() shouldBe "Back"
+      doc.select(".govuk-back-link").text() shouldBe "Back"
     }
 
     s"have a back link with href" in {
-      doc.select("#back-link").attr("href") shouldBe "javascript:history.back()"
+      doc.select(".govuk-back-link").attr("href") shouldBe "#"
     }
 
     s"have the question of the page ${"pla.withdraw.protection.title"}" in {
@@ -91,11 +91,11 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
     }
 
     s"have a back link with text back " in {
-      doc.select("#back-link").text() shouldBe "Back"
+      doc.select(".govuk-back-link").text() shouldBe "Back"
     }
 
     s"have a back link with href" in {
-      doc.select("#back-link").attr("href") shouldBe "javascript:history.back()"
+      doc.select(".govuk-back-link").attr("href") shouldBe "#"
     }
 
     s"have the question of the page ${"pla.withdraw.protection.title"}" in {
