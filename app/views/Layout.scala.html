@@ -36,7 +36,8 @@
     pageTitle: String,
     backLinkEnabled: Boolean= true,
     isUserResearchBannerVisible: Boolean = false,
-    timeoutEnabled: Boolean = true
+    timeoutEnabled: Boolean = true,
+    additionalPrintCSS: Boolean = false
 )(
     contentBlock: Html
 )(
@@ -62,6 +63,9 @@
         )
     }
     <link rel="stylesheet" type="text/css" href ='@routes.Assets.versioned("stylesheets/pla.css")'>
+    @if(additionalPrintCSS) {
+        <link href='@routes.Assets.versioned("stylesheets/pla-print.css")' media="print" rel="stylesheet" type="text/css" />
+    }
 }
 
 @mainContent = {
