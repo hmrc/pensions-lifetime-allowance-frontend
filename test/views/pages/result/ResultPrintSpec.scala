@@ -41,19 +41,19 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
 
     "have a service name which" should {
 
-      lazy val serviceName = doc.getElementsByClass("govuk-header__link govuk-header__link--service-name")
+      lazy val serviceName = doc.getElementsByClass("hmrc-header__service-name")
 
       "contain the text" in {
         serviceName.text shouldBe plaPrintServiceName
       }
-  }
+    }
 
-    "have a second heading which" should {
+    "have a first heading which" should {
 
       lazy val h1Tag = doc.select("h1")
       lazy val p1 = doc.select("p").get(0)
 
-      s"contain the text" in {
+      "contain the text" in {
         h1Tag.text shouldBe "Jim Davis"
       }
 
@@ -72,8 +72,8 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
 
     "have a second heading which" should {
 
-      "contains the text" in {
-        doc.select("h2").text shouldBe plaPrintProtectionDetails
+      "contain the text" in {
+        doc.select("h2").first().text shouldBe plaPrintProtectionDetails
       }
     }
 

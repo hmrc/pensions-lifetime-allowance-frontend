@@ -5,11 +5,11 @@ object AppDependencies {
   import play.sbt.PlayImport.*
 
   private val bootstrapVersion = "7.22.0"
-  private val playFrontendVersion = "7.19.0-play-28"
+  private val playFrontendVersion = "7.20.0-play-28"
   private val playPartialsVersion = "8.4.0-play-28"
   private val mongoPlayVersion = "1.3.0"
 
-  val compile = Seq(
+  val compile: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc" %% "bootstrap-frontend-play-28" % bootstrapVersion,
     "uk.gov.hmrc" %% "play-frontend-hmrc" % playFrontendVersion,
