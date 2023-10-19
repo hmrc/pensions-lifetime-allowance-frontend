@@ -54,6 +54,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
 
   lazy val urBannerLink = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113"
   override lazy val ssoUrl: Option[String] = configuration.getOptional[String](s"portal.ssoUrl")
+  lazy val isWelshTranslationAvailable: Boolean = servicesConfig.getBoolean("microservice.services.features.welsh-translation")
 
   override val excludeCopeTab: Boolean = configuration.getOptional[Boolean](s"microservice.services.exclusions.copetab").getOrElse(true)
   override val identityVerification: Boolean = configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)

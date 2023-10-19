@@ -16,19 +16,18 @@
 
 @import config.FrontendAppConfig
 @import uk.gov.hmrc.hmrcfrontend.config.AccountMenuConfig
+@import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage._
 @import uk.gov.hmrc.hmrcfrontend.views.html.components.implicits.RichAccountMenu
 
+
 @this(
-    govukLayout: GovukLayout,
-    hmrcAccountMenu: HmrcAccountMenu,
-    hmrcHead: HmrcHead,
-    hmrcStandardHeader: HmrcStandardHeader,
-    hmrcStandardFooter: HmrcStandardFooter,
-    hmrcScripts: HmrcScripts,
-    hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
+    hmrcStandardPage: HmrcStandardPage,
+    twoThirdsMainContent: TwoThirdsMainContent,
     hmrcReportTechnicalIssueHelper: HmrcReportTechnicalIssueHelper,
     hmrcTimeoutDialogHelper: HmrcTimeoutDialogHelper,
     appConfig: FrontendAppConfig,
+    hmrcAccountMenu: HmrcAccountMenu,
+    hmrcLanguageSelectHelper: HmrcLanguageSelectHelper,
     govukBackLink: GovukBackLink
 )(implicit accountMenuConfig: AccountMenuConfig)
 
@@ -37,7 +36,8 @@
     backLinkEnabled: Boolean= true,
     isUserResearchBannerVisible: Boolean = false,
     timeoutEnabled: Boolean = true,
-    additionalPrintCSS: Boolean = false
+    additionalPrintCSS: Boolean = false,
+    fullGrid: Boolean = false
 )(
     contentBlock: Html
 )(
@@ -45,27 +45,25 @@
     messages: Messages
 )
 
-@accountMenu = {
-    @if(request.session.get("authToken")){
-        @hmrcAccountMenu(AccountMenu(
-            signOut = SignOut(appConfig.signOutUrl)
-        ).withUrlsFromConfig())
-    }
-
-    @hmrcLanguageSelectHelper()
-    @if(backLinkEnabled) { @govukBackLink(BackLink.mimicsBrowserBackButtonViaJavaScript) }
-}
-
 @head = {
     @if(timeoutEnabled) {
         @hmrcTimeoutDialogHelper(
             signOutUrl = routes.TimeoutController.timeout.url
         )
     }
-    <link rel="stylesheet" type="text/css" href ='@routes.Assets.versioned("stylesheets/pla.css")'>
     @if(additionalPrintCSS) {
-        <link href='@routes.Assets.versioned("stylesheets/pla-print.css")' media="print" rel="stylesheet" type="text/css" />
+    <link href='@routes.Assets.versioned("stylesheets/pla-print.css")' media="print" rel="stylesheet" type="text/css" />
     }
+}
+
+@beforeContentBlock = {
+@if(request.session.get("authToken")){
+    @hmrcAccountMenu(AccountMenu(
+        signOut = SignOut(appConfig.signOutUrl)
+    ).withUrlsFromConfig())
+}
+@hmrcLanguageSelectHelper()
+@if(backLinkEnabled) { @govukBackLink(BackLink.mimicsBrowserBackButtonViaJavaScript) }
 }
 
 @mainContent = {
@@ -73,15 +71,19 @@
     @hmrcReportTechnicalIssueHelper()
 }
 
-@govukLayout(
-    pageTitle = Some(s"""$pageTitle - ${messages("service.name")} - GOV.UK"""),
-    headBlock = Some(hmrcHead(headBlock = Some(head))),
-    headerBlock = Some(hmrcStandardHeader(
-        serviceUrl = Some(""),
-        userResearchBanner = if (isUserResearchBannerVisible) {Some(UserResearchBanner(url = appConfig.urBannerLink))} else None
-    )),
-    beforeContentBlock = Some(accountMenu),
-    mainContentLayout = Some(_ => Html(s"<div class='govuk-grid-row'><div class='govuk-grid-column-two-thirds'>$mainContent</div></div>")),
-    scriptsBlock = Some(hmrcScripts()),
-    footerBlock = Some(hmrcStandardFooter())
-)(mainContent)
+@hmrcStandardPage(
+    HmrcStandardPageParams(
+        serviceURLs = ServiceURLs(
+            serviceUrl = None
+        ),
+        banners = Banners(
+            userResearchBanner = Option.when(isUserResearchBannerVisible){ UserResearchBanner(url = appConfig.urBannerLink) }
+        ),
+        serviceName = Some(messages("service.name")),
+        pageTitle = Some(s"""$pageTitle - ${messages("service.name")} - GOV.UK"""),
+        templateOverrides = TemplateOverrides(
+            additionalHeadBlock = Some(head),
+            beforeContentBlock = Some(beforeContentBlock),
+            mainContentLayout = if (fullGrid) Some(content => Html(s"<div class='govuk-grid-row'><div class='govuk-grid-column-full'>$content</div></div>")) else Some(twoThirdsMainContent(_))
+        )
+    ))(mainContent)
