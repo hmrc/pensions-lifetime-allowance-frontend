@@ -106,7 +106,7 @@ global.error.404.heading=This page can''t be found
 global.error.404.message=Please check that you have entered the correct web address.
 
 ## Generic 500 Error ##
-pla.error.InternalServerError500.title=Sorry, there is a problem with the service - Protect your lifetime allowance - GOV.UK
+pla.error.InternalServerError500.title=Sorry, there is a problem with the service
 pla.error.InternalServerError500.heading=Sorry, there is a problem with the service
 pla.error.InternalServerError500.message=Try again later. Your pension allowance account is not affected by this problem.
 
