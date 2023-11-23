@@ -27,7 +27,7 @@
 @(res: SuccessDisplayModel, showUserResearchPanel: Boolean)(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = Messages("pla.resultSuccess.title"),
+    pageTitle = Messages(s"resultCode.${res.notificationId}.heading"),
     isUserResearchBannerVisible = showUserResearchPanel
 ) {
 

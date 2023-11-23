@@ -44,7 +44,6 @@ error.required                          = This field is required
 pla.links.signout                       = Sign out
 
 ## Timeout ##
-pla.timeout.title       = Session closed due to inactivity
 pla.timeout.pageHeading = You''ve been signed out due to inactivity
 pla.timeout.returnToPTA = You can start again from the <a href="{0}" class="govuk-link" rel="external">protect your lifetime allowance</a> page.
 
@@ -260,7 +259,6 @@ pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2016 
 
 
 ## SUMMARY ##
-pla.summary.title                                   = Submit your application
 pla.summary.pageHeading                             = Check and submit your protection details
 pla.summary.errorSummaryLabel                       = There''s a problem with your application
 pla.summary.underThresholdError.IP2016              = Your total pension savings were less than £1,000,001 on 5 April 2016. You can only apply for individual protection 2016 if your pension savings were £1,000,001 or more.
@@ -430,7 +428,6 @@ pla.resultRejection.viewDetails.afterLink = at any time.
 
 
 ## Manual Correspondence Needed ##
-pla.mcNeeded.title                        = There is a problem accessing your account
 pla.mcNeeded.pageHeading                  = There''s a problem logging you in
 pla.mcNeeded.needToSpeakToYou             = We need to speak to you before you can log in to your account.
 pla.mcNeeded.howToFix                     = How to fix this
