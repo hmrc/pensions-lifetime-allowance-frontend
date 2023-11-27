@@ -32,21 +32,21 @@
 @(amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel])(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
-    <p class="govuk-body">@Messages("pla.pensionsTakenBefore.para.1")</p>
+    <p class="govuk-body">@Messages("pla.pensionsWorthBefore.para.1")</p>
     <ol class="govuk-list govuk-list--number">
-        <li>@Messages("pla.pensionsTakenBefore.step.1")</li>
-        <li>@Messages("pla.pensionsTakenBefore.step.2")</li>
-        <li>@Messages("pla.pensionsTakenBefore.step.3")</li>
+        <li>@Messages("pla.pensionsWorthBefore.step.1")</li>
+        <li>@Messages("pla.pensionsWorthBefore.step.2")</li>
+        <li>@Messages("pla.pensionsWorthBefore.step.3")</li>
     </ol>
-    <p>@Messages("pla.pensionsTakenBefore.para.2")</p>
+    <p>@Messages("pla.pensionsWorthBefore.para.2")</p>
     <ul class="govuk-list govuk-list--number">
-        <li>@Messages("pla.pensionsTakenBefore.bullet.1")</li>
-        <li>@Messages("pla.pensionsTakenBefore.bullet.2")</li>
+        <li>@Messages("pla.pensionsWorthBefore.bullet.1")</li>
+        <li>@Messages("pla.pensionsWorthBefore.bullet.2")</li>
     </ul>
     <p class="govuk-body">
-        @Messages( "pla.pensionsTakenBefore.para.3")
-        <a href="@Links.pensionsTakenBefore" class ="govuk-link" id ="ip16-amend-pensions-taken-before-help-link" rel="noreferrer noopener" target="_blank">
-            @Messages("pla.pensionsTakenBefore.helpLinkText") (@Messages("pla.base.newTab")).
+        @Messages( "pla.pensionsWorthBefore.para.3")
+        <a href="@Links.pensionsWorthBefore" class ="govuk-link" id ="ip16-amend-pensions-taken-before-help-link" rel="noreferrer noopener" target="_blank">
+            @Messages("pla.pensionsWorthBefore.helpLinkText") (@Messages("pla.base.newTab")).
         </a>
     </p>
 }
@@ -59,17 +59,17 @@
 
 @hiddenYesNoContent = {
 
-    <h2 class="govuk-label--l">@Messages("pla.pensionsTakenBefore.question")</h2>
+    <h2 class="govuk-label--l">@Messages("pla.pensionsWorthBefore.question")</h2>
 
     @helpTextAccordion(
         id = "ip16-amend-pensions-taken-before-help",
-        summaryText =  Messages("pla.pensionsTakenBefore.help"),
+        summaryText =  Messages("pla.pensionsWorthBefore.help"),
         hiddenContent = helpTextAccordionContent
     )
 
     @formInputMoney(
         field = amendPensionsTakenBeforeForm("amendedPensionsTakenBeforeAmt"),
-        question = Messages("pla.pensionsTakenBefore.question"),
+        question = Messages("pla.pensionsWorthBefore.question"),
         hideLabel = true,
         pageHeading = false,
         errorMessage = if (amendPensionsTakenBeforeForm.errors.nonEmpty) Some(errorMessage.head) else Some("")

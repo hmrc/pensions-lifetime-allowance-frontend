@@ -61,8 +61,9 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
   val negativeIP14PensionDebitsTuple =  "ip14PensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
   val positivePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("yes")))
-  val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes", Some(BigDecimal(1000.1234567891))))
-  val negativePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("no", None))
+  val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes"))
+  val negativePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("no"))
+  val validPensionsWorthBeforeTuple = "pensionsWorthBefore" -> Json.toJson(PensionsWorthBeforeModel(Some(BigDecimal(1000.1234567891))))
   val positivePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes", Some(BigDecimal(1100.1234567891))))
   val negativePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("no", None))
   val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010.1234567891))))
@@ -169,6 +170,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
       val userData = CacheMap(tstId, Map(positivePensionsTakenTuple,
                                         positivePensionsTakenBeforeTuple,
+                                        validPensionsWorthBeforeTuple,
                                         positivePensionsTakenBetweenTuple,
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple2,

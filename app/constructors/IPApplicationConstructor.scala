@@ -32,11 +32,10 @@ object IPApplicationConstructor {
     // uncrystallised Rights- current pensions
     val uncrystallisedRightsAmount = data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt
 
-
     def getPensionsTakenBeforeAmt() = {
       data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore")) match {
         case Some(model) => model.pensionsTakenBefore match {
-          case "yes" => data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore")).get.pensionsTakenBeforeAmt
+          case "yes" => data.getEntry[PensionsWorthBeforeModel](nameString("pensionsWorthBefore")).get.pensionsWorthBeforeAmt
           case _ => Some(BigDecimal(0))
         }
         case _ => Some(BigDecimal(0))
@@ -56,7 +55,7 @@ object IPApplicationConstructor {
     // preADay - Pensions taken before
     val preADayPensionInPayment: Option[BigDecimal] = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
       case Some(model) => model.pensionsTaken match {
-        case Some("yes") => getPensionsTakenBeforeAmt()
+        case Some("yes") => getPensionsTakenBeforeAmt
         case _ => Some(BigDecimal(0))
       }
       case _ => Some(BigDecimal(0))

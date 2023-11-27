@@ -20,7 +20,7 @@
     govukSummaryList : GovukSummaryList
 )
 
-@(section: SummarySectionModel, removeLinkDefined: Boolean)(implicit messages: Messages)
+@(sections: Seq[SummarySectionModel], removeLinkDefined: Boolean)(implicit messages: Messages)
 
 @summaryRow(rowID: String, displayValues: Seq[String], changeLinkCall: Option[Call], removeLinkCall: Option[Call], removeLinkDefined: Boolean, boldText: Boolean, firstRow: Boolean) = @{
 val firstRowClass = if(firstRow) "has-child-item" else ""
@@ -73,17 +73,18 @@ val changeRemoveLinks = Seq(
     }
 }
 
-@rows = @{
-    val topRow: Option[SummaryListRow] = section.rows.headOption.map { firstRow =>
-        summaryRow(firstRow.rowID, firstRow.displayValues, firstRow.changeLinkCall, firstRow.removeLinkCall, removeLinkDefined, firstRow.boldText, section.rows.tail.nonEmpty)
-    }
-    val otherRows: Seq[Option[SummaryListRow]] = section.rows.tail.map { otherRow =>
-        Some(summaryRow(otherRow.rowID, otherRow.displayValues, otherRow.changeLinkCall, otherRow.removeLinkCall, removeLinkDefined, otherRow.boldText, false))
-    }
-    topRow +: otherRows
+@getRows = @{
+    sections.map { section =>
+        val topRow: Option[SummaryListRow] = section.rows.headOption.map { firstRow =>
+            summaryRow(firstRow.rowID, firstRow.displayValues, firstRow.changeLinkCall, firstRow.removeLinkCall, removeLinkDefined, firstRow.boldText, section.rows.tail.nonEmpty)
+        }
+        val otherRows: Seq[Option[SummaryListRow]] = section.rows.tail.map { otherRow =>
+            Some(summaryRow(otherRow.rowID, otherRow.displayValues, otherRow.changeLinkCall, otherRow.removeLinkCall, removeLinkDefined, otherRow.boldText, false))
+        }
+        topRow +: otherRows
+    }.flatten
 }
 
-
 @govukSummaryList(SummaryList(
-    rows = rows.flatten
+    rows = getRows.flatten
 ))

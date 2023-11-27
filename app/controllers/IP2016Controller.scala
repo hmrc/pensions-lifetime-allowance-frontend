@@ -23,6 +23,7 @@ import forms.OverseasPensionsForm.overseasPensionsForm
 import forms.PSODetailsForm.psoDetailsForm
 import forms.PensionDebitsForm.pensionDebitsForm
 import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
+import forms.PensionsWorthBeforeForm.pensionsWorthBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
 import forms.PensionsTakenForm.pensionsTakenForm
 import javax.inject.Inject
@@ -44,6 +45,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
                                  authFunction: AuthFunction,
                                  pensionsTaken: pages.ip2016.pensionsTaken,
                                  pensionsTakenBefore: pages.ip2016.pensionsTakenBefore,
+                                 pensionsWorthBefore: pages.ip2016.pensionsWorthBefore,
                                  pensionsTakenBetween: pages.ip2016.pensionsTakenBetween,
                                  overseasPensions: pages.ip2016.overseasPensions,
                                  currentPensions: pages.ip2016.currentPensions,
@@ -109,10 +111,40 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
           Future.successful(BadRequest(pensionsTakenBefore(form)))
         },
         success => {
-          sessionCacheService.saveFormData("pensionsTakenBefore", success).flatMap {
-            _ => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
+          sessionCacheService.saveFormData("pensionsTakenBefore", success).map {
+            _ =>
+              success.pensionsTakenBefore match {
+                case "yes" => Redirect(routes.IP2016Controller.pensionsWorthBefore)
+                case "no" => Redirect(routes.IP2016Controller.pensionsTakenBetween)
+              }
           }
         }
+      )
+    }
+  }
+
+  //PENSIONS WORTH BEFORE
+  def pensionsWorthBefore: Action[AnyContent] = Action.async { implicit request =>
+    authFunction.genericAuthWithoutNino("IP2016") {
+      sessionCacheService.fetchAndGetFormData[PensionsWorthBeforeModel]("pensionsWorthBefore").map {
+        case Some(data) => Ok(pensionsWorthBefore(pensionsWorthBeforeForm.fill(data)))
+        case _ => Ok(pensionsWorthBefore(pensionsWorthBeforeForm))
+      }
+    }
+  }
+
+  def submitPensionsWorthBefore: Action[AnyContent] = Action.async { implicit request =>
+    authFunction.genericAuthWithoutNino("IP2016") {
+      pensionsWorthBeforeForm.bindFromRequest().fold(
+        errors => {
+          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
+          Future.successful(BadRequest(pensionsWorthBefore(form)))
+        },
+        success => {
+          sessionCacheService.saveFormData("pensionsWorthBefore", success).flatMap {
+              _ => Future.successful(Redirect(routes.IP2016Controller.pensionsTakenBetween))
+            }
+          }
       )
     }
   }

@@ -29,7 +29,8 @@ class IPApplicationConstructorSpec extends FakeApplication {
     val positivePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("yes")))
     val negativePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
 
-    val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes", Some(BigDecimal(1000))))
+    val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes"))
+    val validPensionsWorthBeforeTuple = "pensionsWorthBefore" -> Json.toJson(PensionsWorthBeforeModel(Some(BigDecimal(1000))))
 
     val positivePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes", Some(BigDecimal(1100))))
     val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010))))
@@ -65,6 +66,7 @@ class IPApplicationConstructorSpec extends FakeApplication {
       "all answers are positive" in {
         val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
                                         positivePensionsTakenBeforeTuple,
+                                        validPensionsWorthBeforeTuple,
                                         positivePensionsTakenBetweenTuple,
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
@@ -91,12 +93,13 @@ class IPApplicationConstructorSpec extends FakeApplication {
       "passed incomplete data" in {
         implicit val protectionType = ApplicationType.IP2016
         val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
-          positivePensionsTakenBeforeTuple))
+          positivePensionsTakenBeforeTuple,
+          validPensionsWorthBeforeTuple))
         val thrown = intercept[Error] {
           IPApplicationConstructor.createIPApplication(tstMap)
         }
 
-        thrown.getMessage shouldBe """assertion failed: Invalid application data provided to createIPApplication for IP2016. Data: CacheMap(testUserID,Map(pensionsTaken -> {"pensionsTaken":"yes"}, pensionsTakenBefore -> {"pensionsTakenBefore":"yes","pensionsTakenBeforeAmt":1000}))"""
+        thrown.getMessage shouldBe """assertion failed: Invalid application data provided to createIPApplication for IP2016. Data: CacheMap(testUserID,Map(pensionsTaken -> {"pensionsTaken":"yes"}, pensionsTakenBefore -> {"pensionsTakenBefore":"yes"}, pensionsWorthBefore -> {"pensionsWorthBeforeAmt":1000}))"""
       }
     }
   }

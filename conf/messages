@@ -132,23 +132,25 @@ pla.ip14PensionsTaken.legend                = Before 6 April 2014, did you turn 
 
 ## Pensions Taken Before ##
 pla.pensionsTakenBefore.title               = Did you get an income from any of your pensions before 6 April 2006?
-pla.pensionsTakenBefore.question            = What were these pensions worth on 5 April 2016?
-pla.pensionsTakenBefore.help                = How to work out the amount
-pla.pensionsTakenBefore.para.1              = If you did not get an income from any other pensions since 6 April 2006:
-pla.pensionsTakenBefore.step.1              = Take only the pensions from which you got an income prior to 6 April 2006.
-pla.pensionsTakenBefore.step.2              = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2016.
-pla.pensionsTakenBefore.step.3              = Multiply this figure by 25.
-pla.pensionsTakenBefore.para.2              = You''ll need to do a different calculation if either of the following apply:
-pla.pensionsTakenBefore.bullet.1            = you did receive an income from other pensions since 6 April 2006
-pla.pensionsTakenBefore.bullet.2            = you have a drawdown pension
-pla.pensionsTakenBefore.para.3              = Find out how in this
-pla.pensionsTakenBefore.helpLinkText        = technical guidance on valuing your pensions
 pla.pensionsTakenBefore.errors.mandatoryError = Select yes if you got an income from any of your pensions before 6 April 2006
-pla.pensionsTakenBefore.amount.errors.mandatoryError = Enter what these pensions were worth on 5 April 2016
-pla.pensionsTakenBefore.amount.errors.decimal = What these pensions were worth on 5 April 2016 has too many numbers after the decimal point
-pla.pensionsTakenBefore.amount.errors.negative = What these pensions were worth on 5 April 2016 must be £0 or more
-pla.pensionsTakenBefore.amount.errors.max = What these pensions were worth on 5 April 2016 must be £1,000,000,000 or less
 
+## Pensions Worth Before ##
+pla.pensionsWorthBefore.title               = What were these pensions worth on 5 April 2016?
+pla.pensionsWorthBefore.question            = What were these pensions worth on 5 April 2016?
+pla.pensionsWorthBefore.help                = How to work out the amount
+pla.pensionsWorthBefore.para.1              = If you did not get an income from any other pensions since 6 April 2006:
+pla.pensionsWorthBefore.step.1              = Take only the pensions from which you got an income prior to 6 April 2006.
+pla.pensionsWorthBefore.step.2              = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2016.
+pla.pensionsWorthBefore.step.3              = Multiply this figure by 25.
+pla.pensionsWorthBefore.para.2              = You''ll need to do a different calculation if either of the following apply:
+pla.pensionsWorthBefore.bullet.1            = you did receive an income from other pensions since 6 April 2006
+pla.pensionsWorthBefore.bullet.2            = you have a drawdown pension
+pla.pensionsWorthBefore.para.3              = Find out how in this
+pla.pensionsWorthBefore.helpLinkText        = technical guidance on valuing your pensions
+pla.pensionsWorthBefore.amount.errors.mandatoryError = Enter what these pensions were worth on 5 April 2016
+pla.pensionsWorthBefore.amount.errors.decimal = What these pensions were worth on 5 April 2016 has too many numbers after the decimal point
+pla.pensionsWorthBefore.amount.errors.negative = What these pensions were worth on 5 April 2016 must be £0 or more
+pla.pensionsWorthBefore.amount.errors.max = What these pensions were worth on 5 April 2016 must be £1,000,000,000 or less
 
 
 ## IP14 Pensions Taken Before ##
@@ -268,8 +270,8 @@ pla.summary.questions.pensionsTaken                 = Before 5 April 2016, did y
 pla.summary.hiddenLinkText.pensionsTaken            = Change your response to the question ''have you taken any of your pensions''
 pla.summary.questions.pensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
 pla.summary.hiddenLinkText.pensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
-pla.summary.questions.pensionsTakenBeforeAmt        = What''s the value of the pensions you took before 6 April 2006?
-pla.summary.hiddenLinkText.pensionsTakenBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
+pla.summary.questions.pensionsWorthBeforeAmt        = What''s the value of the pensions you took before 6 April 2006?
+pla.summary.hiddenLinkText.pensionsWorthBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
 pla.summary.questions.pensionsTakenBetween          = Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.pensionsTakenBetween     = Change your response to the question ''did you get money from your pensions between 6 April 2006 and 5 April 2016''
 pla.summary.questions.pensionsTakenBetweenAmt       = How much lifetime allowance have you used?

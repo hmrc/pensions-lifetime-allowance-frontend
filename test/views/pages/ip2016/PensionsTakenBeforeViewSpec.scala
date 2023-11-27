@@ -27,53 +27,28 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
-  "the PensionsTakenBeforeView" should{
-    val pensionsForm = PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> "yes", "pensionsTakenBeforeAmt" -> "12345"))
+  "the PensionsTakenBeforeView" should {
+    val pensionsForm = PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> "yes"))
     lazy val view = application.injector.instanceOf[pensionsTakenBefore]
     lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
-    val errorForm =  PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> "", "pensionsTakenBeforeAmt" -> "12345"))
+    val errorForm =  PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> ""))
     lazy val errorView = application.injector.instanceOf[pensionsTakenBefore]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaPensionsTakenBeforeTitleNew
+      doc.title() shouldBe plaPensionsTakenBeforeTitle
     }
 
-    "have the correct and properly formatted header"in{
-      doc.getElementsByClass("govuk-heading-xl").text shouldBe plaPensionsTakenBeforeTitle
+    "have the correct and properly formatted header" in {
+      doc.getElementsByClass("govuk-fieldset__heading").text shouldBe plaPensionsTakenBeforeHeading
     }
 
-    "have the right explanatory messages" in{
-      doc.select("#conditional-pensionsTakenBefore > div > label").text shouldBe plaPensionsTakenBeforeQuestion
-      doc.select("summary").text shouldBe plaPensionsTakenBeforeHelp
-      doc.select("#ip16-pensions-taken-before-help > div > p:nth-child(1)").text shouldBe plaPensionsTakenBeforeParaOne
-      doc.select("#ip16-pensions-taken-before-help > div > p:nth-child(3)").text shouldBe plaPensionsTakenBeforeParaTwo
-      doc.select("#ip16-pensions-taken-before-help > div > p:nth-child(5)").text shouldBe plaPensionsTakenBeforeParaThreeNew
-    }
-
-    "have a hidden menu with the correct list values" in{
-      doc.select("#ip16-pensions-taken-before-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsTakenBeforeStepOne
-      doc.select("#ip16-pensions-taken-before-help > div > ol > li:nth-child(2)").text shouldBe plaPensionsTakenBeforeStepTwo
-      doc.select("#ip16-pensions-taken-before-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsTakenBeforeStepThree
-      doc.select("#ip16-pensions-taken-before-help > div > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBeforeBulletOne
-      doc.select("#ip16-pensions-taken-before-help > div > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBeforeBulletTwo
-    }
-
-    "have a help link redirecting to the right place" in{
-      doc.select("#ip16-pensions-taken-before-help-link").text shouldBe plaPensionsTakenBeforeHelpLinkTextNew
-      doc.select("#ip16-pensions-taken-before-help-link").attr("href") shouldBe plaPensionsTakenBeforeHelpLinkLocation
-    }
-
-    "have a valid form" in{
+    "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTakenBefore.url
-    }
-
-    "have a £ symbol present" in{
-      doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
     "have a pair of yes/no buttons" in{

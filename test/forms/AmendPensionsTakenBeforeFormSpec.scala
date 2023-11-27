@@ -29,6 +29,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
   implicit val lang: Lang = mock[Lang]
 
   val messageKey = "pensionsTakenBefore"
+  val amountMessageKey = "pensionsWorthBefore"
 
   "The AmendPensionsTakenBeforeForm" should {
     val validMap = Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "1000.00", "protectionType" -> "type", "status" -> "status")
@@ -106,7 +107,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMissingAmount(messageKey)
+          result.errors.head.message shouldBe errorMissingAmount(amountMessageKey)
         }
       }
     }
@@ -120,7 +121,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMissingAmount(messageKey)
+          result.errors.head.message shouldBe errorMissingAmount(amountMessageKey)
         }
 
         "provided an answer of yes for amendedPensionsTakenBefore with a value for amendedPensionsTakenBeforeAmt larger than the maximum" in {
@@ -128,7 +129,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMaximum(messageKey)
+          result.errors.head.message shouldBe errorMaximum(amountMessageKey)
         }
 
         "provided an answer of yes for amendedPensionsTakenBefore with a value for amendedPensionsTakenBeforeAmt that is negative" in {
@@ -136,7 +137,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorNegative(messageKey)
+          result.errors.head.message shouldBe errorNegative(amountMessageKey)
         }
 
         "provided an answer of yes for amendedPensionsTakenBefore with a value for amendedPensionsTakenBeforeAmt that has more than two decimal places" in {
@@ -145,7 +146,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorDecimal(messageKey)
+          result.errors.head.message shouldBe errorDecimal(amountMessageKey)
         }
       }
 
