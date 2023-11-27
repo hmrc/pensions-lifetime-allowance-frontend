@@ -17,7 +17,7 @@
 package testHelpers.ViewSpecHelpers.ip2016
 
 trait SummaryViewMessages{
-  val plaSummaryTitle                                   = "Submit your application"
+  val plaSummaryTitle                                   = "Check and submit your protection details"
   val plaSummaryPageHeading                             = "Check and submit your protection details"
   val plaSummaryErrorSummaryLabel                       = "There's a problem with your application"
   val plaSummaryUnderThresholdErrorIP2016               = "Your total pension savings were less than £1,000,001 on 5 April 2016. You can only apply for individual protection 2016 if your pension savings were £1,000,001 or more."

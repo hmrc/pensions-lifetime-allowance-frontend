@@ -51,7 +51,6 @@ error.required                          = Mae angen llenwi''r blwch hwn
 pla.links.signout                       = Allgofnodi
 
 ## Timeout ##
-pla.timeout.title       = Mae''r sesiwn wedi dod i ben o ganlyniad i anweithgarwch
 pla.timeout.pageHeading = Rydych wedi''ch allgofnodi o ganlyniad i anweithgarwch
 pla.timeout.returnToPTA = Gallwch ddechrau eto o''r dudalen <a href="{0}" class="govuk-link" rel="external">diogelu''ch lwfans oes</a>.
 
@@ -257,7 +256,6 @@ pla.IP16PsoDetails.errorDateOutOfRange      = Nodwch ddyddiad rhwng 5 Ebrill 201
 
 
 ## SUMMARY ##
-pla.summary.title                                   = Cyflwyno''ch cais
 pla.summary.pageHeading                             = Gwirio a chyflwyno''ch manylion diogelwch
 pla.summary.errorSummaryLabel                       = Mae problem gyda''ch cais
 pla.summary.underThresholdError.IP2016              = Roedd cyfanswm eich cynilion pensiwn yn llai na £1,000,001 ar 5 Ebrill 2016. Gallwch wneud cais am ddiogelwch unigol 2016 os oedd eich cynilion pensiwn yn £1,000,001 neu''n fwy.
@@ -421,7 +419,6 @@ pla.resultRejection.viewDetails.linkText = fwrw golwg ar fanylion eich diogelwch
 pla.resultRejection.viewDetails.afterLink = ar unrhyw adeg.
 
 ## Manual Correspondence Needed ##
-pla.mcNeeded.title                        = Mae problem wedi codi wrth gyrchu eich cyfrif
 pla.mcNeeded.pageHeading                  = Mae problem wedi codi wrth i chi fewngofnodi
 pla.mcNeeded.needToSpeakToYou             = Mae''n rhaid i ni siarad â chi cyn y gallwch fewngofnodi i''ch cyfrif.
 pla.mcNeeded.howToFix                     = Sut i unioni hyn

@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers.result
 
 trait ResultSuccess {
 
-  val plaResultSuccessTitle                 = "Success - Protect your lifetime allowance - GOV.UK"
+  val plaResultSuccessTitle                 = "You've added fixed protection 2016 - Protect your lifetime allowance - GOV.UK"
   val plaResultSuccessAllowanceSubHeading   = "Your protected lifetime allowance is"
   val plaResultSuccessProtectionDetails     = "Your protection details"
   val plaResultSuccessDetailsContent        = "When you decide to take money from your pension, give these details to your pension provider:"
