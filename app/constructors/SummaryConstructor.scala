@@ -62,14 +62,29 @@ trait SummaryConstructor {
     }
 
     val pensionsTakenSection = helper.createYesNoSection("pensionsTaken", pensionsTakenModel, boldText = false)
-    val pensionsTakenBeforeSection =
-      if(helper.positiveAnswer(pensionsTakenModel)) (
-        Some(helper.createYesNoAmountSection("pensionsTakenBefore", pensionsTakenBeforeModel, boldText = false))
-      )
-      else None
+//    val pensionsTakenBeforeSection =
+//      if(helper.positiveAnswer(pensionsTakenModel)) (
+//        Some(helper.createYesNoAmountSection("pensionsTakenBefore", pensionsTakenBeforeModel, boldText = false))
+//      )
+//      else None
+//
+//    val pensionsTakenBetweenSection = helper.createYesNoSection("pensionsTakenBetween", pensionsTakenBetweenModel, boldText = false)
+//
+//    val pensionsUsedBetweenSection =
+//      if (helper.positiveAnswer(pensionsTakenBetweenModel)) (
+//        Some(helper.createAmountSection("pensionsUsedBetween", pensionsUsedBetweenModel, boldText = false))
+//        )
+//      else None
+    val pensionsTakenBeforeSection = if (helper.positiveAnswer(pensionsTakenModel)) {
+      Some(helper.createYesNoAmountSection("pensionsTakenBefore", pensionsTakenBeforeModel, boldText = false))
+    } else None
 
-    val pensionsTakenBetweenSection = helper.createYesNoSection("pensionsTakenBetween", pensionsTakenBetweenModel, boldText = false)
-    val pensionsUsedBetweenSection = Some(helper.createAmountSection("pensionsUsedBetween", pensionsUsedBetweenModel, boldText = false))
+    val pensionsTakenBetweenSection = if (helper.positiveAnswer(pensionsTakenModel)) {
+      helper.createYesNoSection("pensionsTakenBetween", pensionsTakenBetweenModel, boldText = false)
+    } else None
+    val pensionsUsedBetweenSection = if (helper.positiveAnswer(pensionsTakenModel) && helper.positiveAnswer(pensionsTakenBetweenModel)) {
+      Some(helper.createAmountSection("pensionsUsedBetween", pensionsUsedBetweenModel, boldText = false))
+    } else None
 
     val overseasPensionsSection = Some(helper.createYesNoAmountSection("overseasPensions", overseasPensionsModel, boldText = false))
     val currentPensionsSection = Some(helper.createAmountSection("currentPensions", currentPensionsModel, boldText = false))

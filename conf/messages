@@ -160,13 +160,13 @@ pla.pensionsTakenBetween.title              = Did any of these events happen bet
 pla.pensionsTakenBetween.bullet.1           = you got money from your pensions
 pla.pensionsTakenBetween.bullet.2           = you transferred a pension to a scheme held overseas
 pla.pensionsTakenBetween.bullet.3           = you turned 75 with pension savings which you hadn''t yet taken
-pla.pensionsTakenBetween.para.1             = You''ll have used some of your lifetime allowance if any of these events happened.
 pla.pensionsTakenBetween.errors.mandatoryError = Select yes if any of these events happened between 6 April 2006 and 5 April 2016
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## Pensions Used Between ##
 pla.pensionsUsedBetween.title              = How much lifetime allowance have you used?
 pla.pensionsUsedBetween.question           = How much lifetime allowance have you used?
+pla.pensionsUsedBetween.para.1             = You''ll have used some of your lifetime allowance if any of these events happened.
 pla.pensionsUsedBetween.para.2             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
 pla.pensionsUsedBetween.step.1             = Take the lifetime allowance at 5 April 2016 (£1.25m) and divide by the value of your lifetime allowance on the date the event happened.
 pla.pensionsUsedBetween.step.2             = Multiply the value of your lifetime allowance on the date the event happened by the percentage of lifetime allowance used.

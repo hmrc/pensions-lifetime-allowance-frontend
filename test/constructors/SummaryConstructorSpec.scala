@@ -51,8 +51,10 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
 
     val positivePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes"))
     val negativePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("no"))
+    val validPensionUsedBetweenTuple = "pensionsUsedBetween" -> Json.toJson(PensionsUsedBetweenModel(Some(BigDecimal(1100))))
+
     val positivePensionsTakenBetweenSummaryRow = SummaryRowModel("pensionsTakenBetween", Some(controllers.routes.IP2016Controller.pensionsTakenBetween), None,  false, "Yes")
-    val positivePensionsTakenBetweenAmtSummaryRow = SummaryRowModel("pensionsTakenBetweenAmt", Some(controllers.routes.IP2016Controller.pensionsTakenBetween), None,  false, "£1,100")
+    val positivePensionsTakenBetweenAmtSummaryRow = SummaryRowModel("pensionsUsedBetweenAmt", Some(controllers.routes.IP2016Controller.pensionsUsedBetween), None,  false, "£1,100")
     val negativePensionsTakenBetweenSummaryRow = SummaryRowModel("pensionsTakenBetween", Some(controllers.routes.IP2016Controller.pensionsTakenBetween), None,  false, "No")
 
     val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010))))
@@ -86,6 +88,7 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
       "there is no pensions taken model" in {
         val tstMap = CacheMap(tstId, Map(positivePensionsTakenBeforeTuple,
                                         positivePensionsTakenBetweenTuple,
+                                        validPensionUsedBetweenTuple,
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
                                         negativePensionDebitsTuple))
@@ -112,6 +115,7 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
       "pensions taken 'yes' and no pensions taken before model" in {
         val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
                                         positivePensionsTakenBetweenTuple,
+                                        validPensionUsedBetweenTuple,
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
                                         negativePensionDebitsTuple))
@@ -175,7 +179,9 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
                                           SummarySectionModel(List(
                                             positivePensionsTakenBeforeSummaryRow, positivePensionsTakenBeforeAmtSummaryRow)),
                                           SummarySectionModel(List(
-                                            positivePensionsTakenBetweenSummaryRow, positivePensionsTakenBetweenAmtSummaryRow)),
+                                            positivePensionsTakenBetweenSummaryRow)),
+                                          SummarySectionModel(List(
+                                            positivePensionsTakenBetweenAmtSummaryRow)),
                                           SummarySectionModel(List(
                                             positiveOverseasPensionsSummaryRow, positiveOverseasPensionsAmtSummaryRow)),
                                           SummarySectionModel(List(
@@ -194,6 +200,7 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
         val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
                                         positivePensionsTakenBeforeTuple,
                                         positivePensionsTakenBetweenTuple,
+                                        validPensionUsedBetweenTuple,
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
                                         positivePensionDebitsTuple,

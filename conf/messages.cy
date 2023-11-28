@@ -157,13 +157,13 @@ pla.pensionsTakenBetween.title              = A ddigwyddodd unrhyw un o''r canly
 pla.pensionsTakenBetween.bullet.1           = cawsoch arian o''ch pensiynau
 pla.pensionsTakenBetween.bullet.2           = trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor
 pla.pensionsTakenBetween.bullet.3           = cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny
-pla.pensionsTakenBetween.para.1             = Os yw unrhyw un o''r digwyddiadau hyn wedi digwydd, byddech wedi defnyddio peth o''ch lwfans oes.
 pla.pensionsTakenBetween.errors.mandatoryError = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r digwyddiadau hyn rhwng 6 Ebrill 2006 a 5 Ebrill 2016
 pla.pensionsTakenBetween.legend             = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
 ## Pensions Used Between ##
 pla.pensionsUsedBetween.title                       = Faint o lwfans oes a ydych wedi''i ddefnyddio?
 pla.pensionsUsedBetween.question                    = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.pensionsUsedBetween.para.1             = Os yw unrhyw un o''r digwyddiadau hyn wedi digwydd, byddech wedi defnyddio peth o''ch lwfans oes.
 pla.pensionsUsedBetween.para.2                      = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi''i ddefnyddio ar gyfer diogelwch unigol 2016.
 pla.pensionsUsedBetween.step.1                      = Cymerwch y lwfans oes ar 5 Ebrill 2016 (£1.25m) a rhannwch ef â gwerth eich lwfans oes ar ddyddiad y digwyddiad.
 pla.pensionsUsedBetween.step.2                      = Lluoswch werth eich lwfans oes ar ddyddiad y digwyddiad â chanran y lwfans oes a ddefnyddiwyd.

@@ -56,6 +56,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
   val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
   val negativeIP14PensionsTakenTuple = "ip14PensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
+  val validIP14PensionUsedBetweenTuple = "ip14PensionsUsedBetween" -> Json.toJson(PensionsUsedBetweenModel(Some(BigDecimal(1001))))
   val negativeIP14OverseasPensionsTuple = "ip14OverseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
   val validIP14CurrentPensionsTuple = "ip14CurrentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
   val negativeIP14PensionDebitsTuple =  "ip14PensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
@@ -109,7 +110,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
       val tstMap = CacheMap(tstId, Map(negativeIP14PensionsTakenTuple,
                                       negativeIP14OverseasPensionsTuple,
                                       validIP14CurrentPensionsTuple,
-                                      validPensionUsedBetweenTuple,
+                                      validIP14PensionUsedBetweenTuple,
                                       negativeIP14PensionDebitsTuple))
       val response = connector.applyIP14(nino, tstMap)
 

@@ -32,6 +32,8 @@ class IPApplicationConstructorSpec extends FakeApplication {
     val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes", Some(BigDecimal(1000))))
 
     val positivePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes"))
+    val validPensionUsedBetweenTuple = "pensionsUsedBetween" -> Json.toJson(PensionsUsedBetweenModel(Some(BigDecimal(1100))))
+
     val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010))))
     val negativeOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
 
@@ -49,6 +51,7 @@ class IPApplicationConstructorSpec extends FakeApplication {
       "all answers are negative" in {
         val tstMap = CacheMap(tstId, Map(negativePensionsTakenTuple,
                                         positivePensionsTakenBetweenTuple,
+                                        validPensionUsedBetweenTuple,
                                         negativeOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
                                         negativePensionDebitsTuple))
@@ -66,6 +69,7 @@ class IPApplicationConstructorSpec extends FakeApplication {
         val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
                                         positivePensionsTakenBeforeTuple,
                                         positivePensionsTakenBetweenTuple,
+                                        validPensionUsedBetweenTuple,
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
                                         positivePensionDebitsTuple,
