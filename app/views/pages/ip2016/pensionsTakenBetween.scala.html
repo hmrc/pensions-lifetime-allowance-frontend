@@ -22,53 +22,11 @@
     layout: Layout,
     form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
     errorSummary: playHelpers.templates.errorSummary,
-    formHiddenYesNoRadio: playHelpers.templates.formHiddenYesNoRadio,
-    formInputMoney: playHelpers.templates.formInputMoney,
-    helpTextAccordion: playHelpers.templates.helpTextAccordion,
+    plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup,
     submitButton: playHelpers.templates.submitButton
 )
 
 @(pensionsTakenBetweenForm: Form[PensionsTakenBetweenModel])(implicit request: Request[_], messages: Messages)
-
-@helpTextAccordionContent = {
-
-    <p class="govuk-body">@Messages("pla.pensionsTakenBetween.para.2")</p>
-    <ol class="govuk-list govuk-list--number">
-        <li>@Messages("pla.pensionsTakenBetween.step.1")</li>
-        <li>@Messages("pla.pensionsTakenBetween.step.2")</li>
-        <li>@Messages("pla.pensionsTakenBetween.step.3")</li>
-        <li>@Messages("pla.pensionsTakenBetween.step.4")</li>
-    </ol>
-    <p class="govuk-body">
-        @Messages("pla.pensionsTakenBetween.para.3.nonInput") <a id="ip16-pensions-taken-between-help-link" class="govuk-link" href="@Links.pensionsTakenBetween" target="_blank" rel="noreferrer noopener">@Messages("pla.pensionsTakenBetween.helpLinkText") (@Messages("pla.base.newTab")).</a>
-    </p>
-
-}
-
-@errorMessage = @{
-    for(error <- pensionsTakenBetweenForm.errors) yield {
-        if(error.key.equals("pensionsTakenBetween")) "" else messages(error.message, error.args:_*)
-    }
-}
-
-@hiddenYesNoContent = {
-
-    <h2 class="govuk-heading-m">@Messages("pla.pensionsTakenBetween.questionTwo")</h2>
-    <p class="govuk-body">@Messages("pla.pensionsTakenBetween.para.1")</p>
-    @helpTextAccordion(
-        id = "ip16-pensions-taken-between-help",
-        summaryText = Messages("pla.pensionsTakenBetween.help"),
-        hiddenContent = helpTextAccordionContent
-    )
-
-    @formInputMoney(
-        field = pensionsTakenBetweenForm("pensionsTakenBetweenAmt"),
-        question = Messages("pla.pensionsTakenBetween.questionTwo"),
-        hideLabel = true,
-        pageHeading = false,
-        errorMessage = if (pensionsTakenBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
-    )
-}
 
 @title = @{
     if(pensionsTakenBetweenForm.errors.nonEmpty){
@@ -80,26 +38,27 @@
 @layout(
     pageTitle = title
 ) {
-
-    @errorSummary(pensionsTakenBetweenForm.errors, Some("pensionsTakenBetweenAmt"))
+    @errorSummary(pensionsTakenBetweenForm.errors)
 
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBetween.title")</h1>
 
+    <ul class="govuk-list govuk-list--bullet">
+        <li>@Messages("pla.pensionsTaken.bullet.1")</li>
+        <li>@Messages("pla.pensionsTaken.bullet.2")</li>
+        <li>@Messages("pla.pensionsTaken.bullet.3")</li>
+    </ul>
     @form(action = routes.IP2016Controller.submitPensionsTakenBetween) {
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>@Messages("pla.pensionsTakenBetween.bullet.1")</li>
-            <li>@Messages("pla.pensionsTakenBetween.bullet.2")</li>
-            <li>@Messages("pla.pensionsTakenBetween.bullet.3")</li>
-        </ul>
-
-        @formHiddenYesNoRadio(
-            field = pensionsTakenBetweenForm("pensionsTakenBetween"),
-            question = Messages("pla.pensionsTakenBetween.legend"),
-            hiddenQuestion = true,
-            yesHiddencontent = Some(hiddenYesNoContent)
+        @plaInputRadioGroup(
+            legend = Messages("pla.pensionsTakenBetween.title"),
+            legendClass = Some("govuk-visually-hidden"),
+            items = Seq(
+                RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
+                RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+            ),
+            isPageHeading = false,
+            inLine = true,
+            field = pensionsTakenBetweenForm("pensionsTakenBetween")
         )
-
         @submitButton()
     }
 }

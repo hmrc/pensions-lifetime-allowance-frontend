@@ -63,8 +63,9 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
   val positivePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("yes")))
   val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes", Some(BigDecimal(1000.1234567891))))
   val negativePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("no", None))
-  val positivePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes", Some(BigDecimal(1100.1234567891))))
-  val negativePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("no", None))
+  val positivePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes"))
+  val negativePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("no"))
+  val validPensionUsedBetweenTuple = "pensionsUsedBetween" -> Json.toJson(PensionsUsedBetweenModel(Some(BigDecimal(1001))))
   val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010.1234567891))))
   val validCurrentPensionsTuple2 = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001.1234567891))))
   val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
@@ -93,6 +94,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
       val tstMap = CacheMap(tstId, Map(negativePensionsTakenTuple,
                                       negativeOverseasPensionsTuple,
                                       validCurrentPensionsTuple,
+                                      validPensionUsedBetweenTuple,
                                       negativePensionDebitsTuple))
       val response = connector.applyIP16(nino, tstMap)
 
@@ -107,6 +109,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
       val tstMap = CacheMap(tstId, Map(negativeIP14PensionsTakenTuple,
                                       negativeIP14OverseasPensionsTuple,
                                       validIP14CurrentPensionsTuple,
+                                      validPensionUsedBetweenTuple,
                                       negativeIP14PensionDebitsTuple))
       val response = connector.applyIP14(nino, tstMap)
 
@@ -173,6 +176,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple2,
                                         positivePensionDebitsTuple,
+                                        validPensionUsedBetweenTuple,
                                         psoDetailsTuple
                                         ))
 

@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package forms
+package models
 
-import common.Validation.{mandatoryCheck, yesNoCheck}
-import models._
-import play.api.data.Forms._
-import play.api.data._
+import play.api.libs.json.Json
 
-object PensionsTakenBetweenForm extends CommonBinders{
+case class PensionsUsedBetweenModel(pensionsUsedBetweenAmt: Option[BigDecimal]) extends AmountModel {
+  override def getAmount = pensionsUsedBetweenAmt
+}
 
-  def pensionsTakenBetweenForm = Form (
-    mapping(
-      "pensionsTakenBetween" -> common.Validation.newText("pla.pensionsTakenBetween.errors.mandatoryError")
-        .verifying("pla.pensionsTakenBetween.errors.mandatoryError", mandatoryCheck)
-        .verifying("pla.pensionsTakenBetween.errors.mandatoryError", yesNoCheck)
-    )(PensionsTakenBetweenModel.apply)(PensionsTakenBetweenModel.unapply)
-  )
+object PensionsUsedBetweenModel {
+  implicit val format = Json.format[PensionsUsedBetweenModel]
 }

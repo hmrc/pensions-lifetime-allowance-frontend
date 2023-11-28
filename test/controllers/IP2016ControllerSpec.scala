@@ -44,7 +44,7 @@ import models.cache.CacheMap
 import java.util.UUID
 
 import views.html.pages.fallback.technicalError
-import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionDebits, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, psoDetails, removePsoDetails}
+import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionDebits, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, pensionsUsedBetween, psoDetails, removePsoDetails}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -70,6 +70,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     implicit val mockPensionsTaken: pensionsTaken = app.injector.instanceOf[pensionsTaken]
     implicit val mockPensionsTakenBefore: pensionsTakenBefore = app.injector.instanceOf[pensionsTakenBefore]
     implicit val mockPensionsTakenBetween: pensionsTakenBetween = app.injector.instanceOf[pensionsTakenBetween]
+    implicit val mockPensionsUsedBetween: pensionsUsedBetween = app.injector.instanceOf[pensionsUsedBetween]
     implicit val mockOverseasPensions: overseasPensions = app.injector.instanceOf[overseasPensions]
     implicit val mockCurrentPensions: currentPensions = app.injector.instanceOf[currentPensions]
     implicit val mockPsoDetails: psoDetails = app.injector.instanceOf[psoDetails]
@@ -99,6 +100,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             mockPensionsTaken,
             mockPensionsTakenBefore,
             mockPensionsTakenBetween,
+            mockPensionsUsedBetween,
             mockOverseasPensions,
             mockCurrentPensions,
             mockPsoDetails,
@@ -114,7 +116,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     implicit val hc = HeaderCarrier()
 
     //    lazy val TestIP2016Controller = fakeApplication().injector.instanceOf[IP2016Controller]
-    object TestIP2016Controller extends IP2016Controller(mockSessionCacheService, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsTakenBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails, mockPensionDebits) {
+    object TestIP2016Controller extends IP2016Controller(mockSessionCacheService, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsTakenBetween,mockPensionsUsedBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails, mockPensionDebits) {
         lazy val authConnector = mockAuthConnector
     }
 
@@ -337,7 +339,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "supplied with a stored test model" should {
             "return 200" in new Setup {
-                val testModel = new PensionsTakenBetweenModel("yes", Some(1))
+                val testModel = new PensionsTakenBetweenModel("yes")
                 lazy val result = controller.pensionsTakenBetween(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
@@ -348,7 +350,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             "return some HTML that" should {
 
                 "contain some text and use the character set utf-8" in new Setup {
-                    val testModel = new PensionsTakenBetweenModel("yes", Some(1))
+                    val testModel = new PensionsTakenBetweenModel("yes")
                     lazy val result = controller.pensionsTakenBetween(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
@@ -364,10 +366,22 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "Submitting 'yes' in pensionsTakenBetweenForm" when {
 
-            "submitting valid data" should {
+            "submitting valid data 'yes'" should {
+                "redirect to pension used between" in new Setup {
+
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"))
+
+                    mockAuthConnector(Future.successful({}))
+                    cacheSaveCondition[PensionsTakenModel](mockSessionCacheService)
+                    status(DataItem.result) shouldBe 303
+                    redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.pensionsUsedBetween}")
+                }
+            }
+
+            "submitting valid data 'no'" should {
                 "redirect to overseas pensions" in new Setup {
 
-                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", "1"))
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "no"))
 
                     mockAuthConnector(Future.successful({}))
                     cacheSaveCondition[PensionsTakenModel](mockSessionCacheService)
@@ -379,17 +393,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             "submitting invalid data" should {
                 "return 400" in new Setup {
 
-                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBetween, ("pensionsTakenBetween", ""), ("pensionsTakenBetweenAmt", ""))
-
-                    mockAuthConnector(Future.successful({}))
-                    status(DataItem.result) shouldBe 400
-                }
-            }
-
-            "submitting invalid data that fails additional validation" should {
-                "return 400" in new Setup {
-
-                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBetween, ("pensionsTakenBetween", "yes"), ("pensionsTakenBetweenAmt", ""))
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsTakenBetween, ("pensionsTakenBetween", ""))
 
                     mockAuthConnector(Future.successful({}))
                     status(DataItem.result) shouldBe 400

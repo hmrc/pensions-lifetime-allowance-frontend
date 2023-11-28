@@ -53,7 +53,7 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
     }
 
     "have the right sub-headers and summary text" in{
-      doc.select("h2.govuk-label--l").text shouldBe plaPensionsTakenBetweenQuestionTwo
+      doc.select("h2.govuk-label--l").text shouldBe plaPensionsUsedBetweenQuestion
       doc.select(".govuk-details__summary-text").text shouldBe plaPensionsTakenBetweenHelp
     }
 

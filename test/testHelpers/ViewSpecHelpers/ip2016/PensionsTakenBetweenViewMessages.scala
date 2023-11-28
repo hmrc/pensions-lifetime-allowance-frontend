@@ -28,7 +28,7 @@ trait PensionsTakenBetweenViewMessages {
   val plaPensionsTakenBetweenParaThree = "Read technical guidance on working out how much lifetime allowance you've used (opens in a new window)"
   val plaPensionsTakenBetweenParaThreeNew = "Read technical guidance on working out how much lifetime allowance you've used (opens in new tab)."
 
-  val plaPensionsTakenBetweenQuestionTwo = "How much lifetime allowance have you used?"
+  val plaPensionsUsedBetweenQuestion = "How much lifetime allowance have you used?"
   val plaPensionsTakenBetweenHelp = "How do I work out the value?"
 
   val plaPensionsTakenBetweenStepOne = "Take the lifetime allowance at 5 April 2016 (£1.25m) and divide by the value of your lifetime allowance on the date the event happened."

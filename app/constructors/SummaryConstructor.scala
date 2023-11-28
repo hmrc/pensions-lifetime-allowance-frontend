@@ -41,6 +41,7 @@ trait SummaryConstructor {
 
     val pensionsTakenBeforeModel = data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore"))
     val pensionsTakenBetweenModel = data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween"))
+    val pensionsUsedBetweenModel = data.getEntry[PensionsUsedBetweenModel](nameString("pensionsUsedBetween"))
     val overseasPensionsModel = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
     val currentPensionsModel = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
 
@@ -51,7 +52,7 @@ trait SummaryConstructor {
     def relevantAmount(): BigDecimal = {
       val (pensionsBeforeAmt, pensionsBetweenAmt) = if(helper.positiveAnswer(pensionsTakenModel)) (
         if(helper.positiveAnswer(pensionsTakenBeforeModel)) helper.amountValue(pensionsTakenBeforeModel) else None,
-        if(helper.positiveAnswer(pensionsTakenBetweenModel)) helper.amountValue(pensionsTakenBetweenModel) else None
+        if(helper.positiveAnswer(pensionsTakenBetweenModel)) helper.amountValue(pensionsUsedBetweenModel) else None
       )
       else (None, None)
       val overseasPensionsAmnt = if(helper.positiveAnswer(overseasPensionsModel)) helper.amountValue(overseasPensionsModel) else None
@@ -61,12 +62,14 @@ trait SummaryConstructor {
     }
 
     val pensionsTakenSection = helper.createYesNoSection("pensionsTaken", pensionsTakenModel, boldText = false)
-    val (pensionsTakenBeforeSection, pensionsTakenBetweenSection) =
+    val pensionsTakenBeforeSection =
       if(helper.positiveAnswer(pensionsTakenModel)) (
-        Some(helper.createYesNoAmountSection("pensionsTakenBefore", pensionsTakenBeforeModel, boldText = false)),
-        Some(helper.createYesNoAmountSection("pensionsTakenBetween", pensionsTakenBetweenModel, boldText = false))
+        Some(helper.createYesNoAmountSection("pensionsTakenBefore", pensionsTakenBeforeModel, boldText = false))
       )
-      else (None, None)
+      else None
+
+    val pensionsTakenBetweenSection = helper.createYesNoSection("pensionsTakenBetween", pensionsTakenBetweenModel, boldText = false)
+    val pensionsUsedBetweenSection = Some(helper.createAmountSection("pensionsUsedBetween", pensionsUsedBetweenModel, boldText = false))
 
     val overseasPensionsSection = Some(helper.createYesNoAmountSection("overseasPensions", overseasPensionsModel, boldText = false))
     val currentPensionsSection = Some(helper.createAmountSection("currentPensions", currentPensionsModel, boldText = false))
@@ -81,6 +84,7 @@ trait SummaryConstructor {
       pensionsTakenSection,
       pensionsTakenBeforeSection,
       pensionsTakenBetweenSection,
+      pensionsUsedBetweenSection,
       overseasPensionsSection,
       currentPensionsSection,
       totalPensionsSection

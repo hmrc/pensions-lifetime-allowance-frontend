@@ -43,15 +43,7 @@ object IPApplicationConstructor {
       }
     }
 
-    def getPensionsTakenBetweenAmt() = {
-      data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")) match {
-        case Some(model) => model.pensionsTakenBetween match {
-          case "yes" => data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")).get.pensionsTakenBetweenAmt
-          case _ => Some(BigDecimal(0))
-        }
-        case _ => Some(BigDecimal(0))
-      }
-    }
+    val pensionsUsedBetweenAmount = data.getEntry[PensionsUsedBetweenModel](nameString("pensionsUsedBetween")).get.pensionsUsedBetweenAmt
 
     // preADay - Pensions taken before
     val preADayPensionInPayment: Option[BigDecimal] = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
@@ -65,7 +57,7 @@ object IPApplicationConstructor {
     // postADay - Pensions taken between
     val postADayBenefitCrystallisationEvents = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
       case Some(model) => model.pensionsTaken match {
-        case Some("yes") => getPensionsTakenBetweenAmt()
+        case Some("yes") => pensionsUsedBetweenAmount
         case _ => Some(BigDecimal(0))
       }
       case _ => Some(BigDecimal(0))

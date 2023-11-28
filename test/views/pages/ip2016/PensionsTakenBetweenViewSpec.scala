@@ -47,7 +47,7 @@ class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTak
     }
 
     "have the right sub-headers and summary text" in{
-      doc.select("h2.govuk-heading-m").text shouldBe plaPensionsTakenBetweenQuestionTwo
+      doc.select("h2.govuk-heading-m").text shouldBe plaPensionsUsedBetweenQuestion
       doc.select(".govuk-details__summary-text").text shouldBe plaPensionsTakenBetweenHelp
     }
 

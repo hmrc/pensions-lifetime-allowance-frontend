@@ -162,24 +162,24 @@ pla.pensionsTakenBetween.bullet.2           = you transferred a pension to a sch
 pla.pensionsTakenBetween.bullet.3           = you turned 75 with pension savings which you hadn''t yet taken
 pla.pensionsTakenBetween.para.1             = You''ll have used some of your lifetime allowance if any of these events happened.
 pla.pensionsTakenBetween.errors.mandatoryError = Select yes if any of these events happened between 6 April 2006 and 5 April 2016
-
-pla.pensionsTakenBetween.questionTwo        = How much lifetime allowance have you used?
-pla.pensionsTakenBetween.help               = How do I work out the value?
-pla.pensionsTakenBetween.para.2             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
-pla.pensionsTakenBetween.step.1             = Take the lifetime allowance at 5 April 2016 (£1.25m) and divide by the value of your lifetime allowance on the date the event happened.
-pla.pensionsTakenBetween.step.2             = Multiply the value of your lifetime allowance on the date the event happened by the percentage of lifetime allowance used.
-pla.pensionsTakenBetween.step.3             = Take the result from step 1 and multiply by the result of step 2.
-pla.pensionsTakenBetween.step.4             = Repeat for each event and total the amounts together.
-pla.pensionsTakenBetween.para.3             = Read technical guidance on {0}
-pla.pensionsTakenBetween.para.3.nonInput    = Read technical guidance on
-pla.pensionsTakenBetween.helpLinkText       = working out how much lifetime allowance you''ve used
-pla.pensionsTakenBetween.amount.errors.mandatoryError = Enter how much lifetime allowance you have used
-pla.pensionsTakenBetween.amount.errors.decimal = How much lifetime allowance you have used has too many numbers after the decimal point
-pla.pensionsTakenBetween.amount.errors.negative = How much lifetime allowance you have used must be £0 or more
-pla.pensionsTakenBetween.amount.errors.max = How much lifetime allowance you have used must be £1,000,000,000 or less
-
-
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
+
+## Pensions Used Between ##
+pla.pensionsUsedBetween.title              = How much lifetime allowance have you used?
+pla.pensionsUsedBetween.question           = How much lifetime allowance have you used?
+pla.pensionsUsedBetween.para.2             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
+pla.pensionsUsedBetween.step.1             = Take the lifetime allowance at 5 April 2016 (£1.25m) and divide by the value of your lifetime allowance on the date the event happened.
+pla.pensionsUsedBetween.step.2             = Multiply the value of your lifetime allowance on the date the event happened by the percentage of lifetime allowance used.
+pla.pensionsUsedBetween.step.3             = Take the result from step 1 and multiply by the result of step 2.
+pla.pensionsUsedBetween.step.4             = Repeat for each event and total the amounts together.
+pla.pensionsUsedBetween.para.3             = Read technical guidance on {0}
+pla.pensionsUsedBetween.para.3.nonInput    = Read technical guidance on
+pla.pensionsUsedBetween.help               = How do I work out the value?
+pla.pensionsUsedBetween.helpLinkText       = working out how much lifetime allowance you''ve used
+pla.pensionsUsedBetween.amount.errors.mandatoryError = Enter how much lifetime allowance you have used
+pla.pensionsUsedBetween.amount.errors.decimal = How much lifetime allowance you have used has too many numbers after the decimal point
+pla.pensionsUsedBetween.amount.errors.negative = How much lifetime allowance you have used must be £0 or more
+pla.pensionsUsedBetween.amount.errors.max = How much lifetime allowance you have used must be £1,000,000,000 or less
 
 ## IP14 Pensions Taken Between ##
 pla.ip14PensionsTakenBetween.title          = Did any of these events happen between 6 April 2006 and 5 April 2014?
