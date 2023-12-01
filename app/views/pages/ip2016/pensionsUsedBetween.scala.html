@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.PensionsTakenBetweenModel
+@import models.PensionsUsedBetweenModel
 @import play.api.data._
 @import common.Links
 
@@ -61,7 +61,7 @@
     @errorSummary(pensionsUsedBetweenForm.errors, Some("pensionsUsedBetweenAmt"))
 
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsUsedBetween.question")</h1>
-
+    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.1")</p>
     @helpTextAccordion(
         id = "ip16-pensions-used-between-help",
         summaryText =  Messages("pla.pensionsUsedBetween.help"),

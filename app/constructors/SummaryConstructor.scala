@@ -62,19 +62,6 @@ trait SummaryConstructor {
     }
 
     val pensionsTakenSection = helper.createYesNoSection("pensionsTaken", pensionsTakenModel, boldText = false)
-//    val pensionsTakenBeforeSection =
-//      if(helper.positiveAnswer(pensionsTakenModel)) (
-//        Some(helper.createYesNoAmountSection("pensionsTakenBefore", pensionsTakenBeforeModel, boldText = false))
-//      )
-//      else None
-//
-//    val pensionsTakenBetweenSection = helper.createYesNoSection("pensionsTakenBetween", pensionsTakenBetweenModel, boldText = false)
-//
-//    val pensionsUsedBetweenSection =
-//      if (helper.positiveAnswer(pensionsTakenBetweenModel)) (
-//        Some(helper.createAmountSection("pensionsUsedBetween", pensionsUsedBetweenModel, boldText = false))
-//        )
-//      else None
     val pensionsTakenBeforeSection = if (helper.positiveAnswer(pensionsTakenModel)) {
       Some(helper.createYesNoAmountSection("pensionsTakenBefore", pensionsTakenBeforeModel, boldText = false))
     } else None

@@ -402,6 +402,60 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         }
     }
 
+    ///////////////////////////////////////////////
+    // Pensions Used Between
+    ///////////////////////////////////////////////
+    "In IP2016Controller calling the .pensionsUsedBetween action" when {
+
+        "not supplied with a stored model" should {
+            "return 200" in new Setup {
+                lazy val result = controller.pensionsUsedBetween(fakeRequest)
+                mockAuthConnector(Future.successful({}))
+                cacheFetchCondition[PensionsUsedBetweenModel](None)
+                status(result) shouldBe 200
+            }
+        }
+
+        "supplied with a stored test model" should {
+            "return 200" in new Setup {
+                val testModel = new PensionsUsedBetweenModel(Some(1))
+                lazy val result = controller.pensionsUsedBetween(fakeRequest)
+
+                mockAuthConnector(Future.successful({}))
+                cacheFetchCondition[PensionsUsedBetweenModel](Some(testModel))
+                status(result) shouldBe 200
+            }
+        }
+    }
+
+    "Submitting Pensions Used Between data" when {
+
+        "Submitting valid in pensionsUsedBetweenForm" when {
+
+            "submitting valid data" should {
+                "redirect to overseas pensions" in new Setup {
+
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsUsedBetween, ("pensionsUsedBetweenAmt", "1"))
+
+                    mockAuthConnector(Future.successful({}))
+                    cacheSaveCondition[PensionsTakenModel](mockSessionCacheService)
+                    status(DataItem.result) shouldBe 303
+                    redirectLocation(DataItem.result) shouldBe Some(s"${routes.IP2016Controller.overseasPensions}")
+                }
+            }
+
+            "submitting invalid data" should {
+                "return 400" in new Setup {
+
+                    object DataItem extends AuthorisedFakeRequestToPost(controller.submitPensionsUsedBetween, ("pensionsTakenBetweenAmt", ""))
+
+                    mockAuthConnector(Future.successful({}))
+                    status(DataItem.result) shouldBe 400
+                }
+            }
+
+        }
+    }
 
     ///////////////////////////////////////////////
     // Overseas Pensions
