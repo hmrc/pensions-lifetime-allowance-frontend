@@ -33,13 +33,9 @@
 
     <h2 class="govuk-heading-m">@Messages("pla.summary.pensionsHeading")</h2>
 
-    @for(section <- summary.pensionContributionSections) {
-        @summarySection(section, removeLinkDefined)
-    }
+    @summarySection(summary.pensionContributionSections, removeLinkDefined)
 
     <h2 class="govuk-heading-m">@Messages("pla.summary.psosHeading")</h2>
 
-    @for(section <- summary.psoDetailsSections) {
-        @summarySection(section, removeLinkDefined)
-    }
+    @summarySection(summary.psoDetailsSections, removeLinkDefined)
 }

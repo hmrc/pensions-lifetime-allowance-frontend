@@ -35,6 +35,9 @@ POST        /apply-for-ip16-pensions-taken                                      
 GET         /apply-for-ip16-pensions-taken-before                                         @controllers.IP2016Controller.pensionsTakenBefore
 POST        /apply-for-ip16-pensions-taken-before                                         @controllers.IP2016Controller.submitPensionsTakenBefore
 
+GET         /apply-for-ip16-pensions-worth-before                                         @controllers.IP2016Controller.pensionsWorthBefore
+POST        /apply-for-ip16-pensions-worth-before                                         @controllers.IP2016Controller.submitPensionsWorthBefore
+
 GET         /apply-for-ip16-pensions-taken-between                                        @controllers.IP2016Controller.pensionsTakenBetween
 POST        /apply-for-ip16-pensions-taken-between                                        @controllers.IP2016Controller.submitPensionsTakenBetween
 

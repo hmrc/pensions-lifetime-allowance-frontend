@@ -40,6 +40,7 @@ trait SummaryConstructor {
     val pensionsTakenModel: Option[PensionsTakenModel] = data.getEntry[PensionsTakenModel](nameString("pensionsTaken"))
 
     val pensionsTakenBeforeModel = data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore"))
+    val pensionsWorthBeforeModel = data.getEntry[PensionsWorthBeforeModel](nameString("pensionsWorthBefore"))
     val pensionsTakenBetweenModel = data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween"))
     val overseasPensionsModel = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
     val currentPensionsModel = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
@@ -50,7 +51,7 @@ trait SummaryConstructor {
 
     def relevantAmount(): BigDecimal = {
       val (pensionsBeforeAmt, pensionsBetweenAmt) = if(helper.positiveAnswer(pensionsTakenModel)) (
-        if(helper.positiveAnswer(pensionsTakenBeforeModel)) helper.amountValue(pensionsTakenBeforeModel) else None,
+        if(helper.positiveAnswer(pensionsTakenBeforeModel)) helper.amountValue(pensionsWorthBeforeModel) else None,
         if(helper.positiveAnswer(pensionsTakenBetweenModel)) helper.amountValue(pensionsTakenBetweenModel) else None
       )
       else (None, None)
@@ -61,12 +62,15 @@ trait SummaryConstructor {
     }
 
     val pensionsTakenSection = helper.createYesNoSection("pensionsTaken", pensionsTakenModel, boldText = false)
-    val (pensionsTakenBeforeSection, pensionsTakenBetweenSection) =
-      if(helper.positiveAnswer(pensionsTakenModel)) (
-        Some(helper.createYesNoAmountSection("pensionsTakenBefore", pensionsTakenBeforeModel, boldText = false)),
-        Some(helper.createYesNoAmountSection("pensionsTakenBetween", pensionsTakenBetweenModel, boldText = false))
-      )
-      else (None, None)
+    val pensionsTakenBeforeSection = if(helper.positiveAnswer(pensionsTakenModel)) {
+      helper.createYesNoSection("pensionsTakenBefore", pensionsTakenBeforeModel, boldText = false)
+    } else None
+    val pensionsWorthBeforeSection = if(helper.positiveAnswer(pensionsTakenModel) && helper.positiveAnswer(pensionsTakenBeforeModel)) {
+      Some(helper.createAmountSection("pensionsWorthBefore", pensionsWorthBeforeModel, boldText = false))
+    } else None
+    val pensionsTakenBetweenSection = if(helper.positiveAnswer(pensionsTakenModel)) {
+      Some(helper.createYesNoAmountSection("pensionsTakenBetween", pensionsTakenBetweenModel, boldText = false))
+    } else None
 
     val overseasPensionsSection = Some(helper.createYesNoAmountSection("overseasPensions", overseasPensionsModel, boldText = false))
     val currentPensionsSection = Some(helper.createAmountSection("currentPensions", currentPensionsModel, boldText = false))
@@ -80,6 +84,7 @@ trait SummaryConstructor {
     val pensionContributions = List(
       pensionsTakenSection,
       pensionsTakenBeforeSection,
+      pensionsWorthBeforeSection,
       pensionsTakenBetweenSection,
       overseasPensionsSection,
       currentPensionsSection,
@@ -105,7 +110,9 @@ trait SummaryConstructor {
 
     if(!Validation.validIPData(data)) {
       None
-    } else {Some(helper.createSummaryModel(relevantAmount(), pensionContributions, pensionDebits))}
+    } else {
+      Some(helper.createSummaryModel(relevantAmount(), pensionContributions, pensionDebits))
+    }
 
   }
 

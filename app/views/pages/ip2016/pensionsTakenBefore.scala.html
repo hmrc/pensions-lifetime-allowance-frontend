@@ -15,15 +15,12 @@
  *@
 
 @import models.PensionsTakenBeforeModel
-@import common.Links
 @import play.api.data._
 
 @this(
         layout: Layout,
-        helpTextAccordion: playHelpers.templates.helpTextAccordion,
-        formInputMoney: playHelpers.templates.formInputMoney,
         errorSummary: playHelpers.templates.errorSummary,
-        formHiddenYesNoRadio: playHelpers.templates.formHiddenYesNoRadio,
+        plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup,
         submitButton: playHelpers.templates.submitButton,
         form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 )
@@ -34,65 +31,22 @@
     if(pensionsTakenBeforeForm.errors.nonEmpty) Messages("site.title.error", Messages("pla.pensionsTakenBefore.title")) else Messages("pla.pensionsTakenBefore.title")
 }
 
-@helpTextAccordionContent = {
-    <p class="govuk-body">@Messages("pla.pensionsTakenBefore.para.1")</p>
-    <ol class="govuk-list govuk-list--number">
-        <li>@Messages("pla.pensionsTakenBefore.step.1")</li>
-        <li>@Messages("pla.pensionsTakenBefore.step.2")</li>
-        <li>@Messages("pla.pensionsTakenBefore.step.3")</li>
-    </ol>
-    <p>@Messages("pla.pensionsTakenBefore.para.2")</p>
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@Messages("pla.pensionsTakenBefore.bullet.1")</li>
-        <li>@Messages("pla.pensionsTakenBefore.bullet.2")</li>
-    </ul>
-    <p class="govuk-body">
-        @Messages("pla.pensionsTakenBefore.para.3")
-        <a href="@Links.pensionsTakenBefore" class ="govuk-link" id ="ip16-pensions-taken-before-help-link" rel="noreferrer noopener" target="_blank">
-            @Messages("pla.pensionsTakenBefore.helpLinkText") (@Messages("pla.base.newTab")).
-        </a>
-    </p>
-}
-
-@errorMessage = @{
-    for(error <- pensionsTakenBeforeForm.errors) yield {
-        if(error.key.equals("pensionsTakenBefore")) "" else messages(error.message, error.args:_*)
-    }
-}
-
-@hiddenYesNoContent = {
-
-    <h2 class="govuk-label--l">@Messages("pla.pensionsTakenBefore.question")</h2>
-
-    @helpTextAccordion(
-        id = "ip16-pensions-taken-before-help",
-        summaryText =  Messages("pla.pensionsTakenBefore.help"),
-        hiddenContent = helpTextAccordionContent
-    )
-
-    @formInputMoney(
-        field = pensionsTakenBeforeForm("pensionsTakenBeforeAmt"),
-        question = Messages("pla.pensionsTakenBefore.question"),
-        hideLabel = true,
-        pageHeading = false,
-        errorMessage = if (pensionsTakenBeforeForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
-    )
-}
-
 @layout(
     pageTitle = title
 ) {
-    @errorSummary(pensionsTakenBeforeForm.errors, Some("pensionsTakenBeforeAmt"))
-
-    <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBefore.title")</h1>
+    @errorSummary(pensionsTakenBeforeForm.errors)
 
     @form(action = routes.IP2016Controller.submitPensionsTakenBefore) {
 
-        @formHiddenYesNoRadio(
-            field =  pensionsTakenBeforeForm("pensionsTakenBefore"),
-            question = Messages("pla.pensionsTakenBefore.title"),
-            hiddenQuestion = true,
-            yesHiddencontent = Some(hiddenYesNoContent)
+        @plaInputRadioGroup(
+            legend = Messages("pla.pensionsTakenBefore.title"),
+            items = Seq(
+                RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
+                RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+            ),
+            isPageHeading = true,
+            inLine = true,
+            field = pensionsTakenBeforeForm("pensionsTakenBefore")
         )
 
         @submitButton()

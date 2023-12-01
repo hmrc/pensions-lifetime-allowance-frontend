@@ -42,11 +42,11 @@ class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Pension
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaPensionsTakenBeforeTitleNew
+      doc.title() shouldBe plaPensionsTakenBeforeTitle
     }
 
     "have the correct and properly formatted header"in{
-      doc.getElementsByClass("govuk-heading-xl").text shouldBe plaPensionsTakenBeforeTitle
+      doc.getElementsByClass("govuk-heading-xl").text shouldBe plaPensionsTakenBeforeHeading
     }
 
     "have the right explanatory messages" in{

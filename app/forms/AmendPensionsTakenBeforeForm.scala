@@ -55,9 +55,9 @@ object AmendPensionsTakenBeforeForm extends CommonBinders{
       "protectionType" -> text,
       "status" -> text
     )(AmendPensionsTakenBeforeModel.apply)(AmendPensionsTakenBeforeModel.unapply)
-      .verifying("pla.pensionsTakenBefore.amount.errors.mandatoryError", verifyMandatory)
-      .verifying("pla.pensionsTakenBefore.amount.errors.decimal", verifyDecimal)
-      .verifying("pla.pensionsTakenBefore.amount.errors.negative", verifyPositive)
-      .verifying("pla.pensionsTakenBefore.amount.errors.max", verifyMax)
+      .verifying("pla.pensionsWorthBefore.amount.errors.mandatoryError", verifyMandatory)
+      .verifying("pla.pensionsWorthBefore.amount.errors.decimal", verifyDecimal)
+      .verifying("pla.pensionsWorthBefore.amount.errors.negative", verifyPositive)
+      .verifying("pla.pensionsWorthBefore.amount.errors.max", verifyMax)
   )
 }

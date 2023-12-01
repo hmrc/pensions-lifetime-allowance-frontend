@@ -131,22 +131,25 @@ pla.ip14PensionsTaken.legend                = Cyn 6 Ebrill 2014, a gawsoch eich 
 
 ## Pensions Taken Before ##
 pla.pensionsTakenBefore.title               = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
-pla.pensionsTakenBefore.question            = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2016?
-pla.pensionsTakenBefore.help                = Sut i gyfrifo''r swm
-pla.pensionsTakenBefore.para.1              = Os na chawsoch incwm o unrhyw bensiwn arall er 6 Ebrill 2006:
-pla.pensionsTakenBefore.step.1              = Cymerwch y pensiynau y cawsoch incwm ohonynt cyn 6 Ebrill 2006 yn unig.
-pla.pensionsTakenBefore.step.2              = Cyfrifwch y swm blynyddol yr oeddech yn gallu''i gael o''r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2016.
-pla.pensionsTakenBefore.step.3              = Lluoswch y ffigur hwn â 25.
-pla.pensionsTakenBefore.para.2              = Bydd angen i chi wneud cyfrifiad gwahanol os yw''r naill neu''r llall o''r canlynol yn gymwys:
-pla.pensionsTakenBefore.bullet.1            = rydych wedi cael incwm o bensiynau eraill er 6 Ebrill 2006
-pla.pensionsTakenBefore.bullet.2            = mae gennych bensiwn a godir o''r gronfa
-pla.pensionsTakenBefore.para.3              = Darganfyddwch sut yn
-pla.pensionsTakenBefore.helpLinkText        = yr arweiniad technegol hwn ar werthuso''ch pensiynau
 pla.pensionsTakenBefore.errors.mandatoryError = Dewiswch ''Iawn'' os cawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
-pla.pensionsTakenBefore.amount.errors.mandatoryError = Nodwch werth y pensiynau hyn ar 5 Ebrill 2016
-pla.pensionsTakenBefore.amount.errors.decimal = Mae gwerth y pensiynau hyn ar 5 Ebrill 2016 yn cynnwys gormod o rifau ar ôl y pwynt degol
-pla.pensionsTakenBefore.amount.errors.negative = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £0 neu fwy
-pla.pensionsTakenBefore.amount.errors.max = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
+
+## Pensions Worth Before ##
+pla.pensionsWorthBefore.title               = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2016?
+pla.pensionsWorthBefore.question            = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2016?
+pla.pensionsWorthBefore.help                = Sut i gyfrifo''r swm
+pla.pensionsWorthBefore.para.1              = Os na chawsoch incwm o unrhyw bensiwn arall er 6 Ebrill 2006:
+pla.pensionsWorthBefore.step.1              = Cymerwch y pensiynau y cawsoch incwm ohonynt cyn 6 Ebrill 2006 yn unig.
+pla.pensionsWorthBefore.step.2              = Cyfrifwch y swm blynyddol yr oeddech yn gallu''i gael o''r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2016.
+pla.pensionsWorthBefore.step.3              = Lluoswch y ffigur hwn â 25.
+pla.pensionsWorthBefore.para.2              = Bydd angen i chi wneud cyfrifiad gwahanol os yw''r naill neu''r llall o''r canlynol yn gymwys:
+pla.pensionsWorthBefore.bullet.1            = rydych wedi cael incwm o bensiynau eraill er 6 Ebrill 2006
+pla.pensionsWorthBefore.bullet.2            = mae gennych bensiwn a godir o''r gronfa
+pla.pensionsWorthBefore.para.3              = Darganfyddwch sut yn
+pla.pensionsWorthBefore.helpLinkText        = yr arweiniad technegol hwn ar werthuso''ch pensiynau
+pla.pensionsWorthBefore.amount.errors.mandatoryError = Nodwch werth y pensiynau hyn ar 5 Ebrill 2016
+pla.pensionsWorthBefore.amount.errors.decimal = Mae gwerth y pensiynau hyn ar 5 Ebrill 2016 yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.pensionsWorthBefore.amount.errors.negative = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £0 neu fwy
+pla.pensionsWorthBefore.amount.errors.max = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
 
 ## IP14 Pensions Taken Before ##
 pla.ip14PensionsTakenBefore.question        = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2014?
@@ -265,8 +268,8 @@ pla.summary.questions.pensionsTaken                 = Cyn 5 Ebrill 2016, a gawso
 pla.summary.hiddenLinkText.pensionsTaken            = Newidiwch eich ateb i''r cwestiwn "A ydych wedi cymryd unrhyw un o''ch pensiynau?"
 pla.summary.questions.pensionsTakenBefore           = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
 pla.summary.hiddenLinkText.pensionsTakenBefore      = Newidiwch eich ateb i''r cwestiwn "A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?"
-pla.summary.questions.pensionsTakenBeforeAmt        = Beth yw gwerth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006?
-pla.summary.hiddenLinkText.pensionsTakenBeforeAmt   = Newidiwch eich ateb i werth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006
+pla.summary.questions.pensionsWorthBeforeAmt        = Beth yw gwerth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006?
+pla.summary.hiddenLinkText.pensionsWorthBeforeAmt   = Newidiwch eich ateb i werth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006
 pla.summary.questions.pensionsTakenBetween          = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
 pla.summary.hiddenLinkText.pensionsTakenBetween     = Newidiwch eich ateb i''r cwestiwn "A gawsoch arian o''ch pensiynau rhwng 6 Ebrill 2006 a 5 Ebrill 2016?"
 pla.summary.questions.pensionsTakenBetweenAmt       = Faint o lwfans oes a ydych wedi''i ddefnyddio?

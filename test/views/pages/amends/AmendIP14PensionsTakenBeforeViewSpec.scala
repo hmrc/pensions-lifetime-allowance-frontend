@@ -45,11 +45,11 @@ class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe plaPensionsTakenBeforeTitleNew
+      doc.title() shouldBe plaPensionsTakenBeforeTitle
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1.govuk-fieldset__heading").text shouldBe plaPensionsTakenBeforeTitle
+      doc.select("h1.govuk-fieldset__heading").text shouldBe plaPensionsTakenBeforeHeading
     }
 
     "have the right explanatory messages" in{

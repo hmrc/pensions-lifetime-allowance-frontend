@@ -43,10 +43,11 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
     val negativePensionsTakenSummaryRow = SummaryRowModel("pensionsTaken", CallMap.get("pensionsTaken"), None, false, "No")
     val positivePensionsTakenSummaryRow = SummaryRowModel("pensionsTaken", Some(controllers.routes.IP2016Controller.pensionsTaken), None,  false, "Yes")
 
-    val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes", Some(BigDecimal(1001000))))
-    val negativePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("no", None))
+    val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes"))
+    val negativePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("no"))
+    val validPensionsWorthBeforeTuple = "pensionsWorthBefore" -> Json.toJson(PensionsWorthBeforeModel(Some(BigDecimal(1001000))))
     val positivePensionsTakenBeforeSummaryRow = SummaryRowModel("pensionsTakenBefore", Some(controllers.routes.IP2016Controller.pensionsTakenBefore), None,  false, "Yes")
-    val positivePensionsTakenBeforeAmtSummaryRow = SummaryRowModel("pensionsTakenBeforeAmt", Some(controllers.routes.IP2016Controller.pensionsTakenBefore), None,  false, "£1,001,000")
+    val positivePensionsWorthBeforeSummaryRow = SummaryRowModel("pensionsWorthBeforeAmt", Some(controllers.routes.IP2016Controller.pensionsWorthBefore), None,  false, "£1,001,000")
     val negativePensionsTakenBeforeSummaryRow = SummaryRowModel("pensionsTakenBefore", Some(controllers.routes.IP2016Controller.pensionsTakenBefore), None,  false, "No")
 
     val positivePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes", Some(BigDecimal(1100))))
@@ -85,6 +86,7 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
 
       "there is no pensions taken model" in {
         val tstMap = CacheMap(tstId, Map(positivePensionsTakenBeforeTuple,
+                                        validPensionsWorthBeforeTuple,
                                         positivePensionsTakenBetweenTuple,
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
@@ -122,6 +124,7 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
       "pensions taken 'yes' and no pensions taken between model" in {
         val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
                                         positivePensionsTakenBeforeTuple,
+                                        validPensionsWorthBeforeTuple,
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple,
                                         negativePensionDebitsTuple))
@@ -173,7 +176,9 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
                                           SummarySectionModel(List(
                                             positivePensionsTakenSummaryRow)),
                                           SummarySectionModel(List(
-                                            positivePensionsTakenBeforeSummaryRow, positivePensionsTakenBeforeAmtSummaryRow)),
+                                            positivePensionsTakenBeforeSummaryRow)),
+                                          SummarySectionModel(List(
+                                            positivePensionsWorthBeforeSummaryRow)),
                                           SummarySectionModel(List(
                                             positivePensionsTakenBetweenSummaryRow, positivePensionsTakenBetweenAmtSummaryRow)),
                                           SummarySectionModel(List(
@@ -193,6 +198,7 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
 
         val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
                                         positivePensionsTakenBeforeTuple,
+                                        validPensionsWorthBeforeTuple,
                                         positivePensionsTakenBetweenTuple,
                                         positiveOverseasPensionsTuple,
                                         validCurrentPensionsTuple,

@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package forms
+package models
 
-import play.api.data.Forms._
-import play.api.data._
-import common.Validation._
-import models.PensionsTakenBeforeModel
+import play.api.libs.json.Json
 
-object PensionsTakenBeforeForm extends CommonBinders{
+case class PensionsWorthBeforeModel(pensionsWorthBeforeAmt: Option[BigDecimal]) extends AmountModel {
+  override def getAmount = pensionsWorthBeforeAmt
+}
 
-
-  def pensionsTakenBeforeForm = Form (
-    mapping(
-      "pensionsTakenBefore" -> common.Validation.newText("pla.pensionsTakenBefore.errors.mandatoryError")
-        .verifying("pla.pensionsTakenBefore.errors.mandatoryError", mandatoryCheck)
-        .verifying("pla.pensionsTakenBefore.errors.mandatoryError", yesNoCheck)
-    )(PensionsTakenBeforeModel.apply)(PensionsTakenBeforeModel.unapply)
-  )
+object PensionsWorthBeforeModel {
+  implicit val format = Json.format[PensionsWorthBeforeModel]
 }
