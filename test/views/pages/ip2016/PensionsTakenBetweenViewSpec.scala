@@ -46,43 +46,10 @@ class PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTak
       doc.select("h1.govuk-heading-xl").text shouldBe plaPensionsTakenBetweenTitle
     }
 
-    "have the right sub-headers and summary text" in{
-      doc.select("h2.govuk-heading-m").text shouldBe plaPensionsTakenBetweenQuestionTwo
-      doc.select(".govuk-details__summary-text").text shouldBe plaPensionsTakenBetweenHelp
-    }
-
-    "have the right explanatory paragraphs" in{
-      doc.select("#conditional-pensionsTakenBetween > p").text shouldBe plaPensionsTakenBetweenParaOne
-      doc.select("#ip16-pensions-taken-between-help > div > p:nth-child(1)").text shouldBe plaPensionsTakenBetweenParaTwo
-      doc.select("#ip16-pensions-taken-between-help > div > p:nth-child(3)").text shouldBe plaPensionsTakenBetweenParaThreeNew
-    }
-
-    "have a visible menu with a correct list values" in{
-      doc.select("#main-content > div > div > form > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBetweenBulletOne
-      doc.select("#main-content > div > div > form > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBetweenBulletTwo
-      doc.select("#main-content > div > div > form > ul > li:nth-child(3)").text shouldBe plaPensionsTakenBetweenBulletThree
-    }
-
-    "have a hidden drop-down menu with the correct list values" in{
-      doc.select("#ip16-pensions-taken-between-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsTakenBetweenStepOne
-      doc.select("#ip16-pensions-taken-between-help > div > ol > li:nth-child(2)").text shouldBe plaPensionsTakenBetweenStepTwo
-      doc.select("#ip16-pensions-taken-between-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsTakenBetweenStepThree
-      doc.select("#ip16-pensions-taken-between-help > div > ol > li:nth-child(4)").text shouldBe plaPensionsTakenBetweenStepFour
-    }
-
-    "have a help link redirecting to the right location" in{
-      doc.select("a#ip16-pensions-taken-between-help-link").text shouldBe plaPensionsTakenBetweenHelpLinkTextNew
-      doc.select("a#ip16-pensions-taken-between-help-link").attr("href") shouldBe plaPensionsTakenBetweenHelpLinkLocation
-    }
-
-    "have a valid form" in{
-      form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTakenBetween.url
-      form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBetweenLegendText
-    }
-
-    "have a £ symbol present" in{
-      doc.select(".govuk-input__prefix").text shouldBe "£"
+    "have a visible menu with a correct list values" in {
+      doc.select("#main-content > div > div > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBetweenBulletOne
+      doc.select("#main-content > div > div > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBetweenBulletTwo
+      doc.select("#main-content > div > div > ul > li:nth-child(3)").text shouldBe plaPensionsTakenBetweenBulletThree
     }
 
     "have a pair of yes/no buttons" in{

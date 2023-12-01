@@ -16,12 +16,12 @@
 
 package models
 
-import play.api.libs.json._
+import play.api.libs.json.Json
 
-case class PensionsTakenBetweenModel(pensionsTakenBetween: String) extends YesNoModel {
-  override def getYesNoValue = pensionsTakenBetween
+case class PensionsUsedBetweenModel(pensionsUsedBetweenAmt: Option[BigDecimal]) extends AmountModel {
+  override def getAmount = pensionsUsedBetweenAmt
 }
 
-object PensionsTakenBetweenModel {
-  implicit val format = Json.format[PensionsTakenBetweenModel]
+object PensionsUsedBetweenModel {
+  implicit val format = Json.format[PensionsUsedBetweenModel]
 }

@@ -45,7 +45,7 @@ object IPApplicationConstructor {
     def getPensionsTakenBetweenAmt() = {
       data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")) match {
         case Some(model) => model.pensionsTakenBetween match {
-          case "yes" => data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")).get.pensionsTakenBetweenAmt
+          case "yes" => data.getEntry[PensionsUsedBetweenModel](nameString("pensionsUsedBetween")).get.pensionsUsedBetweenAmt
           case _ => Some(BigDecimal(0))
         }
         case _ => Some(BigDecimal(0))
@@ -64,7 +64,7 @@ object IPApplicationConstructor {
     // postADay - Pensions taken between
     val postADayBenefitCrystallisationEvents = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
       case Some(model) => model.pensionsTaken match {
-        case Some("yes") => getPensionsTakenBetweenAmt()
+        case Some("yes") => getPensionsTakenBetweenAmt
         case _ => Some(BigDecimal(0))
       }
       case _ => Some(BigDecimal(0))

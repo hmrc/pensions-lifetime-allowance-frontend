@@ -34,7 +34,7 @@ object Links {
   val ip16Info              = plaMain + "#individual-protection-2016"
   val ip14Info              = plaMain + "#individual-protection-2014"
   val pensionsWorthBefore   = pensionValue + "#income-taken-from-pensions-before-6-april-2006"
-  val pensionsTakenBetween  = pensionValue + "#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
+  val pensionsUsedBetween  = pensionValue + "#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
   val overseasPension       = pensionValue + "#money-put-into-overseas-pensions-between-6-april-2006-and-the-relevant-date"
   val currentPensions       = pensionValue + "#pensions-youve-not-taken-yet"
   val fpGuidance            = ptaManual + "ptm093100"

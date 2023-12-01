@@ -1,0 +1,83 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.PensionsUsedBetweenModel
+@import play.api.data._
+@import common.Links
+
+@this(
+    layout: Layout,
+    helpTextAccordion: playHelpers.templates.helpTextAccordion,
+    formInputMoney: playHelpers.templates.formInputMoney,
+    errorSummary: playHelpers.templates.errorSummary,
+    submitButton: playHelpers.templates.submitButton,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
+)
+
+@(pensionsUsedBetweenForm: Form[PensionsUsedBetweenModel])(implicit request: Request[_], messages: Messages)
+
+
+@title = @{
+    if(pensionsUsedBetweenForm.errors.nonEmpty) Messages("site.title.error", Messages("pla.pensionsUsedBetween.title")) else Messages("pla.pensionsUsedBetween.title")
+}
+
+@helpTextAccordionContent = {
+
+    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.2")</p>
+    <ol class="govuk-list govuk-list--number">
+        <li>@Messages("pla.pensionsUsedBetween.step.1")</li>
+        <li>@Messages("pla.pensionsUsedBetween.step.2")</li>
+        <li>@Messages("pla.pensionsUsedBetween.step.3")</li>
+        <li>@Messages("pla.pensionsUsedBetween.step.4")</li>
+    </ol>
+    <p class="govuk-body">
+        @Messages("pla.pensionsUsedBetween.para.3.nonInput") <a id="ip16-pensions-used-between-help-link" class="govuk-link" href="@Links.pensionsUsedBetween" target="_blank" rel="noreferrer noopener">@Messages("pla.pensionsUsedBetween.helpLinkText") (@Messages("pla.base.newTab")).</a>
+    </p>
+
+}
+
+@errorMessage = @{
+    for(error <- pensionsUsedBetweenForm.errors) yield {
+        if(error.key.equals("pensionsUsedBetween")) "" else messages(error.message, error.args:_*)
+    }
+}
+
+@layout(
+    pageTitle = title
+) {
+    @errorSummary(pensionsUsedBetweenForm.errors, Some("pensionsUsedBetweenAmt"))
+
+    <h1 class="govuk-heading-xl">@Messages("pla.pensionsUsedBetween.question")</h1>
+    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.1")</p>
+    @helpTextAccordion(
+        id = "ip16-pensions-used-between-help",
+        summaryText =  Messages("pla.pensionsUsedBetween.help"),
+        hiddenContent = helpTextAccordionContent
+    )
+
+    @form(action = routes.IP2016Controller.submitPensionsUsedBetween) {
+
+        @formInputMoney(
+            field = pensionsUsedBetweenForm("pensionsUsedBetweenAmt"),
+            question = Messages("pla.pensionsUsedBetween.question"),
+            hideLabel = true,
+            pageHeading = false,
+            errorMessage = if (pensionsUsedBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
+        )
+
+        @submitButton()
+    }
+}

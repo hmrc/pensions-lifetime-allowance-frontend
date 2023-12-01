@@ -41,6 +41,9 @@ POST        /apply-for-ip16-pensions-worth-before                               
 GET         /apply-for-ip16-pensions-taken-between                                        @controllers.IP2016Controller.pensionsTakenBetween
 POST        /apply-for-ip16-pensions-taken-between                                        @controllers.IP2016Controller.submitPensionsTakenBetween
 
+GET         /apply-for-ip16-pensions-used-between                                         @controllers.IP2016Controller.pensionsUsedBetween
+POST        /apply-for-ip16-pensions-used-between                                         @controllers.IP2016Controller.submitPensionsUsedBetween
+
 GET         /apply-for-ip16-overseas-pensions                                             @controllers.IP2016Controller.overseasPensions
 POST        /apply-for-ip16-overseas-pensions                                             @controllers.IP2016Controller.submitOverseasPensions
 
