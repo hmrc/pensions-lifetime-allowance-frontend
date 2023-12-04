@@ -25,6 +25,7 @@ import forms.PensionDebitsForm.pensionDebitsForm
 import forms.PensionsTakenBeforeForm.pensionsTakenBeforeForm
 import forms.PensionsWorthBeforeForm.pensionsWorthBeforeForm
 import forms.PensionsTakenBetweenForm.pensionsTakenBetweenForm
+import forms.PensionsUsedBetweenForm.pensionsUsedBetweenForm
 import forms.PensionsTakenForm.pensionsTakenForm
 import javax.inject.Inject
 import models._
@@ -47,6 +48,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
                                  pensionsTakenBefore: pages.ip2016.pensionsTakenBefore,
                                  pensionsWorthBefore: pages.ip2016.pensionsWorthBefore,
                                  pensionsTakenBetween: pages.ip2016.pensionsTakenBetween,
+                                 pensionsUsedBetween: pages.ip2016.pensionsUsedBetween,
                                  overseasPensions: pages.ip2016.overseasPensions,
                                  currentPensions: pages.ip2016.currentPensions,
                                  psoDetails: pages.ip2016.psoDetails,
@@ -168,14 +170,43 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
           Future.successful(BadRequest(pensionsTakenBetween(form)))
         },
         success => {
-          sessionCacheService.saveFormData("pensionsTakenBetween", success).flatMap {
-            _ => Future.successful(Redirect(routes.IP2016Controller.overseasPensions))
+          sessionCacheService.saveFormData("pensionsTakenBetween", success).map {
+            _ =>
+              success.pensionsTakenBetween match {
+                case "yes" => Redirect(routes.IP2016Controller.pensionsUsedBetween)
+                case "no" => Redirect(routes.IP2016Controller.overseasPensions)
+              }
           }
         }
       )
     }
   }
 
+  //PENSIONS USED BETWEEN
+  def pensionsUsedBetween:  Action[AnyContent] = Action.async { implicit request =>
+    authFunction.genericAuthWithoutNino("IP2016") {
+      sessionCacheService.fetchAndGetFormData[PensionsUsedBetweenModel]("pensionsUsedBeforeAmt").map {
+        case Some(data) => Ok(pensionsUsedBetween(pensionsUsedBetweenForm.fill(data)))
+        case _ => Ok(pensionsUsedBetween(pensionsUsedBetweenForm))
+      }
+    }
+  }
+
+  def submitPensionsUsedBetween: Action[AnyContent] = Action.async { implicit request =>
+    authFunction.genericAuthWithoutNino("IP2016") {
+      pensionsUsedBetweenForm.bindFromRequest().fold(
+        errors => {
+          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
+          Future.successful(BadRequest(pensionsUsedBetween(form)))
+        },
+        success => {
+          sessionCacheService.saveFormData("pensionsUsedBetween", success).flatMap {
+            _ => Future.successful(Redirect(routes.IP2016Controller.overseasPensions))
+          }
+        }
+      )
+    }
+  }
 
   //OVERSEAS PENSIONS
   def overseasPensions: Action[AnyContent] = Action.async { implicit request =>

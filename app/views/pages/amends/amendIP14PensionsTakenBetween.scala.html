@@ -33,31 +33,31 @@
     <p class="govuk-body">@Messages("pla.ip14PensionsTakenBetween.para.2")</p>
     <ol class="govuk-list govuk-list--number">
         <li>@Messages("pla.ip14PensionsTakenBetween.step.1")</li>
-        <li>@Messages("pla.pensionsTakenBetween.step.2")</li>
-        <li>@Messages("pla.pensionsTakenBetween.step.3")</li>
-        <li>@Messages("pla.pensionsTakenBetween.step.4")</li>
+        <li>@Messages("pla.pensionsUsedBetween.step.2")</li>
+        <li>@Messages("pla.pensionsUsedBetween.step.3")</li>
+        <li>@Messages("pla.pensionsUsedBetween.step.4")</li>
     </ol>
-    <p class="govuk-body">@Messages("pla.pensionsTakenBetween.para.3.nonInput")
-        <a href="@Links.pensionsTakenBetween"
+    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.3.nonInput")
+        <a href="@Links.pensionsUsedBetween"
            id="ip14-amend-pensions-taken-between-help-link"
            class="govuk-link"
            rel="noreferrer noopener"
-           target="_blank">@Messages("pla.pensionsTakenBetween.helpLinkText") (@Messages("pla.base.newTab"))</a>.
+           target="_blank">@Messages("pla.pensionsUsedBetween.helpLinkText") (@Messages("pla.base.newTab"))</a>.
     </p>
 }
 
 @hiddenYesNoContent = {
     @formInputMoney(
         field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetweenAmt"),
-        question = Messages("pla.pensionsTakenBetween.questionTwo"),
+        question = Messages("pla.pensionsUsedBetween.question"),
         labelClass = Some("govuk-label--m"),
         hideLabel = false,
         pageHeading = false
     )
-     <p class="govuk-body govuk-!-margin-top-4">@Messages("pla.pensionsTakenBetween.para.1")</p>
+     <p class="govuk-body govuk-!-margin-top-4">@Messages("pla.pensionsUsedBetween.para.1")</p>
      @helpTextAccordion(
         id = "ip14-amend-pensions-taken-between-help",
-        summaryText = Messages("pla.pensionsTakenBetween.help"),
+        summaryText = Messages("pla.pensionsUsedBetween.help"),
         hiddenContent = helpTextAccordionContent
     )
 }

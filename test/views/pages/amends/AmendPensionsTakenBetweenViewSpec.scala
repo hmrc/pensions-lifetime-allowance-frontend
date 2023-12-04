@@ -19,11 +19,11 @@ package views.pages.amends
 import forms.AmendPensionsTakenBetweenForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBetweenViewMessages
+import testHelpers.ViewSpecHelpers.ip2016.{PensionsTakenBetweenViewMessages, PensionsUsedBetweenViewMessages}
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendPensionsTakenBetween
 
-class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTakenBetweenViewMessages {
+class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTakenBetweenViewMessages with PensionsUsedBetweenViewMessages {
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
@@ -53,14 +53,14 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
     }
 
     "have the right sub-headers and summary text" in{
-      doc.select("h2.govuk-label--l").text shouldBe plaPensionsTakenBetweenQuestionTwo
-      doc.select(".govuk-details__summary-text").text shouldBe plaPensionsTakenBetweenHelp
+      doc.select("h2.govuk-label--l").text shouldBe plaPensionsUsedBetweenHeader
+      doc.select(".govuk-details__summary-text").text shouldBe plaPensionsUsedBetweenHelp
     }
 
     "have the right explanatory paragraphs" in{
-      doc.select("#conditional-amendedPensionsTakenBetween > p").text shouldBe plaPensionsTakenBetweenParaOne
-      doc.select("#ip16-amend-pensions-taken-between-help > div > p:nth-child(1)").text shouldBe plaPensionsTakenBetweenParaTwo
-      doc.select("#ip16-amend-pensions-taken-between-help > div > p:nth-child(3)").text shouldBe plaPensionsTakenBetweenParaThreeNew
+      doc.select("#conditional-amendedPensionsTakenBetween > p").text shouldBe plaPensionsUsedBetweenParaOne
+      doc.select("#ip16-amend-pensions-taken-between-help > div > p:nth-child(1)").text shouldBe plaPensionsUsedBetweenParaTwo
+      doc.select("#ip16-amend-pensions-taken-between-help > div > p:nth-child(3)").text shouldBe plaPensionsUsedBetweenParaThreeNew
     }
 
     "have a visible menu with a correct list values" in{
@@ -70,15 +70,15 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
     }
 
     "have a hidden drop-down menu with the correct list values" in{
-      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsTakenBetweenStepOne
-      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(2)").text shouldBe plaPensionsTakenBetweenStepTwo
-      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsTakenBetweenStepThree
-      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(4)").text shouldBe plaPensionsTakenBetweenStepFour
+      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsUsedBetweenStepOne
+      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(2)").text shouldBe plaPensionsUsedBetweenStepTwo
+      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsUsedBetweenStepThree
+      doc.select("#ip16-amend-pensions-taken-between-help > div > ol > li:nth-child(4)").text shouldBe plaPensionsUsedBetweenStepFour
     }
 
     "have a help link redirecting to the right location" in{
-      doc.select("a#ip16-amend-pensions-taken-between-help-link").text shouldBe plaPensionsTakenBetweenHelpLinkTextNew
-      doc.select("a#ip16-amend-pensions-taken-between-help-link").attr("href") shouldBe plaPensionsTakenBetweenHelpLinkLocation
+      doc.select("a#ip16-amend-pensions-taken-between-help-link").text shouldBe plaPensionsUsedBetweenHelpLinkTextNew
+      doc.select("a#ip16-amend-pensions-taken-between-help-link").attr("href") shouldBe plaPensionsUsedBetweenHelpLinkLocation
     }
 
     "have a valid form" in{

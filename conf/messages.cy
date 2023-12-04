@@ -160,23 +160,7 @@ pla.pensionsTakenBetween.title              = A ddigwyddodd unrhyw un o''r canly
 pla.pensionsTakenBetween.bullet.1           = cawsoch arian o''ch pensiynau
 pla.pensionsTakenBetween.bullet.2           = trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor
 pla.pensionsTakenBetween.bullet.3           = cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny
-pla.pensionsTakenBetween.para.1             = Os yw unrhyw un o''r digwyddiadau hyn wedi digwydd, byddech wedi defnyddio peth o''ch lwfans oes.
 pla.pensionsTakenBetween.errors.mandatoryError = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r digwyddiadau hyn rhwng 6 Ebrill 2006 a 5 Ebrill 2016
-
-pla.pensionsTakenBetween.questionTwo        = Faint o lwfans oes a ydych wedi''i ddefnyddio?
-pla.pensionsTakenBetween.help               = Sut wyf yn cyfrifo''r gwerth?
-pla.pensionsTakenBetween.para.2             = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi''i ddefnyddio ar gyfer diogelwch unigol 2016.
-pla.pensionsTakenBetween.step.1             = Cymerwch y lwfans oes ar 5 Ebrill 2016 (£1.25m) a rhannwch ef â gwerth eich lwfans oes ar ddyddiad y digwyddiad.
-pla.pensionsTakenBetween.step.2             = Lluoswch werth eich lwfans oes ar ddyddiad y digwyddiad â chanran y lwfans oes a ddefnyddiwyd.
-pla.pensionsTakenBetween.step.3             = Lluoswch ganlyniad cam 1 gyda chanlyniad cam 2.
-pla.pensionsTakenBetween.step.4             = Ail wnewch hyn ar gyfer pob digwyddiad ac adiwch y symiau at ei gilydd.
-pla.pensionsTakenBetween.para.3             = Darllenwch arweiniad technegol ar {0}
-pla.pensionsTakenBetween.para.3.nonInput    = Darllenwch arweiniad technegol ar
-pla.pensionsTakenBetween.helpLinkText       = cyfrifo faint o lwfans oes yr ydych wedi''i ddefnyddio
-pla.pensionsTakenBetween.amount.errors.mandatoryError = Nodwch faint o lwfans oes yr ydych wedi''i ddefnyddio
-pla.pensionsTakenBetween.amount.errors.decimal = Mae ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
-pla.pensionsTakenBetween.amount.errors.negative = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
-pla.pensionsTakenBetween.amount.errors.max = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
 
 pla.pensionsTakenBetween.legend             = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
@@ -187,6 +171,23 @@ pla.ip14PensionsTakenBetween.para.2         = Gallwch ofyn i weinyddwr eich cynl
 
 pla.ip14PensionsTakenBetween.legend         = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
+## Pensions Used Between ##
+pla.pensionsUsedBetween.title                       = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.pensionsUsedBetween.question                    = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.pensionsUsedBetween.para.1             = Os yw unrhyw un o''r digwyddiadau hyn wedi digwydd, byddech wedi defnyddio peth o''ch lwfans oes.
+pla.pensionsUsedBetween.para.2                      = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi''i ddefnyddio ar gyfer diogelwch unigol 2016.
+pla.pensionsUsedBetween.step.1                      = Cymerwch y lwfans oes ar 5 Ebrill 2016 (£1.25m) a rhannwch ef â gwerth eich lwfans oes ar ddyddiad y digwyddiad.
+pla.pensionsUsedBetween.step.2                      = Lluoswch werth eich lwfans oes ar ddyddiad y digwyddiad â chanran y lwfans oes a ddefnyddiwyd.
+pla.pensionsUsedBetween.step.3                      = Lluoswch ganlyniad cam 1 gyda chanlyniad cam 2.
+pla.pensionsUsedBetween.step.4                      = Ail wnewch hyn ar gyfer pob digwyddiad ac adiwch y symiau at ei gilydd.
+pla.pensionsUsedBetween.help                        = Sut wyf yn cyfrifo''r gwerth?
+pla.pensionsUsedBetween.para.3                      = Darllenwch arweiniad technegol ar {0}
+pla.pensionsUsedBetween.para.3.nonInput             = Darllenwch arweiniad technegol ar
+pla.pensionsUsedBetween.helpLinkText                = cyfrifo faint o lwfans oes yr ydych wedi''i ddefnyddio
+pla.pensionsUsedBetween.amount.errors.mandatoryError= Nodwch faint o lwfans oes yr ydych wedi''i ddefnyddio
+pla.pensionsUsedBetween.amount.errors.decimal       = Mae ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.pensionsUsedBetween.amount.errors.negative      = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
+pla.pensionsUsedBetween.amount.errors.max           = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
 
 ## Overseas Pensions ##
 pla.overseasPensions.title                  = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
@@ -272,8 +273,8 @@ pla.summary.questions.pensionsWorthBeforeAmt        = Beth yw gwerth y pensiynau
 pla.summary.hiddenLinkText.pensionsWorthBeforeAmt   = Newidiwch eich ateb i werth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006
 pla.summary.questions.pensionsTakenBetween          = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
 pla.summary.hiddenLinkText.pensionsTakenBetween     = Newidiwch eich ateb i''r cwestiwn "A gawsoch arian o''ch pensiynau rhwng 6 Ebrill 2006 a 5 Ebrill 2016?"
-pla.summary.questions.pensionsTakenBetweenAmt       = Faint o lwfans oes a ydych wedi''i ddefnyddio?
-pla.summary.hiddenLinkText.pensionsTakenBetweenAmt  = Newidiwch eich ateb i swm y lwfans oes a ddefnyddiwyd
+pla.summary.questions.pensionsUsedBetweenAmt       = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.summary.hiddenLinkText.pensionsUsedBetweenAmt  = Newidiwch eich ateb i swm y lwfans oes a ddefnyddiwyd
 pla.summary.questions.overseasPensions              = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
 pla.summary.hiddenLinkText.overseasPensions         = Newidiwch eich ateb i''r cwestiwn "A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?"
 pla.summary.questions.overseasPensionsAmt           = Faint gwnaethoch gyfrannu?

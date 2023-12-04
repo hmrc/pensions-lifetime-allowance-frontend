@@ -20,10 +20,11 @@ import forms.AmendPensionsTakenBetweenForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBetweenViewSpecMessages
+import testHelpers.ViewSpecHelpers.ip2016.PensionsUsedBetweenViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14PensionsTakenBetween
 
-class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with AmendIP14PensionsTakenBetweenViewSpecMessages {
+class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with AmendIP14PensionsTakenBetweenViewSpecMessages with PensionsUsedBetweenViewMessages {
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
@@ -50,14 +51,14 @@ class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Am
     }
 
     "have the right sub-headers and summary text" in{
-      doc.select(".govuk-label--m").text shouldBe plaPensionsTakenBetweenQuestionTwo
-      doc.select("summary").text shouldBe plaPensionsTakenBetweenHelp
+      doc.select(".govuk-label--m").text shouldBe plaPensionsUsedBetweenHeader
+      doc.select("summary").text shouldBe plaPensionsUsedBetweenHelp
     }
 
     "have the right explanatory paragraphs" in{
-      doc.select("p").eq(0).text shouldBe plaPensionsTakenBetweenParaOne
+      doc.select("p").eq(0).text shouldBe plaPensionsUsedBetweenParaOne
       doc.select("#ip14-amend-pensions-taken-between-help p.govuk-body").eq(0).text shouldBe plaIP14PensionsTakenBetweenParaTwo
-      doc.select("#ip14-amend-pensions-taken-between-help p.govuk-body").eq(1).text shouldBe plaPensionsTakenBetweenParaThreeNew
+      doc.select("#ip14-amend-pensions-taken-between-help p.govuk-body").eq(1).text shouldBe plaPensionsUsedBetweenParaThreeNew
     }
 
     "have a visible menu with a correct list values" in{
@@ -68,15 +69,15 @@ class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Am
 
     "have a hidden drop-down menu with the correct list values" in{
       doc.select("ol.govuk-list.govuk-list--number li").eq(0).text shouldBe plaIP14PensionsTakenBetweenStepOne
-      doc.select("ol.govuk-list.govuk-list--number li").eq(1).text shouldBe plaPensionsTakenBetweenStepTwo
-      doc.select("ol.govuk-list.govuk-list--number li").eq(2).text shouldBe plaPensionsTakenBetweenStepThree
-      doc.select("ol.govuk-list.govuk-list--number li").eq(3).text shouldBe plaPensionsTakenBetweenStepFour
+      doc.select("ol.govuk-list.govuk-list--number li").eq(1).text shouldBe plaPensionsUsedBetweenStepTwo
+      doc.select("ol.govuk-list.govuk-list--number li").eq(2).text shouldBe plaPensionsUsedBetweenStepThree
+      doc.select("ol.govuk-list.govuk-list--number li").eq(3).text shouldBe plaPensionsUsedBetweenStepFour
     }
 
     "have a help link redirecting to the right location" in{
       val linkText = doc.select("#ip14-amend-pensions-taken-between-help a").text
-      plaPensionsTakenBetweenHelpLinkTextNew.contains(linkText) shouldBe true
-      doc.select("#ip14-amend-pensions-taken-between-help a").attr("href") shouldBe plaPensionsTakenBetweenHelpLinkLocation
+      plaPensionsUsedBetweenHelpLinkTextNew.contains(linkText) shouldBe true
+      doc.select("#ip14-amend-pensions-taken-between-help a").attr("href") shouldBe plaPensionsUsedBetweenHelpLinkLocation
     }
 
     "have a valid form" in{

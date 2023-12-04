@@ -29,6 +29,8 @@ object CallMap {
 
     "pensionsTakenBetween"     -> controllers.routes.IP2016Controller.pensionsTakenBetween,
 
+    "pensionsUsedBetween" -> controllers.routes.IP2016Controller.pensionsUsedBetween,
+
     "overseasPensions"     -> controllers.routes.IP2016Controller.overseasPensions,
 
     "currentPensions"     -> controllers.routes.IP2016Controller.currentPensions,
