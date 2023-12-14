@@ -185,7 +185,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   //PENSIONS USED BETWEEN
   def pensionsUsedBetween:  Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      sessionCacheService.fetchAndGetFormData[PensionsUsedBetweenModel]("pensionsUsedBeforeAmt").map {
+      sessionCacheService.fetchAndGetFormData[PensionsUsedBetweenModel]("pensionsUsedBetween").map {
         case Some(data) => Ok(pensionsUsedBetween(pensionsUsedBetweenForm.fill(data)))
         case _ => Ok(pensionsUsedBetween(pensionsUsedBetweenForm))
       }
