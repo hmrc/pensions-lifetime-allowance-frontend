@@ -21,6 +21,7 @@ object ApplicationStage extends Enumeration {
   type ApplicationStage = Value
   val PensionsTakenBefore = Value
   val PensionsTakenBetween = Value
+  val PensionsUsedBetween = Value
   val OverseasPensions = Value
   val CurrentPensions = Value
   val PreviousPsos = Value
@@ -30,6 +31,7 @@ object ApplicationStage extends Enumeration {
     applicationStage.toLowerCase match {
       case "pensionstakenbefore"  => Some(PensionsTakenBefore)
       case "pensionstakenbetween" => Some(PensionsTakenBetween)
+      case "pensionsusedbetween" => Some(PensionsUsedBetween)
       case "overseaspensions"     => Some(OverseasPensions)
       case "currentpensions"      => Some(CurrentPensions)
       case "previouspsos"         => Some(PreviousPsos)

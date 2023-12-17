@@ -27,6 +27,7 @@ import forms.AmendOverseasPensionsForm._
 import forms.AmendPSODetailsForm._
 import forms.AmendPensionsTakenBeforeForm._
 import forms.AmendPensionsTakenBetweenForm._
+import forms.AmendPensionsUsedBetweenForm._
 import forms.AmendmentTypeForm._
 import javax.inject.Inject
 import models.amendModels._
@@ -58,6 +59,7 @@ class AmendsController @Inject()(val sessionCacheService: SessionCacheService,
                                  amendCurrentPensions: pages.amends.amendCurrentPensions,
                                  amendPensionsTakenBefore: pages.amends.amendPensionsTakenBefore,
                                  amendPensionsTakenBetween: pages.amends.amendPensionsTakenBetween,
+                                 amendPensionsUsedBetween: pages.amends.amendPensionsUsedBetween,
                                  amendIP14CurrentPensions: pages.amends.amendIP14CurrentPensions,
                                  amendIP14PensionsTakenBefore: pages.amends.amendIP14PensionsTakenBefore,
                                  amendIP14PensionsTakenBetween: pages.amends.amendIP14PensionsTakenBetween,
@@ -133,17 +135,34 @@ extends FrontendController(mcc) with I18nSupport with Logging{
         success => {
             sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
               case Some(model) =>
-                val updatedAmount = success.amendedPensionsTakenBetween match {
-                  case "yes" => success.amendedPensionsTakenBetweenAmt.get.toDouble
-                  case "no" => 0.asInstanceOf[Double]
-                }
-                val updated = model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(updatedAmount))
-                val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-                val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+//                val updatedAmount = success.amendedPensionsTakenBetween match {
+//                  case "yes" => -1.asInstanceOf[Double]
+//                  case "no" => 0.asInstanceOf[Double]
+//                }
+//                val updated = model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(0))
+//                val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+//                val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+//
+//                sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
+//                  _ =>
+//                    if (updatedAmount == -1 )
+//                      Redirect(routes.AmendsController.amendPensionsUsedBetween(success.protectionType.toLowerCase, success.status.toLowerCase))
+//                    else
+//                      Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+//                }
+                 success.amendedPensionsTakenBetween match {
+                    case "yes" => Future.successful(Redirect(routes.AmendsController.amendPensionsUsedBetween(success.protectionType.toLowerCase, success.status.toLowerCase)))
+                    case "no" =>
+                      val updated = model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(0))
+                      val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+                      val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
-                  _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
-                }
+                      sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
+                        _ =>
+                          Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+                      }
+
+                 }
 
               case _ =>
                 logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken between")
@@ -154,6 +173,36 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
     }
   }
+
+  val submitAmendPensionsUsedBetween = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
+    println(">>>>>>>>>>------------ amendPensionsUsedBetween")
+    amendPensionsUsedBetweenForm.bindFromRequest().fold(
+      errors => {
+        val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
+        Future.successful(BadRequest(amendPensionsUsedBetween(form)))
+      },
+      success => {
+        sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
+          case Some(model) =>
+            val updatedAmount = success.amendedPensionsUsedBetweenAmt.get.toDouble
+            val updated = model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(updatedAmount))
+            val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+            val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+
+            sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
+              _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+            }
+
+          case _ =>
+            logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken between")
+            Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+        }
+      }
+    )
+
+  }
+  }
+
   val submitAmendOverseasPensions = Action.async {
     implicit request =>
        authFunction.genericAuthWithNino("existingProtections") { nino =>
@@ -318,6 +367,13 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     }
   }
 
+  def amendPensionsUsedBetween(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
+    authFunction.genericAuthWithNino("existingProtections") { nino =>
+      println(">>>>>>>>>>>>>>>>>>>> amendPensionsUsedBetween")
+      amendRoute(AmendJourney.pensionUsedBetween, protectionType, status, nino).apply(request)
+    }
+  }
+
   def amendOverseasPensions(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
      authFunction.genericAuthWithNino("existingProtections") { nino =>
       amendRoute(AmendJourney.overseasPension, protectionType, status, nino).apply(request)
@@ -343,6 +399,11 @@ extends FrontendController(mcc) with I18nSupport with Logging{
               val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes" else "no"
               AmendPensionsTakenBetweenModel(
                 yesNoValue,
+                protectionType,
+                status)
+            case `pensionUsedBetween` =>
+              println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+              AmendPensionsUsedBetweenModel(
                 Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0))),
                 protectionType,
                 status)
@@ -371,10 +432,13 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       case AmendPensionsTakenBeforeModel(_,_,"ip2014",_) =>
         Ok(amendIP14PensionsTakenBefore(amendPensionsTakenBeforeForm.fill(model.asInstanceOf[AmendPensionsTakenBeforeModel])))
 
-      case AmendPensionsTakenBetweenModel(_,_,"ip2016",_) =>
+      case AmendPensionsTakenBetweenModel(_,"ip2016",_) =>
         Ok(amendPensionsTakenBetween(amendPensionsTakenBetweenForm.fill(model.asInstanceOf[AmendPensionsTakenBetweenModel])))
 
-      case AmendPensionsTakenBetweenModel(_,_,"ip2014",_) =>
+      case AmendPensionsUsedBetweenModel(_,"ip2016",_) =>
+        Ok(amendPensionsUsedBetween(amendPensionsUsedBetweenForm.fill(model.asInstanceOf[AmendPensionsUsedBetweenModel])))
+
+      case AmendPensionsTakenBetweenModel(_,"ip2014",_) =>
         Ok(amendIP14PensionsTakenBetween(amendPensionsTakenBetweenForm.fill(model.asInstanceOf[AmendPensionsTakenBetweenModel])))
 
       case AmendOverseasPensionsModel(_,_,"ip2016",_) =>
@@ -488,6 +552,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     val currentPension = Value
     val pensionTakenBefore = Value
     val pensionTakenBetween = Value
+    val pensionUsedBetween = Value
     val overseasPension = Value
   }
 

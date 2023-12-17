@@ -18,8 +18,8 @@ package models.amendModels
 
 import play.api.libs.json._
 
-case class AmendPensionsTakenBetweenModel(amendedPensionsTakenBetween: String, protectionType: String, status: String) extends AmendValueModel
+case class AmendPensionsUsedBetweenModel(amendedPensionsUsedBetweenAmt: Option[BigDecimal], protectionType: String, status: String) extends AmendValueModel
 
-object AmendPensionsTakenBetweenModel {
-  implicit val format = Json.format[AmendPensionsTakenBetweenModel]
+object AmendPensionsUsedBetweenModel {
+  implicit val format = Json.format[AmendPensionsUsedBetweenModel]
 }
