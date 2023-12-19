@@ -193,7 +193,15 @@ class DisplayConstructors @Inject()(implicit messagesApi: MessagesApi) extends L
     val overseasPensionsSection = createSection(protection, ApplicationStage.OverseasPensions, protection.nonUKRights)
     val previousPsoSection = createPreviousPsoSection(protection)
 
-    Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, pensionsUsedBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+    protection.postADayBenefitCrystallisationEvents.fold(
+      Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+    )( amt =>
+      if (amt < 0.01) {
+        Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+      } else {
+        Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, pensionsUsedBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+      }
+    )
   }
   def createSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double], displayYesNoOnly: Boolean = false, displayAmountOnly: Boolean = false): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)
@@ -227,26 +235,21 @@ class DisplayConstructors @Inject()(implicit messagesApi: MessagesApi) extends L
   }
 
   def createYesNoSection(stage: String, amendCall: Option[Call], amountOption: Option[Double], displayYesNoOnly: Boolean, displayAmountOnly: Boolean): AmendDisplaySectionModel = {
-    println(">>>>>>>>>>>>>>>>>>>> " + stage)
     amountOption.fold(
-      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no..."))))
+      AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no"))))
     )(amt => {
-      println(">>>>>>>>>>>>>>>>>>>> " + amt)
       if (amt < 0.01) {
         AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no"))))
       } else {
         if (displayYesNoOnly) {
-          println(">>>>>>>>>>>>>>>>>>>> displayYesNoOnly" )
           AmendDisplaySectionModel(stage, Seq(
             AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes"))
           ))
         } else if (displayAmountOnly) {
-          println(">>>>>>>>>>>>>>>>>>>> displayAmountOnly")
           AmendDisplaySectionModel(stage, Seq(
             AmendDisplayRowModel("Amt", amendCall, removeLinkCall = None, Display.currencyDisplayString(amt))
           ))
         } else {
-          println(">>>>>>>>>>>>>>>>>>>> both" )
           AmendDisplaySectionModel(stage, Seq(
             AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes")),
             AmendDisplayRowModel("Amt", amendCall, removeLinkCall = None, Display.currencyDisplayString(amt))

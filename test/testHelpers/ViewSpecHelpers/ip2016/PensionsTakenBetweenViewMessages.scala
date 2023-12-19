@@ -23,6 +23,6 @@ trait PensionsTakenBetweenViewMessages {
   val plaPensionsTakenBetweenBulletTwo = "you transferred a pension to a scheme held overseas"
   val plaPensionsTakenBetweenBulletThree = "you turned 75 with pension savings which you hadn't yet taken"
 
-  val plaPensionsTakenBetweenLegendText = "Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?"
+  val plaPensionsTakenBetweenLegendText = "Did any of these events happen between 6 April 2006 and 5 April 2016?"
   val plaMandatoryError = "Select yes if any of these events happened between 6 April 2006 and 5 April 2016"
 }

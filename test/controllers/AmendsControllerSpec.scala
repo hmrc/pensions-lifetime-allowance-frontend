@@ -75,6 +75,7 @@ class AmendsControllerSpec extends FakeApplication
   val mockAmendCurrentPensions: amendCurrentPensions = app.injector.instanceOf[amendCurrentPensions]
   val mockAmendPensionsTakenBefore: amendPensionsTakenBefore = app.injector.instanceOf[amendPensionsTakenBefore]
   val mockAmendPensionsTakenBetween: amendPensionsTakenBetween = app.injector.instanceOf[amendPensionsTakenBetween]
+  val mockAmendPensionsUsedBetween: amendPensionsUsedBetween = app.injector.instanceOf[amendPensionsUsedBetween]
   val mockAmendIP14CurrentPensions: amendIP14CurrentPensions = app.injector.instanceOf[amendIP14CurrentPensions]
   val mockAmendIP14PensionsTakenBefore: amendIP14PensionsTakenBefore = app.injector.instanceOf[amendIP14PensionsTakenBefore]
   val mockAmendIP14PensionsTakenBetween: amendIP14PensionsTakenBetween = app.injector.instanceOf[amendIP14PensionsTakenBetween]
@@ -131,6 +132,7 @@ class AmendsControllerSpec extends FakeApplication
       mockAmendCurrentPensions,
       mockAmendPensionsTakenBefore,
       mockAmendPensionsTakenBetween,
+      mockAmendPensionsUsedBetween,
       mockAmendIP14CurrentPensions,
       mockAmendIP14PensionsTakenBefore,
       mockAmendIP14PensionsTakenBetween,
@@ -671,7 +673,7 @@ class AmendsControllerSpec extends FakeApplication
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-        jsoupDoc.body.getElementById("conditional-amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__conditional govuk-radios__conditional--hidden"
+        jsoupDoc.body.getElementById("amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__input"
       }
     }
 
@@ -709,18 +711,8 @@ class AmendsControllerSpec extends FakeApplication
 
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-
-          jsoupDoc.body.getElementById("conditional-amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__conditional"
-        }
-
-        "have the value of the input field set to 2000 by default" in new Setup {
-          lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
-          lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-
-          jsoupDoc.body.getElementById("amendedPensionsTakenBetweenAmt").attr("value") shouldBe "2000"
+          jsoupDoc.body.getElementById("amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__input"
+          jsoupDoc.body.getElementById("amendedPensionsTakenBetween").attr("value") shouldBe "yes"
         }
       }
 
@@ -732,11 +724,31 @@ class AmendsControllerSpec extends FakeApplication
         status(result) shouldBe 200
       }
 
+  "In AmendsController calling the .amendPensionsUsedBetween action" when {
+    "not supplied with a stored model" in new Setup {
+
+      lazy val result = controller.amendPensionsUsedBetween("ip2016", "open")(fakeRequest)
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](None)
+
+      status(result) shouldBe 500
+
+    }
+    "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" in new Setup {
+      lazy val result = controller.amendPensionsUsedBetween("ip2016", "dormant")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
+      jsoupDoc.body.getElementById("amendedPensionsUsedBetweenAmt").attr("class") shouldBe "govuk-input govuk-input--width-10"
+    }
+  }
+
   "Submitting Amend IP16 Pensions Taken Between data" when {
 
     "the model can't be fetched from cache" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBetween", "no"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](None)
@@ -747,7 +759,7 @@ class AmendsControllerSpec extends FakeApplication
 
     "the data is valid with a no response" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "no"), ("amendedPensionsTakenBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBetween", "no"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -760,22 +772,22 @@ class AmendsControllerSpec extends FakeApplication
 
     "the data is valid with a yes response" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBetween", "yes"), ("protectionType", "ip2016"), ("status", "dormant"))
 
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
         cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
-      status(DataItem.result) shouldBe 303
+        status(DataItem.result) shouldBe 303
 
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendPensionsUsedBetween("ip2016", "dormant")}")
       }
 
 
     "the data is invalid" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetweenAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(DataItem.result) shouldBe 400
@@ -784,11 +796,45 @@ class AmendsControllerSpec extends FakeApplication
 
     "the data is invalid on additional validation" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
-        ("amendedPensionsTakenBetween", "yes"), ("amendedPensionsTakenBetweenAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBetween", "1"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         status(DataItem.result) shouldBe 400
       }
+  }
+
+  "Submitting Amend IP16 Pensions Used Between data" when {
+
+    "the model can't be fetched from cache" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween,
+        ("amendedPensionsUsedBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](None)
+
+      status(DataItem.result) shouldBe 500
+    }
+
+    "the data is invalid on validation" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween,
+        ("amendedPensionsUsedBetweenAmt", "yes"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      status(DataItem.result) shouldBe 400
+    }
+
+    "the data is valid with a no response" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween,
+        ("amendedPensionsUsedBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+      status(DataItem.result) shouldBe 303
+
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+    }
   }
 
   "In AmendsController calling the .amendOverseasPensions action" when {
@@ -1332,7 +1378,7 @@ class AmendsControllerSpec extends FakeApplication
 
     "supplied an IP2016 AmendPensionsTakenBetweenModel" should {
       "return a status of OK" in new Setup() {
-        val model = AmendPensionsTakenBetweenModel("", Some(1000), "ip2016", "dormant")
+        val model = AmendPensionsTakenBetweenModel("", "ip2016", "dormant")
         lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         status(result) shouldBe OK
         contentAsString(result) shouldBe mockAmendPensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body
@@ -1341,7 +1387,7 @@ class AmendsControllerSpec extends FakeApplication
 
     "supplied an IP2014 AmendPensionsTakenBetweenModel" should {
       "return a status of OK" in new Setup() {
-        val model = AmendPensionsTakenBetweenModel("", Some(1000), "ip2014", "dormant")
+        val model = AmendPensionsTakenBetweenModel("", "ip2014", "dormant")
         lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         status(result) shouldBe OK
         contentAsString(result) shouldBe mockAmendIP14PensionsTakenBetween(AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.fill(model)).body

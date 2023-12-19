@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers.amends
 
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBetweenViewMessages
 
-trait AmendIP14PensionsTakenBetweenViewSpecMessages extends PensionsTakenBetweenViewMessages{
+trait AmendIP14PensionsTakenBetweenViewSpecMessages extends PensionsTakenBetweenViewMessages {
   val plaIP14PensionsTakenBetweenTitle = "Did any of these events happen between 6 April 2006 and 5 April 2014?"
   val plaIP14PensionsTakenBetweenParaTwo = "You can ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2014."
   val plaIP14PensionsTakenBetweenStepOne = "Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened."
