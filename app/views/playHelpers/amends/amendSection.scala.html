@@ -61,6 +61,7 @@
             amendRow(firstRow, protectionType, model.sectionId, model.rows.tail.nonEmpty)
         }
         val otherRows: Seq[Option[SummaryListRow]] = model.rows.tail.map { otherRow =>
+
             Some(amendRow(otherRow, protectionType, model.sectionId, false))
         }
         topRow +: otherRows

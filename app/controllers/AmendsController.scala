@@ -135,21 +135,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
         success => {
             sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
               case Some(model) =>
-//                val updatedAmount = success.amendedPensionsTakenBetween match {
-//                  case "yes" => -1.asInstanceOf[Double]
-//                  case "no" => 0.asInstanceOf[Double]
-//                }
-//                val updated = model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(0))
-//                val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-//                val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
-//
-//                sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
-//                  _ =>
-//                    if (updatedAmount == -1 )
-//                      Redirect(routes.AmendsController.amendPensionsUsedBetween(success.protectionType.toLowerCase, success.status.toLowerCase))
-//                    else
-//                      Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
-//                }
                  success.amendedPensionsTakenBetween match {
                     case "yes" => Future.successful(Redirect(routes.AmendsController.amendPensionsUsedBetween(success.protectionType.toLowerCase, success.status.toLowerCase)))
                     case "no" =>
@@ -200,7 +185,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       }
     )
 
-  }
+    }
   }
 
   val submitAmendOverseasPensions = Action.async {
@@ -369,7 +354,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   def amendPensionsUsedBetween(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      println(">>>>>>>>>>>>>>>>>>>> amendPensionsUsedBetween")
       amendRoute(AmendJourney.pensionUsedBetween, protectionType, status, nino).apply(request)
     }
   }
@@ -402,7 +386,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                 protectionType,
                 status)
             case `pensionUsedBetween` =>
-              println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
               AmendPensionsUsedBetweenModel(
                 Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0))),
                 protectionType,

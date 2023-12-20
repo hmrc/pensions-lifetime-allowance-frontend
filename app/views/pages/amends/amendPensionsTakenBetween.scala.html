@@ -52,18 +52,17 @@
         <li>@Messages("pla.pensionsTakenBetween.bullet.2")</li>
         <li>@Messages("pla.pensionsTakenBetween.bullet.3")</li>
     </ul>
-@plaInputRadioGroup(
-legend = Messages("pla.pensionsTakenBetween.title"),
-legendClass = Some("govuk-visually-hidden"),
-items = Seq(
-RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
-RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
-),
-isPageHeading = false,
-inLine = true,
-field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetween")
-)
-
+    @plaInputRadioGroup(
+        legend = Messages("pla.pensionsTakenBetween.title"),
+        legendClass = Some("govuk-visually-hidden"),
+        items = Seq(
+            RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
+            RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+        ),
+        isPageHeading = false,
+        inLine = true,
+        field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetween")
+    )
 
     @submitButton(submitText = Messages("pla.base.change"))
 
