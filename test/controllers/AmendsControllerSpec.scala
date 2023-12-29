@@ -79,6 +79,7 @@ class AmendsControllerSpec extends FakeApplication
   val mockAmendIP14CurrentPensions: amendIP14CurrentPensions = app.injector.instanceOf[amendIP14CurrentPensions]
   val mockAmendIP14PensionsTakenBefore: amendIP14PensionsTakenBefore = app.injector.instanceOf[amendIP14PensionsTakenBefore]
   val mockAmendIP14PensionsTakenBetween: amendIP14PensionsTakenBetween = app.injector.instanceOf[amendIP14PensionsTakenBetween]
+  val mockAmendIP14PensionsUsedBetween: amendIP14PensionsUsedBetween = app.injector.instanceOf[amendIP14PensionsUsedBetween]
   val mockAmendOverseasPensions: amendOverseasPensions = app.injector.instanceOf[amendOverseasPensions]
   val mockAmendIP414OverseasPensions: amendIP14OverseasPensions = app.injector.instanceOf[amendIP14OverseasPensions]
   val mockOutcomeActive: outcomeActive                = app.injector.instanceOf[outcomeActive]
@@ -136,6 +137,7 @@ class AmendsControllerSpec extends FakeApplication
       mockAmendIP14CurrentPensions,
       mockAmendIP14PensionsTakenBefore,
       mockAmendIP14PensionsTakenBetween,
+      mockAmendIP14PensionsUsedBetween,
       mockAmendOverseasPensions,
       mockAmendIP414OverseasPensions,
       mockOutcomeActive,

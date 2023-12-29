@@ -46,7 +46,6 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
 
         result.value shouldBe Some(AmendPensionsTakenBetweenModel("no", "anotherType", "anotherStatus"))
       }
-
     }
 
     "produce an invalid form" which {

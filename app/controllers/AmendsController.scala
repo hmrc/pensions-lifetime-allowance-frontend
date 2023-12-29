@@ -63,6 +63,7 @@ class AmendsController @Inject()(val sessionCacheService: SessionCacheService,
                                  amendIP14CurrentPensions: pages.amends.amendIP14CurrentPensions,
                                  amendIP14PensionsTakenBefore: pages.amends.amendIP14PensionsTakenBefore,
                                  amendIP14PensionsTakenBetween: pages.amends.amendIP14PensionsTakenBetween,
+                                 amendIP14PensionsUsedBetween: pages.amends.amendIP14PensionsUsedBetween,
                                  amendOverseasPensions: pages.amends.amendOverseasPensions,
                                  amendIP14OverseasPensions: pages.amends.amendIP14OverseasPensions,
                                  outcomeActive: views.html.pages.amends.outcomeActive,
@@ -160,7 +161,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   }
 
   val submitAmendPensionsUsedBetween = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
-    println(">>>>>>>>>>------------ amendPensionsUsedBetween")
     amendPensionsUsedBetweenForm.bindFromRequest().fold(
       errors => {
         val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
@@ -187,7 +187,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
     }
   }
-
   val submitAmendOverseasPensions = Action.async {
     implicit request =>
        authFunction.genericAuthWithNino("existingProtections") { nino =>
@@ -423,6 +422,9 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
       case AmendPensionsTakenBetweenModel(_,"ip2014",_) =>
         Ok(amendIP14PensionsTakenBetween(amendPensionsTakenBetweenForm.fill(model.asInstanceOf[AmendPensionsTakenBetweenModel])))
+
+      case AmendPensionsUsedBetweenModel(_,"ip2014",_) =>
+        Ok(amendIP14PensionsUsedBetween(amendPensionsUsedBetweenForm.fill(model.asInstanceOf[AmendPensionsUsedBetweenModel])))
 
       case AmendOverseasPensionsModel(_,_,"ip2016",_) =>
         Ok(amendOverseasPensions(amendOverseasPensionsForm.fill(model.asInstanceOf[AmendOverseasPensionsModel])))

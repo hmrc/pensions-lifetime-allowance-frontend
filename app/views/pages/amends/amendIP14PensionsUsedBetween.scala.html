@@ -15,7 +15,6 @@
  *@
 
 @import models.amendModels.AmendPensionsUsedBetweenModel
-@import play.api.data._
 @import common.Links
 
 @this(
@@ -27,22 +26,23 @@
     submitButton: playHelpers.templates.submitButton
 )
 
-
 @(amendPensionsUsedBetweenForm: Form[AmendPensionsUsedBetweenModel])(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
-
-    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.2")</p>
+    <p class="govuk-body">@Messages("pla.ip14PensionsTakenBetween.para.2")</p>
     <ol class="govuk-list govuk-list--number">
-        <li>@Messages("pla.pensionsUsedBetween.step.1")</li>
+        <li>@Messages("pla.ip14PensionsTakenBetween.step.1")</li>
         <li>@Messages("pla.pensionsUsedBetween.step.2")</li>
         <li>@Messages("pla.pensionsUsedBetween.step.3")</li>
         <li>@Messages("pla.pensionsUsedBetween.step.4")</li>
     </ol>
-    <p class="govuk-body">
-        @Messages("pla.pensionsUsedBetween.para.3.nonInput") <a class="govuk-link" id="ip16-amend-pensions-used-between-help-link" href="@Links.pensionsUsedBetween" target="_blank" rel="noreferrer noopener">@Messages("pla.pensionsUsedBetween.helpLinkText") (@Messages("pla.base.newTab")).</a>
+    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.3.nonInput")
+        <a href="@Links.pensionsUsedBetween"
+           id="ip14-amend-pensions-used-between-help-link"
+           class="govuk-link"
+           rel="noreferrer noopener"
+           target="_blank">@Messages("pla.pensionsUsedBetween.helpLinkText") (@Messages("pla.base.newTab"))</a>.
     </p>
-
 }
 
 @errorMessage = @{
@@ -52,27 +52,23 @@
 }
 
 
-
 @title = @{
     if(amendPensionsUsedBetweenForm.errors.nonEmpty){
-        messages("site.title.error", messages("pla.pensionsUsedBetween.title"))
+        messages("site.title.error", messages("pla.pensionsUsedBetween.question"))
     } else {
-        messages("pla.pensionsUsedBetween.title")
+        messages("pla.pensionsUsedBetween.question")
     }
 }
 
 @layout(
     pageTitle = title
-) {
-
+){
     @errorSummary(amendPensionsUsedBetweenForm.errors, Some("amendedPensionsUsedBetweenAmt"))
-
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsUsedBetween.question")</h1>
-    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.1")</p>
-
+    <p class="govuk-body govuk-!-margin-top-4">@Messages("pla.pensionsUsedBetween.para.1")</p>
     @form(action = routes.AmendsController.submitAmendPensionsUsedBetween) {
         @helpTextAccordion(
-            id = "ip16-amend-pensions-used-between-help",
+            id = "ip14-amend-pensions-used-between-help",
             summaryText = Messages("pla.pensionsUsedBetween.help"),
             hiddenContent = helpTextAccordionContent
         )
@@ -84,13 +80,10 @@
             errorMessage = if (amendPensionsUsedBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
         )
 
-    @submitButton(submitText = Messages("pla.base.change"))
-
-    <div class="govuk-visually-hidden">
-
-        @helper.inputText(amendPensionsUsedBetweenForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-        @helper.inputText(amendPensionsUsedBetweenForm("status"), 'type -> "hidden", 'class -> "hidden")
-
-    </div>
+        @submitButton(Messages("pla.base.change"))
+        <div class="govuk-visually-hidden">
+            @helper.inputText(amendPensionsUsedBetweenForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(amendPensionsUsedBetweenForm("status"), 'type -> "hidden", 'class -> "hidden")
+        </div>
     }
 }

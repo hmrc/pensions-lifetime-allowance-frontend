@@ -50,44 +50,16 @@ class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Am
       doc.select("h1").text shouldBe plaIP14PensionsTakenBetweenTitle
     }
 
-    "have the right sub-headers and summary text" in{
-      doc.select(".govuk-label--m").text shouldBe plaPensionsUsedBetweenHeader
-      doc.select("summary").text shouldBe plaPensionsUsedBetweenHelp
-    }
-
-    "have the right explanatory paragraphs" in{
-      doc.select("p").eq(0).text shouldBe plaPensionsUsedBetweenParaOne
-      doc.select("#ip14-amend-pensions-taken-between-help p.govuk-body").eq(0).text shouldBe plaIP14PensionsTakenBetweenParaTwo
-      doc.select("#ip14-amend-pensions-taken-between-help p.govuk-body").eq(1).text shouldBe plaPensionsUsedBetweenParaThreeNew
-    }
-
     "have a visible menu with a correct list values" in{
       doc.select("ul.govuk-list.govuk-list--bullet li").eq(0).text shouldBe plaPensionsTakenBetweenBulletOne
       doc.select("ul.govuk-list.govuk-list--bullet li").eq(1).text shouldBe plaPensionsTakenBetweenBulletTwo
       doc.select("ul.govuk-list.govuk-list--bullet li").eq(2).text shouldBe plaPensionsTakenBetweenBulletThree
     }
 
-    "have a hidden drop-down menu with the correct list values" in{
-      doc.select("ol.govuk-list.govuk-list--number li").eq(0).text shouldBe plaIP14PensionsTakenBetweenStepOne
-      doc.select("ol.govuk-list.govuk-list--number li").eq(1).text shouldBe plaPensionsUsedBetweenStepTwo
-      doc.select("ol.govuk-list.govuk-list--number li").eq(2).text shouldBe plaPensionsUsedBetweenStepThree
-      doc.select("ol.govuk-list.govuk-list--number li").eq(3).text shouldBe plaPensionsUsedBetweenStepFour
-    }
-
-    "have a help link redirecting to the right location" in{
-      val linkText = doc.select("#ip14-amend-pensions-taken-between-help a").text
-      plaPensionsUsedBetweenHelpLinkTextNew.contains(linkText) shouldBe true
-      doc.select("#ip14-amend-pensions-taken-between-help a").attr("href") shouldBe plaPensionsUsedBetweenHelpLinkLocation
-    }
-
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPensionsTakenBetween.url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaIP14PensionsTakenBetweenLegendText
-    }
-
-    "have a £ symbol present" in{
-      doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
     "have a pair of yes/no buttons" in{

@@ -238,25 +238,25 @@ class DisplayConstructors @Inject()(implicit messagesApi: MessagesApi) extends L
     amountOption.fold(
       AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no"))))
     )(amt => {
-      if (amt < 0.01) {
-        AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no"))))
-      } else {
-        if (displayYesNoOnly) {
-          AmendDisplaySectionModel(stage, Seq(
-            AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes"))
-          ))
-        } else if (displayAmountOnly) {
-          AmendDisplaySectionModel(stage, Seq(
-            AmendDisplayRowModel("Amt", amendCall, removeLinkCall = None, Display.currencyDisplayString(amt))
-          ))
+        if (amt < 0.01) {
+          AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.no"))))
         } else {
-          AmendDisplaySectionModel(stage, Seq(
-            AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes")),
-            AmendDisplayRowModel("Amt", amendCall, removeLinkCall = None, Display.currencyDisplayString(amt))
-          ))
+          if (displayYesNoOnly) {
+            AmendDisplaySectionModel(stage, Seq(
+              AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes"))
+            ))
+          } else if (displayAmountOnly) {
+            AmendDisplaySectionModel(stage, Seq(
+              AmendDisplayRowModel("Amt", amendCall, removeLinkCall = None, Display.currencyDisplayString(amt))
+            ))
+          } else {
+            AmendDisplaySectionModel(stage, Seq(
+              AmendDisplayRowModel("YesNo", amendCall, removeLinkCall = None, Messages("pla.base.yes")),
+              AmendDisplayRowModel("Amt", amendCall, removeLinkCall = None, Display.currencyDisplayString(amt))
+            ))
+          }
         }
       }
-    }
     )
   }
 
