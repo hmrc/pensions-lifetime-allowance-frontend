@@ -1,0 +1,96 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.amendModels.AmendPensionsUsedBetweenModel
+@import play.api.data._
+@import common.Links
+
+@this(
+    layout: Layout,
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    errorSummary: playHelpers.templates.errorSummary,
+    formInputMoney: playHelpers.templates.formInputMoney,
+    helpTextAccordion: playHelpers.templates.helpTextAccordion,
+    submitButton: playHelpers.templates.submitButton
+)
+
+
+@(amendPensionsUsedBetweenForm: Form[AmendPensionsUsedBetweenModel])(implicit request: Request[_], messages: Messages)
+
+@helpTextAccordionContent = {
+
+    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.2")</p>
+    <ol class="govuk-list govuk-list--number">
+        <li>@Messages("pla.pensionsUsedBetween.step.1")</li>
+        <li>@Messages("pla.pensionsUsedBetween.step.2")</li>
+        <li>@Messages("pla.pensionsUsedBetween.step.3")</li>
+        <li>@Messages("pla.pensionsUsedBetween.step.4")</li>
+    </ol>
+    <p class="govuk-body">
+        @Messages("pla.pensionsUsedBetween.para.3.nonInput") <a class="govuk-link" id="ip16-amend-pensions-used-between-help-link" href="@Links.pensionsUsedBetween" target="_blank" rel="noreferrer noopener">@Messages("pla.pensionsUsedBetween.helpLinkText") (@Messages("pla.base.newTab")).</a>
+    </p>
+
+}
+
+@errorMessage = @{
+    for(error <- amendPensionsUsedBetweenForm.errors) yield {
+        if(error.key.equals("amendedPensionsUsedBetweenAmt")) "" else messages(error.message, error.args:_*)
+    }
+}
+
+
+
+@title = @{
+    if(amendPensionsUsedBetweenForm.errors.nonEmpty){
+        messages("site.title.error", messages("pla.pensionsUsedBetween.title"))
+    } else {
+        messages("pla.pensionsUsedBetween.title")
+    }
+}
+
+@layout(
+    pageTitle = title
+) {
+
+    @errorSummary(amendPensionsUsedBetweenForm.errors, Some("amendedPensionsUsedBetweenAmt"))
+
+    <h1 class="govuk-heading-xl">@Messages("pla.pensionsUsedBetween.question")</h1>
+    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.1")</p>
+
+    @form(action = routes.AmendsController.submitAmendPensionsUsedBetween) {
+        @helpTextAccordion(
+            id = "ip16-amend-pensions-used-between-help",
+            summaryText = Messages("pla.pensionsUsedBetween.help"),
+            hiddenContent = helpTextAccordionContent
+        )
+        @formInputMoney(
+            field = amendPensionsUsedBetweenForm("amendedPensionsUsedBetweenAmt"),
+            question = Messages("pla.pensionsUsedBetween.question"),
+            hideLabel = true,
+            pageHeading = false,
+            errorMessage = if (amendPensionsUsedBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
+        )
+
+    @submitButton(submitText = Messages("pla.base.change"))
+
+    <div class="govuk-visually-hidden">
+
+        @helper.inputText(amendPensionsUsedBetweenForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
+        @helper.inputText(amendPensionsUsedBetweenForm("status"), 'type -> "hidden", 'class -> "hidden")
+
+    </div>
+    }
+}

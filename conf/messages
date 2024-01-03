@@ -493,12 +493,12 @@ pla.amends.PensionsTakenBefore.IP2014.Amt.changeHint        = Change the value o
 
 pla.amends.PensionsTakenBetween.IP2016.YesNo                = Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.amends.PensionsTakenBetween.IP2016.YesNo.changeHint     = Change whether you got any money from your pensions before 5 April 2016?
-pla.amends.PensionsTakenBetween.IP2016.Amt                  = How much lifetime allowance have you used?
-pla.amends.PensionsTakenBetween.IP2016.Amt.changeHint       = Change the amount of lifetime allowance you used
+pla.amends.PensionsUsedBetween.IP2016.Amt                  = How much lifetime allowance have you used?
+pla.amends.PensionsUsedBetween.IP2016.Amt.changeHint       = Change the amount of lifetime allowance you used
 pla.amends.PensionsTakenBetween.IP2014.YesNo                = Between 6 April 2006 and 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.amends.PensionsTakenBetween.IP2014.YesNo.changeHint     = Change whether you got any money from your pensions before 5 April 2014?
-pla.amends.PensionsTakenBetween.IP2014.Amt                  = How much lifetime allowance have you used?
-pla.amends.PensionsTakenBetween.IP2014.Amt.changeHint       = Change the amount of lifetime allowance you used
+pla.amends.PensionsUsedBetween.IP2014.Amt                  = How much lifetime allowance have you used?
+pla.amends.PensionsUsedBetween.IP2014.Amt.changeHint       = Change the amount of lifetime allowance you used
 
 pla.amends.OverseasPensions.IP2016.YesNo                    = Have you put money into a pension scheme held overseas?
 pla.amends.OverseasPensions.IP2016.YesNo.changeHint         = Change whether you put money into a pension scheme held overseas

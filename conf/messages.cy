@@ -486,12 +486,12 @@ pla.amends.PensionsTakenBefore.IP2014.Amt.changeHint        = Newidiwch werth y 
 
 pla.amends.PensionsTakenBetween.IP2016.YesNo                = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
 pla.amends.PensionsTakenBetween.IP2016.YesNo.changeHint     = Newidiwch p''un a gawsoch unrhyw arian o''ch pensiynau cyn 5 Ebrill 2016
-pla.amends.PensionsTakenBetween.IP2016.Amt                  = Faint o lwfans oes a ydych wedi''i ddefnyddio?
-pla.amends.PensionsTakenBetween.IP2016.Amt.changeHint       = Newidiwch swm y lwfans oes a ddefnyddiwyd gennych
+pla.amends.PensionsUsedBetween.IP2016.Amt                  = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.amends.PensionsUsedBetween.IP2016.Amt.changeHint       = Newidiwch swm y lwfans oes a ddefnyddiwyd gennych
 pla.amends.PensionsTakenBetween.IP2014.YesNo                = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
 pla.amends.PensionsTakenBetween.IP2014.YesNo.changeHint     = Newidiwch p''un a gawsoch unrhyw arian o''ch pensiynau cyn 5 Ebrill 2014
-pla.amends.PensionsTakenBetween.IP2014.Amt                  = Faint o lwfans oes a ydych wedi''i ddefnyddio?
-pla.amends.PensionsTakenBetween.IP2014.Amt.changeHint       = Newidiwch swm y lwfans oes a ddefnyddiwyd gennych
+pla.amends.PensionsUsedBetween.IP2014.Amt                  = Faint o lwfans oes a ydych wedi''i ddefnyddio?
+pla.amends.PensionsUsedBetween.IP2014.Amt.changeHint       = Newidiwch swm y lwfans oes a ddefnyddiwyd gennych
 
 pla.amends.OverseasPensions.IP2016.YesNo                    = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
 pla.amends.OverseasPensions.IP2016.YesNo.changeHint         = Newidiwch p''un a ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor

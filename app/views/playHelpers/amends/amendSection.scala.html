@@ -18,7 +18,7 @@
     govukSummaryList : GovukSummaryList
 )
 
-@(model: AmendDisplaySectionModel, protectionType: String)(implicit messages: Messages)
+@(models: Seq[AmendDisplaySectionModel], protectionType: String)(implicit messages: Messages)
 
 @amendRow(model: AmendDisplayRowModel, protectionType: String, sectionId: String, firstRow: Boolean) = @{
     val firstRowClass = if(firstRow) "has-child-item" else ""
@@ -55,16 +55,19 @@
     )
 }
 
-@rows = @{
-    val topRow: Option[SummaryListRow] = model.rows.headOption.map { firstRow =>
-        amendRow(firstRow, protectionType, model.sectionId, model.rows.tail.nonEmpty)
-    }
-    val otherRows: Seq[Option[SummaryListRow]] = model.rows.tail.map { otherRow =>
-        Some(amendRow(otherRow, protectionType, model.sectionId, false))
-    }
-    topRow +: otherRows
+@getRows = @{
+    models.map { model =>
+        val topRow: Option[SummaryListRow] = model.rows.headOption.map { firstRow =>
+            amendRow(firstRow, protectionType, model.sectionId, model.rows.tail.nonEmpty)
+        }
+        val otherRows: Seq[Option[SummaryListRow]] = model.rows.tail.map { otherRow =>
+
+            Some(amendRow(otherRow, protectionType, model.sectionId, false))
+        }
+        topRow +: otherRows
+    }.flatten
 }
 
 @govukSummaryList(SummaryList(
-    rows = rows.flatten
+    rows = getRows.flatten
 ))

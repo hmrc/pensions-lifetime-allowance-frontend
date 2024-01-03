@@ -22,52 +22,12 @@
     layout: Layout,
     form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
     errorSummary: playHelpers.templates.errorSummary,
-    formHiddenYesNoRadio: playHelpers.templates.formHiddenYesNoRadio,
-    formInputMoney: playHelpers.templates.formInputMoney,
-    helpTextAccordion: playHelpers.templates.helpTextAccordion,
+    plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup,
     submitButton: playHelpers.templates.submitButton
 )
 
 
 @(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_], messages: Messages)
-
-@helpTextAccordionContent = {
-
-    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.2")</p>
-    <ol class="govuk-list govuk-list--number">
-        <li>@Messages("pla.pensionsUsedBetween.step.1")</li>
-        <li>@Messages("pla.pensionsUsedBetween.step.2")</li>
-        <li>@Messages("pla.pensionsUsedBetween.step.3")</li>
-        <li>@Messages("pla.pensionsUsedBetween.step.4")</li>
-    </ol>
-    <p class="govuk-body">
-        @Messages("pla.pensionsUsedBetween.para.3.nonInput") <a class="govuk-link" id="ip16-amend-pensions-taken-between-help-link" href="@Links.pensionsUsedBetween" target="_blank" rel="noreferrer noopener">@Messages("pla.pensionsUsedBetween.helpLinkText") (@Messages("pla.base.newTab")).</a>
-    </p>
-
-}
-
-@errorMessage = @{
-    for(error <- amendPensionsTakenBetweenForm.errors) yield {
-        if(error.key.equals("amendedPensionsTakenBetween")) "" else messages(error.message, error.args:_*)
-    }
-}
-
-@hiddenYesNoContent = {
-    <h2 class="govuk-label--l">@Messages("pla.pensionsUsedBetween.question")</h2>
-    <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.1")</p>
-    @helpTextAccordion(
-        id = "ip16-amend-pensions-taken-between-help",
-        summaryText = Messages("pla.pensionsUsedBetween.help"),
-        hiddenContent = helpTextAccordionContent
-    )
-    @formInputMoney(
-        field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetweenAmt"),
-        question = Messages("pla.pensionsUsedBetween.question"),
-        hideLabel = true,
-        pageHeading = false,
-        errorMessage = if (amendPensionsTakenBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
-    )
-}
 
 @title = @{
     if(amendPensionsTakenBetweenForm.errors.nonEmpty){
@@ -81,7 +41,7 @@
     pageTitle = title
 ) {
 
-    @errorSummary(amendPensionsTakenBetweenForm.errors, Some("amendedPensionsTakenBetweenAmt"))
+    @errorSummary(amendPensionsTakenBetweenForm.errors)
 
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBetween.title")</h1>
 
@@ -92,13 +52,16 @@
         <li>@Messages("pla.pensionsTakenBetween.bullet.2")</li>
         <li>@Messages("pla.pensionsTakenBetween.bullet.3")</li>
     </ul>
-
-    @formHiddenYesNoRadio(
-        field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetween"),
-        question = Messages("pla.pensionsTakenBetween.legend"),
-        hiddenQuestion = true,
-        pageHeading = false,
-        yesHiddencontent = Some(hiddenYesNoContent)
+    @plaInputRadioGroup(
+        legend = Messages("pla.pensionsTakenBetween.title"),
+        legendClass = Some("govuk-visually-hidden"),
+        items = Seq(
+            RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
+            RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+        ),
+        isPageHeading = false,
+        inLine = true,
+        field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetween")
     )
 
     @submitButton(submitText = Messages("pla.base.change"))

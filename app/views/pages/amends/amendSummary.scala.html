@@ -48,10 +48,8 @@
 
     <h2 class="govuk-heading-m">@Messages("pla.summary.pensionsHeading")</h2>
 
-    @model.pensionContributionSections.map { section =>
-        @amendSection(section, model.protectionType)
-    }
 
+    @amendSection(model.pensionContributionSections, model.protectionType)
     @govukSummaryList(SummaryList(
     rows = Seq(SummaryListRow(
         key = Key(
@@ -67,9 +65,8 @@
 
     @if(model.psoSections.nonEmpty){
         <h2 class="govuk-heading-m">@Messages("pla.summary.psosHeading")</h2>
-        @model.psoSections.map { section =>
-            @amendSection(section, model.protectionType)
-        }
+
+        @amendSection(model.psoSections, model.protectionType)
     }
 
     @if(status == "open") {
