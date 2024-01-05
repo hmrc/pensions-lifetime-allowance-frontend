@@ -186,22 +186,35 @@ class DisplayConstructors @Inject()(implicit messagesApi: MessagesApi) extends L
   }
 
   def createAmendPensionContributionSectionsFromProtection(protection: ProtectionModel): Seq[AmendDisplaySectionModel] = {
-    val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)
-    val pensionsTakenBeforeSection = createSection(protection, ApplicationStage.PensionsTakenBefore, protection.preADayPensionInPayment)
-    val pensionsTakenBetweenSection = createSection(protection, ApplicationStage.PensionsTakenBetween, protection.postADayBenefitCrystallisationEvents, true, false)
-    val pensionsUsedBetweenSection = createSection(protection, ApplicationStage.PensionsUsedBetween, protection.postADayBenefitCrystallisationEvents, false, true)
-    val overseasPensionsSection = createSection(protection, ApplicationStage.OverseasPensions, protection.nonUKRights)
-    val previousPsoSection = createPreviousPsoSection(protection)
+    val currentPensionsSection           = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)
+    val pensionsTakenBeforeSection       = createSection(protection, ApplicationStage.PensionsTakenBefore, protection.preADayPensionInPayment, displayYesNoOnly = true)
+    val pensionsWorthBeforeSection       = createSection(protection, ApplicationStage.PensionsWorthBefore, protection.preADayPensionInPayment, displayAmountOnly = true)
+    val pensionsTakenBetweenSection      = createSection(protection, ApplicationStage.PensionsTakenBetween, protection.postADayBenefitCrystallisationEvents, displayYesNoOnly = true)
+    val pensionsUsedBetweenSection       = createSection(protection, ApplicationStage.PensionsUsedBetween, protection.postADayBenefitCrystallisationEvents, displayAmountOnly = true)
+    val overseasPensionsSection          = createSection(protection, ApplicationStage.OverseasPensions, protection.nonUKRights)
+    val previousPsoSection               = createPreviousPsoSection(protection)
 
-    protection.postADayBenefitCrystallisationEvents.fold(
-      Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
-    )( amt =>
-      if (amt < 0.01) {
-        Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
-      } else {
-        Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, pensionsUsedBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+    (protection.postADayBenefitCrystallisationEvents, protection.preADayPensionInPayment) match {
+      case (Some(postAmt), None) =>
+        if (postAmt < 0.01) {
+          Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+        } else {
+          Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, pensionsUsedBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+        }
+      case (None, Some(preAmt)) =>
+        if(preAmt < 0.01) {
+          Seq(pensionsTakenBeforeSection, pensionsWorthBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+        } else {
+          Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+        }
+      case (Some(postAmt), Some(preAmt)) => (postAmt < 0.01, preAmt < 0.01) match {
+        case (true, true) => Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+        case (true, false) => Seq(pensionsTakenBeforeSection, pensionsWorthBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+        case (false, true) => Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, pensionsUsedBetweenSection,overseasPensionsSection, currentPensionsSection, previousPsoSection)
+        case (false, false) => Seq(pensionsTakenBeforeSection, pensionsWorthBeforeSection, pensionsTakenBetweenSection, pensionsUsedBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
       }
-    )
+      case _ => Seq(pensionsTakenBeforeSection, pensionsTakenBetweenSection, overseasPensionsSection, currentPensionsSection, previousPsoSection)
+    }
   }
   def createSection(protection: ProtectionModel, applicationStage: ApplicationStage.Value, amountOption: Option[Double], displayYesNoOnly: Boolean = false, displayAmountOnly: Boolean = false): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)

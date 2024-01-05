@@ -49,34 +49,9 @@ class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Pension
       doc.getElementsByClass("govuk-heading-xl").text shouldBe plaPensionsTakenBeforeHeading
     }
 
-    "have the right explanatory messages" in{
-      doc.select("#conditional-amendedPensionsTakenBefore > div > label").text shouldBe plaPensionsTakenBeforeQuestion
-      doc.select("summary").text shouldBe plaPensionsTakenBeforeHelp
-      doc.select("#ip16-amend-pensions-taken-before-help > div > p:nth-child(1)").text shouldBe plaPensionsTakenBeforeParaOne
-      doc.select("#ip16-amend-pensions-taken-before-help > div > p:nth-child(3)").text shouldBe plaPensionsTakenBeforeParaTwo
-      doc.select("#ip16-amend-pensions-taken-before-help > div > p:nth-child(5)").text shouldBe plaPensionsTakenBeforeParaThreeNew
-    }
-
-    "have a hidden menu with the correct list values" in{
-      doc.select("#ip16-amend-pensions-taken-before-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsTakenBeforeStepOne
-      doc.select("#ip16-amend-pensions-taken-before-help > div > ol > li:nth-child(2)").text shouldBe plaPensionsTakenBeforeStepTwo
-      doc.select("#ip16-amend-pensions-taken-before-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsTakenBeforeStepThree
-      doc.select("#ip16-amend-pensions-taken-before-help > div > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBeforeBulletOne
-      doc.select("#ip16-amend-pensions-taken-before-help > div > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBeforeBulletTwo
-    }
-
-    "have a help link redirecting to the right place" in{
-      doc.select("#ip16-amend-pensions-taken-before-help-link").text shouldBe plaPensionsTakenBeforeHelpLinkTextNew
-      doc.select("#ip16-amend-pensions-taken-before-help-link").attr("href") shouldBe plaPensionsTakenBeforeHelpLinkLocation
-    }
-
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPensionsTakenBefore.url
-    }
-
-    "have a £ symbol present" in{
-      doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
     "have a pair of yes/no buttons" in{

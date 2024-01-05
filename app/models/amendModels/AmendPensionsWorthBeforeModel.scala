@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  */
 
 package models.amendModels
+
 import play.api.libs.json.Json
 
-case class AmendPensionsTakenBeforeModel(amendedPensionsTakenBefore: String, protectionType: String, status: String) extends AmendValueModel
+case class AmendPensionsWorthBeforeModel(amendedPensionsTakenBeforeAmt: Option[BigDecimal], protectionType: String, status: String) extends AmendValueModel
 
-object AmendPensionsTakenBeforeModel {
-  implicit val format = Json.format[AmendPensionsTakenBeforeModel]
+object AmendPensionsWorthBeforeModel {
+  implicit val format = Json.format[AmendPensionsWorthBeforeModel]
 }

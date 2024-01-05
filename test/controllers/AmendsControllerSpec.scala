@@ -74,10 +74,12 @@ class AmendsControllerSpec extends FakeApplication
   val mockTechnicalError: technicalError             = app.injector.instanceOf[technicalError]
   val mockAmendCurrentPensions: amendCurrentPensions = app.injector.instanceOf[amendCurrentPensions]
   val mockAmendPensionsTakenBefore: amendPensionsTakenBefore = app.injector.instanceOf[amendPensionsTakenBefore]
+  val mockAmendPensionsWorthBefore: amendPensionsWorthBefore = app.injector.instanceOf[amendPensionsWorthBefore]
   val mockAmendPensionsTakenBetween: amendPensionsTakenBetween = app.injector.instanceOf[amendPensionsTakenBetween]
   val mockAmendPensionsUsedBetween: amendPensionsUsedBetween = app.injector.instanceOf[amendPensionsUsedBetween]
   val mockAmendIP14CurrentPensions: amendIP14CurrentPensions = app.injector.instanceOf[amendIP14CurrentPensions]
   val mockAmendIP14PensionsTakenBefore: amendIP14PensionsTakenBefore = app.injector.instanceOf[amendIP14PensionsTakenBefore]
+  val mockAmendIP14PensionsWorthBefore: amendIP14PensionsWorthBefore = app.injector.instanceOf[amendIP14PensionsWorthBefore]
   val mockAmendIP14PensionsTakenBetween: amendIP14PensionsTakenBetween = app.injector.instanceOf[amendIP14PensionsTakenBetween]
   val mockAmendIP14PensionsUsedBetween: amendIP14PensionsUsedBetween = app.injector.instanceOf[amendIP14PensionsUsedBetween]
   val mockAmendOverseasPensions: amendOverseasPensions = app.injector.instanceOf[amendOverseasPensions]
@@ -132,10 +134,12 @@ class AmendsControllerSpec extends FakeApplication
       mockTechnicalError,
       mockAmendCurrentPensions,
       mockAmendPensionsTakenBefore,
+      mockAmendPensionsWorthBefore,
       mockAmendPensionsTakenBetween,
       mockAmendPensionsUsedBetween,
       mockAmendIP14CurrentPensions,
       mockAmendIP14PensionsTakenBefore,
+      mockAmendIP14PensionsWorthBefore,
       mockAmendIP14PensionsTakenBetween,
       mockAmendIP14PensionsUsedBetween,
       mockAmendOverseasPensions,
@@ -616,10 +620,10 @@ class AmendsControllerSpec extends FakeApplication
 
     "the data is invalidated by additional validation" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "-1"), ("protectionType", "ip2016"), ("status", "dormant"))
-
+        ("amendedPensionsTakenBefore", "1"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
         status(DataItem.result) shouldBe 400
       }
 
@@ -648,7 +652,7 @@ class AmendsControllerSpec extends FakeApplication
 
     "the data is valid with a yes" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "yes"), ("amendedPensionsTakenBeforeAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
+        ("amendedPensionsTakenBefore", "yes"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -656,8 +660,47 @@ class AmendsControllerSpec extends FakeApplication
         cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendPensionsWorthBefore("ip2016", "dormant")}")
       }
+
+  "Submitting Amend IP16 Pensions Worth Before" when {
+    "the data is valid" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore,
+        ("amendedPensionsTakenBeforeAmt", "10000"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+      cacheSaveCondition[PensionsWorthBeforeModel](mockSessionCacheService)
+      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+      status(DataItem.result) shouldBe 303
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+    }
+
+    "the data is invalid" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore,
+        ("amendedPensionsTakenBeforeAmt", "yes"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+      cacheSaveCondition[PensionsWorthBeforeModel](mockSessionCacheService)
+      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+      status(DataItem.result) shouldBe 400
+    }
+
+    "the model can't be fetched from cache" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore,
+        ("amendedPensionsTakenBeforeAmt", "10000"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](None)
+      cacheSaveCondition[PensionsWorthBeforeModel](mockSessionCacheService)
+      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+      status(DataItem.result) shouldBe 500
+    }
+  }
 
   "In AmendsController calling the .amendPensionsTakenBetween action" when {
     "not supplied with a stored model" in new Setup {
@@ -1362,7 +1405,7 @@ class AmendsControllerSpec extends FakeApplication
     "supplied an IP2016 AmendPensionsTakenBeforeModel" should {
 
       "return a status of OK" in new Setup() {
-        val model = AmendPensionsTakenBeforeModel("", Some(1000), "ip2016", "dormant")
+        val model = AmendPensionsTakenBeforeModel("", "ip2016", "dormant")
         lazy val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         contentAsString(result) shouldBe mockAmendPensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
         status(result) shouldBe OK
@@ -1371,7 +1414,7 @@ class AmendsControllerSpec extends FakeApplication
 
     "supplied an IP2014 AmendPensionsTakenBeforeModel" should {
       "return a status of OK" in new Setup() {
-        val model = AmendPensionsTakenBeforeModel("", Some(1000), "ip2014", "dormant")
+        val model = AmendPensionsTakenBeforeModel("", "ip2014", "dormant")
         val result = Future.successful(controller.getRouteUsingModel(model)(fakeRequest))
         contentAsString(result) shouldBe mockAmendIP14PensionsTakenBefore(AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.fill(model)).body
         status(result) shouldBe OK
