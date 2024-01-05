@@ -25,39 +25,13 @@ import common.Validation._
 
 object AmendPensionsTakenBeforeForm extends CommonBinders{
 
-  val verifyMandatory: AmendPensionsTakenBeforeModel => Boolean = {
-    case AmendPensionsTakenBeforeModel("yes", value, _,_) => value.isDefined
-    case _ => true
-  }
-
-  val verifyDecimal: AmendPensionsTakenBeforeModel => Boolean = {
-    case AmendPensionsTakenBeforeModel("yes", Some(value), _,_) => isMaxTwoDecimalPlaces(value)
-    case _ => true
-  }
-
-  val verifyPositive: AmendPensionsTakenBeforeModel => Boolean = {
-    case AmendPensionsTakenBeforeModel("yes", Some(value), _,_) => isPositive(value)
-    case _ => true
-  }
-
-  val verifyMax: AmendPensionsTakenBeforeModel => Boolean = {
-    case AmendPensionsTakenBeforeModel("yes", Some(value), _,_) => isLessThanMax(value)
-    case _ => true
-  }
-
   def amendPensionsTakenBeforeForm = Form (
     mapping(
       "amendedPensionsTakenBefore" -> common.Validation.newText("pla.pensionsTakenBefore.errors.mandatoryError")
         .verifying("pla.pensionsTakenBefore.errors.mandatoryError", mandatoryCheck)
         .verifying("pla.pensionsTakenBefore.errors.mandatoryError", yesNoCheck),
-      "amendedPensionsTakenBeforeAmt" -> text
-        .transform(stringToOptionalBigDecimal, optionalBigDecimalToString),
       "protectionType" -> text,
       "status" -> text
     )(AmendPensionsTakenBeforeModel.apply)(AmendPensionsTakenBeforeModel.unapply)
-      .verifying("pla.pensionsWorthBefore.amount.errors.mandatoryError", verifyMandatory)
-      .verifying("pla.pensionsWorthBefore.amount.errors.decimal", verifyDecimal)
-      .verifying("pla.pensionsWorthBefore.amount.errors.negative", verifyPositive)
-      .verifying("pla.pensionsWorthBefore.amount.errors.max", verifyMax)
   )
 }

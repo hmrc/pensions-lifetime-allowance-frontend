@@ -32,45 +32,36 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
   val amountMessageKey = "pensionsWorthBefore"
 
   "The AmendPensionsTakenBeforeForm" should {
-    val validMap = Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "1000.00", "protectionType" -> "type", "status" -> "status")
+    val validMap = Map("amendedPensionsTakenBefore" -> "yes", "protectionType" -> "type", "status" -> "status")
 
     "produce a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = AmendPensionsTakenBeforeModel("yes", Some(1000.0), "type", "status")
+        val model = AmendPensionsTakenBeforeModel("yes", "type", "status")
         val result = amendPensionsTakenBeforeForm.fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid form with no amount" in {
-        val model = AmendPensionsTakenBeforeModel("no", None, "anotherType", "anotherStatus")
+        val model = AmendPensionsTakenBeforeModel("no", "anotherType", "anotherStatus")
         val result = amendPensionsTakenBeforeForm.fill(model)
 
-        result.data shouldBe Map("amendedPensionsTakenBefore" -> "no", "amendedPensionsTakenBeforeAmt" -> "", "protectionType" -> "anotherType", "status" -> "anotherStatus")
-      }
-
-      "provided with a valid map with the maximum amount" in {
-        val map = validMap.updated("amendedPensionsTakenBeforeAmt", {
-          Constants.npsMaxCurrency - 1
-        }.toString)
-        val result = amendPensionsTakenBeforeForm.bind(map)
-
-        result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes", Some(Constants.npsMaxCurrency - 1), "type", "status"))
+        result.data shouldBe Map("amendedPensionsTakenBefore" -> "no", "protectionType" -> "anotherType", "status" -> "anotherStatus")
       }
 
       "provided with a valid map with a zero amount" in {
         val map = validMap.updated("amendedPensionsTakenBeforeAmt", "0")
         val result = amendPensionsTakenBeforeForm.bind(map)
 
-        result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes", Some(0), "type", "status"))
+        result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes", "type", "status"))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map = validMap.updated("amendedPensionsTakenBeforeAmt", "0.01")
         val result = amendPensionsTakenBeforeForm.bind(map)
 
-        result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes", Some(0.01), "type", "status"))
+        result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes", "type", "status"))
       }
     }
 
@@ -101,62 +92,6 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           result.errors.size shouldBe 1
           result.error("status").get.message shouldBe errorRequired
         }
-
-        "provided with an invalid value for amendedPensionsTakenBeforeAmt" in {
-          val map = validMap.updated("amendedPensionsTakenBeforeAmt", "a")
-          val result = amendPensionsTakenBeforeForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMissingAmount(amountMessageKey)
-        }
-      }
-    }
-
-    "use additional validation to invalidate a form" which {
-
-      "has one error with the correct error message" when {
-
-        "provided an answer of yes for amendedPensionsTakenBefore with no value for amendedPensionsTakenBeforeAmt" in {
-          val map = validMap.updated("amendedPensionsTakenBeforeAmt", "")
-          val result = amendPensionsTakenBeforeForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMissingAmount(amountMessageKey)
-        }
-
-        "provided an answer of yes for amendedPensionsTakenBefore with a value for amendedPensionsTakenBeforeAmt larger than the maximum" in {
-          val map = validMap.updated("amendedPensionsTakenBeforeAmt", s"${Constants.npsMaxCurrency+1}")
-          val result = amendPensionsTakenBeforeForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMaximum(amountMessageKey)
-        }
-
-        "provided an answer of yes for amendedPensionsTakenBefore with a value for amendedPensionsTakenBeforeAmt that is negative" in {
-          val map = validMap.updated("amendedPensionsTakenBeforeAmt", "-0.01")
-          val result = amendPensionsTakenBeforeForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorNegative(amountMessageKey)
-        }
-
-        "provided an answer of yes for amendedPensionsTakenBefore with a value for amendedPensionsTakenBeforeAmt that has more than two decimal places" in {
-          val map = validMap.updated("amendedPensionsTakenBeforeAmt", "0.001")
-
-          val result = amendPensionsTakenBeforeForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorDecimal(amountMessageKey)
-        }
-      }
-
-      "has no errors with an answer of no for amendedPensionsTakenBefore no matter what errors are found for amendedPensionsTakenBeforeAmt" in {
-        val map = validMap
-          .updated("amendedPensionsTakenBefore", "no")
-          .updated("amendedPensionsTakenBeforeAmt", "-0.001")
-        val result = amendPensionsTakenBeforeForm.bind(map)
-
-        result.errors.size shouldBe 0
       }
     }
   }
