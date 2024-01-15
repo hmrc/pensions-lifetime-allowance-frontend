@@ -41,21 +41,11 @@ class PensionsTakenViewSpec extends CommonViewSpecHelper with PensionsTakenViewM
       doc.title() shouldBe plaPensionsTakenTitle
     }
 
-    "have the correct and properly formatted header"in{
-      doc.select("h1.govuk-heading-xl").text shouldBe plaPensionsTakenHeading
-    }
-
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTaken.url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenLegendText
 
-    }
-
-    "have some introductory text" in{
-      doc.select("#main-content > div > div > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBulletOne
-      doc.select("#main-content > div > div > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBulletTwo
-      doc.select("#main-content > div > div > ul > li:nth-child(3)").text shouldBe plaPensionsTakenBulletThree
     }
 
     "have a pair of yes/no buttons" in{

@@ -116,12 +116,8 @@ pla.noNotificationId.paraOne.afterLink      = ar unrhyw adeg.
 
 
 ## Pensions Taken ##
-pla.pensionsTaken.title                     = A ddigwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016?
-pla.pensionsTaken.bullet.1                  = cawsoch arian o''ch pensiynau
-pla.pensionsTaken.bullet.2                  = trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor
-pla.pensionsTaken.bullet.3                  = cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny
 pla.pensionsTaken.mandatoryErr              = Atebwch y cwestiwn hwn
-pla.pensionsTaken.legend                    = Cyn 6 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
+pla.pensionsTaken.title                     = Cyn 6 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 pla.pensionsTaken.errors.mandatoryError     = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016
 
 ## IP14 Pensions Taken ##
@@ -234,7 +230,7 @@ pla.ip14CurrentPensions.hiddenTextPara      = Defnyddiwch ffigurau a oedd yn gyw
 ## PENSION DEBITS ##
 pla.pensionDebits.title                     = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?
 pla.pensionDebits.paraOne                   = Gelwir hynny''n orchymyn rhannu pensiwn a gyhoeddir gan lys.
-pla.pensionDebits.errors.mandatoryError     = Dewiswch ''Iawn'' os oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad ers 5 Ebrill 2016
+pla.pensionDebits.errors.mandatoryError     = TODO
 
 ## IP14 PENSION DEBITS ##
 pla.ip14PensionDebits.title                 = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?
@@ -265,7 +261,7 @@ pla.summary.errorSummaryLabel                       = Mae problem gyda''ch cais
 pla.summary.underThresholdError.IP2016              = Roedd cyfanswm eich cynilion pensiwn yn llai na £1,000,001 ar 5 Ebrill 2016. Gallwch wneud cais am ddiogelwch unigol 2016 os oedd eich cynilion pensiwn yn £1,000,001 neu''n fwy.
 pla.summary.pensionsHeading                         = Gwerth pensiynau
 pla.summary.change                                  = Newid
-pla.summary.questions.pensionsTaken                 = Cyn 5 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
+pla.summary.questions.pensionsTaken                 = Cyn 6 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
 pla.summary.hiddenLinkText.pensionsTaken            = Newidiwch eich ateb i''r cwestiwn "A ydych wedi cymryd unrhyw un o''ch pensiynau?"
 pla.summary.questions.pensionsTakenBefore           = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
 pla.summary.hiddenLinkText.pensionsTakenBefore      = Newidiwch eich ateb i''r cwestiwn "A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?"

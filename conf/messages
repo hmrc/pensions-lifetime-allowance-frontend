@@ -117,13 +117,9 @@ pla.noNotificationId.paraOne.afterLink      = at any time.
 
 
 ## Pensions Taken ##
-pla.pensionsTaken.title                     = Did any of the following happen before 6 April 2016?
-pla.pensionsTaken.bullet.1                  = you got money from your pensions
-pla.pensionsTaken.bullet.2                  = you transferred a pension to a scheme held overseas
-pla.pensionsTaken.bullet.3                  = you turned 75 with pension savings that you hadn''t yet taken
 pla.pensionsTaken.mandatoryErr              = Please answer this question
-pla.pensionsTaken.legend                    = Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
-pla.pensionsTaken.errors.mandatoryError     = Select yes if any of the following happened before 6 April 2016
+pla.pensionsTaken.title                     = Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.pensionsTaken.errors.mandatoryError     = Select yes if before 6 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension?
 
 ## IP14 Pensions Taken ##
 pla.ip14PensionsTaken.title                 = Did any of the following happen before 6 April 2014?
@@ -266,7 +262,7 @@ pla.summary.errorSummaryLabel                       = There''s a problem with yo
 pla.summary.underThresholdError.IP2016              = Your total pension savings were less than £1,000,001 on 5 April 2016. You can only apply for individual protection 2016 if your pension savings were £1,000,001 or more.
 pla.summary.pensionsHeading                         = Value of pensions
 pla.summary.change                                  = Change
-pla.summary.questions.pensionsTaken                 = Before 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
+pla.summary.questions.pensionsTaken                 = Before 6 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.summary.hiddenLinkText.pensionsTaken            = Change your response to the question ''have you taken any of your pensions''
 pla.summary.questions.pensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
 pla.summary.hiddenLinkText.pensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
