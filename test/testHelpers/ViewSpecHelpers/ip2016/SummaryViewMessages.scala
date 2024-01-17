@@ -23,7 +23,7 @@ trait SummaryViewMessages{
   val plaSummaryUnderThresholdErrorIP2016               = "Your total pension savings were less than £1,000,001 on 5 April 2016. You can only apply for individual protection 2016 if your pension savings were £1,000,001 or more."
   val plaSummaryPensionsHeading                         = "Value of pensions"
   val plaSummaryChange                                  = "Change"
-  val plaSummaryQuestionsPensionsTaken                  = "Before 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?"
+  val plaSummaryQuestionsPensionsTaken                  = "Before 6 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?"
   val plaSummaryHiddenLinkTextPensionsTaken             = "Change your response to the question 'have you taken any of your pensions'"
   val plaSummaryQuestionsPensionsTakenBefore            = "Did you get an income from any of your pensions before 6 April 2006?"
   val plaSummaryHiddenLinkTextPensionsTakenBefore       = "Change your response to the question 'Did you get an income from any of your pensions before 6 April 2006?'"
