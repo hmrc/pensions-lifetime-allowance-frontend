@@ -20,6 +20,7 @@ import auth.AuthFunction
 import config.{FrontendAppConfig, PlaContext}
 import constructors.SummaryConstructor
 import enums.ApplicationType
+
 import javax.inject.Inject
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
@@ -48,11 +49,10 @@ class SummaryController @Inject()(sessionCacheService: SessionCacheService,
                                   implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
-  lazy val postSignInRedirectUrl = appConfig.ipStartUrl
   val summaryConstructor: SummaryConstructor = SummaryConstructor
 
-  val summaryIP16 = Action.async { implicit request =>
-    implicit val protectionType = ApplicationType.IP2016
+  val summaryIP16: Action[AnyContent] = Action.async { implicit request =>
+    implicit val protectionType: ApplicationType.Value = ApplicationType.IP2016
     authFunction.genericAuthWithNino("IP2016") { nino =>
       sessionCacheService.fetchAllUserData.map {
         case Some(data) => routeIP2016SummaryFromUserData(data, nino)

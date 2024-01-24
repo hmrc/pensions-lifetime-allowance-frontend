@@ -1,4 +1,4 @@
-import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, scalaSettings, targetJvm}
+import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, scalaSettings}
 import com.typesafe.sbt.web.Import.pipelineStages
 import com.typesafe.sbt.web.Import.Assets
 import com.typesafe.sbt.digest.Import.digest
@@ -42,7 +42,6 @@ lazy val root = Project(appName, file("."))
     Test / parallelExecution := false,
     Test / fork := false,
     retrieveManaged := true,
-    update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
     Assets / pipelineStages := Seq(digest),
     // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
     scalacOptions += "-P:silencer:pathFilters=views;routes;",

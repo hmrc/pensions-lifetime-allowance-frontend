@@ -17,26 +17,55 @@
 package forms
 
 import common.Validation._
+import forms.formatters.DateFormatter
 import models.amendModels.AmendPSODetailsModel
 import play.api.data.Forms._
 import play.api.data._
+import play.api.i18n.Messages
 import utils.Constants
 
-object AmendPSODetailsForm  extends CommonBinders{
-  def amendPsoDetailsForm = Form(
+import java.time.LocalDate
+
+object AmendPSODetailsForm extends CommonBinders {
+
+  val key = "amendPsoDetails"
+  val amountMap = "psoAmt"
+  val protectionTypeMap = "protectionType"
+  val statusMap = "status"
+  val existingPSOMap = "existingPSO"
+
+  private val minDateDay = 5
+  private val minDateMonth = 4
+  private val minDateYear = 2016
+  private val minDate = LocalDate.of(minDateYear, minDateMonth, minDateDay)
+
+  def amendPsoDetailsForm(minDate: LocalDate = minDate, maxDate: LocalDate = LocalDate.now())(implicit messages: Messages): Form[AmendPSODetailsModel] = Form(
     mapping(
-      "pso.day"    -> dateFormatterFromInt,
-      "pso.month"  -> psoPartialDateBinder("monthEmpty"),
-      "pso.year"   -> psoPartialDateBinder("yearEmpty"),
-      "psoAmt"    -> optional(bigDecimal)
+      key -> of(
+        DateFormatter(
+          key,
+          optMinDate = Some(minDate),
+          optMaxDate = Some(maxDate)
+        )
+      ),
+      amountMap -> optional(bigDecimal)
         .verifying("pla.psoDetails.amount.errors.max", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
         .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
         .verifying("pla.psoDetails.amount.errors.decimal", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
         .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined),
-
-      "protectionType" -> protectionTypeFormatter,
-      "status"         -> text,
-      "existingPSO"    -> boolean
-    )(AmendPSODetailsModel.apply)(AmendPSODetailsModel.unapply)
+      protectionTypeMap -> protectionTypeFormatter,
+      statusMap -> text,
+      existingPSOMap -> boolean
+    )((date, amount, protectionType, status, existingPso) =>
+      AmendPSODetailsModel(
+        Some(date.getDayOfMonth),
+        Some(date.getMonthValue),
+        Some(date.getYear),
+        amount,
+        protectionType,
+        status,
+        existingPso
+      )
+    )(model => Some((LocalDate.of(model.psoYear.get, model.psoMonth.get, model.psoDay.get), model.psoAmt, model.protectionType, model.status, model.existingPSO)))
   )
 }

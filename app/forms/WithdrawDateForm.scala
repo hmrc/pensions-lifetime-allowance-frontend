@@ -22,7 +22,7 @@ import models.WithdrawDateFormModel
 import play.api.data.Form
 import play.api.data.Forms._
 
-object WithdrawDateForm extends CommonBinders{
+object WithdrawDateForm extends CommonBinders {
 
   def withdrawDateForm: Form[WithdrawDateFormModel] = Form(
     mapping(

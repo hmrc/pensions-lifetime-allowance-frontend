@@ -32,7 +32,7 @@ object IPApplicationConstructor {
     // uncrystallised Rights- current pensions
     val uncrystallisedRightsAmount = data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt
 
-    def getPensionsTakenBeforeAmt() = {
+    def getPensionsTakenBeforeAmt = {
       data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore")) match {
         case Some(model) => model.pensionsTakenBefore match {
           case "yes" => data.getEntry[PensionsWorthBeforeModel](nameString("pensionsWorthBefore")).get.pensionsWorthBeforeAmt
@@ -42,7 +42,7 @@ object IPApplicationConstructor {
       }
     }
 
-    def getPensionsTakenBetweenAmt() = {
+    def getPensionsTakenBetweenAmt = {
       data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")) match {
         case Some(model) => model.pensionsTakenBetween match {
           case "yes" => data.getEntry[PensionsUsedBetweenModel](nameString("pensionsUsedBetween")).get.pensionsUsedBetweenAmt
@@ -114,7 +114,7 @@ object IPApplicationConstructor {
       pensionDebits)
   }
 
-  def optionBigDecToOptionDouble(opt: Option[BigDecimal]) = {
+  def optionBigDecToOptionDouble(opt: Option[BigDecimal]): Option[Double] = {
     opt match {
       case Some(value) => Some(value.toDouble)
       case _ => None

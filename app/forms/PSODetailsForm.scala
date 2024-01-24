@@ -17,23 +17,39 @@
 package forms
 
 import common.Validation._
-import models._
-import play.api.data.Forms._
-import play.api.data._
+import forms.formatters.DateFormatter
+import models.PSODetailsModel
+import play.api.data.Form
+import play.api.data.Forms.{bigDecimal, mapping, of, optional}
+import play.api.i18n.Messages
 import utils.Constants
+
+import java.time.LocalDate
 
 object PSODetailsForm extends CommonBinders {
 
-  def psoDetailsForm: Form[PSODetailsModel] = Form(
-  mapping(
-    "pso.day"    -> psoDateFormatterFromString,
-    "pso.month"  -> intWithCustomError("monthEmpty"),
-    "pso.year"   -> intWithCustomError("yearEmpty"),
-    "psoAmt"    -> optional(bigDecimal)
-      .verifying("pla.psoDetails.amount.errors.max", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
-      .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-      .verifying("pla.psoDetails.amount.errors.decimal", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-      .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined)
-    )(PSODetailsModel.apply)(PSODetailsModel.unapply)
+  val key = "psoDetails"
+  val amount = "psoAmt"
+
+  private val minDateDay = 5
+  private val minDateMonth = 4
+  private val minDateYear = 2016
+  private val minDate = LocalDate.of(minDateYear, minDateMonth, minDateDay)
+
+  def psoDetailsForm(minDate: LocalDate = minDate, maxDate: LocalDate = LocalDate.now())(implicit messages: Messages): Form[PSODetailsModel] = Form(
+    mapping(
+      key -> of(DateFormatter(
+          key,
+          optMinDate = Some(minDate),
+          optMaxDate = Some(maxDate)
+        )
+      ),
+      amount -> optional(bigDecimal)
+        .verifying("pla.psoDetails.amount.errors.max", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
+        .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying("pla.psoDetails.amount.errors.decimal", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined)
+    )((date, amount) => PSODetailsModel(date.getDayOfMonth, date.getMonthValue, date.getYear, amount)
+    )(model => Some((LocalDate.of(model.psoYear, model.psoMonth, model.psoDay), model.psoAmt)))
   )
 }

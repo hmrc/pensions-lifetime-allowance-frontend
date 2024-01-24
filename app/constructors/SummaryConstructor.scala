@@ -135,7 +135,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
   }
 
   def amountValue(modelOption: Option[AmountModel]): Option[BigDecimal] = {
-    modelOption.map{_.getAmount}.getOrElse(None)
+    modelOption.flatMap(_.getAmount)
   }
 
   def createYesNoSection(dataName: String, modelOption: Option[YesNoModel], boldText: Boolean)
@@ -147,7 +147,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
     }
   }
 
-  def createAmountSection[T <: AmountModel](dataName: String, modelOption: Option[AmountModel], boldText: Boolean) = {
+  def createAmountSection[T <: AmountModel](dataName: String, modelOption: Option[AmountModel], boldText: Boolean): SummarySectionModel = {
     SummarySectionModel(
       List(
         createAmountRow(dataName, modelOption, boldText)
@@ -156,7 +156,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
   }
 
   def createYesNoAmountSection(dataName: String, modelOption: Option[YesNoAmountModel], boldText: Boolean)
-                              (implicit provider: MessagesProvider) = {
+                              (implicit provider: MessagesProvider): SummarySectionModel = {
     SummarySectionModel(
       List(
         createYesNoRow(dataName, modelOption, boldText),
@@ -166,7 +166,7 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
   }
 
   def createYesNoRow(dataName: String, modelOption: Option[YesNoModel], boldText: Boolean)
-                    (implicit provider: MessagesProvider) = {
+                    (implicit provider: MessagesProvider): Option[SummaryRowModel] = {
     modelOption.map { model =>
       val name = nameString(dataName)
       val call = CallMap.get(name)
@@ -181,33 +181,33 @@ class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value)
     provider.messages(s"pla.base.${model.getYesNoValue}")
   }
 
-  def createYesNoAmountRow(dataName: String, modelOption: Option[YesNoAmountModel], boldText: Boolean) = {
+  def createYesNoAmountRow(dataName: String, modelOption: Option[YesNoAmountModel], boldText: Boolean): Option[SummaryRowModel] = {
     val name = nameString(dataName)
     val call = CallMap.get(name)
     if(positiveAnswer(modelOption))
       Some(SummaryRowModel(
-        name+"Amt", call, None, boldText, amountDisplayValue(modelOption.get)
+        name + "Amt", call, None, boldText, amountDisplayValue(modelOption.get)
       )
       )
     else None
   }
 
-  def createAmountRow(dataName: String, modelOption: Option[AmountModel],boldText: Boolean) = {
+  def createAmountRow(dataName: String, modelOption: Option[AmountModel],boldText: Boolean): Option[SummaryRowModel] = {
     val name = nameString(dataName)
-    modelOption.map{ model =>
+    modelOption.flatMap { model =>
       val call = CallMap.get(name)
       Some(SummaryRowModel(
-        name+"Amt", call, None, boldText, amountDisplayValue(model)
+        name + "Amt", call, None, boldText, amountDisplayValue(model)
       ))
-    }.getOrElse(None)
+    }
   }
 
-  def createPSODetailsSection(model: Option[PSODetailsModel])(implicit lang: Lang, provider: MessagesProvider) = {
+  def createPSODetailsSection(model: Option[PSODetailsModel])(implicit lang: Lang, provider: MessagesProvider): SummarySectionModel = {
     model match {
       case Some(m) =>
         val name = nameString(s"psoDetails")
         val changeCall = CallMap.get(name)
-        val removeCall = CallMap.get("remove"+name.capitalize)
+        val removeCall = CallMap.get("remove" + name.capitalize)
         val date = dateDisplayString(constructDate(m.psoDay, m.psoMonth, m.psoYear))
         val amt = currencyDisplayString(m.psoAmt.getOrElse(BigDecimal(0.0)))
         SummarySectionModel(List(

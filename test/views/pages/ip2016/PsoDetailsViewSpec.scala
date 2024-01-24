@@ -28,7 +28,7 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PsoDetailsView" should{
-    val pensionsForm = PSODetailsForm.psoDetailsForm.bind(Map(
+    val pensionsForm = PSODetailsForm.psoDetailsForm().bind(Map(
       "pso.day" -> "1",
       "pso.month" -> "2",
       "pso.year" -> "2017",
@@ -37,7 +37,7 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
     lazy val view = application.injector.instanceOf[psoDetails]
     lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
-    val errorForm =  PSODetailsForm.psoDetailsForm.bind(Map.empty[String, String])
+    val errorForm =  PSODetailsForm.psoDetailsForm().bind(Map.empty[String, String])
     lazy val errorView = application.injector.instanceOf[psoDetails]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
     lazy val pageTitle = s"$plaPsoDetailsTitle - $plaBaseAppName - GOV.UK"

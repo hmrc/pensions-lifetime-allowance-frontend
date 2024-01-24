@@ -19,15 +19,16 @@ package models.amendModels
 import play.api.libs.json._
 
 case class AmendPSODetailsModel (psoDay: Option[Int],
-                                  psoMonth: Option[Int],
-                                  psoYear: Option[Int],
-                                  psoAmt: Option[BigDecimal],
-                                  protectionType: String,
-                                  status: String,
-                                  existingPSO: Boolean)  {
+                                 psoMonth: Option[Int],
+                                 psoYear: Option[Int],
+                                 psoAmt: Option[BigDecimal],
+                                 protectionType: String,
+                                 status: String,
+                                 existingPSO: Boolean) {
+
 }
 
 object AmendPSODetailsModel {
-  implicit val format = Json.format[AmendPSODetailsModel]
+  implicit val format: OFormat[AmendPSODetailsModel] = Json.format[AmendPSODetailsModel]
 
 }

@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package models
+package controllers.helpers
 
-import play.api.libs.json._
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import play.api.test.FakeRequest
+import uk.gov.hmrc.http.SessionKeys
 
-case class PSODetailsModel(psoDay: Int, psoMonth: Int, psoYear: Int, psoAmt: Option[BigDecimal])
+trait FakeRequestHelper {
+  lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  lazy val fakeRequestWithSession: FakeRequest[AnyContentAsEmpty.type] = fakeRequest.withSession((SessionKeys.sessionId, ""))
 
-object PSODetailsModel {
-  implicit val format: OFormat[PSODetailsModel] = Json.format[PSODetailsModel]
+  def fakeRequestToPOSTWithSession (input: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] =
+    fakeRequestWithSession.withFormUrlEncodedBody(input: _*)
 }
