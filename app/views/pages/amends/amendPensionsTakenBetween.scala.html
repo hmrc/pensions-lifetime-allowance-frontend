@@ -43,15 +43,10 @@
 
     @errorSummary(amendPensionsTakenBetweenForm.errors)
 
-    <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBetween.title")</h1>
+    <h1 class="govuk-heading-l">@Messages("pla.pensionsTakenBetween.title")</h1>
 
     @form(action = routes.AmendsController.submitAmendPensionsTakenBetween) {
 
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@Messages("pla.pensionsTakenBetween.bullet.1")</li>
-        <li>@Messages("pla.pensionsTakenBetween.bullet.2")</li>
-        <li>@Messages("pla.pensionsTakenBetween.bullet.3")</li>
-    </ul>
     @plaInputRadioGroup(
         legend = Messages("pla.pensionsTakenBetween.title"),
         legendClass = Some("govuk-visually-hidden"),

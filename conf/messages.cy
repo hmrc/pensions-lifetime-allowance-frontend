@@ -152,11 +152,11 @@ pla.ip14PensionsTakenBefore.question        = Beth oedd gwerth y pensiynau hyn a
 pla.ip14PensionsTakenBefore.step.2          = Cyfrifwch y swm blynyddol yr oeddech yn gallu''i gael o''r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2014.
 
 ## Pensions Taken Between ##
-pla.pensionsTakenBetween.title              = A ddigwyddodd unrhyw un o''r canlynol rhwng 6 Ebrill 2006 a 5 Ebrill 2016?
+pla.pensionsTakenBetween.title              = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch chi arian o''ch pensiynau, a wnaethoch chi drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
 pla.pensionsTakenBetween.bullet.1           = cawsoch arian o''ch pensiynau
 pla.pensionsTakenBetween.bullet.2           = trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor
 pla.pensionsTakenBetween.bullet.3           = cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny
-pla.pensionsTakenBetween.errors.mandatoryError = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r digwyddiadau hyn rhwng 6 Ebrill 2006 a 5 Ebrill 2016
+pla.pensionsTakenBetween.errors.mandatoryError = Dewiswch ''Iawn'' os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o''ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
 
 pla.pensionsTakenBetween.legend             = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 

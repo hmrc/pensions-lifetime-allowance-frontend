@@ -154,11 +154,11 @@ pla.ip14PensionsTakenBefore.question        = What were these pensions worth on 
 pla.ip14PensionsTakenBefore.step.2          = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014.
 
 ## Pensions Taken Between ##
-pla.pensionsTakenBetween.title              = Did any of these events happen between 6 April 2006 and 5 April 2016?
+pla.pensionsTakenBetween.title              = Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
 pla.pensionsTakenBetween.bullet.1           = you got money from your pensions
 pla.pensionsTakenBetween.bullet.2           = you transferred a pension to a scheme held overseas
 pla.pensionsTakenBetween.bullet.3           = you turned 75 with pension savings which you hadn''t yet taken
-pla.pensionsTakenBetween.errors.mandatoryError = Select yes if any of these events happened between 6 April 2006 and 5 April 2016
+pla.pensionsTakenBetween.errors.mandatoryError = Select yes if between 6 April 2006 and 5 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
 
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 

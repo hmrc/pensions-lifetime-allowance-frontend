@@ -49,13 +49,7 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1.govuk-heading-xl").text shouldBe plaPensionsTakenBetweenTitle
-    }
-
-    "have a visible menu with a correct list values" in{
-      doc.select("#main-content > div > div > form > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBetweenBulletOne
-      doc.select("#main-content > div > div > form > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBetweenBulletTwo
-      doc.select("#main-content > div > div > form > ul > li:nth-child(3)").text shouldBe plaPensionsTakenBetweenBulletThree
+      doc.select("h1.govuk-heading-l").text shouldBe plaPensionsTakenBetweenTitle
     }
 
     "have a valid form" in{
