@@ -40,7 +40,7 @@
 @layout(
     pageTitle = title
 ) {
-    @errorSummary(psoDetailsForm.errors, Some("psoAmt"))
+    @errorSummary(psoDetailsForm.errors, errorSuffixes = Some(Map("psoDate" -> "day")))
 
     <h1 class="govuk-heading-xl">@Messages(s"pla.psoDetails.title")</h1>
 
@@ -48,7 +48,7 @@
 
         @formInlineDateInput(
             content = Messages("pla.psoDetails.dateQuestionText"),
-            field = psoDetailsForm("pso"),
+            field = psoDetailsForm("psoDate"),
             hintContent = Some(Messages("pla.psoDetails.dateHintText")),
             pageHeading = false,
             labelClass = Some("govuk-label--m"))

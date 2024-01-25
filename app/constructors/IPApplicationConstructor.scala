@@ -96,7 +96,7 @@ object IPApplicationConstructor {
     }
 
     def createPensionDebit(model: PSODetailsModel): PensionDebit = {
-      PensionDebit(apiDateFormat(model.psoDay, model.psoMonth, model.psoYear), model.psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
+      PensionDebit(model.psoDate.toString, model.psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
     }
 
     val protectionString = protectionType match {

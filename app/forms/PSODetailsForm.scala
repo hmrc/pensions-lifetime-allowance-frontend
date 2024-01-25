@@ -28,7 +28,7 @@ import java.time.LocalDate
 
 object PSODetailsForm extends CommonBinders {
 
-  val key = "psoDetails"
+  val key = "psoDate"
   val amount = "psoAmt"
 
   private val minDateDay = 5
@@ -49,7 +49,7 @@ object PSODetailsForm extends CommonBinders {
         .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
         .verifying("pla.psoDetails.amount.errors.decimal", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
         .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined)
-    )((date, amount) => PSODetailsModel(date.getDayOfMonth, date.getMonthValue, date.getYear, amount)
-    )(model => Some((LocalDate.of(model.psoYear, model.psoMonth, model.psoDay), model.psoAmt)))
+    )((date, amount) => PSODetailsModel(date, amount)
+    )(model => Some(model.psoDate, model.psoAmt))
   )
 }
