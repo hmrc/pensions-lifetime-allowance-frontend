@@ -16,8 +16,8 @@
 
 package auth
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import mocks.AuthMock
@@ -33,8 +33,8 @@ import play.api.{Configuration, Environment, Mode}
 import testHelpers.{FakeApplication, SessionCacheTestHelper}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
-import java.net.URLEncoder
 
+import java.net.URLEncoder
 import views.html.pages.fallback.technicalError
 
 import scala.concurrent.{ExecutionContext, Future}

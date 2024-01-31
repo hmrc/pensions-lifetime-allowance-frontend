@@ -25,7 +25,6 @@ import play.api.Logging
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.{AuthorisedFunctions, _}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.config.AuthRedirects
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
@@ -40,10 +39,10 @@ class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                   implicit val plaContext: PlaContext,
                                   implicit val ec: ExecutionContext)
   extends FrontendController(mcc) with AuthFunction with Logging{
-  override def config: Configuration = appConfig.configuration
+  def config: Configuration = appConfig.configuration
   override def authConnector: AuthConnector = authClientConnector
 }
-trait AuthFunction extends AuthRedirects with AuthorisedFunctions with Logging {
+trait AuthFunction extends AuthorisedFunctions with Logging {
   implicit val partialRetriever: FormPartialRetriever
   implicit val plaContext: PlaContext
   implicit val appConfig: FrontendAppConfig
@@ -54,7 +53,7 @@ trait AuthFunction extends AuthRedirects with AuthorisedFunctions with Logging {
   val confidenceLevel: String = "&confidenceLevel=200"
   val completionURL: String = "&completionURL="
   val failureURL: String = "&failureURL="
-  private def IVUpliftURL()(implicit request: Request[AnyContent]): String = s"$personalIVUrl?" +
+  private def IVUpliftURL()(implicit request: Request[AnyContent]): String = s"${appConfig.ivUpliftUrl}?" +
     s"$originString${appConfig.appName}" +
     s"$confidenceLevel" +
     s"$completionURL${request.uri}" +

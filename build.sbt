@@ -1,7 +1,6 @@
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, scalaSettings, targetJvm}
 import com.typesafe.sbt.web.Import.pipelineStages
 import com.typesafe.sbt.web.Import.Assets
-import com.typesafe.sbt.digest.Import.digest
 import sbt.Keys._
 import sbt._
 import uk.gov.hmrc._
@@ -16,7 +15,6 @@ val appName = "pensions-lifetime-allowance-frontend"
 lazy val appDependencies: Seq[ModuleID] = Seq.empty
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
-val silencerVersion = "1.7.12"
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
@@ -37,19 +35,13 @@ lazy val root = Project(appName, file("."))
   .settings(scalaSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
-    scalaVersion := "2.13.8",
+    scalaVersion := "2.13.12",
     libraryDependencies ++= AppDependencies(),
     Test / parallelExecution := false,
     Test / fork := false,
     retrieveManaged := true,
     update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    Assets / pipelineStages := Seq(digest),
     // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
-    scalacOptions += "-P:silencer:pathFilters=views;routes;",
-    libraryDependencies ++= Seq(
-      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
-    )
   )
   .settings(
       TwirlKeys.templateImports ++= Seq(
