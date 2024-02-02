@@ -1,10 +1,8 @@
-import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, scalaSettings, targetJvm}
-import com.typesafe.sbt.web.Import.pipelineStages
-import com.typesafe.sbt.web.Import.Assets
-import sbt.Keys._
-import sbt._
-import uk.gov.hmrc._
-import DefaultBuildSettings._
+import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, itSettings, scalaSettings}
+import sbt.Keys.{scalacOptions, *}
+import sbt.*
+import uk.gov.hmrc.*
+import DefaultBuildSettings.*
 import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning
@@ -16,6 +14,10 @@ lazy val appDependencies: Seq[ModuleID] = Seq.empty
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
 
+ThisBuild / majorVersion := 2
+ThisBuild / scalaVersion := "2.13.12"
+
+
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
   Seq(
@@ -24,7 +26,9 @@ lazy val scoverageSettings = {
     ScoverageKeys.coverageExcludedFiles := ".*/Routes.*;.*/RoutesPrefix.*;.*/PdfGeneratorConnector.*;",
     ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := false,
-    ScoverageKeys.coverageHighlighting := true
+    ScoverageKeys.coverageHighlighting := true,
+    scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
+    scalacOptions += "-Wconf:cat=unused-imports&src=routes/.*:s",
   )
 }
 
@@ -51,12 +55,9 @@ lazy val root = Project(appName, file("."))
         "uk.gov.hmrc.govukfrontend.views.html.components.implicits._"
       )
   )
-  .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
-  .settings(
-    IntegrationTest / Keys.fork := false,
-    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory) (base => Seq(base / "it")).value,
-    addTestReportOption(IntegrationTest, "int-test-reports"),
-    IntegrationTest / parallelExecution := false)
-  .settings(majorVersion := 2)
-  PlayKeys.playDefaultPort := 9010
+PlayKeys.playDefaultPort := 9010
+
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(root % "test->test")
+  .settings(itSettings():_*)

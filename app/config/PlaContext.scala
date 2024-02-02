@@ -16,9 +16,10 @@
 
 package config
 
-import javax.inject.Inject
 import play.api.i18n.Messages
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.Inject
 
 trait PlaContext {
   def getPageHelpPartial()(messages: Messages): String

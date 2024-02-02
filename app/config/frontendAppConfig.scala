@@ -16,10 +16,11 @@
 
 package config
 
-import javax.inject.Inject
 import play.api.Configuration
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import play.api.mvc.RequestHeader
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.Inject
 
 trait AppConfig {
   val ssoUrl: Option[String]

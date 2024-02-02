@@ -17,7 +17,7 @@
 package testHelpers
 
 
-import akka.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty}
 import play.api.test.FakeRequest
 import org.scalatest.OptionValues
@@ -25,7 +25,8 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 import org.jsoup._
 import auth._
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys

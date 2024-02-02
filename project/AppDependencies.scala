@@ -19,35 +19,18 @@ object AppDependencies {
     "org.apache.pekko" %% "pekko-actor-typed" % pekkoVersion
   )
 
-  trait TestDependencies {
-    lazy val scope: String = "test"
-    lazy val test: Seq[ModuleID] = Seq.empty
-  }
+  val testDependencies: Seq[ModuleID] = Seq(
+      "uk.gov.hmrc"        %% "bootstrap-test-play-30"  % bootstrapVersion,
+      "uk.gov.hmrc.mongo"  %% "hmrc-mongo-test-play-30" % mongoPlayVersion,
+      "org.jsoup"          % "jsoup"                    % "1.17.2",
+      "org.scalatestplus"  %% "scalacheck-1-17"         % "3.2.16.0"
+    ).map(_ % Test)
 
-  object Test {
-    def apply(): Seq[sbt.ModuleID] = new TestDependencies {
-      override lazy val test = Seq(
-        "uk.gov.hmrc"        %% "bootstrap-test-play-30"  % bootstrapVersion % scope,
-        "uk.gov.hmrc.mongo"  %% "hmrc-mongo-test-play-30" % mongoPlayVersion % scope,
-        "org.jsoup"          % "jsoup"                    % "1.15.4" % scope,
-        "org.scalatestplus"  %% "scalacheck-1-17"         % "3.2.16.0"
-      )
-    }.test
-  }
+  val itDependencies: Seq[ModuleID] = Seq(
+        "uk.gov.hmrc" %% "bootstrap-test-play-30" % bootstrapVersion,
+        "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-30" % mongoPlayVersion,
+        "org.jsoup" % "jsoup" % "1.17.2"
+      ).map(_ % Test)
 
-  object IntegrationTest {
-    def apply(): Seq[sbt.ModuleID] = new TestDependencies {
-
-      override lazy val scope: String = "it"
-
-      override lazy val test = Seq(
-        "uk.gov.hmrc" %% "bootstrap-test-play-28" % bootstrapVersion % scope,
-        "uk.gov.hmrc.mongo" %% "hmrc-mongo-test-play-28" % mongoPlayVersion % scope,
-        "org.jsoup" % "jsoup" % "1.15.4" % scope
-      )
-    }.test
-  }
-
-
-  def apply(): Seq[ModuleID] = compile ++ Test() ++ IntegrationTest()
+  def apply(): Seq[ModuleID] = compile ++ testDependencies ++ itDependencies
 }

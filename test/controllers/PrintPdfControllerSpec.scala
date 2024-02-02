@@ -16,13 +16,13 @@
 
 package controllers
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
 import config.FrontendAppConfig
 import connectors.PdfGeneratorConnector
 import models.{PSALookupRequest, PSALookupResult}
-import org.mockito.Matchers._
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar

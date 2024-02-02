@@ -16,8 +16,8 @@
 
 package controllers
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
@@ -26,7 +26,7 @@ import constructors.DisplayConstructors
 import forms.WithdrawDateForm
 import mocks.AuthMock
 import models._
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -82,8 +82,6 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
       override implicit val ec: ExecutionContext = executionContext
 
       override def authConnector: AuthConnector = mockAuthConnector
-      override def config: Configuration = mockAppConfig.configuration
-      override def env: Environment = mockEnv
     }
 
     val controller = new WithdrawProtectionController(
@@ -170,7 +168,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
 
       "return 200" in new Setup {
         mockAuthConnector(Future.successful({}))
-        when(mockSessionCacheService.remove(Matchers.any())).thenReturn(Future.successful(mock[HttpResponse]))
+        when(mockSessionCacheService.remove(any())).thenReturn(Future.successful(mock[HttpResponse]))
         status(controller.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
       }
     }
@@ -181,7 +179,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
         lazy val result = {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-          when(mockPlaConnector.amendProtection(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+          when(mockPlaConnector.amendProtection(anyString(), any())(any(), any()))
             .thenReturn(Future.successful(HttpResponse(status = OK, body = "")))
           controller.displayWithdrawConfirmation("")(fakeRequest)
         }
@@ -193,7 +191,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
         lazy val result = {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-          when(mockPlaConnector.amendProtection(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+          when(mockPlaConnector.amendProtection(anyString(), any())(any(), any()))
             .thenReturn(Future.successful(HttpResponse(status = INTERNAL_SERVER_ERROR, body = "")))
           controller.displayWithdrawConfirmation("")(fakeRequest)
         }
@@ -223,7 +221,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
           cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-          when(mockDisplayConstructors.createWithdrawSummaryTable(Matchers.any())).thenReturn(tstAmendDisplayModel)
+          when(mockDisplayConstructors.createWithdrawSummaryTable(any())).thenReturn(tstAmendDisplayModel)
 
           val result = controller.withdrawImplications(fakeRequest)
           status(result) shouldBe OK
@@ -278,7 +276,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
         "return a 200" in new Setup {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-          when(mockSessionCacheService.fetchAndGetFormData[Any](Matchers.anyString())(Matchers.any(), Matchers.any()))
+          when(mockSessionCacheService.fetchAndGetFormData[Any](anyString())(any(), any()))
             .thenReturn(
               Future.successful(Some(ip2016Protection)),
               Future.successful(Some(withdrawDateForm))
@@ -359,7 +357,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
 
       "the form does not have errors" should {
         "return a 303" in new Setup {
-          when(mockSessionCacheService.saveFormData[WithdrawDateFormModel](Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+          when(mockSessionCacheService.saveFormData[WithdrawDateFormModel](any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("test", Map.empty)))
 
           val requestWithFormInvalid = FakeRequest().withFormUrlEncodedBody(("withdrawDate.day", "5"), ("withdrawDate.month", "9"), ("withdrawDate.year", "2017")).withMethod("POST")
@@ -409,7 +407,7 @@ class WithdrawProtectionControllerSpec extends FakeApplication with MockitoSugar
 
 
   def cacheFetchCondition[T](data: Option[T]): Unit = {
-    when(mockSessionCacheService.fetchAndGetFormData[T](Matchers.anyString())(Matchers.any(), Matchers.any()))
+    when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
       .thenReturn(Future.successful(data))
   }
   

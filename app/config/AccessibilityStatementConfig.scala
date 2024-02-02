@@ -16,10 +16,11 @@
 
 package config
 
-import java.net.URLEncoder
-import javax.inject.Inject
 import play.api.Configuration
 import play.api.mvc.RequestHeader
+
+import java.net.URLEncoder
+import javax.inject.Inject
 
 class AccessibilityStatementConfig @Inject() (config: Configuration) {
   val platformHost: Option[String]                      =

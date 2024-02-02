@@ -16,30 +16,27 @@
 
 package auth
 import config.{FrontendAppConfig, PlaContext}
-import javax.inject.Inject
+import play.api.{Environment, Logging}
 import play.api.i18n.Messages
 import play.api.mvc.Results._
 import play.api.mvc._
-import play.api.{Configuration, Environment}
-import play.api.Logging
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import uk.gov.hmrc.auth.core.{AuthorisedFunctions, _}
+import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                  authClientConnector: AuthConnector,
                                  val technicalError: views.html.pages.fallback.technicalError,
-                                 val env: Environment
                                 )(
                                   implicit val appConfig: FrontendAppConfig,
                                   implicit val partialRetriever: FormPartialRetriever,
                                   implicit val plaContext: PlaContext,
                                   implicit val ec: ExecutionContext)
   extends FrontendController(mcc) with AuthFunction with Logging{
-  def config: Configuration = appConfig.configuration
   override def authConnector: AuthConnector = authClientConnector
 }
 trait AuthFunction extends AuthorisedFunctions with Logging {

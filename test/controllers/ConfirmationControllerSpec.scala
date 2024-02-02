@@ -16,8 +16,8 @@
 
 package controllers
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
@@ -61,8 +61,6 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
         override implicit val ec: ExecutionContext = executionContext
 
         override def authConnector: AuthConnector = mockAuthConnector
-        override def config: Configuration = mockAppConfig.configuration
-        override def env: Environment = mockEnv
     }
 
 

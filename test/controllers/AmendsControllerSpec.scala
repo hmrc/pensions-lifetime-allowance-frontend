@@ -16,8 +16,8 @@
 
 package controllers
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
@@ -46,7 +46,8 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import models.cache.CacheMap
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.{any, anyString, startsWith}
+import org.mockito.ArgumentMatchers.any
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
 
@@ -118,8 +119,8 @@ class AmendsControllerSpec extends FakeApplication
     val authFunction = new AuthFunctionImpl (
       mockMCC,
       mockAuthConnector,
-      mockTechnicalError,
-      mockEnv)
+      mockTechnicalError
+      )
 
     val controller = new AmendsController(
       mockSessionCacheService,
@@ -279,7 +280,7 @@ class AmendsControllerSpec extends FakeApplication
 
 
   def cacheFetchCondition[T](data: Option[T]): Unit = {
-    when(mockSessionCacheService.fetchAndGetFormData[T](Matchers.anyString())(Matchers.any(), Matchers.any()))
+    when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
       .thenReturn(Future.successful(data))
   }
 
@@ -303,7 +304,7 @@ class AmendsControllerSpec extends FakeApplication
     "there is a stored, updated amends model" in new Setup {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockDisplayConstructors.createAmendDisplayModel(Matchers.any())(Matchers.any())).thenReturn(tstAmendDisplayModel)
+      when(mockDisplayConstructors.createAmendDisplayModel(any())(any())).thenReturn(tstAmendDisplayModel)
 
       val result = controller.amendsSummary("ip2014", "dormant")(fakeRequest)
       val jsoupDoc = Jsoup.parse(contentAsString(result))
@@ -336,8 +337,8 @@ class AmendsControllerSpec extends FakeApplication
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockSessionCacheService.saveFormData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
-      when(mockPlaConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(409, "")))
+      when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+      when(mockPlaConnector.amendProtection(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(409, "")))
 
       status(DataItem.result) shouldBe 500
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
@@ -350,8 +351,8 @@ class AmendsControllerSpec extends FakeApplication
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockSessionCacheService.saveFormData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
-      when(mockPlaConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(HttpResponse(423, "")))
+      when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+      when(mockPlaConnector.amendProtection(any(), any())(any(), any())).thenReturn(Future.successful(HttpResponse(423, "")))
 
       status(DataItem.result) shouldBe 423
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.mcNeeded.pageHeading")
@@ -365,11 +366,11 @@ class AmendsControllerSpec extends FakeApplication
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockSessionCacheService.saveFormData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
         .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
-      when(mockPlaConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any(),Matchers.any()))
+      when(mockPlaConnector.amendProtection(any(), any())(any(),any()))
         .thenReturn(Future.successful(HttpResponse(status = 200, json = Json.parse("""{"result":"doesNotMatter"}"""), headers = Map.empty)))
-      when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any()))
+      when(mockResponseConstructors.createAmendResponseModelFromJson(any()))
         .thenReturn(None)
 
       status(result) shouldBe 500
@@ -387,11 +388,11 @@ class AmendsControllerSpec extends FakeApplication
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
-      when(mockPlaConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
         .thenReturn(Future.successful(HttpResponse(status = 200, json = Json.parse("""{"result":"doesNotMatter"}"""), headers = Map.empty)))
-      when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any()))
+      when(mockResponseConstructors.createAmendResponseModelFromJson(any()))
         .thenReturn(Some(AmendResponseModel(noNotificationIdProtection)))
-      when(mockSessionCacheService.saveFormData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+      when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any())).thenReturn(Future.successful(CacheMap("GA", Map.empty)))
 
 
       status(DataItem.result) shouldBe 500
@@ -405,10 +406,10 @@ class AmendsControllerSpec extends FakeApplication
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
-        when(mockPlaConnector.amendProtection(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+        when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
           .thenReturn(Future.successful(HttpResponse(status = 200, json = Json.parse("""{"result":"doesNotMatter"}"""), headers = Map.empty)))
-        when(mockResponseConstructors.createAmendResponseModelFromJson(Matchers.any())).thenReturn(Some(tstActiveAmendResponseModel))
-        when(mockSessionCacheService.saveFormData(Matchers.anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+        when(mockResponseConstructors.createAmendResponseModelFromJson(any())).thenReturn(Some(tstActiveAmendResponseModel))
+        when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
           .thenReturn(Future.successful(CacheMap("cacheId", Map.empty)))
 
         status(result) shouldBe 303
@@ -433,9 +434,9 @@ class AmendsControllerSpec extends FakeApplication
       lazy val result = controller.amendmentOutcome()(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        when(mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
-        when(mockSessionCacheService.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(Some("updatedValue"),Some("changedToYes"),Some("changedToNo"),None,Some("addedPSO")))))
-        when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstActiveAmendResponseDisplayModel)
+        when(mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](startsWith("amendResponseModel"))(any(), any())).thenReturn(Future.successful(Some(tstActiveAmendResponseModel)))
+        when(mockSessionCacheService.fetchAndGetFormData[AmendsGAModel](startsWith("AmendsGA"))(any(), any())).thenReturn(Future.successful(Some(AmendsGAModel(Some("updatedValue"),Some("changedToYes"),Some("changedToNo"),None,Some("addedPSO")))))
+        when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(any())).thenReturn(tstActiveAmendResponseDisplayModel)
 
         status(result) shouldBe 200
         jsoupDoc.body.getElementsByClass("govuk-panel__title").text shouldEqual Messages("amendResultCode.33.heading")
@@ -447,9 +448,9 @@ class AmendsControllerSpec extends FakeApplication
       lazy val result = controller.amendmentOutcome()(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        when(mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](Matchers.startsWith("amendResponseModel"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
-        when(mockSessionCacheService.fetchAndGetFormData[AmendsGAModel](Matchers.startsWith("AmendsGA"))(Matchers.any(), Matchers.any())).thenReturn(Future.successful(Some(AmendsGAModel(None,Some("changedToNo"),Some("changedToYes"),None,None))))
-        when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(Matchers.any())).thenReturn(tstInactiveAmendResponseDisplayModel)
+        when(mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](startsWith("amendResponseModel"))(any(), any())).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
+        when(mockSessionCacheService.fetchAndGetFormData[AmendsGAModel](startsWith("AmendsGA"))(any(), any())).thenReturn(Future.successful(Some(AmendsGAModel(None,Some("changedToNo"),Some("changedToYes"),None,None))))
+        when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(any())).thenReturn(tstInactiveAmendResponseDisplayModel)
 
         status(result) shouldBe 200
         jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
@@ -1149,7 +1150,7 @@ class AmendsControllerSpec extends FakeApplication
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-      when(mockSessionCacheService.saveFormData(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
           .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
       status(DataItem.result) shouldBe 303
@@ -1170,7 +1171,7 @@ class AmendsControllerSpec extends FakeApplication
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-      when(mockSessionCacheService.saveFormData(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
         .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
       status(DataItem.result) shouldBe 303
@@ -1333,10 +1334,10 @@ class AmendsControllerSpec extends FakeApplication
       val modelGA = Some(AmendsGAModel(None, None, None, None, None))
       val model = AmendResponseModel(ProtectionModel(Some("ref"), Some(33), notificationId = Some(33)))
 
-      when(mockSessionCacheService.saveFormData(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
         .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
-      when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(Matchers.any()))
+      when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(any()))
         .thenReturn(ActiveAmendResultDisplayModel(ApplicationType.IP2014, "33", "£1,100,000", None))
 
       lazy val result = controller.amendmentOutcomeResult(Some(model), modelGA, "")
@@ -1350,10 +1351,10 @@ class AmendsControllerSpec extends FakeApplication
       val model = AmendResponseModel(ProtectionModel(Some("ref"), Some(1), notificationId = Some(41)))
       lazy val result = controller.amendmentOutcomeResult(Some(model), modelGA, "")
 
-      when(mockSessionCacheService.saveFormData(Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any()))
+      when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
         .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
-      when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(Matchers.any()))
+      when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(any()))
         .thenReturn(InactiveAmendResultDisplayModel("41", Seq()))
 
         status(result) shouldBe OK

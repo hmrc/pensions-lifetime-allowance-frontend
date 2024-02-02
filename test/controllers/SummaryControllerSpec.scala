@@ -17,8 +17,8 @@
 package controllers
 
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
@@ -27,7 +27,7 @@ import constructors.SummaryConstructor
 import enums.ApplicationType
 import mocks.AuthMock
 import models.SummaryModel
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Messages
@@ -90,8 +90,6 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
       override implicit val ec: ExecutionContext = executionContext
 
       override def authConnector: AuthConnector = mockAuthConnector
-      override def config: Configuration = mockAppConfig.configuration
-      override def env: Environment = mockEnv
     }
 
     val controller = new SummaryController(
@@ -114,7 +112,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
     "user is applying for IP16" in new Setup {
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        when(mockSessionCacheService.fetchAllUserData(Matchers.any())).thenReturn(Future(None))
+        when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(None))
         val result = controller.summaryIP16(fakeRequest)
 
         status(result) shouldBe 500
@@ -126,8 +124,8 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
     "user is applying for IP16" in new Setup  {
       lazy val result = controller.summaryIP16(fakeRequest)
 
-      when(controller.summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(None)
-      when(mockSessionCacheService.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+      when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any())).thenReturn(None)
+      when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
       status(result) shouldBe 500
     }
@@ -135,8 +133,8 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
 
   "Navigating to summary when user has valid data" when {
     "user is applying for IP16" in new Setup  {
-        when(controller.summaryConstructor.createSummaryData(Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).thenReturn(Some(tstSummaryModel))
-        when(mockSessionCacheService.fetchAllUserData(Matchers.any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+        when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any())).thenReturn(Some(tstSummaryModel))
+        when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
         val result = controller.summaryIP16(fakeRequest)
         status(result) shouldBe 200
