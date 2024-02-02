@@ -17,12 +17,13 @@
 package forms
 
 import forms.WithdrawDateForm.withdrawDateForm
-import org.joda.time.LocalDate
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.{Form, FormError}
 import play.api.i18n.Lang
 import play.api.libs.json.Json
 import testHelpers.{FakeApplication, PSODetailsMessages}
+
+import java.time.LocalDate
 
 class CommonBindersSpec extends FakeApplication with PSODetailsMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]

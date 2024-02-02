@@ -16,11 +16,10 @@
 
 package forms
 
-import common.Transformers.{optionalBigDecimalToString, stringToOptionalBigDecimal}
+import common.Validation._
 import models.amendModels.AmendPensionsTakenBetweenModel
 import play.api.data.Forms._
 import play.api.data._
-import common.Validation._
 
 object AmendPensionsTakenBetweenForm extends CommonBinders {
   def amendPensionsTakenBetweenForm = Form (

@@ -18,7 +18,7 @@ package utils
 
 import java.util.UUID
 
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
 import javax.inject.Inject
 import play.api.mvc._
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}

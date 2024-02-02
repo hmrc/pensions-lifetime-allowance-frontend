@@ -16,11 +16,10 @@
 
 package forms
 
-import common.Transformers.{optionalBigDecimalToString, stringToOptionalBigDecimal}
+import common.Validation._
 import models.amendModels.AmendPensionsTakenBeforeModel
 import play.api.data.Form
 import play.api.data.Forms._
-import common.Validation._
 
 
 object AmendPensionsTakenBeforeForm extends CommonBinders{

@@ -18,7 +18,7 @@ package services
 
 import models._
 import models.cache.CacheMap
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.Json
@@ -43,7 +43,7 @@ class SessionCacheServiceSpec extends FakeApplication with MockitoSugar {
   "Calculator Connector" should {
     "fetch and get from repo" in {
       val testModel = PensionsTakenModel(Some("No"))
-      when(mockSessionRepository.getFromSession[PensionsTakenModel](DataKey[PensionsTakenModel](Matchers.any()))(Matchers.any(), Matchers.any()))
+      when(mockSessionRepository.getFromSession[PensionsTakenModel](DataKey[PensionsTakenModel](any()))(any(), any()))
         .thenReturn(Future.successful(Option(testModel)))
 
       lazy val result = TestsessionCacheService.fetchAndGetFormData[PensionsTakenModel]("willAddToPension")
@@ -53,7 +53,7 @@ class SessionCacheServiceSpec extends FakeApplication with MockitoSugar {
     "save form data to repo" in {
       val testModel = PensionsTakenModel(Some("No"))
       val returnedCacheMap = CacheMap("haveAddedToPension", Map("data" -> Json.toJson(testModel)))
-      when(mockSessionRepository.putInSession[PensionsTakenModel](DataKey[PensionsTakenModel](Matchers.any()), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockSessionRepository.putInSession[PensionsTakenModel](DataKey[PensionsTakenModel](any()), any())(any(), any(), any()))
         .thenReturn(Future.successful(returnedCacheMap))
 
       lazy val result = TestsessionCacheService.saveFormData("haveAddedToPension", testModel)

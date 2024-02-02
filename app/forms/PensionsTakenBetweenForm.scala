@@ -20,7 +20,6 @@ import common.Validation.{mandatoryCheck, yesNoCheck}
 import models._
 import play.api.data.Forms._
 import play.api.data._
-import common.Transformers._
 
 object PensionsTakenBetweenForm extends CommonBinders{
 

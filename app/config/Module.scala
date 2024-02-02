@@ -35,9 +35,9 @@ package config
 import auth.{AuthFunction, AuthFunctionImpl}
 import com.google.inject.AbstractModule
 import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-import uk.gov.hmrc.http.HttpClient
 import utils.{ActionWithSessionId, ActionWithSessionImpl}
 
 

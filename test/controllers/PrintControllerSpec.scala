@@ -16,8 +16,6 @@
 
 package controllers
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
@@ -25,14 +23,16 @@ import connectors.CitizenDetailsConnector
 import constructors.DisplayConstructors
 import mocks.AuthMock
 import models._
-import org.mockito.Matchers
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.Environment
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Configuration, Environment}
 import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.auth.core.AuthConnector
@@ -73,8 +73,6 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     override implicit val ec: ExecutionContext = executionContext
 
     override def authConnector: AuthConnector = mockAuthConnector
-    override def config: Configuration = mockAppConfig.configuration
-    override def env: Environment = mockEnv
   }
 
 
@@ -94,11 +92,11 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
       "Valid data is provided" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-        when(mockCitizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any()))
+        when(mockCitizenDetailsConnector.getPersonDetails(any())(any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
-        when(mockSessionCacheService.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any()))
+        when(mockSessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
           .thenReturn(Future.successful(Some(testProtectionModel)))
-        when(mockDisplayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+        when(mockDisplayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
           .thenReturn(testPrintDisplayModel)
 
         val result = TestPrintController.printView(fakeRequest)
@@ -108,11 +106,11 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
 
     "return a 303 redirect" when {
       "InValid data is provided" in {
-        when(mockCitizenDetailsConnector.getPersonDetails(Matchers.any())(Matchers.any()))
+        when(mockCitizenDetailsConnector.getPersonDetails(any())(any()))
           .thenReturn(Future(Some(testPersonalDetails)))
-        when(mockSessionCacheService.fetchAndGetFormData[ProtectionModel](Matchers.any())(Matchers.any(), Matchers.any()))
+        when(mockSessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
           .thenReturn(Future(None))
-        when(mockDisplayConstructors.createPrintDisplayModel(Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any()))
+        when(mockDisplayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
           .thenReturn(testPrintDisplayModel)
 
         val result = TestPrintController.printView(fakeRequest)

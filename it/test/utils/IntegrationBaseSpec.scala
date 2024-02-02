@@ -16,7 +16,7 @@
 
 package utils
 
-import akka.util.Timeout
+import org.apache.pekko.util.Timeout
 import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike

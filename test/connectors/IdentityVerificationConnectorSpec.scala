@@ -18,7 +18,9 @@ package connectors
 
 import config.FrontendAppConfig
 import enums.IdentityVerificationResult
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
@@ -60,7 +62,7 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
 
     def mockJourneyId(journeyId: String): Unit = {
       val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-      when(mockHttp.GET[HttpResponse](Matchers.contains(journeyId), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any())).
+      when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId), any(), any())(any(), any(), any())).
         thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
     }
     possibleJournies.keys.foreach(mockJourneyId)

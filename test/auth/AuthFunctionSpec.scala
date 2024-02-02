@@ -16,8 +16,8 @@
 
 package auth
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
+import org.apache.pekko.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import mocks.AuthMock
@@ -29,12 +29,12 @@ import play.api.mvc.Results._
 import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Configuration, Environment, Mode}
+import play.api.{Environment, Mode}
 import testHelpers.{FakeApplication, SessionCacheTestHelper}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
-import java.net.URLEncoder
 
+import java.net.URLEncoder
 import views.html.pages.fallback.technicalError
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -68,12 +68,6 @@ class AuthFunctionSpec extends FakeApplication
     lazy val plaContext: PlaContext       = mockPlaContext
     lazy val appConfig: FrontendAppConfig = mockAppConfig
     override lazy val authConnector       = mockAuthConnector
-
-    override def config: Configuration = mock[Configuration]
-    override def env: Environment = mock[Environment]
-    override def personalIVUrl = "http://www.test.com"
-    override def ggLoginUrl = "http://www.gglogin.com"
-    override def origin = "origin"
     override def upliftEnvironmentUrl(requestUri: String): String = requestUri
 
     override implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
@@ -105,7 +99,7 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
+        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
       }
 
       "return a 500 on an unexpected authorisation exception" in {
@@ -122,7 +116,7 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
+        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
       }
 
       "redirect to gg login page on an no active session exception" in {
@@ -157,7 +151,7 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
+        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
       }
 
       "return a 500 on an unexpected authorisation exception" in {
@@ -174,7 +168,7 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some("http://www.test.com?origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
+        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
       }
 
       "redirect to gg login page on an no active session exception" in {

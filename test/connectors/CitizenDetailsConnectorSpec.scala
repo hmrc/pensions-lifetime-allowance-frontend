@@ -18,7 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import models.{Person, PersonalDetailsModel}
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.Json
@@ -47,7 +47,7 @@ class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
 
   "Calling getPersonDetails with valid response" should {
     "return a defined Option on PersonalDetailsModel" in new Setup {
-      when(mockHttp.GET[HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockHttp.GET[HttpResponse](any(), any(), any())(any(),any(),any()))
         .thenReturn(Future.successful(HttpResponse(status = OK, json = Json.toJson(tstDetails), headers = Map.empty)))
 
       val response = controller.getPersonDetails("tstNino")
@@ -57,7 +57,7 @@ class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
 
   "Calling getPersonDetails with invalid response" should {
     "return an undefined Option on PersonalDetailsModel" in new Setup {
-      when(mockHttp.GET[HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockHttp.GET[HttpResponse](any(), any(), any())(any(), any(),any()))
         .thenReturn(Future.successful(HttpResponse(status = OK, json = Json.toJson("""name:NoName"""), headers = Map.empty)))
 
       val response = controller.getPersonDetails("tstNino")
@@ -67,7 +67,7 @@ class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
 
   "Calling getPersonDetails with error response" should {
     "return an undefined Option on PersonalDetailsModel" in new Setup {
-      when(mockHttp.GET[HttpResponse](Matchers.any(), Matchers.any(), Matchers.any())(Matchers.any(), Matchers.any(), Matchers.any()))
+      when(mockHttp.GET[HttpResponse](any(), any(), any())(any(), any(), any()))
         .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR, "")))
 
       val response = controller.getPersonDetails("tstNino")

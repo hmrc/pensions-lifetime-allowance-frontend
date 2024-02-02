@@ -17,7 +17,8 @@
 package testHelpers
 
 import models.cache.CacheMap
-import org.mockito.Matchers
+import org.mockito.ArgumentMatchers
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
 import play.api.mvc.Request
@@ -28,9 +29,9 @@ import scala.concurrent.Future
 trait SessionCacheTestHelper {
 
   def cacheSaveCondition[T](mockSessionCacheService: SessionCacheService, key: Option[String] = None, returnedData: Option[CacheMap] = None): OngoingStubbing[Future[CacheMap]] = {
-    val keyMatcher = key.map(Matchers.contains).getOrElse(Matchers.anyString())
+    val keyMatcher = key.map(ArgumentMatchers.contains).getOrElse(anyString())
 
-    when(mockSessionCacheService.saveFormData[T](keyMatcher, Matchers.any())(Matchers.any[Request[_]](), Matchers.any()))
+    when(mockSessionCacheService.saveFormData[T](keyMatcher, any())(any[Request[_]](), any()))
       .thenReturn(Future.successful(returnedData.getOrElse(CacheMap("", Map.empty))))
   }
 

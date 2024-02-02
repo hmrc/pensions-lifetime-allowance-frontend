@@ -1,11 +1,8 @@
-import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, scalaSettings, targetJvm}
-import com.typesafe.sbt.web.Import.pipelineStages
-import com.typesafe.sbt.web.Import.Assets
-import com.typesafe.sbt.digest.Import.digest
-import sbt.Keys._
-import sbt._
-import uk.gov.hmrc._
-import DefaultBuildSettings._
+import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, itSettings, scalaSettings}
+import sbt.Keys.{scalacOptions, *}
+import sbt.*
+import uk.gov.hmrc.*
+import DefaultBuildSettings.*
 import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning
@@ -16,7 +13,10 @@ val appName = "pensions-lifetime-allowance-frontend"
 lazy val appDependencies: Seq[ModuleID] = Seq.empty
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[_]] = Seq.empty
-val silencerVersion = "1.7.12"
+
+ThisBuild / majorVersion := 2
+ThisBuild / scalaVersion := "2.13.12"
+
 
 lazy val scoverageSettings = {
   import scoverage.ScoverageKeys
@@ -26,7 +26,9 @@ lazy val scoverageSettings = {
     ScoverageKeys.coverageExcludedFiles := ".*/Routes.*;.*/RoutesPrefix.*;.*/PdfGeneratorConnector.*;",
     ScoverageKeys.coverageMinimumStmtTotal := 90,
     ScoverageKeys.coverageFailOnMinimum := false,
-    ScoverageKeys.coverageHighlighting := true
+    ScoverageKeys.coverageHighlighting := true,
+    scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
+    scalacOptions += "-Wconf:cat=unused-imports&src=routes/.*:s",
   )
 }
 
@@ -37,19 +39,13 @@ lazy val root = Project(appName, file("."))
   .settings(scalaSettings: _*)
   .settings(defaultSettings(): _*)
   .settings(
-    scalaVersion := "2.13.8",
+    scalaVersion := "2.13.12",
     libraryDependencies ++= AppDependencies(),
     Test / parallelExecution := false,
     Test / fork := false,
     retrieveManaged := true,
     update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    Assets / pipelineStages := Seq(digest),
     // Use the silencer plugin to suppress warnings from unused imports in compiled twirl templates
-    scalacOptions += "-P:silencer:pathFilters=views;routes;",
-    libraryDependencies ++= Seq(
-      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
-    )
   )
   .settings(
       TwirlKeys.templateImports ++= Seq(
@@ -59,12 +55,9 @@ lazy val root = Project(appName, file("."))
         "uk.gov.hmrc.govukfrontend.views.html.components.implicits._"
       )
   )
-  .configs(IntegrationTest)
-  .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
-  .settings(
-    IntegrationTest / Keys.fork := false,
-    IntegrationTest / unmanagedSourceDirectories := (IntegrationTest / baseDirectory) (base => Seq(base / "it")).value,
-    addTestReportOption(IntegrationTest, "int-test-reports"),
-    IntegrationTest / parallelExecution := false)
-  .settings(majorVersion := 2)
-  PlayKeys.playDefaultPort := 9010
+PlayKeys.playDefaultPort := 9010
+
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(root % "test->test")
+  .settings(itSettings():_*)

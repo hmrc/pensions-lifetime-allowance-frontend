@@ -16,16 +16,15 @@
 
 package controllers
 
-import akka.actor.ActorSystem
-import akka.stream.Materializer
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import mocks.AuthMock
 import models._
-import org.mockito.Matchers
-import org.mockito.Matchers.anyString
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -41,10 +40,11 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HeaderCarrier
 import models.cache.CacheMap
-import java.util.UUID
+import org.mockito.ArgumentMatchers
 
+import java.util.UUID
 import views.html.pages.fallback.technicalError
-import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionDebits, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, pensionsWorthBefore, pensionsUsedBetween, psoDetails, removePsoDetails}
+import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionDebits, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, pensionsUsedBetween, pensionsWorthBefore, psoDetails, removePsoDetails}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -90,8 +90,6 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             override implicit val ec : ExecutionContext = executionContext
 
             override def authConnector: AuthConnector = mockAuthConnector
-            override def config: Configuration = mockAppConfig.configuration
-            override def env: Environment = mockEnv
         }
 
         val controller = new IP2016Controller(
@@ -129,18 +127,18 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     val mockUserId = "/auth/oid/" + mockUsername
 
     def cacheFetchCondition[T](data: Option[T]): Unit = {
-        when(mockSessionCacheService.fetchAndGetFormData[T](Matchers.anyString())(Matchers.any(), Matchers.any()))
+        when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
           .thenReturn(Future.successful(data))
     }
 
 
     def psoDetailsCacheSetup(data: Option[PSODetailsModel]) = {
-        when(mockSessionCacheService.fetchAndGetFormData[PSODetailsModel](Matchers.eq(s"psoDetails"))(Matchers.any(), Matchers.any()))
+        when(mockSessionCacheService.fetchAndGetFormData[PSODetailsModel](ArgumentMatchers.eq(s"psoDetails"))(any(), any()))
           .thenReturn(Future.successful(data))
     }
 
     def pensionsDebitsSaveData(data: Option[PensionDebitsModel]) = {
-        when(mockSessionCacheService.saveFormData(anyString(), Matchers.any())(Matchers.any(), Matchers.any()))
+        when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
           .thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
     }
 
