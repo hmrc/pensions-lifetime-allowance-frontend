@@ -60,7 +60,7 @@ pla.notFound.pageHeading    = Ni ellir dod o hyd i''r dudalen hon
 pla.notFound.paraOne        = Gwiriwch eich bod wedi nodi''r cyfeiriad gwe cywir.
 
 ## Confirm FP 2016##
-pla.confirmFP16.title       = Gwneud cais am FP 2016
+pla.confirmFP16.title       = Cael diogelwch sefydlog 2016 ar gyfer eich lwfans oes
 pla.confirmFP16.pageHeading = Cael diogelwch sefydlog 2016 ar gyfer eich lwfans oes
 pla.confirmFP16.para.1      = I gael y diogelwch hwn mae''n rhaid i chi gytuno ar y datganiadau hyn.
 pla.confirmFP16.para.2      = Rwy''n datgan:
