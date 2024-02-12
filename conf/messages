@@ -23,6 +23,7 @@ site.title.error                = Error: {0}
 pla.base.date.fields.day        = Day
 pla.base.date.fields.month      = Month
 pla.base.date.fields.year       = Year
+pla.base.moneyInput.hint        = For example, £600 or £193.54
 
 pla.license.1    = All content is available under the
 pla.license.link = Open Government Licence v3.0
@@ -144,9 +145,10 @@ pla.pensionsWorthBefore.bullet.2            = you have a drawdown pension
 pla.pensionsWorthBefore.para.3              = Find out how in this
 pla.pensionsWorthBefore.helpLinkText        = technical guidance on valuing your pensions
 pla.pensionsWorthBefore.amount.errors.mandatoryError = Enter what these pensions were worth on 5 April 2016
-pla.pensionsWorthBefore.amount.errors.decimal = What these pensions were worth on 5 April 2016 has too many numbers after the decimal point
-pla.pensionsWorthBefore.amount.errors.negative = What these pensions were worth on 5 April 2016 must be £0 or more
-pla.pensionsWorthBefore.amount.errors.max = What these pensions were worth on 5 April 2016 must be £1,000,000,000 or less
+pla.pensionsWorthBefore.amount.errors.notReal        = What these pensions were worth on the 5 April 2016 must be a number, like 10000.00
+pla.pensionsWorthBefore.amount.errors.decimal        = What these pensions were worth on 5 April 2016 has too many numbers after the decimal point
+pla.pensionsWorthBefore.amount.errors.negative       = What these pensions were worth on 5 April 2016 must be £0 or more
+pla.pensionsWorthBefore.amount.errors.max            = What these pensions were worth on 5 April 2016 must be £1,000,000,000 or less
 
 
 ## IP14 Pensions Taken Before ##
@@ -183,9 +185,10 @@ pla.pensionsUsedBetween.para.3.nonInput    = Read technical guidance on
 pla.pensionsUsedBetween.help               = How do I work out the value?
 pla.pensionsUsedBetween.helpLinkText       = working out how much lifetime allowance you''ve used
 pla.pensionsUsedBetween.amount.errors.mandatoryError = Enter how much lifetime allowance you have used
-pla.pensionsUsedBetween.amount.errors.decimal = How much lifetime allowance you have used has too many numbers after the decimal point
-pla.pensionsUsedBetween.amount.errors.negative = How much lifetime allowance you have used must be £0 or more
-pla.pensionsUsedBetween.amount.errors.max = How much lifetime allowance you have used must be £1,000,000,000 or less
+pla.pensionsUsedBetween.amount.errors.notReal        = How much lifetime allowance you have used must be a number, like 10000.00
+pla.pensionsUsedBetween.amount.errors.decimal        = How much lifetime allowance you have used has too many numbers after the decimal point
+pla.pensionsUsedBetween.amount.errors.negative       = How much lifetime allowance you have used must be £0 or more
+pla.pensionsUsedBetween.amount.errors.max            = How much lifetime allowance you have used must be £1,000,000,000 or less
 
 ## Overseas Pensions ##
 pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
@@ -194,6 +197,7 @@ pla.overseasPensions.questionTwo            = How much did you contribute?
 pla.overseasPensions.legend                 = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2016?
 pla.overseasPensions.errors.mandatoryError  = Select yes if you have put money into a pension scheme held overseas
 pla.overseasPensions.amount.errors.mandatoryError = Enter how much you contributed
+pla.overseasPensions.amount.errors.notReal = How much you contributed must be a number, like 10000.00
 pla.overseasPensions.amount.errors.decimal = How much you contributed has too many numbers after the decimal point
 pla.overseasPensions.amount.errors.negative = How much you contributed must be £0 or more
 pla.overseasPensions.amount.errors.max = How much you contributed must be £1,000,000,000 or less
@@ -217,6 +221,7 @@ pla.currentPensions.readGuidance.nonInput   = Read technical guidance on
 pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
 pla.currentPensions.question                = Do not include pensions you''ve already taken or the State Pension.
 pla.currentPensions.amount.errors.mandatoryError = Enter what your UK pensions were worth on 5 April 2016
+pla.currentPensions.amount.errors.notReal = What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00
 pla.currentPensions.amount.errors.decimal = What your UK pensions were worth on 5 April 2016 has too many numbers after the decimal point
 pla.currentPensions.amount.errors.negative = What your UK pensions were worth on 5 April 2016 must be £0 or more
 pla.currentPensions.amount.errors.max = What your UK pensions were worth on 5 April 2016 must be £1,000,000,000 or less
@@ -248,6 +253,7 @@ pla.psoDetails.errorQuestion                = Enter a number without commas, for
 pla.psoDetails.removePso                    = This will remove your pension sharing order.
 pla.psoDetails.cancelRemove                 = Do not remove
 pla.psoDetails.amount.errors.mandatoryError = Enter the amount of pension sharing order
+pla.psoDetails.amount.errors.notReal = The amount of pension sharing order must be a number, like 10000.00
 pla.psoDetails.amount.errors.decimal = The amount of pension sharing order has too many numbers after the decimal point
 pla.psoDetails.amount.errors.negative = The amount of pension sharing order must be £0 or more
 pla.psoDetails.amount.errors.max = The amount of pension sharing order must be £1,000,000,000 or less

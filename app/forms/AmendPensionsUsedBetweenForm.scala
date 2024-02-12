@@ -16,7 +16,6 @@
 
 package forms
 
-import common.Transformers.{optionalBigDecimalToString, stringToOptionalBigDecimal}
 import models.amendModels.AmendPensionsUsedBetweenModel
 import play.api.data.Forms._
 import play.api.data._
@@ -24,36 +23,15 @@ import common.Validation._
 
 object AmendPensionsUsedBetweenForm extends CommonBinders {
 
-  val verifyMandatory: AmendPensionsUsedBetweenModel => Boolean = {
-    case AmendPensionsUsedBetweenModel(value, _,_) => value.isDefined
-    case _ => true
-  }
-
-  val verifyDecimal: AmendPensionsUsedBetweenModel => Boolean = {
-    case AmendPensionsUsedBetweenModel(Some(value), _,_) => isMaxTwoDecimalPlaces(value)
-    case _ => true
-  }
-
-  val verifyPositive: AmendPensionsUsedBetweenModel => Boolean = {
-    case AmendPensionsUsedBetweenModel(Some(value), _,_) => isPositive(value)
-    case _ => true
-  }
-
-  val verifyMax: AmendPensionsUsedBetweenModel => Boolean = {
-    case AmendPensionsUsedBetweenModel(Some(value), _,_) => isLessThanMax(value)
-    case _ => true
-  }
 
   def amendPensionsUsedBetweenForm = Form (
     mapping(
-      "amendedPensionsUsedBetweenAmt" -> text
-        .transform(stringToOptionalBigDecimal, optionalBigDecimalToString),
+      "amendedPensionsUsedBetweenAmt" -> of(decimalFormatter("pla.pensionsUsedBetween.amount.errors.mandatoryError", "pla.pensionsUsedBetween.amount.errors.notReal"))
+        .verifying("pla.pensionsUsedBetween.amount.errors.decimal", pensionsWorthBeforeAmt => isMaxTwoDecimalPlaces(pensionsWorthBeforeAmt.getOrElse(0)))
+        .verifying("pla.pensionsUsedBetween.amount.errors.negative", pensionsWorthBeforeAmt => isPositive(pensionsWorthBeforeAmt.getOrElse(0)))
+        .verifying("pla.pensionsUsedBetween.amount.errors.max", pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0))),
       "protectionType" -> text,
       "status" -> text
     )(AmendPensionsUsedBetweenModel.apply)(AmendPensionsUsedBetweenModel.unapply)
-      .verifying("pla.pensionsUsedBetween.amount.errors.mandatoryError", verifyMandatory)
-      .verifying("pla.pensionsUsedBetween.amount.errors.decimal", verifyDecimal)
-      .verifying("pla.pensionsUsedBetween.amount.errors.negative", verifyPositive)
-      .verifying("pla.pensionsUsedBetween.amount.errors.max", verifyMax)
   )
 }

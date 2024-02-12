@@ -16,7 +16,6 @@
 
 package forms
 
-import common.Transformers.{optionalBigDecimalToString, stringToOptionalBigDecimal}
 import models.amendModels.AmendPensionsWorthBeforeModel
 import common.Validation._
 import play.api.data.Form
@@ -24,37 +23,15 @@ import play.api.data.Forms._
 
 object AmendPensionsWorthBeforeForm extends CommonBinders {
 
-  val verifyMandatory: AmendPensionsWorthBeforeModel => Boolean = {
-    case AmendPensionsWorthBeforeModel(value, _, _) => value.isDefined
-    case _ => true
-  }
-
-  val verifyDecimal: AmendPensionsWorthBeforeModel => Boolean = {
-    case AmendPensionsWorthBeforeModel(Some(value), _, _) => isMaxTwoDecimalPlaces(value)
-    case _ => true
-  }
-
-  val verifyPositive: AmendPensionsWorthBeforeModel => Boolean = {
-    case AmendPensionsWorthBeforeModel(Some(value), _, _) => isPositive(value)
-    case _ => true
-  }
-
-  val verifyMax: AmendPensionsWorthBeforeModel => Boolean = {
-    case AmendPensionsWorthBeforeModel(Some(value), _, _) => isLessThanMax(value)
-    case _ => true
-  }
 
   def amendPensionsWorthBeforeForm: Form[AmendPensionsWorthBeforeModel] = Form (
     mapping(
-      "amendedPensionsTakenBeforeAmt" -> text
-        .transform(stringToOptionalBigDecimal, optionalBigDecimalToString),
+      "amendedPensionsTakenBeforeAmt" -> of(decimalFormatter("pla.pensionsWorthBefore.amount.errors.mandatoryError", "pla.pensionsWorthBefore.amount.errors.notReal"))
+        .verifying("pla.pensionsWorthBefore.amount.errors.decimal", pensionsWorthBeforeAmt => isMaxTwoDecimalPlaces(pensionsWorthBeforeAmt.getOrElse(0)))
+        .verifying("pla.pensionsWorthBefore.amount.errors.negative", pensionsWorthBeforeAmt => isPositive(pensionsWorthBeforeAmt.getOrElse(0)))
+        .verifying("pla.pensionsWorthBefore.amount.errors.max", pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0))),
       "protectionType" -> text,
       "status" -> text
     )(AmendPensionsWorthBeforeModel.apply)(AmendPensionsWorthBeforeModel.unapply)
-      .verifying("pla.pensionsWorthBefore.amount.errors.mandatoryError", verifyMandatory)
-      .verifying("pla.pensionsWorthBefore.amount.errors.decimal", verifyDecimal)
-      .verifying("pla.pensionsWorthBefore.amount.errors.negative", verifyPositive)
-      .verifying("pla.pensionsWorthBefore.amount.errors.max", verifyMax)
   )
-
 }

@@ -22,10 +22,10 @@ import play.api.data.Form
 import play.api.data.Forms._
 import utils.Constants._
 
-object AmendCurrentPensionForm {
+object AmendCurrentPensionForm extends CommonBinders {
   def amendCurrentPensionForm = Form(
     mapping(
-      "amendedUKPensionAmt" -> optional(bigDecimal)
+      "amendedUKPensionAmt" -> of(decimalFormatter("pla.currentPensions.amount.errors.mandatoryError", "pla.currentPensions.amount.errors.notReal"))
         .verifying("pla.currentPensions.amount.errors.mandatoryError", currentPensionsAmt => currentPensionsAmt.isDefined)
         .verifying("pla.currentPensions.amount.errors.negative", currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
         .verifying("pla.currentPensions.amount.errors.decimal", currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))

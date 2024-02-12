@@ -86,7 +86,7 @@ class OverseasPensionsFormSpec extends FakeApplication with CommonErrorMessages 
           val result = overseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMissingAmount(messageKey)
+          result.errors.head.message shouldBe errorReal(messageKey)
         }
       }
 

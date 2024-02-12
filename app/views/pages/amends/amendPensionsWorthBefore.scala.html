@@ -77,11 +77,12 @@
                hiddenContent = helpTextAccordionContent
           )
           @formInputMoney(
-               field = amendPensionsWorthBeforeForm("amendedPensionsTakenBeforeAmt"),
-               question = Messages("pla.pensionsWorthBefore.question"),
-               hideLabel = true,
-               pageHeading = false,
-               errorMessage = if (amendPensionsWorthBeforeForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
+                field = amendPensionsWorthBeforeForm("amendedPensionsTakenBeforeAmt"),
+                question = Messages("pla.pensionsWorthBefore.question"),
+                hintText = Some(Messages("pla.base.moneyInput.hint")),
+                hideLabel = true,
+                pageHeading = false,
+                errorMessage = if (amendPensionsWorthBeforeForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
           )
 
           @submitButton(submitText = Messages("pla.base.change"))

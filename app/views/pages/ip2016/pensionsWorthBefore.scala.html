@@ -77,6 +77,7 @@
         @formInputMoney(
             field = pensionsWorthBeforeForm("pensionsWorthBeforeAmt"),
             question = Messages("pla.pensionsWorthBefore.question"),
+            hintText = Some(Messages("pla.base.moneyInput.hint")),
             hideLabel = true,
             pageHeading = false,
             errorMessage = if (pensionsWorthBeforeForm.errors.nonEmpty) Some(errorMessage.head) else Some("")

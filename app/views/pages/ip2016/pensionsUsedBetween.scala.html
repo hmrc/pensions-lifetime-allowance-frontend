@@ -73,6 +73,7 @@
         @formInputMoney(
             field = pensionsUsedBetweenForm("pensionsUsedBetweenAmt"),
             question = Messages("pla.pensionsUsedBetween.question"),
+            hintText = Some(Messages("pla.base.moneyInput.hint")),
             hideLabel = true,
             pageHeading = false,
             errorMessage = if (pensionsUsedBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
