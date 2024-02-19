@@ -5,7 +5,7 @@ object AppDependencies {
   import play.sbt.PlayImport.*
 
   private val bootstrapVersion = "8.4.0"
-  private val playFrontendVersion = "8.4.0"
+  private val playFrontendVersion = "8.5.0"
   private val playPartialsVersion = "9.1.0"
   private val mongoPlayVersion = "1.7.0"
   private val pekkoVersion = "1.0.2"
