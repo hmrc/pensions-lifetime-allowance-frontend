@@ -101,7 +101,7 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
       errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaBaseErrorsDayEmpty
       errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe plaBaseErrorsMonthEmpty
       errorDoc.select(".govuk-error-summary__list li").eq(2).text shouldBe plaBaseErrorsYearEmpty
-      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe errorReal
+      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe "The amount of pension sharing order must be a number, like 10000.00"
     }
 
     "not have errors on valid pages" in{

@@ -19,14 +19,13 @@ package forms
 import common.Validation.{isLessThanMax, isMaxTwoDecimalPlaces, isPositive}
 import models.PensionsWorthBeforeModel
 import play.api.data.Form
-import play.api.data.Forms.{bigDecimal, mapping, optional}
+import play.api.data.Forms.{mapping, of}
 
 object PensionsWorthBeforeForm extends CommonBinders {
 
   def pensionsWorthBeforeForm = Form (
     mapping(
-      "pensionsWorthBeforeAmt" -> optional(bigDecimal)
-        .verifying("pla.pensionsWorthBefore.amount.errors.mandatoryError", pensionsWorthBeforeAmt => pensionsWorthBeforeAmt.isDefined)
+      "pensionsWorthBeforeAmt" -> of(decimalFormatter("pla.pensionsWorthBefore.amount.errors.mandatoryError", "pla.pensionsWorthBefore.amount.errors.notReal"))
         .verifying("pla.pensionsWorthBefore.amount.errors.decimal", pensionsWorthBeforeAmt => isMaxTwoDecimalPlaces(pensionsWorthBeforeAmt.getOrElse(0)))
         .verifying("pla.pensionsWorthBefore.amount.errors.negative", pensionsWorthBeforeAmt => isPositive(pensionsWorthBeforeAmt.getOrElse(0)))
         .verifying("pla.pensionsWorthBefore.amount.errors.max", pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0)))

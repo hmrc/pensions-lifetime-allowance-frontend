@@ -29,7 +29,7 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
   val messageKey = "pensionsUsedBetween"
 
   "The AmendPensionsUsedBetweenForm" should {
-    val validMap = Map("amendedPensionsUsedBetweenAmt" -> "1000.00", "protectionType" -> "type", "status" -> "status")
+    val validMap = Map("amendedPensionsUsedBetweenAmt" -> "1000.0", "protectionType" -> "type", "status" -> "status")
 
     "produce a valid form with additional validation" when {
 

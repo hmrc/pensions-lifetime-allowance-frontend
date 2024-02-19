@@ -16,45 +16,36 @@
 
 package forms
 
-import common.Transformers.{optionalBigDecimalToString, stringToOptionalBigDecimal}
-import common.Validation.{isLessThanMax, isMaxTwoDecimalPlaces, isPositive, mandatoryCheck, yesNoCheck}
+import common.Transformers.{bigDecimalToString, stringToBigDecimal}
+import common.Validation.{mandatoryCheck, stopOnFirstFail, yesNoCheck, bigDecimalCheck, commaCheck, negativeConstraint, decimalPlaceConstraint, maxMoneyCheck}
+import uk.gov.voa.play.form.ConditionalMappings.{isEqual, mandatoryIf}
 import models._
 import play.api.data.Forms._
 import play.api.data._
+import utils.Constants.npsMaxCurrency
 
 object OverseasPensionsForm extends CommonBinders{
 
-  val verifyMandatory: OverseasPensionsModel => Boolean = {
-    case OverseasPensionsModel("yes", value) => value.isDefined
-    case _ => true
-  }
-
-  val verifyDecimal: OverseasPensionsModel => Boolean = {
-    case OverseasPensionsModel("yes", Some(value)) => isMaxTwoDecimalPlaces(value)
-    case _ => true
-  }
-
-  val verifyPositive: OverseasPensionsModel => Boolean = {
-    case OverseasPensionsModel("yes", Some(value)) => isPositive(value)
-    case _ => true
-  }
-
-  val verifyMax: OverseasPensionsModel => Boolean = {
-    case OverseasPensionsModel("yes", Some(value)) => isLessThanMax(value)
-    case _ => true
-  }
 
   def overseasPensionsForm = Form (
     mapping(
       "overseasPensions" -> common.Validation.newText("pla.overseasPensions.errors.mandatoryError")
         .verifying("pla.overseasPensions.errors.mandatoryError", mandatoryCheck)
         .verifying("pla.overseasPensions.errors.mandatoryError", yesNoCheck),
-      "overseasPensionsAmt" -> text
-        .transform(stringToOptionalBigDecimal, optionalBigDecimalToString)
+      "overseasPensionsAmt" -> mandatoryIf(
+        isEqual("overseasPensions", "yes"),
+        common.Validation.newText("pla.overseasPensions.amount.errors.mandatoryError")
+          .verifying("pla.overseasPensions.amount.errors.notReal", bigDecimalCheck)
+          .verifying("pla.psoDetails.errorQuestion", commaCheck)
+          .transform(stringToBigDecimal, bigDecimalToString)
+          .verifying(
+            stopOnFirstFail(
+              negativeConstraint("pla.overseasPensions.amount.errors.negative"),
+              decimalPlaceConstraint("pla.overseasPensions.amount.errors.decimal"),
+              maxMoneyCheck(npsMaxCurrency, "pla.overseasPensions.amount.errors.max")
+            )
+          )
+      )
     )(OverseasPensionsModel.apply)(OverseasPensionsModel.unapply)
-      .verifying("pla.overseasPensions.amount.errors.mandatoryError", verifyMandatory)
-      .verifying("pla.overseasPensions.amount.errors.decimal", verifyDecimal)
-      .verifying("pla.overseasPensions.amount.errors.negative", verifyPositive)
-      .verifying("pla.overseasPensions.amount.errors.max", verifyMax)
   )
 }

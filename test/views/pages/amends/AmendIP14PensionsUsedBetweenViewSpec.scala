@@ -18,6 +18,7 @@ package views.pages.amends
 
 import forms.AmendPensionsUsedBetweenForm
 import org.jsoup.Jsoup
+import testHelpers.CommonErrorMessages
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBetweenViewSpecMessages
 import testHelpers.ViewSpecHelpers.ip2016.PensionsUsedBetweenViewMessages
@@ -89,7 +90,7 @@ class AmendIP14PensionsUsedBetweenViewSpec extends CommonViewSpecHelper with Ame
     "display the correct errors appropriately" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select(".govuk-error-summary__body li").get(0).text shouldBe errorRequired
+      errorDoc.select(".govuk-error-summary__body li").get(0).text shouldBe "Enter how much lifetime allowance you have used"
     }
 
     "not have errors on valid pages" in{

@@ -29,11 +29,10 @@ object PSODetailsForm extends CommonBinders {
     "pso.day"    -> psoDateFormatterFromString,
     "pso.month"  -> intWithCustomError("monthEmpty"),
     "pso.year"   -> intWithCustomError("yearEmpty"),
-    "psoAmt"    -> optional(bigDecimal)
+    "psoAmt"    -> of(decimalFormatter("pla.psoDetails.amount.errors.mandatoryError", "pla.psoDetails.amount.errors.notReal"))
       .verifying("pla.psoDetails.amount.errors.max", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
       .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
       .verifying("pla.psoDetails.amount.errors.decimal", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-      .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined)
     )(PSODetailsModel.apply)(PSODetailsModel.unapply)
   )
 }

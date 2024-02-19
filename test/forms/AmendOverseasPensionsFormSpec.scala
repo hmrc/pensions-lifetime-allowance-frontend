@@ -104,7 +104,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
           val result = amendOverseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMissingAmount(messageKey)
+          result.errors.head.message shouldBe errorReal(messageKey)
         }
       }
     }

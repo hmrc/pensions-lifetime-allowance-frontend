@@ -39,6 +39,7 @@
     @formInputMoney(
         field = overseasPensionsForm("overseasPensionsAmt"),
         question = Messages("pla.overseasPensions.questionTwo"),
+        hintText = Some(Messages("pla.base.moneyInput.hint")),
         labelClass = Some("govuk-label--l"),
         pageHeading = false,
         errorMessage = if (overseasPensionsForm.errors.nonEmpty) Some(errorMessage.head) else Some("")

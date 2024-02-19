@@ -29,7 +29,7 @@ class AmendPensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorM
   val messageKey = "pensionsWorthBefore"
 
   "The AmendPensionsWorthBeforeForm" should {
-    val validMap = Map("amendedPensionsTakenBeforeAmt" -> "1000.00", "protectionType" -> "type", "status" -> "status")
+    val validMap = Map("amendedPensionsTakenBeforeAmt" -> "1000.0", "protectionType" -> "type", "status" -> "status")
 
     "produce a valid form with additional validation" when {
 

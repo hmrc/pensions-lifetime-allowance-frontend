@@ -77,11 +77,9 @@ trait CommonBinders {
   def protectionTypeFormatter: Mapping[String] = Forms.of[String](protectionFormatter)
 
 
-  implicit val optionalBigDecimalFormatter = new Formatter[Option[BigDecimal]] {
+  def decimalFormatter(requiredKey: String, invalidKey: String, args: Any*) = new Formatter[Option[BigDecimal]] {
     def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[BigDecimal]] =
-        if(ifAmtIsRequired(key, data)){
-          data.get(key).map(validateNumber(key, _)).getOrElse(Left(Seq(FormError(key, "pla.base.errors.errorQuestion", Nil))))
-        } else Right(None)
+        data.get(key).map(validateNumber(requiredKey, invalidKey, key, _)).getOrElse(Left(Seq(FormError(key, requiredKey, Nil))))
 
     def unbind(key: String, value: Option[BigDecimal]): Map[String, String] = {
       value match {
@@ -90,7 +88,6 @@ trait CommonBinders {
       }
     }
   }
-  val yesNoOptionalBigDecimal: Mapping[Option[BigDecimal]] = Forms.of[Option[BigDecimal]](optionalBigDecimalFormatter)
   
   //############Withdrawal Date###################
   private[forms] def withdrawDateValidationFormatter(errorLabel: String) = new Formatter[Option[Int]] {
@@ -214,23 +211,28 @@ trait CommonBinders {
     else Right(day)
   }
 
-  private def validateNumber(key: String, number: String): Either[Seq[FormError], Some[BigDecimal]] = {
+  private def validateNumber(requiredKey: String, invalidKey: String, key: String, number: String): Either[Seq[FormError], Some[BigDecimal]] = {
     number match {
-      case "" => Left(Seq(FormError(key, "pla.base.errors.errorQuestion", Nil)))
-      case value if!checkIfValidBigDecimal(value) => Left(Seq(FormError(key,"error.real")))
-      case value if!isPositive(BigDecimal(value)) => Left(Seq(FormError(key, "pla.base.errors.errorNegative", Nil)))
-      case value if!isLessThanDouble(value.toDouble, Constants.npsMaxCurrency) => Left(Seq(FormError(key, "pla.base.errors.errorMaximum", Nil)))
-      case value if!isMaxTwoDecimalPlaces(BigDecimal(value)) => Left(Seq(FormError(key, "pla.base.errors.errorDecimalPlaces", Nil)))
-      case value => Right(Some(BigDecimal(value)))
+      case "" => Left(Seq(FormError(key, requiredKey, Nil)))
+      case value => checkIfValidBigDecimal(value, invalidKey, key)
     }
   }
 
-  private def checkIfValidBigDecimal(value: String): Boolean = {
+  private def checkIfValidBigDecimal(value: String, invalidKey: String, key: String): Either[Seq[FormError], Some[BigDecimal]] = {
     val output = Try(BigDecimal(value))
-    output match {
-      case Success(result) => true
-      case Failure(_) => false
+    val outputWithoutCommas = Try(BigDecimal(stripCurrencyCharacters(value)))
+    (output, outputWithoutCommas) match {
+      case (Success(_), Success(_)) => Right(Some(BigDecimal(value)))
+      case (Failure(_), Success(_)) => Left(Seq(FormError(key, "pla.psoDetails.errorQuestion")))
+      case (Failure(_), Failure(_)) => Left(Seq(FormError(key, invalidKey)))
+      case _ => Left(Seq(FormError(key, invalidKey)))
     }
+  }
+
+  def stripCurrencyCharacters(input: String):String = {
+    input
+      .trim()
+      .replaceAll(",", "")
   }
 
   private def ifAmtIsRequired(key: String, data: Map[String, String]): Boolean ={

@@ -108,8 +108,8 @@ class CommonBindersSpec extends FakeApplication with PSODetailsMessages with Moc
 
   "Testing form unbinds" should{
     "return a valid Map for the optionalBigDecimalFormatter" in{
-      testForm.optionalBigDecimalFormatter.unbind("testKey",Some(BigDecimal(100))) shouldBe Map("testKey" -> "100")
-      testForm.optionalBigDecimalFormatter.unbind("testKey",None) shouldBe Map()
+      testForm.decimalFormatter("", "").unbind("testKey",Some(BigDecimal(100))) shouldBe Map("testKey" -> "100")
+      testForm.decimalFormatter("", "").unbind("testKey",None) shouldBe Map()
 
     }
 

@@ -24,7 +24,10 @@ import play.api.data.{FieldMapping, FormError}
 import play.api.data.Forms.of
 import play.api.data.format.Formatter
 import models.cache.CacheMap
+import play.api.data.validation.{Constraint, Invalid, Valid}
 import utils.Constants.npsMaxCurrency
+
+import scala.util.{Failure, Success, Try}
 
 object Validation {
 
@@ -42,6 +45,14 @@ object Validation {
     }
   }
 
+  def checkIfValidBigDecimal(value: String): Boolean = {
+    val output = Try(BigDecimal(value))
+    output match {
+      case Success(result) => true
+      case Failure(_) => false
+    }
+  }
+
   def isLessThanMax(amount: BigDecimal): Boolean = {
     amount <= npsMaxCurrency
   }
@@ -50,7 +61,7 @@ object Validation {
     amount < target
   }
 
-  def isValidDate(day:Int, month:Int, year:Int): Boolean = {
+  def isValidDate(day: Int, month: Int, year: Int): Boolean = {
     try {
       val fmt = new SimpleDateFormat("dd/MM/yyyy")
       fmt.setLenient(false)
@@ -86,7 +97,7 @@ object Validation {
       else {
         if (pensionDebitsModel.get.pensionDebits.get == "no") true
         else {
-            !invalidPSODetails()
+          !invalidPSODetails()
         }
       }
     }
@@ -122,5 +133,54 @@ object Validation {
 
     def unbind(key: String, value: String): Map[String, String] =
       Map(key -> value.trim)
+  }
+
+  def decimalPlaceConstraint(errMsgKey: String, decimalPlace: Int = 3): Constraint[BigDecimal] = Constraint {
+    case input if input.scale < decimalPlace =>
+      Valid
+    case _ =>
+      Invalid(errMsgKey)
+  }
+
+  def negativeConstraint(errMsgKey: String): Constraint[BigDecimal] = Constraint {
+    case input if input >= 0 =>
+      Valid
+    case _ =>
+      Invalid(errMsgKey)
+  }
+
+  def maxMoneyCheck(maxValue: BigDecimal, errMsgKey: String): Constraint[BigDecimal] = Constraint {
+    case input if input <= maxValue =>
+      Valid
+    case _ =>
+      Invalid(errMsgKey)
+  }
+
+  val bigDecimalCheck: String => Boolean = input => Try(BigDecimal(input)) match {
+    case Success(_) => true
+    case Failure(_) if input.trim == "" => true
+    case Failure(_) => tryBigDecimalWithoutComma(input)
+    case Failure(_) => false
+  }
+
+  val commaCheck: String => Boolean = input => (tryBigDecimalWithoutComma(input), Try(BigDecimal(input))) match {
+    case (true, Success(_)) => true
+    case (true, Failure(_)) => false
+    case (false, Failure(_)) => true
+  }
+
+  def tryBigDecimalWithoutComma(input: String): Boolean = {
+    Try(BigDecimal(input.trim().replaceAll(",", ""))) match {
+      case Success(_) => true
+      case Failure(_) => false
+    }
+  }
+
+
+  def stopOnFirstFail[T](constraints: Constraint[T]*): Constraint[T] = Constraint { field: T =>
+    constraints.toList.dropWhile(constraint => constraint(field) == Valid) match {
+      case Nil => Valid
+      case constraint :: _ => constraint(field)
+    }
   }
 }
