@@ -29,6 +29,8 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
+  private val messageKey: String = "psoDetails"
+
   "the AmendPsoDetailsView" should{
     val pensionsForm = AmendPSODetailsForm.amendPsoDetailsForm.bind(Map(
       "pso.day" -> "1",
@@ -103,7 +105,7 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
       errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaErrorRequiredDay
       errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe plaErrorRequiredMonth
       errorDoc.select(".govuk-error-summary__list li").eq(2).text shouldBe plaErrorRequiredYear
-      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe errorRealNumber
+      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe errorReal(messageKey)
     }
 
     "not have errors on valid pages" in{

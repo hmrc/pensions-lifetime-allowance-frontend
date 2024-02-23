@@ -25,18 +25,16 @@ import enums.ApplicationType
 import forms.AmendCurrentPensionForm._
 import forms.AmendOverseasPensionsForm._
 import forms.AmendPSODetailsForm._
-import forms.AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm
 import forms.AmendPensionsTakenBeforeForm._
 import forms.AmendPensionsTakenBetweenForm._
 import forms.AmendPensionsUsedBetweenForm._
+import forms.AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm
 import forms.AmendmentTypeForm._
-
-import javax.inject.Inject
 import models.amendModels._
 import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import play.api.Logging
 import play.api.data.FormError
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
@@ -46,6 +44,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
 import views.html.pages
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsController @Inject()(val sessionCacheService: SessionCacheService,
@@ -81,9 +80,7 @@ class AmendsController @Inject()(val sessionCacheService: SessionCacheService,
                                  implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging{
 
-  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
-
-  val amendProtection = Action.async { implicit request =>
+  val amendProtection: Action[AnyContent] = Action.async { implicit request =>
      authFunction.genericAuthWithNino("existingProtections") { nino =>
       amendmentTypeForm.bindFromRequest().fold(
         errors => {
@@ -91,15 +88,17 @@ extends FrontendController(mcc) with I18nSupport with Logging{
           Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
         },
         success => for {
-          protectionAmendment <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status))
-          saveAmendsGA <- sessionCacheService.saveFormData[AmendsGAModel]("AmendsGA", AmendsGAConstructor.identifyAmendsChanges(protectionAmendment.get.updatedProtection, protectionAmendment.get.originalProtection))
+          protectionAmendment <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](
+            Strings.cacheAmendFetchString(success.protectionType, success.status))
+          saveAmendsGA <- sessionCacheService.saveFormData[AmendsGAModel]("AmendsGA", AmendsGAConstructor.identifyAmendsChanges(
+            protectionAmendment.get.updatedProtection, protectionAmendment.get.originalProtection))
           response <- plaConnector.amendProtection(nino, protectionAmendment.get.updatedProtection)
           result <- routeViaMCNeededCheck(response, nino)
         } yield result
       )
     }
   }
-  val submitAmendPensionsTakenBefore = Action.async {
+  val submitAmendPensionsTakenBefore: Action[AnyContent] = Action.async {
     implicit request =>
        authFunction.genericAuthWithNino("existingProtections") { nino =>
         amendPensionsTakenBeforeForm.bindFromRequest().fold(
@@ -111,7 +110,8 @@ extends FrontendController(mcc) with I18nSupport with Logging{
               sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
                 case Some(model) =>
                   success.amendedPensionsTakenBefore match {
-                    case "yes" => Future.successful(Redirect(routes.AmendsController.amendPensionsWorthBefore(success.protectionType.toLowerCase, success.status.toLowerCase)))
+                    case "yes" => Future.successful(Redirect(routes.AmendsController.amendPensionsWorthBefore(
+                      success.protectionType.toLowerCase, success.status.toLowerCase)))
                     case "no" =>
                       val updated = model.updatedProtection.copy(preADayPensionInPayment = Some(0))
                       val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
@@ -131,7 +131,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
         )
       }
   }
-  val submitAmendPensionsWorthBefore = Action.async { implicit request =>
+  val submitAmendPensionsWorthBefore: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       amendPensionsWorthBeforeForm.bindFromRequest().fold(
         errors => {
@@ -158,7 +158,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       )
     }
   }
-  val submitAmendPensionsTakenBetween = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
+  val submitAmendPensionsTakenBetween: Action[AnyContent] = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
       amendPensionsTakenBetweenForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
@@ -190,7 +190,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
     }
   }
-  val submitAmendPensionsUsedBetween = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
+  val submitAmendPensionsUsedBetween: Action[AnyContent] = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
     amendPensionsUsedBetweenForm.bindFromRequest().fold(
       errors => {
         val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
@@ -217,7 +217,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
     }
   }
-  val submitAmendOverseasPensions = Action.async {
+  val submitAmendOverseasPensions: Action[AnyContent] = Action.async {
     implicit request =>
        authFunction.genericAuthWithNino("existingProtections") { nino =>
         amendOverseasPensionsForm.bindFromRequest().fold(
@@ -248,7 +248,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
         )
       }
   }
-  val submitAmendCurrentPension = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
+  val submitAmendCurrentPension: Action[AnyContent] = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
 
       amendCurrentPensionForm.bindFromRequest().fold(
         errors => {
@@ -275,7 +275,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       )
     }
   }
-  val submitRemovePso = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
+  val submitRemovePso: Action[AnyContent] = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
       amendmentTypeForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
@@ -300,7 +300,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
     }
   }
-  val submitAmendPsoDetails = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
+  val submitAmendPsoDetails: Action[AnyContent] = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
       amendPsoDetailsForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
@@ -318,7 +318,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   }
 
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-    implicit val lang = mcc.messagesApi.preferred(request).lang
+    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
      authFunction.genericAuthWithNino("existingProtections") { nino =>
       val protectionKey = Strings.cacheAmendFetchString(protectionType, status)
       sessionCacheService.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
@@ -351,7 +351,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
         logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
       }
       Future(modelAR.map {
-        case model => {
+        model => {
           val id = model.protection.notificationId.getOrElse {
             throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
           }
@@ -508,10 +508,9 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     debits.length match {
         case 0 => Ok(amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
         case 1 => Ok(amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head, protectionType, status))))
-        case num => {
+        case num =>
           logger.warn(s"$num pension debits recorded for user nino $nino during amend journey")
           InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-        }
       }
     }
 
@@ -574,7 +573,8 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     Some(List(PensionDebitModel(startDate = date, amount = amt.toDouble)))
   }
 
-  private def updateAndSaveAmendModelWithPso(debits: Option[List[PensionDebitModel]], amendModelOption: Option[AmendProtectionModel], key: String)(implicit request: Request[AnyContent]) = {
+  private def updateAndSaveAmendModelWithPso(debits: Option[List[PensionDebitModel]], amendModelOption: Option[AmendProtectionModel], key: String)
+                                            (implicit request: Request[AnyContent]) = {
     val amendModel = amendModelOption.getOrElse {throw new Exceptions.RequiredValueNotDefinedException("updateAndSaveAmendModelWithPso", "amendModel")}
     val newUpdatedProtection = amendModel.updatedProtection.copy(pensionDebits = debits)
     sessionCacheService.saveFormData[AmendProtectionModel](key, amendModel.copy(updatedProtection = newUpdatedProtection))

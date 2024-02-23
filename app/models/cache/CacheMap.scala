@@ -16,7 +16,7 @@
 
 package models.cache
 
-import play.api.libs.json.{JsValue, Json, Reads}
+import play.api.libs.json.{JsValue, Json, OFormat, Reads}
 import uk.gov.hmrc.http.InternalServerException
 
 case class CacheMap(id: String, data: Map[String, JsValue]) {
@@ -35,5 +35,5 @@ case class CacheMap(id: String, data: Map[String, JsValue]) {
 }
 
 object CacheMap {
-  implicit val formats = Json.format[CacheMap]
+  implicit val formats: OFormat[CacheMap] = Json.format[CacheMap]
 }

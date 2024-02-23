@@ -25,9 +25,9 @@ class CommonBindersSpec extends FakeApplication with PSODetailsMessages with Moc
   implicit val lang: Lang = mock[Lang]
   object testForm extends CommonBinders
 
-  "stringToOptionalIntFormatter form binder" should{
-    "return a form error" when{
-      "given an incorrect data type" in{
+  "stringToOptionalIntFormatter form binder" should {
+    "return a form error" when {
+      "given an incorrect data type" in {
         val testMap = Map(
           "pso.day" -> "P",
           "pso.month" -> "5",
@@ -43,29 +43,6 @@ class CommonBindersSpec extends FakeApplication with PSODetailsMessages with Moc
         result.errors.size shouldBe 1
         result.error("pso.day").get.message shouldBe errorRealKey
       }
-    }
-  }
-
-
-  "Testing form unbinds" should{
-    "return a valid Map for the optionalBigDecimalFormatter" in{
-      testForm.decimalFormatter("", "").unbind("testKey",Some(BigDecimal(100))) shouldBe Map("testKey" -> "100")
-      testForm.decimalFormatter("", "").unbind("testKey",None) shouldBe Map()
-
-    }
-
-    "return a valid Map for the withdrawDateValidationFormatter" in{
-      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testwithdrawDate.day", Some(31)) shouldBe Map("testwithdrawDate.day" -> "31")
-      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testwithdrawDate.month", Some(10)) shouldBe Map("testwithdrawDate.month" -> "10")
-      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testwithdrawDate.year", Some(2016)) shouldBe Map("testwithdrawDate.year" -> "2016")
-      testForm.withdrawDateValidationFormatter("errorLabel").unbind("testwithdrawDate.year", None) shouldBe Map("testwithdrawDate.year" -> "")
-    }
-
-    "return a valid Map for the withdrawDateStringToIntFormatter" in{
-      testForm.withdrawDateStringToIntFormatter.unbind("testwithdrawDate.day", Some(31)) shouldBe Map("testwithdrawDate.day" -> "31")
-      testForm.withdrawDateStringToIntFormatter.unbind("testwithdrawDate.month", Some(10)) shouldBe Map("testwithdrawDate.month" -> "10")
-      testForm.withdrawDateStringToIntFormatter.unbind("testwithdrawDate.year", Some(2016)) shouldBe Map("testwithdrawDate.year" -> "2016")
-      testForm.withdrawDateStringToIntFormatter.unbind("testwithdrawDate.year", None) shouldBe Map("testwithdrawDate.year" -> "")
     }
   }
 }

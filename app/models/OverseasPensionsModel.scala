@@ -19,11 +19,11 @@ package models
 import play.api.libs.json._
 
 case class OverseasPensionsModel(overseasPensions: String, overseasPensionsAmt: Option[BigDecimal]) extends YesNoAmountModel {
-  override def getYesNoValue = overseasPensions
+  override def getYesNoValue: String = overseasPensions
 
-  override def getAmount = overseasPensionsAmt
+  override def getAmount: Option[BigDecimal] = overseasPensionsAmt
 }
 
 object OverseasPensionsModel {
-  implicit val format = Json.format[OverseasPensionsModel]
+  implicit val format: OFormat[OverseasPensionsModel] = Json.format[OverseasPensionsModel]
 }

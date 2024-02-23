@@ -70,9 +70,9 @@
 
         <div class="govuk-visually-hidden">
 
-            @helper.inputText(psoDetailsForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-            @helper.inputText(psoDetailsForm("status"), 'type -> "hidden", 'class -> "hidden")
-            @helper.inputText(psoDetailsForm("existingPSO"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(psoDetailsForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
+            @helper.inputText(psoDetailsForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
+            @helper.inputText(psoDetailsForm("existingPSO"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
 
         </div>
 

@@ -96,7 +96,7 @@ implicit val lang: Lang = mock[Lang]
           val result = amendCurrentPensionForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedUKPensionAmt").get.message shouldBe errorRealKey
+          result.error("amendedUKPensionAmt").get.message shouldBe errorReal(messageKey)
         }
       }
 

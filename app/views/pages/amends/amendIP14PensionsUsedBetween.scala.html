@@ -82,8 +82,8 @@
 
         @submitButton(Messages("pla.base.change"))
         <div class="govuk-visually-hidden">
-            @helper.inputText(amendPensionsUsedBetweenForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-            @helper.inputText(amendPensionsUsedBetweenForm("status"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(amendPensionsUsedBetweenForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
+            @helper.inputText(amendPensionsUsedBetweenForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
         </div>
     }
 }

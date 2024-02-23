@@ -19,6 +19,7 @@ package testHelpers
 trait CommonErrorMessages {
   val errorRequiredKey = "error.required"
   val errorRealKey = "error.real"
+  def errorReal(errorKey: String) = s"pla.$errorKey.amount.errors.notReal"
   val errorMissingAmount = "pla.base.errors.errorQuestion"
   def errorMissingAmount(errorKey: String) = s"pla.$errorKey.amount.errors.mandatoryError"
   val errorNegative = "pla.base.errors.errorNegative"

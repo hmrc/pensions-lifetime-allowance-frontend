@@ -16,12 +16,12 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class PensionDebit(startDate: String, amount: Double)
 
 object PensionDebit {
-  implicit val format = Json.format[PensionDebit]
+  implicit val format: OFormat[PensionDebit] = Json.format[PensionDebit]
 }
 
 case class IPApplicationModel(
@@ -37,5 +37,5 @@ case class IPApplicationModel(
 
 
 object IPApplicationModel {
-  implicit val format = Json.format[IPApplicationModel]
+  implicit val format: OFormat[IPApplicationModel] = Json.format[IPApplicationModel]
 }

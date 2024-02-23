@@ -23,7 +23,7 @@ import testHelpers.ViewSpecHelpers.ip2016.CurrentPensionsViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendCurrentPensions
 
-class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsViewMessages{
+class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsViewMessages {
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
@@ -84,8 +84,8 @@ class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPens
 
     "display the correct errors appropriately" in{
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe errorRealNumber
-      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $errorRealNumber"
+      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaErrorRequiredNumber
+      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaErrorRequiredNumber"
     }
 
     "not have errors on valid pages" in{

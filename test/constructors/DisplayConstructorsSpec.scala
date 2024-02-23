@@ -22,21 +22,22 @@ import models._
 import models.amendModels.AmendProtectionModel
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesProvider}
-import play.api.mvc.{ControllerComponents, MessagesControllerComponents}
+import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import testHelpers.FakeApplication
+
 class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
-  lazy implicit val fakeRequest = FakeRequest()
-  implicit val mockLang   = mock[Lang]
-  implicit val mockMessagesProvider = mock[MessagesProvider]
-  implicit val controllerComponents = mock[ControllerComponents]
+  lazy implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  implicit val mockLang: Lang = mock[Lang]
+  implicit val mockMessagesProvider: MessagesProvider = mock[MessagesProvider]
+  implicit val controllerComponents: ControllerComponents = mock[ControllerComponents]
   val displayConstructor: DisplayConstructors  = fakeApplication().injector.instanceOf[DisplayConstructors]
-  implicit lazy val mockMessage = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit lazy val mockMessage: Messages = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   lazy val tstPSACheckRef = "PSA33456789"
 
-  lazy val tstProtection = ProtectionModel(
+  lazy val tstProtection: ProtectionModel = ProtectionModel(
     psaCheckReference = Some("psaRef"),
     protectionID = Some(100001),
     protectionType = Some("IP2016"),
@@ -48,7 +49,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     nonUKRights = Some(100000.0),
     uncrystallisedRights = Some(1000000.34)
   )
-  lazy val tstWithPsoProtection = ProtectionModel(
+  lazy val tstWithPsoProtection: ProtectionModel = ProtectionModel(
     psaCheckReference = Some("psaRef"),
     protectionID = Some(100001),
     protectionType = Some("IP2016"),
@@ -62,10 +63,10 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     uncrystallisedRights = Some(1000000.34)
   )
 
-  lazy val tstNoPsoAmendProtectionModel = AmendProtectionModel(tstProtection, tstProtection)
-  lazy val tstWithPsoAmendProtectionModel = AmendProtectionModel(tstWithPsoProtection, tstWithPsoProtection)
+  lazy val tstNoPsoAmendProtectionModel: AmendProtectionModel = AmendProtectionModel(tstProtection, tstProtection)
+  lazy val tstWithPsoAmendProtectionModel: AmendProtectionModel = AmendProtectionModel(tstWithPsoProtection, tstWithPsoProtection)
 
-  lazy val tstPensionContributionNoPsoDisplaySections = Seq(
+  lazy val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
 
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
@@ -89,7 +90,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     )
     )
   )
-  lazy val tstPensionContributionPsoDisplaySections = Seq(
+  lazy val tstPensionContributionPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
 
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
@@ -115,9 +116,9 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     )
   )
 
-  lazy val tstNoPsoDisplaySections = Seq()
+  lazy val tstNoPsoDisplaySections: Seq[Nothing] = Seq()
 
-  lazy val tstPsoDisplaySections = Seq(
+  lazy val tstPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
     AmendDisplaySectionModel(ApplicationStage.CurrentPsos.toString, Seq(
       AmendDisplayRowModel("YesNo", None, None, "Yes"),
       AmendDisplayRowModel("Amt", None, None, "£1,000")
@@ -790,7 +791,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         AmendDisplaySectionModel("CurrentPensions",List(AmendDisplayRowModel("Amt",Some(Helpers.createAmendCall(model, ApplicationStage.CurrentPensions)),None,"£1,000"))),
         AmendDisplaySectionModel("CurrentPsos",List(AmendDisplayRowModel("YesNo",None,None,"No"))))
 
-      result shouldBe AmendDisplayModel("notRecorded", false, pensionContributionSectionResult, false, psoSectionsResult, "£0")
+      result shouldBe AmendDisplayModel("notRecorded", amended = false, pensionContributionSectionResult, psoAdded = false, psoSectionsResult, "£0")
     }
   }
 }

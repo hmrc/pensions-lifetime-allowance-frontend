@@ -86,7 +86,7 @@ class PensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorMessag
           val result = pensionsUsedBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorRealKey
+          result.errors.head.message shouldBe errorReal(messageKey)
         }
       }
 

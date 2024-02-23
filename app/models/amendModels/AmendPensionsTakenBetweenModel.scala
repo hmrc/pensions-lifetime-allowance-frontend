@@ -16,10 +16,10 @@
 
 package models.amendModels
 
-import play.api.libs.json._
+import play.api.libs.json.{Json, OFormat}
 
 case class AmendPensionsTakenBetweenModel(amendedPensionsTakenBetween: String, protectionType: String, status: String) extends AmendValueModel
 
 object AmendPensionsTakenBetweenModel {
-  implicit val format = Json.format[AmendPensionsTakenBetweenModel]
+  implicit val format: OFormat[AmendPensionsTakenBetweenModel] = Json.format[AmendPensionsTakenBetweenModel]
 }

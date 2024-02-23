@@ -23,7 +23,7 @@ import play.api.data._
 
 object PensionsTakenBetweenForm extends CommonBinders{
 
-  def pensionsTakenBetweenForm = Form (
+  def pensionsTakenBetweenForm: Form[PensionsTakenBetweenModel] = Form (
     mapping(
       "pensionsTakenBetween" -> common.Validation.newText("pla.pensionsTakenBetween.errors.mandatoryError")
         .verifying("pla.pensionsTakenBetween.errors.mandatoryError", mandatoryCheck)

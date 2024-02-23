@@ -20,18 +20,17 @@ import auth.AuthFunction
 import config.{FrontendAppConfig, PlaContext}
 import constructors.SummaryConstructor
 import enums.ApplicationType
-import javax.inject.Inject
+import models.cache.CacheMap
+import play.api.{Application, Logging}
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
-import play.api.Application
-import play.api.Logging
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import models.cache.CacheMap
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
+import javax.inject.Inject
 import scala.concurrent.ExecutionContext
 
 class SummaryController @Inject()(sessionCacheService: SessionCacheService,
@@ -48,11 +47,10 @@ class SummaryController @Inject()(sessionCacheService: SessionCacheService,
                                   implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
-  lazy val postSignInRedirectUrl = appConfig.ipStartUrl
   val summaryConstructor: SummaryConstructor = SummaryConstructor
 
-  val summaryIP16 = Action.async { implicit request =>
-    implicit val protectionType = ApplicationType.IP2016
+  val summaryIP16: Action[AnyContent] = Action.async { implicit request =>
+    implicit val protectionType: ApplicationType.Value = ApplicationType.IP2016
     authFunction.genericAuthWithNino("IP2016") { nino =>
       sessionCacheService.fetchAllUserData.map {
         case Some(data) => routeIP2016SummaryFromUserData(data, nino)
@@ -64,7 +62,8 @@ extends FrontendController(mcc) with I18nSupport with Logging {
     }
   }
 
-  private def routeIP2016SummaryFromUserData(data: CacheMap, nino: String)(implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
+  private def routeIP2016SummaryFromUserData(data: CacheMap, nino: String)
+                                            (implicit protectionType: ApplicationType.Value, req: Request[AnyContent]) : Result = {
     implicit val lang: Lang = mcc.messagesApi.preferred(req).lang
     summaryConstructor.createSummaryData(data).map {
         summaryModel => Ok(summary(summaryModel))

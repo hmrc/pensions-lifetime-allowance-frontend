@@ -16,14 +16,14 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class ApplyResponseModel (
                                 protection: ProtectionModel
                                 )
 
 object ApplyResponseModel {
-  implicit val format = Json.format[ApplyResponseModel]
+  implicit val format: OFormat[ApplyResponseModel] = Json.format[ApplyResponseModel]
 }
 
 
@@ -33,14 +33,14 @@ case class TransformedReadResponseModel (
                                )
 
 object TransformedReadResponseModel {
-  implicit val format = Json.format[TransformedReadResponseModel]
+  implicit val format: OFormat[TransformedReadResponseModel] = Json.format[TransformedReadResponseModel]
 }
 
 
 case class ReadResponseModel(psaCheckReference: String, lifetimeAllowanceProtections: Seq[ProtectionModel])
 
 object ReadResponseModel {
-  implicit val format = Json.format[ReadResponseModel]
+  implicit val format: OFormat[ReadResponseModel] = Json.format[ReadResponseModel]
 }
 
 case class AmendResponseModel (
@@ -48,5 +48,5 @@ case class AmendResponseModel (
                                 )
 
 object AmendResponseModel {
-  implicit val format = Json.format[AmendResponseModel]
+  implicit val format: OFormat[AmendResponseModel] = Json.format[AmendResponseModel]
 }

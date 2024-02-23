@@ -34,6 +34,7 @@ trait CommonMessages{
   val plaBaseNewTab                 = "opens in new tab"
   val plaBaseErrorSummaryLabel      = "There are errors on this page"
   val plaErrorRequired              = "Enter the date of your pension sharing order"
+  val plaErrorRequiredNumber        = "What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00"
   val plaErrorRequiredYear          = "Enter a year"
   val plaErrorRequiredMonth         = "Enter a month"
   val plaErrorRequiredDay           = "Enter a day"
@@ -42,9 +43,9 @@ trait CommonMessages{
   val plaBaseDateFieldsYear         = "Year"
 
   val plaBaseErrorsErrorQuestion           = "Enter an amount in the correct format eg £500000"
-  val plaBaseErrorsErrorNegative           = "Enter an amount that''s £0 or more"
+  val plaBaseErrorsErrorNegative           = "Enter an amount that’s £0 or more"
   val plaBaseErrorsErrorMaximum            = "Enter an amount less than £99,999,999,999,999.98"
-  val plaBaseErrorsErrorDecimalPlaces      = "The amount you''ve entered has too many decimal places"
+  val plaBaseErrorsErrorDecimalPlaces      = "The amount you’ve entered has too many decimal places"
   val plaBaseErrorsMandatoryError          = "Please answer this question"
 
   val errorReal                     = "Enter the date of your pension sharing order"
