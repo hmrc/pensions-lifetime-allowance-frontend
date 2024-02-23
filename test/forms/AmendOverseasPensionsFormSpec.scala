@@ -88,7 +88,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
           val result = amendOverseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequired
+          result.error("protectionType").get.message shouldBe errorRequiredKey
         }
 
         "not provided with a value for status" in {
@@ -96,7 +96,7 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
           val result = amendOverseasPensionsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequired
+          result.error("status").get.message shouldBe errorRequiredKey
         }
 
         "provided with an invalid value for amendedOverseasPensionsAmt" in {

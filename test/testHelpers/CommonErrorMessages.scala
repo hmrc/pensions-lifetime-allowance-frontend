@@ -17,9 +17,8 @@
 package testHelpers
 
 trait CommonErrorMessages {
-  val errorRequired = "error.required"
-  val errorReal ="error.real"
-  def errorReal(errorKey: String) = s"pla.$errorKey.amount.errors.notReal"
+  val errorRequiredKey = "error.required"
+  val errorRealKey = "error.real"
   val errorMissingAmount = "pla.base.errors.errorQuestion"
   def errorMissingAmount(errorKey: String) = s"pla.$errorKey.amount.errors.mandatoryError"
   val errorNegative = "pla.base.errors.errorNegative"
@@ -33,6 +32,10 @@ trait CommonErrorMessages {
   val errorMissingYear = "pla.base.errors.yearEmpty"
   val errorDate = "pla.base.errors.invalidDate"
   val errorQuestion = "pla.base.errors.mandatoryError"
+  def errorRequired(errorKey: String, modifier: String) = s"$errorKey.error.required$modifier"
+  def errorNotReal(errorKey: String, modifier: String) = s"$errorKey.error.notReal$modifier"
+  def errorInvalid(errorKey: String, modifier: String) = s"$errorKey.error.invalid$modifier"
+  def errorRange(errorKey: String, modifier: String) = s"$errorKey.error.range$modifier"
   def errorQuestion(errorKey: String) = s"pla.$errorKey.errors.mandatoryError"
   val errorEmptyDay = "pla.withdraw.date-input.form.day-empty"
   val errorEmptyMonth = "pla.withdraw.date-input.form.month-empty"

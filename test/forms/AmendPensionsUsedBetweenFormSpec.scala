@@ -70,7 +70,7 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
           val result = amendPensionsUsedBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequired
+          result.error("protectionType").get.message shouldBe errorRequiredKey
         }
 
         "not provided with a value for status" in {
@@ -78,7 +78,7 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
           val result = amendPensionsUsedBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequired
+          result.error("status").get.message shouldBe errorRequiredKey
         }
 
         "provided with an invalid value for amendedPensionsUsedBetweenAmt" in {

@@ -84,13 +84,11 @@ class PsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessage
       doc.select("#submit").text shouldBe plaBaseContinue
     }
 
-    "display the correct errors appropriately" in{
+    s"display the correct errors appropriately ${errorForm.errors}" in{
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaBaseErrorsDayEmpty
-      errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe plaBaseErrorsMonthEmpty
-      errorDoc.select(".govuk-error-summary__list li").eq(2).text shouldBe plaBaseErrorsYearEmpty
-      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe plaMandatoryError
+      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaErrorRequired
+      errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe plaMandatoryError
     }
 
     "not have errors on valid pages" in{

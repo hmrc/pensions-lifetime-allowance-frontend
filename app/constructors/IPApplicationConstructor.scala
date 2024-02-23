@@ -16,7 +16,6 @@
 
 package constructors
 
-import common.Dates.apiDateFormat
 import common.Strings.nameString
 import common.Validation
 import enums.ApplicationType
@@ -32,7 +31,7 @@ object IPApplicationConstructor {
     // uncrystallised Rights- current pensions
     val uncrystallisedRightsAmount = data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt
 
-    def getPensionsTakenBeforeAmt() = {
+    def getPensionsTakenBeforeAmt = {
       data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore")) match {
         case Some(model) => model.pensionsTakenBefore match {
           case "yes" => data.getEntry[PensionsWorthBeforeModel](nameString("pensionsWorthBefore")).get.pensionsWorthBeforeAmt
@@ -42,7 +41,7 @@ object IPApplicationConstructor {
       }
     }
 
-    def getPensionsTakenBetweenAmt() = {
+    def getPensionsTakenBetweenAmt = {
       data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")) match {
         case Some(model) => model.pensionsTakenBetween match {
           case "yes" => data.getEntry[PensionsUsedBetweenModel](nameString("pensionsUsedBetween")).get.pensionsUsedBetweenAmt
@@ -96,7 +95,7 @@ object IPApplicationConstructor {
     }
 
     def createPensionDebit(model: PSODetailsModel): PensionDebit = {
-      PensionDebit(apiDateFormat(model.psoDay, model.psoMonth, model.psoYear), model.psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
+      PensionDebit(model.pso.toString, model.psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
     }
 
     val protectionString = protectionType match {
@@ -114,7 +113,7 @@ object IPApplicationConstructor {
       pensionDebits)
   }
 
-  def optionBigDecToOptionDouble(opt: Option[BigDecimal]) = {
+  def optionBigDecToOptionDouble(opt: Option[BigDecimal]): Option[Double] = {
     opt match {
       case Some(value) => Some(value.toDouble)
       case _ => None

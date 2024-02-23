@@ -16,14 +16,10 @@
 
 package forms
 
-import forms.WithdrawDateForm.withdrawDateForm
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.data.{Form, FormError}
 import play.api.i18n.Lang
-import play.api.libs.json.Json
 import testHelpers.{FakeApplication, PSODetailsMessages}
 
-import java.time.LocalDate
 
 class CommonBindersSpec extends FakeApplication with PSODetailsMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
@@ -45,66 +41,11 @@ class CommonBindersSpec extends FakeApplication with PSODetailsMessages with Moc
         val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(testMap)
 
         result.errors.size shouldBe 1
-        result.error("pso.day").get.message shouldBe errorReal
+        result.error("pso.day").get.message shouldBe errorRealKey
       }
     }
   }
 
-  "withdrawDateValidationFormatter form binder" should {
-    "return a form error" when {
-      "given an invalid key" in {
-        val postData = Json.obj(
-          "withdrawDate.day" -> "20",
-          "withdrawDate.month" -> "2",
-          "incorrectKey" -> "2017"
-        )
-        val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
-        assert(validatedForm.errors.size == 1)
-        assert(validatedForm.errors.contains(FormError("withdrawDate.year",
-          List(errorEmptyYear))))
-      }
-
-      "given an incorrect data type" in {
-        val postData = Json.obj(
-          "withdrawDate.day" -> "20",
-          "withdrawDate.month" -> "2",
-          "withdrawDate.year" -> "X"
-        )
-        val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
-        assert(validatedForm.errors.size == 1)
-        assert(validatedForm.errors.contains(FormError("withdrawDate.year",
-          List(errorReal))))
-      }
-    }
-
-    "validateCompleteDate" should {
-      "return a form error" when {
-        "given an future date" in {
-          val postData = Json.obj(
-            "withdrawDate.day" -> "20",
-            "withdrawDate.month" -> "2",
-            "withdrawDate.year" -> s"${LocalDate.now.getYear + 1}"
-          )
-          val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
-          assert(validatedForm.errors.size == 1)
-          assert(validatedForm.errors.contains(FormError("withdrawDate.day",
-            List(errorFutureDate))))
-        }
-
-        "given an invalid date" in {
-          val postData = Json.obj(
-            "withdrawDate.day" -> "20",
-            "withdrawDate.month" -> "2",
-            "withdrawDate.year" -> "0000"
-          )
-          val validatedForm = withdrawDateForm.bind(postData, Form.FromJsonMaxChars)
-          assert(validatedForm.errors.size == 1)
-          assert(validatedForm.errors.contains(FormError("withdrawDate.day",
-            List(errorDate))))
-        }
-      }
-    }
-  }
 
   "Testing form unbinds" should{
     "return a valid Map for the optionalBigDecimalFormatter" in{
@@ -128,5 +69,3 @@ class CommonBindersSpec extends FakeApplication with PSODetailsMessages with Moc
     }
   }
 }
-
-//List(FormError(withdrawDate.day,List(pla.withdraw.date-input.form.date-in-future),List()))

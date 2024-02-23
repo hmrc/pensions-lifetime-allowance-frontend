@@ -19,11 +19,13 @@ package views.pages.amends
 import forms.AmendPSODetailsForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.CommonErrorMessages
+import testHelpers.ViewSpecHelpers.CommonMessages
 import testHelpers.ViewSpecHelpers.ip2016.PsoDetailsViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendPsoDetails
 
-class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessages {
+class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMessages with CommonErrorMessages with CommonMessages {
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
@@ -98,10 +100,10 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select(".govuk-button").text shouldBe plaBaseAdd
-      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaBaseErrorsDayEmpty
-      errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe plaBaseErrorsMonthEmpty
-      errorDoc.select(".govuk-error-summary__list li").eq(2).text shouldBe plaBaseErrorsYearEmpty
-      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe "The amount of pension sharing order must be a number, like 10000.00"
+      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaErrorRequiredDay
+      errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe plaErrorRequiredMonth
+      errorDoc.select(".govuk-error-summary__list li").eq(2).text shouldBe plaErrorRequiredYear
+      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe errorRealNumber
     }
 
     "not have errors on valid pages" in{

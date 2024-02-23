@@ -21,6 +21,9 @@ import models._
 import play.api.libs.json.Json
 import testHelpers.FakeApplication
 import models.cache.CacheMap
+
+import java.time.LocalDate
+
 class IPApplicationConstructorSpec extends FakeApplication {
 
   val tstId = "testUserID"
@@ -43,7 +46,7 @@ class IPApplicationConstructorSpec extends FakeApplication {
     val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
     val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
-    val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(1, 2, 2016, Some(BigDecimal(10000))))
+    val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(LocalDate.of(2016, 2, 1), Some(BigDecimal(10000))))
 
 
     "Create an application object" when {
@@ -95,7 +98,7 @@ class IPApplicationConstructorSpec extends FakeApplication {
     "Throw an assertion error" when {
 
       "passed incomplete data" in {
-        implicit val protectionType = ApplicationType.IP2016
+        implicit val protectionType: ApplicationType.Value = ApplicationType.IP2016
         val tstMap = CacheMap(tstId, Map(positivePensionsTakenTuple,
           positivePensionsTakenBeforeTuple,
           validPensionsWorthBeforeTuple))

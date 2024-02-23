@@ -46,7 +46,7 @@ object Dates {
   }
 
   def futureDate(day: Int, month: Int, year: Int): Boolean = {
-    dateAfter(day,month,year,LocalDate.now)
+    dateAfter(day, month, year, LocalDate.now)
   }
 
   def apiDateFormat(day: Int, month: Int, year: Int): String = {

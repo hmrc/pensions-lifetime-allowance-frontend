@@ -19,20 +19,23 @@ package constructors
 import enums.ApplicationType
 import models._
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.Lang
+import play.api.i18n.{Lang, Messages}
 import play.api.libs.json.Json
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import testHelpers.FakeApplication
 import models.cache.CacheMap
 import utils.CallMap
+
+import java.time.LocalDate
+
 class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
 
-  implicit val mockLang = mock[Lang]
+  implicit val mockLang: Lang = mock[Lang]
 
-  lazy implicit val fakeRequest = FakeRequest()
+  lazy implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
-  implicit lazy val mockMessage = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit lazy val mockMessage: Messages = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   object TestSummaryConstructor extends SummaryConstructor
   val tstId = "testUserID"
@@ -74,12 +77,12 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
 
     def totalPensionsAmountSummaryRow(totalAmount: String) = SummaryRowModel("totalPensionsAmt", None, None, false, totalAmount)
 
-    val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(1, 2, 2016, Some(BigDecimal(10000))))
+    val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(LocalDate.of(2016, 2, 1), Some(BigDecimal(10000))))
 
     val psoDetailsSummaryRow = SummaryRowModel("psoDetails", Some(controllers.routes.IP2016Controller.psoDetails), Some(controllers.routes.IP2016Controller.removePsoDetails), false, "£10,000", "1 February 2016")
 
     "handle invalid summary data" when {
-        implicit val protectionType = ApplicationType.IP2016
+        implicit val protectionType: ApplicationType.Value = ApplicationType.IP2016
 
       "there is no data" in {
         val tstMap = CacheMap(tstId, Map.empty)
@@ -146,10 +149,10 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
     }
 
     "handle valid summary data" when {
-        implicit val protectionType = ApplicationType.IP2016
+        implicit val protectionType: ApplicationType.Value = ApplicationType.IP2016
 
       "all answers are negative" in {
-        val testSummaryModel = SummaryModel(protectionType, true, List(
+        val testSummaryModel = SummaryModel(protectionType, invalidRelevantAmount = true, List(
                                                                     SummarySectionModel(List(
                                                                       negativePensionsTakenSummaryRow)),
                                                                     SummarySectionModel(List(
@@ -174,7 +177,7 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
       }
 
       "all answers are positive" in {
-        val testSummaryModel = SummaryModel(protectionType, false,
+        val testSummaryModel = SummaryModel(protectionType, invalidRelevantAmount = false,
                                         List(
                                           SummarySectionModel(List(
                                             positivePensionsTakenSummaryRow)),
@@ -217,7 +220,7 @@ class SummaryConstructorSpec extends FakeApplication with MockitoSugar {
       }
 
       "pensions taken 'yes', pensions taken before 'no', pensions taken between 'no'" in {
-        val testSummaryModel = SummaryModel(protectionType, true,
+        val testSummaryModel = SummaryModel(protectionType, invalidRelevantAmount = true,
                                         List(
                                           SummarySectionModel(List(
                                             positivePensionsTakenSummaryRow)),

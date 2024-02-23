@@ -96,7 +96,7 @@ implicit val lang: Lang = mock[Lang]
           val result = amendCurrentPensionForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedUKPensionAmt").get.message shouldBe errorReal(messageKey)
+          result.error("amendedUKPensionAmt").get.message shouldBe errorRealKey
         }
       }
 
@@ -133,7 +133,7 @@ implicit val lang: Lang = mock[Lang]
           val result = amendCurrentPensionForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequired
+          result.error("protectionType").get.message shouldBe errorRequiredKey
         }
       }
 
@@ -144,7 +144,7 @@ implicit val lang: Lang = mock[Lang]
           val result = amendCurrentPensionForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequired
+          result.error("status").get.message shouldBe errorRequiredKey
         }
       }
     }

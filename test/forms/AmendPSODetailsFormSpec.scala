@@ -130,7 +130,7 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
           val result = amendPsoDetailsForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequired
+          result.error("status").get.message shouldBe errorRequiredKey
         }
 
         "provided with a negative psoAmt value" in {

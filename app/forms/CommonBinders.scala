@@ -16,15 +16,14 @@
 
 package forms
 
-import java.time.LocalDate
-
-import play.api.data.{FormError, Forms, Mapping}
-import play.api.data.format.Formatter
-import utils.Constants
 import common.Dates._
 import common.Exceptions
 import common.Validation._
+import play.api.data.format.Formatter
+import play.api.data.{FormError, Forms, Mapping}
+import utils.Constants
 
+import java.time.LocalDate
 import scala.util.{Failure, Success, Try}
 
 trait CommonBinders {
@@ -79,7 +78,7 @@ trait CommonBinders {
 
   def decimalFormatter(requiredKey: String, invalidKey: String, args: Any*) = new Formatter[Option[BigDecimal]] {
     def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[BigDecimal]] =
-        data.get(key).map(validateNumber(requiredKey, invalidKey, key, _)).getOrElse(Left(Seq(FormError(key, requiredKey, Nil))))
+      data.get(key).map(validateNumber(requiredKey, invalidKey, key, _)).getOrElse(Left(Seq(FormError(key, requiredKey, Nil))))
 
     def unbind(key: String, value: Option[BigDecimal]): Map[String, String] = {
       value match {
@@ -88,7 +87,7 @@ trait CommonBinders {
       }
     }
   }
-  
+
   //############Withdrawal Date###################
   private[forms] def withdrawDateValidationFormatter(errorLabel: String) = new Formatter[Option[Int]] {
     override def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[Int]] = {

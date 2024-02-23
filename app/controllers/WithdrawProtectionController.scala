@@ -16,8 +16,6 @@
 
 package controllers
 
-import java.time.LocalDateTime
-
 import auth.AuthFunction
 import common.{Dates, Strings}
 import config._
@@ -25,19 +23,19 @@ import connectors.PLAConnector
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.WithdrawDateForm._
-import javax.inject.Inject
 import models.{ProtectionModel, WithdrawDateFormModel}
+import play.api.{Application, Logging}
 import play.api.data.{Form, FormError}
 import play.api.i18n.{I18nSupport, Lang, Messages}
 import play.api.mvc._
-import play.api.Application
-import play.api.Logging
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
+import java.time.{LocalDate, LocalDateTime}
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class WithdrawProtectionController @Inject()(sessionCacheService: SessionCacheService,
@@ -59,15 +57,12 @@ class WithdrawProtectionController @Inject()(sessionCacheService: SessionCacheSe
                                              implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
-
-  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
-
   def withdrawImplications: Action[AnyContent] = Action.async {
     implicit request =>
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(currentProtection) =>
-            Ok(withdrawImplications(withdrawDateForm,
+            Ok(withdrawImplications(withdrawDateForm(LocalDateTime.parse(currentProtection.certificateDate.get).toLocalDate),
               Strings.protectionTypeString(currentProtection.protectionType),
               Strings.statusString(currentProtection.status)))
           case _ =>
@@ -82,7 +77,8 @@ extends FrontendController(mcc) with I18nSupport with Logging {
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(currentProtection) =>
-            Ok(withdrawDate(withdrawDateForm,
+            val protectionStartDate = LocalDateTime.parse(currentProtection.certificateDate.get).toLocalDate
+            Ok(withdrawDate(withdrawDateForm(protectionStartDate),
               Strings.protectionTypeString(currentProtection.protectionType),
               Strings.statusString(currentProtection.status)))
           case _ =>
@@ -93,17 +89,16 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   }
 
   private[controllers] def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) = {
-    validateWithdrawDate(withdrawDateForm.bindFromRequest(), LocalDateTime.parse(protection.certificateDate.get)).fold(
-        errors => {
-          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-          Future.successful(BadRequest(withdrawDate(form, Strings.protectionTypeString(protection.protectionType), Strings.statusString(protection.status))))
-        },
-        form => {
-          sessionCacheService.saveFormData(s"withdrawProtectionForm", form).flatMap {
-            _ => Future.successful(Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput))
-          }
+    withdrawDateForm(minDate = LocalDateTime.parse(protection.certificateDate.get).toLocalDate).bindFromRequest().fold(
+      errors => {
+        Future.successful(BadRequest(withdrawDate(errors, Strings.protectionTypeString(protection.protectionType), Strings.statusString(protection.status))))
+      },
+      form => {
+        sessionCacheService.saveFormData(s"withdrawProtectionForm", form).flatMap {
+          _ => Future.successful(Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput))
         }
-      )
+      }
+    )
   }
 
   def postWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
@@ -132,7 +127,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
 
   def getSubmitWithdrawDateInput: Action[AnyContent] = Action.async {
     implicit request =>
-      implicit val lang = mcc.messagesApi.preferred(request).lang
+      implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap  {
           case Some(protection) =>
@@ -146,18 +141,19 @@ extends FrontendController(mcc) with I18nSupport with Logging {
 
   def submitWithdrawDateInput: Action[AnyContent] = Action.async {
     implicit request =>
-      implicit val lang = mcc.messagesApi.preferred(request).lang
+      implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
       authFunction.genericAuthWithNino("existingProtections") { nino =>
         sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") map {
           case Some(protection) =>
-            validateWithdrawDate(withdrawDateForm.bindFromRequest(),
-            LocalDateTime.parse(protection.certificateDate.get)).fold(
+            val protectionStartDate = LocalDateTime.parse(protection.certificateDate.get).toLocalDate
+            withdrawDateForm(protectionStartDate).bindFromRequest().fold(
             formWithErrors =>
                 BadRequest(withdrawDate(buildInvalidForm(formWithErrors),
               Strings.protectionTypeString(protection.protectionType),
               Strings.statusString(protection.status))),
             _ => Ok(withdrawConfirm(
-              getWithdrawDate(withdrawDateForm.bindFromRequest()), Strings.protectionTypeString(protection.protectionType),
+              getWithdrawDate(withdrawDateForm(LocalDateTime.parse(protection.certificateDate.get).toLocalDate).bindFromRequest()),
+              Strings.protectionTypeString(protection.protectionType),
               Strings.statusString(protection.status)))
           )
           case _ =>
@@ -183,12 +179,11 @@ extends FrontendController(mcc) with I18nSupport with Logging {
                                          (implicit request: Request[AnyContent]): Future[Result] = {
     response.status match {
       case OK => Future.successful(Redirect(routes.WithdrawProtectionController.showWithdrawConfirmation(Strings.protectionTypeString(protectionType))))
-      case _ => {
+      case _ =>
         logger.error(s"conflict response returned for withdrawal request for user nino $nino")
         Future.successful(InternalServerError(
           technicalError(ApplicationType.existingProtections.toString))
           .withHeaders(CACHE_CONTROL -> "no-cache"))
-      }
     }
   }
 
@@ -208,16 +203,16 @@ extends FrontendController(mcc) with I18nSupport with Logging {
       val formFields: Seq[String] = errorForm.errors map (field => field.key)
       val formFieldsWithErrors: Seq[FormError] = formFields map (key => FormError(key, "withdrawDate.day"))
       val finalErrors: Seq[FormError] = formFieldsWithErrors ++ Seq(FormError("withdrawDate.day", Messages("pla.withdraw.date-input-form.date-invalid")))
-      withdrawDateForm.copy(errors = finalErrors, data = errorForm.data)
+      withdrawDateForm(LocalDate.now()).copy(errors = finalErrors, data = errorForm.data)
     }
     else errorForm
   }
 
-  def getWithdrawDate(form: Form[WithdrawDateFormModel]) : String = {
-    Dates.apiDateFormat(form.get.withdrawDay.get,form.get.withdrawMonth.get,form.get.withdrawYear.get)
+  def getWithdrawDate(form: Form[WithdrawDateFormModel]): String = {
+    Dates.apiDateFormat(form.get.withdrawDate.getDayOfMonth, form.get.withdrawDate.getMonthValue, form.get.withdrawDate.getYear)
   }
 
-  def getWithdrawDateModel(form: WithdrawDateFormModel) : String = {
-    Dates.apiDateFormat(form.withdrawDay.get,form.withdrawMonth.get,form.withdrawYear.get)
+  def getWithdrawDateModel(form: WithdrawDateFormModel): String = {
+    Dates.apiDateFormat(form.withdrawDate.getDayOfMonth, form.withdrawDate.getMonthValue, form.withdrawDate.getYear)
   }
 }

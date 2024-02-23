@@ -18,7 +18,9 @@ package models
 
 import play.api.libs.json._
 
-case class WithdrawDateFormModel (withdrawDay: Option[Int], withdrawMonth: Option[Int], withdrawYear: Option[Int])
+import java.time.LocalDate
+
+case class WithdrawDateFormModel(withdrawDate: LocalDate)
 
 object WithdrawDateFormModel {
   implicit val format: OFormat[WithdrawDateFormModel] = Json.format[WithdrawDateFormModel]
