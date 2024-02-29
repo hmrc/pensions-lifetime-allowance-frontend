@@ -21,15 +21,15 @@
 
 
 @elements = @{ new FieldElements(field.id, field, null, args.toMap, messages) }
-@parentField = @{args.toMap.get('parentField).asInstanceOf[Option[Field]]}
+@parentField = @{args.toMap.get(Symbol("parentField")).asInstanceOf[Option[Field]]}
 @parentElements = @{parentField.map(pf => new FieldElements(pf.id, pf, null, Map(), messages) )}
 @value = @{ field.value match { case Some(x) => x case None => "" case x => x }}
-@labelAfter = @{ elements.args.get('_labelAfter).getOrElse(false).asInstanceOf[Boolean] }
-@labelHighlight = @{ elements.args.get('_labelHighlight).getOrElse(false).asInstanceOf[Boolean] }
+@labelAfter = @{ elements.args.getOrElse(Symbol("_labelAfter"), false).asInstanceOf[Boolean] }
+@labelHighlight = @{ elements.args.getOrElse(Symbol("_labelHighlight"), false).asInstanceOf[Boolean] }
 
-<label for="@elements.field.name" class="@elements.args.get('_divClass) @if( elements.args.get('_labelClass) ){ @elements.args.get('_labelClass) } @if(elements.hasErrors || (parentElements.isDefined && parentElements.get.hasErrors)) {form-field--error}" @if(elements.args.contains('_labelDataAttributes)){@elements.args.get('_labelDataAttributes)}>
+<label for="@elements.field.name" class="@elements.args.get(Symbol("_divClass")) @if( elements.args.get(Symbol("_labelClass")) ){ @elements.args.get(Symbol("_labelClass")) } @if(elements.hasErrors || (parentElements.isDefined && parentElements.get.hasErrors)) {form-field--error}" @if(elements.args.contains(Symbol("_labelDataAttributes"))){@elements.args.get(Symbol("_labelDataAttributes"))}>
 
-    @if(!elements.args.contains('_hideErrors)) {
+    @if(!elements.args.contains(Symbol("_hideErrors"))) {
         @elements.errors.map { error =>
             <span class="error-notification"
                 id=@{field.id + "-error-message"}
@@ -38,9 +38,9 @@
             </span>
         }
     }
-@if(elements.args.get('_legend).isDefined) {
-    <legend class="visually-hidden" @if(elements.args.get('_legendClass).isDefined) {class="@elements.args.get('_legendClass)"}>
-    @elements.args.get('_legend)
+@if(elements.args.contains(Symbol("_legend"))) {
+    <legend class="visually-hidden" @if(elements.args.contains(Symbol("_legendClass"))) {class="@elements.args.get(Symbol("_legendClass"))"}>
+    @elements.args.get(Symbol("_legend"))
     </legend>
 }
 
@@ -48,51 +48,51 @@
         @parentElements.get.errors.map { error => <span class="error-notification">@Messages(error.toString)</span>}
     }
 
-    @if(!labelAfter && elements.args.contains('_label)) {
+    @if(!labelAfter && elements.args.contains(Symbol("_label"))) {
         @if(labelHighlight){<strong>}
-        <span @if(elements.args.contains('_labelTextClass)) { class="@elements.args.get('_labelTextClass)"}>
+        <span @if(elements.args.contains(Symbol("_labelTextClass"))) { class="@elements.args.get(Symbol("_labelTextClass"))"}>
             <h2>@elements.label</h2>
         </span>
-        @if(elements.args.contains('_inputHint) ){
+        @if(elements.args.contains(Symbol("_inputHint")) ){
             <span class="form-hint"
-                @if(elements.args.contains('_hintId)) {
-                    id="@elements.args.get('_hintId)"
+                @if(elements.args.contains(Symbol("_hintId"))) {
+                    id="@elements.args.get(Symbol("_hintId"))"
             }>
-                @elements.args.get('_inputHint)
+                @elements.args.get(Symbol("_inputHint"))
 
             </span>
         }
         @if(labelHighlight){</strong>}
     }
 
-    @if(elements.args.contains('_additionalHelp)) {
-        @elements.args.get('_additionalHelp)
+    @if(elements.args.contains(Symbol("_additionalHelp"))) {
+        @elements.args.get(Symbol("_additionalHelp"))
     }
 
     <span class="poundSign">&pound;</span>
     <input
-        @if( elements.args.contains('_type)){type="@elements.args.get('_type)" }else{type="text" }
-        @if( elements.args.contains('_dataAttributes) ){ @elements.args.get('_dataAttributes)}
-        class="moneyField @if( elements.args.get('_inputClass) ){ @elements.args.get('_inputClass) }"
-        @if( elements.args.get('_autoComplete) ){ autocomplete="@elements.args.get('_autoComplete)" }
+        @if( elements.args.contains(Symbol("_type"))){type="@elements.args.get(Symbol("_type"))" }else{type="text" }
+        @if( elements.args.contains(Symbol("_dataAttributes")) ){ @elements.args.get(Symbol("_dataAttributes"))}
+        class="moneyField @if( elements.args.get(Symbol("_inputClass")) ){ @elements.args.get(Symbol("_inputClass")) }"
+        @if( elements.args.get(Symbol("_autoComplete")) ){ autocomplete="@elements.args.get(Symbol("_autoComplete"))" }
         name="@elements.field.name"
         id="@elements.field.name"
         value="@value"
-        @if(elements.args.get('_error_id).isDefined) { aria-labeledby="@elements.args.get('_error_id)" }
-        @if(elements.args.get('_hintId).isDefined) { aria-describedby="@elements.args.get('_hintId)" }
-        @if(elements.args.get('_maxlength).isDefined) { maxlength="@elements.args.get('_maxlength)" }
-        @if(elements.args.get('_pattern).isDefined) { pattern="@elements.args.get('_pattern)" }
-        @if(elements.args.get('_title).isDefined) { title="@elements.args.get('_title)" }
-        @if(elements.args.get('_required).isDefined) { required }
+        @if(elements.args.contains(Symbol("_error_id"))) { aria-labeledby="@elements.args.get(Symbol("_error_id"))" }
+        @if(elements.args.contains(Symbol("_hintId"))) { aria-describedby="@elements.args.get(Symbol("_hintId"))" }
+        @if(elements.args.contains(Symbol("_maxlength"))) { maxlength="@elements.args.get(Symbol("_maxlength"))" }
+        @if(elements.args.contains(Symbol("_pattern"))) { pattern="@elements.args.get(Symbol("_pattern"))" }
+        @if(elements.args.contains(Symbol("_title"))) { title="@elements.args.get(Symbol("_title"))" }
+        @if(elements.args.contains(Symbol("_required"))) { required }
     />
 
-    @if(labelAfter && elements.args.contains('_label)) {
+    @if(labelAfter && elements.args.contains(Symbol("_label"))) {
         @if(labelHighlight){<strong>}
-        <span @if(elements.args.contains('_labelTextClass)) { class="@elements.args.get('_labelTextClass)"}>
+        <span @if(elements.args.contains(Symbol("_labelTextClass"))) { class="@elements.args.get(Symbol("_labelTextClass"))"}>
             @elements.label
         </span>
-        @if(elements.args.contains('_inputHint) ){
-            <span class="form-hint">@elements.args.get('_inputHint)</span>
+        @if(elements.args.contains(Symbol("_inputHint")) ){
+            <span class="form-hint">@elements.args.get(Symbol("_inputHint"))</span>
         }
         @if(labelHighlight){</strong>}
     }

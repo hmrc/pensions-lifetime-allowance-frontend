@@ -70,7 +70,7 @@ class AmendPensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorM
           val result = amendPensionsWorthBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequired
+          result.error("protectionType").get.message shouldBe errorRequiredKey
         }
 
         "not provided with a value for status" in {
@@ -78,7 +78,7 @@ class AmendPensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorM
           val result = amendPensionsWorthBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequired
+          result.error("status").get.message shouldBe errorRequiredKey
         }
 
         "provided with an invalid value for amendedPensionsTakenBeforeAmt" in {
@@ -104,7 +104,7 @@ class AmendPensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorM
         }
 
         "provided an answer of yes for amendedPensionsWorthBefore with a value for amendedPensionsTakenBeforeAmt larger than the maximum" in {
-          val map = validMap.updated("amendedPensionsTakenBeforeAmt", s"${Constants.npsMaxCurrency+1}")
+          val map = validMap.updated("amendedPensionsTakenBeforeAmt", s"${Constants.npsMaxCurrency + 1}")
 
           val result = amendPensionsWorthBeforeForm.bind(map)
 

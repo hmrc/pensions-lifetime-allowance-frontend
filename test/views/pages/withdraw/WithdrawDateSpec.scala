@@ -15,17 +15,24 @@
  */
 
 package views.pages.withdraw
+
 import forms.WithdrawDateForm._
+import models.WithdrawDateFormModel
 import org.jsoup.Jsoup
+import play.api.data.Form
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawDateSpecMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.withdraw.withdrawDate
 
+import java.time.LocalDate
+
 class WithdrawDateSpec extends CommonViewSpecHelper with WithdrawDateSpecMessages {
-  val withdrawDateForModelAllGood = withdrawDateForm.bind(Map[String,String]("withdrawDate.day" -> "19", "withdrawDate.month" -> "1", "withdrawDate.year" -> "2018"))
-  val withdrawDateForModelInError = withdrawDateForm.bind(Map[String,String]("withdrawDate.date" -> "", "withdrawDate.month" -> "", "withdrawDate.year" -> "2018"))
-  lazy val view = application.injector.instanceOf[withdrawDate]
+  val withdrawDateForModelAllGood: Form[WithdrawDateFormModel] =
+    withdrawDateForm(LocalDate.of(2017, 5, 4)).bind(Map[String,String]("withdrawDate.day" -> "19", "withdrawDate.month" -> "1", "withdrawDate.year" -> "2018"))
+  val withdrawDateForModelInError: Form[WithdrawDateFormModel] =
+    withdrawDateForm(LocalDate.now()).bind(Map[String,String]("withdrawDate.date" -> "", "withdrawDate.month" -> "", "withdrawDate.year" -> "2018"))
+  lazy val view: withdrawDate = application.injector.instanceOf[withdrawDate]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "Withdraw Date view with form without errors" when {

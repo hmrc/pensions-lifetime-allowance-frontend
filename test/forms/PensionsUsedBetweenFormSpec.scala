@@ -86,7 +86,7 @@ class PensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorMessag
           val result = pensionsUsedBetweenForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message  shouldBe errorReal(messageKey)
+          result.errors.head.message shouldBe errorReal(messageKey)
         }
       }
 
@@ -103,7 +103,7 @@ class PensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorMessag
           }
 
           "provided with an amount greater than the maximum" in {
-            val maxValue = s"${Constants.npsMaxCurrency+1}"
+            val maxValue = s"${Constants.npsMaxCurrency + 1}"
             val map = Map("pensionsUsedBetween" -> "yes", "pensionsUsedBetweenAmt" -> maxValue)
             val result = pensionsUsedBetweenForm.bind(map)
 

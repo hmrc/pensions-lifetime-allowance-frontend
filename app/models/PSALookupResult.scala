@@ -16,11 +16,11 @@
 
 package models
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class PSALookupResult(pensionSchemeAdministratorCheckReference: String, ltaType: Int,
                            psaCheckResult: Int, protectedAmount: Option[BigDecimal], protectionNotificationNumber: Option[String] = None)
 
 object PSALookupResult {
-  implicit val format = Json.format[PSALookupResult]
+  implicit val format: OFormat[PSALookupResult] = Json.format[PSALookupResult]
 }

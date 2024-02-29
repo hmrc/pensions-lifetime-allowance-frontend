@@ -41,8 +41,8 @@
         <p class="govuk-body"><a class="govuk-link" href="@routes.AmendsController.amendsSummary(amendmentTypeForm("protectionType").value.getOrElse(""), amendmentTypeForm("status").value.getOrElse(""))" id="cancel-link">@Messages("pla.amends.pensionDebits.cancelRemove")</a></p>
 
         <div class ="govuk-visually-hidden">
-            @helper.inputText(amendmentTypeForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-            @helper.inputText(amendmentTypeForm("status"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(amendmentTypeForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
+            @helper.inputText(amendmentTypeForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
 
         </div>
 

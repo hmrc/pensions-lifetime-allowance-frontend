@@ -20,18 +20,19 @@ import models._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.{JsValue, Json}
 import testHelpers.FakeApplication
+
 class ResponseConstructorsSpec extends FakeApplication with MockitoSugar {
 
-  val mockResponseConstructor = fakeApplication().injector.instanceOf[ResponseConstructors]
+  val mockResponseConstructor: ResponseConstructors = fakeApplication().injector.instanceOf[ResponseConstructors]
 
-  val testFPSuccessProtectionModel = ProtectionModel (
+  val testFPSuccessProtectionModel: ProtectionModel = ProtectionModel (
     Some("testPSARef"),
     notificationId = Some(24),
     protectionID = Some(12345),
     protectionType = Some("FP2016"),
     certificateDate = Some("2016-04-17"),
     protectionReference = Some("PSA123456"))
-  val testFPSuccessApplyResponseModel     = ApplyResponseModel(testFPSuccessProtectionModel)
+  val testFPSuccessApplyResponseModel: ApplyResponseModel = ApplyResponseModel(testFPSuccessProtectionModel)
 
   "ResponseConstructors" should {
 

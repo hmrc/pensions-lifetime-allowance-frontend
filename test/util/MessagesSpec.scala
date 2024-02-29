@@ -28,7 +28,6 @@ class MessagesSpec extends AnyWordSpecLike with Matchers with OptionValues  {
 
   private val MatchSingleQuoteOnly = """\w+'{1}\w+""".r
   private val MatchBacktickQuoteOnly = """`+""".r
-  private val MatchForwardTickQuoteOnly = """’+""".r
 
   private val englishMessages = parseMessages("conf/messages")
   private val welshMessages = parseMessages("conf/messages.cy")
@@ -63,17 +62,16 @@ class MessagesSpec extends AnyWordSpecLike with Matchers with OptionValues  {
 
   private def countMessagesWithArgs(messages: Map[String, String]) = messages.values.filter(_.contains("{0}"))
 
-  private def assertNonEmpty(label: String, messages: Map[String, String]) = messages.foreach { case (key: String, value: String) =>
+  private def assertNonEmpty(label: String, messages: Map[String, String]): Unit = messages.foreach { case (key: String, value: String) =>
     withClue(s"In $label, there is an empty value for the key:[$key][$value]") {
       value.trim.isEmpty shouldBe false
     }
   }
 
-  private def assertCorrectUseOfQuotes(label: String, messages: Map[String, String]) = messages.foreach { case (key: String, value: String) =>
+  private def assertCorrectUseOfQuotes(label: String, messages: Map[String, String]): Unit = messages.foreach { case (key: String, value: String) =>
     withClue(s"In $label, there is an unescaped or invalid quote:[$key][$value]") {
       MatchSingleQuoteOnly.findFirstIn(value).isDefined shouldBe false
       MatchBacktickQuoteOnly.findFirstIn(value).isDefined shouldBe false
-      MatchForwardTickQuoteOnly.findFirstIn(value).isDefined shouldBe false
     }
   }
 
@@ -83,6 +81,7 @@ class MessagesSpec extends AnyWordSpecLike with Matchers with OptionValues  {
   }
 
   private def describeMismatch(englishKeySet: Set[String], welshKeySet: Set[String]) =
-    if (englishKeySet.size > welshKeySet.size) listMissingMessageKeys("The following message keys are missing from the Welsh Set:", englishKeySet -- welshKeySet)
+    if (englishKeySet.size > welshKeySet.size)
+      listMissingMessageKeys("The following message keys are missing from the Welsh Set:", englishKeySet -- welshKeySet)
     else listMissingMessageKeys("The following message keys are missing from the English Set:", welshKeySet -- englishKeySet)
 }

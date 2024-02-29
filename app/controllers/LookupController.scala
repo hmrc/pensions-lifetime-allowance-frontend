@@ -16,13 +16,9 @@
 
 package controllers
 
-import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalTime, ZoneId}
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
-
-import javax.inject.Inject
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Application
 import play.api.data.Form
@@ -31,11 +27,14 @@ import play.api.libs.json.Json
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.Upstream4xxResponse
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
 
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalTime, ZoneId}
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class LookupController @Inject()(val sessionCacheService: SessionCacheService,
@@ -105,12 +104,12 @@ class LookupController @Inject()(val sessionCacheService: SessionCacheService,
                 sessionCacheService.saveFormData[PSALookupResult](lookupResultID, updatedResult).map {
                   _ => Redirect(routes.LookupController.displayLookupResults)
                 }(executionContext)
-            }((executionContext)).recoverWith {
-              case r: Upstream4xxResponse if r.upstreamResponseCode == NOT_FOUND =>
+            }(executionContext).recoverWith {
+              case r: UpstreamErrorResponse if r.statusCode == NOT_FOUND =>
                 val fullResult = PSALookupRequest(psaRef, Some(pnn))
                 sessionCacheService.saveFormData[PSALookupRequest](lookupRequestID, fullResult).map {
                   _ => Redirect(routes.LookupController.displayNotFoundResults)
-                }((executionContext))
+                }(executionContext)
             }(executionContext)
           case _ =>
             Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm))
@@ -142,6 +141,9 @@ class LookupController @Inject()(val sessionCacheService: SessionCacheService,
     }(executionContext)
   }
 
-  def buildTimestamp: String = s"${LocalDate.now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))} at ${LocalTime.now(ZoneId.of("Europe/London")).format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
+  def buildTimestamp: String = s"${LocalDate.now.format(DateTimeFormatter
+    .ofPattern("dd/MM/yyyy"))} at ${LocalTime.now(
+      ZoneId.of("Europe/London"))
+    .format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
 
 }

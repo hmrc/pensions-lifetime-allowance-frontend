@@ -16,32 +16,27 @@
 
 package forms
 
-import java.time.{LocalDate, LocalDateTime}
-
+import forms.formatters.DateFormatter
 import models.WithdrawDateFormModel
 import play.api.data.Form
-import play.api.data.Forms._
+import play.api.data.Forms.{mapping, of}
+import play.api.i18n.Messages
 
-object WithdrawDateForm extends CommonBinders{
+import java.time.LocalDate
 
-  def withdrawDateForm: Form[WithdrawDateFormModel] = Form(
+object WithdrawDateForm extends CommonBinders {
+
+  val key = "withdrawDate"
+
+  def withdrawDateForm(minDate: LocalDate)(implicit messages: Messages): Form[WithdrawDateFormModel] = Form(
     mapping(
-      "withdrawDate.day" -> withdrawDateFormatter,
-      "withdrawDate.month" -> withdrawDatePartialFormatter("month"),
-      "withdrawDate.year" -> withdrawDatePartialFormatter("year")
+      key -> of(DateFormatter(
+        key,
+        optMinDate = Some(minDate),
+        optMaxDate = Some(LocalDate.now()),
+        rangeInclusive = true
+      ))
     )(WithdrawDateFormModel.apply)(WithdrawDateFormModel.unapply)
   )
 
-  def validateWithdrawDate(form: Form[WithdrawDateFormModel],
-                           protectionStartDate: LocalDateTime): Form[WithdrawDateFormModel] = {
-    if (form.hasErrors) form
-    else {
-      val day = form.get.withdrawDay.get
-      val month = form.get.withdrawMonth.get
-      val year = form.get.withdrawYear.get
-      if (LocalDate.of(year, month, day) isBefore protectionStartDate.toLocalDate)
-        form.withError("withdrawDate.day", "pla.withdraw.date-input.form.date-before-start-date")
-      else form
-    }
-  }
 }

@@ -14,9 +14,8 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-@import play.api.Application
-@import config.FrontendAppConfig
+@import models.WithdrawDateFormModel
+@import play.api.data._
 
 @this(
     layout: Layout,
@@ -41,10 +40,10 @@
 ) {
 
 @if(withdrawDateForm.hasErrors){
-    @errorSummary(withdrawDateForm.errors, Some("withdrawDate"))
+    @errorSummary(withdrawDateForm.errors.distinctBy(error => error.message), Some("withdrawDate"))
 }
 
-@form(action = routes.WithdrawProtectionController.postWithdrawDateInput) {
+    @form(action = routes.WithdrawProtectionController.postWithdrawDateInput) {
 
         @formInlineDateInput(
             content = Messages("pla.withdraw.date-input.title"),

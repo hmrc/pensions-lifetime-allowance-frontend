@@ -49,7 +49,7 @@ class AmendmentTypeFormSpec extends FakeApplication with CommonErrorMessages {
           val result = amendmentTypeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequired
+          result.error("protectionType").get.message shouldBe errorRequiredKey
         }
 
         "provided with no status" in {
@@ -57,7 +57,7 @@ class AmendmentTypeFormSpec extends FakeApplication with CommonErrorMessages {
           val result = amendmentTypeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequired
+          result.error("status").get.message shouldBe errorRequiredKey
         }
       }
 

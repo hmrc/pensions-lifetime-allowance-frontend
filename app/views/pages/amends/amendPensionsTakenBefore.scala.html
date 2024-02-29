@@ -16,7 +16,6 @@
 
 @import models.amendModels.AmendPensionsTakenBeforeModel
 @import play.api.data._
-@import common.Links
 
 @this(
         layout: Layout,
@@ -59,8 +58,8 @@
         @submitButton(Messages("pla.base.change"))
 
         <div class="govuk-visually-hidden">
-            @helper.inputText(amendPensionsTakenBeforeForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-            @helper.inputText(amendPensionsTakenBeforeForm("status"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(amendPensionsTakenBeforeForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
+            @helper.inputText(amendPensionsTakenBeforeForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
         </div>
     }
 }

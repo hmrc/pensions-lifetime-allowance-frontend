@@ -40,7 +40,7 @@
 @layout(
     pageTitle = title
 ) {
-    @errorSummary(psoDetailsForm.errors, Some("psoAmt"))
+    @errorSummary(psoDetailsForm.errors.distinctBy(error => error.message), errorSuffixes = Some(Map("pso" -> "day")))
 
     <h1 class="govuk-heading-xl">@Messages(s"pla.psoDetails.title")</h1>
 

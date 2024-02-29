@@ -20,9 +20,9 @@ import config.FrontendAppConfig
 import enums.IdentityVerificationResult.IdentityVerificationResult
 
 import javax.inject.Inject
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 import services.MetricsService
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReadsInstances, HttpResponse}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpReadsInstances, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -30,13 +30,13 @@ import scala.util.{Failure, Success}
 
 class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, http: DefaultHttpClient)
                                               (implicit executionContext: ExecutionContext){
-  val serviceUrl = appConfig.servicesConfig.baseUrl("identity-verification")
+  val serviceUrl: String = appConfig.servicesConfig.baseUrl("identity-verification")
 
   private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
   private[connectors] case class IdentityVerificationResponse(result: IdentityVerificationResult)
-  private implicit val formats = Json.format[IdentityVerificationResponse]
+  private implicit val formats: OFormat[IdentityVerificationResponse] = Json.format[IdentityVerificationResponse]
 
-  implicit val legacyRawReads = HttpReadsInstances.throwOnFailure(HttpReadsInstances.readEitherOf(HttpReadsInstances.readRaw))
+  implicit val legacyRawReads: HttpReads[HttpResponse] = HttpReadsInstances.throwOnFailure(HttpReadsInstances.readEitherOf(HttpReadsInstances.readRaw))
 
   def identityVerificationResponse(journeyId: String)(implicit hc: HeaderCarrier): Future[IdentityVerificationResult] = {
     val context = MetricsService.identityVerificationTimer.time()

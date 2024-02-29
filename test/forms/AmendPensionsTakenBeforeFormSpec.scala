@@ -21,7 +21,6 @@ import models.amendModels.AmendPensionsTakenBeforeModel
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.{CommonErrorMessages, FakeApplication}
-import utils.Constants
 
 class AmendPensionsTakenBeforeFormSpec extends FakeApplication
   with CommonErrorMessages
@@ -82,7 +81,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequired
+          result.error("protectionType").get.message shouldBe errorRequiredKey
         }
 
         "not provided with a value for status" in {
@@ -90,7 +89,7 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
           val result = amendPensionsTakenBeforeForm.bind(map)
 
           result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequired
+          result.error("status").get.message shouldBe errorRequiredKey
         }
       }
     }

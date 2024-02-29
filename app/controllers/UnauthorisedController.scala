@@ -19,16 +19,15 @@ package controllers
 import config.{FrontendAppConfig, PlaContext}
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
-import javax.inject.Inject
+import play.api.{Application, Logging}
 import play.api.i18n.I18nSupport
 import play.api.mvc._
-import play.api.Application
-import play.api.Logging
 import services.SessionCacheService
-import uk.gov.hmrc.http.Upstream4xxResponse
+import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 
@@ -69,7 +68,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
           logger.info("Unauthorised identity verification, returned to unauthorised page")
           Future.successful(Unauthorized(unauthorised()))
       } recover {
-        case Upstream4xxResponse(_, NOT_FOUND, _, _) =>
+        case UpstreamErrorResponse(_, NOT_FOUND, _, _) =>
           logger.warn("Could not find unauthorised journey ID")
           Unauthorized(unauthorised())
       }

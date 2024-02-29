@@ -19,7 +19,6 @@ package connectors
 import config.FrontendAppConfig
 import models._
 import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -31,6 +30,7 @@ import models.cache.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
@@ -73,7 +73,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
   val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010.1234567891))))
   val validCurrentPensionsTuple2 = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001.1234567891))))
   val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
-  val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(1, 2, 2016, Some(BigDecimal(10000.1234567891))))
+  val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(LocalDate.of(2016, 2, 1), Some(BigDecimal(10000.1234567891))))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 

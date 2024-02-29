@@ -93,8 +93,8 @@
     @submitButton(submitText = Messages("pla.base.change"))
 
         <div class="form-hidden">
-            @helper.inputText(amendCurrentPensionForm("protectionType"), 'type -> "hidden", 'class -> "hidden")
-            @helper.inputText(amendCurrentPensionForm("status"), 'type -> "hidden", 'class -> "hidden")
+            @helper.inputText(amendCurrentPensionForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
+            @helper.inputText(amendCurrentPensionForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
         </div>
 
     }

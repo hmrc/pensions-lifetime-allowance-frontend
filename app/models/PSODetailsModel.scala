@@ -16,10 +16,12 @@
 
 package models
 
+import java.time.LocalDate
+
 import play.api.libs.json._
 
-case class PSODetailsModel (psoDay: Int, psoMonth: Int, psoYear: Int, psoAmt: Option[BigDecimal])
+case class PSODetailsModel(pso: LocalDate, psoAmt: Option[BigDecimal])
 
 object PSODetailsModel {
-  implicit val format = Json.format[PSODetailsModel]
+  implicit val format: OFormat[PSODetailsModel] = Json.format[PSODetailsModel]
 }

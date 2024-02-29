@@ -80,8 +80,8 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
 
     "display the correct errors appropriately" in{
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
-      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe "What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00"
-      errorDoc.select(".govuk-error-message").text shouldBe s"Error: What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00"
+      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaErrorRequiredNumber
+      errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaErrorRequiredNumber"
     }
 
     "not have errors on valid pages" in{

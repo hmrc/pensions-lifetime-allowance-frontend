@@ -19,15 +19,17 @@ package views.pages.withdraw
 import controllers.routes
 import forms.WithdrawDateForm.withdrawDateForm
 import models.WithdrawDateFormModel
-import views.html.pages.withdraw.withdrawImplications
 import org.jsoup.Jsoup
 import play.api.data.Form
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.withdraw.WithdrawImplicationsSpecMessages
+import views.html.pages.withdraw.withdrawImplications
+
+import java.time.LocalDate
 
 class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplicationsSpecMessages {
 
-  val withdrawDateForModel = withdrawDateForm: Form[WithdrawDateFormModel]
+  val withdrawDateForModel: Form[WithdrawDateFormModel] = withdrawDateForm(LocalDate.now()): Form[WithdrawDateFormModel]
 
   "Withdraw Implication view for IP2014" when {
     lazy val view = application.injector.instanceOf[withdrawImplications]

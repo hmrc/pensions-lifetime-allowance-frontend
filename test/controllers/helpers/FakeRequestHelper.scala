@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package models
+package controllers.helpers
 
-import play.api.libs.json._
+import play.api.mvc.{AnyContentAsEmpty, AnyContentAsFormUrlEncoded}
+import play.api.test.FakeRequest
+import uk.gov.hmrc.http.SessionKeys
 
-case class IP14PensionSavingsModel(eligibleIP14PensionSavings: Option[String])
+trait FakeRequestHelper {
+  lazy val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
+  lazy val fakeRequestWithSession: FakeRequest[AnyContentAsEmpty.type] = fakeRequest.withSession((SessionKeys.sessionId, ""))
 
-object IP14PensionSavingsModel {
-  implicit val format = Json.format[IP14PensionSavingsModel]
+  def fakeRequestToPOSTWithSession (input: (String, String)*): FakeRequest[AnyContentAsFormUrlEncoded] =
+    fakeRequestWithSession.withFormUrlEncodedBody(input: _*)
 }

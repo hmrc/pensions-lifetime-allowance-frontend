@@ -16,12 +16,12 @@
 
 package models.amendModels
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Json, OFormat}
 
 case class AmendsGAModel(current: Option[String], before: Option[String], between: Option[String], overseas: Option[String], pso: Option[String]) {
 
 }
 
 object AmendsGAModel {
-  implicit val format = Json.format[AmendsGAModel]
+  implicit val format: OFormat[AmendsGAModel] = Json.format[AmendsGAModel]
 }

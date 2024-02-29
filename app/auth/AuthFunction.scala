@@ -16,12 +16,12 @@
 
 package auth
 import config.{FrontendAppConfig, PlaContext}
-import play.api.{Environment, Logging}
+import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.Results._
 import play.api.mvc._
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
@@ -56,22 +56,23 @@ trait AuthFunction extends AuthorisedFunctions with Logging {
     s"$completionURL${request.uri}" +
     s"$failureURL${appConfig.notAuthorisedRedirectUrl}"
   class MissingNinoException extends Exception("Nino not returned by authorised call")
-  def genericAuthWithoutNino(pType: String)(body: => Future[Result])(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] = {
+  def genericAuthWithoutNino(pType: String)(body: => Future[Result])
+                            (implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] = {
     authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200) {
       body
     }.recover(authErrorHandling(pType))
   }
-  def genericAuthWithNino(pType: String)(body: String => Future[Result])(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] = {
+  def genericAuthWithNino(pType: String)(body: String => Future[Result])
+                         (implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] = {
     authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200).retrieve(Retrievals.nino) { nino =>
       body(nino.getOrElse(throw new MissingNinoException))
     }.recover(authErrorHandling(pType))
   }
   def authErrorHandling(pType: String)(implicit request: Request[AnyContent], messages: Messages): PartialFunction[Throwable, Result] = {
-    case _: NoActiveSession => {
+    case _: NoActiveSession =>
       val upliftUrl = upliftEnvironmentUrl(request.uri)
       Redirect(appConfig.ggSignInUrl,
         Map("continue" -> Seq(upliftUrl), "origin" -> Seq(appConfig.appName)))
-    }
     case _: InsufficientEnrolments => Redirect(IVUpliftURL())
     case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL())
     case e: AuthorisationException =>

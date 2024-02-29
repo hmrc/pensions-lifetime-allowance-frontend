@@ -16,40 +16,40 @@
 
 package controllers
 
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import mocks.AuthMock
 import models._
+import models.cache.CacheMap
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
+import org.mockito.stubbing.OngoingStubbing
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Messages
 import play.api.libs.json.JsValue
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Application, Configuration, Environment}
+import play.api.{Application, Environment}
 import services.SessionCacheService
 import testHelpers._
-import uk.gov.hmrc.auth.core.AuthConnector
+import uk.gov.hmrc.auth.core.{AuthConnector, PlayAuthConnector}
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HeaderCarrier
-import models.cache.CacheMap
-import org.mockito.ArgumentMatchers
-
-import java.util.UUID
 import views.html.pages.fallback.technicalError
-import views.html.pages.ip2016.{currentPensions, overseasPensions, pensionDebits, pensionsTaken, pensionsTakenBefore, pensionsTakenBetween, pensionsUsedBetween, pensionsWorthBefore, psoDetails, removePsoDetails}
+import views.html.pages.ip2016._
 
+import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
-class IP2016ControllerSpec extends FakeApplication with MockitoSugar
-  with BeforeAndAfterEach with SessionCacheTestHelper with AuthMock {
+class IP2016ControllerSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach with SessionCacheTestHelper with AuthMock {
 
 
     val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
@@ -65,7 +65,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     implicit val mockMessages: Messages = mock[Messages]
     implicit val system: ActorSystem = ActorSystem()
     implicit val materializer: Materializer = mock[Materializer]
-    implicit val application = mock[Application]
+    implicit val application: Application = mock[Application]
     implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
     implicit val mockPensionsTaken: pensionsTaken = app.injector.instanceOf[pensionsTaken]
     implicit val mockPensionsTakenBefore: pensionsTakenBefore = app.injector.instanceOf[pensionsTakenBefore]
@@ -82,7 +82,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
     class Setup {
 
-        val authFunction = new AuthFunction {
+        val authFunction: AuthFunction = new AuthFunction {
             override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
             override implicit val plaContext: PlaContext = mockPlaContext
             override implicit val appConfig: FrontendAppConfig = mockAppConfig
@@ -109,22 +109,22 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         )
     }
 
-    override def beforeEach() = {
+    override def beforeEach(): Unit = {
         reset(mockSessionCacheService, mockAuthConnector, mockPlaConnector)
     }
 
-    implicit val hc = HeaderCarrier()
+    implicit val hc: HeaderCarrier = HeaderCarrier()
 
     //    lazy val TestIP2016Controller = fakeApplication().injector.instanceOf[IP2016Controller]
     object TestIP2016Controller extends IP2016Controller(mockSessionCacheService, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsWorthBefore, mockPensionsTakenBetween, mockPensionsUsedBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails, mockPensionDebits) {
-        lazy val authConnector = mockAuthConnector
+        lazy val authConnector: PlayAuthConnector = mockAuthConnector
     }
 
-    val sessionId = UUID.randomUUID.toString
-    val fakeRequest = FakeRequest()
+    val sessionId: String = UUID.randomUUID.toString
+    val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
     val mockUsername = "mockuser"
-    val mockUserId = "/auth/oid/" + mockUsername
+    val mockUserId: String = "/auth/oid/" + mockUsername
 
     def cacheFetchCondition[T](data: Option[T]): Unit = {
         when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
@@ -132,12 +132,12 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     }
 
 
-    def psoDetailsCacheSetup(data: Option[PSODetailsModel]) = {
+    def psoDetailsCacheSetup(data: Option[PSODetailsModel]): OngoingStubbing[Future[Option[PSODetailsModel]]] = {
         when(mockSessionCacheService.fetchAndGetFormData[PSODetailsModel](ArgumentMatchers.eq(s"psoDetails"))(any(), any()))
           .thenReturn(Future.successful(data))
     }
 
-    def pensionsDebitsSaveData(data: Option[PensionDebitsModel]) = {
+    def pensionsDebitsSaveData(data: Option[PensionDebitsModel]): OngoingStubbing[Future[CacheMap]] = {
         when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
           .thenReturn(Future(CacheMap("tstId", Map.empty[String, JsValue])))
     }
@@ -149,7 +149,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "not supplied with a stored model" should {
             "return 200" in new Setup {
-                lazy val result = controller.pensionsTaken(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionsTaken(fakeRequest)
                 mockAuthConnector(Future.successful({}))
 
 
@@ -162,7 +162,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             "return 200" in new Setup {
                 mockAuthConnector(Future.successful({}))
                 val testModel = new PensionsTakenModel(Some("yes"))
-                lazy val result = controller.pensionsTaken(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionsTaken(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PensionsTakenModel](Some(testModel))
@@ -173,7 +173,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
                 "contain some text and use the character set utf-8" in new Setup {
                     mockAuthConnector(Future.successful({}))
                     val testModel = new PensionsTakenModel(Some("yes"))
-                    lazy val result = controller.pensionsTaken(fakeRequest)
+                    lazy val result: Future[Result] = controller.pensionsTaken(fakeRequest)
 
                     cacheFetchCondition[PensionsTakenModel](Some(testModel))
                     contentType(result) shouldBe Some("text/html")
@@ -228,7 +228,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "not supplied with a stored model" should {
             "return 200" in new Setup {
-                lazy val result = controller.pensionsTakenBefore(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionsTakenBefore(fakeRequest)
                 mockAuthConnector(Future.successful({}))
 
                 cacheFetchCondition[PensionsTakenBeforeModel](None)
@@ -244,7 +244,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         "supplied with a stored test model" should {
             "return 200" in new Setup {
                 val testModel = new PensionsTakenBeforeModel("yes")
-                lazy val result = controller.pensionsTakenBefore(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionsTakenBefore(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PensionsTakenBeforeModel](Some(testModel))
@@ -260,7 +260,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 "contain some text and use the character set utf-8" in new Setup {
                     val testModel = new PensionsTakenBeforeModel("yes")
-                    lazy val result = controller.pensionsTakenBefore(fakeRequest)
+                    lazy val result: Future[Result] = controller.pensionsTakenBefore(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
                     cacheFetchCondition[PensionsTakenBeforeModel](Some(testModel))
@@ -330,7 +330,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "not supplied with a stored model" should {
             "return 200" in new Setup {
-                lazy val result = controller.pensionsWorthBefore(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionsWorthBefore(fakeRequest)
                 mockAuthConnector(Future.successful({}))
 
                 cacheFetchCondition[PensionsWorthBeforeModel](None)
@@ -346,7 +346,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         "supplied with a stored test model" should {
             "return 200" in new Setup {
                 val testModel = new PensionsWorthBeforeModel(Some(1))
-                lazy val result = controller.pensionsWorthBefore(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionsWorthBefore(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PensionsWorthBeforeModel](Some(testModel))
@@ -362,7 +362,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 "contain some text and use the character set utf-8" in new Setup {
                     val testModel = new PensionsWorthBeforeModel(Some(1))
-                    lazy val result = controller.pensionsWorthBefore(fakeRequest)
+                    lazy val result: Future[Result] = controller.pensionsWorthBefore(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
                     cacheFetchCondition[PensionsWorthBeforeModel](Some(testModel))
@@ -423,7 +423,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "not supplied with a stored model" should {
             "return 200" in new Setup {
-                lazy val result = controller.pensionsTakenBetween(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionsTakenBetween(fakeRequest)
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PensionsTakenBetweenModel](None)
                 status(result) shouldBe 200
@@ -433,7 +433,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         "supplied with a stored test model" should {
             "return 200" in new Setup {
                 val testModel = new PensionsTakenBetweenModel("yes")
-                lazy val result = controller.pensionsTakenBetween(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionsTakenBetween(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PensionsTakenBetweenModel](Some(testModel))
@@ -444,7 +444,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 "contain some text and use the character set utf-8" in new Setup {
                     val testModel = new PensionsTakenBetweenModel("yes")
-                    lazy val result = controller.pensionsTakenBetween(fakeRequest)
+                    lazy val result: Future[Result] = controller.pensionsTakenBetween(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
                     cacheFetchCondition[PensionsTakenBetweenModel](Some(testModel))
@@ -502,7 +502,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "not supplied with a stored model" should {
             "return 200" in new Setup {
-                lazy val result = controller.pensionsUsedBetween(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionsUsedBetween(fakeRequest)
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PensionsUsedBetweenModel](None)
                 status(result) shouldBe 200
@@ -512,7 +512,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         "supplied with a stored test model" should {
             "return 200" in new Setup {
                 val testModel = new PensionsUsedBetweenModel(Some(1))
-                lazy val result = controller.pensionsUsedBetween(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionsUsedBetween(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PensionsUsedBetweenModel](Some(testModel))
@@ -559,7 +559,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         "not supplied with a stored model" should {
             "return 200" in new Setup {
 
-                lazy val result = controller.overseasPensions(fakeRequest)
+                lazy val result: Future[Result] = controller.overseasPensions(fakeRequest)
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[OverseasPensionsModel](None)
                 status(result) shouldBe 200
@@ -568,8 +568,9 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "supplied with a stored test model (yes, £100000)" should {
             "return 200" in new Setup {
-                val testModel = new OverseasPensionsModel("yes", Some(100000))
-                lazy val result = controller.overseasPensions(fakeRequest)
+                val overseasPensionAmt: BigDecimal = 100000
+                val testModel = new OverseasPensionsModel("yes", Some(overseasPensionAmt))
+                lazy val result: Future[Result] = controller.overseasPensions(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[OverseasPensionsModel](Some(testModel))
@@ -579,8 +580,9 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             "return some HTML that" should {
 
                 "contain some text and use the character set utf-8" in new Setup {
-                    val testModel = new OverseasPensionsModel("yes", Some(100000))
-                    lazy val result = controller.overseasPensions(fakeRequest)
+                    val overseasPensionAmt: BigDecimal = 100000
+                    val testModel = new OverseasPensionsModel("yes", Some(overseasPensionAmt))
+                    lazy val result: Future[Result] = controller.overseasPensions(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
                     cacheFetchCondition[OverseasPensionsModel](Some(testModel))
@@ -636,7 +638,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         "not supplied with a stored model" should {
             "return 200" in new Setup {
 
-                lazy val result = controller.currentPensions(fakeRequest)
+                lazy val result: Future[Result] = controller.currentPensions(fakeRequest)
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[CurrentPensionsModel](None)
                 status(result) shouldBe 200
@@ -645,8 +647,9 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "supplied with a stored test model (£100000)" should {
             "return 200" in new Setup {
-                val testModel = new CurrentPensionsModel(Some(100000))
-                lazy val result = controller.currentPensions(fakeRequest)
+                val overseasPensionAmt: BigDecimal = 100000
+                val testModel = new CurrentPensionsModel(Some(overseasPensionAmt))
+                lazy val result: Future[Result] = controller.currentPensions(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[CurrentPensionsModel](Some(testModel))
@@ -657,8 +660,9 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
             "return some HTML that" should {
 
                 "contain some text and use the character set utf-8" in new Setup {
-                    val testModel = new CurrentPensionsModel(Some(100000))
-                    lazy val result = controller.currentPensions(fakeRequest)
+                    val overseasPensionAmt: BigDecimal = 100000
+                    val testModel = new CurrentPensionsModel(Some(overseasPensionAmt))
+                    lazy val result: Future[Result] = controller.currentPensions(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
                     cacheFetchCondition[CurrentPensionsModel](Some(testModel))
@@ -703,7 +707,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "not supplied with a stored model" should {
             "return 200" in new Setup {
-                lazy val result = controller.pensionDebits(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionDebits(fakeRequest)
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PensionDebitsModel](None)
                 status(result) shouldBe 200
@@ -714,7 +718,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         "supplied with a stored test model" should {
             "return 200" in new Setup {
                 val testModel = new PensionDebitsModel(Some("yes"))
-                lazy val result = controller.pensionDebits(fakeRequest)
+                lazy val result: Future[Result] = controller.pensionDebits(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PensionDebitsModel](Some(testModel))
@@ -725,7 +729,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
                 "contain some text and use the character set utf-8" in new Setup {
                     val testModel = new PensionDebitsModel(Some("yes"))
-                    lazy val result = controller.pensionDebits(fakeRequest)
+                    lazy val result: Future[Result] = controller.pensionDebits(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
                     cacheFetchCondition[PensionDebitsModel](Some(testModel))
@@ -780,7 +784,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
     "In IP2016Controller calling the .psoDetails action" when {
         "not supplied with a stored model" should {
             "return 200" in new Setup {
-                lazy val result = controller.psoDetails(fakeRequest)
+                lazy val result: Future[Result] = controller.psoDetails(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PSODetailsModel](None)
@@ -790,8 +794,12 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "supplied with a stored test model" should {
             "return 200" in new Setup {
-                val testModel = PSODetailsModel(1, 8, 2016, Some(BigDecimal(1234)))
-                lazy val result = controller.psoDetails(fakeRequest)
+                val year = 2016
+                val month = 8
+                val day = 1
+                val psoAmt: BigDecimal = 1234
+                val testModel: PSODetailsModel = PSODetailsModel(LocalDate.of(year, month, day), Some(psoAmt))
+                lazy val result: Future[Result] = controller.psoDetails(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 cacheFetchCondition[PSODetailsModel](Some(testModel))
@@ -801,8 +809,12 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
             "return some HTML that" should {
                 "contain some text and use the character set utf-8" in new Setup {
-                    val testModel = PSODetailsModel(1, 8, 2016, Some(BigDecimal(1234)))
-                    lazy val result = controller.psoDetails(fakeRequest)
+                    val year: Int = 2016
+                    val month: Int = 8
+                    val day: Int = 1
+                    val psoAmt: BigDecimal = 1234
+                    val testModel: PSODetailsModel = PSODetailsModel(LocalDate.of(year, month, day), Some(psoAmt))
+                    lazy val result: Future[Result] = controller.psoDetails(fakeRequest)
 
                     mockAuthConnector(Future.successful({}))
                     cacheFetchCondition[PSODetailsModel](Some(testModel))
@@ -869,7 +881,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "supplied with a stored model" should {
             "return 200" in new Setup {
-                lazy val result = controller.removePsoDetails(fakeRequest)
+                lazy val result: Future[Result] = controller.removePsoDetails(fakeRequest)
 
                 mockAuthConnector(Future.successful({}))
                 status(result) shouldBe 200
@@ -881,7 +893,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
 
         "not supplied with a stored model" should {
             "return 303" in new Setup {
-                lazy val result = controller.submitRemovePsoDetails(fakeRequest)
+                lazy val result: Future[Result] = controller.submitRemovePsoDetails(fakeRequest)
                 val testModel = new PensionDebitsModel(Some("yes"))
 
                 mockAuthConnector(Future.successful({}))
@@ -891,7 +903,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar
         }
         "not supplied with a stored model" should {
             "redirect location should be the summary page" in new Setup {
-                lazy val result = controller.submitRemovePsoDetails(fakeRequest)
+                lazy val result: Future[Result] = controller.submitRemovePsoDetails(fakeRequest)
                 val testModel = new PensionDebitsModel(Some("yes"))
 
                 mockAuthConnector(Future.successful({}))

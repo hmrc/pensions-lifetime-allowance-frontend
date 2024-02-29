@@ -10,23 +10,23 @@ GET         /not-authorised                                                     
 GET         /sign-out                                                                     @controllers.AccountController.signOut
 
 ## Apply IP 14 ##
-GET         /apply-for-ip14-pensions-taken                                                @controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-pensions-taken                                                @controllers.WithdrawnController.showWithdrawn()
 
-GET         /apply-for-ip14-pensions-taken-before                                         @controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-pensions-taken-before                                         @controllers.WithdrawnController.showWithdrawn()
 
-GET         /apply-for-ip14-pensions-taken-between                                        @controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-pensions-taken-between                                        @controllers.WithdrawnController.showWithdrawn()
 
-GET         /apply-for-ip14-overseas-pensions                                             @controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-overseas-pensions                                             @controllers.WithdrawnController.showWithdrawn()
 
-GET         /apply-for-ip14-current-pensions                                              @controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-current-pensions                                              @controllers.WithdrawnController.showWithdrawn()
 
-GET         /apply-for-ip14-pension-sharing-orders                                        @controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-pension-sharing-orders                                        @controllers.WithdrawnController.showWithdrawn()
 
-GET         /apply-for-ip14-pension-sharing-order-details                                 @controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-pension-sharing-order-details                                 @controllers.WithdrawnController.showWithdrawn()
 
-GET         /apply-for-ip14-remove-pension-sharing-order-details                          @controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-remove-pension-sharing-order-details                          @controllers.WithdrawnController.showWithdrawn()
 
-GET         /apply-for-ip14-submit-your-application                                       @controllers.WithdrawnController.showWithdrawn
+GET         /apply-for-ip14-submit-your-application                                       @controllers.WithdrawnController.showWithdrawn()
 
 ## Apply IP 16 ##
 GET         /apply-for-ip16-pensions-taken                                                @controllers.IP2016Controller.pensionsTaken
