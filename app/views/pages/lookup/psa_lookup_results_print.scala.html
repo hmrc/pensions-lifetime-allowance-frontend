@@ -84,29 +84,8 @@
                             @Messages("psa.lookup.results.table.row.3")
                         </dt>
                             <dd class="govuk-summary-list__value govuk-!-width-one-half">
-                            @lookupResult.ltaType match {
-                                case 1 => {
-                                    @Messages("psa.lookup.results.ltatype.1")
-                                }
-                                case 2 => {
-                                    @Messages("psa.lookup.results.ltatype.2")
-                                }
-                                case 3 => {
-                                    @Messages("psa.lookup.results.ltatype.3")
-                                }
-                                case 4 => {
-                                    @Messages("psa.lookup.results.ltatype.4")
-                                }
-                                case 5 => {
-                                    @Messages("psa.lookup.results.ltatype.5")
-                                }
-                                case 6 => {
-                                    @Messages("psa.lookup.results.ltatype.6")
-                                }
-                                case 7 => {
-                                    @Messages("psa.lookup.results.ltatype.7")
-                                }
-                            } </dd>
+                                @if(lookupResult.ltaType >= 1 && lookupResult.ltaType <=17) {@Messages(s"psa.lookup.results.ltatype.${lookupResult.ltaType}")}
+                            </dd>
                         </div>
                         @lookupResult.ltaType match {
                             case x if 2 until 4 contains x => {

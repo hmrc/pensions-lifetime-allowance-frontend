@@ -824,6 +824,16 @@ psa.lookup.results.ltatype.4            = Prif ddiogelwch
 psa.lookup.results.ltatype.5            = Diogelwch uwch
 psa.lookup.results.ltatype.6            = Diogelwch sefydlog 2012
 psa.lookup.results.ltatype.7            = Diogelwch sefydlog 2014
+psa.lookup.results.ltatype.8            = Hawliau Credydau Pensiwn Uwch
+psa.lookup.results.ltatype.9            = Diogelwch Uwch Rhyngwladol - Nad yw’n breswyl
+psa.lookup.results.ltatype.10           = Diogelwch Uwch Rhyngwladol - Trosglwyddiad o gynllun pensiwn tramor cydnabyddedig
+psa.lookup.results.ltatype.11           = Diogelwch Penodol 2016
+psa.lookup.results.ltatype.12           = Diogelwch Unigol 2014
+psa.lookup.results.ltatype.13           = Diogelwch Unigol 2016
+psa.lookup.results.ltatype.14           = Prif Ddiogelwch
+psa.lookup.results.ltatype.15           = Diogelwch Uwch
+psa.lookup.results.ltatype.16           = Diogelwch Penodol
+psa.lookup.results.ltatype.17           = Diogelwch Penodol 2014
 
 psa.lookup.results.save                 = Lawrlwytho PDF o''r canlyniadau hyn
 psa.lookup.results.check-another        = Gwirio tystysgrif arall
