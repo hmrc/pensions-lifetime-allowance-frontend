@@ -44,6 +44,7 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
 import views.html.pages
 
+import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -300,18 +301,19 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
     }
   }
-  val submitAmendPsoDetails: Action[AnyContent] = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
+  def submitAmendPsoDetails(protectionType: String, status: String, existingPSO: Boolean): Action[AnyContent] = Action.async { implicit request =>
+    authFunction.genericAuthWithNino("existingProtections") { nino =>
       amendPsoDetailsForm.bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-          Future.successful(BadRequest(amendPsoDetails(form)))
+          Future.successful(BadRequest(amendPsoDetails(form, protectionType, status, existingPSO)))
         },
         success => {
             val details = createPsoDetailsList(success)
             for {
-              amendModel <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status))
-              storedModel <- updateAndSaveAmendModelWithPso(details, amendModel, Strings.cacheAmendFetchString(success.protectionType, success.status))
-            } yield Redirect(routes.AmendsController.amendsSummary(success.protectionType.toLowerCase, success.status.toLowerCase))
+              amendModel <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+              storedModel <- updateAndSaveAmendModelWithPso(details, amendModel, Strings.cacheAmendFetchString(protectionType, status))
+            } yield Redirect(routes.AmendsController.amendsSummary(protectionType.toLowerCase, status.toLowerCase))
         }
       )
     }
@@ -495,7 +497,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
             case Some(debits) =>
               routeFromPensionDebitsList(debits, protectionType, status, nino)
             case None =>
-              Ok(amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
+              Ok(amendPsoDetails(amendPsoDetailsForm, protectionType, status, existingPSO = false))
           }
         case _ =>
           logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend PSO details page")
@@ -506,21 +508,18 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   def routeFromPensionDebitsList(debits: Seq[PensionDebitModel], protectionType: String, status: String, nino: String)(implicit request: Request[AnyContent]): Result = {
     debits.length match {
-        case 0 => Ok(amendPsoDetails(amendPsoDetailsForm.fill(createBlankAmendPsoDetailsModel(protectionType, status))))
-        case 1 => Ok(amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head, protectionType, status))))
+        case 0 => Ok(amendPsoDetails(amendPsoDetailsForm, protectionType, status, existingPSO = false))
+        case 1 => Ok(amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head)), protectionType, status, existingPSO = true))
         case num =>
           logger.warn(s"$num pension debits recorded for user nino $nino during amend journey")
           InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
 
-  def createAmendPsoDetailsModel(psoDetails: PensionDebitModel, protectionType: String, status: String): AmendPSODetailsModel = {
+  def createAmendPsoDetailsModel(psoDetails: PensionDebitModel): AmendPSODetailsModel = {
     val (day, month, year) = Dates.extractDMYFromAPIDateString(psoDetails.startDate)
-    AmendPSODetailsModel(Some(day), Some(month), Some(year), Some(Display.currencyInputDisplayFormat(psoDetails.amount)), protectionType, status, existingPSO = true)
-  }
-
-  def createBlankAmendPsoDetailsModel(protectionType: String, status: String): AmendPSODetailsModel = {
-    AmendPSODetailsModel(psoDay = None, psoMonth = None, psoYear = None, psoAmt = None, protectionType, status, existingPSO = false)
+    val date = LocalDate.of(year, month, day)
+    AmendPSODetailsModel(date, Some(Display.currencyInputDisplayFormat(psoDetails.amount)))
   }
 
   def removePso(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
@@ -568,7 +567,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   }
 
   private[controllers] def createPsoDetailsList(formModel: AmendPSODetailsModel): Option[List[PensionDebitModel]] = {
-    val date = Dates.apiDateFormat(formModel.psoDay.get, formModel.psoMonth.get, formModel.psoYear.get)
+    val date = formModel.pso.toString
     val amt = formModel.psoAmt.getOrElse{ throw new Exceptions.RequiredValueNotDefinedException("createPsoDetailsList", "psoAmt") }
     Some(List(PensionDebitModel(startDate = date, amount = amt.toDouble)))
   }

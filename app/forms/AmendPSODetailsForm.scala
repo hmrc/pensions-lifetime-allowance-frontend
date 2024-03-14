@@ -17,25 +17,40 @@
 package forms
 
 import common.Validation._
+import forms.formatters.DateFormatter
+import models.PSODetailsModel
 import models.amendModels.AmendPSODetailsModel
 import play.api.data.Forms._
 import play.api.data._
+import play.api.i18n.Messages
 import utils.Constants
 
+import java.time.LocalDate
+
 object AmendPSODetailsForm  extends CommonBinders{
-  def amendPsoDetailsForm: Form[AmendPSODetailsModel] = Form(
+
+  val key = "pso"
+  val amount = "psoAmt"
+  private val minIP16PSODate = LocalDate.of(2016, 4, 6)
+
+
+  def amendPsoDetailsForm()(implicit messages: Messages): Form[AmendPSODetailsModel] = Form(
     mapping(
-      "pso.day"    -> dateFormatterFromInt,
-      "pso.month"  -> psoPartialDateBinder("monthEmpty"),
-      "pso.year"   -> psoPartialDateBinder("yearEmpty"),
-      "psoAmt"    -> of(decimalFormatter("pla.psoDetails.amount.errors.mandatoryError", "pla.psoDetails.amount.errors.notReal"))
+      key -> of(
+        DateFormatter(
+          key,
+          optMinDate = Some(minIP16PSODate),
+          optMaxDate = Some(LocalDate.now()),
+          rangeInclusive = true
+        )
+      ),
+      amount -> optional(bigDecimal)
         .verifying("pla.psoDetails.amount.errors.max", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
         .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying("pla.psoDetails.amount.errors.decimal", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble)),
-
-      "protectionType" -> protectionTypeFormatter,
-      "status"         -> text,
-      "existingPSO"    -> boolean
-    )(AmendPSODetailsModel.apply)(AmendPSODetailsModel.unapply)
+        .verifying("pla.psoDetails.amount.errors.decimal", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
+        .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined),
+    )
+    ((date, amount) => AmendPSODetailsModel(date, amount))
+    (model => Some(model.pso, model.psoAmt))
   )
 }
