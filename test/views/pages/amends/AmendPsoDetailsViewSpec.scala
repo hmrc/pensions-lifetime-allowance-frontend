@@ -32,29 +32,25 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
   private val messageKey: String = "psoDetails"
 
   "the AmendPsoDetailsView" should{
-    val pensionsForm = AmendPSODetailsForm.amendPsoDetailsForm.bind(Map(
+    val pensionsForm = AmendPSODetailsForm.amendPsoDetailsForm("").bind(Map(
       "pso.day" -> "1",
       "pso.month" -> "2",
       "pso.year" -> "2017",
-      "psoAmt" -> "12345",
-      "protectionType" -> "ip2016",
-      "status"         -> "open",
-      "existingPSO"    -> "true"))
+      "psoAmt" -> "12345"
+    ))
 
     lazy val view = application.injector.instanceOf[amendPsoDetails]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
+    lazy val doc = Jsoup.parse(view(pensionsForm, "ip2016", "open", true).body)
 
-    lazy val errorForm =  AmendPSODetailsForm.amendPsoDetailsForm.bind(Map(
+    lazy val errorForm =  AmendPSODetailsForm.amendPsoDetailsForm("").bind(Map(
       "pso.day" -> "",
       "pso.month" -> "",
       "pso.year" -> "",
-      "psoAmt" -> "a",
-      "protectionType" -> "ip2016",
-      "status"         -> "",
-      "existingPSO"    -> "false"))
+      "psoAmt" -> "a"
+    ))
 
     lazy val errorView = application.injector.instanceOf[amendPsoDetails]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "", false).body)
     lazy val pageTitle = s"$plaPsoDetailsTitle - $plaBaseAppName - GOV.UK"
 
     lazy val form = doc.select("form")
@@ -86,7 +82,7 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPsoDetails.url
+      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPsoDetails("ip2016", "open", true).url
     }
 
     "have a £ symbol present" in{
@@ -102,10 +98,8 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select(".govuk-button").text shouldBe plaBaseAdd
-      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe plaErrorRequiredDay
-      errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe plaErrorRequiredMonth
-      errorDoc.select(".govuk-error-summary__list li").eq(2).text shouldBe plaErrorRequiredYear
-      errorDoc.select(".govuk-error-summary__list li").eq(3).text shouldBe errorReal(messageKey)
+      errorDoc.select(".govuk-error-summary__list li").eq(0).text shouldBe errorReal
+      errorDoc.select(".govuk-error-summary__list li").eq(1).text shouldBe errorRealNumber
     }
 
     "not have errors on valid pages" in{

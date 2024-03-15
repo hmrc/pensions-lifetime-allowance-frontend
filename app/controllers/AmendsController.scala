@@ -303,10 +303,9 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   }
   def submitAmendPsoDetails(protectionType: String, status: String, existingPSO: Boolean): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendPsoDetailsForm.bindFromRequest().fold(
-        errors => {
-          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-          Future.successful(BadRequest(amendPsoDetails(form, protectionType, status, existingPSO)))
+      amendPsoDetailsForm(protectionType).bindFromRequest().fold(
+        formWithErrors => {
+          Future.successful(BadRequest(amendPsoDetails(formWithErrors, protectionType, status, existingPSO)))
         },
         success => {
             val details = createPsoDetailsList(success)
@@ -497,7 +496,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
             case Some(debits) =>
               routeFromPensionDebitsList(debits, protectionType, status, nino)
             case None =>
-              Ok(amendPsoDetails(amendPsoDetailsForm, protectionType, status, existingPSO = false))
+              Ok(amendPsoDetails(amendPsoDetailsForm(protectionType), protectionType, status, existingPSO = false))
           }
         case _ =>
           logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend PSO details page")
@@ -508,8 +507,8 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   def routeFromPensionDebitsList(debits: Seq[PensionDebitModel], protectionType: String, status: String, nino: String)(implicit request: Request[AnyContent]): Result = {
     debits.length match {
-        case 0 => Ok(amendPsoDetails(amendPsoDetailsForm, protectionType, status, existingPSO = false))
-        case 1 => Ok(amendPsoDetails(amendPsoDetailsForm.fill(createAmendPsoDetailsModel(debits.head)), protectionType, status, existingPSO = true))
+        case 0 => Ok(amendPsoDetails(amendPsoDetailsForm(protectionType), protectionType, status, existingPSO = false))
+        case 1 => Ok(amendPsoDetails(amendPsoDetailsForm(protectionType).fill(createAmendPsoDetailsModel(debits.head)), protectionType, status, existingPSO = true))
         case num =>
           logger.warn(s"$num pension debits recorded for user nino $nino during amend journey")
           InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")

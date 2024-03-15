@@ -304,9 +304,8 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def submitPSODetails: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       psoDetailsForm().bindFromRequest().fold(
-        errors => {
-          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
-          Future.successful(BadRequest(psoDetails(form)))
+        formWithErrors => {
+          Future.successful(BadRequest(psoDetails(formWithErrors)))
         },
         form => {
           sessionCacheService.saveFormData(s"psoDetails", form).flatMap {

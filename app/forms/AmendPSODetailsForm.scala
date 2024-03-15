@@ -27,23 +27,18 @@ import utils.Constants
 
 import java.time.LocalDate
 
-object AmendPSODetailsForm  extends CommonBinders{
+object AmendPSODetailsForm extends CommonBinders {
 
   val key = "pso"
   val amount = "psoAmt"
-  private val minIP16PSODate = LocalDate.of(2016, 4, 6)
 
-
-  def amendPsoDetailsForm()(implicit messages: Messages): Form[AmendPSODetailsModel] = Form(
+  def amendPsoDetailsForm(protectionType: String)(implicit messages: Messages): Form[AmendPSODetailsModel] = Form(
     mapping(
-      key -> of(
-        DateFormatter(
-          key,
-          optMinDate = Some(minIP16PSODate),
-          optMaxDate = Some(LocalDate.now()),
-          rangeInclusive = true
-        )
-      ),
+      key -> of(DateFormatter(
+        key,
+        optMinDate = Some(if (protectionType == "ip2016") Constants.minIP16PSODate else Constants.minIP14PSODate),
+        optMaxDate = Some(LocalDate.now.plusDays(1))
+      )),
       amount -> optional(bigDecimal)
         .verifying("pla.psoDetails.amount.errors.max", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
         .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
