@@ -847,6 +847,17 @@ psa.lookup.results.ltatype.4 = Primary protection
 psa.lookup.results.ltatype.5 = Enhanced protection
 psa.lookup.results.ltatype.6 = Fixed protection 2012
 psa.lookup.results.ltatype.7 = Fixed protection 2014
+psa.lookup.results.ltatype.8 = Pension Credit Rights Enhancement
+psa.lookup.results.ltatype.9 = International Enhancement - Non-residency
+psa.lookup.results.ltatype.10 = International Enhancement - Transfer from a recognised overseas pension scheme
+psa.lookup.results.ltatype.11 = Fixed Protection 2016
+psa.lookup.results.ltatype.12 = Individual Protection 2014
+psa.lookup.results.ltatype.13 = Individual Protection 2016
+psa.lookup.results.ltatype.14 = Primary Protection
+psa.lookup.results.ltatype.15 = Enhanced Protection
+psa.lookup.results.ltatype.16 = Fixed Protection
+psa.lookup.results.ltatype.17 = Fixed Protection 2014
+
 
 psa.lookup.results.save = Download a PDF of these results
 psa.lookup.results.check-another = Check another certificate

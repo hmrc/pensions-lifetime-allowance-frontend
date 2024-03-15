@@ -54,30 +54,9 @@
             @if(lookupResult.psaCheckResult == 1) {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.3")</td>
-                    <td id="protection-type-value" class="govuk-table__cell"><a href="@routes.LookupController.displayProtectionTypeGuidance">
-                    @lookupResult.ltaType match {
-                        case 1 => {
-                            @Messages("psa.lookup.results.ltatype.1")
-                        }
-                        case 2 => {
-                            @Messages("psa.lookup.results.ltatype.2")
-                        }
-                        case 3 => {
-                            @Messages("psa.lookup.results.ltatype.3")
-                        }
-                        case 4 => {
-                            @Messages("psa.lookup.results.ltatype.4")
-                        }
-                        case 5 => {
-                            @Messages("psa.lookup.results.ltatype.5")
-                        }
-                        case 6 => {
-                            @Messages("psa.lookup.results.ltatype.6")
-                        }
-                        case 7 => {
-                            @Messages("psa.lookup.results.ltatype.7")
-                        }
-                    } </a></td>
+                    <td id="protection-type-value" class="govuk-table__cell">
+                        @if(lookupResult.ltaType >= 1 && lookupResult.ltaType <=17) {@Messages(s"psa.lookup.results.ltatype.${lookupResult.ltaType}")}
+                    </td>
                 </tr>
                 @lookupResult.ltaType match {
                     case x if 2 until 4 contains x => {
