@@ -28,7 +28,7 @@
     submitButton: playHelpers.templates.submitButton
 )
 
-@(psoDetailsForm: Form[AmendPSODetailsModel])(implicit request: Request[_], messages: Messages)
+@(psoDetailsForm: Form[AmendPSODetailsModel], protectionType: String, status: String, existingPSO: Boolean)(implicit request: Request[_], messages: Messages)
 
 @title = @{
     if(psoDetailsForm.errors.nonEmpty){
@@ -42,11 +42,11 @@
     pageTitle = title
 ) {
 
-    @errorSummary(psoDetailsForm.errors)
+    @errorSummary(psoDetailsForm.errors.distinctBy(error => error.message), errorSuffixes = Some(Map("pso" -> "day")))
 
     <h1 class="govuk-heading-xl">@Messages("pla.psoDetails.title")</h1>
 
-    @form(action = routes.AmendsController.submitAmendPsoDetails) {
+    @form(action = routes.AmendsController.submitAmendPsoDetails(protectionType, status, existingPSO)) {
 
         @formInlineDateInput(
             content = Messages("pla.psoDetails.dateQuestionText"),
@@ -65,16 +65,8 @@
         )
 
         @submitButton(
-            submitText = if(psoDetailsForm("existingPSO").value.getOrElse("false") == "true") Messages("pla.base.update") else Messages("pla.base.add")
+            submitText = if(existingPSO) Messages("pla.base.update") else Messages("pla.base.add")
         )
-
-        <div class="govuk-visually-hidden">
-
-            @helper.inputText(psoDetailsForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-            @helper.inputText(psoDetailsForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-            @helper.inputText(psoDetailsForm("existingPSO"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-
-        </div>
 
     }
 

@@ -31,17 +31,13 @@ object PSODetailsForm extends CommonBinders {
   val key = "pso"
   val amount = "psoAmt"
 
-  private val minIP16PSODate = LocalDate.of(2016, 4, 6)
-
   def psoDetailsForm()(implicit messages: Messages): Form[PSODetailsModel] = Form(
     mapping(
       key -> of(DateFormatter(
-          key,
-          optMinDate = Some(minIP16PSODate),
-          optMaxDate = Some(LocalDate.now()),
-          rangeInclusive = true
-        )
-      ),
+        key,
+        optMinDate = Some(Constants.minIP16PSODate),
+        optMaxDate = Some(LocalDate.now.plusDays(1))
+      )),
       amount -> optional(bigDecimal)
         .verifying("pla.psoDetails.amount.errors.max", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
         .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))

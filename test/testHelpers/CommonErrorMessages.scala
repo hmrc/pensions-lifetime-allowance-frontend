@@ -51,4 +51,15 @@ trait CommonErrorMessages {
 trait PSODetailsMessages extends CommonErrorMessages {
   val errorAmendPsoDetailsMissingAmount = "pla.psoDetails.amount.errors.mandatoryError"
   val errorDateRange = "pla.IP16PsoDetails.errorDateOutOfRange"
+  val errorPsoDay = "pso.error.required.day"
+  val errorPsoMonth = "pso.error.required.month"
+  val errorPsoYear = "pso.error.required.year"
+  val errorPsoNotReal = "pso.error.notReal"
+  val errorPsoNotRealDay = "pso.error.notReal.day"
+  val errorPsoNotRealMonth = "pso.error.notReal.month"
+  val errorPsoNotRealYear = "pso.error.notReal.year"
+  val errorPsoDateInFuture = "pso.error.range.max"
+  val errorPsoDateBeforeMin = "pso.error.range.min"
+
+
 }

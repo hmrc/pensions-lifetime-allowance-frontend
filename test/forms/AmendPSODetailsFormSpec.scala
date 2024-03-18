@@ -17,17 +17,19 @@
 package forms
 
 import common.Exceptions
+import controllers.helpers.FakeRequestHelper
 import forms.AmendPSODetailsForm._
 import models.amendModels.AmendPSODetailsModel
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.Lang
+import play.api.i18n.{Messages, MessagesApi}
 import testHelpers.{FakeApplication, PSODetailsMessages}
 import utils.Constants
 
 import java.time.LocalDate
 
-class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages with MockitoSugar {
-  implicit val lang: Lang = mock[Lang]
+class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages with MockitoSugar with FakeRequestHelper {
+  val messagesApi: MessagesApi = fakeApplication().injector.instanceOf[MessagesApi]
+  implicit val testMessages: Messages = messagesApi.preferred(fakeRequest)
 
   val messageKey = "psoDetails"
 
@@ -36,16 +38,14 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
       "pso.day" -> "1",
       "pso.month" -> "5",
       "pso.year" -> "2016",
-      "psoAmt" -> "0.0",
-      "protectionType" -> "ip2016",
-      "status" -> "status",
-      "existingPSO" -> "true")
+      "psoAmt" -> "0.0"
+    )
 
     "produce a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = AmendPSODetailsModel(Some(1), Some(5), Some(2016), Some(0.0), "ip2016", "status", existingPSO = true)
-        val result = AmendPSODetailsForm.amendPsoDetailsForm.fill(model)
+        val model = AmendPSODetailsModel(LocalDate.of(2016, 5, 1), Some(0.0))
+        val result = AmendPSODetailsForm.amendPsoDetailsForm("ip2016").fill(model)
 
         result.data shouldBe validMap
       }
@@ -55,30 +55,28 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
           "pso.day" -> "2",
           "pso.month" -> "6",
           "pso.year" -> "2017",
-          "psoAmt" -> "0.0",
-          "protectionType" -> "ip2014",
-          "status" -> "anotherStatus",
-          "existingPSO" -> "false")
-        val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
+          "psoAmt" -> "0.0"
+        )
+        val result = AmendPSODetailsForm.amendPsoDetailsForm("ip2014").bind(map)
 
         result.value shouldBe Some(
-          AmendPSODetailsModel(Some(2), Some(6), Some(2017), Some(0.0), "ip2014", "anotherStatus", existingPSO = false))
+          AmendPSODetailsModel(LocalDate.of(2017, 6, 2), Some(0.0)))
       }
 
       "provided with a valid map and an amount below the maximum" in {
         val map = validMap.updated("psoAmt", {Constants.npsMaxCurrency - 0.01}.toString)
-        val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
+        val result = AmendPSODetailsForm.amendPsoDetailsForm("ip2016").bind(map)
 
         result.value shouldBe Some(
-          AmendPSODetailsModel(Some(1), Some(5), Some(2016), Some(Constants.npsMaxCurrency - 0.01), "ip2016", "status", existingPSO = true))
+          AmendPSODetailsModel(LocalDate.of(2016, 5, 1), Some(Constants.npsMaxCurrency - 0.01)))
       }
 
       "provided with a valid map and an amount with two decimal places" in {
         val map = validMap.updated("psoAmt", "0.01")
-        val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
+        val result = AmendPSODetailsForm.amendPsoDetailsForm("ip2016").bind(map)
 
         result.value shouldBe Some(
-          AmendPSODetailsModel(Some(1), Some(5), Some(2016), Some(0.01), "ip2016", "status", existingPSO = true))
+          AmendPSODetailsModel(LocalDate.of(2016, 5, 1), Some(0.01)))
       }
     }
 
@@ -88,54 +86,40 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
 
         "not provided with a value for psoDay" in {
           val map = validMap - "pso.day"
-          val result = amendPsoDetailsForm.bind(map)
+          val result = amendPsoDetailsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("pso.day").get.message shouldBe errorMissingDay
+          result.error("pso.day").get.message shouldBe errorPsoDay
         }
 
         "not provided with a value for psoMonth" in {
           val map = validMap - "pso.month"
-          val result = amendPsoDetailsForm.bind(map)
+          val result = amendPsoDetailsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("pso.month").get.message shouldBe errorMissingMonth
+          result.error("pso.month").get.message shouldBe errorPsoMonth
         }
 
         "not provided with a value for psoYear" in {
           val map = validMap - "pso.year"
-          val result = amendPsoDetailsForm.bind(map)
+          val result = amendPsoDetailsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("pso.year").get.message shouldBe errorMissingYear
+          result.error("pso.year").get.message shouldBe errorPsoYear
         }
 
         "not provided with a value for psoAmt" in {
           val map = validMap - "psoAmt"
-          val result = amendPsoDetailsForm.bind(map)
+          val result = amendPsoDetailsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoAmt").get.message shouldBe errorAmendPsoDetailsMissingAmount
         }
 
-        "not provided with a value for protectionType" in {
-          val map = validMap - "protectionType"
-
-          the[Exceptions.RequiredNotFoundProtectionTypeException] thrownBy amendPsoDetailsForm.bind(map) should have message
-            "Value not found for protection type in [protectionFormatter]"
-        }
-
-        "not provided with a value for status" in {
-          val map = validMap - "status"
-          val result = amendPsoDetailsForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequiredKey
-        }
 
         "provided with a negative psoAmt value" in {
           val map = validMap.updated("psoAmt", "-0.01")
-          val result = amendPsoDetailsForm.bind(map)
+          val result = amendPsoDetailsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoAmt").get.message shouldBe errorNegative(messageKey)
@@ -143,7 +127,7 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
 
         "provided with a psoAmt value above the maximum" in {
           val map = validMap.updated("psoAmt", Constants.npsMaxCurrency.toString)
-          val result = amendPsoDetailsForm.bind(map)
+          val result = amendPsoDetailsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoAmt").get.message shouldBe errorMaximum(messageKey)
@@ -151,7 +135,7 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
 
         "provided with a psoAmt value with more than two decimal places" in {
           val map = validMap.updated("psoAmt", "0.001")
-          val result = amendPsoDetailsForm.bind(map)
+          val result = amendPsoDetailsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
           result.error("psoAmt").get.message shouldBe errorDecimal(messageKey)
@@ -165,22 +149,22 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
 
         "provided with an invalid date" in {
           val map = validMap.updated("pso.day", "50")
-          val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
+          val result = AmendPSODetailsForm.amendPsoDetailsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("pso.day").get.message shouldBe errorDate
+          result.error("pso.day").get.message shouldBe errorPsoNotRealDay
         }
 
-        "provided with a future data" in {
+        "provided with a future date" in {
           val date = LocalDate.now().plusDays(1)
           val map = validMap
             .updated("pso.day", date.getDayOfMonth.toString)
             .updated("pso.month", date.getMonthValue.toString)
             .updated("pso.year", date.getYear.toString)
-          val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
+          val result = AmendPSODetailsForm.amendPsoDetailsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("pso.day").get.message shouldBe errorDateRange
+          result.error("pso").get.message shouldBe errorPsoDateInFuture
         }
 
         "provided with a date before the minimum for ip2016" in {
@@ -189,10 +173,10 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
             .updated("pso.day", date.getDayOfMonth.toString)
             .updated("pso.month", date.getMonthValue.toString)
             .updated("pso.year", date.getYear.toString)
-          val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
+          val result = AmendPSODetailsForm.amendPsoDetailsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("pso.day").get.message shouldBe errorDateRange
+          result.error("pso").get.message shouldBe errorPsoDateBeforeMin
         }
 
         "provided with a date before the minimum for ip2014" in {
@@ -201,10 +185,10 @@ class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages wi
             .updated("pso.day", date.getDayOfMonth.toString)
             .updated("pso.month", date.getMonthValue.toString)
             .updated("pso.year", date.getYear.toString)
-          val result = AmendPSODetailsForm.amendPsoDetailsForm.bind(map)
+          val result = AmendPSODetailsForm.amendPsoDetailsForm("ip2014").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("pso.day").get.message shouldBe errorDateRange
+          result.error("pso").get.message shouldBe errorPsoDateBeforeMin
         }
       }
     }

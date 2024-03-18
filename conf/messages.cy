@@ -274,11 +274,8 @@ pso.error.notReal                    = Mae’n rhaid i flwyddyn eich gorchymyn r
 pso.error.notReal.day                = Mae’n rhaid i ddiwrnod eich gorchymyn rhannu pensiwn fod yn rhif dilys
 pso.error.notReal.month              = Mae’n rhaid i fis eich gorchymyn rhannu pensiwn fod yn rhif dilys
 pso.error.notReal.year               = Mae’n rhaid i flwyddyn eich gorchymyn rhannu pensiwn fod yn rhif dilys
-pso.error.range.min                  = Mae’n rhaid i ddyddiad eich gorchymyn rhannu pensiwn fod ar ôl 5 Ebrill 2016
+pso.error.range.min                  = Mae’n rhaid i ddyddiad eich gorchymyn rhannu pensiwn fod ar ôl {0}
 pso.error.range.max                  = Ni all dyddiad eich gorchymyn rhannu pensiwn fod yn y dyfodol
-
-pla.IP14PsoDetails.errorDateOutOfRange      = Nodwch ddyddiad rhwng 5 Ebrill 2014 a heddiw
-pla.IP16PsoDetails.errorDateOutOfRange      = Nodwch ddyddiad rhwng 5 Ebrill 2016 a heddiw
 
 
 ## SUMMARY ##

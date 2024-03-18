@@ -275,11 +275,8 @@ pso.error.notReal                    = The year of your pension sharing order mu
 pso.error.notReal.day                = The day of your pension sharing order must be a valid number
 pso.error.notReal.month              = The month of your pension sharing order must be a valid number
 pso.error.notReal.year               = The year of your pension sharing order must be a valid number
-pso.error.range.min                  = The date of your pension sharing order must be after 5 April 2016
+pso.error.range.min                  = The date of your pension sharing order must be after {0}
 pso.error.range.max                  = The date of your pension sharing order cannot be in the future
-
-pla.IP14PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2014 and today
-pla.IP16PsoDetails.errorDateOutOfRange      = Enter a date between 5 April 2016 and today
 
 
 ## SUMMARY ##

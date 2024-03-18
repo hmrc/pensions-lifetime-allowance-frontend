@@ -54,6 +54,7 @@ import views.html.pages.fallback.{noNotificationId, technicalError}
 import java.util.UUID
 import views.html.pages.result.manualCorrespondenceNeeded
 
+import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsControllerSpec extends FakeApplication
@@ -1138,14 +1139,11 @@ class AmendsControllerSpec extends FakeApplication
 
     "submitting valid data for IP14" in new Setup {
 
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails(protectionType = "ip2014", status = "open", existingPSO = true),
         ("pso.day", "6"),
         ("pso.month", "4"),
         ("pso.year", "2014"),
-        ("psoAmt", "100000"),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
+        ("psoAmt", "100000")
       )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -1159,14 +1157,11 @@ class AmendsControllerSpec extends FakeApplication
 
     "submitting valid data for IP16" in new Setup {
 
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails(protectionType = "ip2016", status = "open", existingPSO = true),
         ("pso.day", "6"),
         ("pso.month", "4"),
         ("pso.year", "2016"),
-        ("psoAmt", "100000"),
-        ("protectionType", "ip2016"),
-        ("status", "open"),
-        ("existingPSO", "true")
+        ("psoAmt", "100000")
       )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -1180,14 +1175,11 @@ class AmendsControllerSpec extends FakeApplication
 
     "submitting invalid data" in new Setup {
 
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails(protectionType = "ip2014", status = "open", existingPSO = true),
         ("pso.day", ""),
         ("pso.month", "1"),
         ("pso.year", "2015"),
-        ("psoAmt", "100000"),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
+        ("psoAmt", "100000")
       )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -1196,14 +1188,11 @@ class AmendsControllerSpec extends FakeApplication
 
     "submitting data which fails additional validation" in new Setup {
 
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails,
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPsoDetails(protectionType = "ip2014", status = "open", existingPSO = true),
         ("pso.day", "36"),
         ("pso.month", "1"),
         ("pso.year", "2015"),
-        ("psoAmt", "100000"),
-        ("protectionType", "ip2014"),
-        ("status", "open"),
-        ("existingPSO", "true")
+        ("psoAmt", "100000")
       )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -1368,7 +1357,7 @@ class AmendsControllerSpec extends FakeApplication
 
       "return the correct value not found exception" in new Setup() {
         the [RequiredValueNotDefinedException] thrownBy {
-          controller.createPsoDetailsList(AmendPSODetailsModel(Some(1), Some(3), Some(2017), None, "", "", false))
+          controller.createPsoDetailsList(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), None))
         } should have message "Value not found for psoAmt in createPsoDetailsList"
       }
     }
@@ -1376,7 +1365,7 @@ class AmendsControllerSpec extends FakeApplication
     "supplied with a PSO amount" should {
 
       "return the correct list" in new Setup {
-        controller.createPsoDetailsList(AmendPSODetailsModel(Some(1), Some(3), Some(2017), Some(1), "", "", false)) shouldBe Some(List(PensionDebitModel("2017-03-01", 1)))
+        controller.createPsoDetailsList(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), Some(1))) shouldBe Some(List(PensionDebitModel("2017-03-01", 1)))
       }
     }
   }
