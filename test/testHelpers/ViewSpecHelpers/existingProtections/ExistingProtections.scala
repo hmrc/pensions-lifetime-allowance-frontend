@@ -20,7 +20,7 @@ trait ExistingProtections {
 
   val plaExistingProtectionsTitle = "View your existing protections"
   val plaExistingProtectionsTitleNew = "View your existing protections - Protect your lifetime allowance - GOV.UK"
-  val plaExistingProtectionsPageHeading = "Your lifetime allowance protection"
+  val plaExistingProtectionsPageHeading = "View your existing protections"
   val plaExistingProtectionsDetails = "Details"
   val plaExistingProtectionsPrint = "Print and save your details"
   val plaExistingProtectionsApplicationDate = "Application date"
