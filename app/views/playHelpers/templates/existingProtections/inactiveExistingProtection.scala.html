@@ -34,20 +34,20 @@
 
 <dl class="govuk-summary-list">
     @protection.protectedAmount.map { amt =>
-        @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, s"inactiveProtectedAmount$protectionNum", Some(changeLink))
+        @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, s"${protection.status}InactiveProtectedAmount${protectionNum}", Some(changeLink))
         }
-        @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, s"inactiveProtectionReference$protectionNum")
+        @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, s"${protection.status}InactiveProtectionReference${protectionNum}")
 
         @protection.psaCheckReference.map { checkRef =>
-        @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, s"inactivePSACheckRef$protectionNum")
+        @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, s"${protection.status}InactivePSACheckRef${protectionNum}")
         }
 
         @protection.certificateDate.map{ cDate =>
-        @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, s"inactiveCertificateDate$protectionNum")
+        @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, s"${protection.status}InactiveCertificateDate${protectionNum}")
         }
 
         @protection.withdrawnDate.map{ wDate =>
-        @protectionDetails(Messages("pla.existingProtections.withdrawnDate"), wDate, s"inactiveWithdrawnDate$protectionNum")
+        @protectionDetails(Messages("pla.existingProtections.withdrawnDate"), wDate, s"${protection.status}InactiveWithdrawnDate${protectionNum}")
     }
 </dl>
 
