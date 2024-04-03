@@ -79,17 +79,6 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
           doc.select("button.govuk-button").attr("id") shouldBe "submit"
         }
       }
-
-      "have a back-link" which {
-
-        "has the correct text" in {
-          doc.select("#main-content > div > div > p > a").text() shouldBe plaBaseBack
-        }
-
-        "has the correct destination" in {
-          doc.select("#main-content > div > div > p > a").attr("href") shouldBe controllers.routes.LookupController.displaySchemeAdministratorReferenceForm.url
-        }
-      }
     }
 
     "provided with a form with errors" should {

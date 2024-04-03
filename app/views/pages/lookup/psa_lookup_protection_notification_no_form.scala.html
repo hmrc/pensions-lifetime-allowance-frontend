@@ -34,7 +34,7 @@
 
 @layout(
     pageTitle = title,
-    backLinkEnabled = false
+    backLinkEnabled = true
 ) {
 
     @errorSummary(pnnForm.errors, Some("lifetimeAllowanceReference"))
@@ -50,7 +50,4 @@
         @submitButton(Messages("psa.lookup.form.button"))
     }
 
-    <p class="govuk-body">
-        <a class="govuk-link" href="@routes.LookupController.displaySchemeAdministratorReferenceForm">@Messages("psa.lookup.form.pnn.back")</a>
-    </p>
 }
