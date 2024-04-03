@@ -788,7 +788,6 @@ psa.lookup.form.protection-notification-no-form.title  = Nodwch y Rhif Hysbysu D
 psa.lookup.form.continue.button                        = Yn eich blaen
 psa.lookup.form.startover.button                       = Dechrau eto
 
-psa.lookup.title                     = Chwilio am Weinyddwr y Cynllun Pensiwn (PSA)
 psa.lookup.form.psaref.hint          = Enghraifft: PSA12345678A
 psa.lookup.form.pnn.hint             = Enghraifft: IP141000000000A
 psa.lookup.form.button               = Cyflwyno

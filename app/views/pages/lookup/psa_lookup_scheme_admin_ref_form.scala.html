@@ -24,7 +24,7 @@
 
 @(psaRefForm: Form[String])(implicit request: Request[_], messages: Messages)
 
-@title = @{ if(psaRefForm.hasErrors) messages("site.title.error", messages("psa.lookup.title")) else  messages("psa.lookup.title") }
+@title = @{ if(psaRefForm.hasErrors) messages("site.title.error", messages("psa.lookup.form.scheme-admin-ref-form.title")) else  messages("psa.lookup.form.scheme-admin-ref-form.title") }
 
 @layout(
     pageTitle = title,

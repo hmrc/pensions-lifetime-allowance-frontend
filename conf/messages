@@ -811,7 +811,6 @@ psa.lookup.form.protection-notification-no-form.title = Enter the Protection Not
 psa.lookup.form.continue.button = Continue
 psa.lookup.form.startover.button = Start over
 
-psa.lookup.title = PSA Lookup
 psa.lookup.form.psaref.hint = Example: PSA12345678A
 psa.lookup.form.pnn.hint = Example: IP141000000000A
 psa.lookup.form.button = Submit

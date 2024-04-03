@@ -20,7 +20,7 @@ trait PsaLookupResultsSpecMessages {
   val logoText = "GOV.UK"
   val hmrcText = "HM Revenue & Customs"
   val copyrightText = "© Crown Copyright"
-  val titleText = "PSA Lookup - Protect your lifetime allowance - GOV.UK"
+  val titleText = "Results of lifetime allowance protection check - Protect your lifetime allowance - GOV.UK"
   val headingText = "Results of lifetime allowance protection check"
   val schemeAdministratorRowTitleText = "Scheme Administrator Reference:"
   val statusRowTitleText = "Status:"
