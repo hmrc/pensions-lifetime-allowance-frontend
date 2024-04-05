@@ -39,51 +39,50 @@
 
     <h1 class="govuk-heading-xl"> @Messages("psa.lookup.results.title")</h1>
     <br>
-    <table class="govuk-table">
-        <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.1")</td>
-                <td id="scheme-administrator-reference-value" class="govuk-table__cell">@lookupResult.pensionSchemeAdministratorCheckReference</td>
-            </tr>
+    <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-full">@Messages("psa.lookup.results.table.row.1")</dt>
+                <dd id="scheme-administrator-reference-value" class="govuk-summary-list__value govuk-!-width-full">@lookupResult.pensionSchemeAdministratorCheckReference</dd>
+            </div>
             @if(lookupResult.protectionNotificationNumber.isDefined) {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.2")</td>
-                    <td id="protection-notification-number-value" class="govuk-table__cell">@lookupResult.protectionNotificationNumber</td>
-                </tr>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">@Messages("psa.lookup.results.table.row.2")</dt>
+                    <dd id="protection-notification-number-value" class="govuk-summary-list__value">@lookupResult.protectionNotificationNumber</dd>
+                </div>
             }
             @if(lookupResult.psaCheckResult == 1) {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.3")</td>
-                    <td id="protection-type-value" class="govuk-table__cell">
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">@Messages("psa.lookup.results.table.row.3")</dt>
+                    <dd id="protection-type-value" class="govuk-summary-list__value">
                         @if(lookupResult.ltaType >= 1 && lookupResult.ltaType <=17) {@Messages(s"psa.lookup.results.ltatype.${lookupResult.ltaType}")}
-                    </td>
-                </tr>
+                    </dd>
+                </div>
                 @lookupResult.ltaType match {
                     case x if 2 until 4 contains x => {
                         @if(lookupResult.protectedAmount.isDefined) {
-                            <tr>
-                                <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.4")</td>
-                                <td id="protected-amount-value" class="govuk-table__cell">£@lookupResult.protectedAmount.get.formatted("%,1.0f")</td>
-                            </tr>
+                            <div class="govuk-summary-list__row">
+                                <dt class="govuk-summary-list__key">@Messages("psa.lookup.results.table.row.4")</dt>
+                                <dd id="protected-amount-value" class="govuk-summary-list__value">£@lookupResult.protectedAmount.get.formatted("%,1.0f")</dd>
+                            </div>
                         }
                     }
                     case _ => {}
                 }
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.5")</td>
-                    <td id="protection-status-valid" class="govuk-table__cell">@Messages("psa.lookup.results.table.row.5.valid")</td>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">@Messages("psa.lookup.results.table.row.5")</dt>
+                    <dd id="protection-status-valid" class="govuk-summary-list__value">@Messages("psa.lookup.results.table.row.5.valid")</dd>
             } else {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.5")</td>
-                    <td id="protection-status-invalid" class="govuk-table__cell">@Messages("psa.lookup.results.table.row.5.invalid")</td>
-                </tr>
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">@Messages("psa.lookup.results.table.row.5")</dt>
+                    <dd id="protection-status-invalid" class="govuk-summary-list__value">@Messages("psa.lookup.results.table.row.5.invalid")</dd>
+                </div>
             }
-            <tr class="govuk-table__row">
-                <td class="govuk-table__header">@Messages("psa.lookup.results.table.row.6")</td>
-                <td id="checked-on-value" class="govuk-table__cell">@timestamp</td>
-            </tr>
-        </tbody>
-    </table>
+                </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">@Messages("psa.lookup.results.table.row.6")</dt>
+                <dd id="checked-on-value" class="govuk-summary-list__value">@timestamp</dd>
+            </div>
+    </dl>
 
     <div>
         <a class="govuk-button govuk-button--secondary" role="button" href="@routes.PrintPdfController.printResultsPDF">@Messages("psa.lookup.results.save")</a>
