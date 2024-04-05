@@ -108,7 +108,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
 
       "contain the data" in {
         doc2b.select("#listProtections > h3").text shouldBe "Individual protection 2014 for dormant protections"
-        doc2b.select("#inactiveProtectedAmount1Content").text shouldBe "100.00"
+        doc2b.select("#dormantInactiveProtectedAmount1Content").text shouldBe "100.00"
       }
     }
 
