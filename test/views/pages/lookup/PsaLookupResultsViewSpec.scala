@@ -43,42 +43,42 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "have a table" which {
 
         "only has 3 rows" in {
-          doc.select("tr").size() shouldBe 3
+          doc.getElementsByClass("govuk-summary-list__key").size() shouldBe 3
         }
 
         "has a first row" which {
-          lazy val row = doc.select("tr").get(0)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe schemeAdministratorRowTitleText
+            row.select("dt").text() shouldBe schemeAdministratorRowTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe "reference"
+            row.select("dd").text() shouldBe "reference"
           }
         }
 
         "has a second row" which {
-          lazy val row = doc.select("tr").get(1)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe statusRowTitleText
+            row.select("dt").text() shouldBe statusRowTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe statusRowInvalidText
+            row.select("dd").text() shouldBe statusRowInvalidText
           }
         }
 
         "has a third row" which {
-          lazy val row = doc.select("tr").get(2)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe checkedOnTitleText
+            row.select("dt").text() shouldBe checkedOnTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe timestampText
+            row.select("dd").text() shouldBe timestampText
           }
         }
       }
@@ -114,54 +114,54 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "have a table" which {
 
         "only has 4 rows" in {
-          doc.select("tr").size() shouldBe 4
+          doc.select("dt").size() shouldBe 4
         }
 
         "has a first row" which {
-          lazy val row = doc.select("tr").get(0)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe schemeAdministratorRowTitleText
+            row.select("dt").text() shouldBe schemeAdministratorRowTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe "reference"
+            row.select("dd").text() shouldBe "reference"
           }
         }
 
         "has a second row" which {
-          lazy val row = doc.select("tr").get(1)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe protectionNumberTitleText
+            row.select("dt").text() shouldBe protectionNumberTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe "data"
+            row.select("dd").text() shouldBe "data"
           }
         }
 
         "has a third row" which {
-          lazy val row = doc.select("tr").get(2)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe statusRowTitleText
+            row.select("dt").text() shouldBe statusRowTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe statusRowInvalidText
+            row.select("dd").text() shouldBe statusRowInvalidText
           }
         }
 
         "has a fourth row" which {
-          lazy val row = doc.select("tr").get(3)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe checkedOnTitleText
+            row.select("dt").text() shouldBe checkedOnTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe timestampText
+            row.select("dd").text() shouldBe timestampText
           }
         }
       }
@@ -177,54 +177,54 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "have a table" which {
 
         "only has 4 rows" in {
-          doc.select("tr").size() shouldBe 4
+          doc.select("dt").size() shouldBe 4
         }
 
         "has a first row" which {
-          lazy val row = doc.select("tr").get(0)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe schemeAdministratorRowTitleText
+            row.select("dt").text() shouldBe schemeAdministratorRowTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe "reference"
+            row.select("dd").text() shouldBe "reference"
           }
         }
 
         "has a second row" which {
-          lazy val row = doc.select("tr").get(1)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe protectionTypeTitleText
+            row.select("dt").text() shouldBe protectionTypeTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe protectionTypeFP2016Text
+            row.select("dd").text() shouldBe protectionTypeFP2016Text
           }
         }
 
         "has a third row" which {
-          lazy val row = doc.select("tr").get(2)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe statusRowTitleText
+            row.select("dt").text() shouldBe statusRowTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe statusRowValidText
+            row.select("dd").text() shouldBe statusRowValidText
           }
         }
 
         "has a fourth row" which {
-          lazy val row = doc.select("tr").get(3)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe checkedOnTitleText
+            row.select("dt").text() shouldBe checkedOnTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe timestampText
+            row.select("dd").text() shouldBe timestampText
           }
         }
       }
@@ -239,54 +239,54 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "have a table" which {
 
         "only has 4 rows" in {
-          doc.select("tr").size() shouldBe 4
+          doc.select("dt").size() shouldBe 4
         }
 
         "has a first row" which {
-          lazy val row = doc.select("tr").get(0)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe schemeAdministratorRowTitleText
+            row.select("dt").text() shouldBe schemeAdministratorRowTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe "reference"
+            row.select("dd").text() shouldBe "reference"
           }
         }
 
         "has a second row" which {
-          lazy val row = doc.select("tr").get(1)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe protectionTypeTitleText
+            row.select("dt").text() shouldBe protectionTypeTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe protectionTypeIP2014Text
+            row.select("dd").text() shouldBe protectionTypeIP2014Text
           }
         }
 
         "has a third row" which {
-          lazy val row = doc.select("tr").get(2)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe statusRowTitleText
+            row.select("dt").text() shouldBe statusRowTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe statusRowValidText
+            row.select("dd").text() shouldBe statusRowValidText
           }
         }
 
         "has a fourth row" which {
-          lazy val row = doc.select("tr").get(3)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe checkedOnTitleText
+            row.select("dt").text() shouldBe checkedOnTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe timestampText
+            row.select("dd").text() shouldBe timestampText
           }
         }
       }
@@ -301,66 +301,66 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "have a table" which {
 
         "only has 5 rows" in {
-          doc.select("tr").size() shouldBe 5
+          doc.select("dt").size() shouldBe 5
         }
 
         "has a first row" which {
-          lazy val row = doc.select("tr").get(0)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe schemeAdministratorRowTitleText
+            row.select("dt").text() shouldBe schemeAdministratorRowTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe "reference"
+            row.select("dd").text() shouldBe "reference"
           }
         }
 
         "has a second row" which {
-          lazy val row = doc.select("tr").get(1)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe protectionTypeTitleText
+            row.select("dt").text() shouldBe protectionTypeTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe protectionTypeIP2016Text
+            row.select("dd").text() shouldBe protectionTypeIP2016Text
           }
         }
 
         "has a third row" which {
-          lazy val row = doc.select("tr").get(2)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe protectedAmountTitleText
+            row.select("dt").text() shouldBe protectedAmountTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe "£2"
+            row.select("dd").text() shouldBe "£2"
           }
         }
 
         "has a fourth row" which {
-          lazy val row = doc.select("tr").get(3)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe statusRowTitleText
+            row.select("dt").text() shouldBe statusRowTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe statusRowValidText
+            row.select("dd").text() shouldBe statusRowValidText
           }
         }
 
         "has a fifth row" which {
-          lazy val row = doc.select("tr").get(4)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(4)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe checkedOnTitleText
+            row.select("dt").text() shouldBe checkedOnTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe timestampText
+            row.select("dd").text() shouldBe timestampText
           }
         }
       }
@@ -375,18 +375,18 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "have a table" which {
 
         "only has 4 rows" in {
-          doc.select("tr").size() shouldBe 4
+          doc.select("dt").size() shouldBe 4
         }
 
         "has a second row" which {
-          lazy val row = doc.select("tr").get(1)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe protectionTypeTitleText
+            row.select("dt").text() shouldBe protectionTypeTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe protectionTypePrimaryText
+            row.select("dd").text() shouldBe protectionTypePrimaryText
           }
         }
       }
@@ -401,18 +401,18 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "have a table" which {
 
         "only has 4 rows" in {
-          doc.select("tr").size() shouldBe 4
+          doc.select("dt").size() shouldBe 4
         }
 
         "has a second row" which {
-          lazy val row = doc.select("tr").get(1)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe protectionTypeTitleText
+            row.select("dt").text() shouldBe protectionTypeTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe protectionTypeEnhancedText
+            row.select("dd").text() shouldBe protectionTypeEnhancedText
           }
         }
       }
@@ -427,18 +427,18 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "have a table" which {
 
         "only has 4 rows" in {
-          doc.select("tr").size() shouldBe 4
+          doc.select("dt").size() shouldBe 4
         }
 
         "has a second row" which {
-          lazy val row = doc.select("tr").get(1)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe protectionTypeTitleText
+            row.select("dt").text() shouldBe protectionTypeTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe protectionTypeFP2012Text
+            row.select("dd").text() shouldBe protectionTypeFP2012Text
           }
         }
       }
@@ -453,18 +453,18 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "have a table" which {
 
         "only has 4 rows" in {
-          doc.select("tr").size() shouldBe 4
+          doc.select("dt").size() shouldBe 4
         }
 
         "has a second row" which {
-          lazy val row = doc.select("tr").get(1)
+          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
-            row.select("td").get(0).text() shouldBe protectionTypeTitleText
+            row.select("dt").text() shouldBe protectionTypeTitleText
           }
 
           "has the correct second element" in {
-            row.select("td").get(1).text() shouldBe protectionTypeFP2014Text
+            row.select("dd").text() shouldBe protectionTypeFP2014Text
           }
         }
       }
