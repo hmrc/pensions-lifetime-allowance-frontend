@@ -115,8 +115,8 @@ POST        /withdraw-protection/date-input-confirmation                        
 GET         /withdraw-protection/confirmation/:withdrawDate                               @controllers.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)
 GET         /withdraw-protection/withdraw-confirmation/:protectionType                    @controllers.WithdrawProtectionController.showWithdrawConfirmation(protectionType)
 #PSA Lookup routes
-GET         /psalookup/protection-notification-number                                     @controllers.LookupController.displayProtectionNotificationNoForm
-POST        /psalookup/protection-notification-number                                     @controllers.LookupController.submitProtectionNotificationNoForm
+GET         /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.displayProtectionNotificationNoForm
+POST        /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.submitProtectionNotificationNoForm
 
 GET         /psalookup/scheme-administrator-reference                                     @controllers.LookupController.displaySchemeAdministratorReferenceForm
 POST        /psalookup/scheme-administrator-reference                                     @controllers.LookupController.submitSchemeAdministratorReferenceForm

@@ -43,7 +43,6 @@ class LookupController @Inject()(val sessionCacheService: SessionCacheService,
                                  mcc: MessagesControllerComponents,
                                  psa_lookup_not_found_results: views.html.pages.lookup.psa_lookup_not_found_results,
                                  pla_protection_guidance: views.html.pages.lookup.pla_protection_guidance,
-                                 psa_lookup_protection_notification_no_form: views.html.pages.lookup.psa_lookup_protection_notification_no_form,
                                  psa_lookup_results: views.html.pages.lookup.psa_lookup_results,
                                  psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form)(
                                  implicit val partialRetriever: FormPartialRetriever,
@@ -77,42 +76,7 @@ class LookupController @Inject()(val sessionCacheService: SessionCacheService,
       formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
       validFormData => {
         sessionCacheService.saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData)).map {
-          _ => Redirect(routes.LookupController.displayProtectionNotificationNoForm)
-        }(executionContext)
-      }
-    )
-  }
-
-  def displayProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-      case Some(_) => Future.successful(Ok(psa_lookup_protection_notification_no_form(pnnForm)))
-      case _ => Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm))
-    }(executionContext)
-  }
-
-  def submitProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    pnnForm.bindFromRequest().fold(
-      formWithErrors => Future.successful(BadRequest(psa_lookup_protection_notification_no_form(formWithErrors))),
-      validFormData => {
-        sessionCacheService.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-          case Some(PSALookupRequest(psaRef, _)) =>
-            val pnn = validFormData.toUpperCase
-            plaConnector.psaLookup(psaRef, pnn)(hc, executionContext).flatMap {
-              result =>
-                val resultData = Json.fromJson[PSALookupResult](result.json).get
-                val updatedResult = resultData.copy(protectionNotificationNumber = Some(pnn))
-                sessionCacheService.saveFormData[PSALookupResult](lookupResultID, updatedResult).map {
-                  _ => Redirect(routes.LookupController.displayLookupResults)
-                }(executionContext)
-            }(executionContext).recoverWith {
-              case r: UpstreamErrorResponse if r.statusCode == NOT_FOUND =>
-                val fullResult = PSALookupRequest(psaRef, Some(pnn))
-                sessionCacheService.saveFormData[PSALookupRequest](lookupRequestID, fullResult).map {
-                  _ => Redirect(routes.LookupController.displayNotFoundResults)
-                }(executionContext)
-            }(executionContext)
-          case _ =>
-            Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm))
+          _ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm)
         }(executionContext)
       }
     )
