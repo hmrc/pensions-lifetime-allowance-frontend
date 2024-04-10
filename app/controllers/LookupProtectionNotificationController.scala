@@ -62,7 +62,7 @@ class LookupProtectionNotificationController @Inject()(val sessionCacheService: 
   def displayProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     sessionCacheService.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
       case Some(_) => Future.successful(Ok(psa_lookup_protection_notification_no_form(pnnForm)))
-      case _ => Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm))
+      case _ => Future.successful(Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm))
     }(executionContext)
   }
 
@@ -88,7 +88,7 @@ class LookupProtectionNotificationController @Inject()(val sessionCacheService: 
                 }(executionContext)
             }(executionContext)
           case _ =>
-            Future.successful(Redirect(routes.LookupController.displaySchemeAdministratorReferenceForm))
+            Future.successful(Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm))
         }(executionContext)
       }
     )

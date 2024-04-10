@@ -118,8 +118,8 @@ GET         /withdraw-protection/withdraw-confirmation/:protectionType          
 GET         /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.displayProtectionNotificationNoForm
 POST        /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.submitProtectionNotificationNoForm
 
-GET         /psalookup/scheme-administrator-reference                                     @controllers.LookupController.displaySchemeAdministratorReferenceForm
-POST        /psalookup/scheme-administrator-reference                                     @controllers.LookupController.submitSchemeAdministratorReferenceForm
+GET         /psalookup/scheme-administrator-reference                                     @controllers.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm
+POST        /psalookup/scheme-administrator-reference                                     @controllers.LookupSchemeAdministratorReferenceController.submitSchemeAdministratorReferenceForm
 
 GET         /psalookup/not-found-results                                                  @controllers.LookupController.displayNotFoundResults
 GET         /psalookup/results                                                            @controllers.LookupController.displayLookupResults

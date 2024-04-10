@@ -127,7 +127,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
       val result = controller.displayProtectionNotificationNoForm.apply(request)
 
       status(result) shouldBe  SEE_OTHER
-      redirectLocation(result).get shouldBe  routes.LookupController.displaySchemeAdministratorReferenceForm.url
+      redirectLocation(result).get shouldBe  routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
     }
 
     "submit pnn form with valid data and redirect to results page" in new Setup  {
@@ -178,7 +178,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
       val result = controller.submitProtectionNotificationNoForm.apply(request)
 
       status(result) shouldBe  SEE_OTHER
-      redirectLocation(result) shouldBe  Some(routes.LookupController.displaySchemeAdministratorReferenceForm.url)
+      redirectLocation(result) shouldBe  Some(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url)
     }
 
   }

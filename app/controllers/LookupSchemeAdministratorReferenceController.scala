@@ -23,11 +23,9 @@ import models.{PSALookupRequest, PSALookupResult}
 import play.api.Application
 import play.api.data.Form
 import play.api.i18n.I18nSupport
-import play.api.libs.json.Json
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
@@ -37,13 +35,11 @@ import java.time.{LocalDate, LocalTime, ZoneId}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class LookupController @Inject()(val sessionCacheService: SessionCacheService,
-                                 val plaConnector: PLAConnector,
-                                 val actionWithSessionId: ActionWithSessionId,
-                                 mcc: MessagesControllerComponents,
-                                 psa_lookup_not_found_results: views.html.pages.lookup.psa_lookup_not_found_results,
-                                 pla_protection_guidance: views.html.pages.lookup.pla_protection_guidance,
-                                 psa_lookup_results: views.html.pages.lookup.psa_lookup_results)(
+class LookupSchemeAdministratorReferenceController @Inject()(val sessionCacheService: SessionCacheService,
+                                                             val plaConnector: PLAConnector,
+                                                             val actionWithSessionId: ActionWithSessionId,
+                                                             mcc: MessagesControllerComponents,
+                                                             psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form)(
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val context: PlaContext,
                                  implicit val appConfig: FrontendAppConfig,
@@ -56,39 +52,26 @@ class LookupController @Inject()(val sessionCacheService: SessionCacheService,
   def psaRefForm(implicit request: Request[AnyContent]): Form[String] = {
     PSALookupSchemeAdministratorReferenceForm.psaRefForm
   }
-  def pnnForm(implicit request: Request[AnyContent]): Form[String] = {
-    PSALookupProtectionNotificationNoForm.pnnForm
-  }
 
   val lookupRequestID = "psa-lookup-request"
   val lookupResultID = "psa-lookup-result"
 
-  def displayNotFoundResults: Action[AnyContent] = actionWithSessionId.async { implicit request =>
+  def displaySchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     sessionCacheService.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-      case Some(req@PSALookupRequest(_, Some(_))) => Future.successful(Ok(psa_lookup_not_found_results(req, buildTimestamp)))
-      case _ => Future.successful(Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm))
+      case Some(PSALookupRequest(psaRef, _)) => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
+      case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
     }(executionContext)
   }
 
-  def displayLookupResults: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService.fetchAndGetFormData[PSALookupResult](lookupResultID).map {
-      case Some(result) => Ok(psa_lookup_results(result, buildTimestamp))
-      case None => Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
-    }(executionContext)
+  def submitSchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
+    psaRefForm.bindFromRequest().fold(
+      formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
+      validFormData => {
+        sessionCacheService.saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData)).map {
+          _ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm)
+        }(executionContext)
+      }
+    )
   }
-
-  def displayProtectionTypeGuidance: Action[AnyContent] = actionWithSessionId { implicit request =>
-    Ok(pla_protection_guidance())
-  }
-
-  def redirectToStart: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService.remove.map { _ => Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
-    }(executionContext)
-  }
-
-  def buildTimestamp: String = s"${LocalDate.now.format(DateTimeFormatter
-    .ofPattern("dd/MM/yyyy"))} at ${LocalTime.now(
-      ZoneId.of("Europe/London"))
-    .format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
 
 }

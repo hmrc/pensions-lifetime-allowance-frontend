@@ -33,7 +33,7 @@
 
     @errorSummary(psaRefForm.errors, Some("pensionSchemeAdministratorCheckReference"))
 
-    @form(action = routes.LookupController.submitSchemeAdministratorReferenceForm) {
+    @form(action = routes.LookupSchemeAdministratorReferenceController.submitSchemeAdministratorReferenceForm) {
 
         @formInputText(
             field = psaRefForm("pensionSchemeAdministratorCheckReference"),
