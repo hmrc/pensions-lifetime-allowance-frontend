@@ -48,7 +48,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       "have a form" which {
 
         "has the correct action" in {
-          doc.select("form").attr("action") shouldBe controllers.routes.LookupController.submitSchemeAdministratorReferenceForm.url
+          doc.select("form").attr("action") shouldBe controllers.routes.LookupSchemeAdministratorReferenceController.submitSchemeAdministratorReferenceForm.url
         }
 
         "has the correct method" in {

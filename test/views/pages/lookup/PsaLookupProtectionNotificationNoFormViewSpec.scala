@@ -53,7 +53,7 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
         }
 
         "has the correct action" in {
-          doc.select("form").attr("action") shouldBe controllers.routes.LookupController.submitProtectionNotificationNoForm.url
+          doc.select("form").attr("action") shouldBe controllers.routes.LookupProtectionNotificationController.submitProtectionNotificationNoForm.url
         }
       }
 

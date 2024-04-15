@@ -115,15 +115,16 @@ POST        /withdraw-protection/date-input-confirmation                        
 GET         /withdraw-protection/confirmation/:withdrawDate                               @controllers.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)
 GET         /withdraw-protection/withdraw-confirmation/:protectionType                    @controllers.WithdrawProtectionController.showWithdrawConfirmation(protectionType)
 #PSA Lookup routes
-GET         /psalookup/protection-notification-number                                     @controllers.LookupController.displayProtectionNotificationNoForm
-POST        /psalookup/protection-notification-number                                     @controllers.LookupController.submitProtectionNotificationNoForm
+GET         /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.displayProtectionNotificationNoForm
+POST        /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.submitProtectionNotificationNoForm
 
-GET         /psalookup/scheme-administrator-reference                                     @controllers.LookupController.displaySchemeAdministratorReferenceForm
-POST        /psalookup/scheme-administrator-reference                                     @controllers.LookupController.submitSchemeAdministratorReferenceForm
+GET         /psalookup/scheme-administrator-reference                                     @controllers.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm
+POST        /psalookup/scheme-administrator-reference                                     @controllers.LookupSchemeAdministratorReferenceController.submitSchemeAdministratorReferenceForm
 
 GET         /psalookup/not-found-results                                                  @controllers.LookupController.displayNotFoundResults
 GET         /psalookup/results                                                            @controllers.LookupController.displayLookupResults
 GET         /psalookup/results/clear                                                      @controllers.LookupController.redirectToStart
+GET         /psalookup/protection-guidance                                                @controllers.LookupController.displayProtectionTypeGuidance
+
 GET         /psalookup/results/print                                                      @controllers.PrintPdfController.printResultsPDF
 GET         /psalookup/not-found/print                                                    @controllers.PrintPdfController.printNotFoundPDF
-GET         /psalookup/protection-guidance                                                @controllers.LookupController.displayProtectionTypeGuidance

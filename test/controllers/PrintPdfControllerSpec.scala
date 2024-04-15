@@ -91,7 +91,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
       val result = controller.printResultsPDF.apply(request)
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm.url
+      redirectLocation(result).get shouldBe routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
     }
 
     "return a 200 when able to print a Results PDF" in new Setup {
@@ -126,7 +126,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
       val result = controller.printNotFoundPDF.apply(request)
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm.url
+      redirectLocation(result).get shouldBe routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
     }
 
     "return a 303 when unable to print a NotFound PDF when the lifetimeAllowanceReference is NOT defined" in new Setup {
@@ -140,7 +140,7 @@ class PrintPdfControllerSpec extends FakeApplication with MockitoSugar with Befo
       val result = controller.printNotFoundPDF.apply(request)
 
       status(result) shouldBe SEE_OTHER
-      redirectLocation(result).get shouldBe routes.LookupController.displaySchemeAdministratorReferenceForm.url
+      redirectLocation(result).get shouldBe routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
     }
 
     "return a 200 when able to print a NotFound PDF when the lifetimeAllowanceReference is defined" in new Setup {

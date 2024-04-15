@@ -16,34 +16,34 @@
 
 package controllers
 
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
-import views.html.pages.lookup.{pla_protection_guidance, psa_lookup_not_found_results, psa_lookup_protection_notification_no_form, psa_lookup_results, psa_lookup_scheme_admin_ref_form}
+import models.cache.CacheMap
 import models.{PSALookupRequest, PSALookupResult}
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.i18n.Messages
-import play.api.libs.json.{Json}
+import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers.FakeApplication
-import models.cache.CacheMap
-import org.mockito.ArgumentMatchers.any
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys, UpstreamErrorResponse}
+import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import utils.ActionWithSessionId
+import views.html.pages.lookup._
 
 import scala.concurrent.Future
 
-class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with MockitoSugar {
+class LookupProtectionNotificationControllerSpec extends FakeApplication with BeforeAndAfterEach with MockitoSugar {
 
   private val sessionId = SessionKeys.sessionId -> "lookup-test"
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
@@ -68,20 +68,26 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   class Setup {
-    val controller = new LookupController(
+    val controller = new LookupProtectionNotificationController(
       mockSessionCacheService,
       mockPlaConnector,
       mockActionWithSessionId,
       mockMCC,
-      mockPsa_lookup_not_found_results,
-      mockPla_protection_guidance,
-      mockPsa_lookup_results,
+      mockPsa_lookup_protection_notification_no_form
     )
   }
 
   override def beforeEach(): Unit = {
     reset(mockPlaConnector)
   }
+
+  private val validPNNForm = Seq(
+    "lifetimeAllowanceReference" -> "IP141000000000A"
+  )
+
+  private val invalidPNNForm = Seq(
+    "lifetimeAllowanceReference" -> ""
+  )
 
   private val plaReturnJson = Json.parse(
     """{
@@ -92,58 +98,87 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       |  "protectionNotificationNumber": "IP14000000000A"
       |}""".stripMargin)
 
-  private val psaRequestJson = Json.parse(
-    """{
-      | "pensionSchemeAdministratorCheckReference": "PSA12345678A",
-      | "lifetimeAllowanceReference": "IP14000000000A"
-      | }""".stripMargin
+  private val cacheData: Map[String, JsValue] = Map(
+    "pensionSchemeAdministratorCheckReference" -> JsString(""),
+    "ltaType" -> JsNumber(5),
+    "psaCheckResult" -> JsNumber(1),
+    "protectedAmount" -> JsNumber(25000),
+    "protectionNotificationNumber" -> JsString("IP14000000000A")
   )
 
-  "LookupController" should {
-    "return 200 with correct message on results page" in new Setup  {
-      val request = FakeRequest().withSession(sessionId)
-      cacheFetchCondition[PSALookupResult](Some(Json.fromJson[PSALookupResult](plaReturnJson).get))
+  private val mockCacheMap = CacheMap("psa-lookup-result", cacheData)
 
-      val result = controller.displayLookupResults.apply(request)
+
+  "LookupProtectionNotificationController" should {
+
+    "return 200 with correct message on pnn form" in new Setup  {
+      cacheFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSAREF")))
+
+      val request = FakeRequest().withSession(sessionId)
+      val result = controller.displayProtectionNotificationNoForm.apply(request)
 
       status(result) shouldBe  OK
     }
 
-    "redirect when no result data is stored on results page" in new Setup  {
-      val request = FakeRequest().withSession(sessionId)
-      cacheFetchCondition[PSALookupResult](None)
-
-      val result = controller.displayLookupResults.apply(request)
-
-      status(result) shouldBe  SEE_OTHER
-      redirectLocation(result).get shouldBe  routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
-    }
-
-    "return 200 with correct message on not found results page" in new Setup  {
-      val request = FakeRequest().withSession(sessionId)
-      cacheFetchCondition[PSALookupRequest](Some(Json.fromJson[PSALookupRequest](psaRequestJson).get))
-
-      val result = controller.displayNotFoundResults.apply(request)
-
-      status(result) shouldBe  OK
-    }
-
-    "redirect when no result data is stored on not found results page" in new Setup  {
-      val request = FakeRequest().withSession(sessionId)
+    "redirect when no data entered on first page for pnn form" in new Setup  {
       cacheFetchCondition[PSALookupRequest](None)
 
-      val result = controller.displayLookupResults.apply(request)
+      val request = FakeRequest().withSession(sessionId)
+      val result = controller.displayProtectionNotificationNoForm.apply(request)
 
       status(result) shouldBe  SEE_OTHER
       redirectLocation(result).get shouldBe  routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
     }
 
-    "return 200 with correct message on protection type guidance page" in new Setup  {
+    "submit pnn form with valid data and redirect to results page" in new Setup  {
+      cacheFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSA REF")))
+      plaConnectorReturn(HttpResponse(status = OK, json = plaReturnJson, headers = Map.empty))
 
-      val request = FakeRequest().withSession(sessionId)
-      val result = controller.displayProtectionTypeGuidance.apply(request)
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*).withMethod("POST")
 
-      status(result) shouldBe  OK
+      cacheSaveCondition[PSALookupResult](mockCacheMap)
+
+      val result = controller.submitProtectionNotificationNoForm.apply(request)
+
+      status(result) shouldBe  SEE_OTHER
+      redirectLocation(result).get shouldBe  routes.LookupController.displayLookupResults.url
+    }
+
+    "submit pnn form with valid data and redirect when a NOT FOUND is returned" in new Setup  {
+      cacheFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSA REF")))
+      plaConnectorReturn(HttpResponse(status = OK, json = plaReturnJson, headers = Map.empty))
+
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*).withMethod("POST")
+
+      when(mockPlaConnector.psaLookup(any(), any())(any(), any()))
+        .thenReturn(Future.failed(UpstreamErrorResponse("message", NOT_FOUND, NOT_FOUND)))
+      cacheSaveCondition[PSALookupResult](mockCacheMap)
+
+      val result = controller.submitProtectionNotificationNoForm.apply(request)
+
+      status(result) shouldBe  SEE_OTHER
+      redirectLocation(result).get shouldBe  routes.LookupController.displayNotFoundResults.url
+    }
+
+    "display errors when invalid data entered for pnn form" in new Setup  {
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(invalidPNNForm: _*).withMethod("POST")
+
+      cacheSaveCondition[PSALookupRequest](mockCacheMap)
+
+      val result = controller.submitProtectionNotificationNoForm.apply(request)
+
+      status(result) shouldBe  BAD_REQUEST
+    }
+
+    "redirect to the administrator reference form when PSA request data not found on submission" in new Setup  {
+      val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*).withMethod("POST")
+
+      cacheFetchCondition[PSALookupRequest](None)
+
+      val result = controller.submitProtectionNotificationNoForm.apply(request)
+
+      status(result) shouldBe  SEE_OTHER
+      redirectLocation(result) shouldBe  Some(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url)
     }
 
   }

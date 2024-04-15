@@ -39,7 +39,7 @@
 
     @errorSummary(pnnForm.errors, Some("lifetimeAllowanceReference"))
 
-    @form(action = routes.LookupController.submitProtectionNotificationNoForm) {
+    @form(action = routes.LookupProtectionNotificationController.submitProtectionNotificationNoForm) {
 
         @formInputText(
             field = pnnForm("lifetimeAllowanceReference"),
