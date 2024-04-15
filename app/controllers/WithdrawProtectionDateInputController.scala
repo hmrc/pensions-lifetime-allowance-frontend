@@ -75,7 +75,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
       },
       form => {
         sessionCacheService.saveFormData(s"withdrawProtectionForm", form).flatMap {
-          _ => Future.successful(Redirect(routes.WithdrawProtectionController.getSubmitWithdrawDateInput))
+          _ => Future.successful(Redirect(routes.WithdrawProtectionDateInputConfirmationController.getSubmitWithdrawDateInput))
         }
       }
     )

@@ -52,7 +52,7 @@ import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdra
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class WithdrawProtectionControllerSpec
+class WithdrawProtectionDateInputConfirmationControllerSpec
   extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach with SessionCacheTestHelper with FakeRequestHelper {
 
   implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
@@ -72,7 +72,6 @@ class WithdrawProtectionControllerSpec
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction = mock[AuthFunction]
   val mockWithdrawConfirm: withdrawConfirm = app.injector.instanceOf[withdrawConfirm]
-  val mockWithdrawConfirmation: withdrawConfirmation = app.injector.instanceOf[withdrawConfirmation]
   val mockWithdrawDate: withdrawDate = app.injector.instanceOf[withdrawDate]
   val mockWithdrawImplications: withdrawImplications = app.injector.instanceOf[withdrawImplications]
   val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
@@ -91,15 +90,12 @@ class WithdrawProtectionControllerSpec
       override def authConnector: AuthConnector = mockAuthConnector
     }
 
-    val controller: WithdrawProtectionController = new WithdrawProtectionController(
+    val controller: WithdrawProtectionDateInputConfirmationController = new WithdrawProtectionDateInputConfirmationController(
       mockSessionCacheService,
-      mockPlaConnector,
       mockMCC,
       authFunction,
       mockWithdrawConfirm,
-      mockWithdrawConfirmation,
       mockWithdrawDate,
-      mockWithdrawImplications,
       mockTechnicalError
     ) {
     }
@@ -164,67 +160,76 @@ class WithdrawProtectionControllerSpec
 
   val lang: Lang = mock[Lang]
 
-    "In WithdrawProtectionController calling the showWithdrawConfirmation action" should {
-
-      "return 200" in new Setup {
-        mockAuthConnector(Future.successful({}))
-        when(mockSessionCacheService.remove(any())).thenReturn(Future.successful(mock[HttpResponse]))
-        status(controller.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
-      }
-    }
-
-    "In WithdrawProtectionController calling the displayWithdrawConfirmation action" when {
-
-      "handling an OK response" in new Setup {
-        lazy val result: Future[Result] = {
+    "In WithdrawProtectionController calling the getSubmitWithdrawDateInput action" when {
+      "there is a stored protection Model" should {
+        "return a 200" in new Setup {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-          when(mockPlaConnector.amendProtection(anyString(), any())(any(), any()))
-            .thenReturn(Future.successful(HttpResponse(status = OK, body = "")))
-          controller.displayWithdrawConfirmation("")(fakeRequest)
+
+          when(mockSessionCacheService.fetchAndGetFormData[Any](anyString())(any(), any()))
+            .thenReturn(
+              Future.successful(Some(ip2016Protection)),
+              Future.successful(Some(withdrawDateForm))
+            )
+
+          lazy val result: Future[Result] = controller.getSubmitWithdrawDateInput(fakeRequest)
+          status(result) shouldBe OK
         }
-          status(result) shouldBe SEE_OTHER
-
       }
-
-      "handling a non-OK response" in new Setup {
-        lazy val result: Future[Result] = {
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-          when(mockPlaConnector.amendProtection(anyString(), any())(any(), any()))
-            .thenReturn(Future.successful(HttpResponse(status = INTERNAL_SERVER_ERROR, body = "")))
-          controller.displayWithdrawConfirmation("")(fakeRequest)
-        }
-          status(result) shouldBe INTERNAL_SERVER_ERROR
-          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-      }
-    }
-
-    "In WithdrawProtectionController calling the withdrawImplications action" when {
 
       "there is no stored protection model" should {
-        "return 500" in new Setup {
-          lazy val result: Future[Result] = {
-            mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-            cacheFetchCondition[ProtectionModel](None)
-            controller.withdrawImplications(fakeRequest)
-          }
+        "return a 500" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          cacheFetchCondition[ProtectionModel](None)
+          lazy val result: Future[Result] = controller.getSubmitWithdrawDateInput(fakeRequest)
           status(result) shouldBe INTERNAL_SERVER_ERROR
-          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-
         }
       }
+    }
+
+    "In withdrawProtectionController calling the submitWithdrawDateInput action" when {
 
       "there is a stored protection model" should {
-
         "return 200" in new Setup {
+
+          object UserRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
+            ("withdrawDate.day", "20"), ("withdrawDate.month", "7"), ("withdrawDate.year", "2017"))
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
           cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-          when(mockDisplayConstructors.createWithdrawSummaryTable(any())).thenReturn(tstAmendDisplayModel)
+          status(UserRequest.result) shouldBe OK
+        }
+      }
+       "there is a stored protection model" should {
+         "return 400 Bad Request" in new Setup {
 
-          val result: Future[Result] = controller.withdrawImplications(fakeRequest)
-          status(result) shouldBe OK
+           object InvalidDayRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
+             ("withdrawDate.day", "20000"), ("withdrawDate.month", "10"), ("withdrawDate.year", "2017"))
+           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+           cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+           status(InvalidDayRequest.result) shouldBe BAD_REQUEST
+         }
+       }
+         "there is a stored protection model" should {
+           "return 400 Bad Request with single error" in new Setup {
+
+             object InvalidMultipleErrorRequest extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
+               ("withdrawDate.day", "20000"), ("withdrawDate.month", "70000"), ("withdrawDate.year", "2010000007"))
+             mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+             cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+             status(InvalidMultipleErrorRequest.result) shouldBe BAD_REQUEST
+           }
+         }
+      "there is a stored protection model" should {
+        "return 400 Bad Request with date in past error" in new Setup {
+
+          object BadRequestDateInPast extends AuthorisedFakeRequestToPost(controller.submitWithdrawDateInput,
+            ("withdrawDate.day", "20"), ("withdrawDate.month", "1"), ("withdrawDate.year", "2012"))
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          status(BadRequestDateInPast.result) shouldBe BAD_REQUEST
         }
       }
     }
