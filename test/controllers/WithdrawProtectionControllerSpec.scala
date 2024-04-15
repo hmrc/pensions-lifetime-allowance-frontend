@@ -94,7 +94,6 @@ class WithdrawProtectionControllerSpec
     val controller: WithdrawProtectionController = new WithdrawProtectionController(
       mockSessionCacheService,
       mockPlaConnector,
-      mockDisplayConstructors,
       mockMCC,
       authFunction,
       mockWithdrawConfirm,
@@ -229,48 +228,6 @@ class WithdrawProtectionControllerSpec
         }
       }
     }
-
-
-    "In WithdrawProtectionController calling the getWithdrawDateInput action" when {
-
-      "there is a stored protection model" should {
-        "return 200" in new Setup {
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-
-          lazy val result: Future[Result] = controller.getWithdrawDateInput(fakeRequest)
-
-          status(result) shouldBe OK
-        }
-      }
-    }
-
-  "In WithdrawProtectionController calling the postWithdrawDateInput action" when {
-
-    "there is no stored protection model" should {
-      "return 500" in new Setup {
-        mockAuthConnector(Future.successful({}))
-        cacheFetchCondition[ProtectionModel](None)
-        lazy val result: Future[Result] = controller.postWithdrawDateInput(fakeRequest)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
-      }
-    }
-
-    "there is a stored protection model" should {
-      "return 303" in new Setup {
-        mockAuthConnector(Future.successful({}))
-
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-        cacheSaveCondition[WithdrawDateFormModel](mockSessionCacheService)
-
-
-        val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withFormUrlEncodedBody(("withdrawDate.day", "20"), ("withdrawDate.month", "7"), ("withdrawDate.year", "2017")).withMethod("POST")
-
-        lazy val result: Future[Result] = controller.postWithdrawDateInput(request)
-        status(result) shouldBe SEE_OTHER
-      }
-    }
-  }
 
     "In WithdrawProtectionController calling the getSubmitWithdrawDateInput action" when {
       "there is a stored protection Model" should {
