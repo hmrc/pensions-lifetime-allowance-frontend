@@ -77,7 +77,7 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
       }
 
       s"have a href" in {
-        button.attr("href") shouldBe routes.WithdrawProtectionController.getWithdrawDateInput.url
+        button.attr("href") shouldBe routes.WithdrawProtectionDateInputController.getWithdrawDateInput.url
       }
 
     }
@@ -130,7 +130,7 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
       }
 
       s"have a href" in {
-        button.attr("href") shouldBe routes.WithdrawProtectionController.getWithdrawDateInput.url
+        button.attr("href") shouldBe routes.WithdrawProtectionDateInputController.getWithdrawDateInput.url
       }
 
     }

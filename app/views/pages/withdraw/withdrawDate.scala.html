@@ -43,7 +43,7 @@
     @errorSummary(withdrawDateForm.errors.distinctBy(error => error.message), Some("withdrawDate"))
 }
 
-    @form(action = routes.WithdrawProtectionController.postWithdrawDateInput) {
+    @form(action = routes.WithdrawProtectionDateInputController.postWithdrawDateInput) {
 
         @formInlineDateInput(
             content = Messages("pla.withdraw.date-input.title"),
