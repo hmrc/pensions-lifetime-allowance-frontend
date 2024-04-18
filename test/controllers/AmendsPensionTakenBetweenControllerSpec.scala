@@ -16,29 +16,21 @@
 
 package controllers
 
-import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
-import common.Exceptions.RequiredValueNotDefinedException
+import auth.{AuthFunction, AuthFunctionImpl}
 import config._
 import config.wiring.PlaFormPartialRetriever
-import connectors.PLAConnector
-import constructors.{DisplayConstructors, ResponseConstructors}
-import enums.ApplicationType
-import forms.{AmendCurrentPensionForm, AmendOverseasPensionsForm, AmendPensionsTakenBeforeForm, AmendPensionsTakenBetweenForm}
 import mocks.AuthMock
 import models._
 import models.amendModels._
-import models.cache.CacheMap
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.{any, anyString, startsWith}
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
-import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.libs.json.{JsNull, Json}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -46,16 +38,12 @@ import services.SessionCacheService
 import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
 import views.html.pages.amends._
-import views.html.pages.fallback.{noNotificationId, technicalError}
-import views.html.pages.result.manualCorrespondenceNeeded
-
-import java.time.LocalDate
+import views.html.pages.fallback.technicalError
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
+class AmendsPensionTakenBetweenControllerSpec extends FakeApplication
   with MockitoSugar
   with SessionCacheTestHelper
   with BeforeAndAfterEach with AuthMock with I18nSupport {
@@ -66,7 +54,7 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
   val mockMCC: MessagesControllerComponents          = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction                 = mock[AuthFunction]
   val mockTechnicalError: technicalError             = app.injector.instanceOf[technicalError]
-  val mockAmendPensionsTakenBefore: amendPensionsTakenBefore = app.injector.instanceOf[amendPensionsTakenBefore]
+  val mockAmendPensionsTakenBetween: amendPensionsTakenBetween = app.injector.instanceOf[amendPensionsTakenBetween]
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
@@ -95,13 +83,12 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
       mockTechnicalError
       )
 
-    val controller = new AmendsPensionTakenBeforeController(
+    val controller = new AmendsPensionTakenBetweenController(
       mockSessionCacheService,
       mockMCC,
       authFunction,
       mockTechnicalError,
-      mockAmendPensionsTakenBefore
-    )
+      mockAmendPensionsTakenBetween)
   }
 
   val sessionId = UUID.randomUUID.toString
@@ -158,135 +145,135 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
     protectionReference = Some("PSA123456"))
   val testAmendIP2016ProtectionModelWithNoDebit = AmendProtectionModel(ip2016NoDebitProtection, ip2016NoDebitProtection)
 
-  val tstPensionContributionNoPsoDisplaySections = Seq(
-      AmendDisplaySectionModel("PensionsTakenBefore", Seq(
-        AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2014", "active")), None, "No")
-      )
-    )
-  )
 
   def cacheFetchCondition[T](data: Option[T]): Unit = {
     when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
       .thenReturn(Future.successful(data))
   }
 
-  "In AmendsController calling the .amendPensionsTakenBefore action" when {
-
+  "In AmendsController calling the .amendPensionsTakenBetween action" when {
     "not supplied with a stored model" in new Setup {
-      lazy val result = controller.amendPensionsTakenBefore("ip2016", "open")(fakeRequest)
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
 
-      status(result) shouldBe 500
+      lazy val result = controller.amendPensionsTakenBetween("ip2016", "open")(fakeRequest)
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](None)
+
+        status(result) shouldBe 500
+
     }
-
     "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" in new Setup {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
-    }
-
-
-    "supplied with the stored test model for (dormant, IP2016, preADay = £2000)" in new Setup {
-
-      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-
-      status(result) shouldBe 200
-    }
-
-    "should take the user to the pensions taken before page" in new Setup {
-      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+      lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-
-      jsoupDoc.body.getElementsByClass("govuk-heading-xl").text shouldEqual Messages("pla.pensionsTakenBefore.title")
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
+        jsoupDoc.body.getElementById("amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__input"
+      }
     }
 
-    "return some HTML that" should {
+    "supplied with the stored test model for (dormant, IP2016, preADay = £2000)" in new Setup {
 
-      "contain some text and use the character set utf-8" in new Setup {
-        lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+      lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-
-        contentType(result) shouldBe Some("text/html")
-        charset(result) shouldBe Some("utf-8")
+        status(result) shouldBe 200
       }
 
-      "have the value of the check box set as 'Yes' by default" in new Setup {
+      "should take the user to the pensions taken before page" in new Setup {
+        lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.pensionsTakenBetween.title")
       }
 
-      "have the value of the input field set to 2000 by default" in new Setup {
+      "return some HTML that" should {
+
+        "contain some text and use the character set utf-8" in new Setup {
+          lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+
+          contentType(result) shouldBe Some("text/html")
+          charset(result) shouldBe Some("utf-8")
+        }
+
+        "have the value of the check box set as 'Yes' by default" in new Setup {
+          lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+          lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+          jsoupDoc.body.getElementById("amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__input"
+          jsoupDoc.body.getElementById("amendedPensionsTakenBetween").attr("value") shouldBe "yes"
+        }
+      }
+
+    "supplied with the stored test model for (dormant, IP2014, preADay = £2000))" in new Setup {
+      lazy val result = controller.amendPensionsTakenBetween("ip2014", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-      }
-    }
-    "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" in new Setup {
-      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
-      status(result) shouldBe 200
-    }
-  }
-
-  "Submitting Amend IP16 Pensions Taken Before data" when {
-
-    "the data is invalid" in new Setup {
-  lazy val result = controller.submitAmendPensionsTakenBefore(fakeRequest)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-
-        status(result) shouldBe 400
-      }
-    }
-
-    "the data is invalidated by additional validation" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "1"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-
-        status(DataItem.result) shouldBe 400
+        status(result) shouldBe 200
       }
 
+  "Submitting Amend IP16 Pensions Taken Between data" when {
 
     "the model can't be fetched from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "no"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](None)
 
         status(DataItem.result) shouldBe 500
-    }
-
-    "the data is valid with a no" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
-        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-
-        status(DataItem.result) shouldBe 303
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
       }
 
-    "the data is valid with a yes" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "yes"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+    "the data is valid with a no response" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "no"), ("protectionType", "ip2016"), ("status", "dormant"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-        cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
         cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendPensionsWorthBefore("ip2016", "dormant")}")
+
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
       }
+
+    "the data is valid with a yes response" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "yes"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+        status(DataItem.result) shouldBe 303
+
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendPensionsUsedBetween("ip2016", "dormant")}")
+      }
+
+
+    "the data is invalid" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
+        ("protectionType", "ip2016"), ("status", "dormant"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        status(DataItem.result) shouldBe 400
+      }
+
+
+    "the data is invalid on additional validation" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween,
+        ("amendedPensionsTakenBetween", "1"), ("protectionType", "ip2016"), ("status", "dormant"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        status(DataItem.result) shouldBe 400
+      }
+  }
 }

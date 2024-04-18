@@ -54,7 +54,7 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPensionsTakenBetween.url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween.url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBetweenLegendText
     }
 

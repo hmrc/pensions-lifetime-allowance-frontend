@@ -36,8 +36,8 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
     )
     ),
     AmendDisplaySectionModel("PensionsTakenBetween", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active")), None, "Yes"),
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active")), None, "£100,000")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")), None, "Yes"),
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")), None, "£100,000")
     )
     ),
     AmendDisplaySectionModel("OverseasPensions", Seq(

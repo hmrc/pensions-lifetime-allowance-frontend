@@ -51,7 +51,7 @@ object Helpers {
     applicationSection match {
       case PensionsTakenBefore       => controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(protectionType, status)
       case PensionsWorthBefore       => controllers.routes.AmendsController.amendPensionsWorthBefore(protectionType, status)
-      case PensionsTakenBetween      => controllers.routes.AmendsController.amendPensionsTakenBetween(protectionType, status)
+      case PensionsTakenBetween      => controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(protectionType, status)
       case PensionsUsedBetween       => controllers.routes.AmendsController.amendPensionsUsedBetween(protectionType, status)
       case OverseasPensions          => controllers.routes.AmendsController.amendOverseasPensions(protectionType, status)
       case CurrentPensions           => controllers.routes.AmendsController.amendCurrentPensions(protectionType, status)

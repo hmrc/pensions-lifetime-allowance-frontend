@@ -19,7 +19,6 @@ package controllers
 import auth.AuthFunction
 import common._
 import config.{FrontendAppConfig, PlaContext}
-import connectors.PLAConnector
 import enums.ApplicationType
 import forms.AmendPensionsTakenBeforeForm._
 import models.amendModels._
@@ -36,7 +35,6 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsPensionTakenBeforeController @Inject()(val sessionCacheService: SessionCacheService,
-                                                   val plaConnector: PLAConnector,
                                                    mcc: MessagesControllerComponents,
                                                    authFunction: AuthFunction,
                                                    technicalError: views.html.pages.fallback.technicalError,

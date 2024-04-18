@@ -73,7 +73,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     )
     ),
     AmendDisplaySectionModel("PensionsTakenBetween", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active")), None, "No")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")), None, "No")
     )
     ),
     AmendDisplaySectionModel("OverseasPensions", Seq(
@@ -97,7 +97,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     )
     ),
     AmendDisplaySectionModel("PensionsTakenBetween", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active")), None, "No")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")), None, "No")
     )
     ),
     AmendDisplaySectionModel("OverseasPensions", Seq(
