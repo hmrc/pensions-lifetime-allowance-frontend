@@ -141,7 +141,7 @@ class WithdrawProtectionControllerSpec
   val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
 
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2014", "active")), None, "No"))
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2014", "active")), None, "No"))
     ),
     AmendDisplaySectionModel("PensionsTakenBetween", Seq(
       AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2014", "active")), None, "No"))

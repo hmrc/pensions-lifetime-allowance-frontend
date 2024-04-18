@@ -77,8 +77,9 @@ GET         /existing-protections                                               
 GET         /print-protection                                                             @controllers.PrintController.printView
 
 ## Amends ##
-GET         /amend-protection/pensions-taken-before/:protectionType/:status               @controllers.AmendsController.amendPensionsTakenBefore(protectionType, status)
-POST        /amend-protection/pensions-taken-before                                       @controllers.AmendsController.submitAmendPensionsTakenBefore
+GET         /amend-protection/pensions-taken-before/:protectionType/:status               @controllers.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(protectionType, status)
+POST        /amend-protection/pensions-taken-before                                       @controllers.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore
+
 GET         /amend-protection/pensions-taken-between/:protectionType/:status              @controllers.AmendsController.amendPensionsTakenBetween(protectionType, status)
 POST        /amend-protection/pensions-taken-between                                      @controllers.AmendsController.submitAmendPensionsTakenBetween
 

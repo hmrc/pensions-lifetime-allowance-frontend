@@ -69,7 +69,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
   lazy val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
 
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
     )
     ),
     AmendDisplaySectionModel("PensionsTakenBetween", Seq(
@@ -93,7 +93,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
   lazy val tstPensionContributionPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
 
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
     )
     ),
     AmendDisplaySectionModel("PensionsTakenBetween", Seq(

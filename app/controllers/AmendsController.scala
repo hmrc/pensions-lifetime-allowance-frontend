@@ -99,39 +99,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       )
     }
   }
-  val submitAmendPensionsTakenBefore: Action[AnyContent] = Action.async {
-    implicit request =>
-       authFunction.genericAuthWithNino("existingProtections") { nino =>
-        amendPensionsTakenBeforeForm.bindFromRequest().fold(
-          errors => {
-            val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-            Future.successful(BadRequest(amendPensionsTakenBefore(form)))
-          },
-          success => {
-              sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
-                case Some(model) =>
-                  success.amendedPensionsTakenBefore match {
-                    case "yes" => Future.successful(Redirect(routes.AmendsController.amendPensionsWorthBefore(
-                      success.protectionType.toLowerCase, success.status.toLowerCase)))
-                    case "no" =>
-                      val updated = model.updatedProtection.copy(preADayPensionInPayment = Some(0))
-                      val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-                      val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                      sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
-                        _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
-                      }
-                  }
-
-                case _ =>
-                  logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before")
-                  Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-
-            }
-          }
-        )
-      }
-  }
   val submitAmendPensionsWorthBefore: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       amendPensionsWorthBeforeForm.bindFromRequest().fold(
@@ -179,9 +147,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                         _ =>
                           Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
                       }
-
                  }
-
               case _ =>
                 logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken between")
                 Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
@@ -369,12 +335,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
           .withHeaders(CACHE_CONTROL -> "no-cache")
       })
     }
-
-  def amendPensionsTakenBefore(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendRoute(AmendJourney.pensionTakenBefore, protectionType, status, nino).apply(request)
-    }
-  }
 
   def amendPensionsWorthBefore(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
