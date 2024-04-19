@@ -334,23 +334,12 @@ extends FrontendController(mcc) with I18nSupport with Logging{
           journey match {
             case `currentPension` =>
               AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.getOrElse[Double](0))), protectionType, status)
-            case `pensionTakenBefore` =>
-              val yesNoValue = if (data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0) > 0) "yes" else "no"
-              AmendPensionsTakenBeforeModel(yesNoValue,
-                protectionType,
-                status)
             case `pensionWorthBefore` =>
               AmendPensionsWorthBeforeModel(
                 Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0))),
                 protectionType,
                 status
               )
-            case `pensionTakenBetween` =>
-              val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes" else "no"
-              AmendPensionsTakenBetweenModel(
-                yesNoValue,
-                protectionType,
-                status)
             case `pensionUsedBetween` =>
               AmendPensionsUsedBetweenModel(
                 Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0))),
