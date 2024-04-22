@@ -64,7 +64,7 @@
 
     <p class="govuk-body">@Messages("pla.overseasPensions.question")</p>
 
-    @form(action = routes.AmendsController.submitAmendOverseasPensions) {
+    @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions) {
 
         @formHiddenYesNoRadio(
             field = amendOverseasPensionsForm("amendedOverseasPensions"),

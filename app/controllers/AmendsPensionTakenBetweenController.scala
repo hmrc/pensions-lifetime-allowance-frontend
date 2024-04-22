@@ -94,7 +94,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                    status))))
                }
              case _ =>
-               logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend pensionTakenBefore page")
+               logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend pensionTakenBetween page")
                InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
            }
         }

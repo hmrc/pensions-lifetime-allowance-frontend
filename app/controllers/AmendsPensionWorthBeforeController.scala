@@ -67,7 +67,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                 }
 
               case _ =>
-                logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before amount")
+                logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions worth before amount")
                 Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
             }
           }
@@ -90,7 +90,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                 status))))
             }
           case _ =>
-            logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend pensionTakenBefore page")
+            logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend pensionWorthBefore page")
             InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
         }
       }

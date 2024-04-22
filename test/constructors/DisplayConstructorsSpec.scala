@@ -77,8 +77,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     )
     ),
     AmendDisplaySectionModel("OverseasPensions", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
     )
     ),
     AmendDisplaySectionModel("CurrentPensions",Seq(
@@ -101,8 +101,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     )
     ),
     AmendDisplaySectionModel("OverseasPensions", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
     )
     ),
     AmendDisplaySectionModel("CurrentPensions",Seq(
