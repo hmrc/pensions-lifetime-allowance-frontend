@@ -57,7 +57,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                 sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
                   case Some(model) =>
                      success.amendedPensionsTakenBetween match {
-                        case "yes" => Future.successful(Redirect(routes.AmendsController.amendPensionsUsedBetween(success.protectionType.toLowerCase, success.status.toLowerCase)))
+                        case "yes" => Future.successful(Redirect(routes.AmendsPensionUsedBetweenController.amendPensionsUsedBetween(success.protectionType.toLowerCase, success.status.toLowerCase)))
                         case "no" =>
                           val updated = model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(0))
                           val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))

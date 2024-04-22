@@ -76,7 +76,7 @@ class AmendIP14PensionsUsedBetweenViewSpec extends CommonViewSpecHelper with Ame
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPensionsUsedBetween.url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween.url
     }
 
     "have a £ symbol present" in{

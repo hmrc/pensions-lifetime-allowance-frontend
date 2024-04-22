@@ -153,7 +153,7 @@ class AmendsPensionTakenBetweenControllerSpec extends FakeApplication
       .thenReturn(Future.successful(data))
   }
 
-  "In AmendsController calling the .amendPensionsTakenBetween action" when {
+  "In AmendsPensionTakenBetweenController calling the .amendPensionsTakenBetween action" when {
     "not supplied with a stored model" in new Setup {
 
       lazy val result = controller.amendPensionsTakenBetween("ip2016", "open")(fakeRequest)
@@ -257,7 +257,7 @@ class AmendsPensionTakenBetweenControllerSpec extends FakeApplication
 
         status(DataItem.result) shouldBe 303
 
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendPensionsUsedBetween("ip2016", "dormant")}")
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsPensionUsedBetweenController.amendPensionsUsedBetween("ip2016", "dormant")}")
       }
 
 

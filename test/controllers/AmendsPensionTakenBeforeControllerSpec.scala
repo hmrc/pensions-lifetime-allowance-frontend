@@ -172,7 +172,7 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
       .thenReturn(Future.successful(data))
   }
 
-  "In AmendsController calling the .amendPensionsTakenBefore action" when {
+  "In AmendsPensionTakenBeforeController calling the .amendPensionsTakenBefore action" when {
 
     "not supplied with a stored model" in new Setup {
       lazy val result = controller.amendPensionsTakenBefore("ip2016", "open")(fakeRequest)
