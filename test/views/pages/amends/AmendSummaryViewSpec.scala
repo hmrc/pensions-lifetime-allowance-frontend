@@ -59,7 +59,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
   lazy val tstPsoDisplaySections = Seq(
     AmendDisplaySectionModel("pensionDebits", Seq(
       AmendDisplayRowModel("CurrentPsos-psoDetails",
-        Some(controllers.routes.AmendsController.amendPsoDetails("ip2016", "open")),
+        Some(controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "open")),
         Some(controllers.routes.AmendsController.removePso("ip2016", "open")),
         "£123456", "2 March 2017")
     ))
@@ -113,7 +113,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
     "have a link to add a new Pension sharing order" in{
       docWithoutPso.select("a#addPsoLink").text() shouldBe plaAmendsAddAPensionSharingOrderText
-      docWithoutPso.select("a#addPsoLink").attr("href") shouldBe controllers.routes.AmendsController.amendPsoDetails("ip2016", "open").url
+      docWithoutPso.select("a#addPsoLink").attr("href") shouldBe controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "open").url
     }
 
     "have a properly structured table" when{

@@ -682,7 +682,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         AmendDisplaySectionModel("pensionDebits",
           Seq(
             AmendDisplayRowModel("CurrentPsos-psoDetails",
-              changeLinkCall = Some(controllers.routes.AmendsController.amendPsoDetails("ip2016", "active")),
+              changeLinkCall = Some(controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "active")),
               removeLinkCall = None,
               "£1,000", "2 March 2017")
           ))

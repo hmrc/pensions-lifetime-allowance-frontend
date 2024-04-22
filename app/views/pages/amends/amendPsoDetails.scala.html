@@ -46,7 +46,7 @@
 
     <h1 class="govuk-heading-xl">@Messages("pla.psoDetails.title")</h1>
 
-    @form(action = routes.AmendsController.submitAmendPsoDetails(protectionType, status, existingPSO)) {
+    @form(action = routes.AmendsPensionSharingOrderController.submitAmendPsoDetails(protectionType, status, existingPSO)) {
 
         @formInlineDateInput(
             content = Messages("pla.psoDetails.dateQuestionText"),

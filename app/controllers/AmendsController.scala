@@ -100,58 +100,32 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     }
   }
 
-  val submitAmendCurrentPension: Action[AnyContent] = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
-
-      amendCurrentPensionForm.bindFromRequest().fold(
-        errors => {
-          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-          Future.successful(BadRequest(amendCurrentPensions(form)))
-        },
-        success => {
-          sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
-            case Some(model) =>
-              val updated = model.updatedProtection.copy(uncrystallisedRights = Some(success.amendedUKPensionAmt.get.toDouble))
-              val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-              val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
-
-              sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
-                _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
-              }
-
-
-            case _ =>
-              logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend current UK pension")
-              Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-          }
-        }
-      )
-    }
-  }
   val submitRemovePso: Action[AnyContent] = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendmentTypeForm.bindFromRequest().fold(
-        errors => {
-          val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-          Future.successful(BadRequest(removePsoDebits(form)))
-        },
-        success => {
-          sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
-            case Some(model) =>
-              val updated = model.updatedProtection.copy(pensionDebits = None)
-              val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-              val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
-              sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
-                _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
-              }
+    amendmentTypeForm.bindFromRequest().fold(
+      errors => {
+        val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
+        Future.successful(BadRequest(removePsoDebits(form)))
+      },
+      success => {
+        sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
+          case Some(model) =>
+            val updated = model.updatedProtection.copy(pensionDebits = None)
+            val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+            val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+            sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
+              _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+            }
 
-            case None =>
-              logger.warn(s"Could not retrieve Amend Protection Model for user with nino $nino when submitting a removal of a pension debit")
-              Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-          }
+          case None =>
+            logger.warn(s"Could not retrieve Amend Protection Model for user with nino $nino when submitting a removal of a pension debit")
+            Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
         }
-      )
+      }
+    )
 
-    }
   }
+  }
+
   def submitAmendPsoDetails(protectionType: String, status: String, existingPSO: Boolean): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       amendPsoDetailsForm(protectionType).bindFromRequest().fold(
@@ -221,99 +195,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       })
     }
 
-  private def amendRoute(journey: AmendJourney.Value, protectionType: String, status: String, nino: String) = Action.async { implicit request =>
-    import AmendJourney._
-    sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).map {
-
-      case Some(data) =>
-        getRouteUsingModel(
-          journey match {
-            case `currentPension` =>
-              AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.getOrElse[Double](0))), protectionType, status)
-            case `pensionWorthBefore` =>
-              AmendPensionsWorthBeforeModel(
-                Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0))),
-                protectionType,
-                status
-              )
-            case `pensionUsedBetween` =>
-              AmendPensionsUsedBetweenModel(
-                Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0))),
-                protectionType,
-                status)
-            case `overseasPension` =>
-              val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
-              AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))), protectionType, status)
-          }
-        )(request)
-      case _ =>
-        logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend $journey page")
-        InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-    }
-  }
-
-  private[controllers] def getRouteUsingModel(model: AmendValueModel)(implicit request: Request[AnyContent]) = {
-    model match {
-      case AmendCurrentPensionModel(_,"ip2016",_) =>
-        Ok(amendCurrentPensions(amendCurrentPensionForm.fill(model.asInstanceOf[AmendCurrentPensionModel])))
-
-      case AmendCurrentPensionModel(_,"ip2014",_) =>
-        Ok(amendIP14CurrentPensions(amendCurrentPensionForm.fill(model.asInstanceOf[AmendCurrentPensionModel])))
-
-      case AmendPensionsTakenBeforeModel(_,"ip2016",_) =>
-        Ok(amendPensionsTakenBefore(amendPensionsTakenBeforeForm.fill(model.asInstanceOf[AmendPensionsTakenBeforeModel])))
-
-      case AmendPensionsWorthBeforeModel(_, "ip2016", _) =>
-        Ok(amendPensionsWorthBefore(amendPensionsWorthBeforeForm.fill(model.asInstanceOf[AmendPensionsWorthBeforeModel])))
-
-      case AmendPensionsTakenBeforeModel(_,"ip2014",_) =>
-        Ok(amendIP14PensionsTakenBefore(amendPensionsTakenBeforeForm.fill(model.asInstanceOf[AmendPensionsTakenBeforeModel])))
-
-      case AmendPensionsWorthBeforeModel(_,"ip2014",_) =>
-        Ok(amendIP14PensionsWorthBefore(amendPensionsWorthBeforeForm.fill(model.asInstanceOf[AmendPensionsWorthBeforeModel])))
-
-      case AmendPensionsTakenBetweenModel(_,"ip2016",_) =>
-        Ok(amendPensionsTakenBetween(amendPensionsTakenBetweenForm.fill(model.asInstanceOf[AmendPensionsTakenBetweenModel])))
-
-      case AmendPensionsUsedBetweenModel(_,"ip2016",_) =>
-        Ok(amendPensionsUsedBetween(amendPensionsUsedBetweenForm.fill(model.asInstanceOf[AmendPensionsUsedBetweenModel])))
-
-      case AmendPensionsTakenBetweenModel(_,"ip2014",_) =>
-        Ok(amendIP14PensionsTakenBetween(amendPensionsTakenBetweenForm.fill(model.asInstanceOf[AmendPensionsTakenBetweenModel])))
-
-      case AmendPensionsUsedBetweenModel(_,"ip2014",_) =>
-        Ok(amendIP14PensionsUsedBetween(amendPensionsUsedBetweenForm.fill(model.asInstanceOf[AmendPensionsUsedBetweenModel])))
-
-      case AmendOverseasPensionsModel(_,_,"ip2016",_) =>
-        Ok(amendOverseasPensions(amendOverseasPensionsForm.fill(model.asInstanceOf[AmendOverseasPensionsModel])))
-
-      case AmendOverseasPensionsModel(_,_,"ip2014",_) =>
-        Ok(amendIP14OverseasPensions(amendOverseasPensionsForm.fill(model.asInstanceOf[AmendOverseasPensionsModel])))
-    }
-  }
-
-  def amendCurrentPensions(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendRoute(AmendJourney.currentPension, protectionType, status, nino).apply(request)
-    }
-  }
-
-  def amendPsoDetails(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).map {
-        case Some(amendProtectionModel) =>
-          amendProtectionModel.updatedProtection.pensionDebits match {
-            case Some(debits) =>
-              routeFromPensionDebitsList(debits, protectionType, status, nino)
-            case None =>
-              Ok(amendPsoDetails(amendPsoDetailsForm(protectionType), protectionType, status, existingPSO = false))
-          }
-        case _ =>
-          logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend PSO details page")
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-      }
-    }
-  }
 
   def routeFromPensionDebitsList(debits: Seq[PensionDebitModel], protectionType: String, status: String, nino: String)(implicit request: Request[AnyContent]): Result = {
     debits.length match {
@@ -386,15 +267,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     val amendModel = amendModelOption.getOrElse {throw new Exceptions.RequiredValueNotDefinedException("updateAndSaveAmendModelWithPso", "amendModel")}
     val newUpdatedProtection = amendModel.updatedProtection.copy(pensionDebits = debits)
     sessionCacheService.saveFormData[AmendProtectionModel](key, amendModel.copy(updatedProtection = newUpdatedProtection))
-  }
-
-  private object AmendJourney extends Enumeration {
-    val currentPension = Value
-    val pensionTakenBefore = Value
-    val pensionWorthBefore = Value
-    val pensionTakenBetween = Value
-    val pensionUsedBetween = Value
-    val overseasPension = Value
   }
 
 }

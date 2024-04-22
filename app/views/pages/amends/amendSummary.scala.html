@@ -78,7 +78,7 @@
 
     @if(!model.psoAdded){
         <p class="govuk-body">
-            <a class="govuk-link" href="@routes.AmendsController.amendPsoDetails(model.protectionType.toLowerCase(), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
+            <a class="govuk-link" href="@routes.AmendsPensionSharingOrderController.amendPsoDetails(model.protectionType.toLowerCase(), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
         </p>
     }
 
