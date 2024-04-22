@@ -535,45 +535,6 @@ class AmendsControllerSpec extends FakeApplication
       }
     }
 
-  "Submitting Amend IP16 Pensions Worth Before" when {
-    "the data is valid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore,
-        ("amendedPensionsTakenBeforeAmt", "10000"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-      cacheSaveCondition[PensionsWorthBeforeModel](mockSessionCacheService)
-      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
-
-      status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
-    }
-
-    "the data is invalid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore,
-        ("amendedPensionsTakenBeforeAmt", "yes"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-      cacheSaveCondition[PensionsWorthBeforeModel](mockSessionCacheService)
-      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
-
-      status(DataItem.result) shouldBe 400
-    }
-
-    "the model can't be fetched from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore,
-        ("amendedPensionsTakenBeforeAmt", "10000"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
-      cacheSaveCondition[PensionsWorthBeforeModel](mockSessionCacheService)
-      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
-
-      status(DataItem.result) shouldBe 500
-    }
-  }
-
   "In AmendsController calling the .amendPensionsUsedBetween action" when {
     "not supplied with a stored model" in new Setup {
 

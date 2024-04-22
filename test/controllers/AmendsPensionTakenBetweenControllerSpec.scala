@@ -55,6 +55,7 @@ class AmendsPensionTakenBetweenControllerSpec extends FakeApplication
   val mockAuthFunction: AuthFunction                 = mock[AuthFunction]
   val mockTechnicalError: technicalError             = app.injector.instanceOf[technicalError]
   val mockAmendPensionsTakenBetween: amendPensionsTakenBetween = app.injector.instanceOf[amendPensionsTakenBetween]
+  val mockAmendIP14PensionsTakenBetween: amendIP14PensionsTakenBetween = app.injector.instanceOf[amendIP14PensionsTakenBetween]
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
@@ -88,7 +89,8 @@ class AmendsPensionTakenBetweenControllerSpec extends FakeApplication
       mockMCC,
       authFunction,
       mockTechnicalError,
-      mockAmendPensionsTakenBetween)
+      mockAmendPensionsTakenBetween,
+      mockAmendIP14PensionsTakenBetween)
   }
 
   val sessionId = UUID.randomUUID.toString

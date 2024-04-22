@@ -38,7 +38,8 @@ class AmendsPensionTakenBetweenController @Inject()(val sessionCacheService: Ses
                                                     mcc: MessagesControllerComponents,
                                                     authFunction: AuthFunction,
                                                     technicalError: views.html.pages.fallback.technicalError,
-                                                    amendPensionsTakenBetween: pages.amends.amendPensionsTakenBetween)
+                                                    amendPensionsTakenBetween: pages.amends.amendPensionsTakenBetween,
+                                                    amendIP14PensionsTakenBetween: pages.amends.amendIP14PensionsTakenBetween)
                                                    (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val formWithCSRF: FormWithCSRF,
@@ -87,7 +88,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
                    yesNoValue,
                    protectionType,
                    status))))
-                 case "ip2014" => Ok(amendPensionsTakenBetween(amendPensionsTakenBetweenForm.fill(AmendPensionsTakenBetweenModel(
+                 case "ip2014" => Ok(amendIP14PensionsTakenBetween(amendPensionsTakenBetweenForm.fill(AmendPensionsTakenBetweenModel(
                    yesNoValue,
                    protectionType,
                    status))))

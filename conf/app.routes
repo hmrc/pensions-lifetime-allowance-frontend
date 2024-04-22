@@ -83,8 +83,8 @@ POST        /amend-protection/pensions-taken-before                             
 GET         /amend-protection/pensions-taken-between/:protectionType/:status              @controllers.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(protectionType, status)
 POST        /amend-protection/pensions-taken-between                                      @controllers.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween
 
-GET         /amend-protection/pensions-worth-before/:protectionType/:status               @controllers.AmendsController.amendPensionsWorthBefore(protectionType, status)
-POST        /amend-protection/pensions-worth-before                                       @controllers.AmendsController.submitAmendPensionsWorthBefore
+GET         /amend-protection/pensions-worth-before/:protectionType/:status               @controllers.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(protectionType, status)
+POST        /amend-protection/pensions-worth-before                                       @controllers.AmendsPensionWorthBeforeController.submitAmendPensionsWorthBefore
 
 GET         /amend-protection/pensions-used-between/:protectionType/:status               @controllers.AmendsController.amendPensionsUsedBetween(protectionType, status)
 POST        /amend-protection/pensions-used-between                                       @controllers.AmendsController.submitAmendPensionsUsedBetween

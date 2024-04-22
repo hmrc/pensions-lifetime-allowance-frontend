@@ -67,6 +67,7 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
   val mockAuthFunction: AuthFunction                 = mock[AuthFunction]
   val mockTechnicalError: technicalError             = app.injector.instanceOf[technicalError]
   val mockAmendPensionsTakenBefore: amendPensionsTakenBefore = app.injector.instanceOf[amendPensionsTakenBefore]
+  val mockAmendIP14PensionsWorthBefore: amendIP14PensionsTakenBefore = app.injector.instanceOf[amendIP14PensionsTakenBefore]
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
@@ -100,7 +101,8 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
       mockMCC,
       authFunction,
       mockTechnicalError,
-      mockAmendPensionsTakenBefore
+      mockAmendPensionsTakenBefore,
+      mockAmendIP14PensionsWorthBefore
     )
   }
 
@@ -287,6 +289,6 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
         cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendPensionsWorthBefore("ip2016", "dormant")}")
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore("ip2016", "dormant")}")
       }
 }

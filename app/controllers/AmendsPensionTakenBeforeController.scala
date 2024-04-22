@@ -38,7 +38,8 @@ class AmendsPensionTakenBeforeController @Inject()(val sessionCacheService: Sess
                                                    mcc: MessagesControllerComponents,
                                                    authFunction: AuthFunction,
                                                    technicalError: views.html.pages.fallback.technicalError,
-                                                   amendPensionsTakenBefore: pages.amends.amendPensionsTakenBefore)
+                                                   amendPensionsTakenBefore: pages.amends.amendPensionsTakenBefore,
+                                                   amendIP14PensionsTakenBefore: pages.amends.amendIP14PensionsTakenBefore)
                                                   (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
                                  implicit val formWithCSRF: FormWithCSRF,
@@ -55,7 +56,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
               case "ip2016" =>  Ok(amendPensionsTakenBefore(amendPensionsTakenBeforeForm.fill(AmendPensionsTakenBeforeModel(yesNoValue,
                 protectionType,
                 status))))
-              case "ip2014" => Ok(amendPensionsTakenBefore(amendPensionsTakenBeforeForm.fill(AmendPensionsTakenBeforeModel(yesNoValue,
+              case "ip2014" => Ok(amendIP14PensionsTakenBefore(amendPensionsTakenBeforeForm.fill(AmendPensionsTakenBeforeModel(yesNoValue,
                 protectionType,
                 status))))
             }
@@ -78,7 +79,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
             sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
               case Some(model) =>
                 success.amendedPensionsTakenBefore match {
-                  case "yes" => Future.successful(Redirect(routes.AmendsController.amendPensionsWorthBefore(
+                  case "yes" => Future.successful(Redirect(routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(
                     success.protectionType.toLowerCase, success.status.toLowerCase)))
                   case "no" =>
                     val updated = model.updatedProtection.copy(preADayPensionInPayment = Some(0))
