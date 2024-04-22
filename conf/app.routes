@@ -92,8 +92,9 @@ POST        /amend-protection/pensions-used-between                             
 GET         /amend-protection/overseas-pensions/:protectionType/:status                   @controllers.AmendsOverseasPensionController.amendOverseasPensions(protectionType, status)
 POST        /amend-protection/overseas-pensions                                           @controllers.AmendsOverseasPensionController.submitAmendOverseasPensions
 
-GET         /amend-protection/current-pensions/:protectionType/:status                    @controllers.AmendsController.amendCurrentPensions(protectionType, status)
-POST        /amend-protection/current-pensions                                            @controllers.AmendsController.submitAmendCurrentPension
+GET         /amend-protection/current-pensions/:protectionType/:status                    @controllers.AmendsCurrentPensionController.amendCurrentPensions(protectionType, status)
+POST        /amend-protection/current-pensions                                            @controllers.AmendsCurrentPensionController.submitAmendCurrentPension
+
 GET         /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsController.amendPsoDetails(protectionType, status)
 POST        /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsController.submitAmendPsoDetails(protectionType, status, existingPSO: Boolean)
 GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.AmendsController.removePso(protectionType, status)

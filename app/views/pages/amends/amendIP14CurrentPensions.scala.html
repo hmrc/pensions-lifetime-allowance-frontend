@@ -81,7 +81,7 @@
         hiddenContent = helpTextAccordionContent
     )
 
-    @form(action = routes.AmendsController.submitAmendCurrentPension) {
+    @form(action = routes.AmendsCurrentPensionController.submitAmendCurrentPension) {
         <div class="inline form-group">
         @formInputMoney(
             field =  amendCurrentPensionForm("amendedUKPensionAmt"),

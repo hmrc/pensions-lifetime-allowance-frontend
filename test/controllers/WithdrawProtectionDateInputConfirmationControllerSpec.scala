@@ -147,7 +147,7 @@ class WithdrawProtectionDateInputConfirmationControllerSpec
       AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2014", "active")), None, "£100,000"))
     ),
     AmendDisplaySectionModel("CurrentPensions", Seq(
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2014", "active")), None, "£1,000,000"))
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2014", "active")), None, "£1,000,000"))
     ),
     AmendDisplaySectionModel("CurrentPsos", Seq(
       AmendDisplayRowModel("YesNo", None, None, "No")))

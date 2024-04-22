@@ -82,7 +82,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     )
     ),
     AmendDisplaySectionModel("CurrentPensions",Seq(
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
     )
     ),
     AmendDisplaySectionModel("CurrentPsos", Seq(
@@ -106,7 +106,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     )
     ),
     AmendDisplaySectionModel("CurrentPensions",Seq(
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
     )
     ),
     AmendDisplaySectionModel("CurrentPsos", Seq(

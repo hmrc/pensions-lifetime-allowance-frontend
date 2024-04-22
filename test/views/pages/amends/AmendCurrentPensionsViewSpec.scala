@@ -69,7 +69,7 @@ class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPens
 
     "has a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendCurrentPension.url
+      form.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController.submitAmendCurrentPension.url
       form.select("div.govuk-form-group > label").text() shouldBe plaCurrentPensionsLegendText
     }
 

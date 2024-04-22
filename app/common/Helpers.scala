@@ -54,7 +54,7 @@ object Helpers {
       case PensionsTakenBetween      => controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(protectionType, status)
       case PensionsUsedBetween       => controllers.routes.AmendsPensionUsedBetweenController.amendPensionsUsedBetween(protectionType, status)
       case OverseasPensions          => controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(protectionType, status)
-      case CurrentPensions           => controllers.routes.AmendsController.amendCurrentPensions(protectionType, status)
+      case CurrentPensions           => controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(protectionType, status)
       case CurrentPsos               => controllers.routes.AmendsController.amendPsoDetails(protectionType, status)
     }
   }

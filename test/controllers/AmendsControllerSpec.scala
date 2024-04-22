@@ -229,7 +229,7 @@ class AmendsControllerSpec extends FakeApplication
     )
     ),
     AmendDisplaySectionModel("CurrentPensions",Seq(
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2014", "active")), None, "£1,000,000")
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2014", "active")), None, "£1,000,000")
     )
     ),
     AmendDisplaySectionModel("CurrentPsos", Seq(
@@ -447,92 +447,6 @@ class AmendsControllerSpec extends FakeApplication
 
         status(result) shouldBe 200
         jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
-    }
-
-
-  "Calling the .amendCurrentPensions action" when {
-
-    "not supplied with a stored model" in new Setup {
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
-
-      val result = controller.amendCurrentPensions("ip2016", "open")(fakeRequest)
-      status(result) shouldBe 500
-    }
-
-    "supplied with a stored test model (£100000, IP2016, dormant)" in new Setup {
-      val testModel = new AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, uncrystallisedRights = Some(100000)))
-      lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testModel))
-      status(result) shouldBe 200
-
-      cacheFetchCondition[AmendProtectionModel](Some(testModel))
-      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
-    }
-
-      "return some HTML that" should {
-
-        "contain some text and use the character set utf-8" in new Setup {
-          val testModel = new AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, uncrystallisedRights = Some(100000)))
-          lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[AmendProtectionModel](Some(testModel))
-
-          contentType(result) shouldBe Some("text/html")
-          charset(result) shouldBe Some("utf-8")
-        }
-
-        "have the value 100000 completed in the amount input by default" in new Setup {
-          lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
-          lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-          val testModel = new AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, uncrystallisedRights = Some(100000)))
-
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[AmendProtectionModel](Some(testModel))
-
-          jsoupDoc.body.getElementById("amendedUKPensionAmt").attr("value") shouldBe "100000"
-        }
-      }
-    }
-
-    "supplied with a stored test model (£100000, IP2014, dormant)" in new Setup {
-      lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-
-        status(result) shouldBe 200
-    }
-
-
-  "Submitting Amend IP16 Current Pensions data" when {
-
-    "the data is valid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendCurrentPension, ("amendedUKPensionAmt", "100000"), ("protectionType", "ip2016"), ("status", "dormant"))
-
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
-        cacheFetchCondition[AmendProtectionModel](Some(testIP16DormantModel))
-
-        status(DataItem.result) shouldBe 303
-        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
-    }
-
-    "the data is invalid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendCurrentPension, ("amendedUKPensionAmt", ""))
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        status(DataItem.result) shouldBe 400
-      }
-
-    "the model can't be fetched from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendCurrentPension, ("amendedUKPensionAmt", "1000000"), ("protectionType", "IP2016"), ("status", "dormant"))
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](None)
-
-        status(DataItem.result) shouldBe 500
-      }
     }
 
   "Calling the amendPsoDetails action" when {

@@ -70,7 +70,7 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
 
     "has a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendCurrentPension.url
+      form.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController.submitAmendCurrentPension.url
       doc.getElementsByClass("govuk-visually-hidden").eq(1).text() shouldBe plaIp14CurrentPensionsTitle
     }
 
