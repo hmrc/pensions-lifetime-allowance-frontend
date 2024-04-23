@@ -39,7 +39,7 @@ object Helpers {
     if (protectionIsAmendable(protection)) {
       val status = protection.status.map(_.toLowerCase).getOrElse("none")
       val protectionType = protection.protectionType.map(_.toLowerCase).getOrElse("none")
-      Some(controllers.routes.AmendsController.removePso(protectionType, status))
+      Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso(protectionType, status))
     } else None
   }
 

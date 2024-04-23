@@ -122,7 +122,14 @@ class AmendsControllerSpec extends FakeApplication
       mockAuthConnector,
       mockTechnicalError
       )
-
+    val rpsoController = new AmendsRemovePensionSharingOrderController(
+      mockSessionCacheService,
+      mockPlaConnector,
+      mockMCC,
+      authFunction,
+      mockTechnicalError,
+      mockRemovePsoDebits
+    )
     val controller = new AmendsController(
       mockSessionCacheService,
       mockPlaConnector,
@@ -449,76 +456,6 @@ class AmendsControllerSpec extends FakeApplication
         jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
     }
 
-  "Removing a recently added PSO" when {
-
-    val testProtectionSinglePsoList = ProtectionModel(
-      psaCheckReference = Some("psaRef"),
-      protectionID = Some(1234),
-      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
-    )
-
-    "there is no amend protection model fetched from cache" in new Setup {
-      lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](None)
-      status(result) shouldBe 500
-    }
-      "show the technical error page for existing protections" in new Setup {
-        lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
-        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](None)
-
-        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-        jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
-      }
-      "have the correct cache control" in new Setup {
-        lazy val result = await(controller.removePso("ip2016", "open")(fakeRequest))
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](None)
-
-        result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-      }
-
-    "a valid amend protection model is fetched from cache" in new Setup {
-      lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
-        status(result) shouldBe 200
-      }
-
-      "show the remove pso page with correct details" in new Setup {
-        lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
-        lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList)))
-
-        jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-        jsoupDoc.body.getElementById("protectionType").`val`() shouldEqual "ip2016"
-        jsoupDoc.body.getElementById("status").`val`() shouldEqual "open"
-      }
-
-
-    "choosing remove on the remove page" in new Setup {
-      lazy val result = controller.submitRemovePso(fakeRequest)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        status(result) shouldEqual 400
-      }
-
-      "return 500 if the an amend protection model could not be retrieved from cache" in new Setup {
-        object DataItem extends AuthorisedFakeRequestToPost(controller.submitRemovePso,
-          ("protectionType", "ip2016"),
-          ("status", "open")
-        )
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](None)
-
-        status(DataItem.result) shouldEqual 500
-      }
-    }
-
     "Choosing remove with a valid amend protection model" in new Setup {
       val ip2016Protection = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
@@ -536,7 +473,7 @@ class AmendsControllerSpec extends FakeApplication
         protectionReference = Some("PSA123456"))
 
       val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitRemovePso, ("protectionType", "ip2016"), ("status", "open"))
+      object DataItem extends AuthorisedFakeRequestToPost(rpsoController.submitRemovePso, ("protectionType", "ip2016"), ("status", "open"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))

@@ -60,7 +60,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
     AmendDisplaySectionModel("pensionDebits", Seq(
       AmendDisplayRowModel("CurrentPsos-psoDetails",
         Some(controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "open")),
-        Some(controllers.routes.AmendsController.removePso("ip2016", "open")),
+        Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso("ip2016", "open")),
         "£123456", "2 March 2017")
     ))
   )

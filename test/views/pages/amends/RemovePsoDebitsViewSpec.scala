@@ -50,7 +50,7 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitRemovePso.url
+      form.attr("action") shouldBe controllers.routes.AmendsRemovePensionSharingOrderController.submitRemovePso.url
     }
 
     "have a functional cancellation link" in{

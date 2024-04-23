@@ -98,8 +98,8 @@ POST        /amend-protection/current-pensions                                  
 GET         /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsPensionSharingOrderController.amendPsoDetails(protectionType, status)
 POST        /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsPensionSharingOrderController.submitAmendPsoDetails(protectionType, status, existingPSO: Boolean)
 
-GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.AmendsController.removePso(protectionType, status)
-POST        /amend-protection/pension-sharing-order/remove                                @controllers.AmendsController.submitRemovePso
+GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.AmendsRemovePensionSharingOrderController.removePso(protectionType, status)
+POST        /amend-protection/pension-sharing-order/remove                                @controllers.AmendsRemovePensionSharingOrderController.submitRemovePso
 
 POST        /amend-protection/submit-amendment                                            @controllers.AmendsController.amendProtection
 GET         /amend-protection/amendment-outcome                                           @controllers.AmendsController.amendmentOutcome
