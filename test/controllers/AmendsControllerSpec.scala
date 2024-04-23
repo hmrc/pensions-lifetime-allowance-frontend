@@ -25,7 +25,6 @@ import config.wiring.PlaFormPartialRetriever
 import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
-import forms.{AmendCurrentPensionForm, AmendOverseasPensionsForm, AmendPensionsTakenBeforeForm, AmendPensionsTakenBetweenForm}
 import mocks.AuthMock
 import models._
 import models.amendModels._
@@ -47,11 +46,8 @@ import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import models.cache.CacheMap
 import org.mockito.ArgumentMatchers.{any, anyString, startsWith}
-import org.mockito.ArgumentMatchers.any
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
-
-import java.util.UUID
 import views.html.pages.result.manualCorrespondenceNeeded
 
 import java.time.LocalDate
@@ -74,18 +70,6 @@ class AmendsControllerSpec extends FakeApplication
   val mockNoNotificationID: noNotificationId         = app.injector.instanceOf[noNotificationId]
   val mockAmendPsoDetails: amendPsoDetails           = app.injector.instanceOf[amendPsoDetails]
   val mockTechnicalError: technicalError             = app.injector.instanceOf[technicalError]
-  val mockAmendCurrentPensions: amendCurrentPensions = app.injector.instanceOf[amendCurrentPensions]
-  val mockAmendPensionsTakenBefore: amendPensionsTakenBefore = app.injector.instanceOf[amendPensionsTakenBefore]
-  val mockAmendPensionsWorthBefore: amendPensionsWorthBefore = app.injector.instanceOf[amendPensionsWorthBefore]
-  val mockAmendPensionsTakenBetween: amendPensionsTakenBetween = app.injector.instanceOf[amendPensionsTakenBetween]
-  val mockAmendPensionsUsedBetween: amendPensionsUsedBetween = app.injector.instanceOf[amendPensionsUsedBetween]
-  val mockAmendIP14CurrentPensions: amendIP14CurrentPensions = app.injector.instanceOf[amendIP14CurrentPensions]
-  val mockAmendIP14PensionsTakenBefore: amendIP14PensionsTakenBefore = app.injector.instanceOf[amendIP14PensionsTakenBefore]
-  val mockAmendIP14PensionsWorthBefore: amendIP14PensionsWorthBefore = app.injector.instanceOf[amendIP14PensionsWorthBefore]
-  val mockAmendIP14PensionsTakenBetween: amendIP14PensionsTakenBetween = app.injector.instanceOf[amendIP14PensionsTakenBetween]
-  val mockAmendIP14PensionsUsedBetween: amendIP14PensionsUsedBetween = app.injector.instanceOf[amendIP14PensionsUsedBetween]
-  val mockAmendOverseasPensions: amendOverseasPensions = app.injector.instanceOf[amendOverseasPensions]
-  val mockAmendIP414OverseasPensions: amendIP14OverseasPensions = app.injector.instanceOf[amendIP14OverseasPensions]
   val mockOutcomeActive: outcomeActive                = app.injector.instanceOf[outcomeActive]
   val mockOutcomeInactive: outcomeInactive            = app.injector.instanceOf[outcomeInactive]
   val mockRemovePsoDebits: removePsoDebits            = app.injector.instanceOf[removePsoDebits]
@@ -141,29 +125,13 @@ class AmendsControllerSpec extends FakeApplication
       mockNoNotificationID,
       mockAmendPsoDetails,
       mockTechnicalError,
-      mockAmendCurrentPensions,
-      mockAmendPensionsTakenBefore,
-      mockAmendPensionsWorthBefore,
-      mockAmendPensionsTakenBetween,
-      mockAmendPensionsUsedBetween,
-      mockAmendIP14CurrentPensions,
-      mockAmendIP14PensionsTakenBefore,
-      mockAmendIP14PensionsWorthBefore,
-      mockAmendIP14PensionsTakenBetween,
-      mockAmendIP14PensionsUsedBetween,
-      mockAmendOverseasPensions,
-      mockAmendIP414OverseasPensions,
       mockOutcomeActive,
       mockOutcomeInactive,
-      mockRemovePsoDebits,
       mockAmendSummary
     )
   }
 
-  val sessionId = UUID.randomUUID.toString
   implicit val fakeRequest = FakeRequest()
-  val mockUsername = "mockuser"
-  val mockUserId = "/auth/oid/" + mockUsername
 
   val ip2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -198,21 +166,6 @@ class AmendsControllerSpec extends FakeApplication
 
   val testAmendIP2014ProtectionModel = AmendProtectionModel(ip2014Protection, ip2014Protection)
 
-
-  val ip2016NoDebitProtection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(0.0),
-    preADayPensionInPayment = Some(0.0),
-    postADayBenefitCrystallisationEvents = Some(0.0),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("IP2016"),
-    status = Some("dormant"),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456"))
-  val testAmendIP2016ProtectionModelWithNoDebit = AmendProtectionModel(ip2016NoDebitProtection, ip2016NoDebitProtection)
 
   val noNotificationIdProtection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),

@@ -22,18 +22,11 @@ import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import constructors.{AmendsGAConstructor, DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
-import forms.AmendCurrentPensionForm._
-import forms.AmendOverseasPensionsForm._
 import forms.AmendPSODetailsForm._
-import forms.AmendPensionsTakenBeforeForm._
-import forms.AmendPensionsTakenBetweenForm._
-import forms.AmendPensionsUsedBetweenForm._
-import forms.AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm
 import forms.AmendmentTypeForm._
 import models.amendModels._
 import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import play.api.Logging
-import play.api.data.FormError
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
@@ -44,7 +37,6 @@ import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
 import views.html.pages
 
-import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -58,21 +50,8 @@ class AmendsController @Inject()(val sessionCacheService: SessionCacheService,
                                  noNotificationId: views.html.pages.fallback.noNotificationId,
                                  amendPsoDetails: pages.amends.amendPsoDetails,
                                  technicalError: views.html.pages.fallback.technicalError,
-                                 amendCurrentPensions: pages.amends.amendCurrentPensions,
-                                 amendPensionsTakenBefore: pages.amends.amendPensionsTakenBefore,
-                                 amendPensionsWorthBefore: pages.amends.amendPensionsWorthBefore,
-                                 amendPensionsTakenBetween: pages.amends.amendPensionsTakenBetween,
-                                 amendPensionsUsedBetween: pages.amends.amendPensionsUsedBetween,
-                                 amendIP14CurrentPensions: pages.amends.amendIP14CurrentPensions,
-                                 amendIP14PensionsTakenBefore: pages.amends.amendIP14PensionsTakenBefore,
-                                 amendIP14PensionsWorthBefore: pages.amends.amendIP14PensionsWorthBefore,
-                                 amendIP14PensionsTakenBetween: pages.amends.amendIP14PensionsTakenBetween,
-                                 amendIP14PensionsUsedBetween: pages.amends.amendIP14PensionsUsedBetween,
-                                 amendOverseasPensions: pages.amends.amendOverseasPensions,
-                                 amendIP14OverseasPensions: pages.amends.amendIP14OverseasPensions,
                                  outcomeActive: views.html.pages.amends.outcomeActive,
                                  outcomeInactive: views.html.pages.amends.outcomeInactive,
-                                 removePsoDebits: pages.amends.removePsoDebits,
                                  amendSummary: views.html.pages.amends.amendSummary)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val partialRetriever: FormPartialRetriever,
@@ -168,23 +147,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
           .withHeaders(CACHE_CONTROL -> "no-cache")
       })
     }
-
-
-  def routeFromPensionDebitsList(debits: Seq[PensionDebitModel], protectionType: String, status: String, nino: String)(implicit request: Request[AnyContent]): Result = {
-    debits.length match {
-        case 0 => Ok(amendPsoDetails(amendPsoDetailsForm(protectionType), protectionType, status, existingPSO = false))
-        case 1 => Ok(amendPsoDetails(amendPsoDetailsForm(protectionType).fill(createAmendPsoDetailsModel(debits.head)), protectionType, status, existingPSO = true))
-        case num =>
-          logger.warn(s"$num pension debits recorded for user nino $nino during amend journey")
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-      }
-    }
-
-  def createAmendPsoDetailsModel(psoDetails: PensionDebitModel): AmendPSODetailsModel = {
-    val (day, month, year) = Dates.extractDMYFromAPIDateString(psoDetails.startDate)
-    val date = LocalDate.of(year, month, day)
-    AmendPSODetailsModel(date, Some(Display.currencyInputDisplayFormat(psoDetails.amount)))
-  }
 
   private def routeViaMCNeededCheck(response: HttpResponse, nino: String)(implicit request: Request[AnyContent]): Future[Result] = {
     response.status match {
