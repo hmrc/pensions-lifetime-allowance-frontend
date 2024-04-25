@@ -65,7 +65,7 @@ class AmendOverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPe
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendOverseasPensions.url
+      form.attr("action") shouldBe controllers.routes.AmendsOverseasPensionController.submitAmendOverseasPensions.url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaOverseasPensionsLegendText
     }
 

@@ -31,22 +31,22 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
   lazy val tstPensionContributionPsoDisplaySections = Seq(
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "Yes"),
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "£100,000")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "active")), None, "Yes"),
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "active")), None, "£100,000")
     )
     ),
     AmendDisplaySectionModel("PensionsTakenBetween", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active")), None, "Yes"),
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active")), None, "£100,000")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")), None, "Yes"),
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")), None, "£100,000")
     )
     ),
     AmendDisplaySectionModel("OverseasPensions", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
     )
     ),
     AmendDisplaySectionModel("CurrentPensions",Seq(
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
     )
     ),
     AmendDisplaySectionModel("CurrentPsos", Seq(
@@ -59,8 +59,8 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
   lazy val tstPsoDisplaySections = Seq(
     AmendDisplaySectionModel("pensionDebits", Seq(
       AmendDisplayRowModel("CurrentPsos-psoDetails",
-        Some(controllers.routes.AmendsController.amendPsoDetails("ip2016", "open")),
-        Some(controllers.routes.AmendsController.removePso("ip2016", "open")),
+        Some(controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "open")),
+        Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso("ip2016", "open")),
         "£123456", "2 March 2017")
     ))
   )
@@ -113,7 +113,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
     "have a link to add a new Pension sharing order" in{
       docWithoutPso.select("a#addPsoLink").text() shouldBe plaAmendsAddAPensionSharingOrderText
-      docWithoutPso.select("a#addPsoLink").attr("href") shouldBe controllers.routes.AmendsController.amendPsoDetails("ip2016", "open").url
+      docWithoutPso.select("a#addPsoLink").attr("href") shouldBe controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "open").url
     }
 
     "have a properly structured table" when{

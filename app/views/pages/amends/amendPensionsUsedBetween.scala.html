@@ -70,7 +70,7 @@
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsUsedBetween.question")</h1>
     <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.1")</p>
 
-    @form(action = routes.AmendsController.submitAmendPensionsUsedBetween) {
+    @form(action = routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween) {
         @helpTextAccordion(
             id = "ip16-amend-pensions-used-between-help",
             summaryText = Messages("pla.pensionsUsedBetween.help"),

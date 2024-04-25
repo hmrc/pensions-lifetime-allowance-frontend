@@ -69,20 +69,20 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
   lazy val tstPensionContributionNoPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
 
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
     )
     ),
     AmendDisplaySectionModel("PensionsTakenBetween", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active")), None, "No")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")), None, "No")
     )
     ),
     AmendDisplaySectionModel("OverseasPensions", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
     )
     ),
     AmendDisplaySectionModel("CurrentPensions",Seq(
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
     )
     ),
     AmendDisplaySectionModel("CurrentPsos", Seq(
@@ -93,20 +93,20 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
   lazy val tstPensionContributionPsoDisplaySections: Seq[AmendDisplaySectionModel] = Seq(
 
     AmendDisplaySectionModel("PensionsTakenBefore", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "active")), None, "No")
     )
     ),
     AmendDisplaySectionModel("PensionsTakenBetween", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendPensionsTakenBetween("ip2016", "active")), None, "No")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")), None, "No")
     )
     ),
     AmendDisplaySectionModel("OverseasPensions", Seq(
-      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
+      AmendDisplayRowModel("YesNo", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")), None, "Yes"),
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")), None, "£100,000")
     )
     ),
     AmendDisplaySectionModel("CurrentPensions",Seq(
-      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
+      AmendDisplayRowModel("Amt", Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "active")), None, "£1,000,000.34")
     )
     ),
     AmendDisplaySectionModel("CurrentPsos", Seq(
@@ -682,7 +682,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         AmendDisplaySectionModel("pensionDebits",
           Seq(
             AmendDisplayRowModel("CurrentPsos-psoDetails",
-              changeLinkCall = Some(controllers.routes.AmendsController.amendPsoDetails("ip2016", "active")),
+              changeLinkCall = Some(controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "active")),
               removeLinkCall = None,
               "£1,000", "2 March 2017")
           ))

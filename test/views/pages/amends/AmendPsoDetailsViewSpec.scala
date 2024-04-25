@@ -82,7 +82,7 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPsoDetails("ip2016", "open", true).url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionSharingOrderController.submitAmendPsoDetails("ip2016", "open", true).url
     }
 
     "have a £ symbol present" in{

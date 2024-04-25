@@ -77,28 +77,31 @@ GET         /existing-protections                                               
 GET         /print-protection                                                             @controllers.PrintController.printView
 
 ## Amends ##
-GET         /amend-protection/pensions-taken-before/:protectionType/:status               @controllers.AmendsController.amendPensionsTakenBefore(protectionType, status)
-POST        /amend-protection/pensions-taken-before                                       @controllers.AmendsController.submitAmendPensionsTakenBefore
-GET         /amend-protection/pensions-taken-between/:protectionType/:status              @controllers.AmendsController.amendPensionsTakenBetween(protectionType, status)
-POST        /amend-protection/pensions-taken-between                                      @controllers.AmendsController.submitAmendPensionsTakenBetween
+GET         /amend-protection/pensions-taken-before/:protectionType/:status               @controllers.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(protectionType, status)
+POST        /amend-protection/pensions-taken-before                                       @controllers.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore
 
-GET         /amend-protection/pensions-worth-before/:protectionType/:status               @controllers.AmendsController.amendPensionsWorthBefore(protectionType, status)
-POST        /amend-protection/pensions-worth-before                                       @controllers.AmendsController.submitAmendPensionsWorthBefore
+GET         /amend-protection/pensions-taken-between/:protectionType/:status              @controllers.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(protectionType, status)
+POST        /amend-protection/pensions-taken-between                                      @controllers.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween
 
-GET         /amend-protection/pensions-used-between/:protectionType/:status               @controllers.AmendsController.amendPensionsUsedBetween(protectionType, status)
-POST        /amend-protection/pensions-used-between                                       @controllers.AmendsController.submitAmendPensionsUsedBetween
+GET         /amend-protection/pensions-worth-before/:protectionType/:status               @controllers.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(protectionType, status)
+POST        /amend-protection/pensions-worth-before                                       @controllers.AmendsPensionWorthBeforeController.submitAmendPensionsWorthBefore
 
-GET         /amend-protection/overseas-pensions/:protectionType/:status                   @controllers.AmendsController.amendOverseasPensions(protectionType, status)
-POST        /amend-protection/overseas-pensions                                           @controllers.AmendsController.submitAmendOverseasPensions
-GET         /amend-protection/current-pensions/:protectionType/:status                    @controllers.AmendsController.amendCurrentPensions(protectionType, status)
-POST        /amend-protection/current-pensions                                            @controllers.AmendsController.submitAmendCurrentPension
-GET         /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsController.amendPsoDetails(protectionType, status)
-POST        /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsController.submitAmendPsoDetails(protectionType, status, existingPSO: Boolean)
-GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.AmendsController.removePso(protectionType, status)
-POST        /amend-protection/pension-sharing-order/remove                                @controllers.AmendsController.submitRemovePso
+GET         /amend-protection/pensions-used-between/:protectionType/:status               @controllers.AmendsPensionUsedBetweenController.amendPensionsUsedBetween(protectionType, status)
+POST        /amend-protection/pensions-used-between                                       @controllers.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween
+
+GET         /amend-protection/overseas-pensions/:protectionType/:status                   @controllers.AmendsOverseasPensionController.amendOverseasPensions(protectionType, status)
+POST        /amend-protection/overseas-pensions                                           @controllers.AmendsOverseasPensionController.submitAmendOverseasPensions
+
+GET         /amend-protection/current-pensions/:protectionType/:status                    @controllers.AmendsCurrentPensionController.amendCurrentPensions(protectionType, status)
+POST        /amend-protection/current-pensions                                            @controllers.AmendsCurrentPensionController.submitAmendCurrentPension
+
+GET         /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsPensionSharingOrderController.amendPsoDetails(protectionType, status)
+POST        /amend-protection/pension-sharing-order/:protectionType/:status               @controllers.AmendsPensionSharingOrderController.submitAmendPsoDetails(protectionType, status, existingPSO: Boolean)
+
+GET         /amend-protection/pension-sharing-order/remove/:protectionType/:status        @controllers.AmendsRemovePensionSharingOrderController.removePso(protectionType, status)
+POST        /amend-protection/pension-sharing-order/remove                                @controllers.AmendsRemovePensionSharingOrderController.submitRemovePso
 
 POST        /amend-protection/submit-amendment                                            @controllers.AmendsController.amendProtection
-
 GET         /amend-protection/amendment-outcome                                           @controllers.AmendsController.amendmentOutcome
 GET         /amend-protection/:protectionType/:status                                     @controllers.AmendsController.amendsSummary(protectionType, status)
 

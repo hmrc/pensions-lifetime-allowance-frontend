@@ -58,7 +58,7 @@ class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Am
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.submitAmendPensionsTakenBetween.url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween.url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaIP14PensionsTakenBetweenLegendText
     }
 

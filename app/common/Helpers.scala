@@ -39,7 +39,7 @@ object Helpers {
     if (protectionIsAmendable(protection)) {
       val status = protection.status.map(_.toLowerCase).getOrElse("none")
       val protectionType = protection.protectionType.map(_.toLowerCase).getOrElse("none")
-      Some(controllers.routes.AmendsController.removePso(protectionType, status))
+      Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso(protectionType, status))
     } else None
   }
 
@@ -49,13 +49,13 @@ object Helpers {
 
     import ApplicationStage._
     applicationSection match {
-      case PensionsTakenBefore       => controllers.routes.AmendsController.amendPensionsTakenBefore(protectionType, status)
-      case PensionsWorthBefore       => controllers.routes.AmendsController.amendPensionsWorthBefore(protectionType, status)
-      case PensionsTakenBetween      => controllers.routes.AmendsController.amendPensionsTakenBetween(protectionType, status)
-      case PensionsUsedBetween       => controllers.routes.AmendsController.amendPensionsUsedBetween(protectionType, status)
-      case OverseasPensions          => controllers.routes.AmendsController.amendOverseasPensions(protectionType, status)
-      case CurrentPensions           => controllers.routes.AmendsController.amendCurrentPensions(protectionType, status)
-      case CurrentPsos               => controllers.routes.AmendsController.amendPsoDetails(protectionType, status)
+      case PensionsTakenBefore       => controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(protectionType, status)
+      case PensionsWorthBefore       => controllers.routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(protectionType, status)
+      case PensionsTakenBetween      => controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(protectionType, status)
+      case PensionsUsedBetween       => controllers.routes.AmendsPensionUsedBetweenController.amendPensionsUsedBetween(protectionType, status)
+      case OverseasPensions          => controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(protectionType, status)
+      case CurrentPensions           => controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(protectionType, status)
+      case CurrentPsos               => controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails(protectionType, status)
     }
   }
 
