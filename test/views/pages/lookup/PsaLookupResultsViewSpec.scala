@@ -86,11 +86,11 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
       "has a pdf link" which {
 
         "has the correct text" in {
-          doc.getElementsByClass("govuk-button govuk-button--secondary").text() shouldBe pdfLinkText
+          doc.getElementById("printLink").text() shouldBe pdfLinkText
         }
 
-        "has the correct destination" in {
-          doc.getElementsByClass("govuk-button govuk-button--secondary").attr("href") shouldBe controllers.routes.PrintPdfController.printResultsPDF.url
+        "has the data module to print page" in {
+          doc.getElementById("printLink").attr("data-module") shouldBe "hmrc-print-link"
         }
       }
 

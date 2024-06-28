@@ -1,9 +1,9 @@
+
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, itSettings, scalaSettings}
 import sbt.Keys.{scalacOptions, *}
 import sbt.*
 import uk.gov.hmrc.*
 import DefaultBuildSettings.*
-import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
@@ -12,7 +12,7 @@ val appName = "pensions-lifetime-allowance-frontend"
 
 lazy val appDependencies: Seq[ModuleID] = Seq.empty
 lazy val plugins: Seq[Plugins] = Seq.empty
-lazy val playSettings: Seq[Setting[_]] = Seq.empty
+lazy val playSettings: Seq[Setting[?]] = Seq.empty
 
 ThisBuild / majorVersion := 2
 ThisBuild / scalaVersion := "2.13.12"
@@ -33,11 +33,11 @@ lazy val scoverageSettings = {
 }
 
 lazy val root = Project(appName, file("."))
-  .enablePlugins(Seq(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin) ++ plugins: _*)
+  .enablePlugins((Seq(play.sbt.PlayScala, SbtDistributablesPlugin) ++ plugins) *)
   .disablePlugins(JUnitXmlReportPlugin)
-  .settings(playSettings ++ scoverageSettings: _*)
-  .settings(scalaSettings: _*)
-  .settings(defaultSettings(): _*)
+  .settings((playSettings ++ scoverageSettings) *)
+  .settings(scalaSettings *)
+  .settings(defaultSettings() *)
   .settings(
     scalaVersion := "2.13.12",
     libraryDependencies ++= AppDependencies(),
@@ -60,4 +60,4 @@ PlayKeys.playDefaultPort := 9010
 lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(root % "test->test")
-  .settings(itSettings():_*)
+  .settings(itSettings() *)

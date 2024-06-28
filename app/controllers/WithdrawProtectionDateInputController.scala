@@ -17,24 +17,20 @@
 package controllers
 
 import auth.AuthFunction
-import common.{Dates, Strings}
+import common.Strings
 import config._
-import connectors.PLAConnector
-import constructors.DisplayConstructors
 import enums.ApplicationType
 import forms.WithdrawDateForm._
-import models.{ProtectionModel, WithdrawDateFormModel}
-import play.api.data.{Form, FormError}
-import play.api.i18n.{I18nSupport, Lang, Messages}
+import models.ProtectionModel
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import play.api.{Application, Logging}
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
-import java.time.{LocalDate, LocalDateTime}
+import java.time.LocalDateTime
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
