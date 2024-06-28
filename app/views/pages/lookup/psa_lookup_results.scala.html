@@ -19,22 +19,24 @@
 
 @this(
     layout: Layout,
-    govukButton: GovukButton)
+    govukButton: GovukButton
+)
 
 @(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, application: Application, frontendAppConfig: FrontendAppConfig)
 
 
 @metrics = {
-@if(lookupResult.psaCheckResult == 0) {
-    frontendAppConfig.invalidStatusMetric
-} else {
-    frontendAppConfig.validStatusMetric
-}
+    @if(lookupResult.psaCheckResult == 0) {
+        frontendAppConfig.invalidStatusMetric
+    } else {
+        frontendAppConfig.validStatusMetric
+    }
 }
 
 @layout(
     pageTitle = Messages("psa.lookup.results.title"),
-    backLinkEnabled = false
+    backLinkEnabled = false,
+    additionalPrintCSS = true
 ) {
 
     <h1 class="govuk-heading-xl"> @Messages("psa.lookup.results.title")</h1>
@@ -85,9 +87,10 @@
     </dl>
 
     <div>
-        <a class="govuk-button govuk-button--secondary" role="button" href="@routes.PrintPdfController.printResultsPDF">@Messages("psa.lookup.results.save")</a>
+        <p class="govuk-body">
+            <a id="printLink" href="#" class="govuk-link" data-module="hmrc-print-link">@Messages("psa.lookup.results.save")</a>
+        </p>
 
-        <br>
         @govukButton(Button(
             href = Some(routes.LookupController.redirectToStart.toString),
             isStartButton = true,

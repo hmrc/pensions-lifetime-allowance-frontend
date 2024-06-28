@@ -25,7 +25,8 @@
 
 @layout(
     pageTitle = Messages("psa.lookup.not-found.results.title"),
-    backLinkEnabled = false
+    backLinkEnabled = false,
+    additionalPrintCSS = true
 ) {
 
     <h1 class="govuk-heading-xl">@Messages("psa.lookup.not-found.results.title")</h1>
@@ -56,9 +57,10 @@
     </ul>
     <p class="govuk-body">@Messages("psa.lookup.not-found.results.suggested-resolution")</p>
 
-    <a class="govuk-button govuk-button--secondary" role="button" href="@routes.PrintPdfController.printNotFoundPDF">@Messages("psa.lookup.results.save")</a>
+    <p class="govuk-body">
+        <a id="printLink" href="#" class="govuk-link" data-module="hmrc-print-link">@Messages("psa.lookup.results.save")</a>
+    </p>
 
-    <br>
     @govukButton(Button(
         href = Some(routes.LookupController.redirectToStart.toString),
         isStartButton = true,

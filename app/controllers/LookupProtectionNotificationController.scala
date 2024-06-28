@@ -18,7 +18,7 @@ package controllers
 
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
-import forms.{PSALookupProtectionNotificationNoForm, PSALookupSchemeAdministratorReferenceForm}
+import forms.PSALookupProtectionNotificationNoForm
 import models.{PSALookupRequest, PSALookupResult}
 import play.api.Application
 import play.api.data.Form
@@ -32,8 +32,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
 
-import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, LocalTime, ZoneId}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
