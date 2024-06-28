@@ -160,7 +160,7 @@ class SummaryViewSpec extends CommonViewSpecHelper with SummaryViewMessages {
 
     "have the correct bullet point messages" in{
       doc.select("ol li").eq(0).text shouldBe plaSummaryConfirm1
-      doc.select("ol li").eq(1).text shouldBe plaSummaryConfirm2
+      doc.select("ol li").eq(1).text startsWith  plaSummaryConfirm2
       doc.select("ol ul li").eq(0).text shouldBe plaSummaryConfirmBullet1
       doc.select("ol ul li").eq(1).text shouldBe plaSummaryConfirmBullet2
     }

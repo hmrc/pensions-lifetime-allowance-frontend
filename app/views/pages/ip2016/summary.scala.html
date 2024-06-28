@@ -52,11 +52,13 @@
     <p class="govuk-body">@Messages("pla.summary.confirmation")</p>
     <ol class="govuk-list govuk-list--number">
         <li>@Messages("pla.summary.confirm1")</li>
-        <li>@Messages("pla.summary.confirm2")</li>
-        <ul class="govuk-list govuk-list--bullet">
-            <li>@Messages("pla.summary.confirmBullet1")</li>
-            <li>@Messages("pla.summary.confirmBullet2")</li>
-        </ul>
+        <li>
+            @Messages("pla.summary.confirm2")
+            <ul class="govuk-list govuk-list--bullet">
+                <li>@Messages("pla.summary.confirmBullet1")</li>
+                <li>@Messages("pla.summary.confirmBullet2")</li>
+            </ul>
+        </li>
     </ol>
     @helpTextAccordion("ip16Help", messages("pla.summary.help"), hiddenContent)
     <p class="govuk-body">@Messages("pla.summary.confirmation2")</p>
