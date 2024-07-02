@@ -6,7 +6,9 @@
 .hmrc-language-select,
 .hmrc-report-technical-issue,
 .govuk-footer,
-.govuk-back-link {
+.govuk-back-link,
+.govuk-link,
+.govuk-button {
     display: none;
 }
 

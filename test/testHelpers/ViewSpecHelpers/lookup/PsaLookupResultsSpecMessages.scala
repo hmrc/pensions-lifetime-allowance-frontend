@@ -38,6 +38,6 @@ trait PsaLookupResultsSpecMessages {
   val protectionTypeFP2012Text = "Fixed protection 2012"
   val protectionTypeFP2014Text = "Fixed protection 2014"
   val protectedAmountTitleText = "Protected Amount:"
-  val pdfLinkText = "Download a PDF of these results"
+  val pdfLinkText = "Save and print these results"
   val startAgainLinkText = "Check another certificate"
 }

@@ -98,11 +98,11 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
     "have a save pdf link" which {
 
       "has the correct text" in {
-        doc.getElementsByClass("govuk-button govuk-button--secondary").text() shouldBe pdfLinkText
+        doc.getElementById("printLink").text() shouldBe pdfLinkText
       }
 
-      "links to the pdf page" in {
-        doc.getElementsByClass("govuk-button govuk-button--secondary").attr("href") shouldBe controllers.routes.PrintPdfController.printNotFoundPDF.url
+      "has the data module to print page" in {
+        doc.getElementById("printLink").attr("data-module") shouldBe "hmrc-print-link"
       }
     }
 

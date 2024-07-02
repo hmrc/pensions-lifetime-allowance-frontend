@@ -19,32 +19,19 @@ package controllers
 import auth.AuthFunction
 import common._
 import config.{FrontendAppConfig, PlaContext}
-import connectors.PLAConnector
-import constructors.{AmendsGAConstructor, DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
-import forms.AmendCurrentPensionForm._
-import forms.AmendOverseasPensionsForm._
-import forms.AmendPSODetailsForm._
-import forms.AmendPensionsTakenBeforeForm._
-import forms.AmendPensionsTakenBetweenForm._
 import forms.AmendPensionsUsedBetweenForm._
-import forms.AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm
-import forms.AmendmentTypeForm._
 import models.amendModels._
-import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import play.api.Logging
 import play.api.data.FormError
-import play.api.i18n.{I18nSupport, Lang}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
-import utils.Constants
 import views.html.pages
 
-import java.time.LocalDate
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 

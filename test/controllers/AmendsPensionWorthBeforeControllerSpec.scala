@@ -19,9 +19,6 @@ package controllers
 import auth.{AuthFunction, AuthFunctionImpl}
 import config._
 import config.wiring.PlaFormPartialRetriever
-import connectors.PLAConnector
-import constructors.{DisplayConstructors, ResponseConstructors}
-import enums.ApplicationType
 import mocks.AuthMock
 import models._
 import models.amendModels._
@@ -41,8 +38,7 @@ import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends._
-import views.html.pages.fallback.{noNotificationId, technicalError}
-import views.html.pages.result.manualCorrespondenceNeeded
+import views.html.pages.fallback.technicalError
 
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
