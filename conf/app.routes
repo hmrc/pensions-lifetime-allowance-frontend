@@ -129,6 +129,3 @@ GET         /psalookup/not-found-results                                        
 GET         /psalookup/results                                                            @controllers.LookupController.displayLookupResults
 GET         /psalookup/results/clear                                                      @controllers.LookupController.redirectToStart
 GET         /psalookup/protection-guidance                                                @controllers.LookupController.displayProtectionTypeGuidance
-
-GET         /psalookup/results/print                                                      @controllers.PrintPdfController.printResultsPDF
-GET         /psalookup/not-found/print                                                    @controllers.PrintPdfController.printNotFoundPDF

@@ -19,7 +19,6 @@ package controllers
 import auth.AuthFunction
 import common.{Dates, Strings}
 import config._
-import connectors.PLAConnector
 import enums.ApplicationType
 import forms.WithdrawDateForm._
 import models.{ProtectionModel, WithdrawDateFormModel}
@@ -29,7 +28,6 @@ import play.api.mvc._
 import play.api.{Application, Logging}
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
