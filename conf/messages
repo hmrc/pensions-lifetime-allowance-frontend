@@ -313,20 +313,16 @@ pla.summary.getIP16                                 = Get individual protection 
 pla.summary.getIP14                                 = Get individual protection 2014
 
 pla.summary.mustAgree                               = To get this protection you must agree to these declarations.
-pla.summary.confirmation                            = I declare:
-pla.summary.confirm1                                = On 5 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
-pla.summary.confirm2                                = On 6 April 2016 I didn''t hold either of these protections:
-pla.summary.ip14Confirm1                            = On 5 April 2014 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme.
-pla.summary.ip14Confirm2                            = On 6 April 2014 I didn''t hold primary protection.
-pla.summary.confirmBullet1                          = primary protection
-pla.summary.confirmBullet2                          = individual protection 2014
+pla.summary.confirmation                            = I confirm that:
+pla.summary.confirmBullet1                          = on 5 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme
+pla.summary.confirmBullet2                          = on 6 April 2016 I didn''t hold either primary protection or individual protection 2014
 pla.summary.help                                    = Help with these conditions
 pla.summary.hiddenPara.1                            = Speak to your pension scheme administrator to get professional help understanding these conditions.
 pla.summary.hiddenPara.2                            = HMRC''s Pensions Tax Manual has {0}
 pla.summary.hiddenPara.2.nonInput                   = HMRC''s Pensions Tax Manual has
 pla.summary.hiddenPara.linkText                     = technical guidance about individual protection 2016
 pla.summary.hiddenPara.ip14LinkText                 = technical guidance about individual protection 2014
-pla.summary.confirmation2                           = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
+pla.summary.confirmation2                           = I confirm that the information I have provided is true and complete to the best of my knowledge and belief.
 pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016.
 pla.summary.ip14Declaration                         = By confirming, you will automatically submit your application for individual protection 2014.
 

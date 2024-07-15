@@ -312,20 +312,16 @@ pla.summary.getIP16                                 = Cael diogelwch unigol 2016
 pla.summary.getIP14                                 = Cael diogelwch unigol 2014
 
 pla.summary.mustAgree                               = I gael y diogelwch hwn mae''n rhaid i chi gytuno ar y datganiadau hyn.
-pla.summary.confirmation                            = Rwy''n datgan:
-pla.summary.confirm1                                = Ar 5 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEF, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau nad yw yn y DU.
-pla.summary.confirm2                                = Ar 6 Ebrill 2016 nid oedd gennyf unrhyw un o''r diogelwch yma:
-pla.summary.ip14Confirm1                            = Ar 5 Ebrill 2014 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEF, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau nad yw yn y DU.
-pla.summary.ip14Confirm2                            = Ar 6 Ebrill 2014 nid oedd gennyf ddiogelwch sylfaenol.
-pla.summary.confirmBullet1                          = diogelwch sylfaenol
-pla.summary.confirmBullet2                          = diogelwch unigol 2014
+pla.summary.confirmation                            = Rwy''n cadarnhau''r canlynol:
+pla.summary.confirmBullet1                          = ar 5 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi''i gofrestru gyda CThEF, neu roeddwn yn aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau nad yw yn y DU
+pla.summary.confirmBullet2                          = ar 6 Ebrill 2016 nid oedd gennyf brif ddiogelwch na diogelwch unigol 2014
 pla.summary.help                                    = Help gyda''r amodau hyn
 pla.summary.hiddenPara.1                            = Siaradwch â gweinyddwr eich cynllun pensiwn i gael help proffesiynol i ddeall yr amodau hyn.
 pla.summary.hiddenPara.2                            = Mae gan Lawlyfr Treth Pensiwn CThEF {0}
 pla.summary.hiddenPara.2.nonInput                   = Mae gan Lawlyfr Treth Pensiwn CThEF
 pla.summary.hiddenPara.linkText                     = arweiniad technegol ynghylch diogelwch unigol 2016
 pla.summary.hiddenPara.ip14LinkText                 = arweiniad technegol ynghylch diogelwch unigol 2014
-pla.summary.confirmation2                           = Rwy''n datgan bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
+pla.summary.confirmation2                           = Rwy''n cadarnhau bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
 pla.summary.declaration                             = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am ddiogelwch unigol 2016 yn awtomatig.
 pla.summary.ip14Declaration                         = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am ddiogelwch unigol 2014 yn awtomatig.
 

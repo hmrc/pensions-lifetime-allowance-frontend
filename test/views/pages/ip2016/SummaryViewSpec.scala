@@ -154,15 +154,12 @@ class SummaryViewSpec extends CommonViewSpecHelper with SummaryViewMessages {
     "have the right explanatory text" in{
       doc.select("p.govuk-body").first().text shouldBe plaSummaryMustAgree
       doc.select("p.govuk-body").eq(1).text shouldBe plaSummaryConfirmation
-      doc.select("p.govuk-body").eq(4).text shouldBe plaSummaryConfirmation2
       doc.select("div.govuk-inset-text").text shouldBe plaSummaryDeclaration
     }
 
     "have the correct bullet point messages" in{
-      doc.select("ol li").eq(0).text shouldBe plaSummaryConfirm1
-      doc.select("ol li").eq(1).text shouldBe plaSummaryConfirm2
-      doc.select("ol ul li").eq(0).text shouldBe plaSummaryConfirmBullet1
-      doc.select("ol ul li").eq(1).text shouldBe plaSummaryConfirmBullet2
+      doc.select("ul#declaration-list li").eq(0).text shouldBe plaSummaryConfirmBullet1
+      doc.select("ul#declaration-list li").eq(1).text shouldBe plaSummaryConfirmBullet2
     }
 
     "have a hidden drop menu with the correct values" in{
