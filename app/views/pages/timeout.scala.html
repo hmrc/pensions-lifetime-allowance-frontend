@@ -25,10 +25,16 @@
 
 @()(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig: FrontendAppConfig)
 
+@returnToPTALink = {
+   <p class="govuk-body">
+       @messages("pla.timeout.returnToPTA.href.1")
+       <a href="@Links.plaMain" class="govuk-link" rel="external">@messages("pla.timeout.returnToPTA.href.2")</a> @messages("pla.timeout.returnToPTA.href.3")
+   </p>
+}
 
 @layout(pageTitle = messages("pla.timeout.pageHeading"), backLinkEnabled = false) {
 
    <h1 class="govuk-heading-xl">@messages("pla.timeout.pageHeading")</h1>
 
-   <p class="govuk-body">@Html(messages("pla.timeout.returnToPTA", Links.plaMain))</p>
+   @returnToPTALink
 }
