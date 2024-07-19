@@ -38,9 +38,9 @@
     backLinkEnabled = false,
     additionalPrintCSS = true
 ) {
-
     <h1 class="govuk-heading-xl"> @Messages("psa.lookup.results.title")</h1>
     <br>
+
     <dl class="govuk-summary-list">
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key govuk-!-width-full">@Messages("psa.lookup.results.table.row.1")</dt>
@@ -73,13 +73,13 @@
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">@Messages("psa.lookup.results.table.row.5")</dt>
                     <dd id="protection-status-valid" class="govuk-summary-list__value">@Messages("psa.lookup.results.table.row.5.valid")</dd>
+                </div>
             } else {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">@Messages("psa.lookup.results.table.row.5")</dt>
                     <dd id="protection-status-invalid" class="govuk-summary-list__value">@Messages("psa.lookup.results.table.row.5.invalid")</dd>
                 </div>
             }
-                </div>
             <div class="govuk-summary-list__row">
                 <dt class="govuk-summary-list__key">@Messages("psa.lookup.results.table.row.6")</dt>
                 <dd id="checked-on-value" class="govuk-summary-list__value">@timestamp</dd>
