@@ -765,7 +765,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       ))
       lazy val tstInactiveAmendsResultDisplayModel = InactiveAmendResultDisplayModel(
         notificationId = "30",
-        additionalInfo = Seq("1","2")
+        additionalInfo = Seq("1")
       )
 
       displayConstructor.createInactiveAmendResponseDisplayModel(tstAmendsResponseModel) shouldBe tstInactiveAmendsResultDisplayModel

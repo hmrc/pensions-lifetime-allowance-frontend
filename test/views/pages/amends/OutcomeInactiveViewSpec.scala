@@ -65,7 +65,7 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
     "have the correct structure for IP16" when{
       "looking at the explanatory paragraph displayed" in{
         docIP16.select("p#additionalInfo1").text() shouldBe plaAmendResultCodeIP16AdditionalInfoOne
-        docIP16.select("p#additionalInfo2").text() shouldBe plaAmendResultCodeAdditionalInfoTwo
+        docIP16.select("p#additionalInfoLink").text() shouldBe plaAmendResultCodeAdditionalInfoTwo
       }
 
       "checking the 'HMRC Pensions Schemes Services' link" in{
@@ -77,7 +77,7 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
     "have the correct structure for IP14" when{
       "looking at the explanatory paragraph displayed" in{
         docIP14.select("p#additionalInfo1").text() shouldBe plaAmendResultCodeIP14AdditionalInfoOne
-        docIP14.select("p#additionalInfo2").text() shouldBe plaAmendResultCodeAdditionalInfoTwo
+        docIP14.select("p#additionalInfoLink").text() shouldBe plaAmendResultCodeAdditionalInfoTwo
       }
 
       "checking the 'HMRC Pensions Schemes Services' link" in{

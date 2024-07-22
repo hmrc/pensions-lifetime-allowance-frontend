@@ -46,7 +46,10 @@ pla.links.signout                       = Sign out
 
 ## Timeout ##
 pla.timeout.pageHeading = You''ve been signed out due to inactivity
-pla.timeout.returnToPTA = You can start again from the <a href="{0}" class="govuk-link" rel="external">protect your lifetime allowance</a> page.
+pla.timeout.returnToPTA.href.1 = You can start again from the
+pla.timeout.returnToPTA.href.2 = protect your lifetime allowance
+pla.timeout.returnToPTA.href.3 = page.
+
 
 ## Not Found ##
 pla.notFound.title          = Page not found - 404
@@ -410,15 +413,12 @@ pla.resultSuccess.applicationDate       = application date
 pla.resultSuccess.print                 = Print and save your details
 pla.resultSuccess.IPChangeDetails       = Changing your protection details
 
-pla.resultSuccess.IPPensionSharing      = If your pension gets shared in a divorce or civil partnership split, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 60 days.
 pla.resultSuccess.IPPensionSharing.beforeLink = If your pension gets shared in a divorce or civil partnership split, contact
 pla.resultSuccess.IPPensionSharing.linkText = HMRC Pension Schemes Services
 pla.resultSuccess.IPPensionSharing.afterLink = within 60 days.
-pla.resultSuccess.FPAddToPension        = If you or your employer adds to your pension, contact <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a> within 90 days.
 pla.resultSuccess.FPAddToPension.beforeLink  = If you or your employer adds to your pension, contact
 pla.resultSuccess.FPAddToPension.linkText  = HMRC Pension Schemes Services
 pla.resultSuccess.FPAddToPension.afterLink  = within 90 days.
-pla.resultSuccess.viewDetails           = You can <a href="{0}">view or change details of your protections</a> at any time.
 pla.resultSuccess.viewDetails.beforeLink= You can
 pla.resultSuccess.viewDetails.linkText  = view or change details of your protections
 pla.resultSuccess.viewDetails.afterLink = at any time.
@@ -438,7 +438,6 @@ pla.resultSuccess.userResearchLink      = https://signup.take-part-in-research.s
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
 pla.resultRejection.pageHeading           = Your application was unsuccessful
-pla.resultRejection.viewDetails           = You can <a href="{0}">view or change details of your protections</a> at any time.
 pla.resultRejection.viewDetails.beforeLink = You can
 pla.resultRejection.viewDetails.linkText = view or change details of your protections
 pla.resultRejection.viewDetails.afterLink = at any time.
@@ -555,88 +554,89 @@ pla.amends.addPsoLink                                       = Add a pension shar
 
 ### AMENDS RESULTS MESSAGES ###
 pla.activeAmend.title                                       = Protection amended
-pla.activeAmend.viewDetails                                 = You can <a href="{0}">view or change details of your protections</a> at any time.
 pla.activeAmend.viewDetails.beforeLink                      = You can
 pla.activeAmend.viewDetails.linkText                        = view or change details of your protections
 pla.activeAmend.viewDetails.afterLink                       = at any time.
 pla.inactiveAmend.title                                     = Protection amended
 
-amendResultCode.25.heading  = You''re no longer entitled to individual protection 2014
-amendResultCode.25.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.25.2        = If you''ve already started taking your pension, you''ll need to tell your pension provider that you''ve lost individual protection 2014.
+amendResultCode.href.text    = HMRC Pension Schemes Services
 
-amendResultCode.26.heading  = You''re no longer entitled to individual protection 2014
-amendResultCode.26.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.26.2        = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.25.heading   = You''re no longer entitled to individual protection 2014
+amendResultCode.25.1         = This is because your total pension savings are below £1,250,001.
+amendResultCode.25.2         = If you''ve already started taking your pension, you''ll need to tell your pension provider that you''ve lost individual protection 2014.
 
-amendResultCode.27.heading  = You''re no longer entitled to individual protection 2014
-amendResultCode.27.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.27.2        = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.26.heading   = You''re no longer entitled to individual protection 2014
+amendResultCode.26.1         = This is because your total pension savings are below £1,250,001.
+amendResultCode.26.href.text = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell
 
-amendResultCode.28.heading  = You''re no longer entitled to individual protection 2014
-amendResultCode.28.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.28.2        = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.27.heading   = You''re no longer entitled to individual protection 2014
+amendResultCode.27.1         = This is because your total pension savings are below £1,250,001.
+amendResultCode.27.href.text = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell
 
-amendResultCode.29.heading  = You''re no longer entitled to individual protection 2014
-amendResultCode.29.1        = This is because your total pension savings are below £1,250,001.
-amendResultCode.29.2        = However, you already had fixed protection 2016 which has now become active. You can view details of this protection in your personal tax account.
-amendResultCode.29.3        = If you lose fixed protection 2016, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.28.heading   = You''re no longer entitled to individual protection 2014
+amendResultCode.28.1         = This is because your total pension savings are below £1,250,001.
+amendResultCode.28.href.text = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell
 
-amendResultCode.30.heading  = You''ve amended individual protection 2014
-amendResultCode.30.1        = As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-amendResultCode.30.2        = If this happens, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.29.heading   = You''re no longer entitled to individual protection 2014
+amendResultCode.29.1         = This is because your total pension savings are below £1,250,001.
+amendResultCode.29.2         = However, you already had fixed protection 2016 which has now become active. You can view details of this protection in your personal tax account.
+amendResultCode.29.href.text = If you lose fixed protection 2016, you must tell
 
-amendResultCode.31.heading  = You''ve amended individual protection 2014
-amendResultCode.31.1        = As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-amendResultCode.31.2        = If this happens, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.30.heading   = You''ve amended individual protection 2014
+amendResultCode.30.1         = As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
+amendResultCode.30.href.text = If this happens, you must tell
 
-amendResultCode.32.heading  = You''ve amended individual protection 2014
-amendResultCode.32.1        = As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-amendResultCode.32.2        = If this happens, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.31.heading   = You''ve amended individual protection 2014
+amendResultCode.31.1         = As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
+amendResultCode.31.href.text = If this happens, you must tell
 
-amendResultCode.33.heading  = You''ve amended individual protection 2014
+amendResultCode.32.heading   = You''ve amended individual protection 2014
+amendResultCode.32.1         = As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
+amendResultCode.32.href.text = If this happens, you must tell
 
-amendResultCode.34.heading  = You''ve amended individual protection 2014
-amendResultCode.4.heading   = You''ve amended individual protection 2014
+amendResultCode.33.heading   = You''ve amended individual protection 2014
 
-amendResultCode.35.heading  = You''re no longer entitled to individual protection 2016
-amendResultCode.35.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.35.2        = If you''ve already started taking your pension, you''ll need to tell your pension provider that you''ve lost individual protection 2016.
+amendResultCode.34.heading   = You''ve amended individual protection 2014
+amendResultCode.4.heading    = You''ve amended individual protection 2014
 
-amendResultCode.36.heading  = You''re no longer entitled to individual protection 2016
-amendResultCode.36.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.36.2        = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.35.heading   = You''re no longer entitled to individual protection 2016
+amendResultCode.35.1         = This is because your total pension savings are below £1,000,001.
+amendResultCode.35.2         = If you''ve already started taking your pension, you''ll need to tell your pension provider that you''ve lost individual protection 2016.
 
-amendResultCode.37.heading  = You''re no longer entitled to individual protection 2016
-amendResultCode.37.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.37.2        = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.36.heading   = You''re no longer entitled to individual protection 2016
+amendResultCode.36.1         = This is because your total pension savings are below £1,000,001.
+amendResultCode.36.href.text = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell
 
-amendResultCode.38.heading  = You''re no longer entitled to individual protection 2016
-amendResultCode.38.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.38.2        = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.37.heading   = You''re no longer entitled to individual protection 2016
+amendResultCode.37.1         = This is because your total pension savings are below £1,000,001.
+amendResultCode.37.href.text = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell
 
-amendResultCode.39.heading  = You''re no longer entitled to individual protection 2016
-amendResultCode.39.1        = This is because your total pension savings are below £1,000,001.
-amendResultCode.39.2        = However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.38.heading   = You''re no longer entitled to individual protection 2016
+amendResultCode.38.1         = This is because your total pension savings are below £1,000,001.
+amendResultCode.38.href.text = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell
 
-amendResultCode.40.heading  = You''ve amended individual protection 2016
-amendResultCode.40.1        = As you already have enhanced protection in place, individual protection 2016 will only become active if you give up enhanced protection.
-amendResultCode.40.2        = If this happens, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.39.heading   = You''re no longer entitled to individual protection 2016
+amendResultCode.39.1         = This is because your total pension savings are below £1,000,001.
+amendResultCode.39.href.text = However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell
 
-amendResultCode.41.heading  = You''ve amended individual protection 2016
-amendResultCode.41.1        = As you already have fixed protection in place, individual protection 2016 will only become active if you lose fixed protection.
-amendResultCode.41.2        = If this happens, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.40.heading   = You''ve amended individual protection 2016
+amendResultCode.40.1         = As you already have enhanced protection in place, individual protection 2016 will only become active if you give up enhanced protection.
+amendResultCode.40.href.text = If this happens, you must tell
 
-amendResultCode.42.heading  = You''ve amended individual protection 2016
-amendResultCode.42.1        = As you already have fixed protection 2014 in place, individual protection 2016 will only become active if you lose fixed protection 2014.
-amendResultCode.42.2        = If this happens, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.41.heading   = You''ve amended individual protection 2016
+amendResultCode.41.1         = As you already have fixed protection in place, individual protection 2016 will only become active if you lose fixed protection.
+amendResultCode.41.href.text = If this happens, you must tell
 
-amendResultCode.43.heading  = You''ve amended individual protection 2016
-amendResultCode.43.1        = As you already have fixed protection 2016 in place, individual protection 2016 will only become active if you lose fixed protection 2016.
-amendResultCode.43.2        = If this happens, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+amendResultCode.42.heading   = You''ve amended individual protection 2016
+amendResultCode.42.1         = As you already have fixed protection 2014 in place, individual protection 2016 will only become active if you lose fixed protection 2014.
+amendResultCode.42.href.text = If this happens, you must tell
 
-amendResultCode.44.heading  = You''ve amended individual protection 2016
-amendResultCode.12.heading  = You''ve amended individual protection 2016
+amendResultCode.43.heading   = You''ve amended individual protection 2016
+amendResultCode.43.1         = As you already have fixed protection 2016 in place, individual protection 2016 will only become active if you lose fixed protection 2016.
+amendResultCode.43.href.text = If this happens, you must tell
+
+amendResultCode.44.heading   = You''ve amended individual protection 2016
+amendResultCode.12.heading   = You''ve amended individual protection 2016
 
 
 
@@ -644,8 +644,10 @@ amendResultCode.12.heading  = You''ve amended individual protection 2016
 
 ### RESULTS MESSAGES ###
 
+resultCode.href.text    =   HMRC Pension Schemes Services
+
 resultCode.1.heading    =   Your application for individual protection 2014 was unsuccessful as you held primary protection on 5 April 2014.
-resultCode.1.1          =   If you''ve lost primary protection, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.1.href.text  =   If you''ve lost primary protection, contact
 
 resultCode.2.heading    =   Your application for individual protection 2014 was rejected as you already have this.
 
@@ -656,22 +658,22 @@ resultCode.4.heading    =   You''ve added individual protection 2014
 
 resultCode.5.heading    =   You''ve added individual protection 2014
 resultCode.5.1          =   As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-resultCode.5.2          =   To give up enhanced protection, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.5.href.text  =   To give up enhanced protection, contact
 
 resultCode.6.heading    =   You''ve added individual protection 2014
 resultCode.6.1          =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-resultCode.6.2          =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.6.href.text  =   If this happens, contact
 
 resultCode.7.heading    =   You''ve added individual protection 2014
 resultCode.7.1          =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-resultCode.7.2          =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.7.href.text  =   If this happens, contact
 
 resultCode.8.heading    =   You''ve added individual protection 2014
 resultCode.8.1          =   As you already had fixed protection 2016 in place, fixed protection 2016 has been made inactive. It will become active again if you lose individual protection 2014.
-resultCode.8.2          =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.8.href.text  =   If this happens, contact
 
 resultCode.9.heading    =   Your application for individual protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
-resultCode.9.1          =   If you''ve lost primary protection, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.9.href.text  =   If you''ve lost primary protection, contact
 
 resultCode.10.heading   =   Your application for individual protection 2016 was unsuccessful as you already have individual protection 2014.
 
@@ -681,32 +683,32 @@ resultCode.12.heading   =   You''ve added individual protection 2016
 
 resultCode.13.heading   =   You''ve added individual protection 2016
 resultCode.13.1         =   As you already have enhanced protection in place, your individual protection 2016 will only become active if you give up enhanced protection.
-resultCode.13.2         =   To give up enhanced protection, contact <a class="govuk-link" class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.13.href.text =   To give up enhanced protection, contact
 
 resultCode.14.heading   =   You''ve added individual protection 2016
 resultCode.14.1         =   As you already have fixed protection in place, your individual protection 2016 will only become active if you lose fixed protection.
-resultCode.14.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.14.href.text =   If this happens, contact
 
 resultCode.15.heading   =   You''ve added individual protection 2016
 resultCode.15.1         =   As you already have fixed protection 2014 in place, your individual protection 2016 will only become active if you lose fixed protection 2014.
-resultCode.15.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.15.href.text =   If this happens, contact
 
 resultCode.16.heading   =   You''ve added individual protection 2016
 resultCode.16.1         =   As you already have fixed protection 2016 in place, your individual protection 2016 will only become active if you lose fixed protection 2016.
-resultCode.16.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.16.href.text =   If this happens, contact
 
 resultCode.17.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have enhanced protection.
 resultCode.17.1         =   If enhanced protection is given up you can re-apply for fixed protection 2016.
-resultCode.17.2         =   To give up enhanced protection, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.17.href.text =   To give up enhanced protection, contact
 
 resultCode.18.heading   =   Your application for fixed protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
-resultCode.18.1         =   If you lost primary protection before 6 April 2016, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.18.href.text =   If you lost primary protection before 6 April 2016, contact
 
 resultCode.19.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection.
-resultCode.19.1         =   If you lost fixed protection before 6 April 2016, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>. You can then re-apply for fixed protection 2016.
+resultCode.19.href.text =   If you lost fixed protection before 6 April 2016, contact
 
 resultCode.20.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection 2014.
-resultCode.20.1         =   If you lost fixed protection 2014 before 6 April 2016, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>. You can then re-apply for fixed protection 2016.
+resultCode.20.href.text =   If you lost fixed protection 2014 before 6 April 2016, contact
 
 resultCode.21.heading   =   Your application for fixed protection 2016 was rejected as you already have this.
 
@@ -714,47 +716,47 @@ resultCode.22.heading   =   You''ve added fixed protection 2016
 
 resultCode.23.heading   =   You''ve added fixed protection 2016
 resultCode.23.1         =   As you already had individual protection 2016 in place, individual protection 2016 has been made inactive. It will become active again if you lose fixed protection 2016.
-resultCode.23.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.23.href.text =   If this happens, contact
 
 resultCode.24.heading   =   You''ve added fixed protection 2016
 resultCode.24.1         =   As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014.
-resultCode.24.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.24.href.text =   If this happens, contact
 
 resultCode.25.heading   =   You''re not entitled to individual protection 2014
 resultCode.25.1         =   This is because your total pensions savings are below £1,250,001.
 
 resultCode.26.heading   =   You''re not entitled to individual protection 2014
 resultCode.26.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.26.2         =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.26.href.text =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell
 
 resultCode.27.heading   =   You''re not entitled to individual protection 2014
 resultCode.27.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.27.2         =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.27.href.text =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell
 
 resultCode.28.heading   =   You''re not entitled to individual protection 2014
 resultCode.28.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.28.2         =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell <a href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.28.href.text =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell
 
 resultCode.29.heading   =   You''re not entitled to individual protection 2014
 resultCode.29.1         =   This is because your total pension savings are below £1,250,001.
 resultCode.29.2         =   However, you already had fixed protection 2016 which has now become active. Your fixed protection 2016 details are shown below. You can view details of this protection in your personal tax account.
-resultCode.29.3         =   If you lose fixed protection 2016, you must tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.29.href.text =   If you lose fixed protection 2016, you must tell
 
 resultCode.30.heading   =   You''ve added individual protection 2014
 resultCode.30.1         =   As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-resultCode.30.2         =   To give up enhanced protection, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.30.href.text =   To give up enhanced protection, contact
 
 resultCode.31.heading   =   You''ve added individual protection 2014
 resultCode.31.1         =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-resultCode.31.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.31.href.text =   If this happens, contact
 
 resultCode.32.heading   =   You''ve added individual protection 2014
 resultCode.32.1         =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-resultCode.32.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.32.href.text =   If this happens, contact
 
 resultCode.33.heading   =   You''ve added individual protection 2014
 resultCode.33.1         =   As you already had fixed protection 2016 in place, fixed protection 2016 has been made inactive. It will become active again if you lose individual protection 2014.
-resultCode.33.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.33.href.text =   If this happens, contact
 
 resultCode.34.heading   =   You''ve added individual protection 2014
 
@@ -763,35 +765,35 @@ resultCode.35.1         =   This is because your total pensions savings are belo
 
 resultCode.36.heading   =   You''re not entitled to individual protection 2016
 resultCode.36.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.36.2         =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.36.href.text =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell tell
 
 resultCode.37.heading   =   You''re not entitled to individual protection 2016
 resultCode.37.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.37.2         =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.37.href.text =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell tell
 
 resultCode.38.heading   =   You''re not entitled to individual protection 2016
 resultCode.38.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.38.2         =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.38.href.text =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell tell
 
 resultCode.39.heading   =   You''re not entitled to individual protection 2016
 resultCode.39.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.39.2         =   However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell tell <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.39.href.text =   However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell tell
 
 resultCode.40.heading   =   You''ve added individual protection 2016
 resultCode.40.1         =   As you already have enhanced protection in place, your individual protection 2016 will only become active if you give up enhanced protection.
-resultCode.40.2         =   To give up enhanced protection, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.40.href.text =   To give up enhanced protection, contact
 
 resultCode.41.heading   =   You''ve added individual protection 2016
 resultCode.41.1         =   As you already have fixed protection in place, your individual protection 2016 will only become active if you lose fixed protection.
-resultCode.41.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.41.href.text =   If this happens, contact
 
 resultCode.42.heading   =   You''ve added individual protection 2016
 resultCode.42.1         =   As you already have fixed protection 2014 in place, your individual protection 2016 will only become active if you lose fixed protection 2014.
-resultCode.42.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.42.href.text =   If this happens, contact
 
 resultCode.43.heading   =   You''ve added individual protection 2016
 resultCode.43.1         =   As you already have fixed protection 2016 in place, your individual protection 2016 will only become active if you lose fixed protection 2016.
-resultCode.43.2         =   If this happens, contact <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">HMRC Pension Schemes Services</a>.
+resultCode.43.href.text =   If this happens, contact
 
 resultCode.44.heading   =   You''ve added individual protection 2016
 
@@ -942,10 +944,7 @@ pla.withdraw.date-input.form.date-before-start-date=Date must be after protectio
 pla.withdraw.date-input-form.date-invalid=Enter a valid date
 pla.withdraw.date-input.form.submit=Submit
 pla.withdraw.confirm.title=You''ve withdrawn individual protection 2016
-pla.withdraw.confirm.info-heading=You can apply for another protection at any time
-pla.withdraw.confirm.info-text=You can view any other protections you may have in your <a href="{0}">personal tax account</a>
 pla.withdraw.confirm.feedback-heading=Give us feedback
-pla.withdraw.confirm.feedback-text=<a href="{0}">What did you think of this service?</a> We use your feedback to make our services better.
 
 
 pla.withdraw.protection.start.title             = Start
@@ -980,7 +979,6 @@ pla.withdraw.confirmation.contact.you.if.needed       = We may need to contact y
 pla.withdraw.confirmation.other.protections.beforeLink = View
 pla.withdraw.confirmation.other.protections.link      = details about other protections and how to apply
 pla.withdraw.confirmation.other.protections.afterLink = on GOV.UK.
-pla.withdraw.confirmation.check.details               = You can check the details of your pension in your <a href="{0}">personal tax account</a>.
 pla.existingProtections.withdrawnDate                 = Withdrawn date
 
 psa.lookup.protection-guidance.protection-type-primary-value = £1,500,000 or above

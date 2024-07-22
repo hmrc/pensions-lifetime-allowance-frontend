@@ -31,13 +31,27 @@
 
 	<p class="govuk-body" id="resultOutcome">@Messages("resultCode."+res.notificationId+".heading")</p>
 
-    @for(infoNum <- res.additionalInfo) {
-    	<p class="govuk-body" id=@{s"additionalInfo$infoNum"}>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
+    @if(res.notificationId == "3" || res.notificationId == "25" || res.notificationId == "35") {
+        @for(infoNum <- res.additionalInfo) {
+            <p class="govuk-body" id=@{s"additionalInfo$infoNum"}>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
+        }
+    } else if(res.additionalInfo.nonEmpty) {
+        @for(infoNum <- res.additionalInfo.dropRight(1)) {
+            <p class="govuk-body" id=@{s"additionalInfo$infoNum"}>@Html(Messages("resultCode." + res.notificationId+ "." + infoNum))</p>
+        }
+        <p class="govuk-body">
+            @Messages("resultCode." + res.notificationId + ".href.text")
+            <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">@messages("resultCode.href.text")</a>.
+        </p>
     }
 
     <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.IPChangeDetails")</h2>
 
-    <p class="govuk-body">@Html(Messages("pla.resultRejection.viewDetails",controllers.routes.ReadProtectionsController.currentProtections))</p>
+    <p class="govuk-body">
+        @Messages("pla.resultRejection.viewDetails.beforeLink")
+        <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections" id="viewChangeDetails">@Messages("pla.resultRejection.viewDetails.linkText")</a>
+        @Messages("pla.resultRejection.viewDetails.afterLink")
+    </p>
 
     <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.giveFeedback")</h2>
 

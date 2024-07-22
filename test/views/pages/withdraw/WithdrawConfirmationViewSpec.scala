@@ -59,7 +59,7 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
       doc.select("h2.govuk-heading-m").text shouldBe plaWithdrawConfirmFeedbackHeading
     }
 
-    s"feedback message of ${"pla.withdraw.confirm.feedback-text"}" in {
+    s"feedback message of ${"pla.resultSuccess.exitSurveyLinkText"}" in {
       doc.select("#main-content > div > div > p:nth-child(5)").text shouldBe plaWithdrawConfirmFeedbackText
     }
     "feedback link " in {

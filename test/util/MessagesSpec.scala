@@ -63,8 +63,10 @@ class MessagesSpec extends AnyWordSpecLike with Matchers with OptionValues  {
   private def countMessagesWithArgs(messages: Map[String, String]) = messages.values.filter(_.contains("{0}"))
 
   private def assertNonEmpty(label: String, messages: Map[String, String]): Unit = messages.foreach { case (key: String, value: String) =>
-    withClue(s"In $label, there is an empty value for the key:[$key][$value]") {
-      value.trim.isEmpty shouldBe false
+    if(!key.contains("pla.timeout.returnToPTA.href.3")) { // Blank cy message to format link+content correctly
+      withClue(s"In $label, there is an empty value for the key:[$key][$value]") {
+        value.trim.isEmpty shouldBe false
+      }
     }
   }
 
