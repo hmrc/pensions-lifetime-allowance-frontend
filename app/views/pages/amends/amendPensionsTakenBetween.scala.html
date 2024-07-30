@@ -27,14 +27,14 @@
 )
 
 
-@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_], messages: Messages)
+@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
 
 @title = @{
     if(amendPensionsTakenBetweenForm.errors.nonEmpty){
         messages("site.title.error", messages("pla.pensionsTakenBetween.title"))
     } else {
         messages("pla.pensionsTakenBetween.title")
-}
+    }
 }
 
 @layout(
@@ -45,27 +45,19 @@
 
     <h1 class="govuk-heading-l">@Messages("pla.pensionsTakenBetween.title")</h1>
 
-    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween) {
+    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)) {
+        @plaInputRadioGroup(
+            legend = Messages("pla.pensionsTakenBetween.title"),
+            legendClass = Some("govuk-visually-hidden"),
+            items = Seq(
+                RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
+                RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+            ),
+            isPageHeading = false,
+            inLine = true,
+            field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetween")
+        )
 
-    @plaInputRadioGroup(
-        legend = Messages("pla.pensionsTakenBetween.title"),
-        legendClass = Some("govuk-visually-hidden"),
-        items = Seq(
-            RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
-            RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
-        ),
-        isPageHeading = false,
-        inLine = true,
-        field = amendPensionsTakenBetweenForm("amendedPensionsTakenBetween")
-    )
-
-    @submitButton(submitText = Messages("pla.base.change"))
-
-    <div class="govuk-visually-hidden">
-
-        @helper.inputText(amendPensionsTakenBetweenForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-        @helper.inputText(amendPensionsTakenBetweenForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-
-    </div>
+        @submitButton(submitText = Messages("pla.base.change"))
     }
 }

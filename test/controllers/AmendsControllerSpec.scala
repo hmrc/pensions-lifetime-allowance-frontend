@@ -123,7 +123,6 @@ class AmendsControllerSpec extends FakeApplication
       authFunction,
       mockManualCorrespondenceNeeded,
       mockNoNotificationID,
-      mockAmendPsoDetails,
       mockTechnicalError,
       mockOutcomeActive,
       mockOutcomeInactive,
@@ -270,23 +269,8 @@ class AmendsControllerSpec extends FakeApplication
 
 
   "Calling the amendProtection action" when {
-    "the hidden fields in the amendment summary page have not been populated correctly" in new Setup {
-
-      object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection, ("protectionTypez", "stuff"))
-
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-
-
-      status(DataItem.result) shouldBe 500
-      DataItem.jsoupDoc.body.getElementById("tryAgainLink").attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
-      DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-      await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-    }
-
     "the microservice returns a conflict response" in new Setup {
-
-      object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection("IP2014", "dormant"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
@@ -300,7 +284,7 @@ class AmendsControllerSpec extends FakeApplication
     }
 
     "the microservice returns a manual correspondence needed response" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection("IP2014", "dormant"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
@@ -313,7 +297,7 @@ class AmendsControllerSpec extends FakeApplication
   }
 
     "the microservice returns an invalid json response" in new Setup {
-      lazy val result = controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("eggs", "dormant")).withMethod("POST"))
+      lazy val result = controller.amendProtection("IP2014", "invalidstatus")(authenticatedFakeRequest().withMethod("POST"))
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
 
@@ -336,7 +320,7 @@ class AmendsControllerSpec extends FakeApplication
     }
 
     "the microservice returns a response with no notificationId" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection, ("protectionType", "IP2014"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection("IP2014", "dormant"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
@@ -355,7 +339,7 @@ class AmendsControllerSpec extends FakeApplication
     }
 
     "the microservice returns a valid response" in new Setup {
-      lazy val result = controller.amendProtection()(authenticatedFakeRequest().withFormUrlEncodedBody(("protectionType", "IP2014"), ("status", "dormant")).withMethod("POST"))
+      lazy val result = controller.amendProtection("IP2014", "dormant")(authenticatedFakeRequest().withMethod("POST"))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -426,7 +410,7 @@ class AmendsControllerSpec extends FakeApplication
         protectionReference = Some("PSA123456"))
 
       val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
-      object DataItem extends AuthorisedFakeRequestToPost(rpsoController.submitRemovePso, ("protectionType", "ip2016"), ("status", "open"))
+      object DataItem extends AuthorisedFakeRequestToPost(rpsoController.submitRemovePso("ip2016", "open"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))

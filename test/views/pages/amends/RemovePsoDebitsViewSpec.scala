@@ -16,7 +16,6 @@
 
 package views.pages.amends
 
-import forms.AmendmentTypeForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.RemovePsoDetailsViewMessages
@@ -28,12 +27,8 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the RemovePsoDetailsView" should{
-    val amendmentForm = AmendmentTypeForm.amendmentTypeForm.bind(Map(
-      "protectionType" -> "ip2016",
-      "status"         -> "open"))
-
     lazy val view = application.injector.instanceOf[removePsoDebits]
-    lazy val doc = Jsoup.parse(view.apply(amendmentForm).body)
+    lazy val doc = Jsoup.parse(view.apply("ip2016", "open").body)
     lazy val form = doc.select("form")
 
     "have the correct title" in{
@@ -50,7 +45,7 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsRemovePensionSharingOrderController.submitRemovePso.url
+      form.attr("action") shouldBe controllers.routes.AmendsRemovePensionSharingOrderController.submitRemovePso("ip2016", "open").url
     }
 
     "have a functional cancellation link" in{

@@ -181,8 +181,8 @@ class AmendsPensionUsedBetweenControllerSpec extends FakeApplication
   "Submitting Amend IP16 Pensions Used Between data" when {
 
     "the model can't be fetched from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween,
-        ("amendedPensionsUsedBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween("ip2016", "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "0"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
@@ -191,16 +191,16 @@ class AmendsPensionUsedBetweenControllerSpec extends FakeApplication
     }
 
     "the data is invalid on validation" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween,
-        ("amendedPensionsUsedBetweenAmt", "yes"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween("ip2016", "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "yes"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       status(DataItem.result) shouldBe 400
     }
 
     "the data is valid with a no response" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween,
-        ("amendedPensionsUsedBetweenAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween("ip2016", "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "0"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))

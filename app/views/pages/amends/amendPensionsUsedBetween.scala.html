@@ -28,7 +28,7 @@
 )
 
 
-@(amendPensionsUsedBetweenForm: Form[AmendPensionsUsedBetweenModel])(implicit request: Request[_], messages: Messages)
+@(amendPensionsUsedBetweenForm: Form[AmendPensionsUsedBetweenModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
 
@@ -70,7 +70,7 @@
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsUsedBetween.question")</h1>
     <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.1")</p>
 
-    @form(action = routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween) {
+    @form(action = routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween(protectionType, status)) {
         @helpTextAccordion(
             id = "ip16-amend-pensions-used-between-help",
             summaryText = Messages("pla.pensionsUsedBetween.help"),
@@ -85,13 +85,6 @@
             errorMessage = if (amendPensionsUsedBetweenForm.errors.nonEmpty) Some(errorMessage.head) else Some("")
         )
 
-    @submitButton(submitText = Messages("pla.base.change"))
-
-    <div class="govuk-visually-hidden">
-
-        @helper.inputText(amendPensionsUsedBetweenForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-        @helper.inputText(amendPensionsUsedBetweenForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-
-    </div>
+        @submitButton(submitText = Messages("pla.base.change"))
     }
 }

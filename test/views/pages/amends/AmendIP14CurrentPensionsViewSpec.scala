@@ -28,17 +28,13 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendIP14CurrentPensionsView" should{
-    val amendCurrentPensionsForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "12000",
-      "protectionType" -> "ip2014",
-      "status" -> "open"))
+    val amendCurrentPensionsForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "12000"))
     lazy val view = application.injector.instanceOf[amendIP14CurrentPensions]
-    lazy val doc = Jsoup.parse(view.apply(amendCurrentPensionsForm).body)
+    lazy val doc = Jsoup.parse(view.apply(amendCurrentPensionsForm, "ip2016", "open").body)
 
-    val errorForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "a",
-      "protectionType" -> "ip2014",
-      "status" -> "open"))
+    val errorForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "a"))
     lazy val errorView = application.injector.instanceOf[amendIP14CurrentPensions]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
     lazy val form = doc.select("form")
 
     "have the correct title" in{
@@ -70,7 +66,7 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
 
     "has a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController.submitAmendCurrentPension.url
+      form.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController.submitAmendCurrentPension("ip2016", "open").url
       doc.getElementsByClass("govuk-visually-hidden").eq(1).text() shouldBe plaIp14CurrentPensionsTitle
     }
 

@@ -26,7 +26,7 @@
         submitButton: playHelpers.templates.submitButton
 )
 
-@(amendPensionsWorthBeforeForm: Form[AmendPensionsWorthBeforeModel])(implicit request: Request[_], messages: Messages)
+@(amendPensionsWorthBeforeForm: Form[AmendPensionsWorthBeforeModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
         <p class="govuk-body">@Messages("pla.pensionsWorthBefore.para.1")</p>
@@ -70,7 +70,7 @@
 
      <h1 class="govuk-heading-xl">@Messages("pla.ip14PensionsTakenBefore.question")</h1>
 
-     @form(action = routes.AmendsPensionWorthBeforeController.submitAmendPensionsWorthBefore) {
+     @form(action = routes.AmendsPensionWorthBeforeController.submitAmendPensionsWorthBefore(protectionType, status)) {
           @helpTextAccordion(
                id = "ip14-amend-pensions-taken-before-help",
                summaryText = Messages("pla.pensionsWorthBefore.help"),
@@ -85,10 +85,5 @@
           )
 
           @submitButton(submitText = Messages("pla.base.change"))
-
-          <div class="govuk-visually-hidden">
-               @helper.inputText(amendPensionsWorthBeforeForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-               @helper.inputText(amendPensionsWorthBeforeForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-          </div>
      }
 }

@@ -278,15 +278,15 @@ class AmendsOverseasPensionControllerSpec extends FakeApplication
   "Submitting Amend IP16 Overseas Pensions data" when {
 
     "there is an error reading the form" in new Setup {
-      lazy val result = controller.submitAmendOverseasPensions(fakeRequest)
+      lazy val result = controller.submitAmendOverseasPensions("ip2016", "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
       status(result) shouldBe 400
       }
 
     "the model can't be fetched from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions,
-        ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions("ip2016", "dormant"),
+        ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](None)
@@ -296,8 +296,8 @@ class AmendsOverseasPensionControllerSpec extends FakeApplication
 
 
     "the data is valid with a no response" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions,
-        ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions("ip2016", "dormant"),
+        ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -308,8 +308,8 @@ class AmendsOverseasPensionControllerSpec extends FakeApplication
       }
 
     "the data is valid with a yes response" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions,
-        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "10"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions("ip2016", "dormant"),
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "10"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -321,8 +321,8 @@ class AmendsOverseasPensionControllerSpec extends FakeApplication
 
 
     "the data is invalid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions,
-        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", ""), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions("ip2016", "dormant"),
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", ""))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 

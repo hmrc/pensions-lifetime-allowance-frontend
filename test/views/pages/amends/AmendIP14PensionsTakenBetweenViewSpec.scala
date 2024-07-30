@@ -30,15 +30,13 @@ class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Am
 
   "the AmendIP14PensionsTakenBetweenView" should {
     val pensionsForm = AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "yes",
-      "amendedPensionsTakenBetweenAmt" -> "12345",
-      "protectionType" -> "ip2014",
-      "status" -> "open"))
+      "amendedPensionsTakenBetweenAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendIP14PensionsTakenBetween]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
     val errorForm =  AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map.empty[String, String])
     lazy val errorView = application.injector.instanceOf[amendIP14PensionsTakenBetween]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
@@ -58,7 +56,7 @@ class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Am
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween.url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween("ip2016", "open").url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaIP14PensionsTakenBetweenLegendText
     }
 

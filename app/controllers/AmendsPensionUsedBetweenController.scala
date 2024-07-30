@@ -23,7 +23,6 @@ import enums.ApplicationType
 import forms.AmendPensionsUsedBetweenForm._
 import models.amendModels._
 import play.api.Logging
-import play.api.data.FormError
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
@@ -42,53 +41,31 @@ class AmendsPensionUsedBetweenController @Inject()(val sessionCacheService: Sess
                                                    amendPensionsUsedBetween: pages.amends.amendPensionsUsedBetween,
                                                    amendIP14PensionsUsedBetween: pages.amends.amendIP14PensionsUsedBetween)
                                                   (implicit val appConfig: FrontendAppConfig,
-                                 implicit val partialRetriever: FormPartialRetriever,
-                                 implicit val formWithCSRF: FormWithCSRF,
-                                 implicit val plaContext: PlaContext,
-                                 implicit val ec: ExecutionContext)
-extends FrontendController(mcc) with I18nSupport with Logging{
-
-  val submitAmendPensionsUsedBetween: Action[AnyContent] = Action.async { implicit request => authFunction.genericAuthWithNino("existingProtections") { nino =>
-    amendPensionsUsedBetweenForm.bindFromRequest().fold(
-      errors => {
-        val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, er.message) })
-        Future.successful(BadRequest(amendPensionsUsedBetween(form)))
-      },
-      success => {
-        sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(success.protectionType, success.status)).flatMap {
-          case Some(model) =>
-            val updatedAmount = success.amendedPensionsUsedBetweenAmt.get.toDouble
-            val updated = model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(updatedAmount))
-            val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-            val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
-
-            sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
-              _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
-            }
-
-          case _ =>
-            logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions used between")
-            Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-        }
-      }
-    )
-
-    }
-  }
+                                                   val partialRetriever: FormPartialRetriever,
+                                                   val formWithCSRF: FormWithCSRF,
+                                                   val plaContext: PlaContext,
+                                                   val ec: ExecutionContext)
+  extends FrontendController(mcc) with I18nSupport with Logging {
 
   def amendPensionsUsedBetween(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).map {
         case Some(data) =>
           protectionType match {
-            case "ip2016" =>  Ok(amendPensionsUsedBetween(amendPensionsUsedBetweenForm.fill(AmendPensionsUsedBetweenModel(
-              Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0))),
+            case "ip2016" => Ok(amendPensionsUsedBetween(
+              amendPensionsUsedBetweenForm.fill(AmendPensionsUsedBetweenModel(
+                Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0)))
+              )),
               protectionType,
-              status))))
-            case "ip2014" => Ok(amendIP14PensionsUsedBetween(amendPensionsUsedBetweenForm.fill(AmendPensionsUsedBetweenModel(
-              Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0))),
+              status
+            ))
+            case "ip2014" => Ok(amendIP14PensionsUsedBetween(
+              amendPensionsUsedBetweenForm.fill(AmendPensionsUsedBetweenModel(
+                Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0)))
+              )),
               protectionType,
-              status))))
+              status
+            ))
           }
         case _ =>
           logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend pensionsUsedBetween page")
@@ -97,4 +74,31 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     }
   }
 
+  def submitAmendPensionsUsedBetween(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
+    authFunction.genericAuthWithNino("existingProtections") { nino =>
+      amendPensionsUsedBetweenForm.bindFromRequest().fold(
+        errors => {
+          Future.successful(BadRequest(amendPensionsUsedBetween(errors, protectionType, status)))
+        },
+        success => {
+          sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).flatMap {
+            case Some(model) =>
+              val updatedAmount = success.amendedPensionsUsedBetweenAmt.get.toDouble
+              val updated = model.updatedProtection.copy(postADayBenefitCrystallisationEvents = Some(updatedAmount))
+              val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+              val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+
+              sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
+                _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
+              }
+
+            case _ =>
+              logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions used between")
+              Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+          }
+        }
+      )
+
+    }
+  }
 }

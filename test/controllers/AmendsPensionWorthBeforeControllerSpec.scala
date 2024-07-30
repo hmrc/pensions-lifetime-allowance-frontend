@@ -157,8 +157,8 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
 
   "Submitting Amend IP16 Pensions Worth Before" when {
     "the data is valid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore,
-        ("amendedPensionsTakenBeforeAmt", "10000"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2016", "dormant"),
+        ("amendedPensionsTakenBeforeAmt", "10000"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -170,8 +170,8 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
     }
 
     "the data is invalid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore,
-        ("amendedPensionsTakenBeforeAmt", "yes"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2016", "dormant"),
+        ("amendedPensionsTakenBeforeAmt", "yes"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -182,8 +182,8 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
     }
 
     "the model can't be fetched from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore,
-        ("amendedPensionsTakenBeforeAmt", "10000"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2016", "dormant"),
+        ("amendedPensionsTakenBeforeAmt", "10000"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)

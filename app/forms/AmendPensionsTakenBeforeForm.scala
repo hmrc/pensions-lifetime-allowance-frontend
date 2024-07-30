@@ -28,9 +28,7 @@ object AmendPensionsTakenBeforeForm extends CommonBinders{
     mapping(
       "amendedPensionsTakenBefore" -> common.Validation.newText("pla.pensionsTakenBefore.errors.mandatoryError")
         .verifying("pla.pensionsTakenBefore.errors.mandatoryError", mandatoryCheck)
-        .verifying("pla.pensionsTakenBefore.errors.mandatoryError", yesNoCheck),
-      "protectionType" -> text,
-      "status" -> text
+        .verifying("pla.pensionsTakenBefore.errors.mandatoryError", yesNoCheck)
     )(AmendPensionsTakenBeforeModel.apply)(AmendPensionsTakenBeforeModel.unapply)
   )
 }

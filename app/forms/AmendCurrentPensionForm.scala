@@ -29,9 +29,7 @@ object AmendCurrentPensionForm extends CommonBinders {
         .verifying("pla.currentPensions.amount.errors.mandatoryError", currentPensionsAmt => currentPensionsAmt.isDefined)
         .verifying("pla.currentPensions.amount.errors.negative", currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
         .verifying("pla.currentPensions.amount.errors.decimal", currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))
-        .verifying("pla.currentPensions.amount.errors.max", currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency)),
-      "protectionType" -> text,
-      "status" -> text
+        .verifying("pla.currentPensions.amount.errors.max", currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency))
     )(AmendCurrentPensionModel.apply)(AmendCurrentPensionModel.unapply)
   )
 }
