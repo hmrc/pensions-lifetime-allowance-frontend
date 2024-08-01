@@ -26,7 +26,7 @@
     formInputMoney: playHelpers.templates.formInputMoney
 )
 
-@(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel])(implicit request: Request[_], messages: Messages)
+@(amendOverseasPensionsForm: Form[AmendOverseasPensionsModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
 
 @errorMessage = @{
     for(error <- amendOverseasPensionsForm.errors) yield {
@@ -64,8 +64,7 @@
 
     <p class="govuk-body">@Messages("pla.overseasPensions.question")</p>
 
-    @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions) {
-
+    @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions(protectionType, status)) {
         @formHiddenYesNoRadio(
             field = amendOverseasPensionsForm("amendedOverseasPensions"),
             question = Messages("pla.overseasPensions.legend"),
@@ -75,11 +74,5 @@
         )
 
         @submitButton(Messages("pla.base.change"))
-        <div class="govuk-visually-hidden">
-
-            @helper.inputText(amendOverseasPensionsForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-            @helper.inputText(amendOverseasPensionsForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-
-        </div>
     }
 }

@@ -27,7 +27,7 @@
     submitButton: playHelpers.templates.submitButton
 )
 
-@(amendCurrentPensionForm: Form[AmendCurrentPensionModel])(implicit request: Request[_], messages: Messages)
+@(amendCurrentPensionForm: Form[AmendCurrentPensionModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
 
 @helpTextAccordionContent = {
     <p class="govuk-body">@Messages("pla.currentPensions.hiddenTextPara")</p>
@@ -66,8 +66,7 @@
         helpTextAccordionContent
     )
 
-    @form(action = routes.AmendsCurrentPensionController.submitAmendCurrentPension) {
-
+    @form(action = routes.AmendsCurrentPensionController.submitAmendCurrentPension(protectionType, status)) {
         @formInputMoney(
             field = amendCurrentPensionForm("amendedUKPensionAmt"),
             question = Messages("pla.currentPensions.title"),
@@ -76,15 +75,7 @@
             pageHeading = false
         )
 
-    @submitButton(submitText = Messages("pla.base.change"))
-
-    <div class="govuk-visually-hidden">
-
-        @helper.inputText(amendCurrentPensionForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-        @helper.inputText(amendCurrentPensionForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-
-    </div>
-
+        @submitButton(submitText = Messages("pla.base.change"))
     }
 
 }

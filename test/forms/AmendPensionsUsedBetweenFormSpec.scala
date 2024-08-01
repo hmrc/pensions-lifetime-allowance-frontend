@@ -29,12 +29,12 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
   val messageKey = "pensionsUsedBetween"
 
   "The AmendPensionsUsedBetweenForm" should {
-    val validMap = Map("amendedPensionsUsedBetweenAmt" -> "1000.0", "protectionType" -> "type", "status" -> "status")
+    val validMap = Map("amendedPensionsUsedBetweenAmt" -> "1000.0")
 
     "produce a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = AmendPensionsUsedBetweenModel(Some(1000.0), "type", "status")
+        val model = AmendPensionsUsedBetweenModel(Some(1000.0))
         val result = amendPensionsUsedBetweenForm.fill(model)
 
         result.data shouldBe validMap
@@ -44,43 +44,27 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
         val map = validMap.updated("amendedPensionsUsedBetweenAmt", {Constants.npsMaxCurrency - 1}.toString)
         val result = amendPensionsUsedBetweenForm.bind(map)
 
-        result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(Constants.npsMaxCurrency - 1), "type", "status"))
+        result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(Constants.npsMaxCurrency - 1)))
       }
 
       "provided with a valid map with an amount equal zero" in {
         val map = validMap.updated("amendedPensionsUsedBetweenAmt", "0")
         val result = amendPensionsUsedBetweenForm.bind(map)
 
-        result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(0), "type", "status"))
+        result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(0)))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map = validMap.updated("amendedPensionsUsedBetweenAmt", "0.01")
         val result = amendPensionsUsedBetweenForm.bind(map)
 
-        result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(0.01), "type", "status"))
+        result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(0.01)))
       }
     }
 
     "produce an invalid form" which {
 
       "has one error with the correct error message" when {
-        "not provided with a value for protectionType" in {
-          val map = validMap - "protectionType"
-          val result = amendPensionsUsedBetweenForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequiredKey
-        }
-
-        "not provided with a value for status" in {
-          val map = validMap - "status"
-          val result = amendPensionsUsedBetweenForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequiredKey
-        }
-
         "provided with an invalid value for amendedPensionsUsedBetweenAmt" in {
           val map = validMap.updated("amendedPensionsUsedBetweenAmt", "-1")
           val result = amendPensionsUsedBetweenForm.bind(map)

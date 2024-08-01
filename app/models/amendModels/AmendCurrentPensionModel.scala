@@ -18,7 +18,7 @@ package models.amendModels
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AmendCurrentPensionModel(amendedUKPensionAmt: Option[BigDecimal], protectionType: String, status: String) extends AmendValueModel
+case class AmendCurrentPensionModel(amendedUKPensionAmt: Option[BigDecimal]) extends AmendValueModel
 
 object AmendCurrentPensionModel{
   implicit val format: OFormat[AmendCurrentPensionModel] = Json.format[AmendCurrentPensionModel]

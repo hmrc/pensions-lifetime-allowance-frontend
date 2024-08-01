@@ -28,22 +28,22 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
   val messageKey = "pensionsTakenBetween"
 
   "The AmendPensionsTakenBetweenForm" should {
-    val validMap = Map("amendedPensionsTakenBetween" -> "yes", "protectionType" -> "type", "status" -> "status")
+    val validMap = Map("amendedPensionsTakenBetween" -> "yes")
 
     "produce a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = AmendPensionsTakenBetweenModel("yes", "type", "status")
+        val model = AmendPensionsTakenBetweenModel("yes")
         val result = amendPensionsTakenBetweenForm.fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid map with no amount" in {
-        val map = Map("amendedPensionsTakenBetween" -> "no", "protectionType" -> "anotherType", "status" -> "anotherStatus")
+        val map = Map("amendedPensionsTakenBetween" -> "no")
         val result = amendPensionsTakenBetweenForm.bind(map)
 
-        result.value shouldBe Some(AmendPensionsTakenBetweenModel("no", "anotherType", "anotherStatus"))
+        result.value shouldBe Some(AmendPensionsTakenBetweenModel("no"))
       }
     }
 
@@ -57,22 +57,6 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
 
           result.errors.size shouldBe 1
           result.error("amendedPensionsTakenBetween").get.message shouldBe errorQuestion(messageKey)
-        }
-
-        "not provided with a value for protectionType" in {
-          val map = validMap - "protectionType"
-          val result = amendPensionsTakenBetweenForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequiredKey
-        }
-
-        "not provided with a value for status" in {
-          val map = validMap - "status"
-          val result = amendPensionsTakenBetweenForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequiredKey
         }
       }
     }

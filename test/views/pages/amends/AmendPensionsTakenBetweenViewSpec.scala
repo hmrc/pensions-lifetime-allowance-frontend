@@ -29,18 +29,16 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
 
   "the AmendPensionsTakenBetweenView" should {
     val pensionsForm = AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "yes",
-                                                                                            "amendedPensionsTakenBetweenAmt" -> "12345",
-                                                                                            "protectionType" -> "ip2016",
-                                                                                            "status" -> "open"))
+                                                                                            "amendedPensionsTakenBetweenAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendPensionsTakenBetween]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
     val errorForm =  AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "",
       "amendedPensionsTakenBetweenAmt" -> "12345",
       "protectionType" -> "ip2016",
       "status" -> "open"))
     lazy val errorView = application.injector.instanceOf[amendPensionsTakenBetween]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
@@ -54,7 +52,7 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween.url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween("ip2016", "open").url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBetweenLegendText
     }
 

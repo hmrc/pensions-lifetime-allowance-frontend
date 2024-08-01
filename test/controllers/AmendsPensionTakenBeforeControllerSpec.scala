@@ -240,7 +240,7 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
   "Submitting Amend IP16 Pensions Taken Before data" when {
 
     "the data is invalid" in new Setup {
-  lazy val result = controller.submitAmendPensionsTakenBefore(fakeRequest)
+  lazy val result = controller.submitAmendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
         status(result) shouldBe 400
@@ -248,8 +248,8 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
     }
 
     "the data is invalidated by additional validation" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "1"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore("ip2016", "dormant"),
+        ("amendedPensionsTakenBefore", "1"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
@@ -258,8 +258,8 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
 
 
     "the model can't be fetched from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore("ip2016", "dormant"),
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](None)
@@ -268,8 +268,8 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
     }
 
     "the data is valid with a no" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore("ip2016", "dormant"),
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
@@ -280,8 +280,8 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
       }
 
     "the data is valid with a yes" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore,
-        ("amendedPensionsTakenBefore", "yes"), ("protectionType", "ip2016"), ("status", "dormant"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore("ip2016", "dormant"),
+        ("amendedPensionsTakenBefore", "yes"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))

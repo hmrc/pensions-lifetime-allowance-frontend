@@ -29,9 +29,7 @@ object AmendPensionsUsedBetweenForm extends CommonBinders {
       "amendedPensionsUsedBetweenAmt" -> of(decimalFormatter("pla.pensionsUsedBetween.amount.errors.mandatoryError", "pla.pensionsUsedBetween.amount.errors.notReal"))
         .verifying("pla.pensionsUsedBetween.amount.errors.decimal", pensionsWorthBeforeAmt => isMaxTwoDecimalPlaces(pensionsWorthBeforeAmt.getOrElse(0)))
         .verifying("pla.pensionsUsedBetween.amount.errors.negative", pensionsWorthBeforeAmt => isPositive(pensionsWorthBeforeAmt.getOrElse(0)))
-        .verifying("pla.pensionsUsedBetween.amount.errors.max", pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0))),
-      "protectionType" -> text,
-      "status" -> text
+        .verifying("pla.pensionsUsedBetween.amount.errors.max", pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0)))
     )(AmendPensionsUsedBetweenModel.apply)(AmendPensionsUsedBetweenModel.unapply)
   )
 }

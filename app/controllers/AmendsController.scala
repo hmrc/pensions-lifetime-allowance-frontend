@@ -22,8 +22,6 @@ import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import constructors.{AmendsGAConstructor, DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
-import forms.AmendPSODetailsForm._
-import forms.AmendmentTypeForm._
 import models.amendModels._
 import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import play.api.Logging
@@ -35,7 +33,6 @@ import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
-import views.html.pages
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,64 +45,27 @@ class AmendsController @Inject()(val sessionCacheService: SessionCacheService,
                                  authFunction: AuthFunction,
                                  manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
                                  noNotificationId: views.html.pages.fallback.noNotificationId,
-                                 amendPsoDetails: pages.amends.amendPsoDetails,
                                  technicalError: views.html.pages.fallback.technicalError,
                                  outcomeActive: views.html.pages.amends.outcomeActive,
                                  outcomeInactive: views.html.pages.amends.outcomeInactive,
                                  amendSummary: views.html.pages.amends.amendSummary)
                                 (implicit val appConfig: FrontendAppConfig,
-                                 implicit val partialRetriever: FormPartialRetriever,
-                                 implicit val formWithCSRF: FormWithCSRF,
-                                 implicit val plaContext: PlaContext,
-                                 implicit val ec: ExecutionContext)
-extends FrontendController(mcc) with I18nSupport with Logging{
-
-  val amendProtection: Action[AnyContent] = Action.async { implicit request =>
-     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendmentTypeForm.bindFromRequest().fold(
-        errors => {
-          logger.warn(s"Couldn't bind protection type or status to amend request for user with nino $nino")
-          Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-        },
-        success => for {
-          protectionAmendment <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](
-            Strings.cacheAmendFetchString(success.protectionType, success.status))
-          saveAmendsGA <- sessionCacheService.saveFormData[AmendsGAModel]("AmendsGA", AmendsGAConstructor.identifyAmendsChanges(
-            protectionAmendment.get.updatedProtection, protectionAmendment.get.originalProtection))
-          response <- plaConnector.amendProtection(nino, protectionAmendment.get.updatedProtection)
-          result <- routeViaMCNeededCheck(response, nino)
-        } yield result
-      )
-    }
-  }
-
-  def submitAmendPsoDetails(protectionType: String, status: String, existingPSO: Boolean): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendPsoDetailsForm(protectionType).bindFromRequest().fold(
-        formWithErrors => {
-          Future.successful(BadRequest(amendPsoDetails(formWithErrors, protectionType, status, existingPSO)))
-        },
-        success => {
-            val details = createPsoDetailsList(success)
-            for {
-              amendModel <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
-              storedModel <- updateAndSaveAmendModelWithPso(details, amendModel, Strings.cacheAmendFetchString(protectionType, status))
-            } yield Redirect(routes.AmendsController.amendsSummary(protectionType.toLowerCase, status.toLowerCase))
-        }
-      )
-    }
-  }
+                                 val partialRetriever: FormPartialRetriever,
+                                 val formWithCSRF: FormWithCSRF,
+                                 val plaContext: PlaContext,
+                                 val ec: ExecutionContext)
+  extends FrontendController(mcc) with I18nSupport with Logging {
 
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
-     authFunction.genericAuthWithNino("existingProtections") { nino =>
+    authFunction.genericAuthWithNino("existingProtections") { nino =>
       val protectionKey = Strings.cacheAmendFetchString(protectionType, status)
       sessionCacheService.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
         case Some(amendModel) =>
-            Ok(amendSummary(
+          Ok(amendSummary(
             displayConstructors.createAmendDisplayModel(amendModel),
-            status,
-            amendmentTypeForm.fill(AmendmentTypeModel(protectionType, status))
+            protectionType,
+            status
           ))
         case _ =>
           logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend summary page")
@@ -114,8 +74,21 @@ extends FrontendController(mcc) with I18nSupport with Logging{
     }
   }
 
+  def amendProtection(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
+    authFunction.genericAuthWithNino("existingProtections") { nino =>
+      for {
+        protectionAmendment <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](
+          Strings.cacheAmendFetchString(protectionType, status))
+        saveAmendsGA <- sessionCacheService.saveFormData[AmendsGAModel]("AmendsGA", AmendsGAConstructor.identifyAmendsChanges(
+          protectionAmendment.get.updatedProtection, protectionAmendment.get.originalProtection))
+        response <- plaConnector.amendProtection(nino, protectionAmendment.get.updatedProtection)
+        result <- routeViaMCNeededCheck(response, nino)
+      } yield result
+    }
+  }
+
   def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
-     authFunction.genericAuthWithNino("existingProtections") { nino =>
+    authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
         modelAR <- sessionCacheService.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
         modelGA <- sessionCacheService.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
@@ -125,28 +98,28 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   }
 
   def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel], nino: String)
-                            (implicit request:Request[AnyContent]):Future[Result] = {
+                            (implicit request: Request[AnyContent]): Future[Result] = {
     if (modelGA.isEmpty) {
-        logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
-      }
-      Future(modelAR.map {
-        model => {
-          val id = model.protection.notificationId.getOrElse {
-            throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
-          }
-          if (Constants.activeAmendmentCodes.contains(id)) {
-            sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-            Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
-          } else {
-            Ok(outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
-          }
-        }
-      }.getOrElse {
-        logger.warn(s"Unable to retrieve amendment outcome model from cache for user nino :$nino")
-        InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-          .withHeaders(CACHE_CONTROL -> "no-cache")
-      })
+      logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
     }
+    Future(modelAR.map {
+      model => {
+        val id = model.protection.notificationId.getOrElse {
+          throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
+        }
+        if (Constants.activeAmendmentCodes.contains(id)) {
+          sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
+          Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
+        } else {
+          Ok(outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
+        }
+      }
+    }.getOrElse {
+      logger.warn(s"Unable to retrieve amendment outcome model from cache for user nino :$nino")
+      InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+        .withHeaders(CACHE_CONTROL -> "no-cache")
+    })
+  }
 
   private def routeViaMCNeededCheck(response: HttpResponse, nino: String)(implicit request: Request[AnyContent]): Future[Result] = {
     response.status match {
@@ -182,13 +155,17 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   private[controllers] def createPsoDetailsList(formModel: AmendPSODetailsModel): Option[List[PensionDebitModel]] = {
     val date = formModel.pso.toString
-    val amt = formModel.psoAmt.getOrElse{ throw new Exceptions.RequiredValueNotDefinedException("createPsoDetailsList", "psoAmt") }
+    val amt = formModel.psoAmt.getOrElse {
+      throw new Exceptions.RequiredValueNotDefinedException("createPsoDetailsList", "psoAmt")
+    }
     Some(List(PensionDebitModel(startDate = date, amount = amt.toDouble)))
   }
 
   private def updateAndSaveAmendModelWithPso(debits: Option[List[PensionDebitModel]], amendModelOption: Option[AmendProtectionModel], key: String)
                                             (implicit request: Request[AnyContent]) = {
-    val amendModel = amendModelOption.getOrElse {throw new Exceptions.RequiredValueNotDefinedException("updateAndSaveAmendModelWithPso", "amendModel")}
+    val amendModel = amendModelOption.getOrElse {
+      throw new Exceptions.RequiredValueNotDefinedException("updateAndSaveAmendModelWithPso", "amendModel")
+    }
     val newUpdatedProtection = amendModel.updatedProtection.copy(pensionDebits = debits)
     sessionCacheService.saveFormData[AmendProtectionModel](key, amendModel.copy(updatedProtection = newUpdatedProtection))
   }

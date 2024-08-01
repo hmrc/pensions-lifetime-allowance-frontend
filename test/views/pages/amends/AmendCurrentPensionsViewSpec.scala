@@ -28,17 +28,13 @@ class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPens
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendCurrentPensionsView" should{
-    val amendCurrentPensionsForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "12000",
-                                                                                            "protectionType" -> "ip2016",
-                                                                                            "status" -> "open"))
+    val amendCurrentPensionsForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "12000"))
     lazy val view = application.injector.instanceOf[amendCurrentPensions]
-    lazy val doc = Jsoup.parse(view.apply(amendCurrentPensionsForm).body)
+    lazy val doc = Jsoup.parse(view.apply(amendCurrentPensionsForm, "ip2016", "open").body)
 
-    val errorForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "a",
-                                                                             "protectionType" -> "ip2016",
-                                                                             "status" -> "open"))
+    val errorForm = AmendCurrentPensionForm.amendCurrentPensionForm.bind(Map("amendedUKPensionAmt" -> "a"))
     lazy val errorView = application.injector.instanceOf[amendCurrentPensions]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
     lazy val form = doc.select("form")
 
     "have the correct title" in{
@@ -69,7 +65,7 @@ class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPens
 
     "has a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController.submitAmendCurrentPension.url
+      form.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController.submitAmendCurrentPension("ip2016", "open").url
       form.select("div.govuk-form-group > label").text() shouldBe plaCurrentPensionsLegendText
     }
 

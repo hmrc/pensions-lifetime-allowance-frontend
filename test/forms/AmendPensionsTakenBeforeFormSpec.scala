@@ -31,36 +31,36 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
   val amountMessageKey = "pensionsWorthBefore"
 
   "The AmendPensionsTakenBeforeForm" should {
-    val validMap = Map("amendedPensionsTakenBefore" -> "yes", "protectionType" -> "type", "status" -> "status")
+    val validMap = Map("amendedPensionsTakenBefore" -> "yes")
 
     "produce a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = AmendPensionsTakenBeforeModel("yes", "type", "status")
+        val model = AmendPensionsTakenBeforeModel("yes")
         val result = amendPensionsTakenBeforeForm.fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid form with no amount" in {
-        val model = AmendPensionsTakenBeforeModel("no", "anotherType", "anotherStatus")
+        val model = AmendPensionsTakenBeforeModel("no")
         val result = amendPensionsTakenBeforeForm.fill(model)
 
-        result.data shouldBe Map("amendedPensionsTakenBefore" -> "no", "protectionType" -> "anotherType", "status" -> "anotherStatus")
+        result.data shouldBe Map("amendedPensionsTakenBefore" -> "no")
       }
 
       "provided with a valid map with a zero amount" in {
         val map = validMap.updated("amendedPensionsTakenBeforeAmt", "0")
         val result = amendPensionsTakenBeforeForm.bind(map)
 
-        result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes", "type", "status"))
+        result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes"))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map = validMap.updated("amendedPensionsTakenBeforeAmt", "0.01")
         val result = amendPensionsTakenBeforeForm.bind(map)
 
-        result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes", "type", "status"))
+        result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes"))
       }
     }
 
@@ -74,22 +74,6 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
 
           result.errors.size shouldBe 1
           result.error("amendedPensionsTakenBefore").get.message shouldBe errorQuestion(messageKey)
-        }
-
-        "not provided with a value for protectionType" in {
-          val map = validMap - "protectionType"
-          val result = amendPensionsTakenBeforeForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequiredKey
-        }
-
-        "not provided with a value for status" in {
-          val map = validMap - "status"
-          val result = amendPensionsTakenBeforeForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequiredKey
         }
       }
     }

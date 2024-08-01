@@ -29,15 +29,13 @@ class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Pension
 
   "the AmendPensionsTakenBeforeView" should{
     val pensionsForm = AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "yes",
-                                                                                          "amendedPensionsTakenBeforeAmt" -> "12345",
-                                                                                          "protectionType" -> "ip2016",
-                                                                                          "status" -> "open"))
+                                                                                          "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendPensionsTakenBefore]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
-    val errorForm =  AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "", "amendedPensionsTakenBeforeAmt" -> "12345", "protectionType" -> "ip2016", "status" -> "open"))
+    val errorForm =  AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "", "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val errorView = application.injector.instanceOf[amendPensionsTakenBefore]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
@@ -51,7 +49,7 @@ class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Pension
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore.url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore("ip2016", "open").url
     }
 
     "have a pair of yes/no buttons" in{

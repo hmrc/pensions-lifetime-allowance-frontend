@@ -31,15 +31,13 @@ class AmendIP14PensionsUsedBetweenViewSpec extends CommonViewSpecHelper with Ame
 
   "the AmendIP14PensionsUsedBetweenView" should {
     val pensionsForm = AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm.bind(Map(
-      "amendedPensionsUsedBetweenAmt" -> "12345",
-      "protectionType" -> "ip2014",
-      "status" -> "open"))
+      "amendedPensionsUsedBetweenAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendIP14PensionsUsedBetween]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
     val errorForm =  AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm.bind(Map.empty[String, String])
     lazy val errorView = application.injector.instanceOf[amendIP14PensionsUsedBetween]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
@@ -76,7 +74,7 @@ class AmendIP14PensionsUsedBetweenViewSpec extends CommonViewSpecHelper with Ame
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween.url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween("ip2016", "open").url
     }
 
     "have a £ symbol present" in{

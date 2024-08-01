@@ -30,15 +30,13 @@ implicit val lang: Lang = mock[Lang]
 
   "Amend current pensions form" should {
     val validMap = Map(
-      "amendedUKPensionAmt" -> "1",
-      "protectionType" -> "type",
-      "status" -> "status"
+      "amendedUKPensionAmt" -> "1"
     )
 
     "create a valid form" when {
 
       "supplied with a valid model" in {
-        val model = AmendCurrentPensionModel(Some(1), "type", "status")
+        val model = AmendCurrentPensionModel(Some(1))
         val result = amendCurrentPensionForm.fillAndValidate(model)
 
         result.data shouldBe validMap
@@ -48,21 +46,21 @@ implicit val lang: Lang = mock[Lang]
         val map = validMap.updated("amendedUKPensionAmt", "0.01")
         val result = amendCurrentPensionForm.bind(map)
 
-        result.value shouldBe Some(AmendCurrentPensionModel(Some(0.01), "type", "status"))
+        result.value shouldBe Some(AmendCurrentPensionModel(Some(0.01)))
       }
 
       "supplied with a valid map with zero amount" in {
         val map = validMap.updated("amendedUKPensionAmt", "0")
         val result = amendCurrentPensionForm.bind(map)
 
-        result.value shouldBe Some(AmendCurrentPensionModel(Some(0), "type", "status"))
+        result.value shouldBe Some(AmendCurrentPensionModel(Some(0)))
       }
 
       "supplied with a valid map with the maximum amount" in {
         val map = validMap.updated("amendedUKPensionAmt", {Constants.npsMaxCurrency - 1}.toString)
         val result = amendCurrentPensionForm.bind(map)
 
-        result.value shouldBe Some(AmendCurrentPensionModel(Some(Constants.npsMaxCurrency - 1), "type", "status"))
+        result.value shouldBe Some(AmendCurrentPensionModel(Some(Constants.npsMaxCurrency - 1)))
       }
     }
 
@@ -124,28 +122,6 @@ implicit val lang: Lang = mock[Lang]
 
         result.errors.size shouldBe 1
         result.error("amendedUKPensionAmt").get.message shouldBe errorMaximum(messageKey)
-      }
-
-      "not supplied with a type" which {
-
-        "has a single error with the correct error message" in {
-          val map = validMap - "protectionType"
-          val result = amendCurrentPensionForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequiredKey
-        }
-      }
-
-      "not supplied with a status" which {
-
-        "has a single error with the correct error message" in {
-          val map = validMap - "status"
-          val result = amendCurrentPensionForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequiredKey
-        }
       }
     }
   }

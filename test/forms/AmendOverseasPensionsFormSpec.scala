@@ -29,22 +29,22 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
   val messageKey = "overseasPensions"
 
   "The AmendOverseasPensionsForm" should {
-    val validMap = Map("amendedOverseasPensions" -> "yes", "amendedOverseasPensionsAmt" -> "1000.00", "protectionType" -> "type", "status" -> "status")
+    val validMap = Map("amendedOverseasPensions" -> "yes", "amendedOverseasPensionsAmt" -> "1000.00")
 
     "produce a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = AmendOverseasPensionsModel("yes", Some(1000.0), "type", "status")
+        val model = AmendOverseasPensionsModel("yes", Some(1000.0))
         val result = amendOverseasPensionsForm.fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid map with no amount" in {
-        val map = Map("amendedOverseasPensions" -> "no", "amendedOverseasPensionsAmt" -> "", "protectionType" -> "anotherType", "status" -> "anotherStatus")
+        val map = Map("amendedOverseasPensions" -> "no", "amendedOverseasPensionsAmt" -> "")
         val result = amendOverseasPensionsForm.bind(map)
 
-        result.value shouldBe Some(AmendOverseasPensionsModel("no", None, "anotherType", "anotherStatus"))
+        result.value shouldBe Some(AmendOverseasPensionsModel("no", None))
       }
 
       "provided with a valid map with the maximum amount" in {
@@ -53,21 +53,21 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
         }.toString)
         val result = amendOverseasPensionsForm.bind(map)
 
-        result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(Constants.npsMaxCurrency - 1), "type", "status"))
+        result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(Constants.npsMaxCurrency - 1)))
       }
 
       "provided with a valid map with a zero amount" in {
         val map = validMap.updated("amendedOverseasPensionsAmt", "0")
         val result = amendOverseasPensionsForm.bind(map)
 
-        result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(0), "type", "status"))
+        result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(0)))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map = validMap.updated("amendedOverseasPensionsAmt", "0.01")
         val result = amendOverseasPensionsForm.bind(map)
 
-        result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(0.01), "type", "status"))
+        result.value shouldBe Some(AmendOverseasPensionsModel("yes", Some(0.01)))
       }
     }
 
@@ -81,22 +81,6 @@ class AmendOverseasPensionsFormSpec extends FakeApplication with CommonErrorMess
 
           result.errors.size shouldBe 1
           result.error("amendedOverseasPensions").get.message shouldBe errorQuestion(messageKey)
-        }
-
-        "not provided with a value for protectionType" in {
-          val map = validMap - "protectionType"
-          val result = amendOverseasPensionsForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("protectionType").get.message shouldBe errorRequiredKey
-        }
-
-        "not provided with a value for status" in {
-          val map = validMap - "status"
-          val result = amendOverseasPensionsForm.bind(map)
-
-          result.errors.size shouldBe 1
-          result.error("status").get.message shouldBe errorRequiredKey
         }
 
         "provided with an invalid value for amendedOverseasPensionsAmt" in {

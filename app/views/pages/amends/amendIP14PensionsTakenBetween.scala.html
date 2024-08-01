@@ -25,7 +25,7 @@
     errorSummary: playHelpers.templates.errorSummary
 )
 
-@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel])(implicit request: Request[_], messages: Messages)
+@(amendPensionsTakenBetweenForm: Form[AmendPensionsTakenBetweenModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
 
 @title = @{
     if(amendPensionsTakenBetweenForm.errors.nonEmpty){
@@ -41,8 +41,7 @@
     @errorSummary(amendPensionsTakenBetweenForm.errors)
     <h1 class="govuk-heading-xl">@Messages("pla.ip14PensionsTakenBetween.title")</h1>
 
-    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween) {
-
+    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)) {
         <ul class="govuk-list govuk-list--bullet">
             <li>@Messages("pla.pensionsTakenBetween.bullet.1")</li>
             <li>@Messages("pla.pensionsTakenBetween.bullet.2")</li>
@@ -62,9 +61,5 @@
         )
 
         @submitButton(Messages("pla.base.change"))
-        <div class="govuk-visually-hidden">
-            @helper.inputText(amendPensionsTakenBetweenForm("protectionType"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-            @helper.inputText(amendPensionsTakenBetweenForm("status"), Symbol("type") -> "hidden", Symbol("class") -> "hidden")
-        </div>
     }
 }

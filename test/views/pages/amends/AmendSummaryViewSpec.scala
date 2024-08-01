@@ -16,7 +16,6 @@
 
 package views.pages.amends
 
-import forms.AmendmentTypeForm
 import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
@@ -83,16 +82,12 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
     totalAmount = "£1,100,000.34"
   )
 
-  "the AmendSummaryView" should{
-    val amendmentForm = AmendmentTypeForm.amendmentTypeForm.bind(Map(
-      "protectionType" -> "ip2016",
-      "status"         -> "open"))
-
+  "the AmendSummaryView" should {
     lazy val view = application.injector.instanceOf[amendSummary]
     lazy val viewWithoutPso = application.injector.instanceOf[amendSummary]
 
-    lazy val doc = Jsoup.parse(view.apply(amendDisplayModel, "open", amendmentForm).body)
-    lazy val docWithoutPso = Jsoup.parse(viewWithoutPso.apply(amendDisplayModelWithoutPso, "open", amendmentForm).body)
+    lazy val doc = Jsoup.parse(view.apply(amendDisplayModel, "ip2016", "open").body)
+    lazy val docWithoutPso = Jsoup.parse(viewWithoutPso.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
@@ -172,7 +167,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
     "have a valid form submission" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.amendProtection.url
+      form.attr("action") shouldBe controllers.routes.AmendsController.amendProtection("ip2016", "open").url
     }
 
     "have a continue button" in{

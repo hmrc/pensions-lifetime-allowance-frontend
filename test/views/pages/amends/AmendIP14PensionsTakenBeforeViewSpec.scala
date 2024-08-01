@@ -29,18 +29,14 @@ class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
 
   "the AmendIP14PensionsTakenBeforeView" should{
     val pensionsForm = AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "yes",
-      "amendedPensionsTakenBeforeAmt" -> "12345",
-      "protectionType" -> "ip2014",
-      "status" -> "open"))
+      "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendIP14PensionsTakenBefore]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
     val errorForm =  AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm.bind(Map("amendedPensionsTakenBefore" -> "",
-      "amendedPensionsTakenBeforeAmt" -> "12345",
-      "protectionType" -> "ip2014",
-      "status" -> "open"))
+      "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val errorView = application.injector.instanceOf[amendIP14PensionsTakenBefore]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
@@ -75,7 +71,7 @@ class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore.url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore("ip2016", "open").url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
     }
 

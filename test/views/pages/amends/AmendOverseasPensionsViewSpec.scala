@@ -27,17 +27,15 @@ class AmendOverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPe
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
-  "the AmendOverseasPensionsView" should{
+  "the AmendOverseasPensionsView" should {
     val oPensionsForm = AmendOverseasPensionsForm.amendOverseasPensionsForm.bind(Map("amendedOverseasPensions" -> "yes",
-                                                                                     "amendedOverseasPensionsAmt" -> "1234",
-                                                                                     "protectionType" -> "ip2016",
-                                                                                     "status" -> "open"))
+                                                                                     "amendedOverseasPensionsAmt" -> "1234"))
     lazy val view = application.injector.instanceOf[amendOverseasPensions]
-    lazy val doc = Jsoup.parse(view.apply(oPensionsForm).body)
+    lazy val doc = Jsoup.parse(view.apply(oPensionsForm, "ip2016", "open").body)
 
-    val errorForm = AmendOverseasPensionsForm.amendOverseasPensionsForm.bind(Map("amendedOverseasPensions" -> "", "amendedOverseasPensionsAmt" -> "1234", "protectionType" -> "ip2016", "status" -> "open"))
+    val errorForm = AmendOverseasPensionsForm.amendOverseasPensionsForm.bind(Map("amendedOverseasPensions" -> "", "amendedOverseasPensionsAmt" -> "1234"))
     lazy val errorView = application.injector.instanceOf[amendOverseasPensions]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
     "have the correct title" in{
@@ -65,7 +63,7 @@ class AmendOverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPe
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsOverseasPensionController.submitAmendOverseasPensions.url
+      form.attr("action") shouldBe controllers.routes.AmendsOverseasPensionController.submitAmendOverseasPensions("ip2016", "open").url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaOverseasPensionsLegendText
     }
 

@@ -29,18 +29,14 @@ class AmendPensionsUsedBetweenViewSpec extends CommonViewSpecHelper with Pension
 
   "the AmendPensionsUsedBetweenView" should {
     val pensionsForm = AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm.bind(Map("amendedPensionsUsedBetween" -> "yes",
-      "amendedPensionsUsedBetweenAmt" -> "12345",
-      "protectionType" -> "ip2016",
-      "status" -> "open"))
+      "amendedPensionsUsedBetweenAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendPensionsUsedBetween]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
+    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
     val errorForm =  AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm.bind(Map("amendedPensionsUsedBetween" -> "",
-      "amendedPensionsUsedBetweenAmt" -> "12345",
-      "protectionType" -> "ip2016",
-      "status" -> "open"))
+      "amendedPensionsUsedBetweenAmt" -> "12345"))
     lazy val errorView = application.injector.instanceOf[amendPensionsUsedBetween]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 

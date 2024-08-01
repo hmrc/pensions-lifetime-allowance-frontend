@@ -44,9 +44,7 @@ object AmendOverseasPensionsForm extends CommonBinders{
               maxMoneyCheck(npsMaxCurrency, "pla.overseasPensions.amount.errors.max")
             )
           )
-      ),
-      "protectionType" -> text,
-      "status" -> text
+      )
     )(AmendOverseasPensionsModel.apply)(AmendOverseasPensionsModel.unapply)
   )
 }
