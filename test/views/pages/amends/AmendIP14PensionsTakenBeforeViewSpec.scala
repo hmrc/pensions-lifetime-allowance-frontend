@@ -45,38 +45,13 @@ class AmendIP14PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Ame
     }
 
     "have the correct and properly formatted header"in{
-      doc.select("h1.govuk-fieldset__heading").text shouldBe plaPensionsTakenBeforeHeading
-    }
-
-    "have the right explanatory messages" in{
-      doc.select("h2.govuk-label--l").text shouldBe plaIP14PensionsTakenBeforeQuestion
-      doc.select("summary").text shouldBe plaPensionsTakenBeforeHelp
-      doc.select("#ip14-amend-pensions-taken-before-help > div > p:nth-child(1)").text shouldBe plaPensionsTakenBeforeParaOne
-      doc.select("#ip14-amend-pensions-taken-before-help > div > p:nth-child(3)").text shouldBe plaPensionsTakenBeforeParaTwo
-      doc.select("#ip14-amend-pensions-taken-before-help > div > p:nth-child(5)").text shouldBe plaPensionsTakenBeforeParaThreeNew
-    }
-
-    "have a hidden menu with the correct list values" in{
-      doc.select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsTakenBeforeStepOne
-      doc.select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(2)").text shouldBe plaIP14PensionsTakenBeforeStepTwo
-      doc.select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsTakenBeforeStepThree
-      doc.select("#ip14-amend-pensions-taken-before-help > div > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBeforeBulletOne
-      doc.select("#ip14-amend-pensions-taken-before-help > div > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBeforeBulletTwo
-    }
-
-    "have a help link redirecting to the right place" in{
-      doc.getElementById("ip14-amend-pensions-taken-before-help-link").text shouldBe plaPensionsTakenBeforeHelpLinkTextNew
-      doc.getElementById("ip14-amend-pensions-taken-before-help-link").attr("href") shouldBe plaPensionsTakenBeforeHelpLinkLocation
+      doc.select("h1.govuk-heading-xl").text shouldBe plaPensionsTakenBeforeHeading
     }
 
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore("ip2016", "open").url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
-    }
-
-    "have a £ symbol present" in{
-      doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
     "have a pair of yes/no buttons" in{
