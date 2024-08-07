@@ -20,6 +20,7 @@ import models.cache.CacheMap
 import play.api.Configuration
 import play.api.libs.json.Writes
 import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.cache.{DataKey, SessionCacheRepository}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}
@@ -49,10 +50,10 @@ class SessionRepository @Inject()(
       .put[T](request)(dataKey, data)
       .map(res => CacheMap(res.id, res.data.value.toMap))
 
-  def getAllFromSession(implicit request: Request[_]): Future[Option[CacheMap]] =
+  def getAllFromSession(implicit request: RequestHeader): Future[Option[CacheMap]] =
     cacheRepo.findById(request).map(_.map(res => CacheMap(res.id, res.data.value.toMap)))
 
-  def clearSession(implicit request: Request[_]): Future[Unit] =
+  def clearSession(implicit request: RequestHeader): Future[Unit] =
     cacheRepo.deleteEntity(request)
 
 }

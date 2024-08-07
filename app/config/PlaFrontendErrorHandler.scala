@@ -18,7 +18,7 @@ package config
 
 import javax.inject.Inject
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.mvc.Request
+import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 import uk.gov.hmrc.play.partials.FormPartialRetriever
@@ -30,12 +30,12 @@ class PlaFrontendErrorHandler @Inject()(errorTemplate: views.html.error_template
                                        implicit val plaContext: PlaContext) extends FrontendErrorHandler {
 
 
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: Request[_]): Html = {
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: RequestHeader): Html = {
     errorTemplate(pageTitle, heading, message)
   }
 
 
-  override def badRequestTemplate(implicit request: Request[_]): Html = {
+  override def badRequestTemplate(implicit request: RequestHeader): Html = {
     standardErrorTemplate(
       Messages("global.error.400.title"),
       Messages("global.error.400.heading"),
@@ -43,7 +43,7 @@ class PlaFrontendErrorHandler @Inject()(errorTemplate: views.html.error_template
     )
   }
 
-  override def notFoundTemplate(implicit request: Request[_]): Html = {
+  override def notFoundTemplate(implicit request: RequestHeader): Html = {
     standardErrorTemplate(
       Messages("global.error.404.title"),
       Messages("global.error.404.heading"),
@@ -51,7 +51,7 @@ class PlaFrontendErrorHandler @Inject()(errorTemplate: views.html.error_template
     )
   }
 
-  override def internalServerErrorTemplate(implicit request: Request[_]): Html =
+  override def internalServerErrorTemplate(implicit request: RequestHeader): Html =
     standardErrorTemplate(
       Messages("pla.error.InternalServerError500.title"),
       Messages("pla.error.InternalServerError500.heading"),
