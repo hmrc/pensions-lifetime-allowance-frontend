@@ -29,7 +29,7 @@ import play.api.libs.json.Json
 import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.client.{HttpClientV2,RequestBuilder}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
@@ -39,8 +39,9 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
 
   implicit val executionContext = fakeApplication().injector.instanceOf[ExecutionContext]
   val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  val mockHttp = mock[DefaultHttpClient]
+  val mockHttp = mock[HttpClientV2]
   val mockSessionCacheService = mock[SessionCacheService]
+  val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
 
   val identityVerficationConstructor = new IdentityVerificationConnector(mockAppConfig, mockHttp)
@@ -62,8 +63,9 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
 
     def mockJourneyId(journeyId: String): Unit = {
       val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-      when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId), any(), any())(any(), any(), any())).
-        thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
+      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
+        .thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
     }
     possibleJournies.keys.foreach(mockJourneyId)
 

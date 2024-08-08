@@ -18,7 +18,7 @@ package services
 
 import models.cache.CacheMap
 import play.api.libs.json.Format
-import play.api.mvc.RequestHeader
+import play.api.mvc.Request
 import repositories.SessionRepository
 import uk.gov.hmrc.mongo.cache.DataKey
 
@@ -28,15 +28,15 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class SessionCacheService @Inject()(sessionRepository: SessionRepository)(implicit executionContext: ExecutionContext) {
 
-  def saveFormData[T](key: String, data: T)(implicit request: RequestHeader, formats: Format[T]): Future[CacheMap] =
+  def saveFormData[T](key: String, data: T)(implicit request: Request[_], formats: Format[T]): Future[CacheMap] =
     sessionRepository.putInSession(DataKey(key), data)
 
-  def fetchAndGetFormData[T](key: String)(implicit request: RequestHeader, formats: Format[T]): Future[Option[T]] =
+  def fetchAndGetFormData[T](key: String)(implicit request: Request[_], formats: Format[T]): Future[Option[T]] =
     sessionRepository.getFromSession[T](DataKey(key))
 
-  def fetchAllUserData(implicit request: RequestHeader): Future[Option[CacheMap]] =
+  def fetchAllUserData(implicit request: Request[_]): Future[Option[CacheMap]] =
     sessionRepository.getAllFromSession
 
-  def remove(implicit request: RequestHeader): Future[Unit] =
+  def remove(implicit request: Request[_]): Future[Unit] =
     sessionRepository.clearSession
 }

@@ -17,17 +17,17 @@
 package connectors
 
 import config.FrontendAppConfig
+
 import javax.inject.Inject
 import models.PersonalDetailsModel
 import play.api.Logging
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpReads.Implicits._
-
 import scala.concurrent.{ExecutionContext, Future}
 
 class CitizenDetailsConnector @Inject()(appConfig: FrontendAppConfig,
-                                            http: DefaultHttpClient
+                                            http: HttpClientV2
                                           )(implicit ec: ExecutionContext) extends Logging {
 
    val serviceUrl = appConfig.servicesConfig.baseUrl("citizen-details")
@@ -35,9 +35,11 @@ class CitizenDetailsConnector @Inject()(appConfig: FrontendAppConfig,
     private def url(nino: String) = s"$serviceUrl/citizen-details/$nino/designatory-details"
 
     def getPersonDetails(nino: String)(implicit hc: HeaderCarrier): Future[Option[PersonalDetailsModel]] = {
-
-      http.GET[HttpResponse](url(nino)) map {
-        response => response.status match {
+      val cdUrl = url(nino)
+      http
+          .get(url"$cdUrl")
+          .execute[HttpResponse]
+          .map { response => response.status match {
           case 200 => response.json.validate[PersonalDetailsModel].asOpt
           case _ => {
             logger.warn(s"Unable to retrieve personal details for nino: $nino")
