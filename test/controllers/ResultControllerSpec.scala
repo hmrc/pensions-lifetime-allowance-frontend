@@ -43,7 +43,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
 import models.cache.CacheMap
 import org.mockito.ArgumentMatchers
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 import utils.ActionWithSessionId
 import views.html.pages.fallback.{noNotificationId, technicalError}
 import views.html.pages.result.{manualCorrespondenceNeeded, resultRejected, resultSuccess, resultSuccessInactive}
@@ -59,7 +59,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
-  val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
+  val mockHttp: HttpClientV2 = mock[HttpClientV2]
   val mockEnv: Environment = mock[Environment]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
