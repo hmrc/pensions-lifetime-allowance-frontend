@@ -18,11 +18,11 @@ package config.wiring
 
 import javax.inject.Inject
 import uk.gov.hmrc.http.HttpGet
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 abstract class PlaFormPartialRetriever @Inject()(sessionCookieCryptoFilterWrapper: SessionCookieCryptoFilterWrapper,
-                                        http: DefaultHttpClient) extends FormPartialRetriever {
+                                        http: HttpClientV2) extends FormPartialRetriever {
   override def httpGet: HttpGet = http
   val crypto = sessionCookieCryptoFilterWrapper.encryptCookieString _
 }
