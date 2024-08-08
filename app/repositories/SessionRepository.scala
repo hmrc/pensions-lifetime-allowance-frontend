@@ -50,10 +50,10 @@ class SessionRepository @Inject()(
       .put[T](request)(dataKey, data)
       .map(res => CacheMap(res.id, res.data.value.toMap))
 
-  def getAllFromSession(implicit request: RequestHeader): Future[Option[CacheMap]] =
+  def getAllFromSession(implicit request: Request[_]): Future[Option[CacheMap]] =
     cacheRepo.findById(request).map(_.map(res => CacheMap(res.id, res.data.value.toMap)))
 
-  def clearSession(implicit request: RequestHeader): Future[Unit] =
+  def clearSession(implicit request: Request[_]): Future[Unit] =
     cacheRepo.deleteEntity(request)
 
 }

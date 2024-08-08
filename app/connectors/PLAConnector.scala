@@ -27,12 +27,13 @@ import play.api.libs.json.Reads._
 import play.api.libs.json._
 import uk.gov.hmrc.http._
 import models.cache.CacheMap
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class PLAConnector @Inject()(appConfig: FrontendAppConfig,
-                                http: DefaultHttpClient) extends Logging{
+                                http: HttpClientV2) extends Logging{
 
   val serviceUrl: String = appConfig.servicesConfig.baseUrl("pensions-lifetime-allowance")
 
@@ -45,7 +46,11 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
 
   def applyFP16(nino: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val requestJson: JsValue = Json.parse("""{"protectionType":"FP2016"}""")
-    http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+    val url = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
+    http
+      .post(url"$url")
+      .withBody(Json.toJson(requestJson))
+      .execute[HttpResponse]
   }
 
   protected val roundDown = of[JsNumber].map { case JsNumber(n) => JsNumber(n.setScale(2, BigDecimal.RoundingMode.DOWN)) }
@@ -100,30 +105,48 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
     val application = IPApplicationConstructor.createIPApplication(userData)
     val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
     val body = requestJson.transform(transformer(application)).get
-    http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", body)
+    val url = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
+    http
+      .post(url"$url")
+      .withBody(Json.toJson(body))
+      .execute[HttpResponse]
   }
 
   def applyIP14(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     implicit val protectionType = ApplicationType.IP2014
     val application = IPApplicationConstructor.createIPApplication(userData)
     val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
-    http.POST[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections", requestJson)
+    val url = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
+    http
+      .post(url"$url")
+      .withBody(Json.toJson(requestJson))
+      .execute[HttpResponse]
   }
 
   def readProtections(nino: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    http.GET[HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections")
+    val url = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
+    http
+      .get(url"$url")
+      .execute[HttpResponse]
   }
 
   def amendProtection(nino: String, protection: ProtectionModel)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val id = protection.protectionID.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino))
     val requestJson = Json.toJson[ProtectionModel](protection)
     val body = requestJson.transform(transformer(protection)).get
+    val url =s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id"
     logger.info(body.toString)
-    http.PUT[JsValue, HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id", body)
+    http
+      .put(url"$url")
+      .withBody(Json.toJson(body))
+      .execute[HttpResponse]
   }
 
   def psaLookup(psaRef: String, ltaRef: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    http.GET[HttpResponse](s"$serviceUrl/protect-your-lifetime-allowance/psalookup/$psaRef/$ltaRef")
+    val url = s"$serviceUrl/protect-your-lifetime-allowance/psalookup/$psaRef/$ltaRef"
+    http
+      .get(url"$url")
+      .execute[HttpResponse]
   }
 }
 

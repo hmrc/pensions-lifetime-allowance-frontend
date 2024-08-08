@@ -25,7 +25,7 @@ import play.api.libs.json.Json
 import play.api.test.Helpers._
 import testHelpers.FakeApplication
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.client.{HttpClientV2,RequestBuilder}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -34,10 +34,11 @@ class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  val mockHttp = mock[DefaultHttpClient]
+  val mockHttp = mock[HttpClientV2]
 
   val tstDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
   val x = Json.toJson(tstDetails)
+  val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
@@ -47,7 +48,8 @@ class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
 
   "Calling getPersonDetails with valid response" should {
     "return a defined Option on PersonalDetailsModel" in new Setup {
-      when(mockHttp.GET[HttpResponse](any(), any(), any())(any(),any(),any()))
+      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
         .thenReturn(Future.successful(HttpResponse(status = OK, json = Json.toJson(tstDetails), headers = Map.empty)))
 
       val response = controller.getPersonDetails("tstNino")
@@ -57,7 +59,8 @@ class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
 
   "Calling getPersonDetails with invalid response" should {
     "return an undefined Option on PersonalDetailsModel" in new Setup {
-      when(mockHttp.GET[HttpResponse](any(), any(), any())(any(), any(),any()))
+      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
         .thenReturn(Future.successful(HttpResponse(status = OK, json = Json.toJson("""name:NoName"""), headers = Map.empty)))
 
       val response = controller.getPersonDetails("tstNino")
@@ -67,7 +70,8 @@ class CitizenDetailsConnectorSpec extends FakeApplication with MockitoSugar {
 
   "Calling getPersonDetails with error response" should {
     "return an undefined Option on PersonalDetailsModel" in new Setup {
-      when(mockHttp.GET[HttpResponse](any(), any(), any())(any(), any(), any()))
+      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
         .thenReturn(Future.successful(HttpResponse(INTERNAL_SERVER_ERROR, "")))
 
       val response = controller.getPersonDetails("tstNino")
