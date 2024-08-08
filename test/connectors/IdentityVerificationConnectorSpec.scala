@@ -28,8 +28,8 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import services.SessionCacheService
 import testHelpers.FakeApplication
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.http.client.{HttpClientV2,RequestBuilder}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
@@ -63,7 +63,7 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
 
     def mockJourneyId(journeyId: String): Unit = {
       val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
+      when(mockHttp.get(url"$journeyId")(any)).thenReturn(requestBuilder)
       when(requestBuilder.execute[HttpResponse](any, any))
         .thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
     }

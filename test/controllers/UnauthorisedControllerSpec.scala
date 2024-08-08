@@ -36,8 +36,8 @@ import services.SessionCacheService
 import testHelpers._
 import models.cache.CacheMap
 import org.mockito.ArgumentMatchers
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import utils.ActionWithSessionId
 import views.html.pages.ivFailure.{lockedOut, technicalIssue, unauthorised}
 import views.html.pages.timeout
@@ -49,11 +49,12 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
 
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
-  val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
+  val mockHttp: HttpClientV2 = mock[HttpClientV2]
   val fakeRequest = FakeRequest("GET", "/")
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   val mockIdentityVerificationConnector: IdentityVerificationConnector = mock[IdentityVerificationConnector]
+  val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val mockImplAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
@@ -86,8 +87,9 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
 
     def mockJourneyId(journeyId: String): Unit = {
       val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-      when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId))(any(), any(), any())).
-        thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
+        when(mockHttp.get(url"$journeyId")(any)).thenReturn(requestBuilder)
+        when(requestBuilder.execute[HttpResponse](any, any))
+        .thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
     }
 
     possibleJournies.keys.foreach(mockJourneyId)
