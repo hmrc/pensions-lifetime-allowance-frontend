@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import models.cache.CacheMap
@@ -52,7 +51,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
   val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
 
   val mockHttp: HttpClientV2 = mock[HttpClientV2]
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val mockMessages: Messages = mock[Messages]

@@ -18,7 +18,6 @@ package controllers
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import views.html.pages.lookup.{pla_protection_guidance, psa_lookup_not_found_results, psa_lookup_protection_notification_no_form, psa_lookup_results, psa_lookup_scheme_admin_ref_form}
@@ -52,7 +51,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
   val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
 
   val mockHttp: HttpClientV2 = mock[HttpClientV2]
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val mockMessages: Messages = mock[Messages]

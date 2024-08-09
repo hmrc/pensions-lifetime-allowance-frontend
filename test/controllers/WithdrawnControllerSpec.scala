@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.MessagesControllerComponents
@@ -30,7 +29,7 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
 
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val mockWithdrawn: withdrawn = app.injector.instanceOf[withdrawn]

@@ -19,7 +19,6 @@ package controllers
 import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
-import config.wiring.PlaFormPartialRetriever
 import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
@@ -72,7 +71,7 @@ class AmendsPensionSharingOrderControllerSpec extends FakeApplication
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
+
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()

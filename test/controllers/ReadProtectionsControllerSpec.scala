@@ -20,7 +20,6 @@ import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
 import config._
-import config.wiring.PlaFormPartialRetriever
 import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import mocks.AuthMock
@@ -68,7 +67,6 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
   val mockEnv: Environment = mock[Environment]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
@@ -85,7 +83,6 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
   class Setup {
 
     val authFunction = new AuthFunction {
-      override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
       override implicit val plaContext: PlaContext = mockPlaContext
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError
