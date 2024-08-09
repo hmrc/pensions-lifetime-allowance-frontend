@@ -18,9 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import enums.IdentityVerificationResult
-import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.{any, eq => eqs}
-import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
