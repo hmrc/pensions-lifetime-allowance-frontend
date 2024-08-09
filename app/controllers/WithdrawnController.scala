@@ -20,7 +20,6 @@ import config.{FrontendAppConfig, PlaContext}
 import javax.inject.Inject
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages.ip2014.withdrawn
 
 import scala.concurrent.Future
@@ -28,7 +27,7 @@ import scala.concurrent.Future
 
 class WithdrawnController @Inject()(mcc: MessagesControllerComponents,
                                     withdrawn: withdrawn)
-                                   (implicit val partialRetriever: FormPartialRetriever,
+                                   (
                                     implicit val appConfig: FrontendAppConfig,
                                     implicit val plaContext: PlaContext) extends FrontendController(mcc) {
 

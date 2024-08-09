@@ -31,7 +31,6 @@ import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -47,9 +46,7 @@ class WithdrawProtectionController @Inject()(sessionCacheService: SessionCacheSe
                                              withdrawImplications: views.html.pages.withdraw.withdrawImplications,
                                              technicalError: views.html.pages.fallback.technicalError
                                             )
-                                            (implicit val appConfig: FrontendAppConfig,
-                                             implicit val partialRetriever: FormPartialRetriever,
-                                             implicit val plaContext: PlaContext,
+                                            (implicit val appConfig: FrontendAppConfig,                                             implicit val plaContext: PlaContext,
                                              implicit val formWithCSRF: FormWithCSRF,
                                              implicit val application: Application,
                                              implicit val ec: ExecutionContext)

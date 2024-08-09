@@ -29,7 +29,6 @@ import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
 
 import javax.inject.Inject
@@ -40,7 +39,7 @@ class LookupProtectionNotificationController @Inject()(val sessionCacheService: 
                                                        val actionWithSessionId: ActionWithSessionId,
                                                        mcc: MessagesControllerComponents,
                                                        psa_lookup_protection_notification_no_form: views.html.pages.lookup.psa_lookup_protection_notification_no_form)(
-                                 implicit val partialRetriever: FormPartialRetriever,
+
                                  implicit val context: PlaContext,
                                  implicit val appConfig: FrontendAppConfig,
                                  implicit val formWithCSRF: FormWithCSRF,

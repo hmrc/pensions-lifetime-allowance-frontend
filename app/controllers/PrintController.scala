@@ -27,7 +27,6 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages.result.resultPrint
 
 import scala.concurrent.ExecutionContext
@@ -38,9 +37,7 @@ class PrintController @Inject()(val sessionCacheService: SessionCacheService,
                                 resultPrintView: resultPrint,
                                 mcc: MessagesControllerComponents,
                                 authFunction: AuthFunction)
-                               (implicit val appConfig: FrontendAppConfig,
-                                implicit val partialRetriever: FormPartialRetriever,
-                                implicit val plaContext: PlaContext,
+                               (implicit val appConfig: FrontendAppConfig,                                implicit val plaContext: PlaContext,
                                 implicit val ec: ExecutionContext
                                )
   extends FrontendController(mcc) with I18nSupport with Logging {

@@ -28,7 +28,6 @@ import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages
 
 import javax.inject.Inject
@@ -40,9 +39,7 @@ class AmendsRemovePensionSharingOrderController @Inject()(val sessionCacheServic
                                                           authFunction: AuthFunction,
                                                           technicalError: views.html.pages.fallback.technicalError,
                                                           removePsoDebits: pages.amends.removePsoDebits)
-                                                         (implicit val appConfig: FrontendAppConfig,
-                                                          val partialRetriever: FormPartialRetriever,
-                                                          val formWithCSRF: FormWithCSRF,
+                                                         (implicit val appConfig: FrontendAppConfig,                                                          val formWithCSRF: FormWithCSRF,
                                                           val plaContext: PlaContext,
                                                           val ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport with Logging {
