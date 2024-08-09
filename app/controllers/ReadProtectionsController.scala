@@ -34,7 +34,6 @@ import services.SessionCacheService
 import models.cache.CacheMap
 import uk.gov.hmrc.http.{HttpResponse, NotFoundException, UpstreamErrorResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,9 +48,7 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                           manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
                                           existingProtections: pages.existingProtections.existingProtections
                                          )
-                                         (implicit val appConfig: FrontendAppConfig,
-                                          implicit val partialRetriever: FormPartialRetriever,
-                                          implicit val plaContext: PlaContext,
+                                         (implicit val appConfig: FrontendAppConfig,                                          implicit val plaContext: PlaContext,
                                           implicit val application: Application,
                                           implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {

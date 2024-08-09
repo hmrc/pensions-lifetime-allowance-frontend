@@ -27,7 +27,6 @@ import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
 
 import java.time.format.DateTimeFormatter
@@ -42,7 +41,7 @@ class LookupController @Inject()(val sessionCacheService: SessionCacheService,
                                  psa_lookup_not_found_results: views.html.pages.lookup.psa_lookup_not_found_results,
                                  pla_protection_guidance: views.html.pages.lookup.pla_protection_guidance,
                                  psa_lookup_results: views.html.pages.lookup.psa_lookup_results)(
-                                 implicit val partialRetriever: FormPartialRetriever,
+
                                  implicit val context: PlaContext,
                                  implicit val appConfig: FrontendAppConfig,
                                  implicit val formWithCSRF: FormWithCSRF,

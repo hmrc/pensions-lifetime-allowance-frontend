@@ -22,52 +22,12 @@
     layout: Layout,
     form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
     errorSummary: playHelpers.templates.errorSummary,
-    formHiddenYesNoRadio: playHelpers.templates.formHiddenYesNoRadio,
-    helpTextAccordion: playHelpers.templates.helpTextAccordion,
-    formInputMoney: playHelpers.templates.formInputMoney,
+    plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup,
     submitButton: playHelpers.templates.submitButton
 )
 
 @(amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel], protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
 
-@helpTextAccordionContent = {
-
-    <p class="govuk-body">@Messages("pla.pensionsWorthBefore.para.1")</p>
-    <ol class="govuk-list govuk-list--number">
-        <li>@Messages("pla.pensionsWorthBefore.step.1")</li>
-        <li>@Messages("pla.ip14PensionsTakenBefore.step.2")</li>
-        <li>@Messages("pla.pensionsWorthBefore.step.3")</li>
-    </ol>
-    <p class="govuk-body">@Messages("pla.pensionsWorthBefore.para.2")</p>
-    <ul class="govuk-list govuk-list--bullet">
-        <li>@Messages("pla.pensionsWorthBefore.bullet.1")</li>
-        <li>@Messages("pla.pensionsWorthBefore.bullet.2")</li>
-    </ul>
-    <p class="govuk-body">
-        @Messages("pla.pensionsWorthBefore.para.3")
-        <a href="@Links.pensionsWorthBefore" id = "ip14-amend-pensions-taken-before-help-link" rel="noreferrer noopener" target="_blank" class="govuk-link">
-            @Messages("pla.pensionsWorthBefore.helpLinkText") (@Messages("pla.base.newTab")).
-        </a>
-    </p>
-}
-
-@hiddenYesNoContent = {
-
-    <h2 class="govuk-label--l">@Messages("pla.ip14PensionsTakenBefore.question")</h2>
-
-    @helpTextAccordion(
-        id = "ip14-amend-pensions-taken-before-help",
-        summaryText = Messages("pla.pensionsWorthBefore.help"),
-        hiddenContent = helpTextAccordionContent
-    )
-
-    @formInputMoney(
-        field = amendPensionsTakenBeforeForm("amendedPensionsTakenBeforeAmt"),
-        question = Messages("pla.ip14PensionsTakenBefore.question"),
-        hideLabel = true,
-        pageHeading = false
-    )
-}
 
 @title = @{
     if(amendPensionsTakenBeforeForm.errors.nonEmpty){
@@ -87,11 +47,16 @@
 
         <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBefore.title")</h1>
 
-        @formHiddenYesNoRadio(
-            field = amendPensionsTakenBeforeForm("amendedPensionsTakenBefore"),
-            question = Messages("pla.pensionsTakenBefore.title"),
-            hiddenQuestion = true,
-            yesHiddencontent = Some(hiddenYesNoContent)
+        @plaInputRadioGroup(
+            legend = Messages("pla.pensionsTakenBefore.title"),
+            legendClass = Some("govuk-visually-hidden"),
+            items = Seq(
+                RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
+                RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))
+            ),
+            isPageHeading = false,
+            inLine = true,
+            field = amendPensionsTakenBeforeForm("amendedPensionsTakenBefore")
         )
 
         @submitButton(Messages("pla.base.change"))

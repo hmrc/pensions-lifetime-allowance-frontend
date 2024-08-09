@@ -25,7 +25,6 @@ import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -39,9 +38,7 @@ class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVe
                                        unauthorised: views.html.pages.ivFailure.unauthorised,
                                        timeout: views.html.pages.timeout)(
                                        implicit val appConfig: FrontendAppConfig,
-                                       implicit val plaContext: PlaContext,
-                                       implicit val partialRetriever: FormPartialRetriever,
-                                       implicit val application: Application,
+                                       implicit val plaContext: PlaContext,                                       implicit val application: Application,
                                        implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 

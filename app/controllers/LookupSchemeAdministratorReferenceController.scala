@@ -27,7 +27,6 @@ import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.ActionWithSessionId
 
 import javax.inject.Inject
@@ -38,7 +37,7 @@ class LookupSchemeAdministratorReferenceController @Inject()(val sessionCacheSer
                                                              val actionWithSessionId: ActionWithSessionId,
                                                              mcc: MessagesControllerComponents,
                                                              psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form)(
-                                 implicit val partialRetriever: FormPartialRetriever,
+
                                  implicit val context: PlaContext,
                                  implicit val appConfig: FrontendAppConfig,
                                  implicit val formWithCSRF: FormWithCSRF,

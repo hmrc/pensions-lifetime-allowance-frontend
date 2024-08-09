@@ -24,7 +24,6 @@ import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,15 +31,12 @@ class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                  authClientConnector: AuthConnector,
                                  val technicalError: views.html.pages.fallback.technicalError,
                                 )(
-                                  implicit val appConfig: FrontendAppConfig,
-                                  implicit val partialRetriever: FormPartialRetriever,
-                                  implicit val plaContext: PlaContext,
+                                  implicit val appConfig: FrontendAppConfig,                                  implicit val plaContext: PlaContext,
                                   implicit val ec: ExecutionContext)
   extends FrontendController(mcc) with AuthFunction with Logging{
   override def authConnector: AuthConnector = authClientConnector
 }
 trait AuthFunction extends AuthorisedFunctions with Logging {
-  implicit val partialRetriever: FormPartialRetriever
   implicit val plaContext: PlaContext
   implicit val appConfig: FrontendAppConfig
   implicit val ec: ExecutionContext

@@ -28,7 +28,6 @@ import play.api.{Application, Logging}
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -40,9 +39,7 @@ class WithdrawProtectionDateInputController @Inject()(sessionCacheService: Sessi
                                                       withdrawDate: views.html.pages.withdraw.withdrawDate,
                                                       technicalError: views.html.pages.fallback.technicalError
                                             )
-                                                     (implicit val appConfig: FrontendAppConfig,
-                                             implicit val partialRetriever: FormPartialRetriever,
-                                             implicit val plaContext: PlaContext,
+                                                     (implicit val appConfig: FrontendAppConfig,                                             implicit val plaContext: PlaContext,
                                              implicit val formWithCSRF: FormWithCSRF,
                                              implicit val application: Application,
                                              implicit val ec: ExecutionContext)

@@ -22,11 +22,9 @@ import play.api.mvc.RequestHeader
 import play.twirl.api.Html
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 class PlaFrontendErrorHandler @Inject()(errorTemplate: views.html.error_template
                                        )(implicit val messagesApi: MessagesApi,
-                                        val PlaFormPartialRetriever: FormPartialRetriever,
                                         val appConfig: FrontendAppConfig,
                                         val plaContext: PlaContext,
                                         val ec: ExecutionContext) extends FrontendErrorHandler {
