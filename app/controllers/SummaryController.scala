@@ -38,7 +38,8 @@ class SummaryController @Inject()(sessionCacheService: SessionCacheService,
                                   technicalError: views.html.pages.fallback.technicalError,
                                   summary: pages.ip2016.summary
                                  )
-                                 (implicit val appConfig: FrontendAppConfig,                                  implicit val plaContext: PlaContext,
+                                 (implicit val appConfig: FrontendAppConfig,
+                                  implicit val plaContext: PlaContext,
                                   implicit val formWithCSRF: FormWithCSRF,
                                   implicit val application: Application,
                                   implicit val ec: ExecutionContext)

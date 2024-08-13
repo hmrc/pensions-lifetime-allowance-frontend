@@ -32,7 +32,8 @@ class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
                                        authFunction: AuthFunction,
                                        ConfirmFP: confirmation.confirmFP)
                                       (implicit val application: Application,
-                                       implicit val appConfig: FrontendAppConfig,                                       implicit val formWithCSRF: FormWithCSRF,
+                                       implicit val appConfig: FrontendAppConfig,
+                                       implicit val formWithCSRF: FormWithCSRF,
                                        implicit val plaContext: PlaContext) extends FrontendController(mcc) {
 
   val confirmFP = Action.async {

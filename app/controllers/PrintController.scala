@@ -37,7 +37,8 @@ class PrintController @Inject()(val sessionCacheService: SessionCacheService,
                                 resultPrintView: resultPrint,
                                 mcc: MessagesControllerComponents,
                                 authFunction: AuthFunction)
-                               (implicit val appConfig: FrontendAppConfig,                                implicit val plaContext: PlaContext,
+                               (implicit val appConfig: FrontendAppConfig,
+                                implicit val plaContext: PlaContext,
                                 implicit val ec: ExecutionContext
                                )
   extends FrontendController(mcc) with I18nSupport with Logging {

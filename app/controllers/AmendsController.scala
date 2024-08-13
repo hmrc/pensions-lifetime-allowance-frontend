@@ -48,7 +48,8 @@ class AmendsController @Inject()(val sessionCacheService: SessionCacheService,
                                  outcomeActive: views.html.pages.amends.outcomeActive,
                                  outcomeInactive: views.html.pages.amends.outcomeInactive,
                                  amendSummary: views.html.pages.amends.amendSummary)
-                                (implicit val appConfig: FrontendAppConfig,                                 val formWithCSRF: FormWithCSRF,
+                                (implicit val appConfig: FrontendAppConfig,
+                                 val formWithCSRF: FormWithCSRF,
                                  val plaContext: PlaContext,
                                  val ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport with Logging {

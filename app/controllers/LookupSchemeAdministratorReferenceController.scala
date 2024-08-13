@@ -37,7 +37,6 @@ class LookupSchemeAdministratorReferenceController @Inject()(val sessionCacheSer
                                                              val actionWithSessionId: ActionWithSessionId,
                                                              mcc: MessagesControllerComponents,
                                                              psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form)(
-
                                  implicit val context: PlaContext,
                                  implicit val appConfig: FrontendAppConfig,
                                  implicit val formWithCSRF: FormWithCSRF,

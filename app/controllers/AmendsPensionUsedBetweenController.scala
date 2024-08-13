@@ -39,7 +39,8 @@ class AmendsPensionUsedBetweenController @Inject()(val sessionCacheService: Sess
                                                    technicalError: views.html.pages.fallback.technicalError,
                                                    amendPensionsUsedBetween: pages.amends.amendPensionsUsedBetween,
                                                    amendIP14PensionsUsedBetween: pages.amends.amendIP14PensionsUsedBetween)
-                                                  (implicit val appConfig: FrontendAppConfig,                                                   val formWithCSRF: FormWithCSRF,
+                                                  (implicit val appConfig: FrontendAppConfig,
+                                                   val formWithCSRF: FormWithCSRF,
                                                    val plaContext: PlaContext,
                                                    val ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport with Logging {

@@ -17,7 +17,6 @@
 package connectors
 
 import config.FrontendAppConfig
-
 import javax.inject.Inject
 import models.PersonalDetailsModel
 import play.api.Logging

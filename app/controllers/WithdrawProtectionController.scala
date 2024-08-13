@@ -46,7 +46,8 @@ class WithdrawProtectionController @Inject()(sessionCacheService: SessionCacheSe
                                              withdrawImplications: views.html.pages.withdraw.withdrawImplications,
                                              technicalError: views.html.pages.fallback.technicalError
                                             )
-                                            (implicit val appConfig: FrontendAppConfig,                                             implicit val plaContext: PlaContext,
+                                            (implicit val appConfig: FrontendAppConfig,
+                                             implicit val plaContext: PlaContext,
                                              implicit val formWithCSRF: FormWithCSRF,
                                              implicit val application: Application,
                                              implicit val ec: ExecutionContext)

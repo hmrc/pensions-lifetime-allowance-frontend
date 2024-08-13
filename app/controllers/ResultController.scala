@@ -48,7 +48,8 @@ class ResultController @Inject()(sessionCacheService: SessionCacheService,
                                  resultRejected: views.html.pages.result.resultRejected,
                                  resultSuccess: views.html.pages.result.resultSuccess,
                                  resultSuccessInactive: views.html.pages.result.resultSuccessInactive)
-                                (implicit val appConfig: FrontendAppConfig,                                 implicit val plaContext: PlaContext,
+                                (implicit val appConfig: FrontendAppConfig,
+                                 implicit val plaContext: PlaContext,
                                  implicit val application: Application,
                                  implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging{

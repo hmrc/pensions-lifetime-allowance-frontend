@@ -53,7 +53,8 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
                                  psoDetails: pages.ip2016.psoDetails,
                                  RemovePsoDetails: pages.ip2016.removePsoDetails,
                                  pensionDebits: pages.ip2016.pensionDebits)
-                                (implicit val appConfig: FrontendAppConfig,                                 implicit val plaContext: PlaContext,
+                                (implicit val appConfig: FrontendAppConfig,
+                                 implicit val plaContext: PlaContext,
                                  implicit val formWithCSRF: FormWithCSRF,
                                  implicit val application: Application,
                                  implicit val ec: ExecutionContext) extends FrontendController(mcc) {

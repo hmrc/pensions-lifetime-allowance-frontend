@@ -40,11 +40,11 @@ class WithdrawProtectionDateInputConfirmationController @Inject()(sessionCacheSe
                                                                   withdrawConfirm: views.html.pages.withdraw.withdrawConfirm,
                                                                   withdrawDate: views.html.pages.withdraw.withdrawDate,
                                                                   technicalError: views.html.pages.fallback.technicalError
-                                            )
-                                                                 (implicit val appConfig: FrontendAppConfig,                                             implicit val plaContext: PlaContext,
-                                             implicit val formWithCSRF: FormWithCSRF,
-                                             implicit val application: Application,
-                                             implicit val ec: ExecutionContext)
+                                            )(implicit val appConfig: FrontendAppConfig,
+                                              implicit val plaContext: PlaContext,
+                                              implicit val formWithCSRF: FormWithCSRF,
+                                              implicit val application: Application,
+                                              implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 
   private[controllers] def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) = {

@@ -39,7 +39,8 @@ class AmendsPensionTakenBeforeController @Inject()(val sessionCacheService: Sess
                                                    technicalError: views.html.pages.fallback.technicalError,
                                                    amendPensionsTakenBefore: pages.amends.amendPensionsTakenBefore,
                                                    amendIP14PensionsTakenBefore: pages.amends.amendIP14PensionsTakenBefore)
-                                                  (implicit val appConfig: FrontendAppConfig,                                                   val formWithCSRF: FormWithCSRF,
+                                                  (implicit val appConfig: FrontendAppConfig,
+                                                   val formWithCSRF: FormWithCSRF,
                                                    val plaContext: PlaContext,
                                                    val ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport with Logging {

@@ -26,7 +26,6 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 class TimeoutController @Inject()(mcc: MessagesControllerComponents,
                                   Timeout: views.html.pages.timeout)(
-
                                   implicit val context: PlaContext,
                                   implicit val appConfig: FrontendAppConfig,
                                   implicit val application: Application) extends FrontendController(mcc) {

@@ -39,7 +39,6 @@ class LookupProtectionNotificationController @Inject()(val sessionCacheService: 
                                                        val actionWithSessionId: ActionWithSessionId,
                                                        mcc: MessagesControllerComponents,
                                                        psa_lookup_protection_notification_no_form: views.html.pages.lookup.psa_lookup_protection_notification_no_form)(
-
                                  implicit val context: PlaContext,
                                  implicit val appConfig: FrontendAppConfig,
                                  implicit val formWithCSRF: FormWithCSRF,

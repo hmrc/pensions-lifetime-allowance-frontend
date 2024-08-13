@@ -48,7 +48,8 @@ class ReadProtectionsController @Inject()(val plaConnector: PLAConnector,
                                           manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
                                           existingProtections: pages.existingProtections.existingProtections
                                          )
-                                         (implicit val appConfig: FrontendAppConfig,                                          implicit val plaContext: PlaContext,
+                                         (implicit val appConfig: FrontendAppConfig,
+                                          implicit val plaContext: PlaContext,
                                           implicit val application: Application,
                                           implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {

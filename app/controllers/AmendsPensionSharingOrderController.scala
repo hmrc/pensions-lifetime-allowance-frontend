@@ -40,7 +40,8 @@ class AmendsPensionSharingOrderController @Inject()(val sessionCacheService: Ses
                                                     authFunction: AuthFunction,
                                                     amendPsoDetails: pages.amends.amendPsoDetails,
                                                     technicalError: views.html.pages.fallback.technicalError)
-                                                   (implicit val appConfig: FrontendAppConfig,                                                    val formWithCSRF: FormWithCSRF,
+                                                   (implicit val appConfig: FrontendAppConfig,
+                                                    val formWithCSRF: FormWithCSRF,
                                                     val plaContext: PlaContext,
                                                     val ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport with Logging {

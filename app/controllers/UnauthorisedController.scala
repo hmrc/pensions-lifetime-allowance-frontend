@@ -38,7 +38,8 @@ class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVe
                                        unauthorised: views.html.pages.ivFailure.unauthorised,
                                        timeout: views.html.pages.timeout)(
                                        implicit val appConfig: FrontendAppConfig,
-                                       implicit val plaContext: PlaContext,                                       implicit val application: Application,
+                                       implicit val plaContext: PlaContext,
+                                       implicit val application: Application,
                                        implicit val ec: ExecutionContext)
 extends FrontendController(mcc) with I18nSupport with Logging {
 

@@ -31,7 +31,8 @@ class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
                                  authClientConnector: AuthConnector,
                                  val technicalError: views.html.pages.fallback.technicalError,
                                 )(
-                                  implicit val appConfig: FrontendAppConfig,                                  implicit val plaContext: PlaContext,
+                                  implicit val appConfig: FrontendAppConfig,
+                                  implicit val plaContext: PlaContext,
                                   implicit val ec: ExecutionContext)
   extends FrontendController(mcc) with AuthFunction with Logging{
   override def authConnector: AuthConnector = authClientConnector
