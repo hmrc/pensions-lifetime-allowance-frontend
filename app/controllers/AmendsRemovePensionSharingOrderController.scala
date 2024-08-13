@@ -39,7 +39,8 @@ class AmendsRemovePensionSharingOrderController @Inject()(val sessionCacheServic
                                                           authFunction: AuthFunction,
                                                           technicalError: views.html.pages.fallback.technicalError,
                                                           removePsoDebits: pages.amends.removePsoDebits)
-                                                         (implicit val appConfig: FrontendAppConfig,                                                          val formWithCSRF: FormWithCSRF,
+                                                         (implicit val appConfig: FrontendAppConfig,
+                                                          val formWithCSRF: FormWithCSRF,
                                                           val plaContext: PlaContext,
                                                           val ec: ExecutionContext)
   extends FrontendController(mcc) with I18nSupport with Logging {
