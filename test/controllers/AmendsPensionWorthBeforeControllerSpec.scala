@@ -58,7 +58,6 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
-
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()

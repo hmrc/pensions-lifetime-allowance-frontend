@@ -25,7 +25,7 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import scala.concurrent.ExecutionContext
 
 
-class TestSetupController @Inject()(connector: StubConnector,                                    mcc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends FrontendController(mcc) {
+class TestSetupController @Inject()(connector: StubConnector,mcc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends FrontendController(mcc) {
 
   def insertProtections(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     val payload: JsValue = request.body

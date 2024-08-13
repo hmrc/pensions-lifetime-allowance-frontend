@@ -20,7 +20,6 @@ import models.cache.CacheMap
 import play.api.Configuration
 import play.api.libs.json.Writes
 import play.api.mvc.Request
-import play.api.mvc.RequestHeader
 import uk.gov.hmrc.http.SessionKeys
 import uk.gov.hmrc.mongo.cache.{DataKey, SessionCacheRepository}
 import uk.gov.hmrc.mongo.{MongoComponent, TimestampSupport}

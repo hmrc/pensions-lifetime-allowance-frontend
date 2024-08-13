@@ -29,7 +29,6 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
 
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
-
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val mockWithdrawn: withdrawn = app.injector.instanceOf[withdrawn]

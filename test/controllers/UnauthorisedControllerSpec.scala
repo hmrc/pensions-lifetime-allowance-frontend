@@ -61,7 +61,6 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
   implicit val hc: HeaderCarrier = mock[HeaderCarrier]
-
   implicit val application = mock[Application]
   implicit val mockLockedOut: lockedOut = app.injector.instanceOf[lockedOut]
   implicit val mockTechnicalIssue: technicalIssue = app.injector.instanceOf[technicalIssue]

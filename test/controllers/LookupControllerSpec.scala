@@ -49,7 +49,6 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
-
   val mockHttp: HttpClientV2 = mock[HttpClientV2]
 
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]

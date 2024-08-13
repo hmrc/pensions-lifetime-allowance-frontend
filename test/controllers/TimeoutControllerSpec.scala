@@ -32,7 +32,6 @@ class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
 
     val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
-
     implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext = mock[PlaContext]
     implicit val system: ActorSystem = ActorSystem()

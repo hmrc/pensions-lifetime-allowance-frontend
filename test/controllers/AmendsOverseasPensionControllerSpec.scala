@@ -49,7 +49,6 @@ import uk.gov.hmrc.http.HttpResponse
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
 import views.html.pages.result.manualCorrespondenceNeeded
-
 import java.time.LocalDate
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
@@ -89,7 +88,6 @@ class AmendsOverseasPensionControllerSpec extends FakeApplication
   val mockAmendSummary: amendSummary                  = app.injector.instanceOf[amendSummary]
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
-
 
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
