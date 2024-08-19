@@ -16,7 +16,6 @@
 
 package controllers
 
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import models.cache.CacheMap
@@ -37,7 +36,7 @@ import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
@@ -50,9 +49,8 @@ class LookupSchemeAdministratorReferenceControllerSpec extends FakeApplication w
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
+  val mockHttp: HttpClientV2 = mock[HttpClientV2]
 
-  val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val mockMessages: Messages = mock[Messages]

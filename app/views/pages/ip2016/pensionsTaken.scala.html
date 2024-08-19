@@ -25,7 +25,7 @@
     plaInputRadioGroup: playHelpers.templates.plaInputRadioGroup
 )
 
-@(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, form: FormWithCSRF)
+@(pensionsTakenForm: Form[PensionsTakenModel])(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, form: FormWithCSRF)
 
 @title = @{
  if(pensionsTakenForm.errors.nonEmpty) Messages("site.title.error", Messages("pla.pensionsTaken.title")) else Messages("pla.pensionsTaken.title")

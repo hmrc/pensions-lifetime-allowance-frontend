@@ -17,7 +17,6 @@
 package controllers
 
 import auth.AuthFunction
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import mocks.AuthMock
@@ -59,7 +58,6 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
     val mockEnv: Environment = mock[Environment]
 
     implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-    implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
     implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext = mock[PlaContext]
     implicit val mockMessages: Messages = mock[Messages]
@@ -83,7 +81,6 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
     class Setup {
 
         val authFunction: AuthFunction = new AuthFunction {
-            override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
             override implicit val plaContext: PlaContext = mockPlaContext
             override implicit val appConfig: FrontendAppConfig = mockAppConfig
             override implicit val technicalError: technicalError = mockTechnicalError

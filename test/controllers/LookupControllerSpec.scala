@@ -18,7 +18,6 @@ package controllers
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import views.html.pages.lookup.{pla_protection_guidance, psa_lookup_not_found_results, psa_lookup_protection_notification_no_form, psa_lookup_results, psa_lookup_scheme_admin_ref_form}
@@ -37,7 +36,7 @@ import testHelpers.FakeApplication
 import models.cache.CacheMap
 import org.mockito.ArgumentMatchers.any
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import utils.ActionWithSessionId
 
@@ -50,9 +49,8 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
+  val mockHttp: HttpClientV2 = mock[HttpClientV2]
 
-  val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val mockMessages: Messages = mock[Messages]

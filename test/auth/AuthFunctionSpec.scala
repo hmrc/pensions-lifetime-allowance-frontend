@@ -18,7 +18,6 @@ package auth
 
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.actor.ActorSystem
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import mocks.AuthMock
 import org.mockito.Mockito._
@@ -47,7 +46,6 @@ class AuthFunctionSpec extends FakeApplication
 
   implicit val system: ActorSystem                        = ActorSystem()
   implicit val materializer:Materializer                  = mock[Materializer]
-  implicit val partialRetriever: PlaFormPartialRetriever  = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig           = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext                 = mock[PlaContext]
   implicit val hc: HeaderCarrier                          = HeaderCarrier()
@@ -69,8 +67,6 @@ class AuthFunctionSpec extends FakeApplication
     lazy val appConfig: FrontendAppConfig = mockAppConfig
     override lazy val authConnector       = mockAuthConnector
     override def upliftEnvironmentUrl(requestUri: String): String = requestUri
-
-    override implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
     override implicit val technicalError: technicalError = app.injector.instanceOf[technicalError]
     override implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   }

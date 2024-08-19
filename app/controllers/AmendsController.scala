@@ -31,7 +31,6 @@ import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HttpResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
 
 import javax.inject.Inject
@@ -50,7 +49,6 @@ class AmendsController @Inject()(val sessionCacheService: SessionCacheService,
                                  outcomeInactive: views.html.pages.amends.outcomeInactive,
                                  amendSummary: views.html.pages.amends.amendSummary)
                                 (implicit val appConfig: FrontendAppConfig,
-                                 val partialRetriever: FormPartialRetriever,
                                  val formWithCSRF: FormWithCSRF,
                                  val plaContext: PlaContext,
                                  val ec: ExecutionContext)

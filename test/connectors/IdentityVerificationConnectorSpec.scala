@@ -18,9 +18,7 @@ package connectors
 
 import config.FrontendAppConfig
 import enums.IdentityVerificationResult
-import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.any
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, eq => eqs}
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
@@ -28,9 +26,9 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import services.SessionCacheService
 import testHelpers.FakeApplication
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 
@@ -39,9 +37,8 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
 
   implicit val executionContext = fakeApplication().injector.instanceOf[ExecutionContext]
   val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  val mockHttp = mock[DefaultHttpClient]
+  val mockHttp = mock[HttpClientV2]
   val mockSessionCacheService = mock[SessionCacheService]
-
 
   val identityVerficationConstructor = new IdentityVerificationConnector(mockAppConfig, mockHttp)
 
@@ -60,12 +57,16 @@ class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFuture
       "invalid-fields-journey-id" -> "test/resources/identity-verification/invalid-fields.json"
     )
 
-    def mockJourneyId(journeyId: String): Unit = {
-      val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
-      when(mockHttp.GET[HttpResponse](ArgumentMatchers.contains(journeyId), any(), any())(any(), any(), any())).
-        thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
-    }
-    possibleJournies.keys.foreach(mockJourneyId)
+  def mockJourneyId(journeyId: String): Unit = {
+    val fileContents = Source.fromFile(possibleJournies(journeyId)).mkString
+    val requestBuilder: RequestBuilder = mock[RequestBuilder]
+    val serviceUrl = identityVerficationConstructor.serviceUrl
+    val journeyIdUrl = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
+    when(mockHttp.get(eqs(new URL(journeyIdUrl)))(any)).thenReturn(requestBuilder)
+    when(requestBuilder.execute[HttpResponse](any, any))
+      .thenReturn(Future.successful(HttpResponse(status = Status.OK, json = Json.parse(fileContents), headers = Map.empty)))
+  }
+  possibleJournies.keys.foreach(mockJourneyId)
 
 
   "return success when identityVerification returns success" in {

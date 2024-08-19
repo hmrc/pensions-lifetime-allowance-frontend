@@ -28,7 +28,6 @@ import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages
 
 import javax.inject.Inject
@@ -41,7 +40,6 @@ class AmendsPensionTakenBeforeController @Inject()(val sessionCacheService: Sess
                                                    amendPensionsTakenBefore: pages.amends.amendPensionsTakenBefore,
                                                    amendIP14PensionsTakenBefore: pages.amends.amendIP14PensionsTakenBefore)
                                                   (implicit val appConfig: FrontendAppConfig,
-                                                   val partialRetriever: FormPartialRetriever,
                                                    val formWithCSRF: FormWithCSRF,
                                                    val plaContext: PlaContext,
                                                    val ec: ExecutionContext)

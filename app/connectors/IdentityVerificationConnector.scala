@@ -22,13 +22,12 @@ import enums.IdentityVerificationResult.IdentityVerificationResult
 import javax.inject.Inject
 import play.api.libs.json.{Json, OFormat}
 import services.MetricsService
-import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpReadsInstances, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
-
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, HttpReadsInstances, HttpResponse, StringContextOps}
+import uk.gov.hmrc.http.client.HttpClientV2
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, http: DefaultHttpClient)
+class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2)
                                               (implicit executionContext: ExecutionContext){
   val serviceUrl: String = appConfig.servicesConfig.baseUrl("identity-verification")
 
@@ -40,12 +39,17 @@ class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, htt
 
   def identityVerificationResponse(journeyId: String)(implicit hc: HeaderCarrier): Future[IdentityVerificationResult] = {
     val context = MetricsService.identityVerificationTimer.time()
-    val ivFuture = http.GET[HttpResponse](url(journeyId)).flatMap { httpResponse =>
-      context.stop()
-      httpResponse.json.validate[IdentityVerificationResponse].fold(
-        errs => Future.failed(new JsonValidationException(s"Unable to deserialise: $errs")),
-        valid => Future.successful(valid.result)
-      )
+    val journeyIdUrl = url(journeyId)
+    val ivFuture =
+      http
+        .get(url"$journeyIdUrl")
+        .execute[HttpResponse]
+        .flatMap{ httpResponse =>
+          context.stop()
+          httpResponse.json.validate[IdentityVerificationResponse].fold(
+            errs => Future.failed(new JsonValidationException(s"Unable to deserialise: $errs")),
+            valid => Future.successful(valid.result)
+          )
     }
 
     ivFuture.onComplete {
