@@ -24,12 +24,12 @@ import utils.Constants._
 
 object CurrentPensionsForm extends CommonBinders {
 
-  def currentPensionsForm = Form(
+  def currentPensionsForm(protectionType: String) = Form(
     mapping(
-      "currentPensionsAmt" -> of(decimalFormatter("pla.currentPensions.amount.errors.mandatoryError", "pla.currentPensions.amount.errors.notReal"))
-        .verifying("pla.currentPensions.amount.errors.negative", currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
-        .verifying("pla.currentPensions.amount.errors.decimal", currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))
-        .verifying("pla.currentPensions.amount.errors.max", currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency))
+      "currentPensionsAmt" -> of(decimalFormatter(s"pla.currentPensions.amount.errors.mandatoryError.$protectionType", s"pla.currentPensions.amount.errors.notReal.$protectionType"))
+        .verifying(s"pla.currentPensions.amount.errors.negative.$protectionType", currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
+        .verifying(s"pla.currentPensions.amount.errors.decimal.$protectionType", currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))
+        .verifying(s"pla.currentPensions.amount.errors.max.$protectionType", currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency))
     )(CurrentPensionsModel.apply)(CurrentPensionsModel.unapply)
   )
 }

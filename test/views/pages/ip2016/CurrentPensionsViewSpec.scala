@@ -28,11 +28,11 @@ class CurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPensionsV
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the CurrentPensionsView" should{
-    val currentPensionsForm = CurrentPensionsForm.currentPensionsForm.bind(Map("currentPensionsAmt" -> "12000"))
+    val currentPensionsForm = CurrentPensionsForm.currentPensionsForm("ip2016").bind(Map("currentPensionsAmt" -> "12000"))
     lazy val view = application.injector.instanceOf[currentPensions]
     lazy val doc = Jsoup.parse(view.apply(currentPensionsForm).body)
 
-    val errorForm = CurrentPensionsForm.currentPensionsForm.bind(Map("currentPensionsAmt" -> "a"))
+    val errorForm = CurrentPensionsForm.currentPensionsForm("ip2016").bind(Map("currentPensionsAmt" -> "a"))
     lazy val errorView = application.injector.instanceOf[currentPensions]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
     lazy val form = doc.select("form")

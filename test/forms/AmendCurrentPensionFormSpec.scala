@@ -37,28 +37,28 @@ implicit val lang: Lang = mock[Lang]
 
       "supplied with a valid model" in {
         val model = AmendCurrentPensionModel(Some(1))
-        val result = amendCurrentPensionForm.fillAndValidate(model)
+        val result = amendCurrentPensionForm("ip2016").fillAndValidate(model)
 
         result.data shouldBe validMap
       }
 
       "supplied with a valid map with an amount with two decimal places" in {
         val map = validMap.updated("amendedUKPensionAmt", "0.01")
-        val result = amendCurrentPensionForm.bind(map)
+        val result = amendCurrentPensionForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendCurrentPensionModel(Some(0.01)))
       }
 
       "supplied with a valid map with zero amount" in {
         val map = validMap.updated("amendedUKPensionAmt", "0")
-        val result = amendCurrentPensionForm.bind(map)
+        val result = amendCurrentPensionForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendCurrentPensionModel(Some(0)))
       }
 
       "supplied with a valid map with the maximum amount" in {
         val map = validMap.updated("amendedUKPensionAmt", {Constants.npsMaxCurrency - 1}.toString)
-        val result = amendCurrentPensionForm.bind(map)
+        val result = amendCurrentPensionForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendCurrentPensionModel(Some(Constants.npsMaxCurrency - 1)))
       }
@@ -70,10 +70,10 @@ implicit val lang: Lang = mock[Lang]
 
         "has a single error with the correct error message" in {
           val map = validMap - "amendedUKPensionAmt"
-          val result = amendCurrentPensionForm.bind(map)
+          val result = amendCurrentPensionForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedUKPensionAmt").get.message shouldBe errorMissingAmount(messageKey)
+          result.error("amendedUKPensionAmt").get.message shouldBe errorMissingAmount(messageKey, "ip2016")
         }
       }
 
@@ -81,47 +81,47 @@ implicit val lang: Lang = mock[Lang]
 
         "has a single error with the correct error message" in {
           val map = validMap.updated("amendedUKPensionAmt", "")
-          val result = amendCurrentPensionForm.bind(map)
+          val result = amendCurrentPensionForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedUKPensionAmt").get.message shouldBe errorMissingAmount(messageKey)
+          result.error("amendedUKPensionAmt").get.message shouldBe errorMissingAmount(messageKey, "ip2016")
         }
       }
 
       "supplied with a non-numeric amount" which {
         "has a single error with the correct error message" in {
           val map = validMap.updated("amendedUKPensionAmt", "a")
-          val result = amendCurrentPensionForm.bind(map)
+          val result = amendCurrentPensionForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedUKPensionAmt").get.message shouldBe errorReal(messageKey)
+          result.error("amendedUKPensionAmt").get.message shouldBe errorReal(messageKey, "ip2016")
         }
       }
 
       "supplied with a negative amount" which {
         "has a single error with the correct error message" in {
           val map = validMap.updated("amendedUKPensionAmt", "-0.01")
-          val result = amendCurrentPensionForm.bind(map)
+          val result = amendCurrentPensionForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedUKPensionAmt").get.message shouldBe errorNegative(messageKey)
+          result.error("amendedUKPensionAmt").get.message shouldBe errorNegative(messageKey, "ip2016")
         }
       }
 
       "supplied with an amount with too many decimal places" in {
         val map = validMap.updated("amendedUKPensionAmt", "0.001")
-        val result = amendCurrentPensionForm.bind(map)
+        val result = amendCurrentPensionForm("ip2016").bind(map)
 
         result.errors.size shouldBe 1
-        result.error("amendedUKPensionAmt").get.message shouldBe errorDecimal(messageKey)
+        result.error("amendedUKPensionAmt").get.message shouldBe errorDecimal(messageKey, "ip2016")
       }
 
       "supplied with an amount above the maximum" in {
         val map = validMap.updated("amendedUKPensionAmt", Constants.npsMaxCurrency.toString)
-        val result = amendCurrentPensionForm.bind(map)
+        val result = amendCurrentPensionForm("ip2016").bind(map)
 
         result.errors.size shouldBe 1
-        result.error("amendedUKPensionAmt").get.message shouldBe errorMaximum(messageKey)
+        result.error("amendedUKPensionAmt").get.message shouldBe errorMaximum(messageKey, "ip2016")
       }
     }
   }

@@ -28,12 +28,12 @@ class AmendOverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPe
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendOverseasPensionsView" should {
-    val oPensionsForm = AmendOverseasPensionsForm.amendOverseasPensionsForm.bind(Map("amendedOverseasPensions" -> "yes",
+    val oPensionsForm = AmendOverseasPensionsForm.amendOverseasPensionsForm("ip2016").bind(Map("amendedOverseasPensions" -> "yes",
                                                                                      "amendedOverseasPensionsAmt" -> "1234"))
     lazy val view = application.injector.instanceOf[amendOverseasPensions]
     lazy val doc = Jsoup.parse(view.apply(oPensionsForm, "ip2016", "open").body)
 
-    val errorForm = AmendOverseasPensionsForm.amendOverseasPensionsForm.bind(Map("amendedOverseasPensions" -> "", "amendedOverseasPensionsAmt" -> "1234"))
+    val errorForm = AmendOverseasPensionsForm.amendOverseasPensionsForm("ip2016").bind(Map("amendedOverseasPensions" -> "", "amendedOverseasPensionsAmt" -> "1234"))
     lazy val errorView = application.injector.instanceOf[amendOverseasPensions]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 

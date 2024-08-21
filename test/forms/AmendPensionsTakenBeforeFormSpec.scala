@@ -37,28 +37,28 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
 
       "provided with a valid model" in {
         val model = AmendPensionsTakenBeforeModel("yes")
-        val result = amendPensionsTakenBeforeForm.fill(model)
+        val result = amendPensionsTakenBeforeForm("ip2016").fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid form with no amount" in {
         val model = AmendPensionsTakenBeforeModel("no")
-        val result = amendPensionsTakenBeforeForm.fill(model)
+        val result = amendPensionsTakenBeforeForm("ip2016").fill(model)
 
         result.data shouldBe Map("amendedPensionsTakenBefore" -> "no")
       }
 
       "provided with a valid map with a zero amount" in {
         val map = validMap.updated("amendedPensionsTakenBeforeAmt", "0")
-        val result = amendPensionsTakenBeforeForm.bind(map)
+        val result = amendPensionsTakenBeforeForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes"))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map = validMap.updated("amendedPensionsTakenBeforeAmt", "0.01")
-        val result = amendPensionsTakenBeforeForm.bind(map)
+        val result = amendPensionsTakenBeforeForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes"))
       }
@@ -70,10 +70,10 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
 
         "not provided with a value for amendedPensionsTakenBefore" in {
           val map = validMap - "amendedPensionsTakenBefore"
-          val result = amendPensionsTakenBeforeForm.bind(map)
+          val result = amendPensionsTakenBeforeForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBefore").get.message shouldBe errorQuestion(messageKey)
+          result.error("amendedPensionsTakenBefore").get.message shouldBe errorQuestion(messageKey, "ip2016")
         }
       }
     }

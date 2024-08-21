@@ -51,14 +51,14 @@ class AmendsPensionWorthBeforeController @Inject()(val sessionCacheService: Sess
         case Some(data) =>
           protectionType match {
             case "ip2016" => Ok(amendPensionsWorthBefore(
-              amendPensionsWorthBeforeForm.fill(AmendPensionsWorthBeforeModel(
+              amendPensionsWorthBeforeForm(protectionType).fill(AmendPensionsWorthBeforeModel(
                 Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0)))
               )),
               protectionType,
               status
             ))
             case "ip2014" => Ok(amendIP14PensionsWorthBefore(
-              amendPensionsWorthBeforeForm.fill(AmendPensionsWorthBeforeModel(
+              amendPensionsWorthBeforeForm(protectionType).fill(AmendPensionsWorthBeforeModel(
                 Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0)))
               )),
               protectionType,
@@ -74,9 +74,12 @@ class AmendsPensionWorthBeforeController @Inject()(val sessionCacheService: Sess
 
   def submitAmendPensionsWorthBefore(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendPensionsWorthBeforeForm.bindFromRequest().fold(
+      amendPensionsWorthBeforeForm(protectionType).bindFromRequest().fold(
         errors => {
-          Future.successful(BadRequest(amendPensionsWorthBefore(errors, protectionType, status)))
+          protectionType match {
+            case "ip2016" => Future.successful(BadRequest(amendPensionsWorthBefore(errors, protectionType, status)))
+            case "ip2014" => Future.successful(BadRequest(amendIP14PensionsWorthBefore(errors, protectionType, status)))
+          }
         },
         success => {
           sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).flatMap {

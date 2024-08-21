@@ -23,11 +23,11 @@ import play.api.data._
 
 object PensionsTakenBetweenForm extends CommonBinders{
 
-  def pensionsTakenBetweenForm: Form[PensionsTakenBetweenModel] = Form (
+  def pensionsTakenBetweenForm(protectionType: String): Form[PensionsTakenBetweenModel] = Form (
     mapping(
-      "pensionsTakenBetween" -> common.Validation.newText("pla.pensionsTakenBetween.errors.mandatoryError")
-        .verifying("pla.pensionsTakenBetween.errors.mandatoryError", mandatoryCheck)
-        .verifying("pla.pensionsTakenBetween.errors.mandatoryError", yesNoCheck)
+      "pensionsTakenBetween" -> common.Validation.newText(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType")
+        .verifying(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType", mandatoryCheck)
+        .verifying(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType", yesNoCheck)
     )(PensionsTakenBetweenModel.apply)(PensionsTakenBetweenModel.unapply)
   )
 }

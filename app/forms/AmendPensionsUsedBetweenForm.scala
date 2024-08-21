@@ -24,12 +24,12 @@ import common.Validation._
 object AmendPensionsUsedBetweenForm extends CommonBinders {
 
 
-  def amendPensionsUsedBetweenForm = Form (
+  def amendPensionsUsedBetweenForm(protectionType: String) = Form (
     mapping(
-      "amendedPensionsUsedBetweenAmt" -> of(decimalFormatter("pla.pensionsUsedBetween.amount.errors.mandatoryError", "pla.pensionsUsedBetween.amount.errors.notReal"))
-        .verifying("pla.pensionsUsedBetween.amount.errors.decimal", pensionsWorthBeforeAmt => isMaxTwoDecimalPlaces(pensionsWorthBeforeAmt.getOrElse(0)))
-        .verifying("pla.pensionsUsedBetween.amount.errors.negative", pensionsWorthBeforeAmt => isPositive(pensionsWorthBeforeAmt.getOrElse(0)))
-        .verifying("pla.pensionsUsedBetween.amount.errors.max", pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0)))
+      "amendedPensionsUsedBetweenAmt" -> of(decimalFormatter(s"pla.pensionsUsedBetween.amount.errors.mandatoryError.$protectionType", s"pla.pensionsUsedBetween.amount.errors.notReal.$protectionType"))
+        .verifying(s"pla.pensionsUsedBetween.amount.errors.decimal.$protectionType", pensionsWorthBeforeAmt => isMaxTwoDecimalPlaces(pensionsWorthBeforeAmt.getOrElse(0)))
+        .verifying(s"pla.pensionsUsedBetween.amount.errors.negative.$protectionType", pensionsWorthBeforeAmt => isPositive(pensionsWorthBeforeAmt.getOrElse(0)))
+        .verifying(s"pla.pensionsUsedBetween.amount.errors.max.$protectionType", pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0)))
     )(AmendPensionsUsedBetweenModel.apply)(AmendPensionsUsedBetweenModel.unapply)
   )
 }

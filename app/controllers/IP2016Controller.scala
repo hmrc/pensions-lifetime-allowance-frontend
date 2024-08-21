@@ -63,8 +63,8 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def pensionsTaken: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       sessionCacheService.fetchAndGetFormData[PensionsTakenModel]("pensionsTaken").map {
-        case Some(data) => Ok(pensionsTaken(pensionsTakenForm.fill(data)))
-        case None => Ok(pensionsTaken(pensionsTakenForm))
+        case Some(data) => Ok(pensionsTaken(pensionsTakenForm("ip2016").fill(data)))
+        case None => Ok(pensionsTaken(pensionsTakenForm("ip2016")))
       }
     }
   }
@@ -72,7 +72,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def submitPensionsTaken: Action[AnyContent] = Action.async {
     implicit request =>
         authFunction.genericAuthWithoutNino("IP2016") {
-        pensionsTakenForm.bindFromRequest().fold(
+        pensionsTakenForm("ip2016").bindFromRequest().fold(
           errors => {
             val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
             Future.successful(BadRequest(pensionsTaken(form)))
@@ -95,15 +95,15 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def pensionsTakenBefore: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       sessionCacheService.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").map {
-        case Some(data) => Ok(pensionsTakenBefore(pensionsTakenBeforeForm.fill(data)))
-        case _ => Ok(pensionsTakenBefore(pensionsTakenBeforeForm))
+        case Some(data) => Ok(pensionsTakenBefore(pensionsTakenBeforeForm("ip2016").fill(data)))
+        case _ => Ok(pensionsTakenBefore(pensionsTakenBeforeForm("ip2016")))
       }
     }
   }
 
   def submitPensionsTakenBefore: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      pensionsTakenBeforeForm.bindFromRequest().fold(
+      pensionsTakenBeforeForm("ip2016").bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(pensionsTakenBefore(form)))
@@ -125,15 +125,15 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def pensionsWorthBefore: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       sessionCacheService.fetchAndGetFormData[PensionsWorthBeforeModel]("pensionsWorthBefore").map {
-        case Some(data) => Ok(pensionsWorthBefore(pensionsWorthBeforeForm.fill(data)))
-        case _ => Ok(pensionsWorthBefore(pensionsWorthBeforeForm))
+        case Some(data) => Ok(pensionsWorthBefore(pensionsWorthBeforeForm("ip2016").fill(data)))
+        case _ => Ok(pensionsWorthBefore(pensionsWorthBeforeForm("ip2016")))
       }
     }
   }
 
   def submitPensionsWorthBefore: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      pensionsWorthBeforeForm.bindFromRequest().fold(
+      pensionsWorthBeforeForm("ip2016").bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(pensionsWorthBefore(form)))
@@ -152,15 +152,15 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def pensionsTakenBetween: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       sessionCacheService.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").map {
-        case Some(data) => Ok(pensionsTakenBetween(pensionsTakenBetweenForm.fill(data)))
-        case _ => Ok(pensionsTakenBetween(pensionsTakenBetweenForm))
+        case Some(data) => Ok(pensionsTakenBetween(pensionsTakenBetweenForm("ip2016").fill(data)))
+        case _ => Ok(pensionsTakenBetween(pensionsTakenBetweenForm("ip2016")))
       }
     }
   }
 
   def submitPensionsTakenBetween: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      pensionsTakenBetweenForm.bindFromRequest().fold(
+      pensionsTakenBetweenForm("ip2016").bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(pensionsTakenBetween(form)))
@@ -182,15 +182,15 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def pensionsUsedBetween:  Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       sessionCacheService.fetchAndGetFormData[PensionsUsedBetweenModel]("pensionsUsedBetween").map {
-        case Some(data) => Ok(pensionsUsedBetween(pensionsUsedBetweenForm.fill(data)))
-        case _ => Ok(pensionsUsedBetween(pensionsUsedBetweenForm))
+        case Some(data) => Ok(pensionsUsedBetween(pensionsUsedBetweenForm("ip2016").fill(data)))
+        case _ => Ok(pensionsUsedBetween(pensionsUsedBetweenForm("ip2016")))
       }
     }
   }
 
   def submitPensionsUsedBetween: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      pensionsUsedBetweenForm.bindFromRequest().fold(
+      pensionsUsedBetweenForm("ip2016").bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(pensionsUsedBetween(form)))
@@ -208,15 +208,15 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def overseasPensions: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       sessionCacheService.fetchAndGetFormData[OverseasPensionsModel]("overseasPensions").map {
-        case Some(data) => Ok(overseasPensions(overseasPensionsForm.fill(data)))
-        case _ => Ok(overseasPensions(overseasPensionsForm))
+        case Some(data) => Ok(overseasPensions(overseasPensionsForm("ip2016").fill(data)))
+        case _ => Ok(overseasPensions(overseasPensionsForm("ip2016")))
       }
     }
   }
 
   def submitOverseasPensions: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      overseasPensionsForm.bindFromRequest().fold(
+      overseasPensionsForm("ip2016").bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(overseasPensions(form)))
@@ -235,15 +235,15 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def currentPensions: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
       sessionCacheService.fetchAndGetFormData[CurrentPensionsModel]("currentPensions").map {
-        case Some(data) => Ok(currentPensions(currentPensionsForm.fill(data)))
-        case _ => Ok(currentPensions(currentPensionsForm))
+        case Some(data) => Ok(currentPensions(currentPensionsForm("ip2016").fill(data)))
+        case _ => Ok(currentPensions(currentPensionsForm("ip2016")))
       }
     }
   }
 
   def submitCurrentPensions: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("IP2016") {
-      currentPensionsForm.bindFromRequest().fold(
+      currentPensionsForm("ip2016").bindFromRequest().fold(
         errors => {
           val form = errors.copy(errors = errors.errors.map { er => FormError(er.key, Messages(er.message)) })
           Future.successful(BadRequest(currentPensions(form)))

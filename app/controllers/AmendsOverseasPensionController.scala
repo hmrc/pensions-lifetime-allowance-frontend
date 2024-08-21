@@ -52,12 +52,12 @@ class AmendsOverseasPensionController @Inject()(val sessionCacheService: Session
           val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
           protectionType match {
             case "ip2016" => Ok(amendOverseasPensions(
-              amendOverseasPensionsForm.fill(AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))))),
+              amendOverseasPensionsForm(protectionType).fill(AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))))),
               protectionType,
               status
             ))
             case "ip2014" => Ok(amendIP14OverseasPensions(
-              amendOverseasPensionsForm.fill(AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))))),
+              amendOverseasPensionsForm(protectionType).fill(AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))))),
               protectionType,
               status
             ))
@@ -72,9 +72,12 @@ class AmendsOverseasPensionController @Inject()(val sessionCacheService: Session
   def submitAmendOverseasPensions(protectionType: String, status: String): Action[AnyContent] = Action.async {
     implicit request =>
       authFunction.genericAuthWithNino("existingProtections") { nino =>
-        amendOverseasPensionsForm.bindFromRequest().fold(
+        amendOverseasPensionsForm(protectionType).bindFromRequest().fold(
           errors => {
-            Future.successful(BadRequest(amendOverseasPensions(errors, protectionType, status)))
+            protectionType match {
+              case "ip2016" => Future.successful(BadRequest(amendOverseasPensions(errors, protectionType, status)))
+              case "ip2014" => Future.successful(BadRequest(amendIP14OverseasPensions(errors, protectionType, status)))
+            }
           },
           success => {
             sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).flatMap {

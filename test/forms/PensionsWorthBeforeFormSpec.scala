@@ -35,14 +35,14 @@ class PensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorMessag
 
       "provided with a valid model" in {
         val model = PensionsWorthBeforeModel(Some(1))
-        val result = pensionsWorthBeforeForm.fill(model)
+        val result = pensionsWorthBeforeForm("ip2016").fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map = validMap.updated("pensionsWorthBeforeAmt", "0.01")
-        val result = pensionsWorthBeforeForm.bind(map)
+        val result = pensionsWorthBeforeForm("ip2016").bind(map)
 
         result.value shouldBe Some(PensionsWorthBeforeModel(Some(0.01)))
       }
@@ -51,14 +51,14 @@ class PensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorMessag
         val map = validMap.updated("pensionsWorthBeforeAmt", {
           Constants.npsMaxCurrency - 1
         }.toString)
-        val result = pensionsWorthBeforeForm.bind(map)
+        val result = pensionsWorthBeforeForm("ip2016").bind(map)
 
         result.value shouldBe Some(PensionsWorthBeforeModel(Some(Constants.npsMaxCurrency - 1)))
       }
 
       "provided with a valid map with a zero amount" in {
         val map = validMap.updated("pensionsWorthBeforeAmt", "0")
-        val result = pensionsWorthBeforeForm.bind(map)
+        val result = pensionsWorthBeforeForm("ip2016").bind(map)
 
         result.value shouldBe Some(PensionsWorthBeforeModel(Some(0)))
       }
@@ -70,34 +70,34 @@ class PensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorMessag
 
         "not provided with a value for pensionsWorthBefore" in {
           val map = validMap.updated("pensionsWorthBeforeAmt", "")
-          val result = pensionsWorthBeforeForm.bind(map)
+          val result = pensionsWorthBeforeForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMissingAmount(messageKey)
+          result.errors.head.message shouldBe errorMissingAmount(messageKey, "ip2016")
         }
 
         "provided with an amount greater than the maximum" in {
           val map = validMap.updated("pensionsWorthBeforeAmt", s"${Constants.npsMaxCurrency + 1}")
-          val result = pensionsWorthBeforeForm.bind(map)
+          val result = pensionsWorthBeforeForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMaximum(messageKey)
+          result.errors.head.message shouldBe errorMaximum(messageKey, "ip2016")
         }
 
         "provided with an amount with over two decimal places" in {
           val map = validMap.updated("pensionsWorthBeforeAmt", "0.001")
-          val result = pensionsWorthBeforeForm.bind(map)
+          val result = pensionsWorthBeforeForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorDecimal(messageKey)
+          result.errors.head.message shouldBe errorDecimal(messageKey, "ip2016")
         }
 
         "provided with a negative amount" in {
           val map = validMap.updated("pensionsWorthBeforeAmt", "-0.01")
-          val result = pensionsWorthBeforeForm.bind(map)
+          val result = pensionsWorthBeforeForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorNegative(messageKey)
+          result.errors.head.message shouldBe errorNegative(messageKey, "ip2016")
         }
       }
     }

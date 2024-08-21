@@ -51,12 +51,12 @@ class AmendsCurrentPensionController @Inject()(val sessionCacheService: SessionC
         case Some(data) =>
           protectionType match {
             case "ip2016" => Ok(amendCurrentPensions(
-              amendCurrentPensionForm.fill(AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.getOrElse[Double](0))))),
+              amendCurrentPensionForm(protectionType).fill(AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.getOrElse[Double](0))))),
               protectionType,
               status
             ))
             case "ip2014" => Ok(amendIP14CurrentPensions(
-              amendCurrentPensionForm.fill(AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.getOrElse[Double](0))))),
+              amendCurrentPensionForm(protectionType).fill(AmendCurrentPensionModel(Some(Display.currencyInputDisplayFormat(data.updatedProtection.uncrystallisedRights.getOrElse[Double](0))))),
               protectionType,
               status
             ))
@@ -70,9 +70,12 @@ class AmendsCurrentPensionController @Inject()(val sessionCacheService: SessionC
 
   def submitAmendCurrentPension(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendCurrentPensionForm.bindFromRequest().fold(
+      amendCurrentPensionForm(protectionType).bindFromRequest().fold(
         errors => {
-          Future.successful(BadRequest(amendCurrentPensions(errors, protectionType, status)))
+          protectionType match {
+            case "ip2016" => Future.successful(BadRequest(amendCurrentPensions(errors, protectionType, status)))
+            case "ip2014" => Future.successful(BadRequest(amendIP14CurrentPensions(errors, protectionType, status)))
+          }
         },
         success => {
           sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).flatMap {

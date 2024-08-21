@@ -16,28 +16,22 @@
 
 package controllers
 
-import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
-import common.Exceptions.RequiredValueNotDefinedException
+import auth.{AuthFunction, AuthFunctionImpl}
 import config._
 import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
-import enums.ApplicationType
-import forms.{AmendCurrentPensionForm, AmendOverseasPensionsForm, AmendPensionsTakenBeforeForm, AmendPensionsTakenBetweenForm}
 import mocks.AuthMock
 import models._
 import models.amendModels._
-import models.cache.CacheMap
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.{any, anyString, startsWith}
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
-import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.libs.json.{JsNull, Json}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -45,11 +39,9 @@ import services.SessionCacheService
 import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
 import views.html.pages.result.manualCorrespondenceNeeded
-import java.time.LocalDate
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -324,7 +316,63 @@ class AmendsOverseasPensionControllerSpec extends FakeApplication
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
         status(DataItem.result) shouldBe 400
-        DataItem.jsoupDoc.getElementsByClass("govuk-error-message").text should include(Messages("pla.overseasPensions.amount.errors.mandatoryError"))
+        DataItem.jsoupDoc.getElementsByClass("govuk-error-message").text should include(Messages("pla.overseasPensions.amount.errors.mandatoryError.ip2016"))
+      }
+    }
+
+  "Submitting Amend IP14 Overseas Pensions data" when {
+
+    "there is an error reading the form" in new Setup {
+      lazy val result = controller.submitAmendOverseasPensions("ip2014", "dormant")(fakeRequest)
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+      status(result) shouldBe 400
+      }
+
+    "the model can't be fetched from cache" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions("ip2014", "dormant"),
+        ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](None)
+
+        status(DataItem.result) shouldBe 500
+      }
+
+
+    "the data is valid with a no response" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions("ip2014", "dormant"),
+        ("amendedOverseasPensions", "no"), ("amendedOverseasPensionsAmt", "0"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+        status(DataItem.result) shouldBe 303
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      }
+
+    "the data is valid with a yes response" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions("ip2014", "dormant"),
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", "10"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+        status(DataItem.result) shouldBe 303
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      }
+
+
+    "the data is invalid" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendOverseasPensions("ip2014", "dormant"),
+        ("amendedOverseasPensions", "yes"), ("amendedOverseasPensionsAmt", ""))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+        status(DataItem.result) shouldBe 400
+        DataItem.jsoupDoc.getElementsByClass("govuk-error-message").text should include(Messages("pla.overseasPensions.amount.errors.mandatoryError.ip2014"))
       }
     }
 }

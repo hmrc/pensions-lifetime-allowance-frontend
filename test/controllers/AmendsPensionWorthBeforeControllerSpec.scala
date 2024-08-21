@@ -191,4 +191,43 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
       status(DataItem.result) shouldBe 500
     }
   }
+
+  "Submitting Amend IP14 Pensions Worth Before" when {
+    "the data is valid" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2014", "dormant"),
+        ("amendedPensionsTakenBeforeAmt", "10000"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      cacheSaveCondition[PensionsWorthBeforeModel](mockSessionCacheService)
+      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+      status(DataItem.result) shouldBe 303
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+    }
+
+    "the data is invalid" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2014", "dormant"),
+        ("amendedPensionsTakenBeforeAmt", "yes"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      cacheSaveCondition[PensionsWorthBeforeModel](mockSessionCacheService)
+      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+      status(DataItem.result) shouldBe 400
+    }
+
+    "the model can't be fetched from cache" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2014", "dormant"),
+        ("amendedPensionsTakenBeforeAmt", "10000"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](None)
+      cacheSaveCondition[PensionsWorthBeforeModel](mockSessionCacheService)
+      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+      status(DataItem.result) shouldBe 500
+    }
+  }
 }

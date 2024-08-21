@@ -52,12 +52,12 @@ class AmendsPensionTakenBetweenController @Inject()(val sessionCacheService: Ses
           val yesNoValue = if (data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes" else "no"
           protectionType match {
             case "ip2016" => Ok(amendPensionsTakenBetween(
-              amendPensionsTakenBetweenForm.fill(AmendPensionsTakenBetweenModel(yesNoValue)),
+              amendPensionsTakenBetweenForm(protectionType).fill(AmendPensionsTakenBetweenModel(yesNoValue)),
               protectionType,
               status
             ))
             case "ip2014" => Ok(amendIP14PensionsTakenBetween(
-              amendPensionsTakenBetweenForm.fill(AmendPensionsTakenBetweenModel(yesNoValue)),
+              amendPensionsTakenBetweenForm(protectionType).fill(AmendPensionsTakenBetweenModel(yesNoValue)),
               protectionType,
               status
             ))
@@ -71,9 +71,12 @@ class AmendsPensionTakenBetweenController @Inject()(val sessionCacheService: Ses
 
   def submitAmendPensionsTakenBetween(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendPensionsTakenBetweenForm.bindFromRequest().fold(
+      amendPensionsTakenBetweenForm(protectionType).bindFromRequest().fold(
         errors => {
-          Future.successful(BadRequest(amendPensionsTakenBetween(errors, protectionType, status)))
+          protectionType match {
+            case "ip2016" => Future.successful(BadRequest(amendPensionsTakenBetween(errors, protectionType, status)))
+            case "ip2014" => Future.successful(BadRequest(amendIP14PensionsTakenBetween(errors, protectionType, status)))
+          }
         },
         success => {
           sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).flatMap {

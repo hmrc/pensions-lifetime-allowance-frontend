@@ -16,28 +16,20 @@
 
 package controllers
 
-import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
-import common.Exceptions.RequiredValueNotDefinedException
+import auth.{AuthFunction, AuthFunctionImpl}
 import config._
-import connectors.PLAConnector
-import constructors.{DisplayConstructors, ResponseConstructors}
-import enums.ApplicationType
-import forms.{AmendCurrentPensionForm, AmendOverseasPensionsForm, AmendPensionsTakenBeforeForm, AmendPensionsTakenBetweenForm}
 import mocks.AuthMock
 import models._
 import models.amendModels._
-import models.cache.CacheMap
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.{any, anyString, startsWith}
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
-import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.libs.json.{JsNull, Json}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -45,12 +37,9 @@ import services.SessionCacheService
 import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
 import views.html.pages.amends._
-import views.html.pages.fallback.{noNotificationId, technicalError}
-import views.html.pages.result.manualCorrespondenceNeeded
+import views.html.pages.fallback.technicalError
 
-import java.time.LocalDate
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -265,7 +254,7 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
         status(DataItem.result) shouldBe 500
     }
 
-    "the data is valid with a no" in new Setup {
+    "the data is valid with a no for IP16" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore("ip2016", "dormant"),
         ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"))
 
@@ -277,7 +266,7 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
       }
 
-    "the data is valid with a yes" in new Setup {
+    "the data is valid with a yes for IP16" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore("ip2016", "dormant"),
         ("amendedPensionsTakenBefore", "yes"))
 
@@ -288,5 +277,30 @@ class AmendsPensionTakenBeforeControllerSpec extends FakeApplication
 
       status(DataItem.result) shouldBe 303
         redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore("ip2016", "dormant")}")
+      }
+
+    "the data is valid with a no for IP14" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore("ip2014", "dormant"),
+        ("amendedPensionsTakenBefore", "no"), ("amendedPensionsTakenBeforeAmt", "0"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+
+        status(DataItem.result) shouldBe 303
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      }
+
+    "the data is valid with a yes for IP14" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBefore("ip2014", "dormant"),
+        ("amendedPensionsTakenBefore", "yes"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+      status(DataItem.result) shouldBe 303
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore("ip2014", "dormant")}")
       }
 }

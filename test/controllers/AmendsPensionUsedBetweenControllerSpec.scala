@@ -209,4 +209,38 @@ class AmendsPensionUsedBetweenControllerSpec extends FakeApplication
       redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
     }
   }
+
+  "Submitting Amend IP14 Pensions Used Between data" when {
+
+    "the model can't be fetched from cache" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween("ip2014", "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "0"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](None)
+
+      status(DataItem.result) shouldBe 500
+    }
+
+    "the data is invalid on validation" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween("ip2014", "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "yes"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      status(DataItem.result) shouldBe 400
+    }
+
+    "the data is valid with a no response" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsUsedBetween("ip2014", "dormant"),
+        ("amendedPensionsUsedBetweenAmt", "0"))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+      status(DataItem.result) shouldBe 303
+
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+    }
+  }
 }
