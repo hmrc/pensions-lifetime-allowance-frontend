@@ -21,7 +21,6 @@ import org.apache.pekko.stream.Materializer
 import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
-import config.wiring.PlaFormPartialRetriever
 import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
@@ -49,7 +48,6 @@ import org.mockito.ArgumentMatchers.{any, anyString, startsWith}
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
 import views.html.pages.result.manualCorrespondenceNeeded
-
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -77,7 +75,6 @@ class AmendsControllerSpec extends FakeApplication
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()

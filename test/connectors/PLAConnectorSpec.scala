@@ -28,7 +28,7 @@ import play.api.test.Helpers._
 import testHelpers.FakeApplication
 import models.cache.CacheMap
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.client.{HttpClientV2,RequestBuilder}
 
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,7 +37,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   val mockEnv       = mock[Environment]
   val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  val mockHttp      = mock[DefaultHttpClient]
+  val mockHttp      = mock[HttpClientV2]
   implicit val executionContext = fakeApplication().injector.instanceOf[ExecutionContext]
 
   class Setup {
@@ -49,6 +49,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
   val tstId = "testUserID"
   val psaRef = "testPSARef"
   val ltaRef = "testLTARef"
+  val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
 
   val negativePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
@@ -83,7 +84,9 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   "Calling applyFP16" should {
     "should return a 200 from a valid apply FP16 request" in new Setup {
-      when(mockHttp.POST[JsValue, HttpResponse](any(), any(), any())(any(),any(), any(), any()))
+      when(mockHttp.post(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val response = connector.applyFP16(nino)
@@ -93,8 +96,11 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   "Calling applyIP16" should {
     "should return a 200 from a valid apply IP16 request" in new Setup {
-      when(mockHttp.POST[JsValue, HttpResponse](any(), any(), any())(any(),any(), any(), any()))
+      when(mockHttp.post(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
+
       val tstMap = CacheMap(tstId, Map(negativePensionsTakenTuple,
                                       negativeOverseasPensionsTuple,
                                       validCurrentPensionsTuple,
@@ -108,8 +114,11 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   "Calling applyIP14" should {
     "should return a 200 from a valid apply IP14 request" in new Setup {
-      when(mockHttp.POST[JsValue, HttpResponse](any(), any(), any())(any(),any(), any(), any()))
+      when(mockHttp.post(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
+
       val tstMap = CacheMap(tstId, Map(negativeIP14PensionsTakenTuple,
                                       negativeIP14OverseasPensionsTuple,
                                       validIP14CurrentPensionsTuple,
@@ -123,7 +132,11 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   "Calling amendProtection" should {
     "return 200 from a valid amendProtection request" in new Setup {
-      when(mockHttp.PUT[JsValue, HttpResponse](any(), any(), any())(any(),any(), any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockHttp.put(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
+        .thenReturn(Future.successful(HttpResponse(OK, "")))
+
       val protectionModel = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
         uncrystallisedRights = Some(100000.00),
@@ -146,7 +159,8 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   "Calling readProtections" should {
     "should return a 200 from a valid apply readProtections request" in new Setup {
-      when(mockHttp.GET[HttpResponse](any(), any(), any())(any(), any(), any()))
+      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val response = connector.readProtections(nino)
@@ -157,7 +171,8 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   "Calling psaLookup" should {
     "should return a 200 from a valid psa lookup request" in new Setup {
-      when(mockHttp.GET[HttpResponse](any(), any(), any())(any(), any(), any()))
+      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val response = connector.psaLookup(psaRef, ltaRef)
@@ -169,9 +184,10 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
   "Calling with 10 decimal places" should {
 
     "convert json double values to 2 decimal places for applying for ip" in new Setup {
-      when(mockHttp.POST[JsValue, HttpResponse](any(), any(), any())
-        (any(), any(), any(), any()))
-       .thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockHttp.post(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
+        .thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val userData = CacheMap(tstId, Map(positivePensionsTakenTuple,
                                         positivePensionsTakenBeforeTuple,
@@ -190,8 +206,11 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
     }
 
     "convert json double values to 2 decimal places for amending ips" in new Setup {
-      when(mockHttp.PUT[JsValue, HttpResponse](any(), any(), any())
-        (any(), any(), any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockHttp.put(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
+        .thenReturn(Future.successful(HttpResponse(OK, "")))
+
       val protectionModel = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
         uncrystallisedRights = Some(100000.1234567891),
@@ -212,8 +231,11 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
     }
 
     "not fail when not able to convert json double values to 2 decimal places for amending ips" in new Setup {
-      when(mockHttp.PUT[JsValue, HttpResponse](any(), any(), any())
-        (any(), any(), any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockHttp.put(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
+        .thenReturn(Future.successful(HttpResponse(OK, "")))
+
       val protectionModel = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
         uncrystallisedRights = None,
@@ -234,8 +256,11 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
     }
 
     "be able to convert just one json double values to 2 decimal places for amending ips" in new Setup {
-      when(mockHttp.PUT[JsValue, HttpResponse](any(), any(), any())
-        (any(), any(), any(), any())).thenReturn(Future.successful(HttpResponse(OK, "")))
+      when(mockHttp.put(any)(any)).thenReturn(requestBuilder)
+      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
+      when(requestBuilder.execute[HttpResponse](any, any))
+        .thenReturn(Future.successful(HttpResponse(OK, "")))
+
       val protectionModel = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
         uncrystallisedRights = None,

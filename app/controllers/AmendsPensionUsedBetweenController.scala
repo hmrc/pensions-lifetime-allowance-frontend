@@ -28,7 +28,6 @@ import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages
 
 import javax.inject.Inject
@@ -41,7 +40,6 @@ class AmendsPensionUsedBetweenController @Inject()(val sessionCacheService: Sess
                                                    amendPensionsUsedBetween: pages.amends.amendPensionsUsedBetween,
                                                    amendIP14PensionsUsedBetween: pages.amends.amendIP14PensionsUsedBetween)
                                                   (implicit val appConfig: FrontendAppConfig,
-                                                   val partialRetriever: FormPartialRetriever,
                                                    val formWithCSRF: FormWithCSRF,
                                                    val plaContext: PlaContext,
                                                    val ec: ExecutionContext)
@@ -53,15 +51,15 @@ class AmendsPensionUsedBetweenController @Inject()(val sessionCacheService: Sess
         case Some(data) =>
           protectionType match {
             case "ip2016" => Ok(amendPensionsUsedBetween(
-              amendPensionsUsedBetweenForm.fill(AmendPensionsUsedBetweenModel(
-                Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0)))
+              amendPensionsUsedBetweenForm(protectionType).fill(AmendPensionsUsedBetweenModel(
+                Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0)))
               )),
               protectionType,
               status
             ))
             case "ip2014" => Ok(amendIP14PensionsUsedBetween(
-              amendPensionsUsedBetweenForm.fill(AmendPensionsUsedBetweenModel(
-                Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0)))
+              amendPensionsUsedBetweenForm(protectionType).fill(AmendPensionsUsedBetweenModel(
+                Some(Display.currencyInputDisplayFormat(data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0)))
               )),
               protectionType,
               status
@@ -76,9 +74,12 @@ class AmendsPensionUsedBetweenController @Inject()(val sessionCacheService: Sess
 
   def submitAmendPensionsUsedBetween(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendPensionsUsedBetweenForm.bindFromRequest().fold(
+      amendPensionsUsedBetweenForm(protectionType).bindFromRequest().fold(
         errors => {
-          Future.successful(BadRequest(amendPensionsUsedBetween(errors, protectionType, status)))
+          protectionType match {
+            case "ip2016" => Future.successful(BadRequest(amendPensionsUsedBetween(errors, protectionType, status)))
+            case "ip2014" => Future.successful(BadRequest(amendIP14PensionsUsedBetween(errors, protectionType, status)))
+          }
         },
         success => {
           sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).flatMap {

@@ -35,9 +35,7 @@ package config
 import auth.{AuthFunction, AuthFunctionImpl}
 import com.google.inject.AbstractModule
 import uk.gov.hmrc.auth.core.AuthConnector
-import uk.gov.hmrc.http.HttpClient
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
 import utils.{ActionWithSessionId, ActionWithSessionImpl}
 
 
@@ -51,7 +49,6 @@ class Module extends AbstractModule {
     bind(classOf[ActionWithSessionId]).to(classOf[ActionWithSessionImpl])
     bind(classOf[PlaContext]).to(classOf[PlaContextImpl])
     bind(classOf[AuthConnector]).to(classOf[DefaultAuthConnector])
-    bind(classOf[HttpClient]).to(classOf[DefaultHttpClient])
     bind(classOf[AuthFunction]).to(classOf[AuthFunctionImpl])
 
   }

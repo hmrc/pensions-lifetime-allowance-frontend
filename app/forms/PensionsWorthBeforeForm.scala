@@ -23,12 +23,12 @@ import play.api.data.Forms.{mapping, of}
 
 object PensionsWorthBeforeForm extends CommonBinders {
 
-  def pensionsWorthBeforeForm = Form (
+  def pensionsWorthBeforeForm(protectionType: String) = Form (
     mapping(
-      "pensionsWorthBeforeAmt" -> of(decimalFormatter("pla.pensionsWorthBefore.amount.errors.mandatoryError", "pla.pensionsWorthBefore.amount.errors.notReal"))
-        .verifying("pla.pensionsWorthBefore.amount.errors.decimal", pensionsWorthBeforeAmt => isMaxTwoDecimalPlaces(pensionsWorthBeforeAmt.getOrElse(0)))
-        .verifying("pla.pensionsWorthBefore.amount.errors.negative", pensionsWorthBeforeAmt => isPositive(pensionsWorthBeforeAmt.getOrElse(0)))
-        .verifying("pla.pensionsWorthBefore.amount.errors.max", pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0)))
+      "pensionsWorthBeforeAmt" -> of(decimalFormatter(s"pla.pensionsWorthBefore.amount.errors.mandatoryError.$protectionType", "pla.pensionsWorthBefore.amount.errors.notReal"))
+        .verifying(s"pla.pensionsWorthBefore.amount.errors.decimal.$protectionType", pensionsWorthBeforeAmt => isMaxTwoDecimalPlaces(pensionsWorthBeforeAmt.getOrElse(0)))
+        .verifying(s"pla.pensionsWorthBefore.amount.errors.negative.$protectionType", pensionsWorthBeforeAmt => isPositive(pensionsWorthBeforeAmt.getOrElse(0)))
+        .verifying(s"pla.pensionsWorthBefore.amount.errors.max.$protectionType", pensionsWorthBeforeAmt => isLessThanMax(pensionsWorthBeforeAmt.getOrElse(0)))
     )(PensionsWorthBeforeModel.apply)(PensionsWorthBeforeModel.unapply)
   )
 

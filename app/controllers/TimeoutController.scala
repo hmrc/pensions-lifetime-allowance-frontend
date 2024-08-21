@@ -23,11 +23,9 @@ import play.api.mvc._
 
 import scala.concurrent.Future
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 
 class TimeoutController @Inject()(mcc: MessagesControllerComponents,
                                   Timeout: views.html.pages.timeout)(
-                                  implicit val partialRetriever: FormPartialRetriever,
                                   implicit val context: PlaContext,
                                   implicit val appConfig: FrontendAppConfig,
                                   implicit val application: Application) extends FrontendController(mcc) {

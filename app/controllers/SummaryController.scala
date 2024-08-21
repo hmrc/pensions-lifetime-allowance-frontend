@@ -27,7 +27,6 @@ import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html._
 
 import javax.inject.Inject
@@ -40,7 +39,6 @@ class SummaryController @Inject()(sessionCacheService: SessionCacheService,
                                   summary: pages.ip2016.summary
                                  )
                                  (implicit val appConfig: FrontendAppConfig,
-                                  implicit val partialRetriever: FormPartialRetriever,
                                   implicit val plaContext: PlaContext,
                                   implicit val formWithCSRF: FormWithCSRF,
                                   implicit val application: Application,

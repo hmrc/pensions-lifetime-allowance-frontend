@@ -27,22 +27,22 @@ import utils.Constants.npsMaxCurrency
 object OverseasPensionsForm extends CommonBinders{
 
 
-  def overseasPensionsForm = Form (
+  def overseasPensionsForm(protectionType: String) = Form (
     mapping(
-      "overseasPensions" -> common.Validation.newText("pla.overseasPensions.errors.mandatoryError")
-        .verifying("pla.overseasPensions.errors.mandatoryError", mandatoryCheck)
-        .verifying("pla.overseasPensions.errors.mandatoryError", yesNoCheck),
+      "overseasPensions" -> common.Validation.newText(s"pla.overseasPensions.errors.mandatoryError.$protectionType")
+        .verifying(s"pla.overseasPensions.errors.mandatoryError.$protectionType", mandatoryCheck)
+        .verifying(s"pla.overseasPensions.errors.mandatoryError.$protectionType", yesNoCheck),
       "overseasPensionsAmt" -> mandatoryIf(
         isEqual("overseasPensions", "yes"),
-        common.Validation.newText("pla.overseasPensions.amount.errors.mandatoryError")
-          .verifying("pla.overseasPensions.amount.errors.notReal", bigDecimalCheck)
-          .verifying("pla.psoDetails.errorQuestion", commaCheck)
+        common.Validation.newText(s"pla.overseasPensions.amount.errors.mandatoryError.$protectionType")
+          .verifying(s"pla.overseasPensions.amount.errors.notReal.$protectionType", bigDecimalCheck)
+          .verifying(s"pla.psoDetails.errorQuestion", commaCheck)
           .transform(stringToBigDecimal, bigDecimalToString)
           .verifying(
             stopOnFirstFail(
-              negativeConstraint("pla.overseasPensions.amount.errors.negative"),
-              decimalPlaceConstraint("pla.overseasPensions.amount.errors.decimal"),
-              maxMoneyCheck(npsMaxCurrency, "pla.overseasPensions.amount.errors.max")
+              negativeConstraint(s"pla.overseasPensions.amount.errors.negative.$protectionType"),
+              decimalPlaceConstraint(s"pla.overseasPensions.amount.errors.decimal.$protectionType"),
+              maxMoneyCheck(npsMaxCurrency, s"pla.overseasPensions.amount.errors.max.$protectionType")
             )
           )
       )

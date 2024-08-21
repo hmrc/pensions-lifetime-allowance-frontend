@@ -24,7 +24,6 @@ import play.api.Application
 import play.api.mvc._
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages._
 
 import scala.concurrent.Future
@@ -34,7 +33,6 @@ class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
                                        ConfirmFP: confirmation.confirmFP)
                                       (implicit val application: Application,
                                        implicit val appConfig: FrontendAppConfig,
-                                       implicit val partialRetriever: FormPartialRetriever,
                                        implicit val formWithCSRF: FormWithCSRF,
                                        implicit val plaContext: PlaContext) extends FrontendController(mcc) {
 

@@ -28,12 +28,12 @@ class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Pensio
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendPensionsTakenBetweenView" should {
-    val pensionsForm = AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "yes",
+    val pensionsForm = AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm("ip2016").bind(Map("amendedPensionsTakenBetween" -> "yes",
                                                                                             "amendedPensionsTakenBetweenAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendPensionsTakenBetween]
     lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
-    val errorForm =  AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm.bind(Map("amendedPensionsTakenBetween" -> "",
+    val errorForm =  AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm("ip2016").bind(Map("amendedPensionsTakenBetween" -> "",
       "amendedPensionsTakenBetweenAmt" -> "12345",
       "protectionType" -> "ip2016",
       "status" -> "open"))

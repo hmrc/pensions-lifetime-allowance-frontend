@@ -20,7 +20,6 @@ import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
 import config._
-import config.wiring.PlaFormPartialRetriever
 import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.{ApplicationOutcome, ApplicationType}
@@ -43,7 +42,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
 import models.cache.CacheMap
 import org.mockito.ArgumentMatchers
-import uk.gov.hmrc.play.bootstrap.http.DefaultHttpClient
+import uk.gov.hmrc.http.client.HttpClientV2
 import utils.ActionWithSessionId
 import views.html.pages.fallback.{noNotificationId, technicalError}
 import views.html.pages.result.{manualCorrespondenceNeeded, resultRejected, resultSuccess, resultSuccessInactive}
@@ -59,11 +58,10 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
-  val mockHttp: DefaultHttpClient = mock[DefaultHttpClient]
+  val mockHttp: HttpClientV2 = mock[HttpClientV2]
   val mockEnv: Environment = mock[Environment]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
@@ -82,7 +80,6 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
 
 
   val authFunction = new AuthFunction {
-    override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
     override implicit val plaContext: PlaContext = mockPlaContext
     override implicit val appConfig: FrontendAppConfig = mockAppConfig
     override implicit val technicalError: technicalError = mockTechnicalError

@@ -31,7 +31,6 @@ import play.api.Logging
 import services.SessionCacheService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import utils.Constants
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -50,7 +49,6 @@ class ResultController @Inject()(sessionCacheService: SessionCacheService,
                                  resultSuccess: views.html.pages.result.resultSuccess,
                                  resultSuccessInactive: views.html.pages.result.resultSuccessInactive)
                                 (implicit val appConfig: FrontendAppConfig,
-                                 implicit val partialRetriever: FormPartialRetriever,
                                  implicit val plaContext: PlaContext,
                                  implicit val application: Application,
                                  implicit val ec: ExecutionContext)

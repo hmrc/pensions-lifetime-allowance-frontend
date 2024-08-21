@@ -16,7 +16,6 @@
 
 package forms
 
-import common.Exceptions
 import controllers.helpers.FakeRequestHelper
 import forms.AmendPSODetailsForm._
 import models.amendModels.AmendPSODetailsModel

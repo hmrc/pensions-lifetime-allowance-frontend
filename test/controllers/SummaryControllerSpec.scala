@@ -20,7 +20,6 @@ package controllers
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import constructors.SummaryConstructor
@@ -56,7 +55,6 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val mockMessages: Messages = mock[Messages]
@@ -82,7 +80,6 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
   class Setup {
 
     val authFunction = new AuthFunction {
-      override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
       override implicit val plaContext: PlaContext = mockPlaContext
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError

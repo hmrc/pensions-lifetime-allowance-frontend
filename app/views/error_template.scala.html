@@ -21,7 +21,7 @@
  appConfig: FrontendAppConfig
 )
 
-@(pageTitle: String, heading: String, message: String)(implicit request: Request[_], messages: Messages, context: config.PlaContext, partialRetriever: uk.gov.hmrc.play.partials.FormPartialRetriever, appConfig: FrontendAppConfig)
+@(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader, messages: Messages, context: config.PlaContext, appConfig: FrontendAppConfig)
 
 @contentHeader = {
   <h1 class="govuk-heading-xl">@heading</h1>

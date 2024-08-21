@@ -24,11 +24,11 @@ import play.api.data.Forms._
 
 object AmendPensionsTakenBeforeForm extends CommonBinders{
 
-  def amendPensionsTakenBeforeForm: Form[AmendPensionsTakenBeforeModel] = Form (
+  def amendPensionsTakenBeforeForm(protectionType: String): Form[AmendPensionsTakenBeforeModel] = Form (
     mapping(
-      "amendedPensionsTakenBefore" -> common.Validation.newText("pla.pensionsTakenBefore.errors.mandatoryError")
-        .verifying("pla.pensionsTakenBefore.errors.mandatoryError", mandatoryCheck)
-        .verifying("pla.pensionsTakenBefore.errors.mandatoryError", yesNoCheck)
+      "amendedPensionsTakenBefore" -> common.Validation.newText(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType")
+        .verifying(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType", mandatoryCheck)
+        .verifying(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType", yesNoCheck)
     )(AmendPensionsTakenBeforeModel.apply)(AmendPensionsTakenBeforeModel.unapply)
   )
 }

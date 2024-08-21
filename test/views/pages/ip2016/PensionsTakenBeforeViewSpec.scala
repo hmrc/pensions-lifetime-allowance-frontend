@@ -28,11 +28,11 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PensionsTakenBeforeView" should {
-    val pensionsForm = PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> "yes"))
+    val pensionsForm = PensionsTakenBeforeForm.pensionsTakenBeforeForm("ip2016").bind(Map("pensionsTakenBefore" -> "yes"))
     lazy val view = application.injector.instanceOf[pensionsTakenBefore]
     lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
 
-    val errorForm =  PensionsTakenBeforeForm.pensionsTakenBeforeForm.bind(Map("pensionsTakenBefore" -> ""))
+    val errorForm =  PensionsTakenBeforeForm.pensionsTakenBeforeForm("ip2016").bind(Map("pensionsTakenBefore" -> ""))
     lazy val errorView = application.injector.instanceOf[pensionsTakenBefore]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
 

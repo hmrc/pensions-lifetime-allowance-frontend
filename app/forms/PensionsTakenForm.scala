@@ -21,9 +21,9 @@ import play.api.data.Forms._
 import play.api.data._
 
 object PensionsTakenForm {
-  def pensionsTakenForm = Form(
+  def pensionsTakenForm(protectionType: String) = Form(
     mapping(
-      "pensionsTaken" -> optional(text).verifying("pla.pensionsTaken.errors.mandatoryError", {_.isDefined})
+      "pensionsTaken" -> optional(text).verifying(s"pla.pensionsTaken.errors.mandatoryError.$protectionType", {_.isDefined})
     )(PensionsTakenModel.apply)(PensionsTakenModel.unapply)
   )
 }

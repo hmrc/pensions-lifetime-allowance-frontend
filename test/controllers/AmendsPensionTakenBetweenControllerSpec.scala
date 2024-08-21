@@ -18,7 +18,6 @@ package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
 import config._
-import config.wiring.PlaFormPartialRetriever
 import mocks.AuthMock
 import models._
 import models.amendModels._
@@ -40,6 +39,7 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends._
 import views.html.pages.fallback.technicalError
+
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -59,7 +59,6 @@ class AmendsPensionTakenBetweenControllerSpec extends FakeApplication
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
@@ -272,6 +271,65 @@ class AmendsPensionTakenBetweenControllerSpec extends FakeApplication
 
     "the data is invalid on additional validation" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween("ip2016", "dormant"),
+        ("amendedPensionsTakenBetween", "1"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        status(DataItem.result) shouldBe 400
+      }
+  }
+
+  "Submitting Amend IP14 Pensions Taken Between data" when {
+
+    "the model can't be fetched from cache" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween("ip2014", "dormant"),
+        ("amendedPensionsTakenBetween", "no"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](None)
+
+        status(DataItem.result) shouldBe 500
+      }
+
+
+    "the data is valid with a no response" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween("ip2014", "dormant"),
+        ("amendedPensionsTakenBetween", "no"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+      status(DataItem.result) shouldBe 303
+
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      }
+
+    "the data is valid with a yes response" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween("ip2014", "dormant"),
+        ("amendedPensionsTakenBetween", "yes"))
+
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+        status(DataItem.result) shouldBe 303
+
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsPensionUsedBetweenController.amendPensionsUsedBetween("ip2014", "dormant")}")
+      }
+
+
+    "the data is invalid" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween("ip2014", "dormant"),
+        ("protectionType", "ip2016"), ("status", "dormant"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        status(DataItem.result) shouldBe 400
+      }
+
+
+    "the data is invalid on additional validation" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsTakenBetween("ip2014", "dormant"),
         ("amendedPensionsTakenBetween", "1"))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))

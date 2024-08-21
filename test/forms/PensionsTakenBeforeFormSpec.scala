@@ -34,7 +34,7 @@ class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessag
 
       "provided with a valid model" in {
         val model = PensionsTakenBeforeModel("yes")
-        val result = pensionsTakenBeforeForm.fill(model)
+        val result = pensionsTakenBeforeForm("ip2016").fill(model)
 
         result.data shouldBe validMap
       }
@@ -46,10 +46,10 @@ class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessag
 
         "not provided with a value for pensionsTakenBefore" in {
           val map = validMap.updated("pensionsTakenBefore", "")
-          val result = pensionsTakenBeforeForm.bind(map)
+          val result = pensionsTakenBeforeForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorQuestion(messageKey)
+          result.errors.head.message shouldBe errorQuestion(messageKey, "ip2016")
         }
       }
     }

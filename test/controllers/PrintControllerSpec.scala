@@ -17,7 +17,6 @@
 package controllers
 
 import auth.AuthFunction
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.CitizenDetailsConnector
 import constructors.DisplayConstructors
@@ -53,7 +52,6 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   val resultPrintView: resultPrint = fakeApplication().injector.instanceOf[resultPrint]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
@@ -66,7 +64,6 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   val testPrintDisplayModel = PrintDisplayModel("Testy", "Mctestface", "AA11TESTA", "IP2016", "open", "PSATestNum", "ProtRefTestNum", Some("£1,246,500"), Some("3 April 2016"))
 
   val authFunction = new AuthFunction {
-    override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
     override implicit val plaContext: PlaContext = mockPlaContext
     override implicit val appConfig: FrontendAppConfig = mockAppConfig
     override implicit val technicalError: technicalError = mockTechnicalError

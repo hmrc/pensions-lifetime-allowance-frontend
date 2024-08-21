@@ -18,7 +18,6 @@ package views.pages.amends
 
 import forms.AmendPensionsUsedBetweenForm
 import org.jsoup.Jsoup
-import testHelpers.CommonErrorMessages
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBetweenViewSpecMessages
 import testHelpers.ViewSpecHelpers.ip2016.PensionsUsedBetweenViewMessages
@@ -30,12 +29,12 @@ class AmendIP14PensionsUsedBetweenViewSpec extends CommonViewSpecHelper with Ame
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendIP14PensionsUsedBetweenView" should {
-    val pensionsForm = AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm.bind(Map(
+    val pensionsForm = AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm("ip2016").bind(Map(
       "amendedPensionsUsedBetweenAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendIP14PensionsUsedBetween]
     lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
-    val errorForm =  AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm.bind(Map.empty[String, String])
+    val errorForm =  AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm("ip2016").bind(Map.empty[String, String])
     lazy val errorView = application.injector.instanceOf[amendIP14PensionsUsedBetween]
     lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 

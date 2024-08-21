@@ -19,7 +19,6 @@ package controllers
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import mocks.AuthMock
 import org.scalatestplus.mockito.MockitoSugar
@@ -37,7 +36,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with AuthMock {
 
-    implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
     implicit val mockAppConfig: FrontendAppConfig              = fakeApplication().injector.instanceOf[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext                    = mock[PlaContext]
     implicit val system: ActorSystem                           = ActorSystem()
@@ -54,7 +52,6 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     val mockEnv = mock[Environment]
 
     val authFunction = new AuthFunction {
-        override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
         override implicit val plaContext: PlaContext = mockPlaContext
         override implicit val appConfig: FrontendAppConfig = mockAppConfig
         override implicit val technicalError: technicalError = mockTechnicalError

@@ -17,7 +17,6 @@
 package controllers
 
 import auth.AuthFunction
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import constructors.DisplayConstructors
@@ -54,7 +53,6 @@ import scala.concurrent.{ExecutionContext, Future}
 class WithdrawProtectionDateInputControllerSpec
   extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach with SessionCacheTestHelper with FakeRequestHelper {
 
-  implicit val mockPartialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val system: ActorSystem = ActorSystem()
   implicit val mat: Materializer = mock[Materializer]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
@@ -77,7 +75,6 @@ class WithdrawProtectionDateInputControllerSpec
   class Setup {
 
     val authFunction: AuthFunction = new AuthFunction {
-      override implicit val partialRetriever: PlaFormPartialRetriever = mockPartialRetriever
       override implicit val plaContext: PlaContext = mockPlaContext
       override implicit val appConfig: FrontendAppConfig = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError

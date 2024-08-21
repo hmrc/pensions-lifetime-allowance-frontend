@@ -28,7 +28,6 @@ import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages
 
 import javax.inject.Inject
@@ -41,7 +40,6 @@ class AmendsPensionWorthBeforeController @Inject()(val sessionCacheService: Sess
                                                    amendPensionsWorthBefore: pages.amends.amendPensionsWorthBefore,
                                                    amendIP14PensionsWorthBefore: pages.amends.amendIP14PensionsWorthBefore)
                                                   (implicit val appConfig: FrontendAppConfig,
-                                                   val partialRetriever: FormPartialRetriever,
                                                    val formWithCSRF: FormWithCSRF,
                                                    val plaContext: PlaContext,
                                                    val ec: ExecutionContext)
@@ -53,14 +51,14 @@ class AmendsPensionWorthBeforeController @Inject()(val sessionCacheService: Sess
         case Some(data) =>
           protectionType match {
             case "ip2016" => Ok(amendPensionsWorthBefore(
-              amendPensionsWorthBeforeForm.fill(AmendPensionsWorthBeforeModel(
+              amendPensionsWorthBeforeForm(protectionType).fill(AmendPensionsWorthBeforeModel(
                 Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0)))
               )),
               protectionType,
               status
             ))
             case "ip2014" => Ok(amendIP14PensionsWorthBefore(
-              amendPensionsWorthBeforeForm.fill(AmendPensionsWorthBeforeModel(
+              amendPensionsWorthBeforeForm(protectionType).fill(AmendPensionsWorthBeforeModel(
                 Some(Display.currencyInputDisplayFormat(data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0)))
               )),
               protectionType,
@@ -76,9 +74,12 @@ class AmendsPensionWorthBeforeController @Inject()(val sessionCacheService: Sess
 
   def submitAmendPensionsWorthBefore(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      amendPensionsWorthBeforeForm.bindFromRequest().fold(
+      amendPensionsWorthBeforeForm(protectionType).bindFromRequest().fold(
         errors => {
-          Future.successful(BadRequest(amendPensionsWorthBefore(errors, protectionType, status)))
+          protectionType match {
+            case "ip2016" => Future.successful(BadRequest(amendPensionsWorthBefore(errors, protectionType, status)))
+            case "ip2014" => Future.successful(BadRequest(amendIP14PensionsWorthBefore(errors, protectionType, status)))
+          }
         },
         success => {
           sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).flatMap {

@@ -19,7 +19,6 @@ package controllers
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import config.wiring.PlaFormPartialRetriever
 import config.{FrontendAppConfig, PlaContext}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
@@ -33,7 +32,6 @@ class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
 
     val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
-    implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
     implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext = mock[PlaContext]
     implicit val system: ActorSystem = ActorSystem()

@@ -23,7 +23,7 @@ import play.api.data._
 object PensionDebitsForm {
   def pensionDebitsForm = Form(
     mapping(
-      "pensionDebits" -> optional(text).verifying("pla.pensionDebits.errors.mandatoryError", {_.isDefined})
+      "pensionDebits" -> optional(text).verifying(s"pla.pensionDebits.errors.mandatoryError", {_.isDefined})
     )(PensionDebitsModel.apply)(PensionDebitsModel.unapply)
   )
 }

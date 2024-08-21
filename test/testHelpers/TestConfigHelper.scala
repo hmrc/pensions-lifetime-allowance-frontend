@@ -18,7 +18,6 @@ package testHelpers
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import config.wiring.PlaFormPartialRetriever
 import connectors.PLAConnector
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.{Configuration, Environment}
@@ -35,6 +34,5 @@ trait TestConfigHelper extends FakeApplication with MockitoSugar {
 trait TestControllerHelper extends MockitoSugar with TestConfigHelper{
   val sessionCacheService = mock[SessionCacheService]
   val plaConnector = mock[PLAConnector]
-  implicit val partialRetriever = mock[PlaFormPartialRetriever]
 }
 

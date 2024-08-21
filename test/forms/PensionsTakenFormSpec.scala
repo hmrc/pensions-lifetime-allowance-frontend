@@ -31,14 +31,14 @@ class PensionsTakenFormSpec extends FakeApplication with CommonErrorMessages wit
 
       "supplied with a valid model" in {
         val model = PensionsTakenModel(Some("text"))
-        val result = pensionsTakenForm.fill(model)
+        val result = pensionsTakenForm("ip2016").fill(model)
 
         result.data shouldBe Map("pensionsTaken" -> "text")
       }
 
       "supplied with a valid form" in {
         val map = Map("pensionsTaken" -> "text")
-        val result = pensionsTakenForm.bind(map)
+        val result = pensionsTakenForm("ip2016").bind(map)
 
         result.value shouldBe Some(PensionsTakenModel(Some("text")))
       }
@@ -48,10 +48,10 @@ class PensionsTakenFormSpec extends FakeApplication with CommonErrorMessages wit
 
       "not provided with a pensionsTaken value" in {
         val map = Map.empty[String, String]
-        val result = pensionsTakenForm.bind(map)
+        val result = pensionsTakenForm("ip2016").bind(map)
 
         result.errors.size shouldBe 1
-        result.error("pensionsTaken").get.message shouldBe errorQuestion("pensionsTaken")
+        result.error("pensionsTaken").get.message shouldBe errorQuestion("pensionsTaken", "ip2016")
       }
     }
   }

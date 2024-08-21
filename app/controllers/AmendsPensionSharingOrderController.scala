@@ -29,7 +29,6 @@ import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import uk.gov.hmrc.play.partials.FormPartialRetriever
 import views.html.pages
 
 import java.time.LocalDate
@@ -42,7 +41,6 @@ class AmendsPensionSharingOrderController @Inject()(val sessionCacheService: Ses
                                                     amendPsoDetails: pages.amends.amendPsoDetails,
                                                     technicalError: views.html.pages.fallback.technicalError)
                                                    (implicit val appConfig: FrontendAppConfig,
-                                                    val partialRetriever: FormPartialRetriever,
                                                     val formWithCSRF: FormWithCSRF,
                                                     val plaContext: PlaContext,
                                                     val ec: ExecutionContext)

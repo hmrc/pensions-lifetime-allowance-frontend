@@ -24,11 +24,11 @@ import models.PensionsTakenBeforeModel
 object PensionsTakenBeforeForm extends CommonBinders{
 
 
-  def pensionsTakenBeforeForm = Form (
+  def pensionsTakenBeforeForm(protectionType: String) = Form (
     mapping(
-      "pensionsTakenBefore" -> common.Validation.newText("pla.pensionsTakenBefore.errors.mandatoryError")
-        .verifying("pla.pensionsTakenBefore.errors.mandatoryError", mandatoryCheck)
-        .verifying("pla.pensionsTakenBefore.errors.mandatoryError", yesNoCheck)
+      "pensionsTakenBefore" -> common.Validation.newText(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType")
+        .verifying(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType", mandatoryCheck)
+        .verifying(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType", yesNoCheck)
     )(PensionsTakenBeforeModel.apply)(PensionsTakenBeforeModel.unapply)
   )
 }

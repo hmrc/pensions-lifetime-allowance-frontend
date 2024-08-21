@@ -16,29 +16,20 @@
 
 package controllers
 
-import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
-import common.Exceptions.RequiredValueNotDefinedException
+import auth.{AuthFunction, AuthFunctionImpl}
 import config._
-import config.wiring.PlaFormPartialRetriever
-import connectors.PLAConnector
-import constructors.{DisplayConstructors, ResponseConstructors}
-import enums.ApplicationType
-import forms.{AmendCurrentPensionForm, AmendOverseasPensionsForm, AmendPensionsTakenBeforeForm, AmendPensionsTakenBetweenForm}
 import mocks.AuthMock
 import models._
 import models.amendModels._
-import models.cache.CacheMap
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.{any, anyString, startsWith}
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
-import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.libs.json.{JsNull, Json}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
@@ -46,13 +37,9 @@ import services.SessionCacheService
 import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
 import views.html.pages.amends._
-import views.html.pages.fallback.{noNotificationId, technicalError}
-import views.html.pages.result.manualCorrespondenceNeeded
+import views.html.pages.fallback.technicalError
 
-import java.time.LocalDate
-import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsCurrentPensionControllerSpec extends FakeApplication
@@ -71,7 +58,6 @@ class AmendsCurrentPensionControllerSpec extends FakeApplication
   val mockEnv: Environment                            = mock[Environment]
   val messagesApi: MessagesApi                        = mockMCC.messagesApi
 
-  implicit val partialRetriever: PlaFormPartialRetriever = mock[PlaFormPartialRetriever]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val system: ActorSystem = ActorSystem()
@@ -181,7 +167,7 @@ class AmendsCurrentPensionControllerSpec extends FakeApplication
     }
 
     "supplied with a stored test model (£100000, IP2014, dormant)" in new Setup {
-      lazy val result = controller.amendCurrentPensions("ip2016", "dormant")(fakeRequest)
+      lazy val result = controller.amendCurrentPensions("ip2014", "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -210,6 +196,34 @@ class AmendsCurrentPensionControllerSpec extends FakeApplication
 
     "the model can't be fetched from cache" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendCurrentPension("IP2016", "dormant"), ("amendedUKPensionAmt", "1000000"))
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](None)
+
+        status(DataItem.result) shouldBe 500
+      }
+    }
+
+  "Submitting Amend IP14 Current Pensions data" when {
+
+    "the data is valid" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendCurrentPension("ip2014", "dormant"), ("amendedUKPensionAmt", "100000"))
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+
+        status(DataItem.result) shouldBe 303
+        redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+    }
+
+    "the data is invalid" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendCurrentPension("ip2014", "dormant"), ("amendedUKPensionAmt", ""))
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        status(DataItem.result) shouldBe 400
+      }
+
+    "the model can't be fetched from cache" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendCurrentPension("ip2014", "dormant"), ("amendedUKPensionAmt", "1000000"))
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](None)
 

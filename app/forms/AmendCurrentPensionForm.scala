@@ -23,13 +23,13 @@ import play.api.data.Forms._
 import utils.Constants._
 
 object AmendCurrentPensionForm extends CommonBinders {
-  def amendCurrentPensionForm = Form(
+  def amendCurrentPensionForm(protectionType: String) = Form(
     mapping(
-      "amendedUKPensionAmt" -> of(decimalFormatter("pla.currentPensions.amount.errors.mandatoryError", "pla.currentPensions.amount.errors.notReal"))
-        .verifying("pla.currentPensions.amount.errors.mandatoryError", currentPensionsAmt => currentPensionsAmt.isDefined)
-        .verifying("pla.currentPensions.amount.errors.negative", currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
-        .verifying("pla.currentPensions.amount.errors.decimal", currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))
-        .verifying("pla.currentPensions.amount.errors.max", currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency))
+      "amendedUKPensionAmt" -> of(decimalFormatter(s"pla.currentPensions.amount.errors.mandatoryError.$protectionType", s"pla.currentPensions.amount.errors.notReal.$protectionType"))
+        .verifying(s"pla.currentPensions.amount.errors.mandatoryError.$protectionType", currentPensionsAmt => currentPensionsAmt.isDefined)
+        .verifying(s"pla.currentPensions.amount.errors.negative.$protectionType", currentPensionsAmt => isPositive(currentPensionsAmt.getOrElse(0)))
+        .verifying(s"pla.currentPensions.amount.errors.decimal.$protectionType", currentPensionsAmt => isMaxTwoDecimalPlaces(currentPensionsAmt.getOrElse(0)))
+        .verifying(s"pla.currentPensions.amount.errors.max.$protectionType", currentPensionsAmt => isLessThanDouble(currentPensionsAmt.getOrElse(BigDecimal(0)).toDouble, npsMaxCurrency))
     )(AmendCurrentPensionModel.apply)(AmendCurrentPensionModel.unapply)
   )
 }
