@@ -42,7 +42,6 @@ import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
 import views.html.pages.result.manualCorrespondenceNeeded
-
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
