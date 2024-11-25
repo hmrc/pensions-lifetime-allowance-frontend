@@ -77,6 +77,8 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
   override val validStatusMetric: String = servicesConfig.getString("valid-protection-status")
   override val invalidStatusMetric: String = servicesConfig.getString("invalid-protection-status")
   override val notFoundStatusMetric: String = servicesConfig.getString("not-found-protection-status")
+  val applyFor2016IPAndFpShutterEnabled: Boolean = configuration.getOptional[Boolean]("applyFor2016IPAndFpShutterEnabled-feature.enabled").getOrElse(false)
+
 
   override lazy val appName: String = loadConfig("appName")
 

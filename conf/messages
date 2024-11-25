@@ -828,6 +828,18 @@ pla.withdrawn.pageHeading                   = Sorry, applications for 2014 prote
 pla.withdrawn.paraOne                       = You can still
 pla.withdrawn.paraOne.linkText              = view existing applications.
 
+## 2016 Individual Application Period Ended ##
+pla.withdrawn.ip2016.title                         = Sorry, applications for individual protection 2016 have ended
+pla.withdrawn.ip2016.pageHeading                   = Sorry, applications for individual protection 2016 have ended
+pla.withdrawn.ip2016.paraOne                       = You can still
+pla.withdrawn.ip2016.paraOne.linkText           = view existing applications.
+
+## 2016 Fixed Application Period Ended ##
+pla.withdrawn.fp2016.title                         = Sorry, applications for fixed protection 2016 have ended
+pla.withdrawn.fp2016.pageHeading                   = Sorry, applications for fixed protection 2016 have ended
+pla.withdrawn.fp2016.paraOne                       = You can still
+pla.withdrawn.fp2016.paraOne.ip.linkText           = view existing applications.
+
 ## PSA Lookup form
 psa.lookup.form.scheme-admin-ref-form.title = Enter the Scheme Administrator Reference
 psa.lookup.form.protection-notification-no-form.title = Enter the Protection Notification Number
@@ -910,7 +922,7 @@ psa.lookup.protection-guidance.protection-type-fixed14-value = £1,500,000
 psa.lookup.protection-guidance.protection-type-fixed16-label = Fixed 2016
 psa.lookup.protection-guidance.protection-type-fixed16-value = £1,250,000
 psa.lookup.protection-guidance.protection-type-individual14-label = Individual 2014
-psa.lookup.protection-guidance.protection-type-individual14-value-line1 = The lower of: 
+psa.lookup.protection-guidance.protection-type-individual14-value-line1 = The lower of:
 psa.lookup.protection-guidance.protection-type-individual14-value-line2 = the value of the pension at 5 April 2014
 psa.lookup.protection-guidance.protection-type-individual14-value-line3 = £1,500,000
 psa.lookup.protection-guidance.protection-type-individual16-label = Individual 2016
