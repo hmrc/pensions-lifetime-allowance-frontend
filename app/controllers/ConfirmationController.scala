@@ -25,12 +25,13 @@ import play.api.mvc._
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages._
-
+import views.html._
 import scala.concurrent.Future
 
 class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
                                        authFunction: AuthFunction,
-                                       ConfirmFP: confirmation.confirmFP)
+                                       ConfirmFP: confirmation.confirmFP,
+                                       withdrawnFP2016: fp2016.withdrawnFP2016)
                                       (implicit val application: Application,
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val formWithCSRF: FormWithCSRF,
@@ -38,8 +39,13 @@ class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
 
   val confirmFP = Action.async {
     implicit request =>
-      authFunction.genericAuthWithoutNino("FP2016") {
-        Future.successful(Ok(ConfirmFP()))
+
+      if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+        Future.successful(Ok(withdrawnFP2016()))
+      } else {
+        authFunction.genericAuthWithoutNino("FP2016") {
+          Future.successful(Ok(ConfirmFP()))
+        }
       }
   }
 }

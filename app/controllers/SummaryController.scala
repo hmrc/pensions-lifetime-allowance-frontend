@@ -30,13 +30,14 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html._
 
 import javax.inject.Inject
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 class SummaryController @Inject()(sessionCacheService: SessionCacheService,
                                  mcc: MessagesControllerComponents,
                                   authFunction: AuthFunction,
                                   technicalError: views.html.pages.fallback.technicalError,
-                                  summary: pages.ip2016.summary
+                                  summary: pages.ip2016.summary,
+                                  withdrawnIP2016: pages.ip2016.withdrawnIP2016
                                  )
                                  (implicit val appConfig: FrontendAppConfig,
                                   implicit val plaContext: PlaContext,
@@ -48,13 +49,17 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   val summaryConstructor: SummaryConstructor = SummaryConstructor
 
   val summaryIP16: Action[AnyContent] = Action.async { implicit request =>
-    implicit val protectionType: ApplicationType.Value = ApplicationType.IP2016
-    authFunction.genericAuthWithNino("IP2016") { nino =>
-      sessionCacheService.fetchAllUserData.map {
-        case Some(data) => routeIP2016SummaryFromUserData(data, nino)
-        case None => {
-          logger.warn(s"unable to fetch summary IP16 data from cache for user nino $nino")
-          InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+      Future.successful(Ok(withdrawnIP2016()))
+    }else {
+      implicit val protectionType: ApplicationType.Value = ApplicationType.IP2016
+      authFunction.genericAuthWithNino("IP2016") { nino =>
+        sessionCacheService.fetchAllUserData.map {
+          case Some(data) => routeIP2016SummaryFromUserData(data, nino)
+          case None => {
+            logger.warn(s"unable to fetch summary IP16 data from cache for user nino $nino")
+            InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+          }
         }
       }
     }
