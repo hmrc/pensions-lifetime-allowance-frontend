@@ -61,6 +61,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   val mockHttp: HttpClientV2 = mock[HttpClientV2]
   val mockEnv: Environment = mock[Environment]
 
+
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]

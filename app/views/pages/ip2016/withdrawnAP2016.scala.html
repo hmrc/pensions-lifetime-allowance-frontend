@@ -21,13 +21,13 @@ layout: Layout
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-pageTitle = Messages("pla.withdrawn.fp2016.title"),
+pageTitle = Messages("pla.withdrawn.ap2016.title"),
 backLinkEnabled = false
 ) {
-<h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.withdrawn.fp2016.pageHeading")</h1>
+<h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.withdrawn.ap2016.pageHeading")</h1>
 
 <p class="govuk-body" id="startAgainText">
-    @Messages("pla.withdrawn.fp2016.paraOne")
-    <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.withdrawn.fp2016.paraOne.linkText")</a>
+    @Messages("pla.withdrawn.ap2016.paraOne")
+    <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.withdrawn.ap2016.paraOne.linkText")</a>
 </p>
 }

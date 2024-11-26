@@ -31,7 +31,7 @@ import scala.concurrent.Future
 class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
                                        authFunction: AuthFunction,
                                        ConfirmFP: confirmation.confirmFP,
-                                       withdrawnFP2016: fp2016.withdrawnFP2016)
+                                       withdrawnAP2016: ip2016.withdrawnAP2016)
                                       (implicit val application: Application,
                                        implicit val appConfig: FrontendAppConfig,
                                        implicit val formWithCSRF: FormWithCSRF,
@@ -41,7 +41,7 @@ class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
     implicit request =>
 
       if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-        Future.successful(Ok(withdrawnFP2016()))
+        Future.successful(Ok(withdrawnAP2016()))
       } else {
         authFunction.genericAuthWithoutNino("FP2016") {
           Future.successful(Ok(ConfirmFP()))

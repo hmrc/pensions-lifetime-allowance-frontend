@@ -54,7 +54,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
                                  psoDetails: pages.ip2016.psoDetails,
                                  RemovePsoDetails: pages.ip2016.removePsoDetails,
                                  pensionDebits: pages.ip2016.pensionDebits,
-                                 withdrawnIP2016: pages.ip2016.withdrawnIP2016)
+                                 withdrawnIP2016: pages.ip2016.withdrawnAP2016)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val plaContext: PlaContext,
                                  implicit val formWithCSRF: FormWithCSRF,

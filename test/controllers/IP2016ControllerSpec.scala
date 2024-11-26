@@ -42,6 +42,7 @@ import uk.gov.hmrc.auth.core.{AuthConnector, PlayAuthConnector}
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HeaderCarrier
 import views.html.pages.fallback.technicalError
+import views.html.pages.ip2016
 import views.html.pages.ip2016._
 
 import java.time.LocalDate
@@ -56,6 +57,8 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
     val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
     val mockAuthFunction: AuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
     val mockEnv: Environment = mock[Environment]
+    val mockWithdrawnAp2016 = mock[ip2016.withdrawnAP2016]
+
 
     implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
     implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
@@ -102,7 +105,8 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
             mockCurrentPensions,
             mockPsoDetails,
             mockRemovePsoDetails,
-            mockPensionDebits
+            mockPensionDebits,
+            mockWithdrawnAp2016
         )
     }
 
