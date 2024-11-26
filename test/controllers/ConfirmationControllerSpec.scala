@@ -54,7 +54,7 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents]
     val mockAuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
     val mockEnv = mock[Environment]
-    val mockWithdrawnAp2016View:withdrawnAP2016  = application.injector.instanceOf[ip2016.withdrawnAP2016]
+    val mockWithdrawnAp2016View:withdrawnAP2016  = mock[ip2016.withdrawnAP2016]
 
     def confirmationControllerRoute: String = routes.ConfirmationController.confirmFP.url
 

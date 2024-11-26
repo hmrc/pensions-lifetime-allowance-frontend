@@ -57,7 +57,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
     val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
     val mockAuthFunction: AuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
     val mockEnv: Environment = mock[Environment]
-    val mockWithdrawnAp2016 = mock[ip2016.withdrawnAP2016]
+    val mockWithdrawnAp2016View:withdrawnAP2016  = mock[ip2016.withdrawnAP2016]
 
 
     implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
@@ -106,7 +106,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
             mockPsoDetails,
             mockRemovePsoDetails,
             mockPensionDebits,
-            mockWithdrawnAp2016
+            mockWithdrawnAp2016View
         )
     }
 
@@ -117,7 +117,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     //    lazy val TestIP2016Controller = fakeApplication().injector.instanceOf[IP2016Controller]
-    object TestIP2016Controller extends IP2016Controller(mockSessionCacheService, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsWorthBefore, mockPensionsTakenBetween, mockPensionsUsedBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails, mockPensionDebits) {
+    object TestIP2016Controller extends IP2016Controller(mockSessionCacheService, mockMCC, mockAuthFunction, mockPensionsTaken, mockPensionsTakenBefore, mockPensionsWorthBefore, mockPensionsTakenBetween, mockPensionsUsedBetween, mockOverseasPensions, mockCurrentPensions, mockPsoDetails, mockRemovePsoDetails, mockPensionDebits,mockWithdrawnAp2016View) {
         lazy val authConnector: PlayAuthConnector = mockAuthConnector
     }
 

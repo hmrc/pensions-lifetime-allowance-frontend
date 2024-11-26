@@ -40,11 +40,12 @@ import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import models.cache.CacheMap
-import java.util.UUID
 
+import java.util.UUID
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.fallback.technicalError
-import views.html.pages.ip2016.summary
+import views.html.pages.ip2016
+import views.html.pages.ip2016.{summary, withdrawnAP2016}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -53,6 +54,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockWithdrawnAp2016View:withdrawnAP2016  = mock[ip2016.withdrawnAP2016]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
@@ -73,7 +75,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
 
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
 
-  val testSummaryController = new SummaryController(mockSessionCacheService, mockMCC, mockAuthFunction, mockTechnicalError, mockSummary) {
+  val testSummaryController = new SummaryController(mockSessionCacheService, mockMCC, mockAuthFunction, mockTechnicalError, mockSummary,mockWithdrawnAp2016View) {
     override val summaryConstructor = mockSummaryConstructor
   }
 
@@ -94,7 +96,8 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
       mockMCC,
       authFunction,
       mockTechnicalError,
-      mockSummary
+      mockSummary,
+      mockWithdrawnAp2016View
     ) {
       override val summaryConstructor = mockSummaryConstructor
     }
