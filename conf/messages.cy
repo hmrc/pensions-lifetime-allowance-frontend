@@ -999,17 +999,11 @@ pla.withdrawn.paraOne                                               = Gallwch da
 pla.withdrawn.paraOne.linkText                                      = weld ceisiadau sy''n bodoli eisoes.
 pla.withdrawn.title                                                 = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
 
-## 2016 Individual Application Period Ended ##
-pla.withdrawn.ip2016.title                                          = Sorry, applications for individual protection 2016 have ended
-pla.withdrawn.ip2016.pageHeading                                    = Sorry, applications for individual protection 2016 have ended
-pla.withdrawn.ip2016.paraOne                                        = Gallwch dal i
-pla.withdrawn.ip2016.paraOne.ip.linkText                            = weld ceisiadau sy''n bodoli eisoes.
-
-## 2016 Fixed Application Period Ended ##
-pla.withdrawn.fp2016.title                                          = Sorry, applications for fixed protection 2016 have ended
-pla.withdrawn.fp2016.pageHeading                                    = Sorry, applications for fixed protection 2016 have ended
-pla.withdrawn.fp2016.paraOne                                        = Gallwch dal i
-pla.withdrawn.fp2016.paraOne.ip.linkText                            = weld ceisiadau sy''n bodoli eisoes.
+## 2016 Application Period Ended ##
+pla.withdrawn.ap2016.title                                          = Mae'n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
+pla.withdrawn.ap2016.pageHeading                                    = Mae'n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
+pla.withdrawn.ap2016.paraOne                                        = Gallwch dal i
+pla.withdrawn.ap2016.paraOne.ip.linkText                            = weld ceisiadau sy''n bodoli eisoes.
 
 psa.lookup.protection-guidance.protection-type-primary-value        = £1,500,000 neu uwch
 pla.views.heading.FP2016                                   = Manylion eich diogelwch penodol 2016

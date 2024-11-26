@@ -37,7 +37,7 @@ class SummaryController @Inject()(sessionCacheService: SessionCacheService,
                                   authFunction: AuthFunction,
                                   technicalError: views.html.pages.fallback.technicalError,
                                   summary: pages.ip2016.summary,
-                                  withdrawnIP2016: pages.ip2016.withdrawnIP2016
+                                  withdrawnIP2016: pages.ip2016.withdrawnAP2016
                                  )
                                  (implicit val appConfig: FrontendAppConfig,
                                   implicit val plaContext: PlaContext,

@@ -33,7 +33,7 @@ import services.SessionCacheService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Constants
-import views.html.{fp2016, pages}
+import views.html.pages
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
@@ -50,8 +50,7 @@ class ResultController @Inject()(sessionCacheService: SessionCacheService,
                                  resultRejected: views.html.pages.result.resultRejected,
                                  resultSuccess: views.html.pages.result.resultSuccess,
                                  resultSuccessInactive: views.html.pages.result.resultSuccessInactive,
-                                 withdrawnFP2016: fp2016.withdrawnFP2016,
-                                 withdrawnIP2016: pages.ip2016.withdrawnIP2016)
+                                 withdrawnIP2016: pages.ip2016.withdrawnAP2016)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val plaContext: PlaContext,
                                  implicit val application: Application,
@@ -63,7 +62,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   val processFPApplication = Action.async { implicit request =>
 
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnFP2016()))
+      Future.successful(Ok(withdrawnIP2016()))
     }else{
     authFunction.genericAuthWithNino("FP2016") { nino =>
       implicit val protectionType = ApplicationType.FP2016
@@ -131,7 +130,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
       if (appConfig.applyFor2016IPAndFpShutterEnabled) {
         protectionType match {
           case ApplicationType.IP2016 => Future.successful(Ok(withdrawnIP2016()))
-          case ApplicationType.FP2016 => Future.successful(Ok(withdrawnFP2016()))
+          case ApplicationType.FP2016 => Future.successful(Ok(withdrawnIP2016()))
         }
       }else {
         implicit val lang = mcc.messagesApi.preferred(request).lang
