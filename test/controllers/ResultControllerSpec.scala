@@ -45,6 +45,8 @@ import org.mockito.ArgumentMatchers
 import uk.gov.hmrc.http.client.HttpClientV2
 import utils.ActionWithSessionId
 import views.html.pages.fallback.{noNotificationId, technicalError}
+import views.html.pages.ip2016
+import views.html.pages.ip2016.withdrawnAP2016
 import views.html.pages.result.{manualCorrespondenceNeeded, resultRejected, resultSuccess, resultSuccessInactive}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -60,6 +62,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
   val mockHttp: HttpClientV2 = mock[HttpClientV2]
   val mockEnv: Environment = mock[Environment]
+  val mockWithdrawnAp2016View:withdrawnAP2016  = mock[ip2016.withdrawnAP2016]
 
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
@@ -206,12 +209,12 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   val testIP14InactiveSuccessApplyResponseModel = ApplyResponseModel(testIP14InactiveSuccessProtectionModel)
   val testIP14RejectionApplyResponseModel = ApplyResponseModel(testIP14RejectionProtectionModel)
 
-  val TestSuccessResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
-  val TestInactiveSuccessResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
-  val TestRejectResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
-  val TestMCNeededResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
-  val testResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
-  val TestIncorrectResponseModelResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive)
+  val TestSuccessResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive,mockWithdrawnAp2016View)
+  val TestInactiveSuccessResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive,mockWithdrawnAp2016View)
+  val TestRejectResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive,mockWithdrawnAp2016View)
+  val TestMCNeededResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive,mockWithdrawnAp2016View)
+  val testResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive,mockWithdrawnAp2016View)
+  val TestIncorrectResponseModelResultController = new ResultController(mockSessionCacheService, mockPlaConnector, mockDisplayConstructors, mockMCC, mockResponseConstructors, authFunction, mockTechnicalError, mockManualCorrespondenceNeeded, mockNoNotificationID, mockResultRejected, mockResultSuccess, mockResultSuccessInactive,mockWithdrawnAp2016View)
 
   //////////////////////////////////////////////
   //  POST / REDIRECT

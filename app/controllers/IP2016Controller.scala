@@ -54,7 +54,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
                                  psoDetails: pages.ip2016.psoDetails,
                                  RemovePsoDetails: pages.ip2016.removePsoDetails,
                                  pensionDebits: pages.ip2016.pensionDebits,
-                                 withdrawnIP2016: pages.ip2016.withdrawnAP2016)
+                                 withdrawnAP2016: pages.ip2016.withdrawnAP2016)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val plaContext: PlaContext,
                                  implicit val formWithCSRF: FormWithCSRF,
@@ -65,7 +65,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def pensionsTaken: Action[AnyContent] = Action.async { implicit request =>
 
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
+      Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
         sessionCacheService.fetchAndGetFormData[PensionsTakenModel]("pensionsTaken").map {
@@ -102,7 +102,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   //PENSIONS TAKEN BEFORE
   def pensionsTakenBefore: Action[AnyContent] = Action.async { implicit request =>
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
+      Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
         sessionCacheService.fetchAndGetFormData[PensionsTakenBeforeModel]("pensionsTakenBefore").map {
@@ -136,7 +136,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   //PENSIONS WORTH BEFORE
   def pensionsWorthBefore: Action[AnyContent] = Action.async { implicit request =>
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
+      Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
         sessionCacheService.fetchAndGetFormData[PensionsWorthBeforeModel]("pensionsWorthBefore").map {
@@ -167,7 +167,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   //PENSIONS TAKEN BETWEEN
   def pensionsTakenBetween: Action[AnyContent] = Action.async { implicit request =>
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
+      Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
         sessionCacheService.fetchAndGetFormData[PensionsTakenBetweenModel]("pensionsTakenBetween").map {
@@ -201,7 +201,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   //PENSIONS USED BETWEEN
   def pensionsUsedBetween: Action[AnyContent] = Action.async { implicit request =>
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
+      Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
         sessionCacheService.fetchAndGetFormData[PensionsUsedBetweenModel]("pensionsUsedBetween").map {
@@ -231,7 +231,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   //OVERSEAS PENSIONS
   def overseasPensions: Action[AnyContent] = Action.async { implicit request =>
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
+      Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
         sessionCacheService.fetchAndGetFormData[OverseasPensionsModel]("overseasPensions").map {
@@ -262,7 +262,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   //CURRENT PENSIONS
   def currentPensions: Action[AnyContent] = Action.async { implicit request =>
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
+      Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
         sessionCacheService.fetchAndGetFormData[CurrentPensionsModel]("currentPensions").map {
@@ -293,7 +293,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   //PENSION DEBITS
   def pensionDebits: Action[AnyContent] = Action.async { implicit request =>
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
+      Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
         sessionCacheService.fetchAndGetFormData[PensionDebitsModel]("pensionDebits").map {
@@ -328,7 +328,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   //PENSION SHARING ORDER DETAILS
   def psoDetails: Action[AnyContent] = Action.async { implicit request =>
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
+      Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
         sessionCacheService.fetchAndGetFormData[PSODetailsModel]("psoDetails").map {
@@ -356,7 +356,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
 
   def removePsoDetails: Action[AnyContent] = Action.async { implicit request =>
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
+      Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
         Future(Ok(RemovePsoDetails()))
