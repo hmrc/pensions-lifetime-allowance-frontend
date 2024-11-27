@@ -40,7 +40,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with AuthMock {
 
-    implicit val mockAppConfig: FrontendAppConfig              = fakeApplication().injector.instanceOf[FrontendAppConfig]
+    implicit val mockAppConfig: FrontendAppConfig              = mock[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext                    = mock[PlaContext]
     implicit val system: ActorSystem                           = ActorSystem()
     implicit val materializer: Materializer                    = mock[Materializer]
@@ -54,7 +54,7 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents]
     val mockAuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
     val mockEnv = mock[Environment]
-    val mockWithdrawnAp2016View:withdrawnAP2016  = mock[ip2016.withdrawnAP2016]
+    val mockWithdrawnAp2016View:withdrawnAP2016  = app.injector.instanceOf[ip2016.withdrawnAP2016]
 
     def confirmationControllerRoute: String = routes.ConfirmationController.confirmFP.url
 
@@ -81,14 +81,8 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     "when applyFor2016IPAndFpShutterEnabled is disabled calling the .confirmFP action" should {
         "return a 200 and the confirmFP view" in new Setup {
             mockAuthConnector(Future.successful({}))
-            val mockAppConfig = mock[FrontendAppConfig]
-
             when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
-
-           // controller.authFunction.appConfig.applyFor2016IPAndFpShutterEnabled = true
-
             val result = controller.confirmFP(FakeRequest(GET, confirmationControllerRoute))
-
             status(result) shouldBe 200
             contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
         }
@@ -97,11 +91,7 @@ class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with 
     "when applyFor2016IPAndFpShutterEnabled is enabled calling the .confirmFP action" should {
         "return a 200 and withdrawnAP2016 view" in new Setup {
             mockAuthConnector(Future.successful({}))
-            val mockAppConfig = mock[FrontendAppConfig]
-            //authFunction.appConfig.applyFor2016IPAndFpShutterEnabled = mockAppConfig
-
             when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
-
             val result = controller.confirmFP(FakeRequest(GET, confirmationControllerRoute))
 
             status(result) shouldBe 200

@@ -65,6 +65,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   def pensionsTaken: Action[AnyContent] = Action.async { implicit request =>
 
     if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+      println("@@@@@@")
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
