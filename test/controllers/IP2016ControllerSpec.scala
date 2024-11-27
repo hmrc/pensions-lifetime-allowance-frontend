@@ -57,11 +57,12 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
     val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
     val mockAuthFunction: AuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
     val mockEnv: Environment = mock[Environment]
-    val mockWithdrawnAp2016View:withdrawnAP2016  = mock[ip2016.withdrawnAP2016]
+    val mockWithdrawnAp2016View:withdrawnAP2016  = app.injector.instanceOf[withdrawnAP2016]
 
 
+    implicit val mockAppConfig = mock[FrontendAppConfig]
     implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-    implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+    //implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
     implicit val mockPlaContext: PlaContext = mock[PlaContext]
     implicit val mockMessages: Messages = mock[Messages]
     implicit val system: ActorSystem = ActorSystem()
@@ -148,14 +149,17 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
     ///////////////////////////////////////////////
     "In IP2016Controller calling the .pensionsTaken action" when {
 
-        "not supplied with a stored model" should {
+        "applyFor2016IPAndFpShutterEnabled is enabled and not supplied with a stored model " should {
             "return 200" in new Setup {
+                when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
                 lazy val result: Future[Result] = controller.pensionsTaken(fakeRequest)
                 mockAuthConnector(Future.successful({}))
 
 
                 cacheFetchCondition[PensionsTakenModel](None)
                 status(result) shouldBe 200
+                contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+
             }
         }
 
@@ -221,6 +225,12 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
         }
     }
 
+    ///////////////////////////////////////////////
+    // Pensions Taken shuttered testing
+    ///////////////////////////////////////////////
+    /*"when applyFor2016IPAndFpShutterEnabled is enabled calling the In IP2016Controller calling the .pensionsTaken action" when {
+        " withdrawnAP2016 view" in new Setup {
+        }*/
 
     ///////////////////////////////////////////////
     // Pensions Taken Before
