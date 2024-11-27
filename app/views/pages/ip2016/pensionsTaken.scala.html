@@ -38,13 +38,12 @@
 
     @errorSummary(pensionsTakenForm.errors, Some("pensionsTaken"))
 
-    <h1 class="govuk-heading-xl">@Messages("pla.pensionsTaken.title")</h1>
+    
 
     @form(action = routes.IP2016Controller.submitPensionsTaken) {
 
         @plaInputRadioGroup(
             legend = Messages("pla.pensionsTaken.title"),
-            legendClass = Some("govuk-visually-hidden"),
             items = Seq(
                 RadioItem(content = Text(Messages("pla.base.yes")), value = Option("yes")),
                 RadioItem(content = Text(Messages("pla.base.no")), value = Option("no"))

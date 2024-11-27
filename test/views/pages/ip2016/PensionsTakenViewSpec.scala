@@ -44,7 +44,7 @@ class PensionsTakenViewSpec extends CommonViewSpecHelper with PensionsTakenViewM
     "have a valid form" in{
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTaken.url
-      form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenLegendText
+      doc.getElementsByClass("govuk-fieldset__heading").text shouldBe plaPensionsTakenLegendText
 
     }
 
