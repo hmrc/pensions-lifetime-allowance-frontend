@@ -121,7 +121,7 @@ pla.noNotificationId.paraOne.afterLink      = ar unrhyw adeg.
 ## Pensions Taken ##
 pla.pensionsTaken.mandatoryErr              = Atebwch y cwestiwn hwn
 pla.pensionsTaken.title                     = Cyn 6 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
-pla.pensionsTaken.errors.mandatoryError     = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016
+pla.pensionsTaken.errors.mandatoryError.ip2016 = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016
 
 ## IP14 Pensions Taken ##
 pla.ip14PensionsTaken.title                 = A ddigwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2014?
