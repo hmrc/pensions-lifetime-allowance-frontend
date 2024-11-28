@@ -62,7 +62,7 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
   val mockHttp: HttpClientV2 = mock[HttpClientV2]
   val mockEnv: Environment = mock[Environment]
-  val mockWithdrawnAp2016View:withdrawnAP2016  = mock[ip2016.withdrawnAP2016]
+  val mockWithdrawnAp2016View:withdrawnAP2016  = app.injector.instanceOf[withdrawnAP2016]
 
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]

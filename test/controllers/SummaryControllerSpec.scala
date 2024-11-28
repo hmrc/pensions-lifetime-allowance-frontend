@@ -54,7 +54,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  val mockWithdrawnAp2016View:withdrawnAP2016  = mock[ip2016.withdrawnAP2016]
+  val mockWithdrawnAp2016View:withdrawnAP2016  =  app.injector.instanceOf[withdrawnAP2016]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
