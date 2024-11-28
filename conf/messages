@@ -1,6 +1,6 @@
 ## Base ##
-service.name                    = Protect your lifetime allowance
-pla.base.appName                = Protect your lifetime allowance
+service.name                    = Check your pension protections and enhancements
+pla.base.appName                = Check your pension protections and enhancements
 pla.base.yes                    = Yes
 pla.base.no                     = No
 pla.base.continue               = Continue

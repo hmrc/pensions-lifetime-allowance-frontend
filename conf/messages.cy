@@ -1,6 +1,6 @@
 ## Base ##
-service.name                    = Diogelu''ch lwfans oes
-pla.base.appName                = Diogelu''ch lwfans oes
+service.name                    = Gwiriwch eich diogelwch pensiwn a’ch diogelwch pensiwn uwch
+pla.base.appName                = Gwiriwch eich diogelwch pensiwn a’ch diogelwch pensiwn uwch
 pla.base.yes                    = Iawn
 pla.base.no                     = Na
 pla.base.continue               = Parhau
