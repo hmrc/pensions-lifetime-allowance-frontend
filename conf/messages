@@ -123,7 +123,7 @@ pla.noNotificationId.paraOne.afterLink      = at any time.
 ## Pensions Taken ##
 pla.pensionsTaken.mandatoryErr              = Please answer this question
 pla.pensionsTaken.title                     = Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
-pla.pensionsTaken.errors.mandatoryError     = Select yes if before 6 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension?
+pla.pensionsTaken.errors.mandatoryError.ip2016 = Select yes if before 6 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension?
 
 ## IP14 Pensions Taken ##
 pla.ip14PensionsTaken.title                 = Did any of the following happen before 6 April 2014?
