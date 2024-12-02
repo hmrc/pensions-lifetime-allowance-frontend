@@ -49,8 +49,7 @@ class ResultController @Inject()(sessionCacheService: SessionCacheService,
                                  noNotificationId: views.html.pages.fallback.noNotificationId,
                                  resultRejected: views.html.pages.result.resultRejected,
                                  resultSuccess: views.html.pages.result.resultSuccess,
-                                 resultSuccessInactive: views.html.pages.result.resultSuccessInactive,
-                                 withdrawnIP2016: pages.ip2016.withdrawnAP2016)
+                                 resultSuccessInactive: views.html.pages.result.resultSuccessInactive)
                                 (implicit val appConfig: FrontendAppConfig,
                                  implicit val plaContext: PlaContext,
                                  implicit val application: Application,
@@ -61,23 +60,18 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   val processFPApplication = Action.async { implicit request =>
 
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-      Future.successful(Ok(withdrawnIP2016()))
-    }else{
     authFunction.genericAuthWithNino("FP2016") { nino =>
       implicit val protectionType = ApplicationType.FP2016
       plaConnector.applyFP16(nino).flatMap(
         response => routeViaMCNeededCheck(response, nino)
       )
     }
-      }
+
   }
 
   val processIPApplication = Action.async {
     implicit request =>
-      if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-        Future.successful(Ok(withdrawnIP2016()))
-      } else {
+
         authFunction.genericAuthWithNino("IP2016") { nino =>
           implicit val protectionType = ApplicationType.IP2016
           for {
@@ -86,7 +80,7 @@ extends FrontendController(mcc) with I18nSupport with Logging{
             response <- routeViaMCNeededCheck(applicationResult, nino)
           } yield response
         }
-      }
+
   }
 
 
@@ -126,13 +120,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   def displayResult(implicit protectionType: ApplicationType.Value): Action[AnyContent] = Action.async {
     implicit request =>
-
-      if (appConfig.applyFor2016IPAndFpShutterEnabled) {
-        protectionType match {
-          case ApplicationType.IP2016 => Future.successful(Ok(withdrawnIP2016()))
-          case ApplicationType.FP2016 => Future.successful(Ok(withdrawnIP2016()))
-        }
-      }else {
         implicit val lang = mcc.messagesApi.preferred(request).lang
         authFunction.genericAuthWithNino("existingProtections") { nino =>
           val showUserResearchPanel = setURPanelFlag
@@ -162,7 +149,6 @@ extends FrontendController(mcc) with I18nSupport with Logging{
               errorResponse
           }
         }
-      }
   }
 
   private[controllers] def setURPanelFlag(implicit hc: HeaderCarrier): Boolean = {
