@@ -16,16 +16,19 @@
 
 package views.pages.amends
 
+import config.FrontendAppConfig
 import forms.AmendPensionsWorthBeforeForm
 import org.jsoup.Jsoup
+import org.mockito.Mockito.when
+import org.scalatestplus.mockito.MockitoSugar
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsWorthBeforeViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14PensionsWorthBefore
 
-class AmendIP14PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with AmendIP14PensionsWorthBeforeViewMessages {
-
+class AmendIP14PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with AmendIP14PensionsWorthBeforeViewMessages with MockitoSugar {
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+
 
   "the AmendIP14PensionsWorthBeforeView" should {
     val pensionsForm = AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm("ip2016").bind(Map("amendedPensionsWorthBefore" -> "yes",
@@ -40,9 +43,10 @@ class AmendIP14PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with Ame
 
     lazy val form = doc.select("form")
 
-    "have the correct title" in {
+    "have the correct old title when applyFor2016IPAndFpShutterEnabled is disabled" in {
       doc.title() shouldBe plaIP14PensionsWorthBeforeTitle
     }
+
 
     "have the correct and properly formatted header" in {
       doc.select("h1.govuk-heading-xl").text shouldBe plaIP14PensionsWorthBeforeHeader
@@ -81,4 +85,6 @@ class AmendIP14PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with Ame
       doc.select(".govuk-error-message").text shouldBe ""
     }
   }
+
+
 }
