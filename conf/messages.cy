@@ -1,6 +1,6 @@
 ## Base ##
-service.name                    = Diogelu''ch lwfans oes
-pla.base.appName                = Diogelu''ch lwfans oes
+service.name                    = Gwiriwch eich diogelwch pensiwn a’ch diogelwch pensiwn uwch
+pla.base.appName                = Gwiriwch eich diogelwch pensiwn a’ch diogelwch pensiwn uwch
 pla.base.yes                    = Iawn
 pla.base.no                     = Na
 pla.base.continue               = Parhau
@@ -992,10 +992,19 @@ pla.resultSuccess.dismissBanner                                     = No thanks
 pla.resultSuccess.userResearchLink.title                            = Help improve GOV.UK
 pla.resultSuccess.userResearchLink.text                             = Help improve this digital service by joining the HMRC user panel (opens in new window)
 pla.resultSuccess.userResearchLink                                  = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113
+
+## 2014 Application Period Ended ##
 pla.withdrawn.pageHeading                                           = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
 pla.withdrawn.paraOne                                               = Gallwch dal i
 pla.withdrawn.paraOne.linkText                                      = weld ceisiadau sy''n bodoli eisoes.
 pla.withdrawn.title                                                 = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
+
+## 2016 Application Period Ended ##
+pla.withdrawn.ap2016.title                                          = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
+pla.withdrawn.ap2016.pageHeading                                    = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
+pla.withdrawn.ap2016.paraOne                                        = Gallwch dal i
+pla.withdrawn.ap2016.paraOne.linkText                            = weld ceisiadau sy''n bodoli eisoes.
+
 psa.lookup.protection-guidance.protection-type-primary-value        = £1,500,000 neu uwch
 pla.views.heading.FP2016                                   = Manylion eich diogelwch penodol 2016
 pla.views.heading.primary                                  = Manylion eich prif ddiogelwch
