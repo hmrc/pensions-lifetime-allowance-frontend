@@ -40,7 +40,7 @@ class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
   val confirmFP = Action.async {
     implicit request =>
 
-      if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+      if (appConfig.applyFor2016IpAndFpShutterEnabled) {
         Future.successful(Ok(withdrawnAP2016()))
       } else {
         authFunction.genericAuthWithoutNino("FP2016") {

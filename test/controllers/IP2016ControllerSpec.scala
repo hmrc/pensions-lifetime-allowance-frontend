@@ -151,20 +151,20 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is disabled and not supplied with a stored model " should {
       "return 200" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         lazy val result: Future[Result] = controller.pensionsTaken(fakeRequest)
         mockAuthConnector(Future.successful({}))
 
         cacheFetchCondition[PensionsTakenModel](None)
         status(result) shouldBe 200
-        contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+        contentAsString(result) should include ("Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?")
 
       }
     }
 
     "applyFor2016IPAndFpShutterEnabled is enabled and not supplied with a stored model " should {
       "return 200 and withdrawnAP2016 view" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
         lazy val result: Future[Result] = controller.pensionsTaken(fakeRequest)
         mockAuthConnector(Future.successful({}))
 
@@ -245,13 +245,13 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is disabled and controller not supplied with a stored model" should {
       "return 200" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         lazy val result: Future[Result] = controller.pensionsTakenBefore(fakeRequest)
         mockAuthConnector(Future.successful({}))
 
         cacheFetchCondition[PensionsTakenBeforeModel](None)
         status(result) shouldBe 200
-        contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+        contentAsString(result) should include ("Did you get an income from any of your pensions before 6 April 2006?")
       }
 
       "take the user to the pensions taken before page" in {
@@ -262,7 +262,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is enabled and controller not supplied with a stored model" should {
       "return 200 and withdrawnAP2016 view" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
         lazy val result: Future[Result] = controller.pensionsTakenBefore(fakeRequest)
         mockAuthConnector(Future.successful({}))
 
@@ -367,13 +367,13 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is disabled and not supplied with a stored model" should {
       "return 200" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         lazy val result: Future[Result] = controller.pensionsWorthBefore(fakeRequest)
         mockAuthConnector(Future.successful({}))
 
         cacheFetchCondition[PensionsWorthBeforeModel](None)
         status(result) shouldBe 200
-        contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+        contentAsString(result) should include ("What were these pensions worth on 5 April 2016?")
       }
 
       "take the user to the pensions worth before page" in {
@@ -384,7 +384,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is enabled and not supplied with a stored model" should {
       "return 200 and withdrawnAP2016 view" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
         lazy val result: Future[Result] = controller.pensionsWorthBefore(fakeRequest)
         mockAuthConnector(Future.successful({}))
 
@@ -479,19 +479,19 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is disabled and not supplied with a stored model" should {
       "return 200" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         lazy val result: Future[Result] = controller.pensionsTakenBetween(fakeRequest)
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[PensionsTakenBetweenModel](None)
         status(result) shouldBe 200
-        contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+        contentAsString(result) should include ("Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?")
 
       }
     }
 
     "applyFor2016IPAndFpShutterEnabled is enabled and not supplied with a stored model" should {
       "return 200 and withdrawnAP2016 view" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
         lazy val result: Future[Result] = controller.pensionsTakenBetween(fakeRequest)
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[PensionsTakenBetweenModel](None)
@@ -573,18 +573,18 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is disabled and not supplied with a stored model" should {
       "return 200" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         lazy val result: Future[Result] = controller.pensionsUsedBetween(fakeRequest)
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[PensionsUsedBetweenModel](None)
         status(result) shouldBe 200
-        contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+        contentAsString(result) should include ("How much lifetime allowance have you used?")
       }
     }
 
     "applyFor2016IPAndFpShutterEnabled is enabled and not supplied with a stored model" should {
       "return 200 and withdrawnAP2016 view" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
         lazy val result: Future[Result] = controller.pensionsUsedBetween(fakeRequest)
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[PensionsUsedBetweenModel](None)
@@ -642,18 +642,18 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is disabled and not supplied with a stored model" should {
       "return 200" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         lazy val result: Future[Result] = controller.overseasPensions(fakeRequest)
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[OverseasPensionsModel](None)
         status(result) shouldBe 200
-        contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+        contentAsString(result) should include ("Have you put money into a pension scheme held overseas?")
       }
     }
 
     "applyFor2016IPAndFpShutterEnabled is enabled and not supplied with a stored model" should {
       "return 200 and withdrawnAP2016 view" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
         lazy val result: Future[Result] = controller.overseasPensions(fakeRequest)
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[OverseasPensionsModel](None)
@@ -733,18 +733,18 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is disabled and not supplied with a stored model" should {
       "return 200" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         lazy val result: Future[Result] = controller.currentPensions(fakeRequest)
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[CurrentPensionsModel](None)
         status(result) shouldBe 200
-        contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+        contentAsString(result) should include ("What were your UK pensions worth on 5 April 2016?")
       }
     }
 
     "applyFor2016IPAndFpShutterEnabled is enabled and not supplied with a stored model" should {
       "return 200 and withdrawnAP2016 view" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
         lazy val result: Future[Result] = controller.currentPensions(fakeRequest)
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[CurrentPensionsModel](None)
@@ -815,19 +815,19 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is disabled and not supplied with a stored model" should {
       "return 200" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         lazy val result: Future[Result] = controller.pensionDebits(fakeRequest)
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[PensionDebitsModel](None)
         status(result) shouldBe 200
-        contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+        contentAsString(result) should include ("Have any of your pensions been shared in a divorce since 5 April 2016?")
       }
 
     }
 
     "applyFor2016IPAndFpShutterEnabled is enabled and not supplied with a stored model" should {
       "return 200 and withdrawnAP2016 view" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
         lazy val result: Future[Result] = controller.pensionDebits(fakeRequest)
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[PensionDebitsModel](None)
@@ -906,19 +906,19 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
   "In IP2016Controller calling the .psoDetails action" when {
     "applyFor2016IPAndFpShutterEnabled is disabled and not supplied with a stored model" should {
       "return 200" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         lazy val result: Future[Result] = controller.psoDetails(fakeRequest)
 
         mockAuthConnector(Future.successful({}))
         cacheFetchCondition[PSODetailsModel](None)
         status(result) shouldBe 200
-        contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+        contentAsString(result) should include ("Pension sharing order")
       }
     }
 
     "applyFor2016IPAndFpShutterEnabled is enabled and not supplied with a stored model" should {
       "return 200 and withdrawnAP2016 view" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
         lazy val result: Future[Result] = controller.psoDetails(fakeRequest)
 
         mockAuthConnector(Future.successful({}))
@@ -1019,7 +1019,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is disabled and supplied with a stored model" should {
       "return 200" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         lazy val result: Future[Result] = controller.removePsoDetails(fakeRequest)
 
         mockAuthConnector(Future.successful({}))
@@ -1030,7 +1030,7 @@ class IP2016ControllerSpec extends FakeApplication with MockitoSugar with Before
 
     "applyFor2016IPAndFpShutterEnabled is enabled and supplied with a stored model" should {
       "return 200 and withdrawnAP2016 view" in new Setup {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
         lazy val result: Future[Result] = controller.removePsoDetails(fakeRequest)
 
         mockAuthConnector(Future.successful({}))

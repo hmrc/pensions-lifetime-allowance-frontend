@@ -133,17 +133,17 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
 
   "Navigating to summary when user has valid data" when {
     "applyFor2016IPAndFpShutterEnabled is disabled and  user is applying for IP16" in new Setup  {
-        when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(false)
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any())).thenReturn(Some(tstSummaryModel))
         when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
         val result = controller.summaryIP16(fakeRequest)
         status(result) shouldBe 200
-      contentAsString(result) should not include ("Sorry, applications for 2016 protection have ended")
+      contentAsString(result) should include ("Get individual protection 2016")
     }
 
     "applyFor2016IPAndFpShutterEnabled is enabled and  user is applying for IP16" in new Setup  {
-      when(mockAppConfig.applyFor2016IPAndFpShutterEnabled).thenReturn(true)
+      when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
       when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any())).thenReturn(Some(tstSummaryModel))
       when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 

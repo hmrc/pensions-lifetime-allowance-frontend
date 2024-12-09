@@ -64,7 +64,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   //PENSIONS TAKEN
   def pensionsTaken: Action[AnyContent] = Action.async { implicit request =>
 
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
@@ -101,7 +101,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
 
   //PENSIONS TAKEN BEFORE
   def pensionsTakenBefore: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
@@ -135,7 +135,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
 
   //PENSIONS WORTH BEFORE
   def pensionsWorthBefore: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
@@ -166,7 +166,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
 
   //PENSIONS TAKEN BETWEEN
   def pensionsTakenBetween: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
@@ -200,7 +200,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
 
   //PENSIONS USED BETWEEN
   def pensionsUsedBetween: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
@@ -230,7 +230,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
 
   //OVERSEAS PENSIONS
   def overseasPensions: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
@@ -261,7 +261,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
 
   //CURRENT PENSIONS
   def currentPensions: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
@@ -292,7 +292,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
 
   //PENSION DEBITS
   def pensionDebits: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
@@ -327,7 +327,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
 
   //PENSION SHARING ORDER DETAILS
   def psoDetails: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
@@ -355,7 +355,7 @@ class IP2016Controller @Inject()(val sessionCacheService: SessionCacheService,
   }
 
   def removePsoDetails: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnAP2016()))
     } else {
       authFunction.genericAuthWithoutNino("IP2016") {
