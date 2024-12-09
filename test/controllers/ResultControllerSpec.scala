@@ -45,6 +45,8 @@ import org.mockito.ArgumentMatchers
 import uk.gov.hmrc.http.client.HttpClientV2
 import utils.ActionWithSessionId
 import views.html.pages.fallback.{noNotificationId, technicalError}
+import views.html.pages.ip2016
+import views.html.pages.ip2016.withdrawnAP2016
 import views.html.pages.result.{manualCorrespondenceNeeded, resultRejected, resultSuccess, resultSuccessInactive}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -60,6 +62,8 @@ class ResultControllerSpec extends FakeApplication with MockitoSugar
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
   val mockHttp: HttpClientV2 = mock[HttpClientV2]
   val mockEnv: Environment = mock[Environment]
+  val mockWithdrawnAp2016View:withdrawnAP2016  = app.injector.instanceOf[withdrawnAP2016]
+
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]

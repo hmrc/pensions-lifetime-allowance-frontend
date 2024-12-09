@@ -19,7 +19,7 @@ package testHelpers.ViewSpecHelpers.amends
 import testHelpers.ViewSpecHelpers.ip2016.SummaryViewMessages
 
 trait AmendSummaryViewSpecMessages extends SummaryViewMessages{
-  val plaAmendsSummaryTitle = "Protection summary - Protect your lifetime allowance - GOV.UK"
+  val plaAmendsSummaryTitle = "Protection summary - Check your pension protections and enhancements - GOV.UK"
   val plaAmendsHeaderOne = "Check your answers and submit the changes"
   val plaAmendsSummaryPageHeading = "Your individual protection 2016 details"
   val plaAmendsVisuallyHiddenTextPensionsTakenBeforeYesNo = "Change whether you received an income from any of your pensions before 6 April 2006"
