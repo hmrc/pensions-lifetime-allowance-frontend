@@ -49,7 +49,7 @@ extends FrontendController(mcc) with I18nSupport with Logging {
   val summaryConstructor: SummaryConstructor = SummaryConstructor
 
   val summaryIP16: Action[AnyContent] = Action.async { implicit request =>
-    if (appConfig.applyFor2016IPAndFpShutterEnabled) {
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
       Future.successful(Ok(withdrawnIP2016()))
     }else {
       implicit val protectionType: ApplicationType.Value = ApplicationType.IP2016
