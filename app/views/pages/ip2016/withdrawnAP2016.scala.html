@@ -1,4 +1,4 @@
-/*
+@*
  * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ *@
 
-package testHelpers.ViewSpecHelpers.ip2016
+@this(
+layout: Layout
+)
 
-trait PensionsTakenViewMessages {
-  val plaPensionsTakenTitle = "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension? - Check your pension protections and enhancements - GOV.UK"
-  val plaPensionsTakenLegendText = "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?"
+@()(implicit request: Request[_], messages: Messages)
+
+@layout(
+     pageTitle = Messages("pla.withdrawn.ap2016.title"),
+     backLinkEnabled = false
+) {
+    <h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.withdrawn.ap2016.pageHeading")</h1>
+
+    <p class="govuk-body" id="startAgainText">
+        @Messages("pla.withdrawn.ap2016.paraOne")
+        <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.withdrawn.ap2016.paraOne.linkText")</a>
+    </p>
 }

@@ -19,7 +19,7 @@ package testHelpers.ViewSpecHelpers.existingProtections
 trait ExistingProtections {
 
   val plaExistingProtectionsTitle = "View your existing protections"
-  val plaExistingProtectionsTitleNew = "View your existing protections - Protect your lifetime allowance - GOV.UK"
+  val plaExistingProtectionsTitleNew = "View your existing protections - Check your pension protections and enhancements - GOV.UK"
   val plaExistingProtectionsPageHeading = "View your existing protections"
   val plaExistingProtectionsDetails = "Details"
   val plaExistingProtectionsPrint = "Print and save your details"

@@ -40,11 +40,12 @@ import testHelpers._
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import models.cache.CacheMap
-import java.util.UUID
 
+import java.util.UUID
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.fallback.technicalError
-import views.html.pages.ip2016.summary
+import views.html.pages.ip2016
+import views.html.pages.ip2016.{summary, withdrawnAP2016}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -53,9 +54,10 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockPlaConnector: PLAConnector = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockWithdrawnAp2016View:withdrawnAP2016  =  app.injector.instanceOf[withdrawnAP2016]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext = mock[PlaContext]
   implicit val mockMessages: Messages = mock[Messages]
   implicit val system: ActorSystem = ActorSystem()
@@ -73,7 +75,7 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
 
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
 
-  val testSummaryController = new SummaryController(mockSessionCacheService, mockMCC, mockAuthFunction, mockTechnicalError, mockSummary) {
+  val testSummaryController = new SummaryController(mockSessionCacheService, mockMCC, mockAuthFunction, mockTechnicalError, mockSummary,mockWithdrawnAp2016View) {
     override val summaryConstructor = mockSummaryConstructor
   }
 
@@ -94,7 +96,8 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
       mockMCC,
       authFunction,
       mockTechnicalError,
-      mockSummary
+      mockSummary,
+      mockWithdrawnAp2016View
     ) {
       override val summaryConstructor = mockSummaryConstructor
     }
@@ -129,12 +132,24 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
   }
 
   "Navigating to summary when user has valid data" when {
-    "user is applying for IP16" in new Setup  {
+    "applyFor2016IPAndFpShutterEnabled is disabled and  user is applying for IP16" in new Setup  {
+        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
         when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any())).thenReturn(Some(tstSummaryModel))
         when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
         val result = controller.summaryIP16(fakeRequest)
         status(result) shouldBe 200
+      contentAsString(result) should include ("Get individual protection 2016")
+    }
+
+    "applyFor2016IPAndFpShutterEnabled is enabled and  user is applying for IP16" in new Setup  {
+      when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
+      when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any())).thenReturn(Some(tstSummaryModel))
+      when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+
+      val result = controller.summaryIP16(fakeRequest)
+      status(result) shouldBe 200
+      contentAsString(result) should include ("Sorry, applications for 2016 protection have ended")
     }
   }
 
