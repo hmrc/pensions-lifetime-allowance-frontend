@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers
 
 trait CommonMessages{
 
-  val plaBaseAppName                = "Protect your lifetime allowance"
+  val plaBaseAppName                = "Check your pension protections and enhancements"
   val plaBaseYes                    = "Yes"
   val plaBaseNo                     = "No"
   val plaBaseContinue               = "Continue"
