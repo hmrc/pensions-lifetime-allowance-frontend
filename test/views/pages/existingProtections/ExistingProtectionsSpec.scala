@@ -16,9 +16,13 @@
 
 package views.pages.existingProtections
 
+import config.FrontendAppConfig
 import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel}
 import org.jsoup.Jsoup
+import org.mockito.Mockito.when
 import play.api.i18n.Messages
+import play.api.inject
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.Call
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.existingProtections.ExistingProtections
@@ -27,14 +31,21 @@ import views.html.pages.existingProtections.existingProtections
 class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtections {
 
   "The Existing Protections page" should {
+    val mockAppConfig: FrontendAppConfig =  mock[FrontendAppConfig]
+    when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
 
     lazy val protectionModel = ExistingProtectionDisplayModel("IP2016", "active", Some(Call("", "", "")), Some(tstPSACheckRef), "protectionReference", Some("250.00"), Some(""))
     lazy val protectionModel2 = ExistingProtectionDisplayModel("IP2014", "dormant", Some(Call("", "", "")), Some(""), "protectionReference", Some(""), Some(""))
     lazy val tstPSACheckRef = "PSA33456789"
 
-    lazy val tstProtectionDisplayModelActive1 = ExistingProtectionDisplayModel("FP2016","active", Some(controllers.routes.AmendsController.amendsSummary("ip2014", "active")), Some(tstPSACheckRef), Messages("pla.protection.protectionReference"), Some("100.00"), None, None)
+    lazy val tstProtectionDisplayModelActive1 = ExistingProtectionDisplayModel("FP2016", "active", Some(controllers.routes.AmendsController.amendsSummary("ip2014", "active")), Some(tstPSACheckRef), Messages("pla.protection.protectionReference"), Some("100.00"), None, None)
     lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel("IP2014", "dormant", Some(controllers.routes.AmendsController.amendsSummary("fp2016", "dormant")), Some(tstPSACheckRef), Messages("pla.protection.protectionReference"), Some("100.00"), Some(""), None)
     lazy val tstProtectionDisplayModelEmpty1 = ExistingProtectionDisplayModel("", "", None, None, "", None, None, None)
+
+    val application = new GuiceApplicationBuilder()
+      .configure("metrics.enabled" -> false)
+      .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
+      .build()
 
     lazy val model = ExistingProtectionsDisplayModel(Some(protectionModel), List(tstProtectionDisplayModelActive1))
     lazy val view = application.injector.instanceOf[existingProtections]
@@ -51,7 +62,6 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     lazy val model3 = ExistingProtectionsDisplayModel(Some(protectionModel), List.empty)
     lazy val view3 = application.injector.instanceOf[existingProtections]
     lazy val doc3 = Jsoup.parse(view3.apply(model3).body)
-
 
 
     "have the correct title" in {
@@ -112,7 +122,6 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
     }
 
-
     "have a view details about other protections and how to apply link which" should {
 
       lazy val link = doc.select("#main-content > div > div > p > a")
@@ -122,14 +131,39 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
 
       s"have the link text $plaExistingProtectionsLinkText" in {
-       link.text shouldBe plaExistingProtectionsLinkText
+        link.text shouldBe plaExistingProtectionsLinkText
       }
 
       s"have a question of ${"pla.existingProtections.other.protections.link"}" in {
-      doc.select("#main-content > div > div > p").text shouldBe plaExistingProtectionOtherText
-        }
+        doc.select("#main-content > div > div > p").text shouldBe plaExistingProtectionOtherText
       }
     }
+
+    "have a view details about taking higher tax-free lump sums with protected allowances and the link which" should {
+      val mockAppConfig: FrontendAppConfig =  mock[FrontendAppConfig]
+      when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
+      val application = new GuiceApplicationBuilder()
+        .configure("metrics.enabled" -> false)
+        .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
+        .build()
+      lazy val view = application.injector.instanceOf[existingProtections]
+      lazy val doc = Jsoup.parse(view.apply(model).body)
+
+      lazy val link = doc.select("#main-content > div > div > p > a")
+
+      s"have a link destination about taking higher tax-free lump sums with protected allowances" in {
+        link.attr("href") shouldBe plaExistingProtectionsHref2016ShutterEnabled
+      }
+
+      s"have the link text $plaExistingProtectionsLinkText2016ShutterEnabled" in {
+        link.text shouldBe plaExistingProtectionsLinkText2016ShutterEnabled
+      }
+
+      s"have a question of ${"pla.existingProtections.other.protections.link_2016ShutterEnabled"}" in {
+        doc.select("#main-content > div > div > p").text shouldBe plaExistingProtectionOtherText2016ShutterEnabled
+      }
+    }
+  }
 }
 
 

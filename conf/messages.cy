@@ -401,6 +401,8 @@ pla.existingProtections.withdrawLinkText                = Tynnu''n ôl eich diog
 pla.existingProtections.other.protections.link          = manylion diogelwch arall a sut i wneud cais
 pla.existingProtections.other.protections.linkText.before = Gweler
 pla.existingProtections.other.protections.linkText.after  = ar GOV.UK.
+pla.existingProtections.other.protections.link_2016ShutterEnabled            = Gymryd cyfandaliadau rhydd o dreth uwch gyda lwfansau wedi’u diogelu
+pla.existingProtections.other.protections.linkText.before_2016ShutterEnabled = Dysgwch am
 
 
 

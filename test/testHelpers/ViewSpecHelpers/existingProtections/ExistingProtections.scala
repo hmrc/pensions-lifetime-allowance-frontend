@@ -30,8 +30,11 @@ trait ExistingProtections {
   val plaExistingProtectionsProtectionRef = "Protection notification number"
   val plaExistingProtectionsPSARef = "Scheme administrator reference"
   val plaExistingProtectionsLinkText = "details about individual and fixed protections and how to apply"
+  val plaExistingProtectionsLinkText2016ShutterEnabled = "Taking higher tax-free lump sums with protected allowances"
   val plaExistingProtectionOtherText = "View details about individual and fixed protections and how to apply on GOV.UK."
   val plaExistingProtectionsHref = "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"
+  val plaExistingProtectionOtherText2016ShutterEnabled = "Find out about Taking higher tax-free lump sums with protected allowances"
+  val plaExistingProtectionsHref2016ShutterEnabled = "https://www.gov.uk/guidance/taking-higher-tax-free-lump-sums-with-lifetime-allowance-protection"
   val plaExistingProtectionsAmendLinkText = "View or change your protection details"
   val plaExistingProtectionsWithdrawLinkText = "Withdraw your open protection"
 
