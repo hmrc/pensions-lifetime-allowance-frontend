@@ -399,6 +399,8 @@ pla.existingProtections.withdrawLinkText                = Withdraw your open pro
 pla.existingProtections.other.protections.link          = details about individual and fixed protections and how to apply
 pla.existingProtections.other.protections.linkText.before = View
 pla.existingProtections.other.protections.linkText.after  = on GOV.UK.
+pla.existingProtections.other.protections.link_2016ShutterEnabled            = Taking higher tax-free lump sums with protected allowances
+pla.existingProtections.other.protections.linkText.before_2016ShutterEnabled = Find out about
 
 ## PROTECTION INFORMATION ##
 pla.protection.statuses.open                            = Open

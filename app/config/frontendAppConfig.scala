@@ -43,6 +43,7 @@ trait AppConfig {
   val appName : String
   val sessionMissingUpliftUrlPrefix: Option[String]
   val configuration: Configuration
+  val applyFor2016IpAndFpShutterEnabled: Boolean
   def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String
 
 }
@@ -59,7 +60,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
 
   override val excludeCopeTab: Boolean = configuration.getOptional[Boolean](s"microservice.services.exclusions.copetab").getOrElse(true)
   override val identityVerification: Boolean = configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)
-  val applyFor2016IpAndFpShutterEnabled: Boolean = configuration.getOptional[Boolean]("applyFor2016IpAndFpShutterEnabled-feature.enabled").getOrElse(false)
+  override val applyFor2016IpAndFpShutterEnabled: Boolean = configuration.getOptional[Boolean]("applyFor2016IpAndFpShutterEnabled-feature.enabled").getOrElse(false)
 
   override lazy val citizenAuthHost = configuration.getOptional[String]("citizen-auth.host")
   override lazy val confirmFPUrl = configuration.getOptional[String]("confirmFP.url").getOrElse("")
@@ -78,7 +79,6 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
   override val validStatusMetric: String = servicesConfig.getString("valid-protection-status")
   override val invalidStatusMetric: String = servicesConfig.getString("invalid-protection-status")
   override val notFoundStatusMetric: String = servicesConfig.getString("not-found-protection-status")
-
 
   override lazy val appName: String = loadConfig("appName")
 
