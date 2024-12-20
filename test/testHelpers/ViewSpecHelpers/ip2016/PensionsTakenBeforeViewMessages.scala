@@ -17,9 +17,9 @@
 package testHelpers.ViewSpecHelpers.ip2016
 
 trait PensionsTakenBeforeViewMessages {
-  val plaPensionsTakenBeforeTitle = "Did you get an income from any of your pensions before 6 April 2006? - Protect your lifetime allowance - GOV.UK"
+  val plaPensionsTakenBeforeTitle = "Did you get an income from any of your pensions before 6 April 2006? - Check your pension protections and enhancements - GOV.UK"
   val plaPensionsTakenBeforeHeading = "Did you get an income from any of your pensions before 6 April 2006?"
-  val plaPensionsWorthBeforeTitle = "What were these pensions worth on 5 April 2016? - Protect your lifetime allowance - GOV.UK"
+  val plaPensionsWorthBeforeTitle = "What were these pensions worth on 5 April 2016? - Check your pension protections and enhancements - GOV.UK"
   val plaPensionsTakenBeforeQuestion = "What were these pensions worth on 5 April 2016?"
   val plaPensionsTakenBeforeHelp = "How to work out the amount"
   val plaPensionsTakenBeforeParaOne = "If you did not get an income from any other pensions since 6 April 2006:"

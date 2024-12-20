@@ -22,6 +22,7 @@ import config._
 import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.{ApplicationOutcome, ApplicationType}
+
 import javax.inject.Inject
 import models._
 import play.api.i18n.I18nSupport
@@ -32,6 +33,7 @@ import services.SessionCacheService
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Constants
+import views.html.pages
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
@@ -57,24 +59,28 @@ extends FrontendController(mcc) with I18nSupport with Logging{
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
   val processFPApplication = Action.async { implicit request =>
+
     authFunction.genericAuthWithNino("FP2016") { nino =>
       implicit val protectionType = ApplicationType.FP2016
       plaConnector.applyFP16(nino).flatMap(
         response => routeViaMCNeededCheck(response, nino)
       )
     }
+
   }
 
   val processIPApplication = Action.async {
     implicit request =>
-      authFunction.genericAuthWithNino("IP2016") { nino =>
-        implicit val protectionType = ApplicationType.IP2016
-        for {
-          userData <- sessionCacheService.fetchAllUserData
-          applicationResult <- plaConnector.applyIP16(nino, userData.get)
-          response <- routeViaMCNeededCheck(applicationResult, nino)
-        } yield response
-      }
+
+        authFunction.genericAuthWithNino("IP2016") { nino =>
+          implicit val protectionType = ApplicationType.IP2016
+          for {
+            userData <- sessionCacheService.fetchAllUserData
+            applicationResult <- plaConnector.applyIP16(nino, userData.get)
+            response <- routeViaMCNeededCheck(applicationResult, nino)
+          } yield response
+        }
+
   }
 
 
@@ -114,35 +120,35 @@ extends FrontendController(mcc) with I18nSupport with Logging{
 
   def displayResult(implicit protectionType: ApplicationType.Value): Action[AnyContent] = Action.async {
     implicit request =>
-      implicit val lang = mcc.messagesApi.preferred(request).lang
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        val showUserResearchPanel = setURPanelFlag
-        val errorResponse = InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-        sessionCacheService.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
-          case Some(model) =>
-            val notificationId = model.protection.notificationId.getOrElse {
-              throw new Exceptions.OptionNotDefinedException("applicationOutcome", "notificationId", protectionType.toString)
-            }
-            applicationOutcome(notificationId) match {
+        implicit val lang = mcc.messagesApi.preferred(request).lang
+        authFunction.genericAuthWithNino("existingProtections") { nino =>
+          val showUserResearchPanel = setURPanelFlag
+          val errorResponse = InternalServerError(technicalError(protectionType.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
+          sessionCacheService.fetchAndGetFormData[ApplyResponseModel](common.Strings.nameString("applyResponseModel")).map {
+            case Some(model) =>
+              val notificationId = model.protection.notificationId.getOrElse {
+                throw new Exceptions.OptionNotDefinedException("applicationOutcome", "notificationId", protectionType.toString)
+              }
+              applicationOutcome(notificationId) match {
 
-              case ApplicationOutcome.Successful =>
-                sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-                val displayModel = displayConstructors.createSuccessDisplayModel(model)
-                Ok(resultSuccess(displayModel, showUserResearchPanel))
+                case ApplicationOutcome.Successful =>
+                  sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
+                  val displayModel = displayConstructors.createSuccessDisplayModel(model)
+                  Ok(resultSuccess(displayModel, showUserResearchPanel))
 
-              case ApplicationOutcome.SuccessfulInactive =>
-                val displayModel = displayConstructors.createSuccessDisplayModel(model)
-                Ok(resultSuccessInactive(displayModel, showUserResearchPanel))
+                case ApplicationOutcome.SuccessfulInactive =>
+                  val displayModel = displayConstructors.createSuccessDisplayModel(model)
+                  Ok(resultSuccessInactive(displayModel, showUserResearchPanel))
 
-              case ApplicationOutcome.Rejected =>
-                val displayModel = displayConstructors.createRejectionDisplayModel(model)
-                Ok(resultRejected(displayModel, showUserResearchPanel))
-            }
-          case _ =>
-            logger.warn(s"Could not retrieve ApplyResponseModel from cache for user with nino: $nino")
-            errorResponse
+                case ApplicationOutcome.Rejected =>
+                  val displayModel = displayConstructors.createRejectionDisplayModel(model)
+                  Ok(resultRejected(displayModel, showUserResearchPanel))
+              }
+            case _ =>
+              logger.warn(s"Could not retrieve ApplyResponseModel from cache for user with nino: $nino")
+              errorResponse
+          }
         }
-      }
   }
 
   private[controllers] def setURPanelFlag(implicit hc: HeaderCarrier): Boolean = {
