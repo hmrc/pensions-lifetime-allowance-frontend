@@ -155,7 +155,7 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
     lazy val doc2 = Jsoup.parse(view2.body)
 
     "have the new correct title" in {
-      doc.title() shouldBe plaPrintNewTitle
+      doc.title() shouldBe plaPrintTitle
     }
 
     "have a new service name which" should {
@@ -163,7 +163,7 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       lazy val serviceName = doc.getElementsByClass("hmrc-header__service-name")
 
       "contain the text" in {
-        serviceName.text shouldBe plaPrintServiceNewName
+        serviceName.text shouldBe plaPrintServiceName
       }
     }
 
