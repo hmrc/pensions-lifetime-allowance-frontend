@@ -20,6 +20,6 @@ import testHelpers.ViewSpecHelpers.ip2016.CurrentPensionsViewMessages
 
 trait AmendIP14CurrentPensionsViewSpecMessages extends CurrentPensionsViewMessages{
   val plaIp14CurrentPensionsTitle               = "What were your UK pensions worth on 5 April 2014?"
-  val plaIp14CurrentPensionsTitleNew               = "What were your UK pensions worth on 5 April 2014? - Check your pension protections and enhancements - GOV.UK"
+  val plaIp14CurrentPensionsTitleNew               = "What were your UK pensions worth on 5 April 2014? - Protect your lifetime allowance - GOV.UK"
   val plaIp14CurrentPensionsHiddenTextPara      = "Use figures that were correct at 5 April 2014."
 }

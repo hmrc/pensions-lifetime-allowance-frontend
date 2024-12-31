@@ -38,7 +38,7 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
     lazy val doc = Jsoup.parse(view.apply(withdrawDate,"ip14", "dormant").body)
 
     s"have a title ${"pla.withdraw.what-happens.info-heading"}" in {
-      doc.title() shouldBe s"$plaWithdrawWhatHappensInfoHeading - Check your pension protections and enhancements - GOV.UK"
+      doc.title() shouldBe s"$plaWithdrawWhatHappensInfoHeading - Protect your lifetime allowance - GOV.UK"
     }
 
     s"have a question of ${"pla.withdraw.what-happens.info-heading"}" in {

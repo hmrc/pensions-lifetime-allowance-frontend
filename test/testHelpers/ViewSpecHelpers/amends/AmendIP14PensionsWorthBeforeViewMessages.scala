@@ -17,7 +17,7 @@
 package testHelpers.ViewSpecHelpers.amends
 
 trait AmendIP14PensionsWorthBeforeViewMessages {
-  val plaIP14PensionsWorthBeforeTitle =  "What were these pensions worth on 5 April 2014? - Check your pension protections and enhancements - GOV.UK"
+  val plaIP14PensionsWorthBeforeTitle =  "What were these pensions worth on 5 April 2014? - Protect your lifetime allowance - GOV.UK"
 
   val plaIP14PensionsWorthBeforeHeader = "What were these pensions worth on 5 April 2014?"
 

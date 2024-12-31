@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers.confirmation
 
 trait ConfirmFP {
 
-val plaConfirmFP16Title       = "Get fixed protection 2016 for your lifetime allowance - Check your pension protections and enhancements - GOV.UK"
+val plaConfirmFP16Title       = "Get fixed protection 2016 for your lifetime allowance - Protect your lifetime allowance - GOV.UK"
 val plaConfirmFP16PageHeading = "Get fixed protection 2016 for your lifetime allowance"
 val plaConfirmFP16Para1       = "To get this protection you must agree to these declarations."
 val plaConfirmFP16Para2       = "I declare:"
