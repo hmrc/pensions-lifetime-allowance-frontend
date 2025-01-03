@@ -4,11 +4,11 @@ object AppDependencies {
 
   import play.sbt.PlayImport.*
 
-  private val bootstrapVersion = "9.1.0"
-  private val playFrontendVersion = "8.5.0"
-  private val mongoPlayVersion = "2.2.0"
+  private val bootstrapVersion = "9.6.0"
+  private val playFrontendVersion = "11.8.0"
+  private val mongoPlayVersion = "2.3.0"
   private val pekkoVersion = "1.0.2"
-  private val playConditionalFormMappingVersion = "3.1.0"
+  private val playConditionalFormMappingVersion = "3.2.0"
 
   val compile: Seq[ModuleID] = Seq(
     ws,
