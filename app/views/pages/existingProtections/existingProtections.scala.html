@@ -17,11 +17,13 @@
 @import models.ExistingProtectionsDisplayModel
 @import play.api.Application
 @import scala.concurrent.ExecutionContext
+@import config.FrontendAppConfig
 
 @this(
     layout: Layout,
     inactiveExistingProtection : playHelpers.templates.existingProtections.inactiveExistingProtection,
-    activeExistingProtection: playHelpers.templates.existingProtections.activeExistingProtection
+    activeExistingProtection: playHelpers.templates.existingProtections.activeExistingProtection,
+    appConfig: FrontendAppConfig
 )
 
 @(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], messages: Messages)
@@ -115,7 +117,11 @@
     }
 
     <p class="govuk-body">
-        @Messages("pla.existingProtections.other.protections.linkText.before") <a class="govuk-link" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance">@Messages("pla.existingProtections.other.protections.link")</a> @Messages("pla.existingProtections.other.protections.linkText.after")
+        @if(appConfig.applyFor2016IpAndFpShutterEnabled) {
+            @Messages("pla.existingProtections.other.protections.linkText.before_2016ShutterEnabled") <a class="govuk-link" href="https://www.gov.uk/guidance/taking-higher-tax-free-lump-sums-with-lifetime-allowance-protection">@Messages("pla.existingProtections.other.protections.link_2016ShutterEnabled")</a>
+        } else {
+            @Messages("pla.existingProtections.other.protections.linkText.before") <a class="govuk-link" href="https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance">@Messages("pla.existingProtections.other.protections.link")</a> @Messages("pla.existingProtections.other.protections.linkText.after")
+        }
     </p>
 
 }

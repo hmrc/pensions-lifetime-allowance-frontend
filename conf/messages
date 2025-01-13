@@ -399,6 +399,8 @@ pla.existingProtections.withdrawLinkText                = Withdraw your open pro
 pla.existingProtections.other.protections.link          = details about individual and fixed protections and how to apply
 pla.existingProtections.other.protections.linkText.before = View
 pla.existingProtections.other.protections.linkText.after  = on GOV.UK.
+pla.existingProtections.other.protections.link_2016ShutterEnabled            = Taking higher tax-free lump sums with protected allowances
+pla.existingProtections.other.protections.linkText.before_2016ShutterEnabled = Find out about
 
 ## PROTECTION INFORMATION ##
 pla.protection.statuses.open                            = Open
@@ -828,6 +830,12 @@ pla.withdrawn.pageHeading                   = Sorry, applications for 2014 prote
 pla.withdrawn.paraOne                       = You can still
 pla.withdrawn.paraOne.linkText              = view existing applications.
 
+## 2016 Application Period Ended ##
+pla.withdrawn.ap2016.title                  = Sorry, applications for 2016 protection have ended
+pla.withdrawn.ap2016.pageHeading            = Sorry, applications for 2016 protection have ended
+pla.withdrawn.ap2016.paraOne                = You can still
+pla.withdrawn.ap2016.paraOne.linkText       = view existing applications.
+
 ## PSA Lookup form
 psa.lookup.form.scheme-admin-ref-form.title = Enter the Scheme Administrator Reference
 psa.lookup.form.protection-notification-no-form.title = Enter the Protection Notification Number
@@ -910,7 +918,7 @@ psa.lookup.protection-guidance.protection-type-fixed14-value = £1,500,000
 psa.lookup.protection-guidance.protection-type-fixed16-label = Fixed 2016
 psa.lookup.protection-guidance.protection-type-fixed16-value = £1,250,000
 psa.lookup.protection-guidance.protection-type-individual14-label = Individual 2014
-psa.lookup.protection-guidance.protection-type-individual14-value-line1 = The lower of: 
+psa.lookup.protection-guidance.protection-type-individual14-value-line1 = The lower of:
 psa.lookup.protection-guidance.protection-type-individual14-value-line2 = the value of the pension at 5 April 2014
 psa.lookup.protection-guidance.protection-type-individual14-value-line3 = £1,500,000
 psa.lookup.protection-guidance.protection-type-individual16-label = Individual 2016

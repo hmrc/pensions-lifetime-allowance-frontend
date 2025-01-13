@@ -401,6 +401,8 @@ pla.existingProtections.withdrawLinkText                = Tynnu''n ôl eich diog
 pla.existingProtections.other.protections.link          = manylion diogelwch arall a sut i wneud cais
 pla.existingProtections.other.protections.linkText.before = Gweler
 pla.existingProtections.other.protections.linkText.after  = ar GOV.UK.
+pla.existingProtections.other.protections.link_2016ShutterEnabled            = Gymryd cyfandaliadau rhydd o dreth uwch gyda lwfansau wedi’u diogelu
+pla.existingProtections.other.protections.linkText.before_2016ShutterEnabled = Dysgwch am
 
 
 
@@ -992,10 +994,19 @@ pla.resultSuccess.dismissBanner                                     = No thanks
 pla.resultSuccess.userResearchLink.title                            = Help improve GOV.UK
 pla.resultSuccess.userResearchLink.text                             = Help improve this digital service by joining the HMRC user panel (opens in new window)
 pla.resultSuccess.userResearchLink                                  = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113
+
+## 2014 Application Period Ended ##
 pla.withdrawn.pageHeading                                           = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
 pla.withdrawn.paraOne                                               = Gallwch dal i
 pla.withdrawn.paraOne.linkText                                      = weld ceisiadau sy''n bodoli eisoes.
 pla.withdrawn.title                                                 = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
+
+## 2016 Application Period Ended ##
+pla.withdrawn.ap2016.title                                          = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
+pla.withdrawn.ap2016.pageHeading                                    = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
+pla.withdrawn.ap2016.paraOne                                        = Gallwch dal
+pla.withdrawn.ap2016.paraOne.linkText                               = bwrw golwg dros geisiadau sy''n bodoli.
+
 psa.lookup.protection-guidance.protection-type-primary-value        = £1,500,000 neu uwch
 pla.views.heading.FP2016                                   = Manylion eich diogelwch penodol 2016
 pla.views.heading.primary                                  = Manylion eich prif ddiogelwch
