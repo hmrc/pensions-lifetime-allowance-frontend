@@ -1,6 +1,6 @@
 ## Base ##
-service.name                    = Gwiriwch eich diogelwch pensiwn a’ch diogelwch pensiwn uwch
-pla.base.appName                = Gwiriwch eich diogelwch pensiwn a’ch diogelwch pensiwn uwch
+service.name                    = Diogelu''ch lwfans oes
+pla.base.appName                = Diogelu''ch lwfans oes
 pla.base.yes                    = Iawn
 pla.base.no                     = Na
 pla.base.continue               = Parhau
@@ -1004,8 +1004,8 @@ pla.withdrawn.title                                                 = Mae''n ddr
 ## 2016 Application Period Ended ##
 pla.withdrawn.ap2016.title                                          = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
 pla.withdrawn.ap2016.pageHeading                                    = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
-pla.withdrawn.ap2016.paraOne                                        = Gallwch dal i
-pla.withdrawn.ap2016.paraOne.linkText                            = weld ceisiadau sy''n bodoli eisoes.
+pla.withdrawn.ap2016.paraOne                                        = Gallwch dal
+pla.withdrawn.ap2016.paraOne.linkText                               = bwrw golwg dros geisiadau sy''n bodoli.
 
 psa.lookup.protection-guidance.protection-type-primary-value        = £1,500,000 neu uwch
 pla.views.heading.FP2016                                   = Manylion eich diogelwch penodol 2016
