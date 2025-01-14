@@ -47,7 +47,7 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
 
     "have a service name which" should {
 
-      lazy val serviceName = doc.getElementsByClass("hmrc-header__service-name")
+      lazy val serviceName = doc.getElementsByClass("govuk-header__service-name")
 
       "contain the text" in {
         serviceName.text shouldBe plaPrintServiceName
