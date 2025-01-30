@@ -1005,7 +1005,8 @@ pla.withdrawn.title                                                 = Mae''n ddr
 pla.withdrawn.ap2016.title                                          = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
 pla.withdrawn.ap2016.pageHeading                                    = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
 pla.withdrawn.ap2016.paraOne                                        = Gallwch dal
-pla.withdrawn.ap2016.paraOne.linkText                               = bwrw golwg dros geisiadau sy''n bodoli.
+pla.withdrawn.ap2016.paraOne.linkText                               = bwrw golwg dros geisiadau blaenorol
+
 
 psa.lookup.protection-guidance.protection-type-primary-value        = £1,500,000 neu uwch
 pla.views.heading.FP2016                                   = Manylion eich diogelwch penodol 2016
