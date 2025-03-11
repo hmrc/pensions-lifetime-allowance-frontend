@@ -251,7 +251,7 @@ class WithdrawProtectionDateInputConfirmationControllerSpec
           lazy val result: Future[Result] = controller.validateAndSaveWithdrawDateForm(ip2016Protection)(requestWithFormInvalid)
 
           status(result) shouldBe SEE_OTHER
-          await(result).header.headers("Location") shouldBe  "/protect-your-lifetime-allowance/withdraw-protection/date-input-confirmation"
+          await(result).header.headers("Location") shouldBe  "/check-your-pension-protections/withdraw-protection/date-input-confirmation"
 
         }
       }

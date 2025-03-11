@@ -88,7 +88,7 @@ class ResultRejectedSpec extends CommonViewSpecHelper with ResultRejected {
       }
 
       "harbour a link with the destination $" in {
-        doc.select("p a").get(1).attr("href") shouldBe "/protect-your-lifetime-allowance/existing-protections"
+        doc.select("p a").get(1).attr("href") shouldBe "/check-your-pension-protections/existing-protections"
       }
 
       "have link text" in {

@@ -48,9 +48,9 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
         "/apply-for-ip14-overseas-pensions", "/apply-for-ip14-current-pensions", "/apply-for-ip14-pension-sharing-orders",
         "/apply-for-ip14-pension-sharing-order-details", "/apply-for-ip14-remove-pension-sharing-order-details",
         "/apply-for-ip14-submit-your-application").foreach { (path) =>
-       (s"show withdrawn page for /protect-your-lifetime-allowance$path") in {
+       (s"show withdrawn page for /check-your-pension-protections$path") in {
 
-        val result = controller.showWithdrawn()(FakeRequest(GET, s"/protect-your-lifetime-allowance$path"))
+        val result = controller.showWithdrawn()(FakeRequest(GET, s"/check-your-pension-protections$path"))
         contentAsString(result) should include ("Sorry, applications for 2014 protection have ended")
       }
     }

@@ -14,9 +14,18 @@
  * limitations under the License.
  */
 
-package testHelpers.ViewSpecHelpers.ip2016
+package controllers
 
-trait PensionsTakenViewMessages {
-  val plaPensionsTakenTitle = "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension? - Check your pension protections - GOV.UK"
-  val plaPensionsTakenLegendText = "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?"
+import play.api.mvc._
+import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
+
+import javax.inject.{Inject, Singleton}
+
+@Singleton
+class RedirectController @Inject()(mcc: MessagesControllerComponents) extends FrontendController(mcc) {
+
+  def redirectToNewServiceUrl(path: String): Action[AnyContent] = Action { implicit _ =>
+    Redirect(s"/check-your-pension-protections/$path")
+  }
+
 }

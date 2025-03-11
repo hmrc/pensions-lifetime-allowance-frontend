@@ -154,7 +154,7 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
       }
 
       "have the destination" in {
-        printLink.attr("href") shouldBe "/protect-your-lifetime-allowance/print-protection"
+        printLink.attr("href") shouldBe "/check-your-pension-protections/print-protection"
       }
 
       "have the link id" in {
@@ -206,7 +206,7 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
       }
 
       "have the destination" in {
-        detailsLink.attr("href") shouldBe "/protect-your-lifetime-allowance/existing-protections"
+        detailsLink.attr("href") shouldBe "/check-your-pension-protections/existing-protections"
       }
 
       "have the link text" in {

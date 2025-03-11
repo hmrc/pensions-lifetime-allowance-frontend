@@ -1,6 +1,6 @@
 ## Base ##
-service.name                    = Diogelu''ch lwfans oes
-pla.base.appName                = Diogelu''ch lwfans oes
+service.name                    = Gwirio’ch diogelwch pensiwn
+pla.base.appName                = Gwirio’ch diogelwch pensiwn
 pla.base.yes                    = Iawn
 pla.base.no                     = Na
 pla.base.continue               = Parhau
@@ -54,8 +54,8 @@ pla.links.signout                       = Allgofnodi
 ## Timeout ##
 pla.timeout.pageHeading = Rydych wedi''ch allgofnodi o ganlyniad i anweithgarwch
 pla.timeout.returnToPTA.href.1 = Gallwch ddechrau eto o''r dudalen
-pla.timeout.returnToPTA.href.2 = diogelu''ch lwfans oes.
-pla.timeout.returnToPTA.href.3 =
+pla.timeout.returnToPTA.href.2 = gwirio’ch diogelwch pensiwn
+pla.timeout.returnToPTA.href.3 = .
 
 ## Not Found ##
 pla.notFound.title          = Heb ddod o hyd i''r dudalen – 404
@@ -96,7 +96,7 @@ pla.technicalIssue.pageHeading  = Mae problem dechnegol wedi codi
 pla.technicalIssue.paraOne      = Mae problemau wedi codi gyda''r gwasanaeth ar-lein hwn.
 pla.technicalIssue.paraTwo      = Rhowch gynnig arall arni mewn 5 munud.
 pla.technicalIssue.tryAgain.p1 = Yn ôl i''r dudalen
-pla.technicalIssue.tryAgain.linkText = diogelu''ch lwfans oes
+pla.technicalIssue.tryAgain.linkText = gwirio’ch diogelwch pensiwn
 pla.technicalIssue.tryAgain.p2 = i roi cynnig arall arni.
 
 ## Technical Error ##
