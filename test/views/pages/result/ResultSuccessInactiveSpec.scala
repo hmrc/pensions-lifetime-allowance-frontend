@@ -111,7 +111,7 @@ class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessI
       }
 
       "have the link destination" in {
-        detailsLink.attr("href") shouldBe "/protect-your-lifetime-allowance/existing-protections"
+        detailsLink.attr("href") shouldBe "/check-your-pension-protections/existing-protections"
       }
 
     }

@@ -113,7 +113,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     "have another protections list which if other protections are present" should {
 
       "display the correct html including the print link" in {
-        doc2b.select("a#printLink").attr("href") shouldBe "/protect-your-lifetime-allowance/print-protection"
+        doc2b.select("a#printLink").attr("href") shouldBe "/check-your-pension-protections/print-protection"
       }
 
       "contain the data" in {

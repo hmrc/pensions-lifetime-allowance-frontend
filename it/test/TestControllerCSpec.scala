@@ -24,7 +24,7 @@ import scala.concurrent.Future
 
 class TestControllerCSpec extends IntegrationBaseSpec with MockedAudit {
 
-  val protectionInsertUrl = s"$localUrl/protect-your-lifetime-allowance/test-only/protections/insert"
+  val protectionInsertUrl = s"$localUrl/check-your-pension-protections/test-only/protections/insert"
 
   "Hitting the /protections/insert route" should {
     "return a 200 and valid result for protections" when {
@@ -85,7 +85,7 @@ class TestControllerCSpec extends IntegrationBaseSpec with MockedAudit {
     }
   }
 
-  val protectionDeleteAllUrl = s"$localUrl/protect-your-lifetime-allowance/test-only/protections/removeAll"
+  val protectionDeleteAllUrl = s"$localUrl/check-your-pension-protections/test-only/protections/removeAll"
 
   "Hitting the /protections/removeAll route" should {
     "return a 200 and valid result for deletion" when {
@@ -104,7 +104,7 @@ class TestControllerCSpec extends IntegrationBaseSpec with MockedAudit {
   }
 
   val nino = "AA123456"
-  val protectionDeleteNinoUrl = s"$localUrl/protect-your-lifetime-allowance/test-only/individuals/$nino/protections"
+  val protectionDeleteNinoUrl = s"$localUrl/check-your-pension-protections/test-only/individuals/$nino/protections"
 
   "Hitting the /individuals/:nino/protections route" should {
     "return a 200 and valid result for nino deletion" when {

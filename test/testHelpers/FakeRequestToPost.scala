@@ -29,7 +29,7 @@ import play.api.test.Helpers._
 
 class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessionId: String, data: (String, String)*)
   extends AnyWordSpecLike with Matchers with OptionValues with TestConfigHelper {
-  val fakeRequest = FakeRequest("POST", "/protect-your-lifetime-allowance/" + url)
+  val fakeRequest = FakeRequest("POST", "/check-your-pension-protections/" + url)
     .withSession(SessionKeys.sessionId -> s"session-$sessionId")
     .withFormUrlEncodedBody(data:_*).withMethod("POST")
   val result = controllerAction(fakeRequest)

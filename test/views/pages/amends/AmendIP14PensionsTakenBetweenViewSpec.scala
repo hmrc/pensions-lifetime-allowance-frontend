@@ -41,7 +41,7 @@ class AmendIP14PensionsTakenBetweenViewSpec extends CommonViewSpecHelper with Am
     lazy val form = doc.select("form")
 
     "have the correct title" in{
-      doc.title() shouldBe s"$plaIP14PensionsTakenBetweenTitle - Protect your lifetime allowance - GOV.UK"
+      doc.title() shouldBe s"$plaIP14PensionsTakenBetweenTitle - Check your pension protections - GOV.UK"
     }
 
     "have the correct and properly formatted header"in{

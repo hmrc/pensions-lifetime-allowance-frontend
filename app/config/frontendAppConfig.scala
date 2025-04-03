@@ -52,7 +52,7 @@ class FrontendAppConfig @Inject()(val configuration: Configuration, val services
 
   private def loadConfig(key: String) = configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  lazy val signOutUrl = "/protect-your-lifetime-allowance/sign-out"
+  lazy val signOutUrl = "/check-your-pension-protections/sign-out"
 
   lazy val urBannerLink = "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113"
   override lazy val ssoUrl: Option[String] = configuration.getOptional[String](s"portal.ssoUrl")

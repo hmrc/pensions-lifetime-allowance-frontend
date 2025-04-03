@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers.result
 
 trait ResultSuccessInactive {
 
-  val  plaResultSuccessTitle                 = "You've added fixed protection 2016 - Protect your lifetime allowance - GOV.UK"
+  val  plaResultSuccessTitle                 = "You've added fixed protection 2016 - Check your pension protections - GOV.UK"
   val  plaResultSuccessIPChangeDetails       = "Changing your protection details"
   val  plaResultSuccessIPPensionSharing      = "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
   val  plaResultSuccessFPAddToPension        = "If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days."
@@ -26,7 +26,7 @@ trait ResultSuccessInactive {
   val  plaResultRejectionViewDetailsLinkText = "view or change details of your protections"
   val  plaResultSuccessGiveFeedback          = "Give us feedback"
   val  plaResultSuccessExitSurveyLinkText    = "What did you think of this service?"
-  val  plaResultSuccessExitSurveyLink        = "/protect-your-lifetime-allowance/sign-out"
+  val  plaResultSuccessExitSurveyLink        = "/check-your-pension-protections/sign-out"
   val  plaResultSuccessExitSurvey            = "We use your feedback to make our services better."
   val  pensionSchemesLink                    = "<a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries'>"
 

@@ -95,7 +95,7 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
+        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised")
       }
 
       "return a 500 on an unexpected authorisation exception" in {
@@ -112,7 +112,7 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
+        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised")
       }
 
       "redirect to gg login page on an no active session exception" in {
@@ -147,7 +147,7 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
+        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised")
       }
 
       "return a 500 on an unexpected authorisation exception" in {
@@ -164,7 +164,7 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/protect-your-lifetime-allowance/not-authorised")
+        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised")
       }
 
       "redirect to gg login page on an no active session exception" in {

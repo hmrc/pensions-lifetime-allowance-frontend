@@ -1,6 +1,6 @@
 ## Base ##
-service.name                    = Protect your lifetime allowance
-pla.base.appName                = Protect your lifetime allowance
+service.name                    = Check your pension protections
+pla.base.appName                = Check your pension protections
 pla.base.yes                    = Yes
 pla.base.no                     = No
 pla.base.continue               = Continue
@@ -47,7 +47,7 @@ pla.links.signout                       = Sign out
 ## Timeout ##
 pla.timeout.pageHeading = You''ve been signed out due to inactivity
 pla.timeout.returnToPTA.href.1 = You can start again from the
-pla.timeout.returnToPTA.href.2 = protect your lifetime allowance
+pla.timeout.returnToPTA.href.2 = check your pension protections
 pla.timeout.returnToPTA.href.3 = page.
 
 
@@ -90,7 +90,7 @@ pla.technicalIssue.pageHeading  = There is a technical problem
 pla.technicalIssue.paraOne      = This online service is experiencing difficulties.
 pla.technicalIssue.paraTwo      = Please try again in 5 minutes.
 pla.technicalIssue.tryAgain.p1 = Return to the
-pla.technicalIssue.tryAgain.linkText = protect your lifetime allowance
+pla.technicalIssue.tryAgain.linkText = check your pension protections
 pla.technicalIssue.tryAgain.p2 = page to try again.
 
 ## Technical Error ##

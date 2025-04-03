@@ -18,13 +18,13 @@ package testHelpers.ViewSpecHelpers.result
 
 trait ResultRejected {
 
-  val plaResultRejectionTitle                 = "Your application was unsuccessful - Protect your lifetime allowance - GOV.UK"
+  val plaResultRejectionTitle                 = "Your application was unsuccessful - Check your pension protections - GOV.UK"
   val plaResultRejectionPageHeading           = "Your application was unsuccessful"
   val plaResultRejectionViewDetails           = "You can view or change details of your protections at any time."
   val plaResultRejectionViewDetailsLinkText   = "view or change details of your protections"
 
   val plaResultSuccessExitSurveyLinkText      = "What did you think of this service?"
-  val plaResultSuccessExitSurveyLink          = "/protect-your-lifetime-allowance/sign-out"
+  val plaResultSuccessExitSurveyLink          = "/check-your-pension-protections/sign-out"
   val plaResultSuccessTitle                   = "Success"
   val plaResultSuccessAllowanceSubHeading     = "Your protected lifetime allowance is"
   val plaResultSuccessProtectionDetails       = "Your protection details"

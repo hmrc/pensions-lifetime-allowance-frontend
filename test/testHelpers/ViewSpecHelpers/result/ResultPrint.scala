@@ -18,8 +18,8 @@ package testHelpers.ViewSpecHelpers.result
 
 trait ResultPrint {
 
-  val plaPrintTitle                             = "Print your active protection - Protect your lifetime allowance - GOV.UK"
-  val plaPrintServiceName                       = "Protect your lifetime allowance"
+  val plaPrintTitle                             = "Print your active protection - Check your pension protections - GOV.UK"
+  val plaPrintServiceName                       = "Check your pension protections"
   val plaPrintNino                              = "National Insurance number"
   val plaPrintProtectionDetails                 = "Protection details"
   val plaPrintApplicationDate                   = "Application date"
