@@ -14,8 +14,10 @@ lazy val appDependencies: Seq[ModuleID] = Seq.empty
 lazy val plugins: Seq[Plugins] = Seq.empty
 lazy val playSettings: Seq[Setting[?]] = Seq.empty
 
+val scala2_16 = "2.13.16"
+
 ThisBuild / majorVersion := 2
-ThisBuild / scalaVersion := "2.13.12"
+ThisBuild / scalaVersion := scala2_16
 
 
 lazy val scoverageSettings = {
@@ -39,7 +41,7 @@ lazy val root = Project(appName, file("."))
   .settings(scalaSettings *)
   .settings(defaultSettings() *)
   .settings(
-    scalaVersion := "2.13.12",
+    scalaVersion := scala2_16,
     libraryDependencies ++= AppDependencies(),
     Test / parallelExecution := false,
     Test / fork := false,
