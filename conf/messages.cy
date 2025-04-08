@@ -860,7 +860,7 @@ psa.lookup.results.ltatype.15           = Diogelwch Uwch
 psa.lookup.results.ltatype.16           = Diogelwch Penodol
 psa.lookup.results.ltatype.17           = Diogelwch Penodol 2014
 
-psa.lookup.results.save                 = Cadwch ac argraffwch y canlyniadau hyn
+psa.lookup.results.save                 = Adolygwch ac argraffwch y canlyniadau hyn
 psa.lookup.results.check-another        = Gwirio tystysgrif arall
 
 psa.lookup.results.title.print.1        = Canlyniadau lwfans oes

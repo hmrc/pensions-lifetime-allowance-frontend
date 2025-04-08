@@ -385,7 +385,7 @@ pla.existingProtections.title                           = View your existing pro
 pla.existingProtections.pageHeading                     = Your lifetime allowance protection
 pla.existingProtections.active.heading                  = Active protection
 pla.existingProtections.details                         = Details
-pla.existingProtections.print                           = Print and save your details
+pla.existingProtections.print                           = Review and print your protection details
 pla.existingProtections.applicationDate                 = Application date
 pla.existingProtections.noProtections                   = You currently have no protections.
 pla.existingProtections.noActiveProtections             = You currently have no active protection.
@@ -437,7 +437,7 @@ pla.resultSuccess.detailsContent        = When you decide to take money from you
 pla.resultSuccess.protectionRef         = protection notification number
 pla.resultSuccess.psaRef                = scheme administrator reference
 pla.resultSuccess.applicationDate       = application date
-pla.resultSuccess.print                 = Print and save your details
+pla.resultSuccess.print                 = Review and print your protection details
 pla.resultSuccess.IPChangeDetails       = Changing your protection details
 
 pla.resultSuccess.IPPensionSharing.beforeLink = If your pension gets shared in a divorce or civil partnership split, contact
@@ -886,7 +886,7 @@ psa.lookup.results.ltatype.16 = Fixed Protection
 psa.lookup.results.ltatype.17 = Fixed Protection 2014
 
 
-psa.lookup.results.save = Save and print these results
+psa.lookup.results.save = Review and print these results
 psa.lookup.results.check-another = Check another certificate
 
 psa.lookup.results.title.print.1 = Results of lifetime allowance
