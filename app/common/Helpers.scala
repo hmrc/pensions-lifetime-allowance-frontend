@@ -31,7 +31,7 @@ object Helpers {
   def createAmendCallIfRequired(protection: ProtectionModel): Option[Call] = {
     val status = protection.status.map(_.toLowerCase).getOrElse("none")
     val protectionType = protection.protectionType.map(_.toLowerCase).getOrElse("none")
-    if (protectionIsAmendable(protection)) Some(controllers.routes.AmendsController.amendsSummary(protectionType, status))
+    if (protectionIsAmendable(protection)) Some(controllers.routes.app.AmendsController.amendsSummary(protectionType, status))
     else None
   }
 
