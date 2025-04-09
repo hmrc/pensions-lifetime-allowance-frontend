@@ -35,7 +35,7 @@ trait ResultRejected {
   val plaResultSuccessProtectionRef   = "protection notification number"
   val plaResultSuccessPsaRef          = "scheme administrator reference"
   val plaResultSuccessApplicationDate = "application date"
-  val plaResultSuccessPrint           = "Print and save your details"
+  val plaResultSuccessPrint           = "Review and print your protection details"
   val plaResultSuccessIPChangeDetails = "Changing your protection details"
 
   val plaResultSuccessIPPensionSharing =

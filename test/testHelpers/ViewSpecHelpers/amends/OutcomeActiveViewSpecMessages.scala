@@ -32,8 +32,8 @@ trait OutcomeActiveViewSpecMessages {
   val plaResultSuccessProtectionRef   = "protection notification number"
   val plaResultSuccessPsaRef          = "scheme administrator reference"
   val plaResultSuccessApplicationDate = "application date"
-  val plaResultSuccessPrint           = "Print and save your details (opens in a new window)"
-  val plaResultSuccessPrintNew        = "Print and save your details (opens in new tab)"
+  val plaResultSuccessPrint           = "Review and print your protection details (opens in a new window)"
+  val plaResultSuccessPrintNew        = "Review and print your protection details (opens in new tab)"
   val plaResultSuccessIPChangeDetails = "Changing your protection details"
 
   val plaResultSuccessIPPensionSharing =
