@@ -16,7 +16,6 @@
 
 package testHelpers
 
-
 import org.apache.pekko.stream.Materializer
 import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty}
 import play.api.test.FakeRequest
@@ -31,25 +30,39 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 
-class FakeRequestTo(url: String, controllerAction: Action[AnyContent], sessionId: Option[String], data: (String, String)*)
-  extends AnyWordSpecLike with Matchers with OptionValues with MockitoSugar {
-  implicit val system = ActorSystem("test")
-  implicit def mat:Materializer = mock[Materializer]
-  val fakeRequest = constructRequest(url, sessionId)
-  val result = controllerAction(fakeRequest)
-  val jsoupDoc = Jsoup.parse(contentAsString(result))
+class FakeRequestTo(
+    url: String,
+    controllerAction: Action[AnyContent],
+    sessionId: Option[String],
+    data: (String, String)*
+) extends AnyWordSpecLike
+    with Matchers
+    with OptionValues
+    with MockitoSugar {
+  implicit val system            = ActorSystem("test")
+  implicit def mat: Materializer = mock[Materializer]
+  val fakeRequest                = constructRequest(url, sessionId)
+  val result                     = controllerAction(fakeRequest)
+  val jsoupDoc                   = Jsoup.parse(contentAsString(result))
 
-  def constructRequest(url: String, sessionId: Option[String]): FakeRequest[AnyContentAsEmpty.type] = {
+  def constructRequest(url: String, sessionId: Option[String]): FakeRequest[AnyContentAsEmpty.type] =
     sessionId match {
-      case Some(sessId) => FakeRequest("GET", "/check-your-pension-protections/" + url).withSession(SessionKeys.sessionId -> s"session-$sessionId")
+      case Some(sessId) =>
+        FakeRequest("GET", "/check-your-pension-protections/" + url).withSession(
+          SessionKeys.sessionId -> s"session-$sessionId"
+        )
       case None => FakeRequest("GET", "/check-your-pension-protections/" + url)
     }
-  }
+
 }
 
-class AuthorisedFakeRequestTo(controllerAction: Action[AnyContent]) extends AnyWordSpecLike with Matchers with OptionValues with MockitoSugar {
-  implicit val system = ActorSystem("test")
+class AuthorisedFakeRequestTo(controllerAction: Action[AnyContent])
+    extends AnyWordSpecLike
+    with Matchers
+    with OptionValues
+    with MockitoSugar {
+  implicit val system            = ActorSystem("test")
   implicit def mat: Materializer = mock[Materializer]
-  val result = controllerAction(authenticatedFakeRequest())
-  val jsoupDoc = Jsoup.parse(contentAsString(result))
+  val result                     = controllerAction(authenticatedFakeRequest())
+  val jsoupDoc                   = Jsoup.parse(contentAsString(result))
 }

@@ -28,13 +28,14 @@ class PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PensionsTakenBeforeView" should {
-    val pensionsForm = PensionsWorthBeforeForm.pensionsWorthBeforeForm("ip2016").bind(Map("pensionsWorthBeforeAmt" -> "1"))
+    val pensionsForm =
+      PensionsWorthBeforeForm.pensionsWorthBeforeForm("ip2016").bind(Map("pensionsWorthBeforeAmt" -> "1"))
     lazy val view = application.injector.instanceOf[pensionsWorthBefore]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm).body)
 
-    val errorForm =  PensionsWorthBeforeForm.pensionsWorthBeforeForm("ip2016").bind(Map("pensionsWorthBeforeAmt" -> ""))
+    val errorForm = PensionsWorthBeforeForm.pensionsWorthBeforeForm("ip2016").bind(Map("pensionsWorthBeforeAmt" -> ""))
     lazy val errorView = application.injector.instanceOf[pensionsWorthBefore]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
 
@@ -50,18 +51,30 @@ class PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
       doc.select("summary").text shouldBe plaPensionsTakenBeforeHelp
       doc.select("#ip16-pensions-worth-before-help > div > p:nth-child(1)").text shouldBe plaPensionsTakenBeforeParaOne
       doc.select("#ip16-pensions-worth-before-help > div > p:nth-child(3)").text shouldBe plaPensionsTakenBeforeParaTwo
-      doc.select("#ip16-pensions-worth-before-help > div > p:nth-child(5)").text shouldBe plaPensionsTakenBeforeParaThreeNew
+      doc
+        .select("#ip16-pensions-worth-before-help > div > p:nth-child(5)")
+        .text shouldBe plaPensionsTakenBeforeParaThreeNew
     }
 
     "have a hidden menu with the correct list values" in {
-      doc.select("#ip16-pensions-worth-before-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsTakenBeforeStepOne
-      doc.select("#ip16-pensions-worth-before-help > div > ol > li:nth-child(2)").text shouldBe plaPensionsTakenBeforeStepTwo
-      doc.select("#ip16-pensions-worth-before-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsTakenBeforeStepThree
-      doc.select("#ip16-pensions-worth-before-help > div > ul > li:nth-child(1)").text shouldBe plaPensionsTakenBeforeBulletOne
-      doc.select("#ip16-pensions-worth-before-help > div > ul > li:nth-child(2)").text shouldBe plaPensionsTakenBeforeBulletTwo
+      doc
+        .select("#ip16-pensions-worth-before-help > div > ol > li:nth-child(1)")
+        .text shouldBe plaPensionsTakenBeforeStepOne
+      doc
+        .select("#ip16-pensions-worth-before-help > div > ol > li:nth-child(2)")
+        .text shouldBe plaPensionsTakenBeforeStepTwo
+      doc
+        .select("#ip16-pensions-worth-before-help > div > ol > li:nth-child(3)")
+        .text shouldBe plaPensionsTakenBeforeStepThree
+      doc
+        .select("#ip16-pensions-worth-before-help > div > ul > li:nth-child(1)")
+        .text shouldBe plaPensionsTakenBeforeBulletOne
+      doc
+        .select("#ip16-pensions-worth-before-help > div > ul > li:nth-child(2)")
+        .text shouldBe plaPensionsTakenBeforeBulletTwo
     }
 
-    "have a help link redirecting to the right place" in{
+    "have a help link redirecting to the right place" in {
       doc.select("#ip16-pensions-worth-before-help-link").text shouldBe plaPensionsTakenBeforeHelpLinkTextNew
       doc.select("#ip16-pensions-worth-before-help-link").attr("href") shouldBe plaPensionsTakenBeforeHelpLinkLocation
     }
@@ -86,7 +99,7 @@ class PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
       errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryAmountError"
     }
 
-    "not have errors on valid pages" in{
+    "not have errors on valid pages" in {
       pensionsForm.hasErrors shouldBe false
       doc.select("span.error-notification").text shouldBe ""
     }

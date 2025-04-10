@@ -23,21 +23,33 @@ trait OutcomeActiveViewSpecMessages {
   val plaResultSuccessIP14Heading           = "You've amended individual protection 2014"
   val plaResultSuccessAllowanceSubHeading   = "Your protected lifetime allowance is"
   val plaResultSuccessProtectionDetails     = "Your protection details"
-  val plaResultSuccessDetailsContent        = "When you decide to take money from your pension, give these details to your pension provider:"
-  val plaResultSuccessYourName              = "your full name"
-  val plaResultSuccessYourNino              = "your National Insurance number"
-  val plaResultSuccessProtectionRef         = "protection notification number"
-  val plaResultSuccessPsaRef                = "scheme administrator reference"
-  val plaResultSuccessApplicationDate       = "application date"
-  val plaResultSuccessPrint                 = "Print and save your details (opens in a new window)"
-  val plaResultSuccessPrintNew              = "Print and save your details (opens in new tab)"
-  val plaResultSuccessIPChangeDetails       = "Changing your protection details"
-  val plaResultSuccessIPPensionSharing      = "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
-  val plaResultSuccessIPPensionSharingLinkText  = "HMRC Pension Schemes Services"
-  val plaResultSuccessIPPensionsSharingLink = "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries"
-  val plaResultSuccessViewDetails           = "You can view or change details of your protections at any time."
-  val plaResultSuccessViewDetailsLinkText   = "view or change details of your protections"
-  val plaResultSuccessGiveFeedback          = "Give us feedback"
-  val plaResultSuccessExitSurvey            = "What did you think of this service? We use your feedback to make our services better."
-  val plaResultSuccessExitSurveyLinkText    = "What did you think of this service?"
+
+  val plaResultSuccessDetailsContent =
+    "When you decide to take money from your pension, give these details to your pension provider:"
+
+  val plaResultSuccessYourName        = "your full name"
+  val plaResultSuccessYourNino        = "your National Insurance number"
+  val plaResultSuccessProtectionRef   = "protection notification number"
+  val plaResultSuccessPsaRef          = "scheme administrator reference"
+  val plaResultSuccessApplicationDate = "application date"
+  val plaResultSuccessPrint           = "Print and save your details (opens in a new window)"
+  val plaResultSuccessPrintNew        = "Print and save your details (opens in new tab)"
+  val plaResultSuccessIPChangeDetails = "Changing your protection details"
+
+  val plaResultSuccessIPPensionSharing =
+    "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
+
+  val plaResultSuccessIPPensionSharingLinkText = "HMRC Pension Schemes Services"
+
+  val plaResultSuccessIPPensionsSharingLink =
+    "https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries"
+
+  val plaResultSuccessViewDetails         = "You can view or change details of your protections at any time."
+  val plaResultSuccessViewDetailsLinkText = "view or change details of your protections"
+  val plaResultSuccessGiveFeedback        = "Give us feedback"
+
+  val plaResultSuccessExitSurvey =
+    "What did you think of this service? We use your feedback to make our services better."
+
+  val plaResultSuccessExitSurveyLinkText = "What did you think of this service?"
 }

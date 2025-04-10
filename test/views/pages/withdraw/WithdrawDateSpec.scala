@@ -28,11 +28,16 @@ import views.html.pages.withdraw.withdrawDate
 import java.time.LocalDate
 
 class WithdrawDateSpec extends CommonViewSpecHelper with WithdrawDateSpecMessages {
+
   val withdrawDateForModelAllGood: Form[WithdrawDateFormModel] =
-    withdrawDateForm(LocalDate.of(2017, 5, 4)).bind(Map[String,String]("withdrawDate.day" -> "19", "withdrawDate.month" -> "1", "withdrawDate.year" -> "2018"))
+    withdrawDateForm(LocalDate.of(2017, 5, 4))
+      .bind(Map[String, String]("withdrawDate.day" -> "19", "withdrawDate.month" -> "1", "withdrawDate.year" -> "2018"))
+
   val withdrawDateForModelInError: Form[WithdrawDateFormModel] =
-    withdrawDateForm(LocalDate.now()).bind(Map[String,String]("withdrawDate.date" -> "", "withdrawDate.month" -> "", "withdrawDate.year" -> "2018"))
-  lazy val view: withdrawDate = application.injector.instanceOf[withdrawDate]
+    withdrawDateForm(LocalDate.now())
+      .bind(Map[String, String]("withdrawDate.date" -> "", "withdrawDate.month" -> "", "withdrawDate.year" -> "2018"))
+
+  lazy val view: withdrawDate             = application.injector.instanceOf[withdrawDate]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "Withdraw Date view with form without errors" when {
@@ -80,6 +85,7 @@ class WithdrawDateSpec extends CommonViewSpecHelper with WithdrawDateSpecMessage
       }
     }
   }
+
   "Withdraw Date view with form with errors" should {
     lazy val doc = Jsoup.parse(view.apply(withdrawDateForModelInError, "IP2014", "dormant").body)
     "display an error message for the input" in {
@@ -89,4 +95,5 @@ class WithdrawDateSpec extends CommonViewSpecHelper with WithdrawDateSpecMessage
       doc.body().select(".govuk-error-summary").size() shouldBe 1
     }
   }
+
 }

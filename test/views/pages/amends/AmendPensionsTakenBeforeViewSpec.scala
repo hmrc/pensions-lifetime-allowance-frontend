@@ -27,52 +27,58 @@ class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Pension
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
-  "the AmendPensionsTakenBeforeView" should{
-    val pensionsForm = AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm("ip2016").bind(Map("amendedPensionsTakenBefore" -> "yes",
-                                                                                          "amendedPensionsTakenBeforeAmt" -> "12345"))
+  "the AmendPensionsTakenBeforeView" should {
+    val pensionsForm = AmendPensionsTakenBeforeForm
+      .amendPensionsTakenBeforeForm("ip2016")
+      .bind(Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendPensionsTakenBefore]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
-    val errorForm =  AmendPensionsTakenBeforeForm.amendPensionsTakenBeforeForm("ip2016").bind(Map("amendedPensionsTakenBefore" -> "", "amendedPensionsTakenBeforeAmt" -> "12345"))
+    val errorForm = AmendPensionsTakenBeforeForm
+      .amendPensionsTakenBeforeForm("ip2016")
+      .bind(Map("amendedPensionsTakenBefore" -> "", "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val errorView = application.injector.instanceOf[amendPensionsTakenBefore]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
-    "have the correct title" in{
+    "have the correct title" in {
       doc.title() shouldBe plaPensionsTakenBeforeTitle
     }
 
-    "have the correct and properly formatted header"in{
+    "have the correct and properly formatted header" in {
       doc.getElementsByClass("govuk-heading-xl").text shouldBe plaPensionsTakenBeforeHeading
     }
 
-    "have a valid form" in{
+    "have a valid form" in {
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore("ip2016", "open").url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController
+        .submitAmendPensionsTakenBefore("ip2016", "open")
+        .url
     }
 
-    "have a pair of yes/no buttons" in{
+    "have a pair of yes/no buttons" in {
       doc.select("[for=amendedPensionsTakenBefore]").text shouldBe plaBaseYes
       doc.select("input#amendedPensionsTakenBefore").attr("type") shouldBe "radio"
       doc.select("[for=amendedPensionsTakenBefore-2]").text shouldBe plaBaseNo
       doc.select("input#amendedPensionsTakenBefore-2").attr("type") shouldBe "radio"
     }
 
-    "have a continue button" in{
+    "have a continue button" in {
       doc.select("button").text shouldBe plaBaseChange
       doc.getElementsByClass("govuk-button").attr("id") shouldBe "submit"
     }
 
-    "display the correct errors appropriately" in{
+    "display the correct errors appropriately" in {
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 
-    "not have errors on valid pages" in{
+    "not have errors on valid pages" in {
       pensionsForm.hasErrors shouldBe false
       doc.select("span.error-notification").text shouldBe ""
     }
   }
+
 }

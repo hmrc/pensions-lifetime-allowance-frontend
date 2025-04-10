@@ -18,17 +18,27 @@ package testHelpers.ViewSpecHelpers.withdraw
 
 trait WithdrawConfirmationSpecMessages {
 
-  def plaWithdrawConfirmationTitle(protectionType: String)             = s"Your $protectionType has been removed - Check your pension protections - GOV.UK"
-  def plaWithdrawConfirmationMessage(protectionType: String)             = s"Your $protectionType has been removed"
-  val plaWithdrawProtectionIP2014label                                   = "individual protection 2014"
-  val plaWithdrawConfirmationCheckDetails                                = "You can check the details of your pension in your personal tax account."
-  val plaWithdrawConfirmationContactYouIfNeeded                          = "We may need to contact you to confirm the information you've given us."
-  val plaWithdrawConfirmFeedbackHeading                                  = "Give us feedback"
-  val plaWithdrawConfirmFeedbackText                                     = "What did you think of this service? We use your feedback to make our services better."
-  val plaWithdrawConfirmFeedbackLink                                     = "What did you think of this service?"
-  val plaWithdrawConfirmFeedbackUrl                                      = "/check-your-pension-protections/sign-out"
-  val plaWithdrawConfirmationOtherProtections                            = "View details about other protections and how to apply on GOV.UK."
-  val plaWithdrawConfirmationOtherProtectionsLink                        = "details about other protections and how to apply"
-  val plaWithdrawConfirmationOtherProtectionsUrl                         = "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"
+  def plaWithdrawConfirmationTitle(protectionType: String) =
+    s"Your $protectionType has been removed - Check your pension protections - GOV.UK"
+
+  def plaWithdrawConfirmationMessage(protectionType: String) = s"Your $protectionType has been removed"
+  val plaWithdrawProtectionIP2014label                       = "individual protection 2014"
+  val plaWithdrawConfirmationCheckDetails = "You can check the details of your pension in your personal tax account."
+
+  val plaWithdrawConfirmationContactYouIfNeeded =
+    "We may need to contact you to confirm the information you've given us."
+
+  val plaWithdrawConfirmFeedbackHeading = "Give us feedback"
+
+  val plaWithdrawConfirmFeedbackText =
+    "What did you think of this service? We use your feedback to make our services better."
+
+  val plaWithdrawConfirmFeedbackLink              = "What did you think of this service?"
+  val plaWithdrawConfirmFeedbackUrl               = "/check-your-pension-protections/sign-out"
+  val plaWithdrawConfirmationOtherProtections     = "View details about other protections and how to apply on GOV.UK."
+  val plaWithdrawConfirmationOtherProtectionsLink = "details about other protections and how to apply"
+
+  val plaWithdrawConfirmationOtherProtectionsUrl =
+    "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"
 
 }

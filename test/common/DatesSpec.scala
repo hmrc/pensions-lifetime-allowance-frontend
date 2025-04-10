@@ -37,36 +37,36 @@ class DatesSpec extends FakeApplication {
   "dateBefore" should {
 
     "return true when comparing 01/01/2016 to 02/02/2016" in {
-        dateBefore(1, 1, 2016, LocalDate.of(2016, 2, 2)) shouldBe true
+      dateBefore(1, 1, 2016, LocalDate.of(2016, 2, 2)) shouldBe true
     }
 
     "return false when comparing 02/02/2016 to 01/01/2016" in {
-        dateBefore(2, 2, 2016, LocalDate.of(2016, 1, 1)) shouldBe false
+      dateBefore(2, 2, 2016, LocalDate.of(2016, 1, 1)) shouldBe false
     }
 
     "return false when comparing the same dates" in {
-        dateBefore(2, 2, 2016, LocalDate.of(2016, 2, 2)) shouldBe false
+      dateBefore(2, 2, 2016, LocalDate.of(2016, 2, 2)) shouldBe false
     }
   }
 
   "dateAfter" should {
 
     "return false when comparing 01/01/2016 to 02/02/2016" in {
-        dateAfter(1, 1, 2016, LocalDate.of(2016, 2, 2)) shouldBe false
+      dateAfter(1, 1, 2016, LocalDate.of(2016, 2, 2)) shouldBe false
     }
 
     "return true when comparing 02/02/2016 to 01/01/2016" in {
-        dateAfter(2, 2, 2016, LocalDate.of(2016, 1, 1)) shouldBe true
+      dateAfter(2, 2, 2016, LocalDate.of(2016, 1, 1)) shouldBe true
     }
 
     "return false when comparing the same dates" in {
-        dateAfter(2, 2, 2016, LocalDate.of(2016, 2, 2)) shouldBe false
+      dateAfter(2, 2, 2016, LocalDate.of(2016, 2, 2)) shouldBe false
     }
   }
 
   "futureDate" should {
-    val today = LocalDate.now
-    val tomorrow = today.plusDays(1)
+    val today     = LocalDate.now
+    val tomorrow  = today.plusDays(1)
     val yesterday = today.minusDays(1)
 
     "return true for tomorrow" in {
@@ -93,17 +93,18 @@ class DatesSpec extends FakeApplication {
     "return a date in the format d-MMMM-YYYY" when {
 
       "the language is set to English" in {
-        val date = "2019-05-22"
-        val(lang, messages) = createLangMessages(Locale.ENGLISH)
+        val date             = "2019-05-22"
+        val (lang, messages) = createLangMessages(Locale.ENGLISH)
         withDrawDateString(date)(lang, messages) shouldBe "22 May 2019"
       }
 
       "the language is set to Welsh" in {
-        val date = "2019-05-22"
-        val(lang, messages) = createLangMessages(Locale.forLanguageTag("cy"))
+        val date             = "2019-05-22"
+        val (lang, messages) = createLangMessages(Locale.forLanguageTag("cy"))
         withDrawDateString(date)(lang, messages) shouldBe "22 Mai 2019"
 
       }
     }
   }
+
 }

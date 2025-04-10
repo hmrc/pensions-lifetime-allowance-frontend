@@ -30,19 +30,22 @@ import uk.gov.hmrc.mongo.cache.DataKey
 import java.util.UUID
 import scala.concurrent.ExecutionContext
 
-class SessionRepositorySpec extends FakeApplication
-  with MockitoSugar
-  with BeforeAndAfterEach
-  with FutureAwaits
-  with DefaultAwaitTimeout {
+class SessionRepositorySpec
+    extends FakeApplication
+    with MockitoSugar
+    with BeforeAndAfterEach
+    with FutureAwaits
+    with DefaultAwaitTimeout {
 
-  val repository: SessionRepository = app.injector.instanceOf[SessionRepository]
+  val repository: SessionRepository               = app.injector.instanceOf[SessionRepository]
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  val session1: String = UUID.randomUUID.toString
-  val session2: String = UUID.randomUUID.toString
+  val session1: String                                 = UUID.randomUUID.toString
+  val session2: String                                 = UUID.randomUUID.toString
   val userRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(SessionKeys.sessionId -> session1)
-  val otherUserRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest().withSession(SessionKeys.sessionId -> session2)
+
+  val otherUserRequest: FakeRequest[AnyContentAsEmpty.type] =
+    FakeRequest().withSession(SessionKeys.sessionId -> session2)
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -50,22 +53,26 @@ class SessionRepositorySpec extends FakeApplication
   }
 
   val testAnswerKey: DataKey[PensionsTakenModel] = DataKey[PensionsTakenModel]("pensionsTaken")
-  val testAnswer: PensionsTakenModel = PensionsTakenModel(Some("no"))
-  val testOldAnswer: PensionsTakenModel = PensionsTakenModel(Some("yes"))
-  val testCacheMap: CacheMap = CacheMap(session1, Map(testAnswerKey.unwrap -> Json.toJson(testAnswer)))
+  val testAnswer: PensionsTakenModel             = PensionsTakenModel(Some("no"))
+  val testOldAnswer: PensionsTakenModel          = PensionsTakenModel(Some("yes"))
+  val testCacheMap: CacheMap      = CacheMap(session1, Map(testAnswerKey.unwrap -> Json.toJson(testAnswer)))
   val testOtherCacheMap: CacheMap = CacheMap(session2, Map(testAnswerKey.unwrap -> Json.toJson(testAnswer)))
 
   "putInSession" must {
     "successfully store data" in {
-      val res = repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, executionContext)
+      val res =
+        repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, executionContext)
 
       await(res) shouldBe testCacheMap
     }
 
     "successfully overwrite existing data" in {
-      await(repository.putInSession(testAnswerKey, testOldAnswer)(PensionsTakenModel.format, userRequest, executionContext))
+      await(
+        repository.putInSession(testAnswerKey, testOldAnswer)(PensionsTakenModel.format, userRequest, executionContext)
+      )
 
-      val res = repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, executionContext)
+      val res =
+        repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, executionContext)
 
       await(res) shouldBe testCacheMap
     }
@@ -73,7 +80,10 @@ class SessionRepositorySpec extends FakeApplication
 
   "getFromSession" must {
     "return None when no data for this session exists" in {
-      await(repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, executionContext))
+      await(
+        repository
+          .putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, executionContext)
+      )
 
       val res = repository.getFromSession(testAnswerKey)(PensionsTakenModel.format, userRequest)
 
@@ -81,8 +91,13 @@ class SessionRepositorySpec extends FakeApplication
     }
 
     "successfully return existing data" in {
-      await(repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, executionContext))
-      await(repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, executionContext))
+      await(
+        repository
+          .putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, executionContext)
+      )
+      await(
+        repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, executionContext)
+      )
 
       val res = repository.getFromSession(testAnswerKey)(PensionsTakenModel.format, userRequest)
 
@@ -92,7 +107,10 @@ class SessionRepositorySpec extends FakeApplication
 
   "getAllFromSession" must {
     "return None when no data for this session exists" in {
-      await(repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, executionContext))
+      await(
+        repository
+          .putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, executionContext)
+      )
 
       val res = repository.getAllFromSession(userRequest)
 
@@ -100,8 +118,13 @@ class SessionRepositorySpec extends FakeApplication
     }
 
     "successfully return cacheMap with existing data" in {
-      await(repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, executionContext))
-      await(repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, executionContext))
+      await(
+        repository
+          .putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, executionContext)
+      )
+      await(
+        repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, executionContext)
+      )
 
       val res = repository.getAllFromSession(userRequest)
 
@@ -111,8 +134,13 @@ class SessionRepositorySpec extends FakeApplication
 
   "clearSession" must {
     "successfully remove session of a user" in {
-      await(repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, executionContext))
-      await(repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, executionContext))
+      await(
+        repository
+          .putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, otherUserRequest, executionContext)
+      )
+      await(
+        repository.putInSession(testAnswerKey, testAnswer)(PensionsTakenModel.format, userRequest, executionContext)
+      )
 
       await(repository.clearSession(userRequest))
 

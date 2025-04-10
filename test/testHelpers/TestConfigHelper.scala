@@ -25,14 +25,13 @@ import services.SessionCacheService
 
 trait TestConfigHelper extends FakeApplication with MockitoSugar {
 
-  val config = mock[Configuration]
-  val env = mock[Environment]
+  val config                            = mock[Configuration]
+  val env                               = mock[Environment]
   implicit lazy val system: ActorSystem = ActorSystem("test")
-  implicit val mat: Materializer = mock[Materializer]
+  implicit val mat: Materializer        = mock[Materializer]
 }
 
-trait TestControllerHelper extends MockitoSugar with TestConfigHelper{
+trait TestControllerHelper extends MockitoSugar with TestConfigHelper {
   val sessionCacheService = mock[SessionCacheService]
-  val plaConnector = mock[PLAConnector]
+  val plaConnector        = mock[PLAConnector]
 }
-

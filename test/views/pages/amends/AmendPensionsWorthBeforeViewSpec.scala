@@ -28,17 +28,24 @@ class AmendPensionsWorthBeforeViewSpec extends CommonViewSpecHelper with Pension
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendPensionsWorthBeforeView" should {
-    val pensionsForm = AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm("ip2016").bind(Map("amendedPensionsWorthBefore" -> "yes",
-      "amendedPensionsTakenBeforeAmt" -> "12345"))
+    val pensionsForm = AmendPensionsWorthBeforeForm
+      .amendPensionsWorthBeforeForm("ip2016")
+      .bind(Map("amendedPensionsWorthBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendPensionsWorthBefore]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
-    val errorForm = AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm("ip2016").bind(Map("amendedPensionsWorthBefore" -> "",
-      "amendedPensionsTakenBeforeAmt" -> "12345",
-      "protectionType" -> "ip2016",
-      "status" -> "open"))
+    val errorForm = AmendPensionsWorthBeforeForm
+      .amendPensionsWorthBeforeForm("ip2016")
+      .bind(
+        Map(
+          "amendedPensionsWorthBefore"    -> "",
+          "amendedPensionsTakenBeforeAmt" -> "12345",
+          "protectionType"                -> "ip2016",
+          "status"                        -> "open"
+        )
+      )
     lazy val errorView = application.injector.instanceOf[amendPensionsWorthBefore]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
@@ -55,18 +62,34 @@ class AmendPensionsWorthBeforeViewSpec extends CommonViewSpecHelper with Pension
     }
 
     "have a hidden drop-down menu with the correct paragraph and  list values" in {
-      doc.select("#ip16-amend-pensions-taken-before-help > div > p:nth-child(1)").text shouldBe plaPensionsWorthBeforeParaOne
-      doc.select("#ip16-amend-pensions-taken-before-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsWorthBeforeStepOne
-      doc.select("#ip16-amend-pensions-taken-before-help > div > ol > li:nth-child(2)").text shouldBe plaPensionsWorthBeforeStepTwo
-      doc.select("#ip16-amend-pensions-taken-before-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsWorthBeforeStepThree
-      doc.select("#ip16-amend-pensions-taken-before-help > div > p:nth-child(3)").text shouldBe plaPensionsWorthBeforeParaTwo
-      doc.select("#ip16-amend-pensions-taken-before-help > div > ul > li:nth-child(1)").text shouldBe plaPensionsWorthBeforeStepFour
-      doc.select("#ip16-amend-pensions-taken-before-help > div > ul > li:nth-child(2)").text shouldBe plaPensionsWorthBeforeStepFive
+      doc
+        .select("#ip16-amend-pensions-taken-before-help > div > p:nth-child(1)")
+        .text shouldBe plaPensionsWorthBeforeParaOne
+      doc
+        .select("#ip16-amend-pensions-taken-before-help > div > ol > li:nth-child(1)")
+        .text shouldBe plaPensionsWorthBeforeStepOne
+      doc
+        .select("#ip16-amend-pensions-taken-before-help > div > ol > li:nth-child(2)")
+        .text shouldBe plaPensionsWorthBeforeStepTwo
+      doc
+        .select("#ip16-amend-pensions-taken-before-help > div > ol > li:nth-child(3)")
+        .text shouldBe plaPensionsWorthBeforeStepThree
+      doc
+        .select("#ip16-amend-pensions-taken-before-help > div > p:nth-child(3)")
+        .text shouldBe plaPensionsWorthBeforeParaTwo
+      doc
+        .select("#ip16-amend-pensions-taken-before-help > div > ul > li:nth-child(1)")
+        .text shouldBe plaPensionsWorthBeforeStepFour
+      doc
+        .select("#ip16-amend-pensions-taken-before-help > div > ul > li:nth-child(2)")
+        .text shouldBe plaPensionsWorthBeforeStepFive
     }
 
     "have a help link redirecting to the right location" in {
       doc.select("a#ip16-amend-pensions-worth-before-help-link").text shouldBe plaPensionsWorthBeforeHelpLinkText
-      doc.select("a#ip16-amend-pensions-worth-before-help-link").attr("href") shouldBe plaPensionsWorthBeforeHelpLinkLocation
+      doc
+        .select("a#ip16-amend-pensions-worth-before-help-link")
+        .attr("href") shouldBe plaPensionsWorthBeforeHelpLinkLocation
     }
 
     "have a £ symbol present" in {
@@ -83,4 +106,5 @@ class AmendPensionsWorthBeforeViewSpec extends CommonViewSpecHelper with Pension
       doc.select(".govuk-error-message").text shouldBe ""
     }
   }
+
 }

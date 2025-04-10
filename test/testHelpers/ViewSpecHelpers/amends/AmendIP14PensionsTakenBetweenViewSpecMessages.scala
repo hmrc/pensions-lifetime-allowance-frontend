@@ -20,7 +20,14 @@ import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBetweenViewMessages
 
 trait AmendIP14PensionsTakenBetweenViewSpecMessages extends PensionsTakenBetweenViewMessages {
   val plaIP14PensionsTakenBetweenTitle = "Did any of these events happen between 6 April 2006 and 5 April 2014?"
-  val plaIP14PensionsTakenBetweenParaTwo = "You can ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2014."
-  val plaIP14PensionsTakenBetweenStepOne = "Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened."
-  val plaIP14PensionsTakenBetweenLegendText = "Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?"
+
+  val plaIP14PensionsTakenBetweenParaTwo =
+    "You can ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2014."
+
+  val plaIP14PensionsTakenBetweenStepOne =
+    "Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened."
+
+  val plaIP14PensionsTakenBetweenLegendText =
+    "Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?"
+
 }

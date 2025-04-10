@@ -33,74 +33,117 @@ import views.html.pages
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendsOverseasPensionController @Inject()(val sessionCacheService: SessionCacheService,
-                                                mcc: MessagesControllerComponents,
-                                                authFunction: AuthFunction,
-                                                technicalError: views.html.pages.fallback.technicalError,
-                                                amendOverseasPensions: pages.amends.amendOverseasPensions,
-                                                amendIP14OverseasPensions: pages.amends.amendIP14OverseasPensions)
-                                               (implicit val appConfig: FrontendAppConfig,
-                                                val formWithCSRF: FormWithCSRF,
-                                                val plaContext: PlaContext,
-                                                val ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport with Logging {
+class AmendsOverseasPensionController @Inject() (
+    val sessionCacheService: SessionCacheService,
+    mcc: MessagesControllerComponents,
+    authFunction: AuthFunction,
+    technicalError: views.html.pages.fallback.technicalError,
+    amendOverseasPensions: pages.amends.amendOverseasPensions,
+    amendIP14OverseasPensions: pages.amends.amendIP14OverseasPensions
+)(
+    implicit val appConfig: FrontendAppConfig,
+    val formWithCSRF: FormWithCSRF,
+    val plaContext: PlaContext,
+    val ec: ExecutionContext
+) extends FrontendController(mcc)
+    with I18nSupport
+    with Logging {
 
-  def amendOverseasPensions(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).map {
-        case Some(data) =>
-          val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
-          protectionType match {
-            case "ip2016" => Ok(amendOverseasPensions(
-              amendOverseasPensionsForm(protectionType).fill(AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))))),
-              protectionType,
-              status
-            ))
-            case "ip2014" => Ok(amendIP14OverseasPensions(
-              amendOverseasPensionsForm(protectionType).fill(AmendOverseasPensionsModel(yesNoValue, Some(Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))))),
-              protectionType,
-              status
-            ))
+  def amendOverseasPensions(protectionType: String, status: String): Action[AnyContent] =
+    Action.async { implicit request =>
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
+        sessionCacheService
+          .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+          .map {
+            case Some(data) =>
+              val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
+              protectionType match {
+                case "ip2016" =>
+                  Ok(
+                    amendOverseasPensions(
+                      amendOverseasPensionsForm(protectionType).fill(
+                        AmendOverseasPensionsModel(
+                          yesNoValue,
+                          Some(
+                            Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))
+                          )
+                        )
+                      ),
+                      protectionType,
+                      status
+                    )
+                  )
+                case "ip2014" =>
+                  Ok(
+                    amendIP14OverseasPensions(
+                      amendOverseasPensionsForm(protectionType).fill(
+                        AmendOverseasPensionsModel(
+                          yesNoValue,
+                          Some(
+                            Display.currencyInputDisplayFormat(data.updatedProtection.nonUKRights.getOrElse[Double](0))
+                          )
+                        )
+                      ),
+                      protectionType,
+                      status
+                    )
+                  )
+              }
+            case _ =>
+              logger.warn(
+                s"Could not retrieve amend protection model for user with nino $nino when loading the amend overseasPension page"
+              )
+              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+                .withHeaders(CACHE_CONTROL -> "no-cache")
           }
-        case _ =>
-          logger.warn(s"Could not retrieve amend protection model for user with nino $nino when loading the amend overseasPension page")
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
       }
     }
-  }
 
-  def submitAmendOverseasPensions(protectionType: String, status: String): Action[AnyContent] = Action.async {
-    implicit request =>
+  def submitAmendOverseasPensions(protectionType: String, status: String): Action[AnyContent] =
+    Action.async { implicit request =>
       authFunction.genericAuthWithNino("existingProtections") { nino =>
-        amendOverseasPensionsForm(protectionType).bindFromRequest().fold(
-          errors => {
-            protectionType match {
-              case "ip2016" => Future.successful(BadRequest(amendOverseasPensions(errors, protectionType, status)))
-              case "ip2014" => Future.successful(BadRequest(amendIP14OverseasPensions(errors, protectionType, status)))
-            }
-          },
-          success => {
-            sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).flatMap {
-              case Some(model) =>
-                val updatedAmount = success.amendedOverseasPensions match {
-                  case "yes" => success.amendedOverseasPensionsAmt.get.toDouble
-                  case "no" => 0.asInstanceOf[Double]
-                }
-                val updated = model.updatedProtection.copy(nonUKRights = Some(updatedAmount))
-                val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-                val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+        amendOverseasPensionsForm(protectionType)
+          .bindFromRequest()
+          .fold(
+            errors =>
+              protectionType match {
+                case "ip2016" => Future.successful(BadRequest(amendOverseasPensions(errors, protectionType, status)))
+                case "ip2014" =>
+                  Future.successful(BadRequest(amendIP14OverseasPensions(errors, protectionType, status)))
+              },
+            success =>
+              sessionCacheService
+                .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+                .flatMap {
+                  case Some(model) =>
+                    val updatedAmount = success.amendedOverseasPensions match {
+                      case "yes" => success.amendedOverseasPensionsAmt.get.toDouble
+                      case "no"  => 0.asInstanceOf[Double]
+                    }
+                    val updated        = model.updatedProtection.copy(nonUKRights = Some(updatedAmount))
+                    val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+                    val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
-                  _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
-                }
+                    sessionCacheService
+                      .saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel)
+                      .map { _ =>
+                        Redirect(
+                          routes.AmendsController
+                            .amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase)
+                        )
+                      }
 
-              case _ =>
-                logger.warn(s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before")
-                Future.successful(InternalServerError(technicalError(ApplicationType.IP2016.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-            }
-          }
-        )
+                  case _ =>
+                    logger.warn(
+                      s"Could not retrieve amend protection model for user with nino $nino after submitting amend pensions taken before"
+                    )
+                    Future.successful(
+                      InternalServerError(technicalError(ApplicationType.IP2016.toString))
+                        .withHeaders(CACHE_CONTROL -> "no-cache")
+                    )
+                }
+          )
       }
-  }
+    }
 
 }

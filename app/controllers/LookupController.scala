@@ -34,57 +34,71 @@ import java.time.{LocalDate, LocalTime, ZoneId}
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class LookupController @Inject()(val sessionCacheService: SessionCacheService,
-                                 val plaConnector: PLAConnector,
-                                 val actionWithSessionId: ActionWithSessionId,
-                                 mcc: MessagesControllerComponents,
-                                 psa_lookup_not_found_results: views.html.pages.lookup.psa_lookup_not_found_results,
-                                 pla_protection_guidance: views.html.pages.lookup.pla_protection_guidance,
-                                 psa_lookup_results: views.html.pages.lookup.psa_lookup_results)(
-                                 implicit val context: PlaContext,
-                                 implicit val appConfig: FrontendAppConfig,
-                                 implicit val formWithCSRF: FormWithCSRF,
-                                 implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
+class LookupController @Inject() (
+    val sessionCacheService: SessionCacheService,
+    val plaConnector: PLAConnector,
+    val actionWithSessionId: ActionWithSessionId,
+    mcc: MessagesControllerComponents,
+    psa_lookup_not_found_results: views.html.pages.lookup.psa_lookup_not_found_results,
+    pla_protection_guidance: views.html.pages.lookup.pla_protection_guidance,
+    psa_lookup_results: views.html.pages.lookup.psa_lookup_results
+)(
+    implicit val context: PlaContext,
+    implicit val appConfig: FrontendAppConfig,
+    implicit val formWithCSRF: FormWithCSRF,
+    implicit val application: Application
+) extends FrontendController(mcc)
+    with I18nSupport {
 
   implicit val executionContext: ExecutionContext = mcc.executionContext
-  implicit val parser: BodyParser[AnyContent] = mcc.parsers.defaultBodyParser
+  implicit val parser: BodyParser[AnyContent]     = mcc.parsers.defaultBodyParser
 
-  def psaRefForm(implicit request: Request[AnyContent]): Form[String] = {
+  def psaRefForm(implicit request: Request[AnyContent]): Form[String] =
     PSALookupSchemeAdministratorReferenceForm.psaRefForm
-  }
-  def pnnForm(implicit request: Request[AnyContent]): Form[String] = {
+
+  def pnnForm(implicit request: Request[AnyContent]): Form[String] =
     PSALookupProtectionNotificationNoForm.pnnForm
-  }
 
   val lookupRequestID = "psa-lookup-request"
-  val lookupResultID = "psa-lookup-result"
+  val lookupResultID  = "psa-lookup-result"
 
   def displayNotFoundResults: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-      case Some(req@PSALookupRequest(_, Some(_))) => Future.successful(Ok(psa_lookup_not_found_results(req, buildTimestamp)))
-      case _ => Future.successful(Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm))
-    }(executionContext)
+    sessionCacheService
+      .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+      .flatMap {
+        case Some(req @ PSALookupRequest(_, Some(_))) =>
+          Future.successful(Ok(psa_lookup_not_found_results(req, buildTimestamp)))
+        case _ =>
+          Future.successful(
+            Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
+          )
+      }(executionContext)
   }
 
   def displayLookupResults: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService.fetchAndGetFormData[PSALookupResult](lookupResultID).map {
-      case Some(result) => Ok(psa_lookup_results(result, buildTimestamp))
-      case None => Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
-    }(executionContext)
+    sessionCacheService
+      .fetchAndGetFormData[PSALookupResult](lookupResultID)
+      .map {
+        case Some(result) => Ok(psa_lookup_results(result, buildTimestamp))
+        case None =>
+          Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
+      }(executionContext)
   }
 
-  def displayProtectionTypeGuidance: Action[AnyContent] = actionWithSessionId { implicit request =>
-    Ok(pla_protection_guidance())
-  }
+  def displayProtectionTypeGuidance: Action[AnyContent] =
+    actionWithSessionId(implicit request => Ok(pla_protection_guidance()))
 
   def redirectToStart: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService.remove.map { _ => Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
+    sessionCacheService.remove.map { _ =>
+      Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
     }(executionContext)
   }
 
-  def buildTimestamp: String = s"${LocalDate.now.format(DateTimeFormatter
-    .ofPattern("dd/MM/yyyy"))} at ${LocalTime.now(
-      ZoneId.of("Europe/London"))
-    .format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
+  def buildTimestamp: String = s"${LocalDate.now.format(
+      DateTimeFormatter
+        .ofPattern("dd/MM/yyyy")
+    )} at ${LocalTime
+      .now(ZoneId.of("Europe/London"))
+      .format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
 
 }

@@ -26,16 +26,16 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
 
   "The Psa Lookup Not Found Print view" should {
     val psaLookupRequest = PSALookupRequest("check", Some("ref"))
-    lazy val view = application.injector.instanceOf[psa_lookup_not_found_results]
-    lazy val doc = Jsoup.parse(view.apply(psaLookupRequest,"timestamp").body)
+    lazy val view        = application.injector.instanceOf[psa_lookup_not_found_results]
+    lazy val doc         = Jsoup.parse(view.apply(psaLookupRequest, "timestamp").body)
 
     "have the correct header text" in {
       doc.select("h1.govuk-heading-xl").text() shouldBe checkDetailsText
     }
 
-    "include a table" which {
+    "include a table".which {
 
-      "has the correct first row" which {
+      "has the correct first row".which {
         lazy val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(1)")
 
         "contains the correct first element text" in {
@@ -47,7 +47,7 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
         }
       }
 
-      "has the correct second row" which {
+      "has the correct second row".which {
         lazy val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(2)")
 
         "contains the correct first element text" in {
@@ -59,7 +59,7 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
         }
       }
 
-      "has the correct third row" which {
+      "has the correct third row".which {
         lazy val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(3)")
 
         "contains the correct first element text" in {
@@ -80,7 +80,7 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
       doc.select("#main-content > div > div > p:nth-child(4)").text() shouldBe causesText
     }
 
-    "include a list" which {
+    "include a list".which {
 
       "has the first cause listed" in {
         doc.select("#main-content > div > div > ul > li:nth-child(1)").text() shouldBe causeOneText
@@ -95,7 +95,7 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
       doc.select("#main-content > div > div > p:nth-child(6)").text() shouldBe suggestionsText
     }
 
-    "have a save pdf link" which {
+    "have a save pdf link".which {
 
       "has the correct text" in {
         doc.getElementById("printLink").text() shouldBe pdfLinkText
@@ -106,15 +106,18 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
       }
     }
 
-    "have a start again link" which {
+    "have a start again link".which {
 
       "has the correct text" in {
         doc.getElementsByClass("govuk-button govuk-button--start").text() shouldBe startAgainText
       }
 
       "links to the start point" in {
-        doc.getElementsByClass("govuk-button govuk-button--start").attr("href") shouldBe controllers.routes.LookupController.redirectToStart.url
+        doc
+          .getElementsByClass("govuk-button govuk-button--start")
+          .attr("href") shouldBe controllers.routes.LookupController.redirectToStart.url
       }
     }
   }
+
 }

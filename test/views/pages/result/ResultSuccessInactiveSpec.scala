@@ -28,12 +28,14 @@ class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessI
   "The Result Rejected Page" should {
 
     lazy val protectionmodel = ProtectionDetailsDisplayModel(Some(""), "", Some(""))
-    lazy val ip2016Model = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", true, Some(protectionmodel), Seq("1", "2"))
-    lazy val fp2016Model = SuccessDisplayModel(ApplicationType.FP2016, "16", "100.00", false, Some(protectionmodel), Seq("1", "2"))
+    lazy val ip2016Model =
+      SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", true, Some(protectionmodel), Seq("1", "2"))
+    lazy val fp2016Model =
+      SuccessDisplayModel(ApplicationType.FP2016, "16", "100.00", false, Some(protectionmodel), Seq("1", "2"))
 
     lazy val view = application.injector.instanceOf[resultSuccessInactive]
 
-    lazy val doc = Jsoup.parse(view.apply(ip2016Model, false).body)
+    lazy val doc  = Jsoup.parse(view.apply(ip2016Model, false).body)
     lazy val doc2 = Jsoup.parse(view.apply(fp2016Model, false).body)
 
     "have the correct title" in {
@@ -56,7 +58,10 @@ class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessI
     "have a result code paragraph which" should {
 
       "have the text" in {
-        doc.body.select("p").get(0).text  shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."
+        doc.body
+          .select("p")
+          .get(0)
+          .text shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."
       }
 
       "have the correct Id" in {
@@ -138,4 +143,5 @@ class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessI
       }
     }
   }
+
 }

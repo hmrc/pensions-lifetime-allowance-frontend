@@ -51,34 +51,39 @@ import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class WithdrawProtectionDateInputControllerSpec
-  extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach with SessionCacheTestHelper with FakeRequestHelper {
+    extends FakeApplication
+    with MockitoSugar
+    with AuthMock
+    with BeforeAndAfterEach
+    with SessionCacheTestHelper
+    with FakeRequestHelper {
 
-  implicit val system: ActorSystem = ActorSystem()
-  implicit val mat: Materializer = mock[Materializer]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext = mock[PlaContext]
-  implicit val application: Application = mock[Application]
+  implicit val system: ActorSystem                = ActorSystem()
+  implicit val mat: Materializer                  = mock[Materializer]
+  implicit val mockAppConfig: FrontendAppConfig   = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext         = mock[PlaContext]
+  implicit val application: Application           = mock[Application]
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  val messagesApi: MessagesApi = fakeApplication().injector.instanceOf[MessagesApi]
+  val messagesApi: MessagesApi        = fakeApplication().injector.instanceOf[MessagesApi]
   implicit val testMessages: Messages = messagesApi.preferred(fakeRequest)
 
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockPlaConnector: PLAConnector = mock[PLAConnector]
+  val mockPlaConnector: PLAConnector               = mock[PLAConnector]
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
-  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  val mockAuthFunction: AuthFunction = mock[AuthFunction]
-  val mockWithdrawDate: withdrawDate = app.injector.instanceOf[withdrawDate]
-  val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
+  val mockWithdrawDate: withdrawDate               = app.injector.instanceOf[withdrawDate]
+  val mockTechnicalError: technicalError           = app.injector.instanceOf[technicalError]
+  implicit val formWithCSRF: FormWithCSRF          = app.injector.instanceOf[FormWithCSRF]
 
   class Setup {
 
     val authFunction: AuthFunction = new AuthFunction {
-      override implicit val plaContext: PlaContext = mockPlaContext
-      override implicit val appConfig: FrontendAppConfig = mockAppConfig
+      override implicit val plaContext: PlaContext         = mockPlaContext
+      override implicit val appConfig: FrontendAppConfig   = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError
-      override implicit val ec: ExecutionContext = executionContext
+      override implicit val ec: ExecutionContext           = executionContext
 
       override def authConnector: AuthConnector = mockAuthConnector
     }
@@ -89,8 +94,8 @@ class WithdrawProtectionDateInputControllerSpec
       authFunction,
       mockWithdrawDate,
       mockTechnicalError
-    ) {
-    }
+    ) {}
+
   }
 
   override def beforeEach(): Unit = {
@@ -110,29 +115,30 @@ class WithdrawProtectionDateInputControllerSpec
     status = Some("dormant"),
     certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456"))
+    protectionReference = Some("PSA123456")
+  )
 
   val lang: Lang = mock[Lang]
 
-   "In WithdrawProtectionController calling the getWithdrawDateInput action" when {
+  "In WithdrawProtectionController calling the getWithdrawDateInput action" when {
 
-      "there is a stored protection model" should {
-        "return 200" in new Setup {
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+    "there is a stored protection model" should {
+      "return 200" in new Setup {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
 
-          lazy val result: Future[Result] = controller.getWithdrawDateInput(fakeRequest)
+        lazy val result: Future[Result] = controller.getWithdrawDateInput(fakeRequest)
 
-          status(result) shouldBe OK
-        }
+        status(result) shouldBe OK
       }
     }
+  }
 
   "In WithdrawProtectionController calling the postWithdrawDateInput action" when {
 
     "there is no stored protection model" should {
       "return 500" in new Setup {
-        mockAuthConnector(Future.successful({}))
+        mockAuthConnector(Future.successful {})
         cacheFetchCondition[ProtectionModel](None)
         lazy val result: Future[Result] = controller.postWithdrawDateInput(fakeRequest)
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -141,13 +147,18 @@ class WithdrawProtectionDateInputControllerSpec
 
     "there is a stored protection model" should {
       "return 303" in new Setup {
-        mockAuthConnector(Future.successful({}))
+        mockAuthConnector(Future.successful {})
 
         cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
         cacheSaveCondition[WithdrawDateFormModel](mockSessionCacheService)
 
-
-        val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withFormUrlEncodedBody(("withdrawDate.day", "20"), ("withdrawDate.month", "7"), ("withdrawDate.year", "2017")).withMethod("POST")
+        val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest()
+          .withFormUrlEncodedBody(
+            ("withdrawDate.day", "20"),
+            ("withdrawDate.month", "7"),
+            ("withdrawDate.year", "2017")
+          )
+          .withMethod("POST")
 
         lazy val result: Future[Result] = controller.postWithdrawDateInput(request)
         status(result) shouldBe SEE_OTHER
@@ -155,10 +166,8 @@ class WithdrawProtectionDateInputControllerSpec
     }
   }
 
-  def cacheFetchCondition[T](data: Option[T]): Unit = {
+  def cacheFetchCondition[T](data: Option[T]): Unit =
     when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
       .thenReturn(Future.successful(data))
-  }
-  
-}
 
+}
