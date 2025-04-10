@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.redirect
 
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
