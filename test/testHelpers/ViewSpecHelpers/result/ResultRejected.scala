@@ -32,7 +32,7 @@ trait ResultRejected {
   val plaResultSuccessProtectionRef           = "protection notification number"
   val plaResultSuccessPsaRef                  = "scheme administrator reference"
   val plaResultSuccessApplicationDate         = "application date"
-  val plaResultSuccessPrint                   = "Print and save your details"
+  val plaResultSuccessPrint                   = "Review and print your protection details"
   val plaResultSuccessIPChangeDetails         = "Changing your protection details"
   val plaResultSuccessIPPensionSharing        = "If your pension gets shared in a divorce or civil partnership split, contact <a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries'>HMRC Pension Schemes Services</a> within 60 days."
   val plaResultSuccessFPAddToPension          = "If you or your employer adds to your pension, contact <a href='https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries'>HMRC Pension Schemes Services</a> within 90 days."
