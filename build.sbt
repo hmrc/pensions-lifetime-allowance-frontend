@@ -1,5 +1,4 @@
 import uk.gov.hmrc.DefaultBuildSettings.{defaultSettings, itSettings, scalaSettings}
-import sbt.Keys.{*, scalacOptions}
 import sbt.*
 import uk.gov.hmrc.*
 import DefaultBuildSettings.*
