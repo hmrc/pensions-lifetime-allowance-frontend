@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package controllers.redirect
 
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.mvc.MessagesControllerComponents
