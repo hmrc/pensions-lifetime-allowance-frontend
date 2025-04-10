@@ -32,42 +32,51 @@ import utils.ActionWithSessionId
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class LookupSchemeAdministratorReferenceController @Inject()(val sessionCacheService: SessionCacheService,
-                                                             val plaConnector: PLAConnector,
-                                                             val actionWithSessionId: ActionWithSessionId,
-                                                             mcc: MessagesControllerComponents,
-                                                             psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form)(
-                                 implicit val context: PlaContext,
-                                 implicit val appConfig: FrontendAppConfig,
-                                 implicit val formWithCSRF: FormWithCSRF,
-                                 implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
+class LookupSchemeAdministratorReferenceController @Inject() (
+    val sessionCacheService: SessionCacheService,
+    val plaConnector: PLAConnector,
+    val actionWithSessionId: ActionWithSessionId,
+    mcc: MessagesControllerComponents,
+    psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form
+)(
+    implicit val context: PlaContext,
+    implicit val appConfig: FrontendAppConfig,
+    implicit val formWithCSRF: FormWithCSRF,
+    implicit val application: Application
+) extends FrontendController(mcc)
+    with I18nSupport {
 
   implicit val executionContext: ExecutionContext = mcc.executionContext
-  implicit val parser: BodyParser[AnyContent] = mcc.parsers.defaultBodyParser
+  implicit val parser: BodyParser[AnyContent]     = mcc.parsers.defaultBodyParser
 
-  def psaRefForm(implicit request: Request[AnyContent]): Form[String] = {
+  def psaRefForm(implicit request: Request[AnyContent]): Form[String] =
     PSALookupSchemeAdministratorReferenceForm.psaRefForm
-  }
 
   val lookupRequestID = "psa-lookup-request"
-  val lookupResultID = "psa-lookup-result"
+  val lookupResultID  = "psa-lookup-result"
 
   def displaySchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-      case Some(PSALookupRequest(psaRef, _)) => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
-      case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
-    }(executionContext)
+    sessionCacheService
+      .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+      .flatMap {
+        case Some(PSALookupRequest(psaRef, _)) =>
+          Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
+        case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
+      }(executionContext)
   }
 
   def submitSchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    psaRefForm.bindFromRequest().fold(
-      formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
-      validFormData => {
-        sessionCacheService.saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData)).map {
-          _ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm)
-        }(executionContext)
-      }
-    )
+    psaRefForm
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
+        validFormData =>
+          sessionCacheService
+            .saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData))
+            .map(_ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm))(
+              executionContext
+            )
+      )
   }
 
 }

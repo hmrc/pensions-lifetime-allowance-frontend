@@ -29,23 +29,33 @@ import java.time.LocalDate
 
 object AmendPSODetailsForm extends CommonBinders {
 
-  val key = "pso"
+  val key    = "pso"
   val amount = "psoAmt"
 
   def amendPsoDetailsForm(protectionType: String)(implicit messages: Messages): Form[AmendPSODetailsModel] = Form(
     mapping(
-      key -> of(DateFormatter(
-        key,
-        optMinDate = Some(if (protectionType == "ip2016") Constants.minIP16PSODate else Constants.minIP14PSODate),
-        optMaxDate = Some(LocalDate.now.plusDays(1))
-      )),
+      key -> of(
+        DateFormatter(
+          key,
+          optMinDate = Some(if (protectionType == "ip2016") Constants.minIP16PSODate else Constants.minIP14PSODate),
+          optMaxDate = Some(LocalDate.now.plusDays(1))
+        )
+      ),
       amount -> optional(bigDecimal)
-        .verifying("pla.psoDetails.amount.errors.max", psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency))
-        .verifying("pla.psoDetails.amount.errors.negative", psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying("pla.psoDetails.amount.errors.decimal", psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble))
-        .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined),
-    )
-    ((date, amount) => AmendPSODetailsModel(date, amount))
-    (model => Some(model.pso, model.psoAmt))
+        .verifying(
+          "pla.psoDetails.amount.errors.max",
+          psoAmt => isLessThanDouble(psoAmt.getOrElse(BigDecimal(0.0)).toDouble, Constants.npsMaxCurrency)
+        )
+        .verifying(
+          "pla.psoDetails.amount.errors.negative",
+          psoAmt => isPositive(psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
+        )
+        .verifying(
+          "pla.psoDetails.amount.errors.decimal",
+          psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
+        )
+        .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined)
+    )((date, amount) => AmendPSODetailsModel(date, amount))(model => Some(model.pso, model.psoAmt))
   )
+
 }

@@ -21,13 +21,15 @@ import models._
 import play.api.data.Forms._
 import play.api.data._
 
-object PensionsTakenBetweenForm extends CommonBinders{
+object PensionsTakenBetweenForm extends CommonBinders {
 
-  def pensionsTakenBetweenForm(protectionType: String): Form[PensionsTakenBetweenModel] = Form (
+  def pensionsTakenBetweenForm(protectionType: String): Form[PensionsTakenBetweenModel] = Form(
     mapping(
-      "pensionsTakenBetween" -> common.Validation.newText(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType")
+      "pensionsTakenBetween" -> common.Validation
+        .newText(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType")
         .verifying(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType", mandatoryCheck)
         .verifying(s"pla.pensionsTakenBetween.errors.mandatoryError.$protectionType", yesNoCheck)
     )(PensionsTakenBetweenModel.apply)(PensionsTakenBetweenModel.unapply)
   )
+
 }

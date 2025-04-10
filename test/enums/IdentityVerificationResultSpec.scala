@@ -23,6 +23,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
 class IdentityVerificationResultSpec extends AnyWordSpecLike with Matchers with OptionValues {
+
   "IdentityVerificationResult" when {
     "serialising to JSON" should {
       "return JSString" in {
@@ -36,4 +37,5 @@ class IdentityVerificationResultSpec extends AnyWordSpecLike with Matchers with 
       }
     }
   }
+
 }

@@ -35,84 +35,87 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
 
   lazy val amendsInactiveResultModelIP16 = InactiveAmendResultDisplayModel(
     notificationId = "43",
-    additionalInfo = Seq("1","2")
+    additionalInfo = Seq("1", "2")
   )
 
   lazy val amendsInactiveResultModelIP14 = InactiveAmendResultDisplayModel(
     notificationId = "32",
-    additionalInfo = Seq("1","2")
+    additionalInfo = Seq("1", "2")
   )
 
   lazy val viewIP16 = application.injector.instanceOf[outcomeInactive]
-  lazy val docIP16 = Jsoup.parse(viewIP16.apply(amendsInactiveResultModelIP16, Some(amendsGAModel)).body)
+  lazy val docIP16  = Jsoup.parse(viewIP16.apply(amendsInactiveResultModelIP16, Some(amendsGAModel)).body)
 
   lazy val viewIP14 = application.injector.instanceOf[outcomeInactive]
-  lazy val docIP14 = Jsoup.parse(viewIP14.apply(amendsInactiveResultModelIP14, Some(amendsGAModel)).body)
+  lazy val docIP14  = Jsoup.parse(viewIP14.apply(amendsInactiveResultModelIP14, Some(amendsGAModel)).body)
 
-  "the OutcomeInactiveView" should{
-    "have the correct title" in{
+  "the OutcomeInactiveView" should {
+    "have the correct title" in {
       docIP16.title() shouldBe s"$plaResultSuccessOutcomeActiveTitle - Check your pension protections - GOV.UK"
     }
 
-    "have the correct header for IP16" in{
+    "have the correct header for IP16" in {
       docIP16.select("h1.govuk-heading-xl").text() shouldBe plaResultSuccessIP16Heading
     }
 
-    "have the correct header for IP14" in{
+    "have the correct header for IP14" in {
       docIP14.select("h1.govuk-heading-xl").text() shouldBe plaResultSuccessIP14Heading
     }
 
-    "have the correct structure for IP16" when{
-      "looking at the explanatory paragraph displayed" in{
+    "have the correct structure for IP16" when {
+      "looking at the explanatory paragraph displayed" in {
         docIP16.select("p#additionalInfo1").text() shouldBe plaAmendResultCodeIP16AdditionalInfoOne
         docIP16.select("p#additionalInfoLink").text() shouldBe plaAmendResultCodeAdditionalInfoTwo
       }
 
-      "checking the 'HMRC Pensions Schemes Services' link" in{
+      "checking the 'HMRC Pensions Schemes Services' link" in {
         docIP16.select("#ipPensionSharing a").text() shouldBe plaResultSuccessIPPensionSharingLinkText
         docIP16.select("#ipPensionSharing a").attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
       }
     }
 
-    "have the correct structure for IP14" when{
-      "looking at the explanatory paragraph displayed" in{
+    "have the correct structure for IP14" when {
+      "looking at the explanatory paragraph displayed" in {
         docIP14.select("p#additionalInfo1").text() shouldBe plaAmendResultCodeIP14AdditionalInfoOne
         docIP14.select("p#additionalInfoLink").text() shouldBe plaAmendResultCodeAdditionalInfoTwo
       }
 
-      "checking the 'HMRC Pensions Schemes Services' link" in{
+      "checking the 'HMRC Pensions Schemes Services' link" in {
         docIP14.select("#ipPensionSharing a").text() shouldBe plaResultSuccessIPPensionSharingLinkText
         docIP14.select("#ipPensionSharing a").attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
       }
     }
 
-    "have a properly structured 'Changing your protection details' section" when{
-      "looking at the header" in{
+    "have a properly structured 'Changing your protection details' section" when {
+      "looking at the header" in {
         docIP16.select("h2.govuk-heading-m").eq(0).text() shouldBe plaResultSuccessIPChangeDetails
       }
 
-      "looking at the explanatory paragraph" in{
+      "looking at the explanatory paragraph" in {
         docIP16.select("p").eq(2).text() shouldBe plaResultSuccessIPPensionSharing
         docIP16.select("p").eq(3).text() shouldBe plaResultSuccessViewDetailInactive
       }
 
-      "using the links" in{
+      "using the links" in {
         docIP16.select("#ipPensionSharing a").text() shouldBe plaResultSuccessIPPensionSharingLinkText
         docIP16.select("#ipPensionSharing a").attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
         docIP16.select("#viewChangeDetails").text() shouldBe plaResultSuccessViewDetailsLinkText
-        docIP16.select("#viewChangeDetails").attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
+        docIP16
+          .select("#viewChangeDetails")
+          .attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
       }
     }
-    "have a properly structured 'Give us feedback' section" when{
-      "looking at the header" in{
+    "have a properly structured 'Give us feedback' section" when {
+      "looking at the header" in {
         docIP16.select("h2.govuk-heading-m").eq(1).text() shouldBe plaResultSuccessGiveFeedback
       }
-      "looking at the explanatory paragraph" in{
+      "looking at the explanatory paragraph" in {
         docIP16.select("p").eq(4).text() shouldBe plaResultSuccessExitSurvey
       }
-      "using the feedback link" in{
+      "using the feedback link" in {
         docIP16.select("#submit-survey-button").text() shouldBe plaResultSuccessExitSurveyLinkText
       }
     }
   }
+
 }

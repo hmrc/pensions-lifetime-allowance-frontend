@@ -38,100 +38,113 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
     protectionType = ApplicationType.IP2016,
     notificationId = "44",
     protectedAmount = "£1,350,000.45",
-    details = Some(ProtectionDetailsDisplayModel(
-      protectionReference = Some("protectionRef"),
-      psaReference = "psaRef",
-      applicationDate = Some("14 June 2017")
-    ))
+    details = Some(
+      ProtectionDetailsDisplayModel(
+        protectionReference = Some("protectionRef"),
+        psaReference = "psaRef",
+        applicationDate = Some("14 June 2017")
+      )
+    )
   )
 
   val amendsActiveResultModelIP14 = ActiveAmendResultDisplayModel(
     protectionType = ApplicationType.IP2014,
     notificationId = "33",
     protectedAmount = "£1,350,000.11",
-    details = Some(ProtectionDetailsDisplayModel(
-      protectionReference = Some("protectionRef"),
-      psaReference = "psaRef",
-      applicationDate = Some("14 June 2017")
-    ))
+    details = Some(
+      ProtectionDetailsDisplayModel(
+        protectionReference = Some("protectionRef"),
+        psaReference = "psaRef",
+        applicationDate = Some("14 June 2017")
+      )
+    )
   )
 
   lazy val viewIP16 = application.injector.instanceOf[outcomeActive]
-  lazy val docIP16 = Jsoup.parse(viewIP16.apply(amendsActiveResultModelIP16,Some(amendsGAModel)).body)
+  lazy val docIP16  = Jsoup.parse(viewIP16.apply(amendsActiveResultModelIP16, Some(amendsGAModel)).body)
 
   lazy val viewIP14 = application.injector.instanceOf[outcomeActive]
-  lazy val docIP14 = Jsoup.parse(viewIP14.apply(amendsActiveResultModelIP14, Some(amendsGAModel)).body)
+  lazy val docIP14  = Jsoup.parse(viewIP14.apply(amendsActiveResultModelIP14, Some(amendsGAModel)).body)
 
-  "the OutcomeActiveView" should{
-    "have the correct title" in{
+  "the OutcomeActiveView" should {
+    "have the correct title" in {
       docIP16.title() shouldBe plaResultSuccessOutcomeActiveTitleNew
     }
 
-    "have the right success message displayed for IP16" in{
+    "have the right success message displayed for IP16" in {
       docIP16.select("h1.govuk-panel__title").text() shouldBe plaResultSuccessIP16Heading
       docIP16.select("#amendedAllowanceText").text() shouldBe plaResultSuccessAllowanceSubHeading
       docIP16.select("strong#protectedAmount").text() shouldBe "£1,350,000.45"
     }
 
-    "have the right success message displayed for IP14" in{
+    "have the right success message displayed for IP14" in {
       docIP14.select("h1.govuk-panel__title").text() shouldBe plaResultSuccessIP14Heading
       docIP14.select("#amendedAllowanceText").text() shouldBe plaResultSuccessAllowanceSubHeading
       docIP14.select("strong#protectedAmount").text() shouldBe "£1,350,000.11"
     }
 
-    "have a properly structured 'Your protection details' section" when{
-      "looking at the header" in{
+    "have a properly structured 'Your protection details' section" when {
+      "looking at the header" in {
         docIP16.select("h2.govuk-heading-m").eq(0).text() shouldBe plaResultSuccessProtectionDetails
       }
 
-      "looking at the explanatory paragraph" in{
+      "looking at the explanatory paragraph" in {
         docIP16.select("#main-content > div > div > p:nth-child(8)").text() shouldBe plaResultSuccessDetailsContent
       }
 
-      "looking at the bullet point list" in{
+      "looking at the bullet point list" in {
         val details = amendsActiveResultModelIP16.details.get
         docIP16.select("li#yourFullName").text() shouldBe plaResultSuccessYourName
         docIP16.select("li#yourNino").text() shouldBe plaResultSuccessYourNino
-        docIP16.select("li#protectionRef").text() shouldBe plaResultSuccessProtectionRef + s": ${details.protectionReference.get}"
+        docIP16
+          .select("li#protectionRef")
+          .text() shouldBe plaResultSuccessProtectionRef + s": ${details.protectionReference.get}"
         docIP16.select("li#psaRef").text() shouldBe plaResultSuccessPsaRef + s": ${details.psaReference}"
-        docIP16.select("li#applicationDate").text() shouldBe plaResultSuccessApplicationDate + s": ${details.applicationDate.get}"
+        docIP16
+          .select("li#applicationDate")
+          .text() shouldBe plaResultSuccessApplicationDate + s": ${details.applicationDate.get}"
       }
 
-      "have the right print message" in{
+      "have the right print message" in {
         docIP16.select("a#printPage").text() shouldBe plaResultSuccessPrintNew
         docIP16.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
       }
     }
 
-    "have a properly structured 'Changing your protection details' section" when{
-      "looking at the header" in{
+    "have a properly structured 'Changing your protection details' section" when {
+      "looking at the header" in {
         docIP16.select("h2.govuk-heading-m").eq(1).text() shouldBe plaResultSuccessIPChangeDetails
       }
 
-      "looking at the explanatory paragraph" in{
+      "looking at the explanatory paragraph" in {
         docIP16.select("p#ipPensionSharing").text() shouldBe plaResultSuccessIPPensionSharing
         docIP16.select("#main-content > div > div > p:nth-child(13)").text() shouldBe plaResultSuccessViewDetails
       }
 
-      "using the links" in{
+      "using the links" in {
         docIP16.select("#ipPensionSharing > a").text() shouldBe plaResultSuccessIPPensionSharingLinkText
         docIP16.select("#ipPensionSharing > a").attr("href") shouldBe plaResultSuccessIPPensionsSharingLink
-        docIP16.select("#main-content > div > div > p:nth-child(13) > a").text() shouldBe plaResultSuccessViewDetailsLinkText
-        docIP16.select("#main-content > div > div > p:nth-child(13) > a").attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
+        docIP16
+          .select("#main-content > div > div > p:nth-child(13) > a")
+          .text() shouldBe plaResultSuccessViewDetailsLinkText
+        docIP16
+          .select("#main-content > div > div > p:nth-child(13) > a")
+          .attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
       }
     }
 
-    "have a properly structured 'Give us feedback' section" when{
-      "looking at the header" in{
+    "have a properly structured 'Give us feedback' section" when {
+      "looking at the header" in {
         docIP16.select("h2.govuk-heading-m").eq(2).text() shouldBe plaResultSuccessGiveFeedback
       }
-      "looking at the explanatory paragraph" in{
+      "looking at the explanatory paragraph" in {
         docIP16.select("#main-content > div > div > p:nth-child(15)").text() shouldBe plaResultSuccessExitSurvey
       }
-      "using the feedback link" in{
+      "using the feedback link" in {
         docIP16.select("#submit-survey-button").text() shouldBe plaResultSuccessExitSurveyLinkText
       }
     }
 
   }
+
 }

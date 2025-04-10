@@ -27,30 +27,36 @@ import uk.gov.hmrc.http.client.HttpClientV2
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
-class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2)
-                                              (implicit executionContext: ExecutionContext){
+class IdentityVerificationConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2)(
+    implicit executionContext: ExecutionContext
+) {
   val serviceUrl: String = appConfig.servicesConfig.baseUrl("identity-verification")
 
   private def url(journeyId: String) = s"$serviceUrl/mdtp/journey/journeyId/$journeyId"
   private[connectors] case class IdentityVerificationResponse(result: IdentityVerificationResult)
   private implicit val formats: OFormat[IdentityVerificationResponse] = Json.format[IdentityVerificationResponse]
 
-  implicit val legacyRawReads: HttpReads[HttpResponse] = HttpReadsInstances.throwOnFailure(HttpReadsInstances.readEitherOf(HttpReadsInstances.readRaw))
+  implicit val legacyRawReads: HttpReads[HttpResponse] =
+    HttpReadsInstances.throwOnFailure(HttpReadsInstances.readEitherOf(HttpReadsInstances.readRaw))
 
-  def identityVerificationResponse(journeyId: String)(implicit hc: HeaderCarrier): Future[IdentityVerificationResult] = {
-    val context = MetricsService.identityVerificationTimer.time()
+  def identityVerificationResponse(
+      journeyId: String
+  )(implicit hc: HeaderCarrier): Future[IdentityVerificationResult] = {
+    val context      = MetricsService.identityVerificationTimer.time()
     val journeyIdUrl = url(journeyId)
     val ivFuture =
       http
         .get(url"$journeyIdUrl")
         .execute[HttpResponse]
-        .flatMap{ httpResponse =>
+        .flatMap { httpResponse =>
           context.stop()
-          httpResponse.json.validate[IdentityVerificationResponse].fold(
-            errs => Future.failed(new JsonValidationException(s"Unable to deserialise: $errs")),
-            valid => Future.successful(valid.result)
-          )
-    }
+          httpResponse.json
+            .validate[IdentityVerificationResponse]
+            .fold(
+              errs => Future.failed(new JsonValidationException(s"Unable to deserialise: $errs")),
+              valid => Future.successful(valid.result)
+            )
+        }
 
     ivFuture.onComplete {
       case Failure(_) => MetricsService.identityVerificationFailedCounter.inc()

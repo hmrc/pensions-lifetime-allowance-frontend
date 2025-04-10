@@ -18,25 +18,29 @@ package testHelpers.ViewSpecHelpers.existingProtections
 
 trait ExistingProtections {
 
-  val plaExistingProtectionsTitle = "View your existing protections"
-  val plaExistingProtectionsTitleNew = "View your existing protections - Check your pension protections - GOV.UK"
-  val plaExistingProtectionsPageHeading = "View your existing protections"
-  val plaExistingProtectionsDetails = "Details"
-  val plaExistingProtectionsPrint = "Print and save your details"
+  val plaExistingProtectionsTitle           = "View your existing protections"
+  val plaExistingProtectionsTitleNew        = "View your existing protections - Check your pension protections - GOV.UK"
+  val plaExistingProtectionsPageHeading     = "View your existing protections"
+  val plaExistingProtectionsDetails         = "Details"
+  val plaExistingProtectionsPrint           = "Print and save your details"
   val plaExistingProtectionsApplicationDate = "Application date"
   val plaExistingProtectionsNoActiveProtections = "You currently have no active protection."
-  val plaExistingProtectionsNoOtherProtections = "You have no other protections."
-  val plaExistingProtectionsProtectedAmount = "Protected lifetime allowance"
-  val plaExistingProtectionsProtectionRef = "Protection notification number"
-  val plaExistingProtectionsPSARef = "Scheme administrator reference"
-  val plaExistingProtectionsLinkText = "details about individual and fixed protections and how to apply"
+  val plaExistingProtectionsNoOtherProtections  = "You have no other protections."
+  val plaExistingProtectionsProtectedAmount     = "Protected lifetime allowance"
+  val plaExistingProtectionsProtectionRef       = "Protection notification number"
+  val plaExistingProtectionsPSARef              = "Scheme administrator reference"
+  val plaExistingProtectionsLinkText            = "details about individual and fixed protections and how to apply"
   val plaExistingProtectionsLinkText2016ShutterEnabled = "Taking higher tax-free lump sums with protected allowances"
   val plaExistingProtectionOtherText = "View details about individual and fixed protections and how to apply on GOV.UK."
-  val plaExistingProtectionsHref = "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"
-  val plaExistingProtectionOtherText2016ShutterEnabled = "Find out about Taking higher tax-free lump sums with protected allowances"
-  val plaExistingProtectionsHref2016ShutterEnabled = "https://www.gov.uk/guidance/taking-higher-tax-free-lump-sums-with-lifetime-allowance-protection"
-  val plaExistingProtectionsAmendLinkText = "View or change your protection details"
+  val plaExistingProtectionsHref     = "https://www.gov.uk/guidance/pension-schemes-protect-your-lifetime-allowance"
+
+  val plaExistingProtectionOtherText2016ShutterEnabled =
+    "Find out about Taking higher tax-free lump sums with protected allowances"
+
+  val plaExistingProtectionsHref2016ShutterEnabled =
+    "https://www.gov.uk/guidance/taking-higher-tax-free-lump-sums-with-lifetime-allowance-protection"
+
+  val plaExistingProtectionsAmendLinkText    = "View or change your protection details"
   val plaExistingProtectionsWithdrawLinkText = "Withdraw your open protection"
 
 }
-

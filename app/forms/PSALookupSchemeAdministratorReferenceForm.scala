@@ -23,22 +23,23 @@ import play.api.i18n.{Messages, MessagesProvider}
 
 object PSALookupSchemeAdministratorReferenceForm {
 
-  def psaRefForm(implicit messagesProvider: MessagesProvider): Form[String] = {
-    Form(single(
-      "pensionSchemeAdministratorCheckReference" -> text.verifying(psaRefConstraint)
-    ))
-  }
+  def psaRefForm(implicit messagesProvider: MessagesProvider): Form[String] =
+    Form(
+      single(
+        "pensionSchemeAdministratorCheckReference" -> text.verifying(psaRefConstraint)
+      )
+    )
 
   private val psaRefRegex = """^(?i)PSA[0-9]{8}[A-Z]$""".r
 
-  def psaRefConstraint(implicit messagesProvider: MessagesProvider): Constraint[String]  = Constraint("constraints.psarefcheck")({
-    psaRef =>
+  def psaRefConstraint(implicit messagesProvider: MessagesProvider): Constraint[String] =
+    Constraint("constraints.psarefcheck") { psaRef =>
       val errors = psaRef match {
-        case "" => Seq(ValidationError(Messages("psa.lookup.form.psaref.required")))
+        case ""            => Seq(ValidationError(Messages("psa.lookup.form.psaref.required")))
         case psaRefRegex() => Nil
-        case _ => Seq(ValidationError(Messages("psa.lookup.form.psaref.invalid")))
+        case _             => Seq(ValidationError(Messages("psa.lookup.form.psaref.invalid")))
       }
       if (errors.isEmpty) Valid else Invalid(errors)
-  })
+    }
 
 }

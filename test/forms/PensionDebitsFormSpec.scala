@@ -30,14 +30,14 @@ class PensionDebitsFormSpec extends FakeApplication with CommonErrorMessages wit
     "return a valid form" when {
 
       "supplied with a valid model" in {
-        val model = PensionDebitsModel(Some("text"))
+        val model  = PensionDebitsModel(Some("text"))
         val result = pensionDebitsForm.fill(model)
 
         result.data shouldBe Map("pensionDebits" -> "text")
       }
 
       "supplied with a valid form" in {
-        val map = Map("pensionDebits" -> "text")
+        val map    = Map("pensionDebits" -> "text")
         val result = pensionDebitsForm.bind(map)
 
         result.value shouldBe Some(PensionDebitsModel(Some("text")))
@@ -47,7 +47,7 @@ class PensionDebitsFormSpec extends FakeApplication with CommonErrorMessages wit
     "return an invalid form with one error and the correct message" when {
 
       "not provided with a pensionDebits value" in {
-        val map = Map.empty[String, String]
+        val map    = Map.empty[String, String]
         val result = pensionDebitsForm.bind(map)
 
         result.errors.size shouldBe 1
@@ -55,4 +55,5 @@ class PensionDebitsFormSpec extends FakeApplication with CommonErrorMessages wit
       }
     }
   }
+
 }

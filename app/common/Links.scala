@@ -26,22 +26,21 @@ object Links {
   val contactInfo       = baseGovUrl + "contact-hmrc"
   val helpDesk          = baseGovUrl + "government/organisations/hm-revenue-customs/contact/online-services-helpdesk"
   val callCharges       = baseGovUrl + "call-charges"
-  val contactHMRC       = baseGovUrl + "government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 
-  val pensionValue      = baseGovUrl + "guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection"
+  val contactHMRC =
+    baseGovUrl + "government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
+
+  val pensionValue = baseGovUrl + "guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection"
 
   // Sidebar Read More link locations
-  val ip16Info              = plaMain + "#individual-protection-2016"
-  val ip14Info              = plaMain + "#individual-protection-2014"
-  val pensionsWorthBefore   = pensionValue + "#income-taken-from-pensions-before-6-april-2006"
-  val pensionsUsedBetween   = pensionValue + "#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
-  val overseasPension       = pensionValue + "#money-put-into-overseas-pensions-between-6-april-2006-and-the-relevant-date"
-  val currentPensions       = pensionValue + "#pensions-youve-not-taken-yet"
-  val fpGuidance            = ptaManual + "ptm093100"
-  val ipGuidance            = ptaManual + "ptm094210"
-  val ip14Guidance          = ptaManual + "ptm094200"
-
-
-
+  val ip16Info            = plaMain + "#individual-protection-2016"
+  val ip14Info            = plaMain + "#individual-protection-2014"
+  val pensionsWorthBefore = pensionValue + "#income-taken-from-pensions-before-6-april-2006"
+  val pensionsUsedBetween = pensionValue + "#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
+  val overseasPension = pensionValue + "#money-put-into-overseas-pensions-between-6-april-2006-and-the-relevant-date"
+  val currentPensions = pensionValue + "#pensions-youve-not-taken-yet"
+  val fpGuidance      = ptaManual + "ptm093100"
+  val ipGuidance      = ptaManual + "ptm094210"
+  val ip14Guidance    = ptaManual + "ptm094200"
 
 }

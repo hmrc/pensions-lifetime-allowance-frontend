@@ -24,7 +24,7 @@ import testHelpers.{CommonErrorMessages, FakeApplication}
 import utils.Constants
 
 class AmendCurrentPensionFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
-implicit val lang: Lang = mock[Lang]
+  implicit val lang: Lang = mock[Lang]
 
   val messageKey = "currentPensions"
 
@@ -36,28 +36,28 @@ implicit val lang: Lang = mock[Lang]
     "create a valid form" when {
 
       "supplied with a valid model" in {
-        val model = AmendCurrentPensionModel(Some(1))
+        val model  = AmendCurrentPensionModel(Some(1))
         val result = amendCurrentPensionForm("ip2016").fillAndValidate(model)
 
         result.data shouldBe validMap
       }
 
       "supplied with a valid map with an amount with two decimal places" in {
-        val map = validMap.updated("amendedUKPensionAmt", "0.01")
+        val map    = validMap.updated("amendedUKPensionAmt", "0.01")
         val result = amendCurrentPensionForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendCurrentPensionModel(Some(0.01)))
       }
 
       "supplied with a valid map with zero amount" in {
-        val map = validMap.updated("amendedUKPensionAmt", "0")
+        val map    = validMap.updated("amendedUKPensionAmt", "0")
         val result = amendCurrentPensionForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendCurrentPensionModel(Some(0)))
       }
 
       "supplied with a valid map with the maximum amount" in {
-        val map = validMap.updated("amendedUKPensionAmt", {Constants.npsMaxCurrency - 1}.toString)
+        val map    = validMap.updated("amendedUKPensionAmt", { Constants.npsMaxCurrency - 1 }.toString)
         val result = amendCurrentPensionForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendCurrentPensionModel(Some(Constants.npsMaxCurrency - 1)))
@@ -66,10 +66,10 @@ implicit val lang: Lang = mock[Lang]
 
     "create an invalid form" when {
 
-      "not supplied with an amended amount" which {
+      "not supplied with an amended amount".which {
 
         "has a single error with the correct error message" in {
-          val map = validMap - "amendedUKPensionAmt"
+          val map    = validMap - "amendedUKPensionAmt"
           val result = amendCurrentPensionForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -77,10 +77,10 @@ implicit val lang: Lang = mock[Lang]
         }
       }
 
-      "supplied with an empty amount" which {
+      "supplied with an empty amount".which {
 
         "has a single error with the correct error message" in {
-          val map = validMap.updated("amendedUKPensionAmt", "")
+          val map    = validMap.updated("amendedUKPensionAmt", "")
           val result = amendCurrentPensionForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -88,9 +88,9 @@ implicit val lang: Lang = mock[Lang]
         }
       }
 
-      "supplied with a non-numeric amount" which {
+      "supplied with a non-numeric amount".which {
         "has a single error with the correct error message" in {
-          val map = validMap.updated("amendedUKPensionAmt", "a")
+          val map    = validMap.updated("amendedUKPensionAmt", "a")
           val result = amendCurrentPensionForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -98,9 +98,9 @@ implicit val lang: Lang = mock[Lang]
         }
       }
 
-      "supplied with a negative amount" which {
+      "supplied with a negative amount".which {
         "has a single error with the correct error message" in {
-          val map = validMap.updated("amendedUKPensionAmt", "-0.01")
+          val map    = validMap.updated("amendedUKPensionAmt", "-0.01")
           val result = amendCurrentPensionForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -109,7 +109,7 @@ implicit val lang: Lang = mock[Lang]
       }
 
       "supplied with an amount with too many decimal places" in {
-        val map = validMap.updated("amendedUKPensionAmt", "0.001")
+        val map    = validMap.updated("amendedUKPensionAmt", "0.001")
         val result = amendCurrentPensionForm("ip2016").bind(map)
 
         result.errors.size shouldBe 1
@@ -117,7 +117,7 @@ implicit val lang: Lang = mock[Lang]
       }
 
       "supplied with an amount above the maximum" in {
-        val map = validMap.updated("amendedUKPensionAmt", Constants.npsMaxCurrency.toString)
+        val map    = validMap.updated("amendedUKPensionAmt", Constants.npsMaxCurrency.toString)
         val result = amendCurrentPensionForm("ip2016").bind(map)
 
         result.errors.size shouldBe 1
@@ -125,4 +125,5 @@ implicit val lang: Lang = mock[Lang]
       }
     }
   }
+
 }

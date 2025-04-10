@@ -23,25 +23,25 @@ import play.api.i18n.{Messages, MessagesProvider}
 
 object PSALookupProtectionNotificationNoForm {
 
-  def pnnForm(implicit messagesProvider: MessagesProvider): Form[String] = {
-    Form(single(
-      "lifetimeAllowanceReference" -> text.verifying(ltaRefConstraint)
-    ))
-  }
+  def pnnForm(implicit messagesProvider: MessagesProvider): Form[String] =
+    Form(
+      single(
+        "lifetimeAllowanceReference" -> text.verifying(ltaRefConstraint)
+      )
+    )
 
-  private val npsRefRegex = """^(?i)(IP14|FP14|IP16|FP16)[0-9]{10}[ABCDEFGHJKLMNPRSTXYZ]$""".r
+  private val npsRefRegex  = """^(?i)(IP14|FP14|IP16|FP16)[0-9]{10}[ABCDEFGHJKLMNPRSTXYZ]$""".r
   private val tpssRefRegex = """^(?i)[1-9A][0-9]{6}[ABCDEFHXJKLMNYPQRSTZW]$""".r
 
-
-  def ltaRefConstraint(implicit messagesProvider: MessagesProvider): Constraint[String] = Constraint("constraints.ltarefcheck")({
-    ltaRef =>
+  def ltaRefConstraint(implicit messagesProvider: MessagesProvider): Constraint[String] =
+    Constraint("constraints.ltarefcheck") { ltaRef =>
       val errors = ltaRef match {
-        case "" => Seq(ValidationError(Messages("psa.lookup.form.pnn.required")))
+        case ""             => Seq(ValidationError(Messages("psa.lookup.form.pnn.required")))
         case npsRefRegex(_) => Nil
         case tpssRefRegex() => Nil
-        case _ => Seq(ValidationError(Messages("psa.lookup.form.pnn.invalid")))
+        case _              => Seq(ValidationError(Messages("psa.lookup.form.pnn.invalid")))
       }
       if (errors.isEmpty) Valid else Invalid(errors)
-  })
+    }
 
 }

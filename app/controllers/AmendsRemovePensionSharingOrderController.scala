@@ -33,45 +33,67 @@ import views.html.pages
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendsRemovePensionSharingOrderController @Inject()(val sessionCacheService: SessionCacheService,
-                                                          val plaConnector: PLAConnector,
-                                                          mcc: MessagesControllerComponents,
-                                                          authFunction: AuthFunction,
-                                                          technicalError: views.html.pages.fallback.technicalError,
-                                                          removePsoDebits: pages.amends.removePsoDebits)
-                                                         (implicit val appConfig: FrontendAppConfig,
-                                                          val formWithCSRF: FormWithCSRF,
-                                                          val plaContext: PlaContext,
-                                                          val ec: ExecutionContext)
-  extends FrontendController(mcc) with I18nSupport with Logging {
+class AmendsRemovePensionSharingOrderController @Inject() (
+    val sessionCacheService: SessionCacheService,
+    val plaConnector: PLAConnector,
+    mcc: MessagesControllerComponents,
+    authFunction: AuthFunction,
+    technicalError: views.html.pages.fallback.technicalError,
+    removePsoDebits: pages.amends.removePsoDebits
+)(
+    implicit val appConfig: FrontendAppConfig,
+    val formWithCSRF: FormWithCSRF,
+    val plaContext: PlaContext,
+    val ec: ExecutionContext
+) extends FrontendController(mcc)
+    with I18nSupport
+    with Logging {
 
   def removePso(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).map {
-        case Some(_) =>
-          Ok(removePsoDebits(protectionType, status))
-        case _ =>
-          logger.warn(s"Could not retrieve Amend ProtectionModel for user with nino $nino when removing the new pension debit")
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-      }
+      sessionCacheService
+        .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+        .map {
+          case Some(_) =>
+            Ok(removePsoDebits(protectionType, status))
+          case _ =>
+            logger.warn(
+              s"Could not retrieve Amend ProtectionModel for user with nino $nino when removing the new pension debit"
+            )
+            InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+              .withHeaders(CACHE_CONTROL -> "no-cache")
+        }
     }
   }
 
   def submitRemovePso(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status)).flatMap {
-        case Some(model) =>
-          val updated = model.updatedProtection.copy(pensionDebits = None)
-          val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
-          val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
-          sessionCacheService.saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel).map {
-            _ => Redirect(routes.AmendsController.amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase))
-          }
+      sessionCacheService
+        .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+        .flatMap {
+          case Some(model) =>
+            val updated        = model.updatedProtection.copy(pensionDebits = None)
+            val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
+            val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
+            sessionCacheService
+              .saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel)
+              .map { _ =>
+                Redirect(
+                  routes.AmendsController
+                    .amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase)
+                )
+              }
 
-        case None =>
-          logger.warn(s"Could not retrieve Amend Protection Model for user with nino $nino when submitting a removal of a pension debit")
-          Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
-      }
+          case None =>
+            logger.warn(
+              s"Could not retrieve Amend Protection Model for user with nino $nino when submitting a removal of a pension debit"
+            )
+            Future.successful(
+              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+                .withHeaders(CACHE_CONTROL -> "no-cache")
+            )
+        }
     }
   }
+
 }

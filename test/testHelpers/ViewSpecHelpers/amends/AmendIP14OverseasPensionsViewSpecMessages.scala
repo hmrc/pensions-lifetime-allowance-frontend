@@ -18,7 +18,12 @@ package testHelpers.ViewSpecHelpers.amends
 
 import testHelpers.ViewSpecHelpers.ip2016.OverseasPensionsViewMessages
 
-trait AmendIP14OverseasPensionsViewSpecMessages extends OverseasPensionsViewMessages{
-  val plaIP14OverseasPensionsQuestion = "Only include contributions you made between 6 April 2006 and 5 April 2014 that you got UK tax relief on."
-  val plaIP14OverseasPensionsLegendText = "Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2014?"
+trait AmendIP14OverseasPensionsViewSpecMessages extends OverseasPensionsViewMessages {
+
+  val plaIP14OverseasPensionsQuestion =
+    "Only include contributions you made between 6 April 2006 and 5 April 2014 that you got UK tax relief on."
+
+  val plaIP14OverseasPensionsLegendText =
+    "Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2014?"
+
 }

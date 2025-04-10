@@ -17,24 +17,34 @@
 package forms
 
 import common.Transformers.{bigDecimalToString, stringToBigDecimal}
-import common.Validation.{mandatoryCheck, stopOnFirstFail, yesNoCheck, bigDecimalCheck, commaCheck, negativeConstraint, decimalPlaceConstraint, maxMoneyCheck}
+import common.Validation.{
+  bigDecimalCheck,
+  commaCheck,
+  decimalPlaceConstraint,
+  mandatoryCheck,
+  maxMoneyCheck,
+  negativeConstraint,
+  stopOnFirstFail,
+  yesNoCheck
+}
 import uk.gov.voa.play.form.ConditionalMappings.{isEqual, mandatoryIf}
 import models._
 import play.api.data.Forms._
 import play.api.data._
 import utils.Constants.npsMaxCurrency
 
-object OverseasPensionsForm extends CommonBinders{
+object OverseasPensionsForm extends CommonBinders {
 
-
-  def overseasPensionsForm(protectionType: String) = Form (
+  def overseasPensionsForm(protectionType: String) = Form(
     mapping(
-      "overseasPensions" -> common.Validation.newText(s"pla.overseasPensions.errors.mandatoryError.$protectionType")
+      "overseasPensions" -> common.Validation
+        .newText(s"pla.overseasPensions.errors.mandatoryError.$protectionType")
         .verifying(s"pla.overseasPensions.errors.mandatoryError.$protectionType", mandatoryCheck)
         .verifying(s"pla.overseasPensions.errors.mandatoryError.$protectionType", yesNoCheck),
       "overseasPensionsAmt" -> mandatoryIf(
         isEqual("overseasPensions", "yes"),
-        common.Validation.newText(s"pla.overseasPensions.amount.errors.mandatoryError.$protectionType")
+        common.Validation
+          .newText(s"pla.overseasPensions.amount.errors.mandatoryError.$protectionType")
           .verifying(s"pla.overseasPensions.amount.errors.notReal.$protectionType", bigDecimalCheck)
           .verifying(s"pla.psoDetails.errorQuestion", commaCheck)
           .transform(stringToBigDecimal, bigDecimalToString)
@@ -48,4 +58,5 @@ object OverseasPensionsForm extends CommonBinders{
       )
     )(OverseasPensionsModel.apply)(OverseasPensionsModel.unapply)
   )
+
 }

@@ -33,40 +33,40 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
     "produce a valid form " when {
 
       "provided with a valid model" in {
-        val model = CurrentPensionsModel(Some(1))
+        val model  = CurrentPensionsModel(Some(1))
         val result = currentPensionsForm("ip2016").fill(model)
 
         result.data shouldBe Map("currentPensionsAmt" -> "1")
       }
 
       "provided with a valid form with an amount with two decimal places" in {
-        val map = Map("currentPensionsAmt" -> "0.01")
+        val map    = Map("currentPensionsAmt" -> "0.01")
         val result = currentPensionsForm("ip2016").bind(map)
 
         result.value shouldBe Some(CurrentPensionsModel(Some(0.01)))
       }
 
       "provided with a valid form with a zero amount" in {
-        val map = Map("currentPensionsAmt" -> "0")
+        val map    = Map("currentPensionsAmt" -> "0")
         val result = currentPensionsForm("ip2016").bind(map)
 
         result.value shouldBe Some(CurrentPensionsModel(Some(0)))
       }
 
       "provided with a valid form with the maximum amount" in {
-        val map = Map("currentPensionsAmt" -> {Constants.npsMaxCurrency - 1}.toString)
+        val map    = Map("currentPensionsAmt" -> { Constants.npsMaxCurrency - 1 }.toString)
         val result = currentPensionsForm("ip2016").bind(map)
 
         result.value shouldBe Some(CurrentPensionsModel(Some(Constants.npsMaxCurrency - 1)))
       }
     }
 
-    "produce an invalid form" which {
+    "produce an invalid form".which {
 
       "has only one error with the correct message" when {
 
         "provided with no amount value" in {
-          val map = Map.empty[String, String]
+          val map    = Map.empty[String, String]
           val result = currentPensionsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -74,7 +74,7 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
         }
 
         "provided with an amount value with over two decimal places" in {
-          val map = Map("currentPensionsAmt" -> "0.001")
+          val map    = Map("currentPensionsAmt" -> "0.001")
           val result = currentPensionsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -82,7 +82,7 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
         }
 
         "provided with a negative amount value" in {
-          val map = Map("currentPensionsAmt" -> "-0.01")
+          val map    = Map("currentPensionsAmt" -> "-0.01")
           val result = currentPensionsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -90,7 +90,7 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
         }
 
         "provided with an amount value above the maximum" in {
-          val map = Map("currentPensionsAmt" -> Constants.npsMaxCurrency.toString)
+          val map    = Map("currentPensionsAmt" -> Constants.npsMaxCurrency.toString)
           val result = currentPensionsForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -99,4 +99,5 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
       }
     }
   }
+
 }

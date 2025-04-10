@@ -26,36 +26,37 @@ class RemovePsoDetailsViewSpec extends CommonViewSpecHelper with RemovePsoDetail
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
-  "the RemovePsoDetailsView" should{
+  "the RemovePsoDetailsView" should {
     lazy val view = application.injector.instanceOf[removePsoDetails]
-    lazy val doc = Jsoup.parse(view().body)
+    lazy val doc  = Jsoup.parse(view().body)
     lazy val form = doc.select("form")
 
-    "have the correct title" in{
+    "have the correct title" in {
       doc.title() shouldBe plaPsoDetailsTitleNew
     }
 
-    "have the right explanatory paragraph" in{
+    "have the right explanatory paragraph" in {
       doc.select("p.govuk-body").eq(0).text shouldBe plaPsoDetailsRemovePso
     }
 
-    "have the correct and properly formatted header"in{
+    "have the correct and properly formatted header" in {
       doc.select("h1.govuk-heading-xl").text shouldBe plaPsoDetailsTitle
     }
 
-    "have a valid form" in{
+    "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.IP2016Controller.removePsoDetails.url
     }
 
-    "have a functional cancellation link" in{
+    "have a functional cancellation link" in {
       doc.select("#cancel-link").text shouldBe plaPsoDetailsCancelRemove
       doc.select("#cancel-link").attr("href") shouldBe plaPsoDetailsCancellationLink
     }
 
-    "have a remove button" in{
+    "have a remove button" in {
       doc.select(".govuk-button").text shouldBe plaBaseRemove
       doc.select(".govuk-button").attr("id") shouldBe "submit"
     }
   }
+
 }

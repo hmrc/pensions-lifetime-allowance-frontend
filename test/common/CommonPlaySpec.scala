@@ -33,7 +33,7 @@ trait CommonPlaySpec extends AnyWordSpec with Matchers with OptionValues {
   import scala.concurrent.duration._
   import scala.concurrent.{Await, Future}
 
-  implicit val defaultTimeout: FiniteDuration = 5 seconds
+  implicit val defaultTimeout: FiniteDuration = 5.seconds
 
   implicit def extractAwait[A](future: Future[A]): A = await[A](future)
 
@@ -46,13 +46,11 @@ trait CommonPlaySpec extends AnyWordSpec with Matchers with OptionValues {
 
   def status(of: Future[Result])(implicit timeout: Duration): Int = status(Await.result(of, timeout))
 
-  def jsonBodyOf(result: Result)(implicit mat: Materializer): JsValue = {
+  def jsonBodyOf(result: Result)(implicit mat: Materializer): JsValue =
     Json.parse(bodyOf(result))
-  }
 
-  def jsonBodyOf(resultF: Future[Result])(implicit mat: Materializer, ec: ExecutionContext): Future[JsValue] = {
+  def jsonBodyOf(resultF: Future[Result])(implicit mat: Materializer, ec: ExecutionContext): Future[JsValue] =
     resultF.map(jsonBodyOf)
-  }
 
   def bodyOf(result: Result)(implicit mat: Materializer): String = {
     val bodyBytes: ByteString = await(result.body.consumeData)
@@ -64,7 +62,7 @@ trait CommonPlaySpec extends AnyWordSpec with Matchers with OptionValues {
     bodyBytes.decodeString(Charset.defaultCharset().name)
   }
 
-  def bodyOf(resultF: Future[Result])(implicit mat: Materializer, ec: ExecutionContext): Future[String] = {
+  def bodyOf(resultF: Future[Result])(implicit mat: Materializer, ec: ExecutionContext): Future[String] =
     resultF.map(bodyOf)
-  }
+
 }

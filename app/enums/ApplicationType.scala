@@ -19,18 +19,18 @@ package enums
 object ApplicationType extends Enumeration {
 
   type ApplicationType = Value
-  val IP2014 = Value
-  val IP2016 = Value
-  val FP2016 = Value
+  val IP2014              = Value
+  val IP2016              = Value
+  val FP2016              = Value
   val existingProtections = Value
 
-  def fromString(applicationType: String): Option[Value] = {
+  def fromString(applicationType: String): Option[Value] =
     applicationType.toLowerCase match {
-      case "ip2014" => Some(IP2014)
-      case "ip2016" => Some(IP2016)
-      case "fp2016" => Some(FP2016)
+      case "ip2014"              => Some(IP2014)
+      case "ip2016"              => Some(IP2016)
+      case "fp2016"              => Some(FP2016)
       case "existingprotections" => Some(existingProtections)
-      case _ => None
+      case _                     => None
     }
-  }
+
 }

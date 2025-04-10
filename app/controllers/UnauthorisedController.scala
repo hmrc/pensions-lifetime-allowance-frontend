@@ -29,49 +29,54 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-
-class UnauthorisedController @Inject()(identityVerificationConnector: IdentityVerificationConnector,
-                                       sessionCacheService: SessionCacheService,
-                                       mcc: MessagesControllerComponents,
-                                       lockedOut: views.html.pages.ivFailure.lockedOut,
-                                       technicalIssue: views.html.pages.ivFailure.technicalIssue,
-                                       unauthorised: views.html.pages.ivFailure.unauthorised,
-                                       timeout: views.html.pages.timeout)(
-                                       implicit val appConfig: FrontendAppConfig,
-                                       implicit val plaContext: PlaContext,
-                                       implicit val application: Application,
-                                       implicit val ec: ExecutionContext)
-extends FrontendController(mcc) with I18nSupport with Logging {
+class UnauthorisedController @Inject() (
+    identityVerificationConnector: IdentityVerificationConnector,
+    sessionCacheService: SessionCacheService,
+    mcc: MessagesControllerComponents,
+    lockedOut: views.html.pages.ivFailure.lockedOut,
+    technicalIssue: views.html.pages.ivFailure.technicalIssue,
+    unauthorised: views.html.pages.ivFailure.unauthorised,
+    timeout: views.html.pages.timeout
+)(
+    implicit val appConfig: FrontendAppConfig,
+    implicit val plaContext: PlaContext,
+    implicit val application: Application,
+    implicit val ec: ExecutionContext
+) extends FrontendController(mcc)
+    with I18nSupport
+    with Logging {
 
   val issuesKey = "previous-technical-issues"
 
   def showNotAuthorised(journeyId: Option[String]): Action[AnyContent] = Action.async { implicit request =>
-    val result: Future[Result] = journeyId map { id =>
-      val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
-      identityVerificationResult.flatMap {
-        case IdentityVerificationResult.TechnicalIssue =>
-          logger.warn("Technical Issue relating to Identity verification, user directed to technical issue page")
-          sessionCacheService.fetchAndGetFormData[Boolean](issuesKey).flatMap {
-            case Some(true) => Future.successful(Ok(technicalIssue()))
-            case _ =>
-              sessionCacheService.saveFormData(issuesKey, true).map { map =>
-                InternalServerError(technicalIssue())
+    val result: Future[Result] = journeyId
+      .map { id =>
+        val identityVerificationResult = identityVerificationConnector.identityVerificationResponse(id)
+        identityVerificationResult
+          .flatMap {
+            case IdentityVerificationResult.TechnicalIssue =>
+              logger.warn("Technical Issue relating to Identity verification, user directed to technical issue page")
+              sessionCacheService.fetchAndGetFormData[Boolean](issuesKey).flatMap {
+                case Some(true) => Future.successful(Ok(technicalIssue()))
+                case _ =>
+                  sessionCacheService.saveFormData(issuesKey, true).map(map => InternalServerError(technicalIssue()))
               }
+            case IdentityVerificationResult.LockedOut => Future.successful(Unauthorized(lockedOut()))
+            case IdentityVerificationResult.Timeout =>
+              logger.info("User session timed out during IV uplift")
+              Future.successful(Unauthorized(timeout()))
+            case _ =>
+              logger.info("Unauthorised identity verification, returned to unauthorised page")
+              Future.successful(Unauthorized(unauthorised()))
           }
-        case IdentityVerificationResult.LockedOut => Future.successful(Unauthorized(lockedOut()))
-        case IdentityVerificationResult.Timeout =>
-          logger.info("User session timed out during IV uplift")
-          Future.successful(Unauthorized(timeout()))
-        case _ =>
-          logger.info("Unauthorised identity verification, returned to unauthorised page")
-          Future.successful(Unauthorized(unauthorised()))
-      } recover {
-        case UpstreamErrorResponse(_, NOT_FOUND, _, _) =>
-          logger.warn("Could not find unauthorised journey ID")
-          Unauthorized(unauthorised())
+          .recover { case UpstreamErrorResponse(_, NOT_FOUND, _, _) =>
+            logger.warn("Could not find unauthorised journey ID")
+            Unauthorized(unauthorised())
+          }
       }
-    } getOrElse Future.successful(Unauthorized(unauthorised()))
+      .getOrElse(Future.successful(Unauthorized(unauthorised())))
 
     result
   }
+
 }

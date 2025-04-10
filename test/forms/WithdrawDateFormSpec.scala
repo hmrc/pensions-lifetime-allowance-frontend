@@ -25,9 +25,9 @@ import testHelpers.{CommonErrorMessages, FakeApplication}
 
 import java.time.LocalDate
 
-class WithdrawDateFormSpec extends FakeApplication with CommonErrorMessages with FakeRequestHelper  {
+class WithdrawDateFormSpec extends FakeApplication with CommonErrorMessages with FakeRequestHelper {
 
-  val messagesApi: MessagesApi = fakeApplication().injector.instanceOf[MessagesApi]
+  val messagesApi: MessagesApi        = fakeApplication().injector.instanceOf[MessagesApi]
   implicit val testMessages: Messages = messagesApi.preferred(fakeRequest)
 
   val messageKey = "withdrawDate"
@@ -35,89 +35,83 @@ class WithdrawDateFormSpec extends FakeApplication with CommonErrorMessages with
   "Withdraw date form" should {
     "return no errors with valid date" in {
       val postData = Json.obj(
-        s"$messageKey.day" -> "20",
+        s"$messageKey.day"   -> "20",
         s"$messageKey.month" -> "2",
-        s"$messageKey.year" -> "2017"
+        s"$messageKey.year"  -> "2017"
       )
       val validatedForm = withdrawDateForm(LocalDate.of(2016, 2, 20)).bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.isEmpty)
     }
     "return errors when no day provided" in {
       val postData = Json.obj(
-        s"$messageKey.day" -> "",
+        s"$messageKey.day"   -> "",
         s"$messageKey.month" -> "2",
-        s"$messageKey.year" -> "2017"
+        s"$messageKey.year"  -> "2017"
       )
       val validatedForm = withdrawDateForm(LocalDate.now()).bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("withdrawDate.day",
-        List(errorRequired(messageKey, ".day")))))
+      assert(validatedForm.errors.contains(FormError("withdrawDate.day", List(errorRequired(messageKey, ".day")))))
     }
     "return errors when no month provided" in {
       val postData = Json.obj(
-        s"$messageKey.day" -> "20",
+        s"$messageKey.day"   -> "20",
         s"$messageKey.month" -> "",
-        s"$messageKey.year" -> "2017"
+        s"$messageKey.year"  -> "2017"
       )
       val validatedForm = withdrawDateForm(LocalDate.now()).bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError(s"$messageKey.month",
-        List(errorRequired(messageKey, ".month")))))
+      assert(validatedForm.errors.contains(FormError(s"$messageKey.month", List(errorRequired(messageKey, ".month")))))
     }
     "return errors when no year provided" in {
       val postData = Json.obj(
-        s"$messageKey.day" -> "20",
+        s"$messageKey.day"   -> "20",
         s"$messageKey.month" -> "2",
-        s"$messageKey.year" -> ""
+        s"$messageKey.year"  -> ""
       )
       val validatedForm = withdrawDateForm(LocalDate.now()).bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("withdrawDate.year",
-        List(errorRequired(messageKey, ".year")))))
+      assert(validatedForm.errors.contains(FormError("withdrawDate.year", List(errorRequired(messageKey, ".year")))))
     }
     "return errors when day greater than 31 provided" in {
       val postData = Json.obj(
-        s"$messageKey.day" -> "35",
+        s"$messageKey.day"   -> "35",
         s"$messageKey.month" -> "2",
-        s"$messageKey.year" -> "2017"
+        s"$messageKey.year"  -> "2017"
       )
       val validatedForm = withdrawDateForm(LocalDate.now()).bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError(s"$messageKey.day",
-        List(errorNotReal(messageKey, ".day")))))
+      assert(validatedForm.errors.contains(FormError(s"$messageKey.day", List(errorNotReal(messageKey, ".day")))))
     }
     "return errors when month greater than 12 provided" in {
       val postData = Json.obj(
-        s"$messageKey.day" -> "20",
+        s"$messageKey.day"   -> "20",
         s"$messageKey.month" -> "62",
-        s"$messageKey.year" -> "2017"
+        s"$messageKey.year"  -> "2017"
       )
       val validatedForm = withdrawDateForm(LocalDate.now()).bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError(s"$messageKey.month",
-        List(errorNotReal(messageKey, ".month")))))
+      assert(validatedForm.errors.contains(FormError(s"$messageKey.month", List(errorNotReal(messageKey, ".month")))))
     }
     "return errors when day lower than 1 provided" in {
       val postData = Json.obj(
-        s"$messageKey.day" -> "0",
+        s"$messageKey.day"   -> "0",
         s"$messageKey.month" -> "2",
-        s"$messageKey.year" -> "2017"
+        s"$messageKey.year"  -> "2017"
       )
       val validatedForm = withdrawDateForm(LocalDate.now()).bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError(s"$messageKey.day",
-        List(errorNotReal(messageKey, ".day")))))
+      assert(validatedForm.errors.contains(FormError(s"$messageKey.day", List(errorNotReal(messageKey, ".day")))))
     }
     "return errors when month lower than 1 provided" in {
       val postData = Json.obj(
-        s"$messageKey.day" -> "20",
+        s"$messageKey.day"   -> "20",
         s"$messageKey.month" -> "0",
-        s"$messageKey.year" -> "2017"
+        s"$messageKey.year"  -> "2017"
       )
       val validatedForm = withdrawDateForm(LocalDate.now()).bind(postData, Form.FromJsonMaxChars)
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError(s"$messageKey.month",
-        List(errorNotReal(messageKey, ".month")))))
+      assert(validatedForm.errors.contains(FormError(s"$messageKey.month", List(errorNotReal(messageKey, ".month")))))
     }
   }
+
 }

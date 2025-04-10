@@ -30,21 +30,23 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SessionRepository @Inject()(
-                                   mongoComponent: MongoComponent,
-                                   config: Configuration,
-                                   timestampSupport: TimestampSupport
-                                 )(implicit ec: ExecutionContext)
-  extends SessionCacheRepository(
-    mongoComponent = mongoComponent,
-    collectionName = config.get[String]("appName"),
-    ttl = Duration(config.get[Int]("mongodb.timeToLiveInSeconds"), TimeUnit.SECONDS),
-    timestampSupport = timestampSupport,
-    sessionIdKey = SessionKeys.sessionId
-  ) {
+class SessionRepository @Inject() (
+    mongoComponent: MongoComponent,
+    config: Configuration,
+    timestampSupport: TimestampSupport
+)(implicit ec: ExecutionContext)
+    extends SessionCacheRepository(
+      mongoComponent = mongoComponent,
+      collectionName = config.get[String]("appName"),
+      ttl = Duration(config.get[Int]("mongodb.timeToLiveInSeconds"), TimeUnit.SECONDS),
+      timestampSupport = timestampSupport,
+      sessionIdKey = SessionKeys.sessionId
+    ) {
 
-  def putInSession[T: Writes](dataKey: DataKey[T], data: T)
-                             (implicit request: Request[Any], ec: ExecutionContext): Future[CacheMap] =
+  def putInSession[T: Writes](
+      dataKey: DataKey[T],
+      data: T
+  )(implicit request: Request[Any], ec: ExecutionContext): Future[CacheMap] =
     cacheRepo
       .put[T](request)(dataKey, data)
       .map(res => CacheMap(res.id, res.data.value.toMap))

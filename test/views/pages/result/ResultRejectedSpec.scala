@@ -23,7 +23,6 @@ import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultRejected
 import views.html.pages.result.resultRejected
 
-
 class ResultRejectedSpec extends CommonViewSpecHelper with ResultRejected {
 
   val rejectionDisplayModel = RejectionDisplayModel("24", Seq("1", "2"), ApplicationType.IP2016)
@@ -31,7 +30,7 @@ class ResultRejectedSpec extends CommonViewSpecHelper with ResultRejected {
   "The Result Rejected Page" should {
 
     lazy val view = application.injector.instanceOf[resultRejected]
-    lazy val doc = Jsoup.parse(view.apply(rejectionDisplayModel,false).body)
+    lazy val doc  = Jsoup.parse(view.apply(rejectionDisplayModel, false).body)
 
     "have the correct title" in {
       doc.title() shouldBe plaResultRejectionTitle
@@ -64,7 +63,10 @@ class ResultRejectedSpec extends CommonViewSpecHelper with ResultRejected {
     "have the additional info paragraph which" should {
 
       "contain the text" in {
-        doc.select("p").get(1).text shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."
+        doc
+          .select("p")
+          .get(1)
+          .text shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."
       }
 
       "have the correct Id" in {
@@ -117,4 +119,5 @@ class ResultRejectedSpec extends CommonViewSpecHelper with ResultRejected {
     }
 
   }
+
 }

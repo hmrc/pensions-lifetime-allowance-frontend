@@ -30,23 +30,28 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
 
   implicit val lang: Lang = mock[Lang]
 
-  val messagesApi: MessagesApi = fakeApplication().injector.instanceOf[MessagesApi]
+  val messagesApi: MessagesApi        = fakeApplication().injector.instanceOf[MessagesApi]
   implicit val testMessages: Messages = messagesApi.preferred(fakeRequest)
 
-  val messageKey = "psoDetails"
+  val messageKey     = "psoDetails"
   val dateMessageKey = "pso"
 
   "PSODetailsForm" should {
-    val validMap = Map(s"$dateMessageKey.day" -> "1", s"$dateMessageKey.month" -> "2", s"$dateMessageKey.year" -> "2017", "psoAmt" -> "0.01")
+    val validMap = Map(
+      s"$dateMessageKey.day"   -> "1",
+      s"$dateMessageKey.month" -> "2",
+      s"$dateMessageKey.year"  -> "2017",
+      "psoAmt"                 -> "0.01"
+    )
 
     "return a valid form with additional validation" when {
 
-      val year = 2017
+      val year  = 2017
       val month = 2
-      val day = 1
+      val day   = 1
 
       "provided with a valid model" in {
-        val model = PSODetailsModel(LocalDate.of(year, month, day), Some(0.01))
+        val model  = PSODetailsModel(LocalDate.of(year, month, day), Some(0.01))
         val result = psoDetailsForm().fill(model)
 
         result.data shouldBe validMap
@@ -59,16 +64,18 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "provided with a valid map with a value for psoAmt which is zero" in {
-        val map = validMap.updated("psoAmt", "0")
+        val map    = validMap.updated("psoAmt", "0")
         val result = psoDetailsForm().bind(map)
 
         result.value shouldBe Some(PSODetailsModel(LocalDate.of(year, month, day), Some(0.0)))
       }
 
       "provided with a valid map with a value for psoAmt which is the maximum value" in {
-        val map = validMap.updated("psoAmt", {
-          Constants.npsMaxCurrency - 1
-        }.toString)
+        val map = validMap.updated(
+          "psoAmt", {
+            Constants.npsMaxCurrency - 1
+          }.toString
+        )
         val result = psoDetailsForm().bind(map)
 
         result.value shouldBe Some(PSODetailsModel(LocalDate.of(year, month, day), Some(Constants.npsMaxCurrency - 1)))
@@ -78,7 +85,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
     "produce an invalid form has one error with the correct error message" when {
 
       "not provided with a value for psoDay" in {
-        val map = validMap - s"$dateMessageKey.day"
+        val map    = validMap - s"$dateMessageKey.day"
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -86,7 +93,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "not provided with a value for psoMonth" in {
-        val map = validMap - s"$dateMessageKey.month"
+        val map    = validMap - s"$dateMessageKey.month"
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -94,7 +101,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "not provided with a value for psoYear" in {
-        val map = validMap - s"$dateMessageKey.year"
+        val map    = validMap - s"$dateMessageKey.year"
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -102,7 +109,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "not provided with a value for psoAmt" in {
-        val map = validMap - "psoAmt"
+        val map    = validMap - "psoAmt"
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -110,7 +117,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "provided an amount with over two decimal places" in {
-        val map = validMap.updated("psoAmt", "0.001")
+        val map    = validMap.updated("psoAmt", "0.001")
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -118,7 +125,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "provided an amount with a negative value" in {
-        val map = validMap.updated("psoAmt", "-0.01")
+        val map    = validMap.updated("psoAmt", "-0.01")
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -126,7 +133,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "provided an amount with over the maximum value" in {
-        val map = validMap.updated("psoAmt", Constants.npsMaxCurrency.toString)
+        val map    = validMap.updated("psoAmt", Constants.npsMaxCurrency.toString)
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -134,7 +141,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "provided with an empty string for psoDay" in {
-        val map = validMap.updated(s"$dateMessageKey.day","")
+        val map    = validMap.updated(s"$dateMessageKey.day", "")
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -142,7 +149,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "provided with an empty string for psoMonth" in {
-        val map = validMap.updated(s"$dateMessageKey.month","")
+        val map    = validMap.updated(s"$dateMessageKey.month", "")
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -150,7 +157,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "provided with an empty string for psoYear" in {
-        val map = validMap.updated(s"$dateMessageKey.year","")
+        val map    = validMap.updated(s"$dateMessageKey.year", "")
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -158,7 +165,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "provided with a non integer equivalent string for psoDay" in {
-        val map = validMap.updated(s"$dateMessageKey.day","a")
+        val map    = validMap.updated(s"$dateMessageKey.day", "a")
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -166,7 +173,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "provided with a non integer equivalent string for psoMonth" in {
-        val map = validMap.updated(s"$dateMessageKey.month","b")
+        val map    = validMap.updated(s"$dateMessageKey.month", "b")
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -174,7 +181,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
 
       "provided with a non integer equivalent string for psoYear" in {
-        val map = validMap.updated(s"$dateMessageKey.year","c")
+        val map    = validMap.updated(s"$dateMessageKey.year", "c")
         val result = psoDetailsForm().bind(map)
 
         result.errors.size shouldBe 1
@@ -182,12 +189,12 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
     }
 
-    "use additional validation to invalidate a form" which {
+    "use additional validation to invalidate a form".which {
 
       "has one error with the correct error message" when {
 
         "provided with an invalid date" in {
-          val map = validMap.updated(s"$dateMessageKey.day", "50")
+          val map    = validMap.updated(s"$dateMessageKey.day", "50")
           val result = psoDetailsForm().bind(map)
 
           result.errors.size shouldBe 1
@@ -232,4 +239,5 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       }
     }
   }
+
 }

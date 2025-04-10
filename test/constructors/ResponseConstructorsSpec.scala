@@ -25,33 +25,33 @@ class ResponseConstructorsSpec extends FakeApplication with MockitoSugar {
 
   val mockResponseConstructor: ResponseConstructors = fakeApplication().injector.instanceOf[ResponseConstructors]
 
-  val testFPSuccessProtectionModel: ProtectionModel = ProtectionModel (
+  val testFPSuccessProtectionModel: ProtectionModel = ProtectionModel(
     Some("testPSARef"),
     notificationId = Some(24),
     protectionID = Some(12345),
     protectionType = Some("FP2016"),
     certificateDate = Some("2016-04-17"),
-    protectionReference = Some("PSA123456"))
+    protectionReference = Some("PSA123456")
+  )
+
   val testFPSuccessApplyResponseModel: ApplyResponseModel = ApplyResponseModel(testFPSuccessProtectionModel)
 
   "ResponseConstructors" should {
 
     "create the correct ApplyResponse model from Json" in {
-      val jsn: JsValue = Json.parse(
-        """{"certificateDate":"2016-04-17",
-          |"notificationId":24,
-          |"protectionID":12345,
-          |"protectionReference":"PSA123456",
-          |"protectionType":"FP2016",
-          |"psaCheckReference":"testPSARef"}""".stripMargin)
+      val jsn: JsValue = Json.parse("""{"certificateDate":"2016-04-17",
+                                      |"notificationId":24,
+                                      |"protectionID":12345,
+                                      |"protectionReference":"PSA123456",
+                                      |"protectionType":"FP2016",
+                                      |"psaCheckReference":"testPSARef"}""".stripMargin)
       val testApplyResponseModel = mockResponseConstructor.createApplyResponseModelFromJson(jsn).get
       testApplyResponseModel shouldBe testFPSuccessApplyResponseModel
     }
 
     "return None if an ApplyResponse model can't be created" in {
-      val jsn: JsValue = Json.parse(
-        """{"protectionID":"wrong"
-          |}""".stripMargin)
+      val jsn: JsValue = Json.parse("""{"protectionID":"wrong"
+                                      |}""".stripMargin)
       val testApplyResponseModel = mockResponseConstructor.createApplyResponseModelFromJson(jsn)
       testApplyResponseModel shouldBe None
     }
@@ -59,48 +59,50 @@ class ResponseConstructorsSpec extends FakeApplication with MockitoSugar {
     "create the correct TransformedReadResponse model from Json" in {
       val tstPSACheckRef = "testPsaRef"
 
-      val tstProtectionModelOpen = ProtectionModel (
+      val tstProtectionModelOpen = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(2),
         status = Some("Open"),
         version = Some(2)
       )
-      val tstProtectionModelDormant = ProtectionModel (
+      val tstProtectionModelDormant = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(1),
         status = Some("Withdrawn"),
         version = Some(1)
       )
 
-      val jsn: JsValue = Json.parse(
-        """{
-          |"psaCheckReference":"testPsaRef",
-          |"lifetimeAllowanceProtections":
-            |[
-              |{
-                | "protectionID":1,
-                | "status":"Withdrawn",
-                | "version":1
-              |},
-              |{
-                |"protectionID":2,
-                |"status":"Open",
-                |"version":2
-              |}
-            |]
-          |}
+      val jsn: JsValue = Json.parse("""{
+                                      |"psaCheckReference":"testPsaRef",
+                                      |"lifetimeAllowanceProtections":
+                                      |[
+                                      |{
+                                      | "protectionID":1,
+                                      | "status":"Withdrawn",
+                                      | "version":1
+                                      |},
+                                      |{
+                                      |"protectionID":2,
+                                      |"status":"Open",
+                                      |"version":2
+                                      |}
+                                      |]
+                                      |}
         """.stripMargin)
-      val tstTransformedReadResponseModel = TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
-      mockResponseConstructor.createTransformedReadResponseModelFromJson(jsn) shouldBe Some(tstTransformedReadResponseModel)
+      val tstTransformedReadResponseModel =
+        TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
+      mockResponseConstructor.createTransformedReadResponseModelFromJson(jsn) shouldBe Some(
+        tstTransformedReadResponseModel
+      )
     }
 
     "return None if a TransformedReadResponse model can't be created" in {
 
-      val jsn: JsValue = Json.parse(
-        """{"psaCheckReference":"wrong"
-          |}""".stripMargin)
+      val jsn: JsValue = Json.parse("""{"psaCheckReference":"wrong"
+                                      |}""".stripMargin)
 
       mockResponseConstructor.createTransformedReadResponseModelFromJson(jsn) shouldBe None
     }
   }
+
 }

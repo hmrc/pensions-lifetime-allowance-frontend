@@ -30,14 +30,14 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
     "return a valid form" when {
 
       "supplied with a valid model" in {
-        val model = PensionsTakenBetweenModel("text")
+        val model  = PensionsTakenBetweenModel("text")
         val result = pensionsTakenBetweenForm("ip2016").fill(model)
 
         result.data shouldBe Map("pensionsTakenBetween" -> "text")
       }
 
       "supplied with a valid form" in {
-        val map = Map("pensionsTakenBetween" -> "yes")
+        val map    = Map("pensionsTakenBetween" -> "yes")
         val result = pensionsTakenBetweenForm("ip2016").bind(map)
 
         result.value shouldBe Some(PensionsTakenBetweenModel("yes"))
@@ -47,7 +47,7 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
     "return an invalid form with one error and the correct message" when {
 
       "not provided with a pensionsTakenBetween value" in {
-        val map = Map.empty[String, String]
+        val map    = Map.empty[String, String]
         val result = pensionsTakenBetweenForm("ip2016").bind(map)
 
         result.errors.size shouldBe 1
@@ -55,7 +55,7 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
       }
 
       "provided with a invalid pensionsTakenBetween value" in {
-        val map = Map("pensionsTakenBetween" -> "some-value")
+        val map    = Map("pensionsTakenBetween" -> "some-value")
         val result = pensionsTakenBetweenForm("ip2016").bind(map)
 
         result.errors.size shouldBe 1
@@ -63,4 +63,5 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
       }
     }
   }
+
 }

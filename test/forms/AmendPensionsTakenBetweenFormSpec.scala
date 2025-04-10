@@ -33,26 +33,26 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
     "produce a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = AmendPensionsTakenBetweenModel("yes")
+        val model  = AmendPensionsTakenBetweenModel("yes")
         val result = amendPensionsTakenBetweenForm("ip2016").fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid map with no amount" in {
-        val map = Map("amendedPensionsTakenBetween" -> "no")
+        val map    = Map("amendedPensionsTakenBetween" -> "no")
         val result = amendPensionsTakenBetweenForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendPensionsTakenBetweenModel("no"))
       }
     }
 
-    "produce an invalid form" which {
+    "produce an invalid form".which {
 
       "has one error with the correct error message" when {
 
         "not provided with a value for amendedPensionsTakenBetween" in {
-          val map = validMap - "amendedPensionsTakenBetween"
+          val map    = validMap - "amendedPensionsTakenBetween"
           val result = amendPensionsTakenBetweenForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -61,4 +61,5 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
       }
     }
   }
+
 }

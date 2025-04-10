@@ -25,16 +25,14 @@ object PensionDebit {
 }
 
 case class IPApplicationModel(
-             protectionType: String,
-             relevantAmount: Double = 0.0,
-             uncrystallisedRights: Option[Double] = None,
-             preADayPensionInPayment: Option[Double] = None,
-             postADayBenefitCrystallisationEvents: Option[Double] = None,
-             nonUKRights: Option[Double] = None,
-             pensionDebits: Option[List[PensionDebit]] = None) {
-
-}
-
+    protectionType: String,
+    relevantAmount: Double = 0.0,
+    uncrystallisedRights: Option[Double] = None,
+    preADayPensionInPayment: Option[Double] = None,
+    postADayBenefitCrystallisationEvents: Option[Double] = None,
+    nonUKRights: Option[Double] = None,
+    pensionDebits: Option[List[PensionDebit]] = None
+) {}
 
 object IPApplicationModel {
   implicit val format: OFormat[IPApplicationModel] = Json.format[IPApplicationModel]

@@ -26,7 +26,9 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class SessionCacheService @Inject()(sessionRepository: SessionRepository)(implicit executionContext: ExecutionContext) {
+class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
+    implicit executionContext: ExecutionContext
+) {
 
   def saveFormData[T](key: String, data: T)(implicit request: Request[_], formats: Format[T]): Future[CacheMap] =
     sessionRepository.putInSession(DataKey(key), data)
@@ -39,4 +41,5 @@ class SessionCacheService @Inject()(sessionRepository: SessionRepository)(implic
 
   def remove(implicit request: Request[_]): Future[Unit] =
     sessionRepository.clearSession
+
 }

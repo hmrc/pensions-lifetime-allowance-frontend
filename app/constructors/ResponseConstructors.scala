@@ -21,33 +21,41 @@ import play.api.libs.json.JsValue
 
 class ResponseConstructors {
 
-    def createApplyResponseModelFromJson(json: JsValue): Option[ApplyResponseModel] = {
-        val psaReference = (json \ "psaCheckReference").asOpt[String]
+  def createApplyResponseModelFromJson(json: JsValue): Option[ApplyResponseModel] = {
+    val psaReference = (json \ "psaCheckReference").asOpt[String]
 
-        json.validate[ProtectionModel].fold(
-            errors => None,
-            success => Some(ApplyResponseModel(success.copy(psaCheckReference = psaReference)))
-        )
+    json
+      .validate[ProtectionModel]
+      .fold(
+        errors => None,
+        success => Some(ApplyResponseModel(success.copy(psaCheckReference = psaReference)))
+      )
+  }
+
+  def createTransformedReadResponseModelFromJson(json: JsValue): Option[TransformedReadResponseModel] = {
+    val responseModel = json.validate[ReadResponseModel]
+    responseModel.fold(
+      errors => None,
+      valid = success => Some(transformReadResponseModel(success))
+    )
+  }
+
+  def transformReadResponseModel(respModel: ReadResponseModel): TransformedReadResponseModel = {
+    val activeProtectionOpt = respModel.lifetimeAllowanceProtections.find(_.status.contains("Open")).map {
+      _.copy(psaCheckReference = Some(respModel.psaCheckReference))
     }
-
-    def createTransformedReadResponseModelFromJson(json: JsValue): Option[TransformedReadResponseModel] = {
-        val responseModel = json.validate[ReadResponseModel]
-        responseModel.fold (
-            errors => None,
-            valid = success => Some(transformReadResponseModel(success))
-        )
+    val otherProtections = respModel.lifetimeAllowanceProtections.filterNot(_.status.contains("Open")).map {
+      _.copy(psaCheckReference = Some(respModel.psaCheckReference))
     }
+    TransformedReadResponseModel(activeProtectionOpt, otherProtections)
+  }
 
-    def transformReadResponseModel(respModel: ReadResponseModel): TransformedReadResponseModel = {
-        val activeProtectionOpt = respModel.lifetimeAllowanceProtections.find(_.status.contains("Open")).map{_.copy(psaCheckReference = Some(respModel.psaCheckReference))}
-        val otherProtections = respModel.lifetimeAllowanceProtections.filterNot(_.status.contains("Open")).map{_.copy(psaCheckReference = Some(respModel.psaCheckReference))}
-        TransformedReadResponseModel(activeProtectionOpt, otherProtections)
-    }
-
-    def createAmendResponseModelFromJson(json: JsValue): Option[AmendResponseModel] = {
-        json.validate[ProtectionModel].fold(
+  def createAmendResponseModelFromJson(json: JsValue): Option[AmendResponseModel] =
+    json
+      .validate[ProtectionModel]
+      .fold(
         errors => None,
         success => Some(AmendResponseModel(success))
-        )
-    }
+      )
+
 }

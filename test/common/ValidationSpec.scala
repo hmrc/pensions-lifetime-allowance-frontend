@@ -36,11 +36,11 @@ class ValidationSpec extends AnyWordSpecLike with Matchers with OptionValues {
 
   "Is positive check" should {
 
-  	"pass for 1" in { isPositive(1) shouldBe true }
-  	"pass for 0" in { isPositive(0) shouldBe true }
-  	"pass for 0.0000001" in { isPositive(0.0000001) shouldBe true }
-  	"fail for -1" in { isPositive(-1) shouldBe false }
-  	"fail for -0.0000001" in { isPositive(-0.0000001) shouldBe false }
+    "pass for 1" in { isPositive(1) shouldBe true }
+    "pass for 0" in { isPositive(0) shouldBe true }
+    "pass for 0.0000001" in { isPositive(0.0000001) shouldBe true }
+    "fail for -1" in { isPositive(-1) shouldBe false }
+    "fail for -0.0000001" in { isPositive(-0.0000001) shouldBe false }
   }
 
   "Is valid date" should {
@@ -48,4 +48,5 @@ class ValidationSpec extends AnyWordSpecLike with Matchers with OptionValues {
     "fail for 29/2/2015" in { isValidDate(29, 2, 2015) shouldBe false }
     "fail for -3/2/2015" in { isValidDate(-3, 2, 2015) shouldBe false }
   }
+
 }

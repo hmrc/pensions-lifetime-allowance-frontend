@@ -27,7 +27,7 @@ import testHelpers._
 class AccountControllerSpec extends FakeApplication with MockitoSugar {
 
   val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockMCC       = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
   class Setup {
     val controller = new AccountController(mockAppConfig, mockMCC)
@@ -40,9 +40,10 @@ class AccountControllerSpec extends FakeApplication with MockitoSugar {
     status(DataItem.result) shouldBe Status.SEE_OTHER
   }
 
-    "redirect to the feedback survey with the origin token PLA" in new Setup {
-      object DataItem extends FakeRequestTo("/", controller.signOut, Some("sessionId"))
+  "redirect to the feedback survey with the origin token PLA" in new Setup {
+    object DataItem extends FakeRequestTo("/", controller.signOut, Some("sessionId"))
 
-      redirectLocation(DataItem.result).get shouldBe (MockConfig.feedbackSurvey)
-    }
+    redirectLocation(DataItem.result).get shouldBe (MockConfig.feedbackSurvey)
+  }
+
 }

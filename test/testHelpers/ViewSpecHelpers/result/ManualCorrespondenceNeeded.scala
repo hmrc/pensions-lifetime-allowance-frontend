@@ -18,22 +18,25 @@ package testHelpers.ViewSpecHelpers.result
 
 trait ManualCorrespondenceNeeded {
 
- val  plaMcNeededTitle                        = "There's a problem logging you in - Check your pension protections - GOV.UK"
- val  plaMcNeededPageHeading                  = "There's a problem logging you in"
- val  plaMcNeededNeedToSpeakToYou             = "We need to speak to you before you can log in to your account."
- val  plaMcNeededHowToFix                     = "How to fix this"
- val  plaMcNeededTelephone                    = "Phone 0300 200 3300"
- val  plaMcNeededSayCantLogIn                 = "Say 'I can't log in'"
- val  plaMcNeededSayYes                       = "Say 'Yes' when asked if you are having problems logging in"
- val  plaMcNeededAdvisorHelp                  = "You will hear a recorded message advising you to call another number - do not hang up and redial. Stay on the line and an advisor will hep you."
- val  plaMcNeededTellAdvisor                  = "Tell the advisor this is an 'MCI issue'"
+  val plaMcNeededTitle            = "There's a problem logging you in - Check your pension protections - GOV.UK"
+  val plaMcNeededPageHeading      = "There's a problem logging you in"
+  val plaMcNeededNeedToSpeakToYou = "We need to speak to you before you can log in to your account."
+  val plaMcNeededHowToFix         = "How to fix this"
+  val plaMcNeededTelephone        = "Phone 0300 200 3300"
+  val plaMcNeededSayCantLogIn     = "Say 'I can't log in'"
+  val plaMcNeededSayYes           = "Say 'Yes' when asked if you are having problems logging in"
 
- val  plaMcNeededOtherContact                 = "Other ways to contact us"
- val  plaMcNeededTextphone                    = "Textphone: 0300 200 3319"
- val  plaMcNeededNonUKPhone                   = "Outside UK: +44 135 535 9022"
- val  plaMcNeededLinesOpen                    = "Phone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday."
- val  plaMcNeededLinesClosed                  = "Closed Sundays and bank holidays."
- val  plaMcNeededLinesBusy                    = "Phone lines are less busy before 10am Monday to Friday."
- val  plaMcNeededcallCharges                  = "Find out about call charges"
+  val plaMcNeededAdvisorHelp =
+    "You will hear a recorded message advising you to call another number - do not hang up and redial. Stay on the line and an advisor will hep you."
+
+  val plaMcNeededTellAdvisor = "Tell the advisor this is an 'MCI issue'"
+
+  val plaMcNeededOtherContact = "Other ways to contact us"
+  val plaMcNeededTextphone    = "Textphone: 0300 200 3319"
+  val plaMcNeededNonUKPhone   = "Outside UK: +44 135 535 9022"
+  val plaMcNeededLinesOpen    = "Phone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday."
+  val plaMcNeededLinesClosed  = "Closed Sundays and bank holidays."
+  val plaMcNeededLinesBusy    = "Phone lines are less busy before 10am Monday to Friday."
+  val plaMcNeededcallCharges  = "Find out about call charges"
 
 }

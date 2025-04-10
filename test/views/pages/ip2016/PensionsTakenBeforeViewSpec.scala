@@ -28,17 +28,18 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the PensionsTakenBeforeView" should {
-    val pensionsForm = PensionsTakenBeforeForm.pensionsTakenBeforeForm("ip2016").bind(Map("pensionsTakenBefore" -> "yes"))
+    val pensionsForm =
+      PensionsTakenBeforeForm.pensionsTakenBeforeForm("ip2016").bind(Map("pensionsTakenBefore" -> "yes"))
     lazy val view = application.injector.instanceOf[pensionsTakenBefore]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm).body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm).body)
 
-    val errorForm =  PensionsTakenBeforeForm.pensionsTakenBeforeForm("ip2016").bind(Map("pensionsTakenBefore" -> ""))
+    val errorForm = PensionsTakenBeforeForm.pensionsTakenBeforeForm("ip2016").bind(Map("pensionsTakenBefore" -> ""))
     lazy val errorView = application.injector.instanceOf[pensionsTakenBefore]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm).body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm).body)
 
     lazy val form = doc.select("form")
 
-    "have the correct title" in{
+    "have the correct title" in {
       doc.title() shouldBe plaPensionsTakenBeforeTitle
     }
 
@@ -51,27 +52,28 @@ class PensionsTakenBeforeViewSpec extends CommonViewSpecHelper with PensionsTake
       form.attr("action") shouldBe controllers.routes.IP2016Controller.submitPensionsTakenBefore.url
     }
 
-    "have a pair of yes/no buttons" in{
+    "have a pair of yes/no buttons" in {
       doc.select("[for=pensionsTakenBefore]").text shouldBe plaBaseYes
       doc.select("input#pensionsTakenBefore").attr("type") shouldBe "radio"
       doc.select("[for=pensionsTakenBefore-2]").text shouldBe plaBaseNo
       doc.select("input#pensionsTakenBefore-2").attr("type") shouldBe "radio"
     }
 
-    "have a continue button" in{
+    "have a continue button" in {
       doc.select("button").text shouldBe plaBaseContinue
       doc.getElementsByClass("govuk-button").attr("id") shouldBe "submit"
     }
 
-    "display the correct errors appropriately" in{
+    "display the correct errors appropriately" in {
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 
-    "not have errors on valid pages" in{
+    "not have errors on valid pages" in {
       pensionsForm.hasErrors shouldBe false
       doc.select("span.error-notification").text shouldBe ""
     }
   }
+
 }

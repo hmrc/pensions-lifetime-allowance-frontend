@@ -33,19 +33,19 @@ class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessag
     "return a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = PensionsTakenBeforeModel("yes")
+        val model  = PensionsTakenBeforeModel("yes")
         val result = pensionsTakenBeforeForm("ip2016").fill(model)
 
         result.data shouldBe validMap
       }
     }
 
-    "produce an invalid form" which {
+    "produce an invalid form".which {
 
       "has only one error with the correct message" when {
 
         "not provided with a value for pensionsTakenBefore" in {
-          val map = validMap.updated("pensionsTakenBefore", "")
+          val map    = validMap.updated("pensionsTakenBefore", "")
           val result = pensionsTakenBeforeForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -54,4 +54,5 @@ class PensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessag
       }
     }
   }
+
 }

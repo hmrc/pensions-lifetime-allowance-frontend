@@ -23,12 +23,16 @@ import java.net.URLEncoder
 import javax.inject.Inject
 
 class AccessibilityStatementConfig @Inject() (config: Configuration) {
-  val platformHost: Option[String]                      =
+
+  val platformHost: Option[String] =
     config.getOptional[String]("platform.frontend.host")
-  val accessibilityStatementHost: Option[String]        =
+
+  val accessibilityStatementHost: Option[String] =
     platformHost.orElse(config.getOptional[String]("accessibility-statement.host"))
-  val accessibilityStatementPath: Option[String]        =
+
+  val accessibilityStatementPath: Option[String] =
     config.getOptional[String]("accessibility-statement.path")
+
   val accessibilityStatementServicePath: Option[String] =
     config.getOptional[String]("accessibility-statement.service-path")
 
@@ -38,8 +42,10 @@ class AccessibilityStatementConfig @Inject() (config: Configuration) {
       path        <- accessibilityStatementPath
       servicePath <- accessibilityStatementServicePath
     } yield s"$host$path$servicePath$query"
+
   private def query(implicit request: RequestHeader): String = {
     val referrerUrl = URLEncoder.encode(s"${platformHost.getOrElse("")}${request.path}", "UTF-8")
     s"?referrerUrl=$referrerUrl"
   }
+
 }

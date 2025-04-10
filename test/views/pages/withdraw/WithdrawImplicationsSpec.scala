@@ -33,7 +33,7 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
 
   "Withdraw Implication view for IP2014" when {
     lazy val view = application.injector.instanceOf[withdrawImplications]
-    lazy val doc = Jsoup.parse(view.apply(withdrawDateForModel, "IP2014", "dormant").body)
+    lazy val doc  = Jsoup.parse(view.apply(withdrawDateForModel, "IP2014", "dormant").body)
 
     s"have a title ${"pla.withdraw.protection.title"}" in {
       doc.title() shouldBe plaWithdrawProtectionTitle(plaWithdrawProtectionIP2014label)
@@ -52,22 +52,29 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
     }
 
     s"have a alert of ${"pla.withdraw.implication.info"}" in {
-      doc.select("#main-content > div > div > div > strong").text() shouldBe s"Warning ${plaWithdrawImplicationInfo(plaWithdrawProtectionIP2014label)}"
+      doc
+        .select("#main-content > div > div > div > strong")
+        .text() shouldBe s"Warning ${plaWithdrawImplicationInfo(plaWithdrawProtectionIP2014label)}"
     }
 
     "have a div tag that" should {
       "have a heading label" in {
-        doc.select("#main-content > div > div > p").text() shouldBe plaWithdrawProtectionIfInfo(plaWithdrawProtectionIP2014label)
+        doc.select("#main-content > div > div > p").text() shouldBe plaWithdrawProtectionIfInfo(
+          plaWithdrawProtectionIP2014label
+        )
       }
       s"has first paragraph of ${"pla.withdraw.protection.if.info.1"}" in {
-        doc.select("#main-content > div > div > ul > li:nth-child(1)").text() shouldBe plaWithdrawProtectionIfInfo1(plaWithdrawProtectionIP2014label)
+        doc.select("#main-content > div > div > ul > li:nth-child(1)").text() shouldBe plaWithdrawProtectionIfInfo1(
+          plaWithdrawProtectionIP2014label
+        )
       }
 
       s"has second paragraph of ${"pla.withdraw.protection.if.info.1"}" in {
-        doc.select("#main-content > div > div > ul > li:nth-child(2)").text() shouldBe plaWithdrawProtectionIfInfo2(plaWithdrawProtectionIP2014label)
+        doc.select("#main-content > div > div > ul > li:nth-child(2)").text() shouldBe plaWithdrawProtectionIfInfo2(
+          plaWithdrawProtectionIP2014label
+        )
       }
     }
-
 
     "have a continue button that" should {
       lazy val button = doc.getElementById("continue-button")
@@ -86,7 +93,7 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
 
   "Withdraw Implication view for IP2016" when {
     lazy val view = application.injector.instanceOf[withdrawImplications]
-    lazy val doc = Jsoup.parse(view.apply(withdrawDateForModel, "IP2016", "dormant").body)
+    lazy val doc  = Jsoup.parse(view.apply(withdrawDateForModel, "IP2016", "dormant").body)
 
     s"have a title ${"pla.withdraw.protection.title"}" in {
       doc.title() shouldBe plaWithdrawProtectionTitle(plaWithdrawProtectionIP2016label)
@@ -105,22 +112,29 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
     }
 
     s"have a alert of ${"pla.withdraw.implication.info"}" in {
-      doc.select("#main-content > div > div > div > strong").text() shouldBe s"Warning ${plaWithdrawImplicationInfo(plaWithdrawProtectionIP2016label)}"
+      doc
+        .select("#main-content > div > div > div > strong")
+        .text() shouldBe s"Warning ${plaWithdrawImplicationInfo(plaWithdrawProtectionIP2016label)}"
     }
 
     "have a div tag that" should {
       "have a heading label" in {
-        doc.select("#main-content > div > div > p").text() shouldBe plaWithdrawProtectionIfInfo(plaWithdrawProtectionIP2016label)
+        doc.select("#main-content > div > div > p").text() shouldBe plaWithdrawProtectionIfInfo(
+          plaWithdrawProtectionIP2016label
+        )
       }
       s"has first paragraph of ${"pla.withdraw.protection.if.info.1"}" in {
-        doc.select("#main-content > div > div > ul > li:nth-child(1)").text() shouldBe plaWithdrawProtectionIfInfo1(plaWithdrawProtectionIP2016label)
+        doc.select("#main-content > div > div > ul > li:nth-child(1)").text() shouldBe plaWithdrawProtectionIfInfo1(
+          plaWithdrawProtectionIP2016label
+        )
       }
 
       s"has second paragraph of ${"pla.withdraw.protection.if.info.1"}" in {
-        doc.select("#main-content > div > div > ul > li:nth-child(2)").text() shouldBe plaWithdrawProtectionIfInfo2(plaWithdrawProtectionIP2016label)
+        doc.select("#main-content > div > div > ul > li:nth-child(2)").text() shouldBe plaWithdrawProtectionIfInfo2(
+          plaWithdrawProtectionIP2016label
+        )
       }
     }
-
 
     "have a continue button that" should {
       lazy val button = doc.getElementById("continue-button")

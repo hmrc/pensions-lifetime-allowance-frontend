@@ -40,62 +40,62 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ConfirmationControllerSpec extends FakeApplication with MockitoSugar with AuthMock {
 
-    implicit val mockAppConfig: FrontendAppConfig              = mock[FrontendAppConfig]
-    implicit val mockPlaContext: PlaContext                    = mock[PlaContext]
-    implicit val system: ActorSystem                           = ActorSystem()
-    implicit val materializer: Materializer                    = mock[Materializer]
-    implicit val application: Application                      = mock[Application]
-    implicit val mockTechnicalError: technicalError            = app.injector.instanceOf[technicalError]
-    implicit val mockConfirmFP: confirmFP                      = app.injector.instanceOf[confirmFP]
-    implicit val formWithCSRF: FormWithCSRF                    = app.injector.instanceOf[FormWithCSRF]
-    implicit val executionContext: ExecutionContext            = app.injector.instanceOf[ExecutionContext]
+  implicit val mockAppConfig: FrontendAppConfig   = mock[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext         = mock[PlaContext]
+  implicit val system: ActorSystem                = ActorSystem()
+  implicit val materializer: Materializer         = mock[Materializer]
+  implicit val application: Application           = mock[Application]
+  implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
+  implicit val mockConfirmFP: confirmFP           = app.injector.instanceOf[confirmFP]
+  implicit val formWithCSRF: FormWithCSRF         = app.injector.instanceOf[FormWithCSRF]
+  implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
+  val mockMCC                                  = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockAuthFunction                         = fakeApplication().injector.instanceOf[AuthFunction]
+  val mockEnv                                  = mock[Environment]
+  val mockWithdrawnAp2016View: withdrawnAP2016 = app.injector.instanceOf[ip2016.withdrawnAP2016]
 
-    val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-    val mockAuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
-    val mockEnv = mock[Environment]
-    val mockWithdrawnAp2016View:withdrawnAP2016  = app.injector.instanceOf[ip2016.withdrawnAP2016]
+  def confirmationControllerRoute: String = routes.ConfirmationController.confirmFP.url
 
-    def confirmationControllerRoute: String = routes.ConfirmationController.confirmFP.url
+  val authFunction = new AuthFunction {
+    override implicit val plaContext: PlaContext         = mockPlaContext
+    override implicit val appConfig: FrontendAppConfig   = mockAppConfig
+    override implicit val technicalError: technicalError = mockTechnicalError
+    override implicit val ec: ExecutionContext           = executionContext
 
-    val authFunction = new AuthFunction {
-        override implicit val plaContext: PlaContext = mockPlaContext
-        override implicit val appConfig: FrontendAppConfig = mockAppConfig
-        override implicit val technicalError: technicalError = mockTechnicalError
-        override implicit val ec: ExecutionContext = executionContext
+    override def authConnector: AuthConnector = mockAuthConnector
+  }
 
-        override def authConnector: AuthConnector = mockAuthConnector
+  class Setup {
+
+    val controller = new ConfirmationController(
+      mockMCC,
+      authFunction,
+      mockConfirmFP,
+      mockWithdrawnAp2016View
+    )
+
+  }
+
+  "when applyFor2016IPAndFpShutterEnabled is disabled calling the .confirmFP action" should {
+    "return a 200 and the confirmFP view" in new Setup {
+      mockAuthConnector(Future.successful {})
+      when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
+      val result = controller.confirmFP(FakeRequest(GET, confirmationControllerRoute))
+      status(result) shouldBe 200
+      contentAsString(result) should include("Get fixed protection 2016 for your lifetime allowance")
     }
+  }
 
+  "when applyFor2016IPAndFpShutterEnabled is enabled calling the .confirmFP action" should {
+    "return a 200 and withdrawnAP2016 view" in new Setup {
+      mockAuthConnector(Future.successful {})
+      when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
+      val result = controller.confirmFP(FakeRequest(GET, confirmationControllerRoute))
 
-    class Setup {
-        val controller = new ConfirmationController(
-            mockMCC,
-            authFunction,
-            mockConfirmFP,
-            mockWithdrawnAp2016View
-
-        )
+      status(result) shouldBe 200
+      contentAsString(result) should include("Sorry, applications for 2016 protection have ended")
     }
+  }
 
-    "when applyFor2016IPAndFpShutterEnabled is disabled calling the .confirmFP action" should {
-        "return a 200 and the confirmFP view" in new Setup {
-            mockAuthConnector(Future.successful({}))
-            when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
-            val result = controller.confirmFP(FakeRequest(GET, confirmationControllerRoute))
-            status(result) shouldBe 200
-            contentAsString(result) should include ("Get fixed protection 2016 for your lifetime allowance")
-        }
-    }
-
-    "when applyFor2016IPAndFpShutterEnabled is enabled calling the .confirmFP action" should {
-        "return a 200 and withdrawnAP2016 view" in new Setup {
-            mockAuthConnector(Future.successful({}))
-            when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
-            val result = controller.confirmFP(FakeRequest(GET, confirmationControllerRoute))
-
-            status(result) shouldBe 200
-            contentAsString(result) should include ("Sorry, applications for 2016 protection have ended")
-        }
-    }
 }
