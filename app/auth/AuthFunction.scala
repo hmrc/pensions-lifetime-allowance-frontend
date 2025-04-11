@@ -15,6 +15,7 @@
  */
 
 package auth
+
 import config.{FrontendAppConfig, PlaContext}
 import play.api.Logging
 import play.api.i18n.Messages
@@ -27,59 +28,68 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-class AuthFunctionImpl @Inject()(mcc: MessagesControllerComponents,
-                                 authClientConnector: AuthConnector,
-                                 val technicalError: views.html.pages.fallback.technicalError,
-                                )(
-                                  implicit val appConfig: FrontendAppConfig,
-                                  implicit val plaContext: PlaContext,
-                                  implicit val ec: ExecutionContext)
-  extends FrontendController(mcc) with AuthFunction with Logging{
+
+class AuthFunctionImpl @Inject() (
+    mcc: MessagesControllerComponents,
+    authClientConnector: AuthConnector,
+    val technicalError: views.html.pages.fallback.technicalError
+)(implicit val appConfig: FrontendAppConfig, implicit val plaContext: PlaContext, implicit val ec: ExecutionContext)
+    extends FrontendController(mcc)
+    with AuthFunction
+    with Logging {
   override def authConnector: AuthConnector = authClientConnector
 }
+
 trait AuthFunction extends AuthorisedFunctions with Logging {
   implicit val plaContext: PlaContext
   implicit val appConfig: FrontendAppConfig
   implicit val ec: ExecutionContext
   val technicalError: views.html.pages.fallback.technicalError
-  val enrolmentKey: String = "HMRC-NI"
-  val originString: String = "origin="
+  val enrolmentKey: String    = "HMRC-NI"
+  val originString: String    = "origin="
   val confidenceLevel: String = "&confidenceLevel=200"
-  val completionURL: String = "&completionURL="
-  val failureURL: String = "&failureURL="
+  val completionURL: String   = "&completionURL="
+  val failureURL: String      = "&failureURL="
+
   private def IVUpliftURL()(implicit request: Request[AnyContent]): String = s"${appConfig.ivUpliftUrl}?" +
     s"$originString${appConfig.appName}" +
     s"$confidenceLevel" +
     s"$completionURL${request.uri}" +
     s"$failureURL${appConfig.notAuthorisedRedirectUrl}"
+
   class MissingNinoException extends Exception("Nino not returned by authorised call")
-  def genericAuthWithoutNino(pType: String)(body: => Future[Result])
-                            (implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] = {
-    authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200) {
+
+  def genericAuthWithoutNino(pType: String)(
+      body: => Future[Result]
+  )(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] =
+    authorised(Enrolment(enrolmentKey).and(ConfidenceLevel.L200)) {
       body
     }.recover(authErrorHandling(pType))
-  }
-  def genericAuthWithNino(pType: String)(body: String => Future[Result])
-                         (implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] = {
-    authorised(Enrolment(enrolmentKey) and ConfidenceLevel.L200).retrieve(Retrievals.nino) { nino =>
-      body(nino.getOrElse(throw new MissingNinoException))
-    }.recover(authErrorHandling(pType))
-  }
-  def authErrorHandling(pType: String)(implicit request: Request[AnyContent], messages: Messages): PartialFunction[Throwable, Result] = {
+
+  def genericAuthWithNino(pType: String)(
+      body: String => Future[Result]
+  )(implicit request: Request[AnyContent], messages: Messages, hc: HeaderCarrier): Future[Result] =
+    authorised(Enrolment(enrolmentKey).and(ConfidenceLevel.L200))
+      .retrieve(Retrievals.nino)(nino => body(nino.getOrElse(throw new MissingNinoException)))
+      .recover(authErrorHandling(pType))
+
+  def authErrorHandling(
+      pType: String
+  )(implicit request: Request[AnyContent], messages: Messages): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession =>
       val upliftUrl = upliftEnvironmentUrl(request.uri)
-      Redirect(appConfig.ggSignInUrl,
-        Map("continue" -> Seq(upliftUrl), "origin" -> Seq(appConfig.appName)))
-    case _: InsufficientEnrolments => Redirect(IVUpliftURL())
+      Redirect(appConfig.ggSignInUrl, Map("continue" -> Seq(upliftUrl), "origin" -> Seq(appConfig.appName)))
+    case _: InsufficientEnrolments      => Redirect(IVUpliftURL())
     case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL())
     case e: AuthorisationException =>
       logger.error("Unexpected auth exception ", e)
       InternalServerError(technicalError(pType))
   }
-  def upliftEnvironmentUrl(requestUri: String): String = {
+
+  def upliftEnvironmentUrl(requestUri: String): String =
     appConfig.sessionMissingUpliftUrlPrefix match {
       case Some(prefix) => prefix + requestUri
-      case _ => requestUri
+      case _            => requestUri
     }
-  }
+
 }

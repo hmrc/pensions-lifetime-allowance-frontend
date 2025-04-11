@@ -18,13 +18,19 @@ package models
 
 import enums.ApplicationType
 
-case class SummaryModel(protectionType: ApplicationType.Value, invalidRelevantAmount: Boolean, pensionContributionSections: Seq[SummarySectionModel], psoDetailsSections: Seq[SummarySectionModel]) {
+case class SummaryModel(
+    protectionType: ApplicationType.Value,
+    invalidRelevantAmount: Boolean,
+    pensionContributionSections: Seq[SummarySectionModel],
+    psoDetailsSections: Seq[SummarySectionModel]
+) {
 
   val hasRemoveLink =
     psoDetailsSections.foldLeft(false)((bool, next) =>
       bool match {
         case false => next.rows.exists(_.removeLinkCall.isDefined)
-        case _ => bool
+        case _     => bool
       }
     )
+
 }

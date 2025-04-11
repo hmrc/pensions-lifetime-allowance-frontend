@@ -16,7 +16,6 @@
 
 package controllers
 
-
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
@@ -52,41 +51,47 @@ import scala.concurrent.{ExecutionContext, Future}
 class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthMock {
 
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockPlaConnector: PLAConnector = mock[PLAConnector]
-  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  val mockWithdrawnAp2016View:withdrawnAP2016  =  app.injector.instanceOf[withdrawnAP2016]
+  val mockPlaConnector: PLAConnector               = mock[PLAConnector]
+  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockWithdrawnAp2016View: withdrawnAP2016     = app.injector.instanceOf[withdrawnAP2016]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext = mock[PlaContext]
-  implicit val mockMessages: Messages = mock[Messages]
-  implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: Materializer = mock[Materializer]
-  implicit val application = mock[Application]
+  implicit val mockAppConfig: FrontendAppConfig   = mock[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext         = mock[PlaContext]
+  implicit val mockMessages: Messages             = mock[Messages]
+  implicit val system: ActorSystem                = ActorSystem()
+  implicit val materializer: Materializer         = mock[Materializer]
+  implicit val application                        = mock[Application]
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
-  implicit val mockSummary: summary = app.injector.instanceOf[summary]
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
-
+  implicit val mockSummary: summary               = app.injector.instanceOf[summary]
+  implicit val formWithCSRF: FormWithCSRF         = app.injector.instanceOf[FormWithCSRF]
 
   val mockSummaryConstructor: SummaryConstructor = mock[SummaryConstructor]
-  val fakeRequest = FakeRequest()
-  val mockAuthFunction: AuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
-  val mockEnv: Environment = mock[Environment]
+  val fakeRequest                                = FakeRequest()
+  val mockAuthFunction: AuthFunction             = fakeApplication().injector.instanceOf[AuthFunction]
+  val mockEnv: Environment                       = mock[Environment]
 
   val tstSummaryModel = SummaryModel(ApplicationType.FP2016, false, List.empty, List.empty)
 
-  val testSummaryController = new SummaryController(mockSessionCacheService, mockMCC, mockAuthFunction, mockTechnicalError, mockSummary,mockWithdrawnAp2016View) {
+  val testSummaryController = new SummaryController(
+    mockSessionCacheService,
+    mockMCC,
+    mockAuthFunction,
+    mockTechnicalError,
+    mockSummary,
+    mockWithdrawnAp2016View
+  ) {
     override val summaryConstructor = mockSummaryConstructor
   }
 
   class Setup {
 
     val authFunction = new AuthFunction {
-      override implicit val plaContext: PlaContext = mockPlaContext
-      override implicit val appConfig: FrontendAppConfig = mockAppConfig
+      override implicit val plaContext: PlaContext         = mockPlaContext
+      override implicit val appConfig: FrontendAppConfig   = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError
-      implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
-      override implicit val ec: ExecutionContext = executionContext
+      implicit val formWithCSRF: FormWithCSRF              = app.injector.instanceOf[FormWithCSRF]
+      override implicit val ec: ExecutionContext           = executionContext
 
       override def authConnector: AuthConnector = mockAuthConnector
     }
@@ -101,65 +106,72 @@ class SummaryControllerSpec extends FakeApplication with MockitoSugar with AuthM
     ) {
       override val summaryConstructor = mockSummaryConstructor
     }
+
   }
 
-  val sessionId = UUID.randomUUID.toString
+  val sessionId    = UUID.randomUUID.toString
   val mockUsername = "mockuser"
-  val mockUserId = "/auth/oid/" + mockUsername
+  val mockUserId   = "/auth/oid/" + mockUsername
 
   "Navigating to summary when there is no user data" when {
 
     "user is applying for IP16" in new Setup {
 
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(None))
-        val result = controller.summaryIP16(fakeRequest)
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(None))
+      val result = controller.summaryIP16(fakeRequest)
 
-        status(result) shouldBe 500
+      status(result) shouldBe 500
     }
   }
 
   "Navigating to summary when there is invalid user data" when {
 
-    "user is applying for IP16" in new Setup  {
+    "user is applying for IP16" in new Setup {
       lazy val result = controller.summaryIP16(fakeRequest)
 
       when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any())).thenReturn(None)
-      when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+      when(mockSessionCacheService.fetchAllUserData(any()))
+        .thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
       status(result) shouldBe 500
     }
   }
 
   "Navigating to summary when user has valid data" when {
-    "applyFor2016IPAndFpShutterEnabled is disabled and  user is applying for IP16" in new Setup  {
-        when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
-        when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any())).thenReturn(Some(tstSummaryModel))
-        when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
-
-        val result = controller.summaryIP16(fakeRequest)
-        status(result) shouldBe 200
-      contentAsString(result) should include ("Get individual protection 2016")
-    }
-
-    "applyFor2016IPAndFpShutterEnabled is enabled and  user is applying for IP16" in new Setup  {
-      when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
-      when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any())).thenReturn(Some(tstSummaryModel))
-      when(mockSessionCacheService.fetchAllUserData(any())).thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+    "applyFor2016IPAndFpShutterEnabled is disabled and  user is applying for IP16" in new Setup {
+      when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
+      when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any()))
+        .thenReturn(Some(tstSummaryModel))
+      when(mockSessionCacheService.fetchAllUserData(any()))
+        .thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
 
       val result = controller.summaryIP16(fakeRequest)
       status(result) shouldBe 200
-      contentAsString(result) should include ("Sorry, applications for 2016 protection have ended")
+      contentAsString(result) should include("Get individual protection 2016")
+    }
+
+    "applyFor2016IPAndFpShutterEnabled is enabled and  user is applying for IP16" in new Setup {
+      when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
+      when(controller.summaryConstructor.createSummaryData(any())(any(), any(), any()))
+        .thenReturn(Some(tstSummaryModel))
+      when(mockSessionCacheService.fetchAllUserData(any()))
+        .thenReturn(Future(Some(CacheMap("tstID", Map.empty[String, JsValue]))))
+
+      val result = controller.summaryIP16(fakeRequest)
+      status(result) shouldBe 200
+      contentAsString(result) should include("Sorry, applications for 2016 protection have ended")
     }
   }
 
   "Checking for data metrics flags" should {
-    "return true for 'pensionsTakenBetween'" in new Setup  {
+    "return true for 'pensionsTakenBetween'" in new Setup {
       SummaryController.recordDataMetrics("pensionsTakenBetween") shouldBe true
     }
 
-    "return false for 'pensionsTakenBetweenAmt'" in new Setup  {
+    "return false for 'pensionsTakenBetweenAmt'" in new Setup {
       SummaryController.recordDataMetrics("pensionsTakenBetweenAmt") shouldBe false
     }
   }
+
 }

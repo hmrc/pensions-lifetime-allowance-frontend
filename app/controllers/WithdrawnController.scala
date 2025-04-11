@@ -24,13 +24,10 @@ import views.html.pages.ip2014.withdrawn
 
 import scala.concurrent.Future
 
+class WithdrawnController @Inject() (mcc: MessagesControllerComponents, withdrawn: withdrawn)(
+    implicit val appConfig: FrontendAppConfig,
+    implicit val plaContext: PlaContext
+) extends FrontendController(mcc) {
 
-class WithdrawnController @Inject()(mcc: MessagesControllerComponents,
-                                    withdrawn: withdrawn)
-                                   (implicit val appConfig: FrontendAppConfig,
-                                    implicit val plaContext: PlaContext) extends FrontendController(mcc) {
-
-  def showWithdrawn(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(withdrawn()))
-  }
+  def showWithdrawn(): Action[AnyContent] = Action.async(implicit request => Future.successful(Ok(withdrawn())))
 }

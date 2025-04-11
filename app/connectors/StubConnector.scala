@@ -19,42 +19,39 @@ package connectors
 import config.FrontendAppConfig
 import javax.inject.Inject
 import play.api.libs.json.JsValue
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse,StringContextOps}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.HttpReads.Implicits._
 import play.api.libs.json.Json
 import scala.concurrent.{ExecutionContext, Future}
 
-class StubConnector @Inject()(appConig: FrontendAppConfig,
-                             http: HttpClientV2)(implicit ec: ExecutionContext) {
+class StubConnector @Inject() (appConig: FrontendAppConfig, http: HttpClientV2)(implicit ec: ExecutionContext) {
 
   lazy val serviceUrl: String = appConig.servicesConfig.baseUrl("pla-dynamic-stub")
 
   private def deleteProtectionByNinoUrl(nino: String) = s"$serviceUrl/test-only/individuals/$nino/protections"
-  private def deleteProtectionsUrl = s"$serviceUrl/test-only/protections/removeAll"
-  private def insertProtectionsUrl = s"$serviceUrl/test-only/protections/insert"
+  private def deleteProtectionsUrl                    = s"$serviceUrl/test-only/protections/removeAll"
+  private def insertProtectionsUrl                    = s"$serviceUrl/test-only/protections/insert"
 
   def deleteProtectionByNino(nino: String)(implicit hc: HeaderCarrier): Future[Int] = {
     val dpUrl = deleteProtectionByNinoUrl(nino)
     http
       .delete(url"$dpUrl")
       .execute[HttpResponse]
-      .map{_.status}
+      .map(_.status)
   }
 
-  def deleteProtections()(implicit hc: HeaderCarrier): Future[Int] = {
+  def deleteProtections()(implicit hc: HeaderCarrier): Future[Int] =
     http
       .delete(url"$deleteProtectionsUrl")
       .execute[HttpResponse]
-      .map{_.status}
-  }
+      .map(_.status)
 
-  def insertProtections(payload: JsValue)(implicit hc: HeaderCarrier): Future[Int] = {
+  def insertProtections(payload: JsValue)(implicit hc: HeaderCarrier): Future[Int] =
     http
       .post(url"$insertProtectionsUrl")
       .withBody(Json.toJson(payload))
       .execute[HttpResponse]
-      .map{_.status}
-  }
-}
+      .map(_.status)
 
+}

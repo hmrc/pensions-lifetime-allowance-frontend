@@ -21,25 +21,26 @@ import models.amendModels.AmendsGAModel
 
 object AmendsGAConstructor {
 
-  def identifyAmendsChanges(updated: ProtectionModel, original: ProtectionModel): AmendsGAModel ={
-    val current: Option[String] = if(updated.uncrystallisedRights != original.uncrystallisedRights) Some("UpdatedValue") else None
+  def identifyAmendsChanges(updated: ProtectionModel, original: ProtectionModel): AmendsGAModel = {
+    val current: Option[String] =
+      if (updated.uncrystallisedRights != original.uncrystallisedRights) Some("UpdatedValue") else None
 
     val before: Option[String] = gaAction(updated.preADayPensionInPayment, original.preADayPensionInPayment)
 
-    val between: Option[String] = gaAction(updated.postADayBenefitCrystallisationEvents, original.postADayBenefitCrystallisationEvents)
+    val between: Option[String] =
+      gaAction(updated.postADayBenefitCrystallisationEvents, original.postADayBenefitCrystallisationEvents)
 
     val overseas: Option[String] = gaAction(updated.nonUKRights, original.nonUKRights)
 
-    val pso: Option[String] = if(updated.pensionDebits.isDefined) Some("addedPSO") else None
-    AmendsGAModel(current,before,between,overseas,pso)
+    val pso: Option[String] = if (updated.pensionDebits.isDefined) Some("addedPSO") else None
+    AmendsGAModel(current, before, between, overseas, pso)
   }
 
-  def gaAction(updated: Option[Double], original: Option[Double]): Option[String] ={
-    if(updated != original){
-      if(!updated.contains(0.0) && !original.contains(0.0)) Some("UpdatedValue")
-      else if(updated.contains(0.0)) Some("ChangedToNo")
+  def gaAction(updated: Option[Double], original: Option[Double]): Option[String] =
+    if (updated != original) {
+      if (!updated.contains(0.0) && !original.contains(0.0)) Some("UpdatedValue")
+      else if (updated.contains(0.0)) Some("ChangedToNo")
       else Some("ChangedToYes")
     } else None
-  }
 
 }

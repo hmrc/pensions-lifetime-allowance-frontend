@@ -25,64 +25,79 @@ import models.cache.CacheMap
 import play.api.i18n.{Lang, MessagesProvider}
 import utils.{CallMap, Constants}
 
-object SummaryConstructor extends SummaryConstructor {
-
-}
+object SummaryConstructor extends SummaryConstructor {}
 
 trait SummaryConstructor {
 
-  def createSummaryData(data: CacheMap)(implicit protectionType: ApplicationType.Value,
-                                        lang: Lang, provider: MessagesProvider) : Option[SummaryModel] = {
+  def createSummaryData(
+      data: CacheMap
+  )(implicit protectionType: ApplicationType.Value, lang: Lang, provider: MessagesProvider): Option[SummaryModel] = {
 
     val helper = new SummaryConstructorHelper()
 
     val pensionsTakenModel: Option[PensionsTakenModel] = data.getEntry[PensionsTakenModel](nameString("pensionsTaken"))
 
-    val pensionsTakenBeforeModel = data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore"))
-    val pensionsWorthBeforeModel = data.getEntry[PensionsWorthBeforeModel](nameString("pensionsWorthBefore"))
+    val pensionsTakenBeforeModel  = data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore"))
+    val pensionsWorthBeforeModel  = data.getEntry[PensionsWorthBeforeModel](nameString("pensionsWorthBefore"))
     val pensionsTakenBetweenModel = data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween"))
-    val pensionsUsedBetweenModel = data.getEntry[PensionsUsedBetweenModel](nameString("pensionsUsedBetween"))
-    val overseasPensionsModel = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
-    val currentPensionsModel = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
+    val pensionsUsedBetweenModel  = data.getEntry[PensionsUsedBetweenModel](nameString("pensionsUsedBetween"))
+    val overseasPensionsModel     = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
+    val currentPensionsModel      = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
 
     val pensionDebitsModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
-    val psoDetails = data.getEntry[PSODetailsModel](nameString("psoDetails"))
-
+    val psoDetails         = data.getEntry[PSODetailsModel](nameString("psoDetails"))
 
     def relevantAmount(): BigDecimal = {
-      val (pensionsBeforeAmt, pensionsBetweenAmt) = if(helper.positiveAnswer(pensionsTakenModel)) (
-        if(helper.positiveAnswer(pensionsTakenBeforeModel)) helper.amountValue(pensionsWorthBeforeModel) else None,
-        if(helper.positiveAnswer(pensionsTakenBetweenModel)) helper.amountValue(pensionsUsedBetweenModel) else None
-      )
-      else (None, None)
-      val overseasPensionsAmnt = if(helper.positiveAnswer(overseasPensionsModel)) helper.amountValue(overseasPensionsModel) else None
+      val (pensionsBeforeAmt, pensionsBetweenAmt) =
+        if (helper.positiveAnswer(pensionsTakenModel))
+          (
+            if (helper.positiveAnswer(pensionsTakenBeforeModel)) helper.amountValue(pensionsWorthBeforeModel) else None,
+            if (helper.positiveAnswer(pensionsTakenBetweenModel)) helper.amountValue(pensionsUsedBetweenModel) else None
+          )
+        else (None, None)
+      val overseasPensionsAmnt =
+        if (helper.positiveAnswer(overseasPensionsModel)) helper.amountValue(overseasPensionsModel) else None
       val currentPensionsAmnt = helper.amountValue(currentPensionsModel)
 
-      List(pensionsBeforeAmt,pensionsBetweenAmt,overseasPensionsAmnt,currentPensionsAmnt).flatten.sum
+      List(pensionsBeforeAmt, pensionsBetweenAmt, overseasPensionsAmnt, currentPensionsAmnt).flatten.sum
     }
 
     val pensionsTakenSection = helper.createYesNoSection("pensionsTaken", pensionsTakenModel, boldText = false)
-    val pensionsTakenBeforeSection = if(helper.positiveAnswer(pensionsTakenModel)) {
+    val pensionsTakenBeforeSection = if (helper.positiveAnswer(pensionsTakenModel)) {
       helper.createYesNoSection("pensionsTakenBefore", pensionsTakenBeforeModel, boldText = false)
     } else None
-    val pensionsWorthBeforeSection = if(helper.positiveAnswer(pensionsTakenModel) && helper.positiveAnswer(pensionsTakenBeforeModel)) {
-      Some(helper.createAmountSection("pensionsWorthBefore", pensionsWorthBeforeModel, boldText = false))
-    } else None
+    val pensionsWorthBeforeSection =
+      if (helper.positiveAnswer(pensionsTakenModel) && helper.positiveAnswer(pensionsTakenBeforeModel)) {
+        Some(helper.createAmountSection("pensionsWorthBefore", pensionsWorthBeforeModel, boldText = false))
+      } else None
 
     val pensionsTakenBetweenSection = if (helper.positiveAnswer(pensionsTakenModel)) {
       helper.createYesNoSection("pensionsTakenBetween", pensionsTakenBetweenModel, boldText = false)
     } else None
-    val pensionsUsedBetweenSection = if (helper.positiveAnswer(pensionsTakenModel) && helper.positiveAnswer(pensionsTakenBetweenModel)) {
-      Some(helper.createAmountSection("pensionsUsedBetween", pensionsUsedBetweenModel, boldText = false))
-    } else None
+    val pensionsUsedBetweenSection =
+      if (helper.positiveAnswer(pensionsTakenModel) && helper.positiveAnswer(pensionsTakenBetweenModel)) {
+        Some(helper.createAmountSection("pensionsUsedBetween", pensionsUsedBetweenModel, boldText = false))
+      } else None
 
-    val overseasPensionsSection = Some(helper.createYesNoAmountSection("overseasPensions", overseasPensionsModel, boldText = false))
-    val currentPensionsSection = Some(helper.createAmountSection("currentPensions", currentPensionsModel, boldText = false))
-    
+    val overseasPensionsSection = Some(
+      helper.createYesNoAmountSection("overseasPensions", overseasPensionsModel, boldText = false)
+    )
+    val currentPensionsSection = Some(
+      helper.createAmountSection("currentPensions", currentPensionsModel, boldText = false)
+    )
+
     val totalPensionsSection = Some(
-      SummarySectionModel(List(
-        SummaryRowModel(nameString("totalPensionsAmt"), None, None, boldText = false, currencyDisplayString(relevantAmount()))
-      ))
+      SummarySectionModel(
+        List(
+          SummaryRowModel(
+            nameString("totalPensionsAmt"),
+            None,
+            None,
+            boldText = false,
+            currencyDisplayString(relevantAmount())
+          )
+        )
+      )
     )
 
     val pensionContributions = List(
@@ -98,22 +113,22 @@ trait SummaryConstructor {
 
     val pensionDebitsSection = helper.createYesNoSection("pensionDebits", pensionDebitsModel, boldText = false)
 
-    val psoDetailsSection: Option[SummarySectionModel] = {
+    val psoDetailsSection: Option[SummarySectionModel] =
       pensionDebitsModel.flatMap {
-        case s: PensionDebitsModel => s.getYesNoValue match {
-          case "yes" => Some(helper.createPSODetailsSection(psoDetails))
-          case _ => None
-        }
-        case _  => None
+        case s: PensionDebitsModel =>
+          s.getYesNoValue match {
+            case "yes" => Some(helper.createPSODetailsSection(psoDetails))
+            case _     => None
+          }
+        case _ => None
       }
-    }
 
     val pensionDebits = List(
       pensionDebitsSection,
       psoDetailsSection
     ).flatten
 
-    if(!Validation.validIPData(data)) {
+    if (!Validation.validIPData(data)) {
       None
     } else {
       Some(helper.createSummaryModel(relevantAmount(), pensionContributions, pensionDebits))
@@ -125,101 +140,127 @@ trait SummaryConstructor {
 
 class SummaryConstructorHelper()(implicit protectionType: ApplicationType.Value) {
 
-  def positiveAnswer(modelOption: Option[YesNoModel]): Boolean = {
-    modelOption.exists{_.getYesNoValue == "yes"}
-  }
+  def positiveAnswer(modelOption: Option[YesNoModel]): Boolean =
+    modelOption.exists(_.getYesNoValue == "yes")
 
-  def amountDisplayValue(model: AmountModel): String = {
+  def amountDisplayValue(model: AmountModel): String =
     currencyDisplayString(model.getAmount.getOrElse(BigDecimal(0)))
-  }
 
-  def amountValue(modelOption: Option[AmountModel]): Option[BigDecimal] = {
+  def amountValue(modelOption: Option[AmountModel]): Option[BigDecimal] =
     modelOption.flatMap(_.getAmount)
-  }
 
-  def createYesNoSection(dataName: String, modelOption: Option[YesNoModel], boldText: Boolean)
-                        (implicit provider: MessagesProvider): Option[SummarySectionModel] = {
+  def createYesNoSection(dataName: String, modelOption: Option[YesNoModel], boldText: Boolean)(
+      implicit provider: MessagesProvider
+  ): Option[SummarySectionModel] =
     createYesNoRow(dataName, modelOption, boldText).map { row =>
       SummarySectionModel(
         List(row)
       )
     }
-  }
 
-  def createAmountSection[T <: AmountModel](dataName: String, modelOption: Option[AmountModel], boldText: Boolean): SummarySectionModel = {
+  def createAmountSection[T <: AmountModel](
+      dataName: String,
+      modelOption: Option[AmountModel],
+      boldText: Boolean
+  ): SummarySectionModel =
     SummarySectionModel(
       List(
         createAmountRow(dataName, modelOption, boldText)
       ).flatten
     )
-  }
 
-  def createYesNoAmountSection(dataName: String, modelOption: Option[YesNoAmountModel], boldText: Boolean)
-                              (implicit provider: MessagesProvider): SummarySectionModel = {
+  def createYesNoAmountSection(dataName: String, modelOption: Option[YesNoAmountModel], boldText: Boolean)(
+      implicit provider: MessagesProvider
+  ): SummarySectionModel =
     SummarySectionModel(
       List(
         createYesNoRow(dataName, modelOption, boldText),
         createYesNoAmountRow(dataName, modelOption, boldText)
       ).flatten
     )
-  }
 
-  def createYesNoRow(dataName: String, modelOption: Option[YesNoModel], boldText: Boolean)
-                    (implicit provider: MessagesProvider): Option[SummaryRowModel] = {
+  def createYesNoRow(dataName: String, modelOption: Option[YesNoModel], boldText: Boolean)(
+      implicit provider: MessagesProvider
+  ): Option[SummaryRowModel] =
     modelOption.map { model =>
-      val name = nameString(dataName)
-      val call = CallMap.get(name)
+      val name         = nameString(dataName)
+      val call         = CallMap.get(name)
       val displayValue = yesNoValue(model)
       SummaryRowModel(
-        name, call, None, boldText, displayValue
+        name,
+        call,
+        None,
+        boldText,
+        displayValue
       )
     }
-  }
 
-  def yesNoValue(model: YesNoModel)(implicit provider: MessagesProvider): String = {
+  def yesNoValue(model: YesNoModel)(implicit provider: MessagesProvider): String =
     provider.messages(s"pla.base.${model.getYesNoValue}")
-  }
 
-  def createYesNoAmountRow(dataName: String, modelOption: Option[YesNoAmountModel], boldText: Boolean): Option[SummaryRowModel] = {
+  def createYesNoAmountRow(
+      dataName: String,
+      modelOption: Option[YesNoAmountModel],
+      boldText: Boolean
+  ): Option[SummaryRowModel] = {
     val name = nameString(dataName)
     val call = CallMap.get(name)
-    if(positiveAnswer(modelOption))
-      Some(SummaryRowModel(
-        name + "Amt", call, None, boldText, amountDisplayValue(modelOption.get)
-      )
+    if (positiveAnswer(modelOption))
+      Some(
+        SummaryRowModel(
+          name + "Amt",
+          call,
+          None,
+          boldText,
+          amountDisplayValue(modelOption.get)
+        )
       )
     else None
   }
 
-  def createAmountRow(dataName: String, modelOption: Option[AmountModel],boldText: Boolean): Option[SummaryRowModel] = {
+  def createAmountRow(
+      dataName: String,
+      modelOption: Option[AmountModel],
+      boldText: Boolean
+  ): Option[SummaryRowModel] = {
     val name = nameString(dataName)
     modelOption.flatMap { model =>
       val call = CallMap.get(name)
-      Some(SummaryRowModel(
-        name + "Amt", call, None, boldText, amountDisplayValue(model)
-      ))
+      Some(
+        SummaryRowModel(
+          name + "Amt",
+          call,
+          None,
+          boldText,
+          amountDisplayValue(model)
+        )
+      )
     }
   }
 
-  def createPSODetailsSection(model: Option[PSODetailsModel])(implicit lang: Lang, provider: MessagesProvider): SummarySectionModel = {
+  def createPSODetailsSection(
+      model: Option[PSODetailsModel]
+  )(implicit lang: Lang, provider: MessagesProvider): SummarySectionModel =
     model match {
       case Some(m) =>
-        val name = nameString(s"psoDetails")
+        val name       = nameString(s"psoDetails")
         val changeCall = CallMap.get(name)
         val removeCall = CallMap.get("remove" + name.capitalize)
-        val date = dateDisplayString(m.pso)
-        val amt = currencyDisplayString(m.psoAmt.getOrElse(BigDecimal(0.0)))
-        SummarySectionModel(List(
-          SummaryRowModel(name, changeCall, removeCall, boldText = false, amt, date)
-        ))
+        val date       = dateDisplayString(m.pso)
+        val amt        = currencyDisplayString(m.psoAmt.getOrElse(BigDecimal(0.0)))
+        SummarySectionModel(
+          List(
+            SummaryRowModel(name, changeCall, removeCall, boldText = false, amt, date)
+          )
+        )
       case None => SummarySectionModel(List.empty)
     }
 
-  }
-
-  def createSummaryModel(relevantAmount: BigDecimal,
-                         pensionContributions: List[SummarySectionModel],
-                         pensionDebits: List[SummarySectionModel])(implicit protectionType: ApplicationType.Value): SummaryModel = {
+  def createSummaryModel(
+      relevantAmount: BigDecimal,
+      pensionContributions: List[SummarySectionModel],
+      pensionDebits: List[SummarySectionModel]
+  )(implicit protectionType: ApplicationType.Value): SummaryModel = {
     val threshold = protectionType match {
       case ApplicationType.IP2016 => Constants.ip16RelevantAmountThreshold
       case ApplicationType.IP2014 => Constants.ip14RelevantAmountThreshold

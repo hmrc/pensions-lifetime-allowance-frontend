@@ -19,7 +19,8 @@ package constructors
 import models.amendModels.AmendsGAModel
 import models.{PensionDebitModel, ProtectionModel}
 import testHelpers.FakeApplication
-class AmendsGAConstructorSpec extends FakeApplication{
+
+class AmendsGAConstructorSpec extends FakeApplication {
 
   val testProtectionModel1: ProtectionModel = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -34,7 +35,8 @@ class AmendsGAConstructorSpec extends FakeApplication{
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456"),
-    pensionDebits = None)
+    pensionDebits = None
+  )
 
   val testProtectionModel2: ProtectionModel = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -49,7 +51,8 @@ class AmendsGAConstructorSpec extends FakeApplication{
     certificateDate = Some("2016-05-21"),
     protectedAmount = Some(1000000),
     protectionReference = Some("PSA123456"),
-    pensionDebits = Some(List(PensionDebitModel("2016-10-23", 1000.0))))
+    pensionDebits = Some(List(PensionDebitModel("2016-10-23", 1000.0)))
+  )
 
   val testProtectionModel3: ProtectionModel = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -64,38 +67,57 @@ class AmendsGAConstructorSpec extends FakeApplication{
     certificateDate = Some("2016-05-21"),
     protectedAmount = Some(1000000),
     protectionReference = Some("PSA123456"),
-    pensionDebits = None)
+    pensionDebits = None
+  )
 
   "Calling the identify changes method" when {
 
     "The original and updated protection models are the same" in {
       val original = testProtectionModel1
-      val updated = testProtectionModel1
+      val updated  = testProtectionModel1
 
-      AmendsGAConstructor.identifyAmendsChanges(updated,original) shouldBe AmendsGAModel(None,None,None,None,None)
+      AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(None, None, None, None, None)
     }
 
     "The original and updated protection models are different" when {
 
       "The values for Current Pensions, PTBefore, PTBetween and Overseas Pensions are updated" in {
         val original = testProtectionModel1
-        val updated = testProtectionModel2
+        val updated  = testProtectionModel2
 
-        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(Some("UpdatedValue"), Some("UpdatedValue"), Some("UpdatedValue"), Some("UpdatedValue"), Some("addedPSO"))
+        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(
+          Some("UpdatedValue"),
+          Some("UpdatedValue"),
+          Some("UpdatedValue"),
+          Some("UpdatedValue"),
+          Some("addedPSO")
+        )
       }
 
       "PTBefore, PTBetween and Overseas Pensions are amended from 'No' to 'Yes'" in {
         val original = testProtectionModel3
-        val updated = testProtectionModel1
+        val updated  = testProtectionModel1
 
-        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(Some("UpdatedValue"), Some("ChangedToYes"), Some("ChangedToYes"), Some("ChangedToYes"), None)
+        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(
+          Some("UpdatedValue"),
+          Some("ChangedToYes"),
+          Some("ChangedToYes"),
+          Some("ChangedToYes"),
+          None
+        )
       }
 
       "PTBefore, PTBetween and Overseas Pensions are amended from 'Yes' to 'No'" in {
         val original = testProtectionModel1
-        val updated = testProtectionModel3
+        val updated  = testProtectionModel3
 
-        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(Some("UpdatedValue"), Some("ChangedToNo"), Some("ChangedToNo"), Some("ChangedToNo"), None)
+        AmendsGAConstructor.identifyAmendsChanges(updated, original) shouldBe AmendsGAModel(
+          Some("UpdatedValue"),
+          Some("ChangedToNo"),
+          Some("ChangedToNo"),
+          Some("ChangedToNo"),
+          None
+        )
       }
     }
 

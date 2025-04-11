@@ -24,16 +24,18 @@ import play.api.data.Forms._
 import common.Validation._
 import utils.Constants.npsMaxCurrency
 
-object AmendOverseasPensionsForm extends CommonBinders{
+object AmendOverseasPensionsForm extends CommonBinders {
 
-  def amendOverseasPensionsForm(protectionType: String) = Form (
+  def amendOverseasPensionsForm(protectionType: String) = Form(
     mapping(
-      "amendedOverseasPensions" -> common.Validation.newText(s"pla.overseasPensions.errors.mandatoryError.$protectionType")
+      "amendedOverseasPensions" -> common.Validation
+        .newText(s"pla.overseasPensions.errors.mandatoryError.$protectionType")
         .verifying(s"pla.overseasPensions.errors.mandatoryError.$protectionType", mandatoryCheck)
         .verifying(s"pla.overseasPensions.errors.mandatoryError.$protectionType", yesNoCheck),
       "amendedOverseasPensionsAmt" -> mandatoryIf(
         isEqual("amendedOverseasPensions", "yes"),
-        common.Validation.newText(s"pla.overseasPensions.amount.errors.mandatoryError.$protectionType")
+        common.Validation
+          .newText(s"pla.overseasPensions.amount.errors.mandatoryError.$protectionType")
           .verifying(s"pla.overseasPensions.amount.errors.notReal.$protectionType", bigDecimalCheck)
           .verifying("pla.psoDetails.errorQuestion", commaCheck)
           .transform(stringToBigDecimal, bigDecimalToString)
@@ -47,4 +49,5 @@ object AmendOverseasPensionsForm extends CommonBinders{
       )
     )(AmendOverseasPensionsModel.apply)(AmendOverseasPensionsModel.unapply)
   )
+
 }

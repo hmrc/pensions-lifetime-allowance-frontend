@@ -24,79 +24,91 @@ import models.cache.CacheMap
 
 object IPApplicationConstructor {
 
-  def createIPApplication(data: CacheMap)(implicit protectionType: ApplicationType.Value) : IPApplicationModel = {
+  def createIPApplication(data: CacheMap)(implicit protectionType: ApplicationType.Value): IPApplicationModel = {
 
-    assert(Validation.validIPData(data), s"Invalid application data provided to createIPApplication for $protectionType. Data: $data")
+    assert(
+      Validation.validIPData(data),
+      s"Invalid application data provided to createIPApplication for $protectionType. Data: $data"
+    )
 
     // uncrystallised Rights- current pensions
-    val uncrystallisedRightsAmount = data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt
+    val uncrystallisedRightsAmount =
+      data.getEntry[CurrentPensionsModel](nameString("currentPensions")).get.currentPensionsAmt
 
-    def getPensionsTakenBeforeAmt = {
+    def getPensionsTakenBeforeAmt =
       data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore")) match {
-        case Some(model) => model.pensionsTakenBefore match {
-          case "yes" => data.getEntry[PensionsWorthBeforeModel](nameString("pensionsWorthBefore")).get.pensionsWorthBeforeAmt
-          case _ => Some(BigDecimal(0))
-        }
+        case Some(model) =>
+          model.pensionsTakenBefore match {
+            case "yes" =>
+              data.getEntry[PensionsWorthBeforeModel](nameString("pensionsWorthBefore")).get.pensionsWorthBeforeAmt
+            case _ => Some(BigDecimal(0))
+          }
         case _ => Some(BigDecimal(0))
       }
-    }
 
-    def getPensionsTakenBetweenAmt = {
+    def getPensionsTakenBetweenAmt =
       data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween")) match {
-        case Some(model) => model.pensionsTakenBetween match {
-          case "yes" => data.getEntry[PensionsUsedBetweenModel](nameString("pensionsUsedBetween")).get.pensionsUsedBetweenAmt
-          case _ => Some(BigDecimal(0))
-        }
+        case Some(model) =>
+          model.pensionsTakenBetween match {
+            case "yes" =>
+              data.getEntry[PensionsUsedBetweenModel](nameString("pensionsUsedBetween")).get.pensionsUsedBetweenAmt
+            case _ => Some(BigDecimal(0))
+          }
         case _ => Some(BigDecimal(0))
       }
-    }
 
     // preADay - Pensions taken before
-    val preADayPensionInPayment: Option[BigDecimal] = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
-      case Some(model) => model.pensionsTaken match {
-        case Some("yes") => getPensionsTakenBeforeAmt
+    val preADayPensionInPayment: Option[BigDecimal] =
+      data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
+        case Some(model) =>
+          model.pensionsTaken match {
+            case Some("yes") => getPensionsTakenBeforeAmt
+            case _           => Some(BigDecimal(0))
+          }
         case _ => Some(BigDecimal(0))
       }
-      case _ => Some(BigDecimal(0))
-    }
 
     // postADay - Pensions taken between
     val postADayBenefitCrystallisationEvents = data.getEntry[PensionsTakenModel](nameString("pensionsTaken")) match {
-      case Some(model) => model.pensionsTaken match {
-        case Some("yes") => getPensionsTakenBetweenAmt
-        case _ => Some(BigDecimal(0))
-      }
+      case Some(model) =>
+        model.pensionsTaken match {
+          case Some("yes") => getPensionsTakenBetweenAmt
+          case _           => Some(BigDecimal(0))
+        }
       case _ => Some(BigDecimal(0))
     }
 
     // nonUKRights - Overseas pensions
     val nonUKRights = data.getEntry[OverseasPensionsModel](nameString("overseasPensions")) match {
-      case Some(model) => model.overseasPensions match {
-        case "yes" => data.getEntry[OverseasPensionsModel](nameString("overseasPensions")).get.overseasPensionsAmt
-        case _ => Some(BigDecimal(0))
-      }
+      case Some(model) =>
+        model.overseasPensions match {
+          case "yes" => data.getEntry[OverseasPensionsModel](nameString("overseasPensions")).get.overseasPensionsAmt
+          case _     => Some(BigDecimal(0))
+        }
       case _ => Some(BigDecimal(0))
     }
 
-    val amounts: List[Option[BigDecimal]] = List(uncrystallisedRightsAmount,preADayPensionInPayment, postADayBenefitCrystallisationEvents, nonUKRights)
+    val amounts: List[Option[BigDecimal]] =
+      List(uncrystallisedRightsAmount, preADayPensionInPayment, postADayBenefitCrystallisationEvents, nonUKRights)
     val relevantAmount = amounts.flatten.sum
 
-    
     val hasPso = data.getEntry[PensionDebitsModel](nameString("pensionDebits")) match {
-      case Some(pdModel) => pdModel.pensionDebits match {
-        case Some("yes")  =>  true
-        case _            => false
-      }
+      case Some(pdModel) =>
+        pdModel.pensionDebits match {
+          case Some("yes") => true
+          case _           => false
+        }
       case None => false
     }
 
-    lazy val pensionDebits = if(!hasPso) None else {
-      Option(List(createPensionDebit(data.getEntry[PSODetailsModel](nameString(s"psoDetails")).get)))
-    }
+    lazy val pensionDebits =
+      if (!hasPso) None
+      else {
+        Option(List(createPensionDebit(data.getEntry[PSODetailsModel](nameString(s"psoDetails")).get)))
+      }
 
-    def createPensionDebit(model: PSODetailsModel): PensionDebit = {
+    def createPensionDebit(model: PSODetailsModel): PensionDebit =
       PensionDebit(model.pso.toString, model.psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
-    }
 
     val protectionString = protectionType match {
       case ApplicationType.IP2016 => "IP2016"
@@ -110,15 +122,14 @@ object IPApplicationConstructor {
       optionBigDecToOptionDouble(preADayPensionInPayment),
       optionBigDecToOptionDouble(postADayBenefitCrystallisationEvents),
       optionBigDecToOptionDouble(nonUKRights),
-      pensionDebits)
+      pensionDebits
+    )
   }
 
-  def optionBigDecToOptionDouble(opt: Option[BigDecimal]): Option[Double] = {
+  def optionBigDecToOptionDouble(opt: Option[BigDecimal]): Option[Double] =
     opt match {
       case Some(value) => Some(value.toDouble)
-      case _ => None
+      case _           => None
     }
-  }
-
 
 }

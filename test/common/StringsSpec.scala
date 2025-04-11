@@ -95,4 +95,5 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
       }
     }
   }
+
 }

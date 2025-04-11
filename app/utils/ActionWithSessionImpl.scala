@@ -24,29 +24,26 @@ import utils.SessionIdSupport.maybeSessionId
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ActionWithSessionImpl @Inject()(controllerComponents: ControllerComponents) extends ActionWithSessionId {
-  override def parser: BodyParser[AnyContent]               = controllerComponents.parsers.defaultBodyParser
+class ActionWithSessionImpl @Inject() (controllerComponents: ControllerComponents) extends ActionWithSessionId {
+  override def parser: BodyParser[AnyContent]     = controllerComponents.parsers.defaultBodyParser
   override val executionContext: ExecutionContext = controllerComponents.executionContext
 }
 
 trait ActionWithSessionId extends ActionBuilder[Request, AnyContent] {
   override implicit val executionContext: ExecutionContext
 
-  def invokeBlock[A](request: Request[A],
-                     block: Request[A] => Future[Result]): Future[Result] = {
+  def invokeBlock[A](request: Request[A], block: Request[A] => Future[Result]): Future[Result] =
 
-    maybeSessionId(request).map { sessionId =>
-      block(request).map(addSessionIdToSession(request, sessionId))
-    }.getOrElse {
+    maybeSessionId(request).map(sessionId => block(request).map(addSessionIdToSession(request, sessionId))).getOrElse {
       throw SessionIdNotFoundException()
     }
-  }
 
-  def addSessionIdToSession[A](request: Request[A], sessionId: String)
-                              (result: Result): Result =
+  def addSessionIdToSession[A](request: Request[A], sessionId: String)(result: Result): Result =
     result.withSession(request.session + (SessionKeys.sessionId -> sessionId))
 
-  case class SessionIdNotFoundException() extends Exception(
-    "Session id not found in headers or session as expected. Have you enabled SessionIdFilter?"
-  )
+  case class SessionIdNotFoundException()
+      extends Exception(
+        "Session id not found in headers or session as expected. Have you enabled SessionIdFilter?"
+      )
+
 }

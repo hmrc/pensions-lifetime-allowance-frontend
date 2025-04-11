@@ -26,27 +26,30 @@ import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsWorthBeforeViewMessag
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendIP14PensionsWorthBefore
 
-class AmendIP14PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with AmendIP14PensionsWorthBeforeViewMessages with MockitoSugar {
+class AmendIP14PensionsWorthBeforeViewSpec
+    extends CommonViewSpecHelper
+    with AmendIP14PensionsWorthBeforeViewMessages
+    with MockitoSugar {
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
-
   "the AmendIP14PensionsWorthBeforeView" should {
-    val pensionsForm = AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm("ip2016").bind(Map("amendedPensionsWorthBefore" -> "yes",
-      "amendedPensionsTakenBeforeAmt" -> "12345"))
+    val pensionsForm = AmendPensionsWorthBeforeForm
+      .amendPensionsWorthBeforeForm("ip2016")
+      .bind(Map("amendedPensionsWorthBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendIP14PensionsWorthBefore]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
-    val errorForm = AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm("ip2016").bind(Map("amendedPensionsWorthBefore" -> "",
-      "amendedPensionsTakenBeforeAmt" -> "12345"))
+    val errorForm = AmendPensionsWorthBeforeForm
+      .amendPensionsWorthBeforeForm("ip2016")
+      .bind(Map("amendedPensionsWorthBefore" -> "", "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val errorView = application.injector.instanceOf[amendIP14PensionsWorthBefore]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
     "have the correct old title when applyFor2016IPAndFpShutterEnabled is disabled" in {
       doc.title() shouldBe plaIP14PensionsWorthBeforeTitle
     }
-
 
     "have the correct and properly formatted header" in {
       doc.select("h1.govuk-heading-xl").text shouldBe plaIP14PensionsWorthBeforeHeader
@@ -57,18 +60,34 @@ class AmendIP14PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with Ame
     }
 
     "have a hidden drop-down menu with the correct paragraph and  list values" in {
-      doc.select("#ip14-amend-pensions-taken-before-help > div > p:nth-child(1)").text shouldBe plaIP14PensionsWorthBeforeParaOne
-      doc.select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(1)").text shouldBe plaIP14PensionsWorthBeforeStepOne
-      doc.select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(2)").text shouldBe plaIP14PensionsWorthBeforeStepTwo
-      doc.select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(3)").text shouldBe plaIP14PensionsWorthBeforeStepThree
-      doc.select("#ip14-amend-pensions-taken-before-help > div > p:nth-child(3)").text shouldBe plaIP14PensionsWorthBeforeParaTwo
-      doc.select("#ip14-amend-pensions-taken-before-help > div > ul > li:nth-child(1)").text shouldBe plaIP14PensionsWorthBeforeStepFour
-      doc.select("#ip14-amend-pensions-taken-before-help > div > ul > li:nth-child(2)").text shouldBe plaIP14PensionsWorthBeforeStepFive
+      doc
+        .select("#ip14-amend-pensions-taken-before-help > div > p:nth-child(1)")
+        .text shouldBe plaIP14PensionsWorthBeforeParaOne
+      doc
+        .select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(1)")
+        .text shouldBe plaIP14PensionsWorthBeforeStepOne
+      doc
+        .select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(2)")
+        .text shouldBe plaIP14PensionsWorthBeforeStepTwo
+      doc
+        .select("#ip14-amend-pensions-taken-before-help > div > ol > li:nth-child(3)")
+        .text shouldBe plaIP14PensionsWorthBeforeStepThree
+      doc
+        .select("#ip14-amend-pensions-taken-before-help > div > p:nth-child(3)")
+        .text shouldBe plaIP14PensionsWorthBeforeParaTwo
+      doc
+        .select("#ip14-amend-pensions-taken-before-help > div > ul > li:nth-child(1)")
+        .text shouldBe plaIP14PensionsWorthBeforeStepFour
+      doc
+        .select("#ip14-amend-pensions-taken-before-help > div > ul > li:nth-child(2)")
+        .text shouldBe plaIP14PensionsWorthBeforeStepFive
     }
 
     "have a help link redirecting to the right location" in {
       doc.select("a#ip14-amend-pensions-taken-before-help-link").text shouldBe plaIP14PensionsWorthBeforeHelpLinkText
-      doc.select("a#ip14-amend-pensions-taken-before-help-link").attr("href") shouldBe plaIP14PensionsWorthBeforeHelpLinkLocation
+      doc
+        .select("a#ip14-amend-pensions-taken-before-help-link")
+        .attr("href") shouldBe plaIP14PensionsWorthBeforeHelpLinkLocation
     }
 
     "have a £ symbol present" in {
@@ -85,6 +104,5 @@ class AmendIP14PensionsWorthBeforeViewSpec extends CommonViewSpecHelper with Ame
       doc.select(".govuk-error-message").text shouldBe ""
     }
   }
-
 
 }

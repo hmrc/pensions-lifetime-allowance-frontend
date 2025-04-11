@@ -21,6 +21,7 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
 class ApplicationTypeSpec extends AnyWordSpecLike with Matchers with OptionValues {
+
   "ApplicationType" when {
     "translating from string to enum" should {
 
@@ -46,4 +47,5 @@ class ApplicationTypeSpec extends AnyWordSpecLike with Matchers with OptionValue
 
     }
   }
+
 }

@@ -23,9 +23,8 @@ import play.api.i18n.{Lang, Messages}
 
 object Dates {
 
-  def constructDate(day: Int, month: Int, year: Int): LocalDate = {
+  def constructDate(day: Int, month: Int, year: Int): LocalDate =
     LocalDate.of(year, month, day)
-  }
 
   def constructDateFromAPIString(date: String): LocalDate = {
     val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -37,17 +36,14 @@ object Dates {
     (date.getDayOfMonth, date.getMonthValue, date.getYear)
   }
 
-  def dateBefore(day: Int, month: Int, year: Int, date2: LocalDate): Boolean = {
+  def dateBefore(day: Int, month: Int, year: Int, date2: LocalDate): Boolean =
     LocalDate.of(year, month, day).isBefore(date2)
-  }
 
-  def dateAfter(day: Int, month: Int, year: Int, date2: LocalDate): Boolean = {
+  def dateAfter(day: Int, month: Int, year: Int, date2: LocalDate): Boolean =
     LocalDate.of(year, month, day).isAfter(date2)
-  }
 
-  def futureDate(day: Int, month: Int, year: Int): Boolean = {
+  def futureDate(day: Int, month: Int, year: Int): Boolean =
     dateAfter(day, month, year, LocalDate.now)
-  }
 
   def apiDateFormat(day: Int, month: Int, year: Int): String = {
 
@@ -55,8 +51,9 @@ object Dates {
     LocalDate.of(year, month, day).format(dateFormat)
   }
 
-  def withDrawDateString(date: String)(implicit lang: Lang, messages: Messages) : String = {
+  def withDrawDateString(date: String)(implicit lang: Lang, messages: Messages): String = {
     val localDate = constructDateFromAPIString(date)
     Display.dateDisplayString(localDate)
   }
+
 }

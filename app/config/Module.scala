@@ -38,12 +38,10 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.play.bootstrap.auth.DefaultAuthConnector
 import utils.{ActionWithSessionId, ActionWithSessionImpl}
 
-
 class Module extends AbstractModule {
 
-  override def configure(): Unit = {
+  override def configure(): Unit =
     bindControllers()
-  }
 
   private def bindControllers() = {
     bind(classOf[ActionWithSessionId]).to(classOf[ActionWithSessionImpl])
@@ -52,4 +50,5 @@ class Module extends AbstractModule {
     bind(classOf[AuthFunction]).to(classOf[AuthFunctionImpl])
 
   }
+
 }

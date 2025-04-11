@@ -23,7 +23,7 @@ import testHelpers.FakeApplication
 
 import javax.inject.Inject
 
-class PNNFormSpec @Inject()(implicit val messages: Messages) extends FakeApplication {
+class PNNFormSpec @Inject() (implicit val messages: Messages) extends FakeApplication {
 
   private val form = PSALookupProtectionNotificationNoForm.pnnForm
 
@@ -64,7 +64,6 @@ class PNNFormSpec @Inject()(implicit val messages: Messages) extends FakeApplica
       assert(validatedForm.errors.isEmpty)
     }
 
-
     "return errors when no data provided" in {
       val postData = Json.obj(
         "lifetimeAllowanceReference" -> ""
@@ -72,8 +71,11 @@ class PNNFormSpec @Inject()(implicit val messages: Messages) extends FakeApplica
       val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("lifetimeAllowanceReference",
-        List(Messages("psa.lookup.form.pnn.required")))))
+      assert(
+        validatedForm.errors.contains(
+          FormError("lifetimeAllowanceReference", List(Messages("psa.lookup.form.pnn.required")))
+        )
+      )
     }
 
     "return errors with invalid psa reference" in {
@@ -83,8 +85,12 @@ class PNNFormSpec @Inject()(implicit val messages: Messages) extends FakeApplica
       val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("lifetimeAllowanceReference",
-        List(Messages("psa.lookup.form.pnn.invalid")))))
+      assert(
+        validatedForm.errors.contains(
+          FormError("lifetimeAllowanceReference", List(Messages("psa.lookup.form.pnn.invalid")))
+        )
+      )
     }
   }
+
 }

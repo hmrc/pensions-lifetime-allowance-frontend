@@ -16,19 +16,29 @@
 
 package testHelpers.ViewSpecHelpers.ip2016
 
-trait CurrentPensionsViewMessages{
-  val plaCurrentPensionsTitle = "What were your UK pensions worth on 5 April 2016? - Check your pension protections - GOV.UK"
-  val plaCurrentPensionsHeading = "What were your UK pensions worth on 5 April 2016?"
-  val plaCurrentPensionsQuestion = "Do not include pensions you've already taken or the State Pension."
+trait CurrentPensionsViewMessages {
+
+  val plaCurrentPensionsTitle =
+    "What were your UK pensions worth on 5 April 2016? - Check your pension protections - GOV.UK"
+
+  val plaCurrentPensionsHeading    = "What were your UK pensions worth on 5 April 2016?"
+  val plaCurrentPensionsQuestion   = "Do not include pensions you've already taken or the State Pension."
   val plaCurrentPensionsHiddenLink = "How do I work out the value?"
   val plaCurrentPensionsLegendText = "What were your UK pensions worth on 5 April 2016?"
-  val plaHiddenMenuItemOne = "Take any pensions where your employer guarantees you a specified annual income."
-  val plaHiddenMenuItemTwo = "Multiply the annual income from these pensions by 20."
-  val plaHiddenMenuItemThree = "Add the amount of any lump sum payments you'll get on top of this annual income."
-  val plaHiddenMenuItemFour = "Add the total amount you've built up in your other pension pots."
-  val plaHelpLink = "how to value pensions you've not yet taken (opens in a new window)"
-  val plaHelpLinkNew = "how to value pensions you've not yet taken (opens in new tab)."
-  val plaHelpLinkCompleteMessage = "Read technical guidance on how to value pensions you've not yet taken (opens in a new window)"
-  val plaHelpLinkCompleteMessageNew = "Read technical guidance on how to value pensions you've not yet taken (opens in new tab)."
-  val plaHelpLinkExternalReference = "https://www.gov.uk/guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection#pensions-youve-not-taken-yet"
+  val plaHiddenMenuItemOne         = "Take any pensions where your employer guarantees you a specified annual income."
+  val plaHiddenMenuItemTwo         = "Multiply the annual income from these pensions by 20."
+  val plaHiddenMenuItemThree       = "Add the amount of any lump sum payments you'll get on top of this annual income."
+  val plaHiddenMenuItemFour        = "Add the total amount you've built up in your other pension pots."
+  val plaHelpLink                  = "how to value pensions you've not yet taken (opens in a new window)"
+  val plaHelpLinkNew               = "how to value pensions you've not yet taken (opens in new tab)."
+
+  val plaHelpLinkCompleteMessage =
+    "Read technical guidance on how to value pensions you've not yet taken (opens in a new window)"
+
+  val plaHelpLinkCompleteMessageNew =
+    "Read technical guidance on how to value pensions you've not yet taken (opens in new tab)."
+
+  val plaHelpLinkExternalReference =
+    "https://www.gov.uk/guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection#pensions-youve-not-taken-yet"
+
 }

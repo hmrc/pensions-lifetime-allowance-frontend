@@ -21,14 +21,15 @@ import models.amendModels.AmendPensionsTakenBeforeModel
 import play.api.data.Form
 import play.api.data.Forms._
 
+object AmendPensionsTakenBeforeForm extends CommonBinders {
 
-object AmendPensionsTakenBeforeForm extends CommonBinders{
-
-  def amendPensionsTakenBeforeForm(protectionType: String): Form[AmendPensionsTakenBeforeModel] = Form (
+  def amendPensionsTakenBeforeForm(protectionType: String): Form[AmendPensionsTakenBeforeModel] = Form(
     mapping(
-      "amendedPensionsTakenBefore" -> common.Validation.newText(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType")
+      "amendedPensionsTakenBefore" -> common.Validation
+        .newText(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType")
         .verifying(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType", mandatoryCheck)
         .verifying(s"pla.pensionsTakenBefore.errors.mandatoryError.$protectionType", yesNoCheck)
     )(AmendPensionsTakenBeforeModel.apply)(AmendPensionsTakenBeforeModel.unapply)
   )
+
 }

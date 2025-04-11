@@ -31,37 +31,33 @@ import scala.util.{Failure, Success, Try}
 
 object Validation {
 
-  def isMaxTwoDecimalPlaces(amount: BigDecimal): Boolean = {
+  def isMaxTwoDecimalPlaces(amount: BigDecimal): Boolean =
     amount match {
       case checkAmount if checkAmount.scale <= 2 => true
-      case _ => false
+      case _                                     => false
     }
-  }
 
-  def isPositive(amount: BigDecimal): Boolean = {
+  def isPositive(amount: BigDecimal): Boolean =
     amount match {
       case checkAmount if checkAmount < 0 => false
-      case _ => true
+      case _                              => true
     }
-  }
 
   def checkIfValidBigDecimal(value: String): Boolean = {
     val output = Try(BigDecimal(value))
     output match {
       case Success(result) => true
-      case Failure(_) => false
+      case Failure(_)      => false
     }
   }
 
-  def isLessThanMax(amount: BigDecimal): Boolean = {
+  def isLessThanMax(amount: BigDecimal): Boolean =
     amount <= npsMaxCurrency
-  }
 
-  def isLessThanDouble(amount: Double, target: Double): Boolean = {
+  def isLessThanDouble(amount: Double, target: Double): Boolean =
     amount < target
-  }
 
-  def isValidDate(day: Int, month: Int, year: Int): Boolean = {
+  def isValidDate(day: Int, month: Int, year: Int): Boolean =
     try {
       val fmt = new SimpleDateFormat("dd/MM/yyyy")
       fmt.setLenient(false)
@@ -70,29 +66,27 @@ object Validation {
     } catch {
       case e: Exception => false
     }
-  }
 
   def validIPData(data: CacheMap)(implicit protectionType: ApplicationType.Value): Boolean = {
     import Strings.nameString
     val pensionsTakenModel: Option[PensionsTakenModel] = data.getEntry[PensionsTakenModel](nameString("pensionsTaken"))
 
-    val pensionsTakenBeforeModel = data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore"))
+    val pensionsTakenBeforeModel  = data.getEntry[PensionsTakenBeforeModel](nameString("pensionsTakenBefore"))
     val pensionsTakenBetweenModel = data.getEntry[PensionsTakenBetweenModel](nameString("pensionsTakenBetween"))
-    val overseasPensionsModel = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
-    val currentPensionsModel = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
+    val overseasPensionsModel     = data.getEntry[OverseasPensionsModel](nameString("overseasPensions"))
+    val currentPensionsModel      = data.getEntry[CurrentPensionsModel](nameString("currentPensions"))
 
     val pensionDebitsModel = data.getEntry[PensionDebitsModel](nameString("pensionDebits"))
 
-    def validPensionData(): Boolean = {
+    def validPensionData(): Boolean =
       if (pensionsTakenModel.isEmpty || overseasPensionsModel.isEmpty || currentPensionsModel.isEmpty) false
       else {
         if (pensionsTakenModel.get.pensionsTaken.get == "yes") {
           pensionsTakenBeforeModel.isDefined && pensionsTakenBetweenModel.isDefined
         } else true
       }
-    }
 
-    def validPSOData(): Boolean = {
+    def validPSOData(): Boolean =
       if (pensionDebitsModel.isEmpty) false
       else {
         if (pensionDebitsModel.get.pensionDebits.get == "no") true
@@ -100,11 +94,9 @@ object Validation {
           !invalidPSODetails()
         }
       }
-    }
 
-    def invalidPSODetails(): Boolean = {
+    def invalidPSODetails(): Boolean =
       data.getEntry[PSODetailsModel](nameString(s"psoDetails")).isEmpty
-    }
 
     validPensionData() && validPSOData()
   }
@@ -113,9 +105,9 @@ object Validation {
 
   val yesNoCheck: String => Boolean = {
     case "yes" => true
-    case "no" => true
-    case "" => true
-    case _ => false
+    case "no"  => true
+    case ""    => true
+    case _     => false
   }
 
   def newText(errorKey: String = "error.required", optional: Boolean = false): FieldMapping[String] =
@@ -125,10 +117,10 @@ object Validation {
 
     def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
-        case None => Left(Seq(FormError(key, errorKey)))
+        case None                                               => Left(Seq(FormError(key, errorKey)))
         case Some(x) if x.trim.length == 0 && optional == false => Left(Seq(FormError(key, errorKey)))
-        case Some(x) if x.trim.length == 0 && optional == true => Right(x.trim)
-        case Some(s) => Right(s.trim)
+        case Some(x) if x.trim.length == 0 && optional == true  => Right(x.trim)
+        case Some(s)                                            => Right(s.trim)
       }
 
     def unbind(key: String, value: String): Map[String, String] =
@@ -156,31 +148,32 @@ object Validation {
       Invalid(errMsgKey)
   }
 
-  val bigDecimalCheck: String => Boolean = input => Try(BigDecimal(input)) match {
-    case Success(_) => true
-    case Failure(_) if input.trim == "" => true
-    case Failure(_) => tryBigDecimalWithoutComma(input)
-    case Failure(_) => false
-  }
+  val bigDecimalCheck: String => Boolean = input =>
+    Try(BigDecimal(input)) match {
+      case Success(_)                     => true
+      case Failure(_) if input.trim == "" => true
+      case Failure(_)                     => tryBigDecimalWithoutComma(input)
+      case Failure(_)                     => false
+    }
 
-  val commaCheck: String => Boolean = input => (tryBigDecimalWithoutComma(input), Try(BigDecimal(input))) match {
-    case (true, Success(_)) => true
-    case (true, Failure(_)) => false
-    case (false, Failure(_)) => true
-  }
+  val commaCheck: String => Boolean = input =>
+    (tryBigDecimalWithoutComma(input), Try(BigDecimal(input))) match {
+      case (true, Success(_))  => true
+      case (true, Failure(_))  => false
+      case (false, Failure(_)) => true
+    }
 
-  def tryBigDecimalWithoutComma(input: String): Boolean = {
+  def tryBigDecimalWithoutComma(input: String): Boolean =
     Try(BigDecimal(input.trim().replaceAll(",", ""))) match {
       case Success(_) => true
       case Failure(_) => false
     }
-  }
-
 
   def stopOnFirstFail[T](constraints: Constraint[T]*): Constraint[T] = Constraint { field: T =>
     constraints.toList.dropWhile(constraint => constraint(field) == Valid) match {
-      case Nil => Valid
+      case Nil             => Valid
       case constraint :: _ => constraint(field)
     }
   }
+
 }

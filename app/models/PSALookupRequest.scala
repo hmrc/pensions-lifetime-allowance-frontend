@@ -18,12 +18,21 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-abstract case class PSALookupRequest(pensionSchemeAdministratorCheckReference: String,
-                                     lifetimeAllowanceReference: Option[String] = None)
+abstract case class PSALookupRequest(
+    pensionSchemeAdministratorCheckReference: String,
+    lifetimeAllowanceReference: Option[String] = None
+)
 
 object PSALookupRequest {
   implicit val format: OFormat[PSALookupRequest] = Json.format[PSALookupRequest]
 
-  def apply(pensionSchemeAdministratorCheckReference: String, lifetimeAllowanceReference: Option[String] = None): PSALookupRequest =
-    new PSALookupRequest(pensionSchemeAdministratorCheckReference.toUpperCase, lifetimeAllowanceReference.map(_.toUpperCase)) {}
+  def apply(
+      pensionSchemeAdministratorCheckReference: String,
+      lifetimeAllowanceReference: Option[String] = None
+  ): PSALookupRequest =
+    new PSALookupRequest(
+      pensionSchemeAdministratorCheckReference.toUpperCase,
+      lifetimeAllowanceReference.map(_.toUpperCase)
+    ) {}
+
 }

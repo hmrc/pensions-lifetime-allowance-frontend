@@ -42,29 +42,36 @@ import views.html.pages.fallback.technicalError
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
-class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
-  with MockitoSugar
-  with SessionCacheTestHelper
-  with BeforeAndAfterEach with AuthMock with I18nSupport {
+class AmendsPensionWorthBeforeControllerSpec
+    extends FakeApplication
+    with MockitoSugar
+    with SessionCacheTestHelper
+    with BeforeAndAfterEach
+    with AuthMock
+    with I18nSupport {
 
-  implicit lazy val mockMessage = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit lazy val mockMessage =
+    fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
-  val mockSessionCacheService: SessionCacheService       = mock[SessionCacheService]
-  val mockMCC: MessagesControllerComponents          = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  val mockAuthFunction: AuthFunction                 = mock[AuthFunction]
-  val mockTechnicalError: technicalError             = app.injector.instanceOf[technicalError]
+  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
+  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
+  val mockTechnicalError: technicalError           = app.injector.instanceOf[technicalError]
   val mockAmendPensionsWorthBefore: amendPensionsWorthBefore = app.injector.instanceOf[amendPensionsWorthBefore]
-  val mockAmendIP14PensionsWorthBefore: amendIP14PensionsWorthBefore = app.injector.instanceOf[amendIP14PensionsWorthBefore]
-  val mockEnv: Environment                            = mock[Environment]
-  val messagesApi: MessagesApi                        = mockMCC.messagesApi
+
+  val mockAmendIP14PensionsWorthBefore: amendIP14PensionsWorthBefore =
+    app.injector.instanceOf[amendIP14PensionsWorthBefore]
+
+  val mockEnv: Environment     = mock[Environment]
+  val messagesApi: MessagesApi = mockMCC.messagesApi
 
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext = mock[PlaContext]
-  implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: Materializer = mock[Materializer]
-  implicit val mockLang: Lang = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
-  implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
+  implicit val system: ActorSystem              = ActorSystem()
+  implicit val materializer: Materializer       = mock[Materializer]
+  implicit val mockLang: Lang                   = mock[Lang]
+  implicit val formWithCSRF: FormWithCSRF       = app.injector.instanceOf[FormWithCSRF]
+  implicit val ec: ExecutionContext             = app.injector.instanceOf[ExecutionContext]
 
   override def beforeEach() = {
     reset(
@@ -75,14 +82,25 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
     super.beforeEach()
   }
 
-  val testIP16DormantModel = AmendProtectionModel(ProtectionModel(None, None), ProtectionModel(None, None, protectionType = Some("IP2016"), status = Some("dormant"), relevantAmount = Some(100000), uncrystallisedRights = Some(100000)))
+  val testIP16DormantModel = AmendProtectionModel(
+    ProtectionModel(None, None),
+    ProtectionModel(
+      None,
+      None,
+      protectionType = Some("IP2016"),
+      status = Some("dormant"),
+      relevantAmount = Some(100000),
+      uncrystallisedRights = Some(100000)
+    )
+  )
 
   class Setup {
-    val authFunction = new AuthFunctionImpl (
+
+    val authFunction = new AuthFunctionImpl(
       mockMCC,
       mockAuthConnector,
       mockTechnicalError
-      )
+    )
 
     val controller = new AmendsPensionWorthBeforeController(
       mockSessionCacheService,
@@ -90,13 +108,15 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
       authFunction,
       mockTechnicalError,
       mockAmendPensionsWorthBefore,
-      mockAmendIP14PensionsWorthBefore)
+      mockAmendIP14PensionsWorthBefore
+    )
+
   }
 
-  val sessionId = UUID.randomUUID.toString
+  val sessionId            = UUID.randomUUID.toString
   implicit val fakeRequest = FakeRequest()
-  val mockUsername = "mockuser"
-  val mockUserId = "/auth/oid/" + mockUsername
+  val mockUsername         = "mockuser"
+  val mockUserId           = "/auth/oid/" + mockUsername
 
   val ip2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -110,10 +130,10 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
     status = Some("dormant"),
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456"))
+    protectionReference = Some("PSA123456")
+  )
 
   val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
-
 
   val ip2014Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -127,10 +147,10 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
     status = Some("dormant"),
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456"))
+    protectionReference = Some("PSA123456")
+  )
 
   val testAmendIP2014ProtectionModel = AmendProtectionModel(ip2014Protection, ip2014Protection)
-
 
   val ip2016NoDebitProtection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -144,19 +164,22 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
     status = Some("dormant"),
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456"))
+    protectionReference = Some("PSA123456")
+  )
+
   val testAmendIP2016ProtectionModelWithNoDebit = AmendProtectionModel(ip2016NoDebitProtection, ip2016NoDebitProtection)
 
-
-  def cacheFetchCondition[T](data: Option[T]): Unit = {
+  def cacheFetchCondition[T](data: Option[T]): Unit =
     when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
       .thenReturn(Future.successful(data))
-  }
 
   "Submitting Amend IP16 Pensions Worth Before" when {
     "the data is valid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2016", "dormant"),
-        ("amendedPensionsTakenBeforeAmt", "10000"))
+      object DataItem
+          extends AuthorisedFakeRequestToPost(
+            controller.submitAmendPensionsWorthBefore("ip2016", "dormant"),
+            ("amendedPensionsTakenBeforeAmt", "10000")
+          )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -168,8 +191,11 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
     }
 
     "the data is invalid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2016", "dormant"),
-        ("amendedPensionsTakenBeforeAmt", "yes"))
+      object DataItem
+          extends AuthorisedFakeRequestToPost(
+            controller.submitAmendPensionsWorthBefore("ip2016", "dormant"),
+            ("amendedPensionsTakenBeforeAmt", "yes")
+          )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
@@ -180,8 +206,11 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
     }
 
     "the model can't be fetched from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2016", "dormant"),
-        ("amendedPensionsTakenBeforeAmt", "10000"))
+      object DataItem
+          extends AuthorisedFakeRequestToPost(
+            controller.submitAmendPensionsWorthBefore("ip2016", "dormant"),
+            ("amendedPensionsTakenBeforeAmt", "10000")
+          )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
@@ -194,8 +223,11 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
 
   "Submitting Amend IP14 Pensions Worth Before" when {
     "the data is valid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2014", "dormant"),
-        ("amendedPensionsTakenBeforeAmt", "10000"))
+      object DataItem
+          extends AuthorisedFakeRequestToPost(
+            controller.submitAmendPensionsWorthBefore("ip2014", "dormant"),
+            ("amendedPensionsTakenBeforeAmt", "10000")
+          )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
@@ -207,8 +239,11 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
     }
 
     "the data is invalid" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2014", "dormant"),
-        ("amendedPensionsTakenBeforeAmt", "yes"))
+      object DataItem
+          extends AuthorisedFakeRequestToPost(
+            controller.submitAmendPensionsWorthBefore("ip2014", "dormant"),
+            ("amendedPensionsTakenBeforeAmt", "yes")
+          )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
@@ -219,8 +254,11 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
     }
 
     "the model can't be fetched from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitAmendPensionsWorthBefore("ip2014", "dormant"),
-        ("amendedPensionsTakenBeforeAmt", "10000"))
+      object DataItem
+          extends AuthorisedFakeRequestToPost(
+            controller.submitAmendPensionsWorthBefore("ip2014", "dormant"),
+            ("amendedPensionsTakenBeforeAmt", "10000")
+          )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
@@ -230,4 +268,5 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
       status(DataItem.result) shouldBe 500
     }
   }
+
 }

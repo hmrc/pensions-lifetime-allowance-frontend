@@ -27,66 +27,72 @@ class AmendIP14CurrentPensionsViewSpec extends CommonViewSpecHelper with AmendIP
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
-  "the AmendIP14CurrentPensionsView" should{
-    val amendCurrentPensionsForm = AmendCurrentPensionForm.amendCurrentPensionForm("ip2016").bind(Map("amendedUKPensionAmt" -> "12000"))
+  "the AmendIP14CurrentPensionsView" should {
+    val amendCurrentPensionsForm =
+      AmendCurrentPensionForm.amendCurrentPensionForm("ip2016").bind(Map("amendedUKPensionAmt" -> "12000"))
     lazy val view = application.injector.instanceOf[amendIP14CurrentPensions]
-    lazy val doc = Jsoup.parse(view.apply(amendCurrentPensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(amendCurrentPensionsForm, "ip2016", "open").body)
 
     val errorForm = AmendCurrentPensionForm.amendCurrentPensionForm("ip2016").bind(Map("amendedUKPensionAmt" -> "a"))
     lazy val errorView = application.injector.instanceOf[amendIP14CurrentPensions]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
-    lazy val form = doc.select("form")
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val form      = doc.select("form")
 
-    "have the correct title" in{
+    "have the correct title" in {
       doc.title() shouldBe plaIp14CurrentPensionsTitleNew
     }
 
-    "have the correct and properly formatted header"in{
+    "have the correct and properly formatted header" in {
       doc.getElementsByClass("govuk-heading-xl").text shouldBe plaIp14CurrentPensionsTitle
     }
 
-    "have some introductory text" in{
+    "have some introductory text" in {
       doc.select("p").first().text shouldBe plaCurrentPensionsQuestion
     }
 
-    "have a hidden menu with the correct values" in{
+    "have a hidden menu with the correct values" in {
       doc.select("summary").text shouldBe plaCurrentPensionsHiddenLink
-      doc.select("#ip14-amend-current-pensions-help > div > p:nth-child(1)").text shouldBe plaIp14CurrentPensionsHiddenTextPara
+      doc
+        .select("#ip14-amend-current-pensions-help > div > p:nth-child(1)")
+        .text shouldBe plaIp14CurrentPensionsHiddenTextPara
       doc.select("#ip14-amend-current-pensions-help > div > ul > li:nth-child(1)").text shouldBe plaHiddenMenuItemOne
       doc.select("#ip14-amend-current-pensions-help > div > ul > li:nth-child(2)").text shouldBe plaHiddenMenuItemTwo
       doc.select("#ip14-amend-current-pensions-help > div > ul > li:nth-child(3)").text shouldBe plaHiddenMenuItemThree
       doc.select("#ip14-amend-current-pensions-help > div > ul > li:nth-child(4)").text shouldBe plaHiddenMenuItemFour
     }
 
-    "have a help link redirecting to the right location" in{
+    "have a help link redirecting to the right location" in {
       doc.select("#ip14-amend-current-pensions-help > div > p:nth-child(3)").text shouldBe plaHelpLinkCompleteMessageNew
       doc.select("#ip14-amend-current-pensions-help-link").text shouldBe plaHelpLinkNew
       doc.select("#ip14-amend-current-pensions-help-link").attr("href") shouldBe plaHelpLinkExternalReference
     }
 
-    "has a valid form" in{
+    "has a valid form" in {
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController.submitAmendCurrentPension("ip2016", "open").url
+      form.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController
+        .submitAmendCurrentPension("ip2016", "open")
+        .url
       doc.getElementsByClass("govuk-visually-hidden").eq(1).text() shouldBe plaIp14CurrentPensionsTitle
     }
 
-    "have a £ symbol present" in{
+    "have a £ symbol present" in {
       doc.select(".govuk-input__prefix").text shouldBe "£"
     }
 
-    "have a continue button" in{
+    "have a continue button" in {
       doc.getElementsByClass("govuk-button").text shouldBe plaBaseChange
       doc.getElementsByClass("govuk-button").attr("id") shouldBe "submit"
     }
 
-    "display the correct errors appropriately" in{
+    "display the correct errors appropriately" in {
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
     }
 
-    "not have errors on valid pages" in{
+    "not have errors on valid pages" in {
       amendCurrentPensionsForm.hasErrors shouldBe false
       doc.select("a#amendedUKPensionAmt-error-summary").text shouldBe ""
       doc.select("span#amendedUKPensionAmt-error-message.error-notification").text shouldBe ""
     }
   }
+
 }

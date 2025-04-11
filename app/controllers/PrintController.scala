@@ -31,17 +31,17 @@ import views.html.pages.result.resultPrint
 
 import scala.concurrent.ExecutionContext
 
-class PrintController @Inject()(val sessionCacheService: SessionCacheService,
-                                val citizenDetailsConnector: CitizenDetailsConnector,
-                                displayConstructors: DisplayConstructors,
-                                resultPrintView: resultPrint,
-                                mcc: MessagesControllerComponents,
-                                authFunction: AuthFunction)
-                               (implicit val appConfig: FrontendAppConfig,
-                                implicit val plaContext: PlaContext,
-                                implicit val ec: ExecutionContext
-                               )
-  extends FrontendController(mcc) with I18nSupport with Logging {
+class PrintController @Inject() (
+    val sessionCacheService: SessionCacheService,
+    val citizenDetailsConnector: CitizenDetailsConnector,
+    displayConstructors: DisplayConstructors,
+    resultPrintView: resultPrint,
+    mcc: MessagesControllerComponents,
+    authFunction: AuthFunction
+)(implicit val appConfig: FrontendAppConfig, implicit val plaContext: PlaContext, implicit val ec: ExecutionContext)
+    extends FrontendController(mcc)
+    with I18nSupport
+    with Logging {
 
   lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
@@ -50,15 +50,16 @@ class PrintController @Inject()(val sessionCacheService: SessionCacheService,
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
         personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
-        protectionModel <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
+        protectionModel      <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
       } yield routePrintView(personalDetailsModel, protectionModel, nino)
     }
   }
 
-
-  private def routePrintView(personalDetailsModel: Option[PersonalDetailsModel],
-                             protectionModel: Option[ProtectionModel],
-                             nino: String)(implicit request: Request[AnyContent],lang: Lang): Result = {
+  private def routePrintView(
+      personalDetailsModel: Option[PersonalDetailsModel],
+      protectionModel: Option[ProtectionModel],
+      nino: String
+  )(implicit request: Request[AnyContent], lang: Lang): Result =
     protectionModel match {
       case Some(model) =>
         val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
@@ -67,5 +68,5 @@ class PrintController @Inject()(val sessionCacheService: SessionCacheService,
         logger.warn(s"Forced redirect to PrintView for $nino")
         Redirect(routes.ReadProtectionsController.currentProtections)
     }
-  }
+
 }

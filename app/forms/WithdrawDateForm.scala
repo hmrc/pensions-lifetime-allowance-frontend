@@ -30,12 +30,14 @@ object WithdrawDateForm extends CommonBinders {
 
   def withdrawDateForm(minDate: LocalDate)(implicit messages: Messages): Form[WithdrawDateFormModel] = Form(
     mapping(
-      key -> of(DateFormatter(
-        key,
-        optMinDate = Some(minDate),
-        optMaxDate = Some(LocalDate.now()),
-        rangeInclusive = true
-      ))
+      key -> of(
+        DateFormatter(
+          key,
+          optMinDate = Some(minDate),
+          optMaxDate = Some(LocalDate.now()),
+          rangeInclusive = true
+        )
+      )
     )(WithdrawDateFormModel.apply)(WithdrawDateFormModel.unapply)
   )
 

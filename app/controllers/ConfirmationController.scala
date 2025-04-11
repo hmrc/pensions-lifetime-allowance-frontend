@@ -28,24 +28,26 @@ import views.html.pages._
 import views.html._
 import scala.concurrent.Future
 
-class ConfirmationController @Inject()(mcc: MessagesControllerComponents,
-                                       authFunction: AuthFunction,
-                                       ConfirmFP: confirmation.confirmFP,
-                                       withdrawnAP2016: ip2016.withdrawnAP2016)
-                                      (implicit val application: Application,
-                                       implicit val appConfig: FrontendAppConfig,
-                                       implicit val formWithCSRF: FormWithCSRF,
-                                       implicit val plaContext: PlaContext) extends FrontendController(mcc) {
+class ConfirmationController @Inject() (
+    mcc: MessagesControllerComponents,
+    authFunction: AuthFunction,
+    ConfirmFP: confirmation.confirmFP,
+    withdrawnAP2016: ip2016.withdrawnAP2016
+)(
+    implicit val application: Application,
+    implicit val appConfig: FrontendAppConfig,
+    implicit val formWithCSRF: FormWithCSRF,
+    implicit val plaContext: PlaContext
+) extends FrontendController(mcc) {
 
-  val confirmFP = Action.async {
-    implicit request =>
-
-      if (appConfig.applyFor2016IpAndFpShutterEnabled) {
-        Future.successful(Ok(withdrawnAP2016()))
-      } else {
-        authFunction.genericAuthWithoutNino("FP2016") {
-          Future.successful(Ok(ConfirmFP()))
-        }
+  val confirmFP = Action.async { implicit request =>
+    if (appConfig.applyFor2016IpAndFpShutterEnabled) {
+      Future.successful(Ok(withdrawnAP2016()))
+    } else {
+      authFunction.genericAuthWithoutNino("FP2016") {
+        Future.successful(Ok(ConfirmFP()))
       }
+    }
   }
+
 }

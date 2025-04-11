@@ -18,25 +18,36 @@ package testHelpers.ViewSpecHelpers.result
 
 trait ResultSuccess {
 
-  val plaResultSuccessTitle                 = "You've added fixed protection 2016 - Check your pension protections - GOV.UK"
-  val plaResultSuccessAllowanceSubHeading   = "Your protected lifetime allowance is"
-  val plaResultSuccessProtectionDetails     = "Your protection details"
-  val plaResultSuccessDetailsContent        = "When you decide to take money from your pension, give these details to your pension provider:"
-  val plaResultSuccessProtectionRef         = "protection notification number"
-  val plaResultSuccessPsaRef                = "scheme administrator reference"
-  val plaResultSuccessApplicationDate       = "application date"
-  val plaResultSuccessPrint                 = "Print and save your details"
-  val plaResultSuccessIPChangeDetails       = "Changing your protection details"
-  val plaResultSuccessIPPensionSharing      = "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
-  val plaResultSuccessFPAddToPension        = "If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days."
-  val plaResultSuccessViewDetails           = "You can view or change details of your protections at any time."
-  val plaResultSuccessViewDetailsLinkText   = "view or change details of your protections"
-  val plaResultSuccessGiveFeedback          = "Give us feedback"
-  val plaResultSuccessExitSurveyLinkText    = "What did you think of this service?"
-  val plaResultSuccessExitSurveyLink        = "/check-your-pension-protections/sign-out"
-  val plaResultSuccessExitSurvey            = "Your feedback helps us improve"
-  val plaResultSuccessExitSurveyCombined    = "What did you think of this service? We use your feedback to make our services better."
-  val plaResultSuccessYourName              = "your full name"
-  val plaResultSuccessYourNino              = "your National Insurance number"
+  val plaResultSuccessTitle = "You've added fixed protection 2016 - Check your pension protections - GOV.UK"
+  val plaResultSuccessAllowanceSubHeading = "Your protected lifetime allowance is"
+  val plaResultSuccessProtectionDetails   = "Your protection details"
+
+  val plaResultSuccessDetailsContent =
+    "When you decide to take money from your pension, give these details to your pension provider:"
+
+  val plaResultSuccessProtectionRef   = "protection notification number"
+  val plaResultSuccessPsaRef          = "scheme administrator reference"
+  val plaResultSuccessApplicationDate = "application date"
+  val plaResultSuccessPrint           = "Print and save your details"
+  val plaResultSuccessIPChangeDetails = "Changing your protection details"
+
+  val plaResultSuccessIPPensionSharing =
+    "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
+
+  val plaResultSuccessFPAddToPension =
+    "If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days."
+
+  val plaResultSuccessViewDetails         = "You can view or change details of your protections at any time."
+  val plaResultSuccessViewDetailsLinkText = "view or change details of your protections"
+  val plaResultSuccessGiveFeedback        = "Give us feedback"
+  val plaResultSuccessExitSurveyLinkText  = "What did you think of this service?"
+  val plaResultSuccessExitSurveyLink      = "/check-your-pension-protections/sign-out"
+  val plaResultSuccessExitSurvey          = "Your feedback helps us improve"
+
+  val plaResultSuccessExitSurveyCombined =
+    "What did you think of this service? We use your feedback to make our services better."
+
+  val plaResultSuccessYourName = "your full name"
+  val plaResultSuccessYourNino = "your National Insurance number"
 
 }

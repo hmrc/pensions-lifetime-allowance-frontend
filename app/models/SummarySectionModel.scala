@@ -16,6 +16,4 @@
 
 package models
 
-case class SummarySectionModel(rows: Seq[SummaryRowModel]) {
-
-}
+case class SummarySectionModel(rows: Seq[SummaryRowModel]) {}

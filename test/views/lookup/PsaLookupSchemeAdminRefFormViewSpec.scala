@@ -30,9 +30,11 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
   "The Psa Lookup Scheme Admin Ref form view" when {
 
     "provided with no errors" should {
-      lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm.bind(Map("pensionSchemeAdministratorCheckReference" -> "PSA12345678A"))
+      lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm.bind(
+        Map("pensionSchemeAdministratorCheckReference" -> "PSA12345678A")
+      )
       lazy val view = application.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
-      lazy val doc = Jsoup.parse(view.apply(form).body)
+      lazy val doc  = Jsoup.parse(view.apply(form).body)
 
       "have the correct title" in {
         doc.title() shouldBe titleText
@@ -46,10 +48,14 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
         doc.select("div.error-summary").size() shouldBe 0
       }
 
-      "have a form" which {
+      "have a form".which {
 
         "has the correct action" in {
-          doc.select("form").attr("action") shouldBe controllers.routes.LookupSchemeAdministratorReferenceController.submitSchemeAdministratorReferenceForm.url
+          doc
+            .select("form")
+            .attr(
+              "action"
+            ) shouldBe controllers.routes.LookupSchemeAdministratorReferenceController.submitSchemeAdministratorReferenceForm.url
         }
 
         "has the correct method" in {
@@ -70,7 +76,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
         doc.select("input[type=text]").attr("value") shouldBe "PSA12345678A"
       }
 
-      "have a button" which {
+      "have a button".which {
 
         "has the correct text" in {
           doc.select("button").text() shouldBe plaBaseContinue
@@ -79,9 +85,11 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
     }
 
     "provided with errors" should {
-      lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm.bind(Map("pensionSchemeAdministratorCheckReference" -> "A"))
+      lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm.bind(
+        Map("pensionSchemeAdministratorCheckReference" -> "A")
+      )
       lazy val view = application.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
-      lazy val doc = Jsoup.parse(view.apply(form).body)
+      lazy val doc  = Jsoup.parse(view.apply(form).body)
 
       "have an error summary" in {
         doc.select("ul.govuk-error-summary__list").size() shouldBe 1
@@ -99,7 +107,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
     "provided with an empty form" should {
       lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm
       lazy val view = application.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
-      lazy val doc = Jsoup.parse(view.apply(form).body)
+      lazy val doc  = Jsoup.parse(view.apply(form).body)
 
       "have no error summary" in {
         doc.select("div.error-summary").size() shouldBe 0
@@ -115,4 +123,5 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       }
     }
   }
+
 }

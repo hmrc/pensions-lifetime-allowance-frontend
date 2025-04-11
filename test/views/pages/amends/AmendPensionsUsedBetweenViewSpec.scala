@@ -23,20 +23,25 @@ import testHelpers.ViewSpecHelpers.ip2016.{PensionsTakenBetweenViewMessages, Pen
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendPensionsUsedBetween
 
-class AmendPensionsUsedBetweenViewSpec extends CommonViewSpecHelper with PensionsTakenBetweenViewMessages with PensionsUsedBetweenViewMessages {
+class AmendPensionsUsedBetweenViewSpec
+    extends CommonViewSpecHelper
+    with PensionsTakenBetweenViewMessages
+    with PensionsUsedBetweenViewMessages {
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendPensionsUsedBetweenView" should {
-    val pensionsForm = AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm("ip2016").bind(Map("amendedPensionsUsedBetween" -> "yes",
-      "amendedPensionsUsedBetweenAmt" -> "12345"))
+    val pensionsForm = AmendPensionsUsedBetweenForm
+      .amendPensionsUsedBetweenForm("ip2016")
+      .bind(Map("amendedPensionsUsedBetween" -> "yes", "amendedPensionsUsedBetweenAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendPensionsUsedBetween]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
-    val errorForm =  AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm("ip2016").bind(Map("amendedPensionsUsedBetween" -> "",
-      "amendedPensionsUsedBetweenAmt" -> "12345"))
+    val errorForm = AmendPensionsUsedBetweenForm
+      .amendPensionsUsedBetweenForm("ip2016")
+      .bind(Map("amendedPensionsUsedBetween" -> "", "amendedPensionsUsedBetweenAmt" -> "12345"))
     lazy val errorView = application.injector.instanceOf[amendPensionsUsedBetween]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
@@ -54,20 +59,34 @@ class AmendPensionsUsedBetweenViewSpec extends CommonViewSpecHelper with Pension
 
     "have the right explanatory paragraphs" in {
       doc.select("#main-content > div > div > p").text shouldBe plaPensionsUsedBetweenParaOne
-      doc.select("#ip16-amend-pensions-used-between-help > div > p:nth-child(1)").text shouldBe plaPensionsUsedBetweenParaTwo
-      doc.select("#ip16-amend-pensions-used-between-help > div > p:nth-child(3)").text shouldBe plaPensionsUsedBetweenParaThreeNew
+      doc
+        .select("#ip16-amend-pensions-used-between-help > div > p:nth-child(1)")
+        .text shouldBe plaPensionsUsedBetweenParaTwo
+      doc
+        .select("#ip16-amend-pensions-used-between-help > div > p:nth-child(3)")
+        .text shouldBe plaPensionsUsedBetweenParaThreeNew
     }
 
     "have a hidden drop-down menu with the correct list values" in {
-      doc.select("#ip16-amend-pensions-used-between-help > div > ol > li:nth-child(1)").text shouldBe plaPensionsUsedBetweenStepOne
-      doc.select("#ip16-amend-pensions-used-between-help > div > ol > li:nth-child(2)").text shouldBe plaPensionsUsedBetweenStepTwo
-      doc.select("#ip16-amend-pensions-used-between-help > div > ol > li:nth-child(3)").text shouldBe plaPensionsUsedBetweenStepThree
-      doc.select("#ip16-amend-pensions-used-between-help > div > ol > li:nth-child(4)").text shouldBe plaPensionsUsedBetweenStepFour
+      doc
+        .select("#ip16-amend-pensions-used-between-help > div > ol > li:nth-child(1)")
+        .text shouldBe plaPensionsUsedBetweenStepOne
+      doc
+        .select("#ip16-amend-pensions-used-between-help > div > ol > li:nth-child(2)")
+        .text shouldBe plaPensionsUsedBetweenStepTwo
+      doc
+        .select("#ip16-amend-pensions-used-between-help > div > ol > li:nth-child(3)")
+        .text shouldBe plaPensionsUsedBetweenStepThree
+      doc
+        .select("#ip16-amend-pensions-used-between-help > div > ol > li:nth-child(4)")
+        .text shouldBe plaPensionsUsedBetweenStepFour
     }
 
     "have a help link redirecting to the right location" in {
       doc.select("a#ip16-amend-pensions-used-between-help-link").text shouldBe plaPensionsUsedBetweenHelpLinkTextNew
-      doc.select("a#ip16-amend-pensions-used-between-help-link").attr("href") shouldBe plaPensionsUsedBetweenHelpLinkLocation
+      doc
+        .select("a#ip16-amend-pensions-used-between-help-link")
+        .attr("href") shouldBe plaPensionsUsedBetweenHelpLinkLocation
     }
 
     "have a £ symbol present" in {
@@ -84,4 +103,5 @@ class AmendPensionsUsedBetweenViewSpec extends CommonViewSpecHelper with Pension
       doc.select(".govuk-error-message").text shouldBe ""
     }
   }
+
 }

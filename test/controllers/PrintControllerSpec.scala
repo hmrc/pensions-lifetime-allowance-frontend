@@ -45,42 +45,54 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
-  val fakeRequest = FakeRequest()
-  val mockEnv: Environment = mock[Environment]
-  val resultPrintView: resultPrint = fakeApplication().injector.instanceOf[resultPrint]
+  val fakeRequest                                          = FakeRequest()
+  val mockEnv: Environment                                 = mock[Environment]
+  val resultPrintView: resultPrint                         = fakeApplication().injector.instanceOf[resultPrint]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext = mock[PlaContext]
-  implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: Materializer = mock[Materializer]
+  implicit val mockAppConfig: FrontendAppConfig   = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext         = mock[PlaContext]
+  implicit val system: ActorSystem                = ActorSystem()
+  implicit val materializer: Materializer         = mock[Materializer]
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
-
 
   val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
   val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111))
-  val testPrintDisplayModel = PrintDisplayModel("Testy", "Mctestface", "AA11TESTA", "IP2016", "open", "PSATestNum", "ProtRefTestNum", Some("£1,246,500"), Some("3 April 2016"))
+
+  val testPrintDisplayModel = PrintDisplayModel(
+    "Testy",
+    "Mctestface",
+    "AA11TESTA",
+    "IP2016",
+    "open",
+    "PSATestNum",
+    "ProtRefTestNum",
+    Some("£1,246,500"),
+    Some("3 April 2016")
+  )
 
   val authFunction = new AuthFunction {
-    override implicit val plaContext: PlaContext = mockPlaContext
-    override implicit val appConfig: FrontendAppConfig = mockAppConfig
+    override implicit val plaContext: PlaContext         = mockPlaContext
+    override implicit val appConfig: FrontendAppConfig   = mockAppConfig
     override implicit val technicalError: technicalError = mockTechnicalError
-    override implicit val ec: ExecutionContext = executionContext
+    override implicit val ec: ExecutionContext           = executionContext
 
     override def authConnector: AuthConnector = mockAuthConnector
   }
 
-
-  val TestPrintController = new PrintController(mockSessionCacheService, mockCitizenDetailsConnector, mockDisplayConstructors, resultPrintView, mockMCC, authFunction) {
-  }
+  val TestPrintController = new PrintController(
+    mockSessionCacheService,
+    mockCitizenDetailsConnector,
+    mockDisplayConstructors,
+    resultPrintView,
+    mockMCC,
+    authFunction
+  ) {}
 
   override def beforeEach(): Unit = {
-    reset(mockDisplayConstructors,
-      mockSessionCacheService,
-      mockCitizenDetailsConnector,
-      mockPlaContext)
+    reset(mockDisplayConstructors, mockSessionCacheService, mockCitizenDetailsConnector, mockPlaContext)
     super.beforeEach()
   }
 
@@ -116,6 +128,5 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
       }
     }
   }
+
 }
-
-

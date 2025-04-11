@@ -16,11 +16,11 @@
 
 package models
 
-trait YesNoModel{
+trait YesNoModel {
   def getYesNoValue: String
 }
 
-trait AmountModel{
+trait AmountModel {
   def getAmount: Option[BigDecimal]
 }
 

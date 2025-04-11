@@ -26,7 +26,7 @@ class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCor
   "The Manual Correspondence needed page" should {
 
     lazy val view = application.injector.instanceOf[manualCorrespondenceNeeded]
-    lazy val doc = Jsoup.parse(view().body)
+    lazy val doc  = Jsoup.parse(view().body)
 
     "have the correct title" in {
       doc.title() shouldBe plaMcNeededTitle
@@ -37,7 +37,7 @@ class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCor
       lazy val h1Tag = doc.select("h1.govuk-heading-xl")
 
       s"have the heading text $plaMcNeededPageHeading" in {
-      h1Tag.text shouldBe plaMcNeededPageHeading
+        h1Tag.text shouldBe plaMcNeededPageHeading
       }
 
       "have data metrics" in {
@@ -145,4 +145,5 @@ class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCor
       }
     }
   }
+
 }

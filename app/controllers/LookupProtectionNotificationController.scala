@@ -34,60 +34,74 @@ import utils.ActionWithSessionId
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class LookupProtectionNotificationController @Inject()(val sessionCacheService: SessionCacheService,
-                                                       val plaConnector: PLAConnector,
-                                                       val actionWithSessionId: ActionWithSessionId,
-                                                       mcc: MessagesControllerComponents,
-                                                       psa_lookup_protection_notification_no_form: views.html.pages.lookup.psa_lookup_protection_notification_no_form)(
-                                 implicit val context: PlaContext,
-                                 implicit val appConfig: FrontendAppConfig,
-                                 implicit val formWithCSRF: FormWithCSRF,
-                                 implicit val application: Application) extends FrontendController(mcc) with I18nSupport {
+class LookupProtectionNotificationController @Inject() (
+    val sessionCacheService: SessionCacheService,
+    val plaConnector: PLAConnector,
+    val actionWithSessionId: ActionWithSessionId,
+    mcc: MessagesControllerComponents,
+    psa_lookup_protection_notification_no_form: views.html.pages.lookup.psa_lookup_protection_notification_no_form
+)(
+    implicit val context: PlaContext,
+    implicit val appConfig: FrontendAppConfig,
+    implicit val formWithCSRF: FormWithCSRF,
+    implicit val application: Application
+) extends FrontendController(mcc)
+    with I18nSupport {
 
   implicit val executionContext: ExecutionContext = mcc.executionContext
-  implicit val parser: BodyParser[AnyContent] = mcc.parsers.defaultBodyParser
+  implicit val parser: BodyParser[AnyContent]     = mcc.parsers.defaultBodyParser
 
-  def pnnForm(implicit request: Request[AnyContent]): Form[String] = {
+  def pnnForm(implicit request: Request[AnyContent]): Form[String] =
     PSALookupProtectionNotificationNoForm.pnnForm
-  }
 
   val lookupRequestID = "psa-lookup-request"
-  val lookupResultID = "psa-lookup-result"
-
+  val lookupResultID  = "psa-lookup-result"
 
   def displayProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-      case Some(_) => Future.successful(Ok(psa_lookup_protection_notification_no_form(pnnForm)))
-      case _ => Future.successful(Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm))
-    }(executionContext)
+    sessionCacheService
+      .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+      .flatMap {
+        case Some(_) => Future.successful(Ok(psa_lookup_protection_notification_no_form(pnnForm)))
+        case _ =>
+          Future.successful(
+            Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
+          )
+      }(executionContext)
   }
 
   def submitProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    pnnForm.bindFromRequest().fold(
-      formWithErrors => Future.successful(BadRequest(psa_lookup_protection_notification_no_form(formWithErrors))),
-      validFormData => {
-        sessionCacheService.fetchAndGetFormData[PSALookupRequest](lookupRequestID).flatMap {
-          case Some(PSALookupRequest(psaRef, _)) =>
-            val pnn = validFormData.toUpperCase
-            plaConnector.psaLookup(psaRef, pnn)(hc, executionContext).flatMap {
-              result =>
-                val resultData = Json.fromJson[PSALookupResult](result.json).get
-                val updatedResult = resultData.copy(protectionNotificationNumber = Some(pnn))
-                sessionCacheService.saveFormData[PSALookupResult](lookupResultID, updatedResult).map {
-                  _ => Redirect(routes.LookupController.displayLookupResults)
-                }(executionContext)
-            }(executionContext).recoverWith {
-              case r: UpstreamErrorResponse if r.statusCode == NOT_FOUND =>
-                val fullResult = PSALookupRequest(psaRef, Some(pnn))
-                sessionCacheService.saveFormData[PSALookupRequest](lookupRequestID, fullResult).map {
-                  _ => Redirect(routes.LookupController.displayNotFoundResults)
-                }(executionContext)
+    pnnForm
+      .bindFromRequest()
+      .fold(
+        formWithErrors => Future.successful(BadRequest(psa_lookup_protection_notification_no_form(formWithErrors))),
+        validFormData =>
+          sessionCacheService
+            .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+            .flatMap {
+              case Some(PSALookupRequest(psaRef, _)) =>
+                val pnn = validFormData.toUpperCase
+                plaConnector
+                  .psaLookup(psaRef, pnn)(hc, executionContext)
+                  .flatMap { result =>
+                    val resultData    = Json.fromJson[PSALookupResult](result.json).get
+                    val updatedResult = resultData.copy(protectionNotificationNumber = Some(pnn))
+                    sessionCacheService
+                      .saveFormData[PSALookupResult](lookupResultID, updatedResult)
+                      .map(_ => Redirect(routes.LookupController.displayLookupResults))(executionContext)
+                  }(executionContext)
+                  .recoverWith {
+                    case r: UpstreamErrorResponse if r.statusCode == NOT_FOUND =>
+                      val fullResult = PSALookupRequest(psaRef, Some(pnn))
+                      sessionCacheService
+                        .saveFormData[PSALookupRequest](lookupRequestID, fullResult)
+                        .map(_ => Redirect(routes.LookupController.displayNotFoundResults))(executionContext)
+                  }(executionContext)
+              case _ =>
+                Future.successful(
+                  Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
+                )
             }(executionContext)
-          case _ =>
-            Future.successful(Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm))
-        }(executionContext)
-      }
-    )
+      )
   }
 
 }

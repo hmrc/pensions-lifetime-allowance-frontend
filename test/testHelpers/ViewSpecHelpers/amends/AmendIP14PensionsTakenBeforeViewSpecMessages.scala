@@ -18,7 +18,10 @@ package testHelpers.ViewSpecHelpers.amends
 
 import testHelpers.ViewSpecHelpers.ip2016.PensionsTakenBeforeViewMessages
 
-trait AmendIP14PensionsTakenBeforeViewSpecMessages extends PensionsTakenBeforeViewMessages{
+trait AmendIP14PensionsTakenBeforeViewSpecMessages extends PensionsTakenBeforeViewMessages {
   val plaIP14PensionsTakenBeforeQuestion = "What were these pensions worth on 5 April 2014?"
-  val plaIP14PensionsTakenBeforeStepTwo = "Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014."
+
+  val plaIP14PensionsTakenBeforeStepTwo =
+    "Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014."
+
 }

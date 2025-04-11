@@ -32,37 +32,36 @@ case class MoneyPounds(value: BigDecimal, decimalPlaces: Int = 2, roundUp: Boole
         .setScale(decimalPlaces, if (roundUp) BigDecimal.RoundingMode.CEILING else BigDecimal.RoundingMode.FLOOR)
         .abs
     )
+
 }
 
 object Display {
 
   def currencyDisplayString(amt: BigDecimal): String = {
     val amount = MoneyPounds(amt)
-    val minus = if (amount.isNegative) "-" else ""
-    val str = s"£$minus${amount.quantity}"
+    val minus  = if (amount.isNegative) "-" else ""
+    val str    = s"£$minus${amount.quantity}"
     if (str.endsWith(".00")) {
       str.takeWhile(_ != '.')
-    }
-    else str
+    } else str
   }
 
-  def dateDisplayString(date: LocalDate)(implicit lang: Lang, messages: Messages): String = {
+  def dateDisplayString(date: LocalDate)(implicit lang: Lang, messages: Messages): String =
     if (lang.language == "cy") {
       val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
       date.format(dateFormat)
-      val monthNum = date.getMonthValue
+      val monthNum       = date.getMonthValue
       val welshFormatter = DateTimeFormatter.ofPattern(s"""d '${messages(s"pla.month.$monthNum")}' yyyy""")
       date.format(welshFormatter)
-    }
-    else {
+    } else {
       val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
       date.format(dateFormat)
     }
-  }
 
   def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {
     def df(n: BigDecimal): String = new DecimalFormat("0.00").format(n).replace(".00", "")
 
     BigDecimal(df(amt))
   }
+
 }

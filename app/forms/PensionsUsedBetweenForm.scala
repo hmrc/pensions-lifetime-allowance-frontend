@@ -23,12 +23,26 @@ import play.api.data.Forms.{mapping, of}
 
 object PensionsUsedBetweenForm extends CommonBinders {
 
-  def pensionsUsedBetweenForm(protectionType: String) = Form (
+  def pensionsUsedBetweenForm(protectionType: String) = Form(
     mapping(
-      "pensionsUsedBetweenAmt" -> of(decimalFormatter(s"pla.pensionsUsedBetween.amount.errors.mandatoryError.$protectionType", "pla.pensionsUsedBetween.amount.errors.notReal"))
-        .verifying(s"pla.pensionsUsedBetween.amount.errors.decimal.$protectionType", pensionsUsedBetweenAmt => isMaxTwoDecimalPlaces(pensionsUsedBetweenAmt.getOrElse(0)))
-        .verifying(s"pla.pensionsUsedBetween.amount.errors.negative.$protectionType", pensionsUsedBetweenAmt => isPositive(pensionsUsedBetweenAmt.getOrElse(0)))
-        .verifying(s"pla.pensionsUsedBetween.amount.errors.max.$protectionType", pensionsUsedBetweenAmt => isLessThanMax(pensionsUsedBetweenAmt.getOrElse(0)))
+      "pensionsUsedBetweenAmt" -> of(
+        decimalFormatter(
+          s"pla.pensionsUsedBetween.amount.errors.mandatoryError.$protectionType",
+          "pla.pensionsUsedBetween.amount.errors.notReal"
+        )
+      )
+        .verifying(
+          s"pla.pensionsUsedBetween.amount.errors.decimal.$protectionType",
+          pensionsUsedBetweenAmt => isMaxTwoDecimalPlaces(pensionsUsedBetweenAmt.getOrElse(0))
+        )
+        .verifying(
+          s"pla.pensionsUsedBetween.amount.errors.negative.$protectionType",
+          pensionsUsedBetweenAmt => isPositive(pensionsUsedBetweenAmt.getOrElse(0))
+        )
+        .verifying(
+          s"pla.pensionsUsedBetween.amount.errors.max.$protectionType",
+          pensionsUsedBetweenAmt => isLessThanMax(pensionsUsedBetweenAmt.getOrElse(0))
+        )
     )(PensionsUsedBetweenModel.apply)(PensionsUsedBetweenModel.unapply)
   )
 

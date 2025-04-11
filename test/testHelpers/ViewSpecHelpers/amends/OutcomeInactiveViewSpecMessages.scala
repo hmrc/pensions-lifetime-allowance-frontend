@@ -16,9 +16,14 @@
 
 package testHelpers.ViewSpecHelpers.amends
 
-trait OutcomeInactiveViewSpecMessages extends OutcomeActiveViewSpecMessages{
-  val plaAmendResultCodeIP14AdditionalInfoOne        = "As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014."
-  val plaAmendResultCodeIP16AdditionalInfoOne        = "As you already have fixed protection 2016 in place, individual protection 2016 will only become active if you lose fixed protection 2016."
-  val plaAmendResultCodeAdditionalInfoTwo        = "If this happens, you must tell HMRC Pension Schemes Services."
-  val plaResultSuccessViewDetailInactive         = "You can view or change details of your protections at any time."
+trait OutcomeInactiveViewSpecMessages extends OutcomeActiveViewSpecMessages {
+
+  val plaAmendResultCodeIP14AdditionalInfoOne =
+    "As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014."
+
+  val plaAmendResultCodeIP16AdditionalInfoOne =
+    "As you already have fixed protection 2016 in place, individual protection 2016 will only become active if you lose fixed protection 2016."
+
+  val plaAmendResultCodeAdditionalInfoTwo = "If this happens, you must tell HMRC Pension Schemes Services."
+  val plaResultSuccessViewDetailInactive  = "You can view or change details of your protections at any time."
 }

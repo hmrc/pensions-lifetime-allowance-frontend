@@ -25,41 +25,49 @@ trait CommonBinders {
 
   def decimalFormatter(requiredKey: String, invalidKey: String, args: Any*) = new Formatter[Option[BigDecimal]] {
     def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[BigDecimal]] =
-      data.get(key).map(validateNumber(requiredKey, invalidKey, key, _)).getOrElse(Left(Seq(FormError(key, requiredKey, Nil))))
+      data
+        .get(key)
+        .map(validateNumber(requiredKey, invalidKey, key, _))
+        .getOrElse(Left(Seq(FormError(key, requiredKey, Nil))))
 
-    def unbind(key: String, value: Option[BigDecimal]): Map[String, String] = {
+    def unbind(key: String, value: Option[BigDecimal]): Map[String, String] =
       value match {
         case Some(data) => Map(key -> data.toString())
-        case None => Map()
+        case None       => Map()
       }
-    }
   }
 
-  //#################HELPER METHODS#################################//
+  // #################HELPER METHODS#################################//
 
-
-  private def validateNumber(requiredKey: String, invalidKey: String, key: String, number: String): Either[Seq[FormError], Some[BigDecimal]] = {
+  private def validateNumber(
+      requiredKey: String,
+      invalidKey: String,
+      key: String,
+      number: String
+  ): Either[Seq[FormError], Some[BigDecimal]] =
     number match {
-      case "" => Left(Seq(FormError(key, requiredKey, Nil)))
+      case ""    => Left(Seq(FormError(key, requiredKey, Nil)))
       case value => checkIfValidBigDecimal(value, invalidKey, key)
     }
-  }
 
-  private def checkIfValidBigDecimal(value: String, invalidKey: String, key: String): Either[Seq[FormError], Some[BigDecimal]] = {
-    val output = Try(BigDecimal(value))
+  private def checkIfValidBigDecimal(
+      value: String,
+      invalidKey: String,
+      key: String
+  ): Either[Seq[FormError], Some[BigDecimal]] = {
+    val output              = Try(BigDecimal(value))
     val outputWithoutCommas = Try(BigDecimal(stripCurrencyCharacters(value)))
     (output, outputWithoutCommas) match {
       case (Success(_), Success(_)) => Right(Some(BigDecimal(value)))
       case (Failure(_), Success(_)) => Left(Seq(FormError(key, "pla.psoDetails.errorQuestion")))
       case (Failure(_), Failure(_)) => Left(Seq(FormError(key, invalidKey)))
-      case _ => Left(Seq(FormError(key, invalidKey)))
+      case _                        => Left(Seq(FormError(key, invalidKey)))
     }
   }
 
-  def stripCurrencyCharacters(input: String): String = {
+  def stripCurrencyCharacters(input: String): String =
     input
       .trim()
       .replaceAll(",", "")
-  }
 
 }
