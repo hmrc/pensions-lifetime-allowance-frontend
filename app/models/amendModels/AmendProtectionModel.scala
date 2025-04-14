@@ -19,9 +19,7 @@ package models.amendModels
 import models.ProtectionModel
 import play.api.libs.json.{Json, OFormat}
 
-case class AmendProtectionModel (originalProtection: ProtectionModel,
-                                 updatedProtection: ProtectionModel
-                                )
+case class AmendProtectionModel(originalProtection: ProtectionModel, updatedProtection: ProtectionModel)
 
 object AmendProtectionModel {
   implicit val format: OFormat[AmendProtectionModel] = Json.format[AmendProtectionModel]

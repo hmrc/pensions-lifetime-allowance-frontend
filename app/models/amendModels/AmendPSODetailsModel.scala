@@ -20,11 +20,7 @@ import play.api.libs.json._
 
 import java.time.LocalDate
 
-case class AmendPSODetailsModel (pso: LocalDate,
-                                 psoAmt: Option[BigDecimal]
-                                ) {
-
-}
+case class AmendPSODetailsModel(pso: LocalDate, psoAmt: Option[BigDecimal]) {}
 
 object AmendPSODetailsModel {
   implicit val format: OFormat[AmendPSODetailsModel] = Json.format[AmendPSODetailsModel]
