@@ -16,14 +16,15 @@
 
 package controllers
 
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import auth.AuthFunction
 import config._
 import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import mocks.AuthMock
+import models.cache.CacheMap
 import models.{ExistingProtectionsDisplayModel, ProtectionModel, TransformedReadResponseModel}
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
@@ -31,16 +32,15 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Lang
 import play.api.libs.json.Json
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Application, Configuration, Environment}
+import play.api.{Application, Environment}
 import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.http.HttpResponse
-import models.cache.CacheMap
 import utils.ActionWithSessionId
 import views.html.pages.existingProtections.existingProtections
 import views.html.pages.fallback.technicalError
@@ -72,13 +72,13 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
   implicit val mockLang: Lang = mock[Lang]
-  implicit val application = mock[Application]
+  implicit val application: Application = mock[Application]
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
   implicit val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded = app.injector.instanceOf[manualCorrespondenceNeeded]
   implicit val mockExistingProtections: existingProtections = app.injector.instanceOf[existingProtections]
 
 
-  val fakeRequest = FakeRequest()
+  val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
   class Setup {
 

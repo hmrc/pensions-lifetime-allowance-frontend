@@ -18,7 +18,6 @@ package forms
 
 import common.Validation._
 import forms.formatters.DateFormatter
-import models.PSODetailsModel
 import models.amendModels.AmendPSODetailsModel
 import play.api.data.Forms._
 import play.api.data._

@@ -16,29 +16,29 @@
 
 package controllers
 
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
-import views.html.pages.lookup.{pla_protection_guidance, psa_lookup_not_found_results, psa_lookup_protection_notification_no_form, psa_lookup_results, psa_lookup_scheme_admin_ref_form}
+import models.cache.CacheMap
 import models.{PSALookupRequest, PSALookupResult}
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
+import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito.{reset, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.i18n.Messages
-import play.api.libs.json.{Json}
+import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers.FakeApplication
-import models.cache.CacheMap
-import org.mockito.ArgumentMatchers.any
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys}
-import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys}
 import utils.ActionWithSessionId
+import views.html.pages.lookup._
 
 import scala.concurrent.Future
 
@@ -57,7 +57,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
   implicit val hc: HeaderCarrier = HeaderCarrier()
-  implicit val application = mock[Application]
+  implicit val application: Application = mock[Application]
   implicit val mockPsa_lookup_not_found_results: psa_lookup_not_found_results = app.injector.instanceOf[psa_lookup_not_found_results]
   implicit val mockPla_protection_guidance: pla_protection_guidance = app.injector.instanceOf[pla_protection_guidance]
   implicit val mockPsa_lookup_protection_notification_no_form: psa_lookup_protection_notification_no_form = app.injector.instanceOf[psa_lookup_protection_notification_no_form]

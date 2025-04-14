@@ -160,7 +160,6 @@ object Validation {
     case Success(_) => true
     case Failure(_) if input.trim == "" => true
     case Failure(_) => tryBigDecimalWithoutComma(input)
-    case Failure(_) => false
   }
 
   val commaCheck: String => Boolean = input => (tryBigDecimalWithoutComma(input), Try(BigDecimal(input))) match {

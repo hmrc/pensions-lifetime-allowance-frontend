@@ -29,8 +29,6 @@ class AmendPsoDetailsViewSpec extends CommonViewSpecHelper with PsoDetailsViewMe
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
-  private val messageKey: String = "psoDetails"
-
   "the AmendPsoDetailsView" should{
     val pensionsForm = AmendPSODetailsForm.amendPsoDetailsForm("").bind(Map(
       "pso.day" -> "1",

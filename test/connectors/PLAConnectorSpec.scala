@@ -40,7 +40,7 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with ScalaCheck
   val mockEnv       = mock[Environment]
   val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   val mockHttp      = mock[HttpClientV2]
-  implicit val executionContext = fakeApplication().injector.instanceOf[ExecutionContext]
+  implicit val executionContext: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
 
   class Setup {
     val connector = new PLAConnector(mockAppConfig, mockHttp)

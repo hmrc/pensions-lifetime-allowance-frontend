@@ -25,11 +25,11 @@ import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
-import org.scalatest.{BeforeAndAfterEach, stats}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
-import play.api.i18n.{I18nSupport, Lang, MessagesApi}
-import play.api.mvc.{MessagesControllerComponents, Result}
+import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -47,7 +47,7 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
   with SessionCacheTestHelper
   with BeforeAndAfterEach with AuthMock with I18nSupport {
 
-  implicit lazy val mockMessage = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit lazy val mockMessage: Messages = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   val mockSessionCacheService: SessionCacheService       = mock[SessionCacheService]
   val mockMCC: MessagesControllerComponents          = fakeApplication().injector.instanceOf[MessagesControllerComponents]
@@ -66,12 +66,10 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  override def beforeEach() = {
-    reset(
-      mockSessionCacheService,
-      mockAuthConnector,
-      mockEnv
-    )
+  override def beforeEach(): Unit = {
+    reset(mockSessionCacheService)
+    reset(mockAuthConnector)
+    reset(mockEnv)
     super.beforeEach()
   }
 
@@ -94,8 +92,8 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
   }
 
   val sessionId = UUID.randomUUID.toString
-  implicit val fakeRequest = FakeRequest()
-  implicit val messages = messagesApi.preferred(fakeRequest)
+  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  implicit val messages: Messages = messagesApi.preferred(fakeRequest)
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
 

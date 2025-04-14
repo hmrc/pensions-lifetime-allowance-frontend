@@ -26,8 +26,9 @@ import play.api.http.Status
 import play.api.libs.json.Json
 import services.SessionCacheService
 import testHelpers.FakeApplication
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
+
 import java.net.URL
 import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
@@ -35,7 +36,7 @@ import scala.io.Source
 class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFutures with MockitoSugar {
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 
-  implicit val executionContext = fakeApplication().injector.instanceOf[ExecutionContext]
+  implicit val executionContext: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
   val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   val mockHttp = mock[HttpClientV2]
   val mockSessionCacheService = mock[SessionCacheService]

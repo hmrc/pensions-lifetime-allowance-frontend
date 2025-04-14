@@ -20,8 +20,10 @@ import models._
 import models.cache.CacheMap
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.Json
+import play.api.mvc.AnyContent
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
@@ -31,12 +33,12 @@ import uk.gov.hmrc.mongo.cache.DataKey
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
-class SessionCacheServiceSpec extends FakeApplication with MockitoSugar {
+class SessionCacheServiceSpec extends FakeApplication with MockitoSugar with ScalaFutures {
 
   val mockSessionRepository = mock[SessionRepository]
   val sessionId = UUID.randomUUID.toString
-  implicit val executionContext = fakeApplication().injector.instanceOf[ExecutionContext]
-  lazy implicit val fakeRequest = FakeRequest()
+  implicit val executionContext: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
+  lazy implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
   object TestsessionCacheService extends SessionCacheService(mockSessionRepository)
 
@@ -58,14 +60,6 @@ class SessionCacheServiceSpec extends FakeApplication with MockitoSugar {
 
       lazy val result = TestsessionCacheService.saveFormData("haveAddedToPension", testModel)
       await(result) shouldBe returnedCacheMap
-    }
-
-    "remove data from the repo" in {
-
-      when(mockSessionRepository.clearSession)
-        .thenReturn(Future.successful(()))
-
-
     }
   }
 }

@@ -16,11 +16,13 @@
 
 package controllers
 
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
 import config.{FrontendAppConfig, PlaContext}
 import connectors.IdentityVerificationConnector
 import enums.IdentityVerificationResult
+import models.cache.CacheMap
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -33,10 +35,8 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers._
-import models.cache.CacheMap
-import org.mockito.ArgumentMatchers
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import utils.ActionWithSessionId
 import views.html.pages.ivFailure.{lockedOut, technicalIssue, unauthorised}
 import views.html.pages.timeout
@@ -61,7 +61,7 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
   implicit val hc: HeaderCarrier = mock[HeaderCarrier]
-  implicit val application = mock[Application]
+  implicit val application: Application = mock[Application]
   implicit val mockLockedOut: lockedOut = app.injector.instanceOf[lockedOut]
   implicit val mockTechnicalIssue: technicalIssue = app.injector.instanceOf[technicalIssue]
   implicit val mockUnauthorised: unauthorised = app.injector.instanceOf[unauthorised]
@@ -105,10 +105,8 @@ class UnauthorisedControllerSpec extends FakeApplication with MockitoSugar with 
   }
 
   override def beforeEach(): Unit = {
-    reset(
-      mockSessionCacheService,
-      mockIdentityVerificationConnector
-    )
+    reset(mockSessionCacheService)
+    reset(mockIdentityVerificationConnector)
     super.beforeEach()
   }
 

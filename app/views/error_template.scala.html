@@ -21,7 +21,7 @@
  appConfig: FrontendAppConfig
 )
 
-@(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader, messages: Messages, context: config.PlaContext, appConfig: FrontendAppConfig)
+@(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader, messages: Messages)
 
 @contentHeader = {
   <h1 class="govuk-heading-xl">@heading</h1>

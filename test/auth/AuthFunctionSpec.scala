@@ -56,9 +56,9 @@ class AuthFunctionSpec extends FakeApplication
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
   override def beforeEach(): Unit = {
-    reset(mockPlayAuthConnector,
-      mockAuthConnector,
-      mockPlaContext)
+    reset(mockPlayAuthConnector)
+    reset(mockAuthConnector)
+    reset(mockPlaContext)
   }
 
   class TestAuthFunction extends AuthFunction {

@@ -128,7 +128,6 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
     "have an sections paragraph (Other Protection) which" should {
 
       lazy val p2 = doc2.select("div p").get(1)
-      lazy val p3 = doc2.select("div p").get(2)
 
       "have a give to pension provider section with the text" in {
         p2.text shouldBe plaPrintGiveToPensionProvider

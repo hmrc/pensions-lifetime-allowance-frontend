@@ -29,7 +29,7 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -47,7 +47,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
-  val fakeRequest = FakeRequest()
+  val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
   val mockEnv: Environment = mock[Environment]
   val resultPrintView: resultPrint = fakeApplication().injector.instanceOf[resultPrint]
 
@@ -77,10 +77,10 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   }
 
   override def beforeEach(): Unit = {
-    reset(mockDisplayConstructors,
-      mockSessionCacheService,
-      mockCitizenDetailsConnector,
-      mockPlaContext)
+    reset(mockDisplayConstructors)
+    reset(mockSessionCacheService)
+    reset(mockCitizenDetailsConnector)
+    reset(mockPlaContext)
     super.beforeEach()
   }
 

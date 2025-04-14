@@ -18,8 +18,8 @@ package controllers
 
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
+import models.PSALookupRequest
 import models.cache.CacheMap
-import models.{PSALookupRequest}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.any
@@ -28,15 +28,15 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.i18n.Messages
-import play.api.libs.json.{JsNumber, JsString, JsValue, Json}
+import play.api.libs.json.{JsNumber, JsString, JsValue}
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys}
 import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys}
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
@@ -57,7 +57,7 @@ class LookupSchemeAdministratorReferenceControllerSpec extends FakeApplication w
   implicit val system: ActorSystem = ActorSystem()
   implicit val materializer: Materializer = mock[Materializer]
   implicit val hc: HeaderCarrier = HeaderCarrier()
-  implicit val application = mock[Application]
+  implicit val application: Application = mock[Application]
   implicit val mockPsa_lookup_not_found_results: psa_lookup_not_found_results = app.injector.instanceOf[psa_lookup_not_found_results]
   implicit val mockPla_protection_guidance: pla_protection_guidance = app.injector.instanceOf[pla_protection_guidance]
   implicit val mockPsa_lookup_protection_notification_no_form: psa_lookup_protection_notification_no_form = app.injector.instanceOf[psa_lookup_protection_notification_no_form]

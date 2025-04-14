@@ -15,15 +15,12 @@
  *@
 
 @import common.Links
-@import play.api.Application
-@import config.FrontendAppConfig
-
 
 @this(
    layout: Layout
 )
 
-@()(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, appConfig: FrontendAppConfig)
+@()(implicit request: Request[_], messages: Messages)
 
 @returnToPTALink = {
    <p class="govuk-body">

@@ -32,7 +32,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -40,7 +40,8 @@ import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends._
-import views.html.pages.fallback.{technicalError}
+import views.html.pages.fallback.technicalError
+
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsRemovePensionSharingOrderControllerSpec extends FakeApplication
@@ -48,7 +49,7 @@ class AmendsRemovePensionSharingOrderControllerSpec extends FakeApplication
   with SessionCacheTestHelper
   with BeforeAndAfterEach with AuthMock with I18nSupport {
 
-  implicit lazy val mockMessage = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit lazy val mockMessage: Messages = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
   val mockSessionCacheService: SessionCacheService       = mock[SessionCacheService]
   val mockPlaConnector: PLAConnector                 = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents          = fakeApplication().injector.instanceOf[MessagesControllerComponents]
@@ -66,13 +67,11 @@ class AmendsRemovePensionSharingOrderControllerSpec extends FakeApplication
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
   implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  override def beforeEach() = {
-    reset(
-      mockSessionCacheService,
-      mockPlaConnector,
-      mockAuthConnector,
-      mockEnv
-    )
+  override def beforeEach(): Unit = {
+    reset(mockSessionCacheService)
+    reset(mockPlaConnector)
+    reset(mockAuthConnector)
+    reset(mockEnv)
     super.beforeEach()
   }
 
@@ -92,7 +91,7 @@ class AmendsRemovePensionSharingOrderControllerSpec extends FakeApplication
       mockRemovePsoDebits
     )
   }
-  implicit val fakeRequest = FakeRequest()
+  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
   val ip2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
