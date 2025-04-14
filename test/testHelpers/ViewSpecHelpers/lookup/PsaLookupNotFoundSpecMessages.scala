@@ -32,6 +32,6 @@ trait PsaLookupNotFoundSpecMessages {
   val causeTwoText                = "entered one of the numbers incorrectly"
   val suggestionsText             = "Check the information you've been given and try again."
   val copyrightText               = "© Crown Copyright"
-  val pdfLinkText                 = "Save and print these results"
+  val pdfLinkText                 = "Review and print these results"
   val startAgainText              = "Try again"
 }

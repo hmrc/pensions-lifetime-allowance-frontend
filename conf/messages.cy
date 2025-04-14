@@ -387,7 +387,7 @@ pla.existingProtections.title                           = Bwrw golwg ar fanylion
 pla.existingProtections.pageHeading                     = Eich diogelwch lwfans oes
 pla.existingProtections.active.heading                  = Diogelwch sydd ar waith
 pla.existingProtections.details                         = Manylion
-pla.existingProtections.print                           = Argraffu a chadw''ch manylion
+pla.existingProtections.print                           = Adolygwch fanylion eich diogelwch a’u hargraffu
 pla.existingProtections.applicationDate                 = Dyddiad y cais
 pla.existingProtections.noProtections                   = Ar hyn o bryd nid oes gennych unrhyw ddiogelwch.
 pla.existingProtections.noActiveProtections             = Ar hyn o bryd nid oes gennych ddiogelwch sydd ar waith.
@@ -441,7 +441,7 @@ pla.resultSuccess.detailsContent        = Pan fyddwch yn penderfynu cymryd arian
 pla.resultSuccess.protectionRef         = rhif hysbysu diogelwch
 pla.resultSuccess.psaRef                = cyfeirnod gweinyddwr y cynllun
 pla.resultSuccess.applicationDate       = dyddiad y cais
-pla.resultSuccess.print                 = Argraffu a chadw''ch manylion
+pla.resultSuccess.print                 = Adolygwch fanylion eich diogelwch a’u hargraffu
 pla.resultSuccess.IPChangeDetails       = Newid eich manylion diogelwch
 pla.resultSuccess.IPPensionSharing.beforeLink = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â
 pla.resultSuccess.IPPensionSharing.linkText = Gwasanaethau Cynlluniau Pensiwn
@@ -860,7 +860,7 @@ psa.lookup.results.ltatype.15           = Diogelwch Uwch
 psa.lookup.results.ltatype.16           = Diogelwch Penodol
 psa.lookup.results.ltatype.17           = Diogelwch Penodol 2014
 
-psa.lookup.results.save                 = Cadwch ac argraffwch y canlyniadau hyn
+psa.lookup.results.save                 = Adolygwch ac argraffwch y canlyniadau hyn
 psa.lookup.results.check-another        = Gwirio tystysgrif arall
 
 psa.lookup.results.title.print.1        = Canlyniadau lwfans oes

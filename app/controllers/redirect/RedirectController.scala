@@ -22,10 +22,9 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RedirectController @Inject()(mcc: MessagesControllerComponents) extends FrontendController(mcc) {
+class RedirectController @Inject() (mcc: MessagesControllerComponents) extends FrontendController(mcc) {
 
-  def redirectToNewServiceUrl(path: String): Action[AnyContent] = Action { implicit _ =>
-    Redirect(s"/check-your-pension-protections/$path")
-  }
+  def redirectToNewServiceUrl(path: String): Action[AnyContent] =
+    Action(implicit request => Redirect(s"/check-your-pension-protections/$path"))
 
 }

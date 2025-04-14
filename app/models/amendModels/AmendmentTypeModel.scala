@@ -18,8 +18,8 @@ package models.amendModels
 
 import play.api.libs.json.{Json, OFormat}
 
-case class AmendmentTypeModel (protectionType: String, status: String)
+case class AmendmentTypeModel(protectionType: String, status: String)
 
-object AmendmentTypeModel{
+object AmendmentTypeModel {
   implicit val format: OFormat[AmendmentTypeModel] = Json.format[AmendmentTypeModel]
 }

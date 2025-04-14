@@ -20,8 +20,9 @@ import javax.inject.Inject
 import uk.gov.hmrc.crypto.PlainText
 import uk.gov.hmrc.play.bootstrap.frontend.filters.crypto.SessionCookieCrypto
 
-class SessionCookieCryptoFilterWrapper @Inject()(sessionCookieCrypto: SessionCookieCrypto){
-  def encryptCookieString(cookie: String) : String = {
+class SessionCookieCryptoFilterWrapper @Inject() (sessionCookieCrypto: SessionCookieCrypto) {
+
+  def encryptCookieString(cookie: String): String =
     sessionCookieCrypto.crypto.encrypt(PlainText(cookie)).toString
-  }
+
 }

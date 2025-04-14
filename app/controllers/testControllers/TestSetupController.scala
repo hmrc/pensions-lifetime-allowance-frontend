@@ -24,25 +24,21 @@ import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import scala.concurrent.ExecutionContext
 
-
-class TestSetupController @Inject()(connector: StubConnector,mcc: MessagesControllerComponents)(implicit ec: ExecutionContext) extends FrontendController(mcc) {
+class TestSetupController @Inject() (connector: StubConnector, mcc: MessagesControllerComponents)(
+    implicit ec: ExecutionContext
+) extends FrontendController(mcc) {
 
   def insertProtections(): Action[JsValue] = Action.async(parse.json) { implicit request =>
     val payload: JsValue = request.body
-    connector.insertProtections(payload).map {
-      case OK => Ok
-    }
+    connector.insertProtections(payload).map { case OK => Ok }
   }
 
   def removeAllProtections(): Action[AnyContent] = Action.async { implicit request =>
-    connector.deleteProtections().map {
-      case OK => Ok("All protections deleted")
-    }
+    connector.deleteProtections().map { case OK => Ok("All protections deleted") }
   }
 
   def removeProtections(nino: String): Action[AnyContent] = Action.async { implicit request =>
-    connector.deleteProtectionByNino(nino).map {
-      case OK => Ok(s"$nino deleted")
-    }
+    connector.deleteProtectionByNino(nino).map { case OK => Ok(s"$nino deleted") }
   }
+
 }
