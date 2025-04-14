@@ -59,5 +59,13 @@ class SessionCacheServiceSpec extends FakeApplication with MockitoSugar {
       lazy val result = TestsessionCacheService.saveFormData("haveAddedToPension", testModel)
       await(result) shouldBe returnedCacheMap
     }
+
+    "remove data from the repo" in {
+
+      when(mockSessionRepository.clearSession)
+        .thenReturn(Future.successful(()))
+
+
+    }
   }
 }

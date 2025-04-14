@@ -18,22 +18,24 @@ package connectors
 
 import config.FrontendAppConfig
 import models._
+import models.cache.CacheMap
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
+import org.scalacheck.Gen
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 import play.api.Environment
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import play.api.test.Helpers._
 import testHelpers.FakeApplication
-import models.cache.CacheMap
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
-import uk.gov.hmrc.http.client.{HttpClientV2,RequestBuilder}
+import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
 
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
+class PLAConnectorSpec extends FakeApplication with MockitoSugar with ScalaCheckDrivenPropertyChecks with BeforeAndAfterEach {
 
   val mockEnv       = mock[Environment]
   val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
@@ -90,24 +92,6 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
         .thenReturn(Future.successful(HttpResponse(OK, "")))
 
       val response = connector.applyFP16(nino)
-      await(response).status shouldBe OK
-    }
-  }
-
-  "Calling applyIP16" should {
-    "should return a 200 from a valid apply IP16 request" in new Setup {
-      when(mockHttp.post(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      val tstMap = CacheMap(tstId, Map(negativePensionsTakenTuple,
-                                      negativeOverseasPensionsTuple,
-                                      validCurrentPensionsTuple,
-                                      validPensionUsedBetweenTuple,
-                                      negativePensionDebitsTuple))
-      val response = connector.applyIP16(nino, tstMap)
-
       await(response).status shouldBe OK
     }
   }
@@ -183,28 +167,6 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
 
   "Calling with 10 decimal places" should {
 
-    "convert json double values to 2 decimal places for applying for ip" in new Setup {
-      when(mockHttp.post(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      val userData = CacheMap(tstId, Map(positivePensionsTakenTuple,
-                                        positivePensionsTakenBeforeTuple,
-                                        validPensionsWorthBeforeTuple,
-                                        positivePensionsTakenBetweenTuple,
-                                        positiveOverseasPensionsTuple,
-                                        validCurrentPensionsTuple2,
-                                        positivePensionDebitsTuple,
-                                        validPensionUsedBetweenTuple,
-                                        psoDetailsTuple
-                                        ))
-
-      val response = connector.applyIP16(nino, userData)
-
-      await(response).status shouldBe OK
-    }
-
     "convert json double values to 2 decimal places for amending ips" in new Setup {
       when(mockHttp.put(any)(any)).thenReturn(requestBuilder)
       when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
@@ -278,6 +240,50 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with BeforeAndA
       val response = connector.amendProtection(nino, protectionModel)
 
       await(response).status shouldBe OK
+    }
+  }
+
+  "ResponseHandler" must {
+
+    "return the response directly" when {
+
+      s"response is $OK" in {
+
+        val response = HttpResponse(OK, validApplyFP16Json)
+        ResponseHandler.handlePLAResponse("GET", "/foo", response) shouldBe response
+      }
+
+      Seq(CONFLICT, LOCKED).foreach { code =>
+        s"status code of the response is $code" in {
+
+          val response = HttpResponse(code, validApplyFP16Json)
+          ResponseHandler.handlePLAResponse("GET", "/foo", response) shouldBe response
+        }
+      }
+    }
+
+    "return the response upon handling a response" when {
+
+      s"status code of the response any 4xx/5xx code other than $CONFLICT or $LOCKED" in {
+
+        forAll(Gen.oneOf(BAD_REQUEST to NETWORK_AUTHENTICATION_REQUIRED)
+          .suchThat(code => code != CONFLICT && code != LOCKED)) { code =>
+          val response = HttpResponse(code, validApplyFP16Json)
+          val result = ResponseHandler.handlePLAResponse("GET", "/foo", response)
+
+          result shouldBe response
+        }
+      }
+    }
+
+    "throw and UpstreamErrorResponse" when {
+
+      s"status code of the response is $NOT_FOUND" in {
+
+        an[UpstreamErrorResponse] mustBe thrownBy {
+          ResponseHandler.handlePLAResponse("GET", "/foo", HttpResponse(NOT_FOUND, validApplyFP16Json))
+        }
+      }
     }
   }
 }

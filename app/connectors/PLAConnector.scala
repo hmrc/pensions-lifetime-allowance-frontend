@@ -100,18 +100,6 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
     r
   }
 
-  def applyIP16(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    implicit val protectionType = ApplicationType.IP2016
-    val application = IPApplicationConstructor.createIPApplication(userData)
-    val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
-    val body = requestJson.transform(transformer(application)).get
-    val url = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
-    http
-      .post(url"$url")
-      .withBody(Json.toJson(body))
-      .execute[HttpResponse]
-  }
-
   def applyIP14(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     implicit val protectionType = ApplicationType.IP2014
     val application = IPApplicationConstructor.createIPApplication(userData)

@@ -126,6 +126,19 @@ class WithdrawProtectionDateInputControllerSpec
           status(result) shouldBe OK
         }
       }
+
+     "there is not stored protection model" should {
+
+       "return 500" in new Setup {
+
+         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+         cacheFetchCondition[ProtectionModel](None)
+
+         lazy val result: Future[Result] = controller.getWithdrawDateInput(fakeRequest)
+
+         status(result) shouldBe INTERNAL_SERVER_ERROR
+       }
+     }
     }
 
   "In WithdrawProtectionController calling the postWithdrawDateInput action" when {
@@ -140,7 +153,22 @@ class WithdrawProtectionDateInputControllerSpec
     }
 
     "there is a stored protection model" should {
-      "return 303" in new Setup {
+
+      "return 400 when form is submitted with errors" in new Setup {
+
+        mockAuthConnector(Future.successful({}))
+
+        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+        cacheSaveCondition[WithdrawDateFormModel](mockSessionCacheService)
+
+
+        val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest().withFormUrlEncodedBody(("withdrawDate.day", "20"), ("withdrawDate.month", "7"), ("withdrawDate.year", "abcd")).withMethod("POST")
+
+        lazy val result: Future[Result] = controller.postWithdrawDateInput(request)
+        status(result) shouldBe BAD_REQUEST
+      }
+
+      "return 303 when valid data is submitted" in new Setup {
         mockAuthConnector(Future.successful({}))
 
         cacheFetchCondition[ProtectionModel](Some(ip2016Protection))

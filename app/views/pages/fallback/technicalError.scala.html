@@ -22,9 +22,8 @@
 
 @restartTarget = @{
     pType match {
-        case "IP2016" => controllers.routes.IP2016Controller.pensionsTaken
-        case "FP2016" => controllers.routes.ConfirmationController.confirmFP
         case "existingProtections" => controllers.routes.ReadProtectionsController.currentProtections
+        case _ => controllers.routes.WithdrawnController.showWithdrawn2016()
     }
 }
 

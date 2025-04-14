@@ -25,11 +25,11 @@ import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
-import org.scalatest.BeforeAndAfterEach
+import org.scalatest.{BeforeAndAfterEach, stats}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.i18n.{I18nSupport, Lang, MessagesApi}
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -95,6 +95,7 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
 
   val sessionId = UUID.randomUUID.toString
   implicit val fakeRequest = FakeRequest()
+  implicit val messages = messagesApi.preferred(fakeRequest)
   val mockUsername = "mockuser"
   val mockUserId = "/auth/oid/" + mockUsername
 
@@ -151,6 +152,44 @@ class AmendsPensionWorthBeforeControllerSpec extends FakeApplication
   def cacheFetchCondition[T](data: Option[T]): Unit = {
     when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
       .thenReturn(Future.successful(data))
+  }
+
+  "AmendsPensionWorthBeforeController" must {
+
+    "return a 200 status" when {
+
+      "model is returned from cache and protection type is IP2014" in new Setup {
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+
+        val result: Future[Result] = controller.amendPensionsWorthBefore("ip2014", "dormant")(fakeRequest)
+
+        status(result) shouldBe OK
+        contentAsString(result) should include(messages("pla.ip14PensionsTakenBefore.question"))
+      }
+
+      "IP2016 model is returned from cache" in new Setup {
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+
+        val result: Future[Result] = controller.amendPensionsWorthBefore("ip2016", "dormant")(fakeRequest)
+
+        status(result) shouldBe OK
+        contentAsString(result) should include(messages("pla.pensionsWorthBefore.title"))
+      }
+    }
+
+    "return 500 when nothing is returned from cache" in new Setup {
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](None)
+
+      val result = controller.amendPensionsWorthBefore("ip2016", "dormant")(fakeRequest)
+
+      status(result) shouldBe INTERNAL_SERVER_ERROR
+    }
   }
 
   "Submitting Amend IP16 Pensions Worth Before" when {

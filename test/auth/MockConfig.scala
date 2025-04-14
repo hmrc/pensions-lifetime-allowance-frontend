@@ -46,5 +46,4 @@ object MockConfig extends AppConfig {
   override val appName: String = ""
   override val sessionMissingUpliftUrlPrefix: Option[String] = None
   override val configuration: Configuration = NoConfiguration
-  override val applyFor2016IpAndFpShutterEnabled: Boolean = false
 }
