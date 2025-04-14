@@ -27,43 +27,46 @@ import java.time.format.DateTimeFormatter
 class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication with FakeRequestHelper {
 
   object Errors {
-    val dateRequiredError = s"$testKey.error.required"
-    val dayRequiredError = s"$testKey.error.required.day"
-    val dayMonthRequiredError = s"$testKey.error.required.dayMonth"
-    val dayYearRequiredError = s"$testKey.error.required.dayYear"
-    val monthRequiredError = s"$testKey.error.required.month"
+    val dateRequiredError      = s"$testKey.error.required"
+    val dayRequiredError       = s"$testKey.error.required.day"
+    val dayMonthRequiredError  = s"$testKey.error.required.dayMonth"
+    val dayYearRequiredError   = s"$testKey.error.required.dayYear"
+    val monthRequiredError     = s"$testKey.error.required.month"
     val monthYearRequiredError = s"$testKey.error.required.monthYear"
-    val yearRequiredError = s"$testKey.error.required.year"
+    val yearRequiredError      = s"$testKey.error.required.year"
 
-    val dateInvalidError = s"$testKey.error.invalid"
-    val dayInvalidError = s"$testKey.error.invalid.day"
-    val dayMonthInvalidError = s"$testKey.error.invalid.dayMonth"
-    val dayYearInvalidError = s"$testKey.error.invalid.dayYear"
-    val monthInvalidError = s"$testKey.error.invalid.month"
+    val dateInvalidError      = s"$testKey.error.invalid"
+    val dayInvalidError       = s"$testKey.error.invalid.day"
+    val dayMonthInvalidError  = s"$testKey.error.invalid.dayMonth"
+    val dayYearInvalidError   = s"$testKey.error.invalid.dayYear"
+    val monthInvalidError     = s"$testKey.error.invalid.month"
     val monthYearInvalidError = s"$testKey.error.invalid.monthYear"
-    val yearInvalidError = s"$testKey.error.invalid.year"
+    val yearInvalidError      = s"$testKey.error.invalid.year"
 
-    val dateNotRealError = s"$testKey.error.notReal"
-    val dayNotRealError = s"$testKey.error.notReal.day"
+    val dateNotRealError  = s"$testKey.error.notReal"
+    val dayNotRealError   = s"$testKey.error.notReal.day"
     val monthNotRealError = s"$testKey.error.notReal.month"
-    val yearNotRealError = s"$testKey.error.notReal.year"
+    val yearNotRealError  = s"$testKey.error.notReal.year"
 
     val dateMinError = s"$testKey.error.range.min"
     val dateMaxError = s"$testKey.error.range.max"
   }
 
-  val testKey = "testKey"
-  val dayKey = s"$testKey.day"
+  val testKey  = "testKey"
+  val dayKey   = s"$testKey.day"
   val monthKey = s"$testKey.month"
-  val yearKey = s"$testKey.year"
+  val yearKey  = s"$testKey.year"
 
-  val testDate: LocalDate = LocalDate.of(2000, 2, 1)
+  val testDate: LocalDate    = LocalDate.of(2000, 2, 1)
   val testMinDate: LocalDate = testDate.minusYears(1)
   val testMaxDate: LocalDate = testDate.plusYears(1)
 
-  val messagesApi: MessagesApi = fakeApplication.injector.instanceOf[MessagesApi]
+  val messagesApi: MessagesApi    = fakeApplication.injector.instanceOf[MessagesApi]
   implicit val messages: Messages = messagesApi.preferred(fakeRequest)
-  val testFormatter: DateFormatter = DateFormatter(testKey, Some(testMinDate), Some(testMaxDate), rangeInclusive = false)(messages)
+
+  val testFormatter: DateFormatter =
+    DateFormatter(testKey, Some(testMinDate), Some(testMaxDate), rangeInclusive = false)(messages)
+
   val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.toLocale)
 
   "testFormatter.bind" when {
@@ -72,9 +75,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "",
+            dayKey   -> "",
             monthKey -> "1",
-            yearKey -> "2000"
+            yearKey  -> "2000"
           )
         ) shouldBe Left(List(FormError(dayKey, Errors.dayRequiredError)))
       }
@@ -82,9 +85,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "1",
+            dayKey   -> "1",
             monthKey -> "",
-            yearKey -> "2000"
+            yearKey  -> "2000"
           )
         ) shouldBe Left(List(FormError(monthKey, Errors.monthRequiredError)))
       }
@@ -92,9 +95,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "1",
+            dayKey   -> "1",
             monthKey -> "1",
-            yearKey -> ""
+            yearKey  -> ""
           )
         ) shouldBe Left(List(FormError(yearKey, Errors.yearRequiredError)))
       }
@@ -104,39 +107,45 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "",
+            dayKey   -> "",
             monthKey -> "",
-            yearKey -> "2000"
+            yearKey  -> "2000"
           )
-        ) shouldBe Left(List(FormError(dayKey, Errors.dayMonthRequiredError), FormError(monthKey, Errors.dayMonthRequiredError)))
+        ) shouldBe Left(
+          List(FormError(dayKey, Errors.dayMonthRequiredError), FormError(monthKey, Errors.dayMonthRequiredError))
+        )
       }
       "return day/year required errors when the day and year are missing" in {
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "",
+            dayKey   -> "",
             monthKey -> "1",
-            yearKey -> ""
+            yearKey  -> ""
           )
-        ) shouldBe Left(List(FormError(dayKey, Errors.dayYearRequiredError), FormError(yearKey, Errors.dayYearRequiredError)))
+        ) shouldBe Left(
+          List(FormError(dayKey, Errors.dayYearRequiredError), FormError(yearKey, Errors.dayYearRequiredError))
+        )
       }
       "return month/year required errors when the month and year are missing" in {
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "1",
+            dayKey   -> "1",
             monthKey -> "",
-            yearKey -> ""
+            yearKey  -> ""
           )
-        ) shouldBe Left(List(FormError(monthKey, Errors.monthYearRequiredError), FormError(yearKey, Errors.monthYearRequiredError)))
+        ) shouldBe Left(
+          List(FormError(monthKey, Errors.monthYearRequiredError), FormError(yearKey, Errors.monthYearRequiredError))
+        )
       }
       "return global required error when the day, month and year are missing" in {
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "",
+            dayKey   -> "",
             monthKey -> "",
-            yearKey -> ""
+            yearKey  -> ""
           )
         ) shouldBe Left(List(FormError(testKey, Errors.dateRequiredError)))
       }
@@ -146,9 +155,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "a",
+            dayKey   -> "a",
             monthKey -> "1",
-            yearKey -> "2000"
+            yearKey  -> "2000"
           )
         ) shouldBe Left(List(FormError(dayKey, Errors.dayInvalidError)))
       }
@@ -156,9 +165,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "1",
+            dayKey   -> "1",
             monthKey -> "b",
-            yearKey -> "2000"
+            yearKey  -> "2000"
           )
         ) shouldBe Left(List(FormError(monthKey, Errors.monthInvalidError)))
       }
@@ -166,9 +175,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "1",
+            dayKey   -> "1",
             monthKey -> "1",
-            yearKey -> "c"
+            yearKey  -> "c"
           )
         ) shouldBe Left(List(FormError(yearKey, Errors.yearInvalidError)))
       }
@@ -178,39 +187,45 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "a",
+            dayKey   -> "a",
             monthKey -> "b",
-            yearKey -> "2000"
+            yearKey  -> "2000"
           )
-        ) shouldBe Left(List(FormError(dayKey, Errors.dayMonthInvalidError), FormError(monthKey, Errors.dayMonthInvalidError)))
+        ) shouldBe Left(
+          List(FormError(dayKey, Errors.dayMonthInvalidError), FormError(monthKey, Errors.dayMonthInvalidError))
+        )
       }
       "return invalid errors on day/year keys when the day and year are invalid" in {
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "a",
+            dayKey   -> "a",
             monthKey -> "1",
-            yearKey -> "c"
+            yearKey  -> "c"
           )
-        ) shouldBe Left(List(FormError(dayKey, Errors.dayYearInvalidError), FormError(yearKey, Errors.dayYearInvalidError)))
+        ) shouldBe Left(
+          List(FormError(dayKey, Errors.dayYearInvalidError), FormError(yearKey, Errors.dayYearInvalidError))
+        )
       }
       "return invalid errors on month/year keys when the month and year are invalid" in {
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "1",
+            dayKey   -> "1",
             monthKey -> "b",
-            yearKey -> "c"
+            yearKey  -> "c"
           )
-        ) shouldBe Left(List(FormError(monthKey, Errors.monthYearInvalidError), FormError(yearKey, Errors.monthYearInvalidError)))
+        ) shouldBe Left(
+          List(FormError(monthKey, Errors.monthYearInvalidError), FormError(yearKey, Errors.monthYearInvalidError))
+        )
       }
       "return global invalid error when the day, month and year are invalid" in {
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "a",
+            dayKey   -> "a",
             monthKey -> "b",
-            yearKey -> "c"
+            yearKey  -> "c"
           )
         ) shouldBe Left(List(FormError(testKey, Errors.dateInvalidError)))
       }
@@ -220,9 +235,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "32",
+            dayKey   -> "32",
             monthKey -> "1",
-            yearKey -> "2000"
+            yearKey  -> "2000"
           )
         ) shouldBe Left(List(FormError(dayKey, Errors.dayNotRealError)))
       }
@@ -230,9 +245,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "1",
+            dayKey   -> "1",
             monthKey -> "13",
-            yearKey -> "2000"
+            yearKey  -> "2000"
           )
         ) shouldBe Left(List(FormError(monthKey, Errors.monthNotRealError)))
       }
@@ -240,9 +255,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "1",
+            dayKey   -> "1",
             monthKey -> "1",
-            yearKey -> "10000"
+            yearKey  -> "10000"
           )
         ) shouldBe Left(List(FormError(yearKey, Errors.yearNotRealError)))
       }
@@ -250,9 +265,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "0",
+            dayKey   -> "0",
             monthKey -> "0",
-            yearKey -> "999"
+            yearKey  -> "999"
           )
         ) shouldBe Left(List(FormError(testKey, Errors.dateNotRealError)))
       }
@@ -260,9 +275,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "29",
+            dayKey   -> "29",
             monthKey -> "2",
-            yearKey -> "2001"
+            yearKey  -> "2001"
           )
         ) shouldBe Left(List(FormError(testKey, Errors.dateNotRealError)))
       }
@@ -273,9 +288,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> testDate.getDayOfMonth.toString,
+            dayKey   -> testDate.getDayOfMonth.toString,
             monthKey -> testDate.getMonthValue.toString,
-            yearKey -> testDate.getYear.toString
+            yearKey  -> testDate.getYear.toString
           )
         ) shouldBe Left(List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate)))))
       }
@@ -284,9 +299,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> testDate.getDayOfMonth.toString,
+            dayKey   -> testDate.getDayOfMonth.toString,
             monthKey -> testDate.getMonthValue.toString,
-            yearKey -> testDate.getYear.toString
+            yearKey  -> testDate.getYear.toString
           )
         ) shouldBe Left(List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate)))))
       }
@@ -295,9 +310,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> testDate.getDayOfMonth.toString,
+            dayKey   -> testDate.getDayOfMonth.toString,
             monthKey -> testDate.getMonthValue.toString,
-            yearKey -> testDate.getYear.toString
+            yearKey  -> testDate.getYear.toString
           )
         ) shouldBe Left(List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate)))))
       }
@@ -306,24 +321,25 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> testDate.getDayOfMonth.toString,
+            dayKey   -> testDate.getDayOfMonth.toString,
             monthKey -> testDate.getMonthValue.toString,
-            yearKey -> testDate.getYear.toString
+            yearKey  -> testDate.getYear.toString
           )
         ) shouldBe Left(List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate)))))
       }
     }
     "the formatter has inclusive date range" must {
-      val testFormatter: DateFormatter = DateFormatter(testKey, Some(testMinDate), Some(testMaxDate), rangeInclusive = true)(messages)
+      val testFormatter: DateFormatter =
+        DateFormatter(testKey, Some(testMinDate), Some(testMaxDate), rangeInclusive = true)(messages)
 
       "return global date error when date is valid but is too far in the future" in {
         val testDate = testMaxDate.plusDays(1)
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> testDate.getDayOfMonth.toString,
+            dayKey   -> testDate.getDayOfMonth.toString,
             monthKey -> testDate.getMonthValue.toString,
-            yearKey -> testDate.getYear.toString
+            yearKey  -> testDate.getYear.toString
           )
         ) shouldBe Left(List(FormError(testKey, Errors.dateMaxError, List(dateFormatter.format(testMaxDate)))))
       }
@@ -332,9 +348,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> testDate.getDayOfMonth.toString,
+            dayKey   -> testDate.getDayOfMonth.toString,
             monthKey -> testDate.getMonthValue.toString,
-            yearKey -> testDate.getYear.toString
+            yearKey  -> testDate.getYear.toString
           )
         ) shouldBe Left(List(FormError(testKey, Errors.dateMinError, List(dateFormatter.format(testMinDate)))))
       }
@@ -343,9 +359,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> testDate.getDayOfMonth.toString,
+            dayKey   -> testDate.getDayOfMonth.toString,
             monthKey -> testDate.getMonthValue.toString,
-            yearKey -> testDate.getYear.toString
+            yearKey  -> testDate.getYear.toString
           )
         ) shouldBe Right(testDate)
       }
@@ -354,9 +370,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> testDate.getDayOfMonth.toString,
+            dayKey   -> testDate.getDayOfMonth.toString,
             monthKey -> testDate.getMonthValue.toString,
-            yearKey -> testDate.getYear.toString
+            yearKey  -> testDate.getYear.toString
           )
         ) shouldBe Right(testDate)
       }
@@ -366,9 +382,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         testFormatter.bind(
           testKey,
           Map(
-            dayKey -> "1",
+            dayKey   -> "1",
             monthKey -> "1",
-            yearKey -> "2000"
+            yearKey  -> "2000"
           )
         ) shouldBe Right(LocalDate.of(2000, 1, 1))
       }
@@ -379,9 +395,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         formatter.bind(
           testKey,
           Map(
-            dayKey -> "2",
+            dayKey   -> "2",
             monthKey -> "2",
-            yearKey -> "2001"
+            yearKey  -> "2001"
           )
         ) shouldBe Right(LocalDate.of(2001, 2, 2))
       }
@@ -389,9 +405,9 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
         formatter.bind(
           testKey,
           Map(
-            dayKey -> "30",
+            dayKey   -> "30",
             monthKey -> "1",
-            yearKey -> "1999"
+            yearKey  -> "1999"
           )
         ) shouldBe Right(LocalDate.of(1999, 1, 30))
       }
@@ -401,10 +417,11 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
   "testFormatter.unbind" must {
     "return a map with the correct day, month and year" in {
       testFormatter.unbind(testKey, testDate) shouldBe Map(
-        dayKey -> testDate.getDayOfMonth.toString,
+        dayKey   -> testDate.getDayOfMonth.toString,
         monthKey -> testDate.getMonthValue.toString,
-        yearKey -> testDate.getYear.toString
+        yearKey  -> testDate.getYear.toString
       )
     }
   }
+
 }

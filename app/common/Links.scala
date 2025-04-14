@@ -26,16 +26,14 @@ object Links {
   val contactInfo       = baseGovUrl + "contact-hmrc"
   val helpDesk          = baseGovUrl + "government/organisations/hm-revenue-customs/contact/online-services-helpdesk"
   val callCharges       = baseGovUrl + "call-charges"
-  val contactHMRC       = baseGovUrl + "government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 
-  val pensionValue      = baseGovUrl + "guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection"
+  val contactHMRC =
+    baseGovUrl + "government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
+
+  val pensionValue = baseGovUrl + "guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection"
 
   // Sidebar Read More link locations
-  val pensionsWorthBefore   = pensionValue + "#income-taken-from-pensions-before-6-april-2006"
-  val pensionsUsedBetween   = pensionValue + "#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
-  val currentPensions       = pensionValue + "#pensions-youve-not-taken-yet"
-
-
-
-
+  val pensionsWorthBefore = pensionValue + "#income-taken-from-pensions-before-6-april-2006"
+  val pensionsUsedBetween = pensionValue + "#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
+  val currentPensions     = pensionValue + "#pensions-youve-not-taken-yet"
 }

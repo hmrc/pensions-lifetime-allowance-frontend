@@ -26,8 +26,12 @@ trait PlaContext {
   def assetsUrl: String
 }
 
-class PlaContextImpl @Inject()(servicesConfig: ServicesConfig) extends PlaContext {
-  override def getPageHelpPartial()(messages: Messages): String = s"${servicesConfig.baseUrl("contact-frontend")}/contact/problem_reports"
+class PlaContextImpl @Inject() (servicesConfig: ServicesConfig) extends PlaContext {
 
-  override def assetsUrl: String = s"${servicesConfig.getString("assets.url")}${servicesConfig.getString("assets.version")}/"
+  override def getPageHelpPartial()(messages: Messages): String =
+    s"${servicesConfig.baseUrl("contact-frontend")}/contact/problem_reports"
+
+  override def assetsUrl: String =
+    s"${servicesConfig.getString("assets.url")}${servicesConfig.getString("assets.version")}/"
+
 }

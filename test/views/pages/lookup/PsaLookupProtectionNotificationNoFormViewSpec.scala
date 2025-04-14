@@ -22,14 +22,17 @@ import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupProtectionNotificationNoFormSpecMessages
 import views.html.pages.lookup.psa_lookup_protection_notification_no_form
 
-class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper with PsaLookupProtectionNotificationNoFormSpecMessages {
+class PsaLookupProtectionNotificationNoFormViewSpec
+    extends CommonViewSpecHelper
+    with PsaLookupProtectionNotificationNoFormSpecMessages {
 
   "The Psa Lookup Protection Notification No Form view" when {
 
     "provided with a form without errors" should {
-      lazy val form = PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "IP141000000000A"))
+      lazy val form =
+        PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "IP141000000000A"))
       lazy val view = application.injector.instanceOf[psa_lookup_protection_notification_no_form]
-      lazy val doc = Jsoup.parse(view.apply(form).body)
+      lazy val doc  = Jsoup.parse(view.apply(form).body)
 
       "have the correct title" in {
         doc.title() shouldBe titleText
@@ -43,14 +46,18 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
         doc.select("div.govuk-error-summary").size() shouldBe 0
       }
 
-      "have a form" which {
+      "have a form".which {
 
         "has the correct method" in {
           doc.select("form").attr("method") shouldBe "POST"
         }
 
         "has the correct action" in {
-          doc.select("form").attr("action") shouldBe controllers.routes.LookupProtectionNotificationController.submitProtectionNotificationNoForm.url
+          doc
+            .select("form")
+            .attr(
+              "action"
+            ) shouldBe controllers.routes.LookupProtectionNotificationController.submitProtectionNotificationNoForm.url
         }
       }
 
@@ -66,7 +73,7 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
         doc.select("input[type=text]").attr("value") shouldBe "IP141000000000A"
       }
 
-      "have a button" which {
+      "have a button".which {
 
         "has the correct text" in {
           doc.select("button.govuk-button").text() shouldBe buttonText
@@ -81,7 +88,7 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
     "provided with a form with errors" should {
       lazy val form = PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "A"))
       lazy val view = application.injector.instanceOf[psa_lookup_protection_notification_no_form]
-      lazy val doc = Jsoup.parse(view.apply(form).body)
+      lazy val doc  = Jsoup.parse(view.apply(form).body)
 
       "have an error summary" in {
         doc.select("div.govuk-error-summary").size() shouldBe 1
@@ -103,7 +110,7 @@ class PsaLookupProtectionNotificationNoFormViewSpec extends CommonViewSpecHelper
     "provided with an empty form" should {
       lazy val form = PSALookupProtectionNotificationNoForm.pnnForm
       lazy val view = application.injector.instanceOf[psa_lookup_protection_notification_no_form]
-      lazy val doc = Jsoup.parse(view.apply(form).body)
+      lazy val doc  = Jsoup.parse(view.apply(form).body)
 
       "not have an error summary" in {
         doc.select("div.govuk-error-summary").size() shouldBe 0

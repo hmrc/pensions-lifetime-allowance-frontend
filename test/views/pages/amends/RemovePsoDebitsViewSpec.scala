@@ -22,40 +22,43 @@ import testHelpers.ViewSpecHelpers.ip2016.RemovePsoDetailsViewMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.removePsoDebits
 
-class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages{
+class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetailsViewMessages {
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
-  "the RemovePsoDetailsView" should{
+  "the RemovePsoDetailsView" should {
     lazy val view = application.injector.instanceOf[removePsoDebits]
-    lazy val doc = Jsoup.parse(view.apply("ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply("ip2016", "open").body)
     lazy val form = doc.select("form")
 
-    "have the correct title" in{
+    "have the correct title" in {
       doc.title() shouldBe plaPsoDetailsTitleNew
     }
 
-    "have the right explanatory paragraph" in{
+    "have the right explanatory paragraph" in {
       doc.select("p").eq(0).text shouldBe plaPsoDetailsRemovePso
     }
 
-    "have the correct and properly formatted header"in{
+    "have the correct and properly formatted header" in {
       doc.select("h1.govuk-heading-xl").text shouldBe plaPsoDetailsTitle
     }
 
-    "have a valid form" in{
+    "have a valid form" in {
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsRemovePensionSharingOrderController.submitRemovePso("ip2016", "open").url
+      form.attr("action") shouldBe controllers.routes.AmendsRemovePensionSharingOrderController
+        .submitRemovePso("ip2016", "open")
+        .url
     }
 
-    "have a functional cancellation link" in{
+    "have a functional cancellation link" in {
       doc.select("#cancel-link").text shouldBe plaPsoDetailsCancelRemove
       doc.select("#cancel-link").attr("href") shouldBe plaAmendsPsoDetailsCancellationLink
     }
 
-    "have a remove button" in{
+    "have a remove button" in {
       doc.select(".govuk-button").text shouldBe plaBaseRemove
       doc.select(".govuk-button").attr("id") shouldBe "submit"
     }
   }
+
 }

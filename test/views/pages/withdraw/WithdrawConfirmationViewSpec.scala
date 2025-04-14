@@ -25,7 +25,7 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
 
   "Withdraw Confirmation view" when {
     lazy val view = application.injector.instanceOf[withdrawConfirmation]
-    lazy val doc = Jsoup.parse(view("IP2014").body)
+    lazy val doc  = Jsoup.parse(view("IP2014").body)
 
     s"have a title ${"pla.withdraw.confirmation.message"}" in {
       doc.title() shouldBe plaWithdrawConfirmationTitle(plaWithdrawProtectionIP2014label)
@@ -50,7 +50,9 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
       }
 
       "Other protections link href" in {
-        doc.select("#main-content > div > div > p:nth-child(3) > a").attr("href") shouldBe plaWithdrawConfirmationOtherProtectionsUrl
+        doc
+          .select("#main-content > div > div > p:nth-child(3) > a")
+          .attr("href") shouldBe plaWithdrawConfirmationOtherProtectionsUrl
 
       }
     }
@@ -66,7 +68,7 @@ class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawCon
       doc.select("#submit-survey-button").text() shouldBe plaWithdrawConfirmFeedbackLink
     }
     "feedback link href" in {
-      doc.select("#submit-survey-button").attr("href")  shouldBe plaWithdrawConfirmFeedbackUrl
+      doc.select("#submit-survey-button").attr("href") shouldBe plaWithdrawConfirmFeedbackUrl
     }
 
   }

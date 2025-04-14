@@ -18,24 +18,22 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class ApplyResponseModel (
-                                protection: ProtectionModel
-                                )
+case class ApplyResponseModel(
+    protection: ProtectionModel
+)
 
 object ApplyResponseModel {
   implicit val format: OFormat[ApplyResponseModel] = Json.format[ApplyResponseModel]
 }
 
-
-case class TransformedReadResponseModel (
-                               activeProtection: Option[ProtectionModel],
-                               inactiveProtections: Seq[ProtectionModel]
-                               )
+case class TransformedReadResponseModel(
+    activeProtection: Option[ProtectionModel],
+    inactiveProtections: Seq[ProtectionModel]
+)
 
 object TransformedReadResponseModel {
   implicit val format: OFormat[TransformedReadResponseModel] = Json.format[TransformedReadResponseModel]
 }
-
 
 case class ReadResponseModel(psaCheckReference: String, lifetimeAllowanceProtections: Seq[ProtectionModel])
 
@@ -43,9 +41,9 @@ object ReadResponseModel {
   implicit val format: OFormat[ReadResponseModel] = Json.format[ReadResponseModel]
 }
 
-case class AmendResponseModel (
-                              protection: ProtectionModel
-                                )
+case class AmendResponseModel(
+    protection: ProtectionModel
+)
 
 object AmendResponseModel {
   implicit val format: OFormat[AmendResponseModel] = Json.format[AmendResponseModel]

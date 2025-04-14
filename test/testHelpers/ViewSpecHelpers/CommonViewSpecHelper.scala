@@ -26,17 +26,18 @@ import play.api.test.FakeRequest
 import testHelpers.FakeApplication
 import uk.gov.hmrc.http.client.HttpClientV2
 
-
 trait CommonViewSpecHelper extends FakeApplication with CommonMessages with MockitoSugar {
 
-  implicit val application: Application = fakeApplication()
-  val http = mock[HttpClientV2]
-  val sessionCookieCryptoFilterWrapper = mock[SessionCookieCryptoFilterWrapper]
+  implicit val application: Application                  = fakeApplication()
+  val http                                               = mock[HttpClientV2]
+  val sessionCookieCryptoFilterWrapper                   = mock[SessionCookieCryptoFilterWrapper]
   implicit lazy val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockMessage: Messages = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+
+  implicit val mockMessage: Messages =
+    fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+
   implicit val plaContext: PlaContext = mock[PlaContext]
 
 }
-

@@ -30,21 +30,25 @@ class ApplicationStageSpec extends AnyFlatSpec with Matchers {
   it should "return Some(PensionsTakenBetween)" in {
     fromString("pensionstakenbetween") shouldBe Some(PensionsTakenBetween)
   }
+
   it should "return Some(OverseasPensions)" in {
     fromString("overseaspensions") shouldBe Some(OverseasPensions)
   }
+
   it should "return Some(CurrentPensions)" in {
     fromString("currentpensions") shouldBe Some(CurrentPensions)
   }
+
   it should "return Some(PreviousPsos)" in {
     fromString("previouspsos") shouldBe Some(PreviousPsos)
   }
+
   it should "return Some(CurrentPsos)" in {
     fromString("currentpsos") shouldBe Some(CurrentPsos)
   }
+
   it should "return None" in {
     fromString("") shouldBe None
   }
-
 
 }

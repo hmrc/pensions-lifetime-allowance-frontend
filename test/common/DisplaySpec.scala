@@ -28,7 +28,7 @@ import java.util.Locale
 class DisplaySpec extends FakeApplication with MockitoSugar {
 
   implicit val mockMessages: Messages = mock[Messages]
-  val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi
+  val mockMCC                         = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi
 
   "currencyDisplayString" should {
 
@@ -63,15 +63,16 @@ class DisplaySpec extends FakeApplication with MockitoSugar {
       "lang is set to en" in {
 
         val (lang, messsage) = createLangMessages(Locale.ENGLISH)
-        val tstDate = LocalDate.of(2018, 4, 17)
+        val tstDate          = LocalDate.of(2018, 4, 17)
         dateDisplayString(tstDate)(lang, messsage) shouldBe "17 April 2018"
       }
 
       "lang is set to cy" in {
         val (lang, messsage) = createLangMessages(Locale.forLanguageTag("cy"))
-        val tstDate = LocalDate.of(2018, 4, 17)
+        val tstDate          = LocalDate.of(2018, 4, 17)
         dateDisplayString(tstDate)(lang, messsage) shouldBe "17 Ebrill 2018"
       }
     }
   }
+
 }

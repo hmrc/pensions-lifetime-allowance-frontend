@@ -17,6 +17,11 @@
 package testHelpers.ViewSpecHelpers.ip2016
 
 trait PensionsTakenViewMessages {
-  val plaPensionsTakenTitle = "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension? - Check your pension protections - GOV.UK"
-  val plaPensionsTakenLegendText = "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?"
+
+  val plaPensionsTakenTitle =
+    "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension? - Check your pension protections - GOV.UK"
+
+  val plaPensionsTakenLegendText =
+    "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?"
+
 }

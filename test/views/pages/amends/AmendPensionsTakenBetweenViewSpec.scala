@@ -23,60 +23,73 @@ import testHelpers.ViewSpecHelpers.ip2016.{PensionsTakenBetweenViewMessages, Pen
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendPensionsTakenBetween
 
-class AmendPensionsTakenBetweenViewSpec extends CommonViewSpecHelper with PensionsTakenBetweenViewMessages with PensionsUsedBetweenViewMessages {
+class AmendPensionsTakenBetweenViewSpec
+    extends CommonViewSpecHelper
+    with PensionsTakenBetweenViewMessages
+    with PensionsUsedBetweenViewMessages {
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the AmendPensionsTakenBetweenView" should {
-    val pensionsForm = AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm("ip2016").bind(Map("amendedPensionsTakenBetween" -> "yes",
-                                                                                            "amendedPensionsTakenBetweenAmt" -> "12345"))
+    val pensionsForm = AmendPensionsTakenBetweenForm
+      .amendPensionsTakenBetweenForm("ip2016")
+      .bind(Map("amendedPensionsTakenBetween" -> "yes", "amendedPensionsTakenBetweenAmt" -> "12345"))
     lazy val view = application.injector.instanceOf[amendPensionsTakenBetween]
-    lazy val doc = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
-    val errorForm =  AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm("ip2016").bind(Map("amendedPensionsTakenBetween" -> "",
-      "amendedPensionsTakenBetweenAmt" -> "12345",
-      "protectionType" -> "ip2016",
-      "status" -> "open"))
+    val errorForm = AmendPensionsTakenBetweenForm
+      .amendPensionsTakenBetweenForm("ip2016")
+      .bind(
+        Map(
+          "amendedPensionsTakenBetween"    -> "",
+          "amendedPensionsTakenBetweenAmt" -> "12345",
+          "protectionType"                 -> "ip2016",
+          "status"                         -> "open"
+        )
+      )
     lazy val errorView = application.injector.instanceOf[amendPensionsTakenBetween]
-    lazy val errorDoc = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
-    "have the correct title" in{
+    "have the correct title" in {
       doc.title() shouldBe plaPensionsTakenBetweenTitleNew
     }
 
-    "have the correct and properly formatted header"in{
+    "have the correct and properly formatted header" in {
       doc.select("h1.govuk-heading-l").text shouldBe plaPensionsTakenBetweenTitle
     }
 
-    "have a valid form" in{
+    "have a valid form" in {
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween("ip2016", "open").url
+      form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController
+        .submitAmendPensionsTakenBetween("ip2016", "open")
+        .url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBetweenLegendText
     }
 
-    "have a pair of yes/no buttons" in{
+    "have a pair of yes/no buttons" in {
       doc.select("[for=amendedPensionsTakenBetween]").text shouldBe plaBaseYes
       doc.select("input#amendedPensionsTakenBetween").attr("type") shouldBe "radio"
       doc.select("[for=amendedPensionsTakenBetween-2]").text shouldBe plaBaseNo
       doc.select("input#amendedPensionsTakenBetween-2").attr("type") shouldBe "radio"
     }
 
-    "have a continue button" in{
+    "have a continue button" in {
       doc.select(".govuk-button").text shouldBe plaBaseChange
       doc.select(".govuk-button").attr("id") shouldBe "submit"
     }
 
-    "display the correct errors appropriately" in{
+    "display the correct errors appropriately" in {
       errorForm.hasErrors shouldBe true
       errorDoc.select(".govuk-error-summary__title").text shouldBe plaBaseErrorSummaryLabel
       errorDoc.select(".govuk-error-message").text shouldBe s"Error: $plaMandatoryError"
     }
 
-    "not have errors on valid pages" in{
+    "not have errors on valid pages" in {
       pensionsForm.hasErrors shouldBe false
       doc.select(".govuk-error-message").text shouldBe ""
     }
   }
+
 }

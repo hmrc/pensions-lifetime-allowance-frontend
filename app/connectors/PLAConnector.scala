@@ -32,34 +32,36 @@ import uk.gov.hmrc.http.client.HttpClientV2
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class PLAConnector @Inject()(appConfig: FrontendAppConfig,
-                                http: HttpClientV2) extends Logging{
+class PLAConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2) extends Logging {
 
   val serviceUrl: String = appConfig.servicesConfig.baseUrl("pensions-lifetime-allowance")
 
-  implicit val hc: HeaderCarrier = HeaderCarrier().withExtraHeaders("Accept" -> "application/vnd.hmrc.1.0+json", "Content-Type" -> "application/json")
-
+  implicit val hc: HeaderCarrier =
+    HeaderCarrier().withExtraHeaders("Accept" -> "application/vnd.hmrc.1.0+json", "Content-Type" -> "application/json")
 
   implicit val readApiResponse: HttpReads[HttpResponse] = new HttpReads[HttpResponse] {
-    def read(method: String, url: String, response: HttpResponse) = ResponseHandler.handlePLAResponse(method, url, response)
+    def read(method: String, url: String, response: HttpResponse) =
+      ResponseHandler.handlePLAResponse(method, url, response)
   }
 
   def applyFP16(nino: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val requestJson: JsValue = Json.parse("""{"protectionType":"FP2016"}""")
-    val url = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
+    val url                  = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
     http
       .post(url"$url")
       .withBody(Json.toJson(requestJson))
       .execute[HttpResponse]
   }
 
-  protected val roundDown = of[JsNumber].map { case JsNumber(n) => JsNumber(n.setScale(2, BigDecimal.RoundingMode.DOWN)) }
+  protected val roundDown = of[JsNumber].map { case JsNumber(n) =>
+    JsNumber(n.setScale(2, BigDecimal.RoundingMode.DOWN))
+  }
 
   protected def getProperties(cc: AnyRef): Map[String, Any] = cc.getClass.getDeclaredFields
     .foldLeft(Map[String, Any]()) { (a, f) =>
-    f.setAccessible(true)
-    a + (f.getName -> f.get(cc))
-  }
+      f.setAccessible(true)
+      a + (f.getName -> f.get(cc))
+    }
 
   protected def getReads(fields: List[Symbol], props: Map[String, Any]) = {
     val t = (__ \ Symbol("amount")).json.update(roundDown)
@@ -68,7 +70,10 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
         value match {
           case Some(_) =>
             s.name match {
-              case "pensionDebits" => Some((__ \ s).json.update(of[JsArray].map { case JsArray(arr) => JsArray(arr.map(item => item.transform(t).get)) }))
+              case "pensionDebits" =>
+                Some((__ \ s).json.update(of[JsArray].map { case JsArray(arr) =>
+                  JsArray(arr.map(item => item.transform(t).get))
+                }))
               case _ => Some((__ \ s).json.update(roundDown))
             }
           case _ => None
@@ -78,33 +83,51 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
   }
 
   protected def transformer(application: IPApplicationModel) = {
-    val fields = List(Symbol("uncrystallisedRights"), Symbol("preADayPensionInPayment"), Symbol("postADayBenefitCrystallisationEvents"), Symbol("nonUKRights"), Symbol("pensionDebits"))
+    val fields = List(
+      Symbol("uncrystallisedRights"),
+      Symbol("preADayPensionInPayment"),
+      Symbol("postADayBenefitCrystallisationEvents"),
+      Symbol("nonUKRights"),
+      Symbol("pensionDebits")
+    )
     val jsonTransformerList = getReads(fields, getProperties(application))
-    jsonTransformerList.filter(_.isDefined).foldLeft((__ \ Symbol("relevantAmount")).json.update(roundDown)) { (combined, reads) =>
-      combined andThen reads.get
+    jsonTransformerList.filter(_.isDefined).foldLeft((__ \ Symbol("relevantAmount")).json.update(roundDown)) {
+      (combined, reads) => combined.andThen(reads.get)
     }
   }
 
   protected def transformer(model: ProtectionModel) = {
-    val fields = List(Symbol("protectedAmount"), Symbol("relevantAmount"), Symbol("postADayBenefitCrystallisationEvents"), Symbol("preADayPensionInPayment"),
-      Symbol("uncrystallisedRights"), Symbol("nonUKRights"), Symbol("pensionDebitAmount"), Symbol("pensionDebitEnteredAmount"),
-      Symbol("pensionDebitTotalAmount"), Symbol("pensionDebits"))
+    val fields = List(
+      Symbol("protectedAmount"),
+      Symbol("relevantAmount"),
+      Symbol("postADayBenefitCrystallisationEvents"),
+      Symbol("preADayPensionInPayment"),
+      Symbol("uncrystallisedRights"),
+      Symbol("nonUKRights"),
+      Symbol("pensionDebitAmount"),
+      Symbol("pensionDebitEnteredAmount"),
+      Symbol("pensionDebitTotalAmount"),
+      Symbol("pensionDebits")
+    )
     val jsonTransformerList = getReads(fields, getProperties(model))
 
     val list = jsonTransformerList.filter(_.isDefined)
     val r: Reads[JsObject] = list.size match {
-      case 0 => (__).json.pickBranch
+      case 0 => __.json.pickBranch
       case 1 => list.head.get
-      case _ => list.drop(1).foldLeft(list.head.get) { (combined, reads) => combined andThen reads.get }
+      case _ => list.drop(1).foldLeft(list.head.get)((combined, reads) => combined.andThen(reads.get))
     }
     r
   }
 
-  def applyIP14(nino: String, userData: CacheMap)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+  def applyIP14(
+      nino: String,
+      userData: CacheMap
+  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     implicit val protectionType = ApplicationType.IP2014
-    val application = IPApplicationConstructor.createIPApplication(userData)
-    val requestJson: JsValue = Json.toJson[IPApplicationModel](application)
-    val url = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
+    val application             = IPApplicationConstructor.createIPApplication(userData)
+    val requestJson: JsValue    = Json.toJson[IPApplicationModel](application)
+    val url                     = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
     http
       .post(url"$url")
       .withBody(Json.toJson(requestJson))
@@ -118,11 +141,16 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
       .execute[HttpResponse]
   }
 
-  def amendProtection(nino: String, protection: ProtectionModel)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    val id = protection.protectionID.getOrElse(throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino))
+  def amendProtection(
+      nino: String,
+      protection: ProtectionModel
+  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+    val id = protection.protectionID.getOrElse(
+      throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino)
+    )
     val requestJson = Json.toJson[ProtectionModel](protection)
-    val body = requestJson.transform(transformer(protection)).get
-    val url =s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id"
+    val body        = requestJson.transform(transformer(protection)).get
+    val url         = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id"
     logger.info(body.toString)
     http
       .put(url"$url")
@@ -130,25 +158,28 @@ class PLAConnector @Inject()(appConfig: FrontendAppConfig,
       .execute[HttpResponse]
   }
 
-  def psaLookup(psaRef: String, ltaRef: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+  def psaLookup(
+      psaRef: String,
+      ltaRef: String
+  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
     val url = s"$serviceUrl/protect-your-lifetime-allowance/psalookup/$psaRef/$ltaRef"
     http
       .get(url"$url")
       .execute[HttpResponse]
   }
-}
-
-object ResponseHandler extends ResponseHandler {
 
 }
+
+object ResponseHandler extends ResponseHandler {}
 
 trait ResponseHandler extends HttpErrorFunctions {
-  def handlePLAResponse(method: String, url: String, response: HttpResponse): HttpResponse = {
+
+  def handlePLAResponse(method: String, url: String, response: HttpResponse): HttpResponse =
     response.status match {
       case 409 => response // this is an expected response for this API, so don't throw an exception
       case 423 => response // this is a possible response for this API that must be handled separately, so don't throw an exception
       case 404 => throw UpstreamErrorResponse(response.body, 404, 404) // this is a possible response for this API that must be handled separately, so don't throw an exception
       case _ => handleResponseEither(method, url)(response).getOrElse(response)
     }
-  }
+
 }

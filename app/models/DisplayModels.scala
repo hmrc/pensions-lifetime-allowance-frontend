@@ -20,78 +20,83 @@ import enums.ApplicationType
 import play.api.mvc.Call
 
 case class SuccessDisplayModel(
-                                protectionType: ApplicationType.Value,
-                                notificationId: String, protectedAmount: String,
-                                printable: Boolean,
-                                details: Option[ProtectionDetailsDisplayModel],
-                                additionalInfo: Seq[String]
-                                )
+    protectionType: ApplicationType.Value,
+    notificationId: String,
+    protectedAmount: String,
+    printable: Boolean,
+    details: Option[ProtectionDetailsDisplayModel],
+    additionalInfo: Seq[String]
+)
 
 case class RejectionDisplayModel(
-                                  notificationId: String,
-                                  additionalInfo: Seq[String],
-                                  protectionType: ApplicationType.Value
-                                  )
+    notificationId: String,
+    additionalInfo: Seq[String],
+    protectionType: ApplicationType.Value
+)
 
 case class ProtectionDetailsDisplayModel(
-                                          protectionReference: Option[String],
-                                          psaReference: String,
-                                          applicationDate: Option[String]
-                                          )
-
+    protectionReference: Option[String],
+    psaReference: String,
+    applicationDate: Option[String]
+)
 
 case class ExistingProtectionDisplayModel(
-                                   protectionType: String,
-                                   status: String,
-                                   amendCall: Option[Call],
-                                   psaCheckReference: Option[String],
-                                   protectionReference: String,
-                                   protectedAmount: Option[String],
-                                   certificateDate: Option[String],
-                                   withdrawnDate:Option[String] =None
-                                   )
-
+    protectionType: String,
+    status: String,
+    amendCall: Option[Call],
+    psaCheckReference: Option[String],
+    protectionReference: String,
+    protectedAmount: Option[String],
+    certificateDate: Option[String],
+    withdrawnDate: Option[String] = None
+)
 
 case class ExistingProtectionsDisplayModel(
-                                            activeProtection: Option[ExistingProtectionDisplayModel],
-                                            otherProtections: Seq[ExistingProtectionDisplayModel]
-                                            )
+    activeProtection: Option[ExistingProtectionDisplayModel],
+    otherProtections: Seq[ExistingProtectionDisplayModel]
+)
 
+case class PrintDisplayModel(
+    firstName: String,
+    surname: String,
+    nino: String,
+    protectionType: String,
+    status: String,
+    psaCheckReference: String,
+    protectionReference: String,
+    protectedAmount: Option[String],
+    certificateDate: Option[String]
+)
 
-case class PrintDisplayModel (
-                                firstName: String, surname: String,
-                                nino: String,
-                                protectionType: String,
-                                status: String,
-                                psaCheckReference: String,
-                                protectionReference: String,
-                                protectedAmount: Option[String],
-                                certificateDate: Option[String]
-                               )
+case class AmendDisplayModel(
+    protectionType: String,
+    amended: Boolean,
+    pensionContributionSections: Seq[AmendDisplaySectionModel],
+    psoAdded: Boolean,
+    psoSections: Seq[AmendDisplaySectionModel],
+    totalAmount: String
+)
 
-case class AmendDisplayModel (
-                             protectionType: String,
-                             amended: Boolean,
-                             pensionContributionSections: Seq[AmendDisplaySectionModel],
-                             psoAdded: Boolean,
-                             psoSections : Seq[AmendDisplaySectionModel],
-                             totalAmount: String
-                               )
+case class AmendDisplaySectionModel(
+    sectionId: String,
+    rows: Seq[AmendDisplayRowModel]
+)
 
-case class AmendDisplaySectionModel (
-                                    sectionId: String,
-                                    rows: Seq[AmendDisplayRowModel]
-                                      )
+case class AmendDisplayRowModel(
+    rowId: String,
+    changeLinkCall: Option[Call],
+    removeLinkCall: Option[Call],
+    displayValue: String*
+)
 
-case class AmendDisplayRowModel(rowId: String, changeLinkCall: Option[Call], removeLinkCall: Option[Call], displayValue: String*)
+case class ActiveAmendResultDisplayModel(
+    protectionType: ApplicationType.Value,
+    notificationId: String,
+    protectedAmount: String,
+    details: Option[ProtectionDetailsDisplayModel]
+)
 
-case class ActiveAmendResultDisplayModel (
-                                         protectionType: ApplicationType.Value,
-                                         notificationId: String, protectedAmount: String,
-                                         details: Option[ProtectionDetailsDisplayModel]
-                                           )
-
-case class InactiveAmendResultDisplayModel (
-                                           notificationId: String,
-                                           additionalInfo: Seq[String]
-                                           )
+case class InactiveAmendResultDisplayModel(
+    notificationId: String,
+    additionalInfo: Seq[String]
+)

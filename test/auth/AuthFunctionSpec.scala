@@ -16,10 +16,10 @@
 
 package auth
 
-import org.apache.pekko.stream.Materializer
-import org.apache.pekko.actor.ActorSystem
 import config.{FrontendAppConfig, PlaContext}
 import mocks.AuthMock
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -32,26 +32,29 @@ import play.api.{Environment, Mode}
 import testHelpers.{FakeApplication, SessionCacheTestHelper}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
-
-import java.net.URLEncoder
 import views.html.pages.fallback.technicalError
 
+import java.net.URLEncoder
 import scala.concurrent.{ExecutionContext, Future}
 
-class AuthFunctionSpec extends FakeApplication
-  with MockitoSugar
-  with SessionCacheTestHelper
-  with BeforeAndAfterEach
-  with AuthMock {
+class AuthFunctionSpec
+    extends FakeApplication
+    with MockitoSugar
+    with SessionCacheTestHelper
+    with BeforeAndAfterEach
+    with AuthMock {
 
-  implicit val system: ActorSystem                        = ActorSystem()
-  implicit val materializer:Materializer                  = mock[Materializer]
-  implicit val mockAppConfig: FrontendAppConfig           = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext                 = mock[PlaContext]
-  implicit val hc: HeaderCarrier                          = HeaderCarrier()
+  implicit val system: ActorSystem              = ActorSystem()
+  implicit val materializer: Materializer       = mock[Materializer]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
+  implicit val hc: HeaderCarrier                = HeaderCarrier()
 
-  val mockPlayAuthConnector                 = mock[PlayAuthConnector]
-  implicit val mockMessages: Messages       = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  val mockPlayAuthConnector = mock[PlayAuthConnector]
+
+  implicit val mockMessages: Messages =
+    fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+
   val mockEnv: Environment                  = mock[Environment]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
@@ -63,15 +66,15 @@ class AuthFunctionSpec extends FakeApplication
 
   class TestAuthFunction extends AuthFunction {
 
-    lazy val plaContext: PlaContext       = mockPlaContext
-    lazy val appConfig: FrontendAppConfig = mockAppConfig
-    override lazy val authConnector       = mockAuthConnector
+    lazy val plaContext: PlaContext                               = mockPlaContext
+    lazy val appConfig: FrontendAppConfig                         = mockAppConfig
+    override lazy val authConnector                               = mockAuthConnector
     override def upliftEnvironmentUrl(requestUri: String): String = requestUri
-    override implicit val technicalError: technicalError = app.injector.instanceOf[technicalError]
-    override implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+    override implicit val technicalError: technicalError          = app.injector.instanceOf[technicalError]
+    override implicit val ec: ExecutionContext                    = app.injector.instanceOf[ExecutionContext]
   }
 
-  lazy val requestUrl = "http://www.pla-frontend.gov.uk/ip16-start-page"
+  lazy val requestUrl  = "http://www.pla-frontend.gov.uk/ip16-start-page"
   lazy val fakeRequest = FakeRequest(GET, requestUrl)
 
   "In AuthFunction calling the genericAuthWithoutNino action" when {
@@ -79,8 +82,12 @@ class AuthFunctionSpec extends FakeApplication
 
       "execute the body" in {
         val authFunction = new TestAuthFunction
-        mockAuthConnector(Future.successful({}))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(Ok("Test body")))(fakeRequest, mockMessages, hc)
+        mockAuthConnector(Future.successful {})
+        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(Ok("Test body")))(
+          fakeRequest,
+          mockMessages,
+          hc
+        )
         status(result) shouldBe 200
         contentAsString(result) shouldBe "Test body"
       }
@@ -92,16 +99,26 @@ class AuthFunctionSpec extends FakeApplication
         val authFunction = new TestAuthFunction
         when(mockEnv.mode).thenReturn(Mode.Test)
         mockAuthConnector(Future.failed(new InsufficientConfidenceLevel("")))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(
+          fakeRequest,
+          mockMessages,
+          hc
+        )
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised")
+        redirectLocation(result) shouldBe Some(
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised"
+        )
       }
 
       "return a 500 on an unexpected authorisation exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new InternalError("")))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(Ok("Test body")))(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(Ok("Test body")))(
+          fakeRequest,
+          mockMessages,
+          hc
+        )
 
         status(result) shouldBe 500
       }
@@ -109,19 +126,31 @@ class AuthFunctionSpec extends FakeApplication
       "redirect to IV uplift page on an insufficient enrolments exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new InsufficientEnrolments("")))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(
+          fakeRequest,
+          mockMessages,
+          hc
+        )
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised")
+        redirectLocation(result) shouldBe Some(
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised"
+        )
       }
 
       "redirect to gg login page on an no active session exception" in {
         val authFunction = new TestAuthFunction
         mockAuthConnector(Future.failed(new SessionRecordNotFound))
-        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(fakeRequest, mockMessages, hc)
+        val result = authFunction.genericAuthWithoutNino("IP2016")(Future.successful(InternalServerError("Test body")))(
+          fakeRequest,
+          mockMessages,
+          hc
+        )
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ggSignInUrl}?continue=${URLEncoder.encode(requestUrl, "UTF-8")}&origin=${mockAppConfig.appName}")
+        redirectLocation(result) shouldBe Some(
+          s"${mockAppConfig.ggSignInUrl}?continue=${URLEncoder.encode(requestUrl, "UTF-8")}&origin=${mockAppConfig.appName}"
+        )
       }
     }
   }
@@ -147,7 +176,9 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised")
+        redirectLocation(result) shouldBe Some(
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised"
+        )
       }
 
       "return a 500 on an unexpected authorisation exception" in {
@@ -164,7 +195,9 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ivUpliftUrl}?"+"origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised")
+        redirectLocation(result) shouldBe Some(
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised"
+        )
       }
 
       "redirect to gg login page on an no active session exception" in {
@@ -173,7 +206,9 @@ class AuthFunctionSpec extends FakeApplication
         val result = authFunction.genericAuthWithNino("IP2016")(body)(fakeRequest, mockMessages, hc)
 
         status(result) shouldBe 303
-        redirectLocation(result) shouldBe Some(s"${mockAppConfig.ggSignInUrl}?continue=${URLEncoder.encode(requestUrl, "UTF-8")}&origin=${mockAppConfig.appName}")
+        redirectLocation(result) shouldBe Some(
+          s"${mockAppConfig.ggSignInUrl}?continue=${URLEncoder.encode(requestUrl, "UTF-8")}&origin=${mockAppConfig.appName}"
+        )
       }
     }
   }

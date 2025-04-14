@@ -24,7 +24,7 @@ import views.html.pages.ip2016.withdrawnAP2016
 
 class WithdrawnAP2016ViewSpec extends CommonViewSpecHelper {
 
-  lazy val view: withdrawnAP2016 = app.injector.instanceOf[withdrawnAP2016]
+  lazy val view: withdrawnAP2016       = app.injector.instanceOf[withdrawnAP2016]
   implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   lazy val doc: Document = Jsoup.parse(view()(fakeRequest, messages).body)
@@ -51,4 +51,5 @@ class WithdrawnAP2016ViewSpec extends CommonViewSpecHelper {
       link.text() shouldBe messages("pla.withdrawn.ap2016.paraOne.linkText")
     }
   }
+
 }

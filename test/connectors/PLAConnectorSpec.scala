@@ -35,54 +35,70 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class PLAConnectorSpec extends FakeApplication with MockitoSugar with ScalaCheckDrivenPropertyChecks with BeforeAndAfterEach {
+class PLAConnectorSpec
+    extends FakeApplication
+    with MockitoSugar
+    with ScalaCheckDrivenPropertyChecks
+    with BeforeAndAfterEach {
 
-  val mockEnv       = mock[Environment]
-  val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  val mockHttp      = mock[HttpClientV2]
+  val mockEnv                                     = mock[Environment]
+  val mockAppConfig                               = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  val mockHttp                                    = mock[HttpClientV2]
   implicit val executionContext: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
 
   class Setup {
     val connector = new PLAConnector(mockAppConfig, mockHttp)
   }
 
-  val validApplyFP16Json = """{"protectionType":"FP2016"}"""
-  val nino = "AB999999C"
-  val tstId = "testUserID"
-  val psaRef = "testPSARef"
-  val ltaRef = "testLTARef"
+  val validApplyFP16Json             = """{"protectionType":"FP2016"}"""
+  val nino                           = "AB999999C"
+  val tstId                          = "testUserID"
+  val psaRef                         = "testPSARef"
+  val ltaRef                         = "testLTARef"
   val requestBuilder: RequestBuilder = mock[RequestBuilder]
 
-
-  val negativePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
+  val negativePensionsTakenTuple    = "pensionsTaken"    -> Json.toJson(PensionsTakenModel(Some("no")))
   val negativeOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
-  val validCurrentPensionsTuple = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
-  val negativePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
+  val validCurrentPensionsTuple     = "currentPensions"  -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
+  val negativePensionDebitsTuple    = "pensionDebits"    -> Json.toJson(PensionDebitsModel(Some("no")))
 
   val negativeIP14PensionsTakenTuple = "ip14PensionsTaken" -> Json.toJson(PensionsTakenModel(Some("no")))
-  val validIP14PensionUsedBetweenTuple = "ip14PensionsUsedBetween" -> Json.toJson(PensionsUsedBetweenModel(Some(BigDecimal(1001))))
+
+  val validIP14PensionUsedBetweenTuple =
+    "ip14PensionsUsedBetween" -> Json.toJson(PensionsUsedBetweenModel(Some(BigDecimal(1001))))
+
   val negativeIP14OverseasPensionsTuple = "ip14OverseasPensions" -> Json.toJson(OverseasPensionsModel("no", None))
   val validIP14CurrentPensionsTuple = "ip14CurrentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001))))
-  val negativeIP14PensionDebitsTuple =  "ip14PensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
+  val negativeIP14PensionDebitsTuple = "ip14PensionDebits" -> Json.toJson(PensionDebitsModel(Some("no")))
 
-  val positivePensionsTakenTuple = "pensionsTaken" -> Json.toJson(PensionsTakenModel(Some("yes")))
+  val positivePensionsTakenTuple       = "pensionsTaken"       -> Json.toJson(PensionsTakenModel(Some("yes")))
   val positivePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("yes"))
   val negativePensionsTakenBeforeTuple = "pensionsTakenBefore" -> Json.toJson(PensionsTakenBeforeModel("no"))
-  val validPensionsWorthBeforeTuple = "pensionsWorthBefore" -> Json.toJson(PensionsWorthBeforeModel(Some(BigDecimal(1000.1234567891))))
+
+  val validPensionsWorthBeforeTuple =
+    "pensionsWorthBefore" -> Json.toJson(PensionsWorthBeforeModel(Some(BigDecimal(1000.1234567891))))
+
   val positivePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("yes"))
   val negativePensionsTakenBetweenTuple = "pensionsTakenBetween" -> Json.toJson(PensionsTakenBetweenModel("no"))
-  val validPensionUsedBetweenTuple = "pensionsUsedBetween" -> Json.toJson(PensionsUsedBetweenModel(Some(BigDecimal(1001))))
 
-  val positiveOverseasPensionsTuple = "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010.1234567891))))
-  val validCurrentPensionsTuple2 = "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001.1234567891))))
-  val positivePensionDebitsTuple =  "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
-  val psoDetailsTuple = "psoDetails" -> Json.toJson(PSODetailsModel(LocalDate.of(2016, 2, 1), Some(BigDecimal(10000.1234567891))))
+  val validPensionUsedBetweenTuple =
+    "pensionsUsedBetween" -> Json.toJson(PensionsUsedBetweenModel(Some(BigDecimal(1001))))
+
+  val positiveOverseasPensionsTuple =
+    "overseasPensions" -> Json.toJson(OverseasPensionsModel("yes", Some(BigDecimal(1010.1234567891))))
+
+  val validCurrentPensionsTuple2 =
+    "currentPensions" -> Json.toJson(CurrentPensionsModel(Some(BigDecimal(1001.1234567891))))
+
+  val positivePensionDebitsTuple = "pensionDebits" -> Json.toJson(PensionDebitsModel(Some("yes")))
+
+  val psoDetailsTuple =
+    "psoDetails" -> Json.toJson(PSODetailsModel(LocalDate.of(2016, 2, 1), Some(BigDecimal(10000.1234567891))))
 
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  override def beforeEach() =  {
+  override def beforeEach() =
     reset(mockHttp)
-  }
 
   "Calling applyFP16" should {
     "should return a 200 from a valid apply FP16 request" in new Setup {
@@ -103,11 +119,16 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with ScalaCheck
       when(requestBuilder.execute[HttpResponse](any, any))
         .thenReturn(Future.successful(HttpResponse(OK, "")))
 
-      val tstMap = CacheMap(tstId, Map(negativeIP14PensionsTakenTuple,
-                                      negativeIP14OverseasPensionsTuple,
-                                      validIP14CurrentPensionsTuple,
-                                      validIP14PensionUsedBetweenTuple,
-                                      negativeIP14PensionDebitsTuple))
+      val tstMap = CacheMap(
+        tstId,
+        Map(
+          negativeIP14PensionsTakenTuple,
+          negativeIP14OverseasPensionsTuple,
+          validIP14CurrentPensionsTuple,
+          validIP14PensionUsedBetweenTuple,
+          negativeIP14PensionDebitsTuple
+        )
+      )
       val response = connector.applyIP14(nino, tstMap)
 
       await(response).status shouldBe OK
@@ -133,7 +154,8 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with ScalaCheck
         status = Some("dormant"),
         certificateDate = Some("2016-04-17"),
         protectedAmount = Some(1250000),
-        protectionReference = Some("PSA123456"))
+        protectionReference = Some("PSA123456")
+      )
 
       val response = connector.amendProtection(nino, protectionModel)
 
@@ -185,7 +207,8 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with ScalaCheck
         status = Some("dormant"),
         certificateDate = Some("2016-04-17"),
         protectedAmount = Some(1250000.1234567891),
-        protectionReference = Some("PSA123456"))
+        protectionReference = Some("PSA123456")
+      )
 
       val response = connector.amendProtection(nino, protectionModel)
 
@@ -210,7 +233,8 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with ScalaCheck
         status = Some("dormant"),
         certificateDate = Some("2016-04-17"),
         protectedAmount = None,
-        protectionReference = Some("PSA123456"))
+        protectionReference = Some("PSA123456")
+      )
 
       val response = connector.amendProtection(nino, protectionModel)
 
@@ -235,7 +259,8 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with ScalaCheck
         status = Some("dormant"),
         certificateDate = Some("2016-04-17"),
         protectedAmount = Some(1250000.1234567891),
-        protectionReference = Some("PSA123456"))
+        protectionReference = Some("PSA123456")
+      )
 
       val response = connector.amendProtection(nino, protectionModel)
 
@@ -264,16 +289,17 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with ScalaCheck
 
     "return the response upon handling a response" when {
 
-      s"status code of the response any 4xx/5xx code other than $CONFLICT or $LOCKED" in {
-
-        forAll(Gen.oneOf(BAD_REQUEST to NETWORK_AUTHENTICATION_REQUIRED)
-          .suchThat(code => code != CONFLICT && code != LOCKED)) { code =>
+      s"status code of the response any 4xx/5xx code other than $CONFLICT or $LOCKED" in
+        forAll(
+          Gen
+            .oneOf(BAD_REQUEST to NETWORK_AUTHENTICATION_REQUIRED)
+            .suchThat(code => code != CONFLICT && code != LOCKED)
+        ) { code =>
           val response = HttpResponse(code, validApplyFP16Json)
-          val result = ResponseHandler.handlePLAResponse("GET", "/foo", response)
+          val result   = ResponseHandler.handlePLAResponse("GET", "/foo", response)
 
           result shouldBe response
         }
-      }
     }
 
     "throw and UpstreamErrorResponse" when {
@@ -286,4 +312,5 @@ class PLAConnectorSpec extends FakeApplication with MockitoSugar with ScalaCheck
       }
     }
   }
+
 }

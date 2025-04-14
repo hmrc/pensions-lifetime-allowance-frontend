@@ -23,7 +23,7 @@ import testHelpers.FakeApplication
 
 import javax.inject.Inject
 
-class PSARefFormSpec @Inject()(implicit val messages: Messages) extends FakeApplication {
+class PSARefFormSpec @Inject() (implicit val messages: Messages) extends FakeApplication {
 
   private val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm
 
@@ -53,8 +53,11 @@ class PSARefFormSpec @Inject()(implicit val messages: Messages) extends FakeAppl
       val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("pensionSchemeAdministratorCheckReference",
-        List(Messages("psa.lookup.form.psaref.required")))))
+      assert(
+        validatedForm.errors.contains(
+          FormError("pensionSchemeAdministratorCheckReference", List(Messages("psa.lookup.form.psaref.required")))
+        )
+      )
     }
 
     "return errors with invalid psa reference" in {
@@ -64,8 +67,12 @@ class PSARefFormSpec @Inject()(implicit val messages: Messages) extends FakeAppl
       val validatedForm = form.bind(postData, Form.FromJsonMaxChars)
 
       assert(validatedForm.errors.size == 1)
-      assert(validatedForm.errors.contains(FormError("pensionSchemeAdministratorCheckReference",
-        List(Messages("psa.lookup.form.psaref.invalid")))))
+      assert(
+        validatedForm.errors.contains(
+          FormError("pensionSchemeAdministratorCheckReference", List(Messages("psa.lookup.form.psaref.invalid")))
+        )
+      )
     }
   }
+
 }

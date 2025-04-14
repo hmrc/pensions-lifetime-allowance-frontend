@@ -23,38 +23,37 @@ import play.twirl.api.Html
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.play.bootstrap.frontend.http.FrontendErrorHandler
 
-class PlaFrontendErrorHandler @Inject()(errorTemplate: views.html.error_template
-                                       )(implicit val messagesApi: MessagesApi,
-                                        val appConfig: FrontendAppConfig,
-                                        val plaContext: PlaContext,
-                                        val ec: ExecutionContext) extends FrontendErrorHandler {
+class PlaFrontendErrorHandler @Inject() (errorTemplate: views.html.error_template)(
+    implicit val messagesApi: MessagesApi,
+    val appConfig: FrontendAppConfig,
+    val plaContext: PlaContext,
+    val ec: ExecutionContext
+) extends FrontendErrorHandler {
 
-
-  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(implicit rh: RequestHeader): Future[Html] =
+  override def standardErrorTemplate(pageTitle: String, heading: String, message: String)(
+      implicit rh: RequestHeader
+  ): Future[Html] =
     Future.successful(errorTemplate(pageTitle, heading, message))
 
-
-  override def badRequestTemplate(implicit request: RequestHeader): Future[Html] = {
+  override def badRequestTemplate(implicit request: RequestHeader): Future[Html] =
     standardErrorTemplate(
       Messages("global.error.400.title"),
       Messages("global.error.400.heading"),
       Messages("global.error.400.message")
     )
-  }
 
-  override def notFoundTemplate(implicit request: RequestHeader): Future[Html] = {
+  override def notFoundTemplate(implicit request: RequestHeader): Future[Html] =
     standardErrorTemplate(
       Messages("global.error.404.title"),
       Messages("global.error.404.heading"),
       Messages("global.error.404.message")
     )
-  }
 
-  override def internalServerErrorTemplate(implicit request: RequestHeader): Future[Html] = {
+  override def internalServerErrorTemplate(implicit request: RequestHeader): Future[Html] =
     standardErrorTemplate(
       Messages("pla.error.InternalServerError500.title"),
       Messages("pla.error.InternalServerError500.heading"),
       Messages("pla.error.InternalServerError500.message")
     )
-  }
+
 }

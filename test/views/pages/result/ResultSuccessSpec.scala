@@ -30,14 +30,27 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
     lazy val protectionModelWithNoDetails = ProtectionDetailsDisplayModel(Some(""), "", Some(""))
     lazy val protectionModelWithDetails = ProtectionDetailsDisplayModel(Some("None"), "PSA33456789", Some("15/07/2015"))
 
-    lazy val ip2016Model = SuccessDisplayModel(ApplicationType.IP2016, "24", "100.00", true, Some(protectionModelWithNoDetails), Seq("1", "2"))
-    lazy val fp2016Model = SuccessDisplayModel(ApplicationType.FP2016, "24", "100.00", false, Some(protectionModelWithDetails), Seq("1", "2"))
+    lazy val ip2016Model = SuccessDisplayModel(
+      ApplicationType.IP2016,
+      "24",
+      "100.00",
+      true,
+      Some(protectionModelWithNoDetails),
+      Seq("1", "2")
+    )
+    lazy val fp2016Model = SuccessDisplayModel(
+      ApplicationType.FP2016,
+      "24",
+      "100.00",
+      false,
+      Some(protectionModelWithDetails),
+      Seq("1", "2")
+    )
 
     lazy val view = application.injector.instanceOf[resultSuccess]
 
-    lazy val ip2016Doc = Jsoup.parse(view.apply(ip2016Model,false).body)
-    lazy val fp2016Doc = Jsoup.parse(view.apply(fp2016Model,false).body)
-
+    lazy val ip2016Doc = Jsoup.parse(view.apply(ip2016Model, false).body)
+    lazy val fp2016Doc = Jsoup.parse(view.apply(fp2016Model, false).body)
 
     "have the correct title" in {
       ip2016Doc.title() shouldBe plaResultSuccessTitle
@@ -45,7 +58,7 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
 
     "have a results section which" should {
 
-      lazy val firstPara = ip2016Doc.select("p").get(0)
+      lazy val firstPara    = ip2016Doc.select("p").get(0)
       lazy val protecAmount = ip2016Doc.select("strong")
 
       "have an initial heading with the text" in {
@@ -76,7 +89,10 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
     "has a result paragraph with code which" should {
 
       "have the text" in {
-        ip2016Doc.body.select("div p").get(1).text shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."
+        ip2016Doc.body
+          .select("div p")
+          .get(1)
+          .text shouldBe "As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014."
       }
 
       "have the Id" in {
@@ -110,19 +126,24 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
 
       "have a protection reference line(protection ref defined)" in {
         fp2016Doc.select("#main-content > div > div > ul >li:nth-child(3)").attr("id") shouldBe "protectionRef"
-        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(3)").text shouldBe s"$plaResultSuccessProtectionRef: None"
+        fp2016Doc
+          .select("#main-content > div > div > ul >li:nth-child(3)")
+          .text shouldBe s"$plaResultSuccessProtectionRef: None"
       }
 
       "have a psa line(protection ref defined)" in {
         fp2016Doc.select("#main-content > div > div > ul >li:nth-child(4)").attr("id") shouldBe "psaRef"
-        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(4)").text shouldBe s"$plaResultSuccessPsaRef: PSA33456789"
+        fp2016Doc
+          .select("#main-content > div > div > ul >li:nth-child(4)")
+          .text shouldBe s"$plaResultSuccessPsaRef: PSA33456789"
       }
 
       "have an application date line(protection ref defined)" in {
         fp2016Doc.select("#main-content > div > div > ul >li:nth-child(5)").attr("id") shouldBe "applicationDate"
-        fp2016Doc.select("#main-content > div > div > ul >li:nth-child(5)").text shouldBe s"$plaResultSuccessApplicationDate: 15/07/2015"
+        fp2016Doc
+          .select("#main-content > div > div > ul >li:nth-child(5)")
+          .text shouldBe s"$plaResultSuccessApplicationDate: 15/07/2015"
       }
-
 
       "have a name line(protection ref not defined)" in {
         ip2016Doc.select("#main-content > div > div > ul >li:nth-child(1)").attr("id") shouldBe "yourFullName"
@@ -233,6 +254,6 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
       }
     }
 
-
   }
+
 }

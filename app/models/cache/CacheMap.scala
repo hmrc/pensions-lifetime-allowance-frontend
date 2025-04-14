@@ -28,10 +28,12 @@ case class CacheMap(id: String, data: Map[String, JsValue]) {
         json
           .validate[T]
           .fold(
-            errors => throw new InternalServerException(s"CacheMap entry for $key could not be parsed, errors: $errors"),
-            valid  => valid
+            errors =>
+              throw new InternalServerException(s"CacheMap entry for $key could not be parsed, errors: $errors"),
+            valid => valid
           )
       )
+
 }
 
 object CacheMap {

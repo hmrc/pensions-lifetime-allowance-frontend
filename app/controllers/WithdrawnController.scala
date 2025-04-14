@@ -23,17 +23,13 @@ import views.html.pages.ip2016.withdrawnAP2016
 
 import javax.inject.Inject
 
+class WithdrawnController @Inject() (
+    mcc: MessagesControllerComponents,
+    withdrawn2014: withdrawn,
+    withdrawn2016: withdrawnAP2016
+) extends FrontendController(mcc) {
 
-class WithdrawnController @Inject()(mcc: MessagesControllerComponents,
-                                    withdrawn2014: withdrawn,
-                                    withdrawn2016: withdrawnAP2016
-                                   ) extends FrontendController(mcc) {
+  def showWithdrawn2014(): Action[AnyContent] = Action(implicit request => Ok(withdrawn2014()))
 
-  def showWithdrawn2014(): Action[AnyContent] = Action { implicit request =>
-    Ok(withdrawn2014())
-  }
-
-  def showWithdrawn2016(): Action[AnyContent] = Action { implicit request =>
-    Ok(withdrawn2016())
-  }
+  def showWithdrawn2016(): Action[AnyContent] = Action(implicit request => Ok(withdrawn2016()))
 }

@@ -26,13 +26,33 @@ import views.html.pages.result.resultPrint
 class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
 
   "The Print Result Page" should {
-    lazy val model = PrintDisplayModel("Jim", "Davis", "nino", "IP2016", "active", "PSA33456789", Messages("pla.protection.protectionReference"), Some("100.00"), Some("23/02/2015"))
+    lazy val model = PrintDisplayModel(
+      "Jim",
+      "Davis",
+      "nino",
+      "IP2016",
+      "active",
+      "PSA33456789",
+      Messages("pla.protection.protectionReference"),
+      Some("100.00"),
+      Some("23/02/2015")
+    )
     lazy val resultPrintView = fakeApplication().injector.instanceOf[resultPrint]
-    lazy val view = resultPrintView(model)
-    lazy val doc = Jsoup.parse(view.body)
-    lazy val model2 = PrintDisplayModel("Jim", "Davis", "nino", "FP2014", "dormant", "PSA33456789", Messages("pla.protection.protectionReference"), Some("100.00"), Some("23/02/2015"))
+    lazy val view            = resultPrintView(model)
+    lazy val doc             = Jsoup.parse(view.body)
+    lazy val model2 = PrintDisplayModel(
+      "Jim",
+      "Davis",
+      "nino",
+      "FP2014",
+      "dormant",
+      "PSA33456789",
+      Messages("pla.protection.protectionReference"),
+      Some("100.00"),
+      Some("23/02/2015")
+    )
     lazy val view2 = resultPrintView(model2)
-    lazy val doc2 = Jsoup.parse(view2.body)
+    lazy val doc2  = Jsoup.parse(view2.body)
 
     "have the new correct title" in {
       doc.title() shouldBe plaPrintTitle
@@ -50,7 +70,7 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
     "have a first heading which" should {
 
       lazy val h1Tag = doc.select("h1")
-      lazy val p1 = doc.select("p").get(0)
+      lazy val p1    = doc.select("p").get(0)
 
       "contain the text" in {
         h1Tag.text shouldBe "Jim Davis"
@@ -135,4 +155,5 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
 
     }
   }
+
 }

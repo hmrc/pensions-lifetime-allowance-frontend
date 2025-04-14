@@ -25,15 +25,15 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
 
   "The PLA Protection Guidance View" should {
     lazy val view = application.injector.instanceOf[pla_protection_guidance]
-    lazy val doc = Jsoup.parse(view().body)
+    lazy val doc  = Jsoup.parse(view().body)
 
     "have a header with the correct content" in {
       doc.select("h1").text() shouldBe title
     }
 
-    "have a table" which {
+    "have a table".which {
 
-      "has a heading row" which {
+      "has a heading row".which {
 
         "has the correct left column heading" in {
           doc.select("#main-content > div > div > dl > div:nth-child(1) > dt").text() shouldBe tableHeadingLeft
@@ -44,7 +44,7 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         }
       }
 
-      "has a first row" which {
+      "has a first row".which {
 
         "has the correct left element" in {
           doc.select("#main-content > div > div > dl > div:nth-child(2) > dt").text() shouldBe rowOneLeft
@@ -55,7 +55,7 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         }
       }
 
-      "has a second row" which {
+      "has a second row".which {
 
         "has the correct left element" in {
           doc.select("#main-content > div > div > dl > div:nth-child(3) > dt").text() shouldBe rowTwoLeft
@@ -66,7 +66,7 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         }
       }
 
-      "has a third row" which {
+      "has a third row".which {
 
         "has the correct left element" in {
           doc.select("#main-content > div > div > dl > div:nth-child(4) > dt").text() shouldBe rowThreeLeft
@@ -77,7 +77,7 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         }
       }
 
-      "has a fourth row" which {
+      "has a fourth row".which {
 
         "has the correct left element" in {
           doc.select("#main-content > div > div > dl > div:nth-child(5) > dt").text() shouldBe rowFourLeft
@@ -88,13 +88,13 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         }
       }
 
-      "has a fifth row" which {
+      "has a fifth row".which {
 
         "has the correct left element" in {
           doc.select("#main-content > div > div > dl > div:nth-child(6) > dt").text() shouldBe rowFiveLeft
         }
 
-        "has the correct right element" which {
+        "has the correct right element".which {
           lazy val element = doc.select("#main-content > div > div > dl > div:nth-child(6) > dd")
 
           "has the correct text" in {
@@ -111,13 +111,13 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         }
       }
 
-      "has a sixth row" which {
+      "has a sixth row".which {
 
         "has the correct left element" in {
           doc.select("#main-content > div > div > dl > div:nth-child(7) > dt").text() shouldBe rowSixLeft
         }
 
-        "has the correct right element" which {
+        "has the correct right element".which {
           lazy val element = doc.select("#main-content > div > div > dl > div:nth-child(7) > dd")
 
           "has the correct text" in {
@@ -134,7 +134,7 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         }
       }
 
-      "has a seventh row" which {
+      "has a seventh row".which {
 
         "has the correct left element" in {
           doc.select("#main-content > div > div > dl > div:nth-child(8) > dt").text() shouldBe rowSevenLeft
@@ -146,7 +146,7 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
       }
     }
 
-    "has a back link" which {
+    "has a back link".which {
       lazy val link = doc.getElementsByClass("govuk-link govuk-body")
 
       "has the correct text" in {
@@ -158,4 +158,5 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
       }
     }
   }
+
 }

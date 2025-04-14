@@ -50,43 +50,48 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar with AuthMock {
 
-  val testSuccessResponse = HttpResponse(status = 200, json = Json.parse("""{"thisJson":"doesNotMatter"}"""), headers = Map.empty)
-  val testMCNeededResponse = HttpResponse(423, "")
+  val testSuccessResponse =
+    HttpResponse(status = 200, json = Json.parse("""{"thisJson":"doesNotMatter"}"""), headers = Map.empty)
+
+  val testMCNeededResponse      = HttpResponse(423, "")
   val testUpstreamErrorResponse = HttpResponse(503, "")
 
-  val testTransformedReadResponseModel = TransformedReadResponseModel(None, Seq.empty)
+  val testTransformedReadResponseModel    = TransformedReadResponseModel(None, Seq.empty)
   val testExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(None, Seq.empty)
 
-  val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
+  val mockDisplayConstructors: DisplayConstructors   = mock[DisplayConstructors]
   val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockPlaConnector: PLAConnector = mock[PLAConnector]
-  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockSessionCacheService: SessionCacheService   = mock[SessionCacheService]
+  val mockPlaConnector: PLAConnector                 = mock[PLAConnector]
+  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
-  val mockAuthFunction: AuthFunction = fakeApplication().injector.instanceOf[AuthFunction]
-  val mockEnv: Environment = mock[Environment]
+  val mockAuthFunction: AuthFunction               = fakeApplication().injector.instanceOf[AuthFunction]
+  val mockEnv: Environment                         = mock[Environment]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext = mock[PlaContext]
-  implicit val system: ActorSystem = ActorSystem()
-  implicit val materializer: Materializer = mock[Materializer]
-  implicit val mockLang: Lang = mock[Lang]
-  implicit val application: Application = mock[Application]
-  implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
-  implicit val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded = app.injector.instanceOf[manualCorrespondenceNeeded]
-  implicit val mockExistingProtections: existingProtections = app.injector.instanceOf[existingProtections]
+  implicit val mockAppConfig: FrontendAppConfig   = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext         = mock[PlaContext]
+  implicit val system: ActorSystem                = ActorSystem()
+  implicit val materializer: Materializer         = mock[Materializer]
+  implicit val mockLang: Lang                     = mock[Lang]
+  implicit val application: Application           = mock[Application]
 
+  implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
+
+  implicit val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded =
+    app.injector.instanceOf[manualCorrespondenceNeeded]
+
+  implicit val mockExistingProtections: existingProtections = app.injector.instanceOf[existingProtections]
 
   val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
   class Setup {
 
     val authFunction = new AuthFunction {
-      override implicit val plaContext: PlaContext = mockPlaContext
-      override implicit val appConfig: FrontendAppConfig = mockAppConfig
+      override implicit val plaContext: PlaContext         = mockPlaContext
+      override implicit val appConfig: FrontendAppConfig   = mockAppConfig
       override implicit val technicalError: technicalError = mockTechnicalError
-      override implicit val ec: ExecutionContext = executionContext
+      override implicit val ec: ExecutionContext           = executionContext
 
       override def authConnector: AuthConnector = mockAuthConnector
     }
@@ -100,7 +105,9 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       authFunction,
       mockTechnicalError,
       mockManualCorrespondenceNeeded,
-      mockExistingProtections)
+      mockExistingProtections
+    )
+
   }
 
   val ip2016Protection = ProtectionModel(
@@ -115,7 +122,8 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
     status = Some("dormant"),
     certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456"))
+    protectionReference = Some("PSA123456")
+  )
 
   val nonAmendableProtection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -129,238 +137,302 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
     status = Some("rejected"),
     certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
-    protectionReference = Some("PSA123456"))
+    protectionReference = Some("PSA123456")
+  )
 
   val mockCacheMap = mock[CacheMap]
 
-  def mockCacheSave: OngoingStubbing[Future[CacheMap]] = {
+  def mockCacheSave: OngoingStubbing[Future[CacheMap]] =
     when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
       .thenReturn(Future(mockCacheMap))
+
+  "Calling saveActiveProtection" should {
+
+    "return a true" when {
+
+      "provided with no protection model" in new Setup {
+        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+          .thenReturn(Some(testTransformedReadResponseModel))
+        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+          .thenReturn(testExistingProtectionsDisplayModel)
+        await(controller.saveActiveProtection(None)(fakeRequest)) shouldBe true
+      }
+
+      "provided with a protection model" in new Setup {
+        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+          .thenReturn(Some(testTransformedReadResponseModel))
+        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+          .thenReturn(testExistingProtectionsDisplayModel)
+        when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
+          .thenReturn(Future.successful(mock[CacheMap]))
+        await(controller.saveActiveProtection(Some(ip2016Protection))(fakeRequest)) shouldBe true
+      }
+    }
   }
 
+  "Calling getAmendableProtection" should {
 
-    "Calling saveActiveProtection" should {
+    "return an empty sequence if no protections exist" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(None, Seq())
 
-      "return a true" when {
-
-        "provided with no protection model" in new Setup{
-          when(mockPlaConnector.readProtections(any())(any(),any())).thenReturn(Future(testSuccessResponse))
-          when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-          when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-          await(controller.saveActiveProtection(None)(fakeRequest)) shouldBe true
-        }
-
-        "provided with a protection model" in new Setup {
-          when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-          when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-          when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-          when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
-            .thenReturn(Future.successful(mock[CacheMap]))
-          await(controller.saveActiveProtection(Some(ip2016Protection))(fakeRequest)) shouldBe true
-        }
-      }
+      controller.getAmendableProtections(model) shouldBe Seq()
     }
 
-    "Calling getAmendableProtection" should {
+    "return an empty sequence if no protections are amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model =
+        TransformedReadResponseModel(Some(nonAmendableProtection), Seq(nonAmendableProtection, nonAmendableProtection))
 
-      "return an empty sequence if no protections exist" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(),any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(None, Seq())
-
-        controller.getAmendableProtections(model) shouldBe Seq()
-      }
-
-      "return an empty sequence if no protections are amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(),any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(nonAmendableProtection, nonAmendableProtection))
-
-        controller.getAmendableProtections(model) shouldBe Seq()
-      }
-
-      "return a single element if only the active protection is amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(),any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(nonAmendableProtection, nonAmendableProtection))
-
-        controller.getAmendableProtections(model) shouldBe Seq(ip2016Protection)
-      }
-
-      "return all inactive elements if only they are amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(),any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(ip2016Protection, ip2016Protection))
-
-        controller.getAmendableProtections(model) shouldBe Seq(ip2016Protection, ip2016Protection)
-      }
-
-      "return all elements if they are all amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(),any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(ip2016Protection, ip2016Protection))
-
-        controller.getAmendableProtections(model) shouldBe Seq(ip2016Protection, ip2016Protection, ip2016Protection)
-      }
+      controller.getAmendableProtections(model) shouldBe Seq()
     }
 
-    "Calling saveAmendableProtection" should {
+    "return a single element if only the active protection is amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model =
+        TransformedReadResponseModel(Some(ip2016Protection), Seq(nonAmendableProtection, nonAmendableProtection))
 
-      "return an empty sequence if no protections exist" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(),any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(None, Seq())
-        mockCacheSave
-        await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq()
-      }
-
-      "return an empty sequence if no protections are amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(),any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(nonAmendableProtection, nonAmendableProtection))
-        mockCacheSave
-        await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq()
-      }
-
-      "return a single cache map if only the active protection is amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(nonAmendableProtection, nonAmendableProtection))
-        mockCacheSave
-        await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap)
-      }
-
-      "return a cache map per inactive elements if only they are amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(ip2016Protection, ip2016Protection))
-        mockCacheSave
-        await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap, mockCacheMap)
-      }
-
-      "return a cache map per element if they are all amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(ip2016Protection, ip2016Protection))
-        mockCacheSave
-        await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap, mockCacheMap, mockCacheMap)
-      }
+      controller.getAmendableProtections(model) shouldBe Seq(ip2016Protection)
     }
 
-    "Calling getNonAmendableProtection" should {
+    "return all inactive elements if only they are amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(ip2016Protection, ip2016Protection))
 
-      "return an empty sequence if no protections exist" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(None, Seq())
-
-        controller.getNonAmendableProtections(model) shouldBe Seq()
-      }
-
-      "return an empty sequence if all protections are amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(ip2016Protection, ip2016Protection))
-
-        controller.getNonAmendableProtections(model) shouldBe Seq()
-      }
-
-      "return a single element if only the active protection is non-amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(ip2016Protection, ip2016Protection))
-
-        controller.getNonAmendableProtections(model) shouldBe Seq(nonAmendableProtection)
-      }
-
-      "return all inactive elements if only they are non-amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(nonAmendableProtection, nonAmendableProtection))
-
-        controller.getNonAmendableProtections(model) shouldBe Seq(nonAmendableProtection, nonAmendableProtection)
-      }
-
-      "return all elements if they are all non-amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(nonAmendableProtection, nonAmendableProtection))
-
-        controller.getNonAmendableProtections(model) shouldBe Seq(nonAmendableProtection, nonAmendableProtection, nonAmendableProtection)
-      }
+      controller.getAmendableProtections(model) shouldBe Seq(ip2016Protection, ip2016Protection)
     }
 
-    "Calling saveNonAmendableProtection" should {
+    "return all elements if they are all amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(ip2016Protection, ip2016Protection))
 
-      "return an empty sequence if no protections exist" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(None, Seq())
-        mockCacheSave
-        await(controller.saveNonAmendableProtections(model)(fakeRequest)) shouldBe Seq()
-      }
-
-      "return an empty sequence if no protections are amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(ip2016Protection, ip2016Protection))
-        mockCacheSave
-        await(controller.saveNonAmendableProtections(model)(fakeRequest)) shouldBe Seq()
-      }
-
-      "return a single cache map if only the active protection is amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(ip2016Protection, ip2016Protection))
-        mockCacheSave
-        await(controller.saveNonAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap)
-      }
-
-      "return a cache map per inactive elements if only they are amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(nonAmendableProtection, nonAmendableProtection))
-        mockCacheSave
-        await(controller.saveNonAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap, mockCacheMap)
-      }
-
-      "return a cache map per element if they are all amendable" in new Setup {
-        when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
-        val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(nonAmendableProtection, nonAmendableProtection))
-        mockCacheSave
-        await(controller.saveNonAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap, mockCacheMap, mockCacheMap)
-      }
+      controller.getAmendableProtections(model) shouldBe Seq(ip2016Protection, ip2016Protection, ip2016Protection)
     }
+  }
+
+  "Calling saveAmendableProtection" should {
+
+    "return an empty sequence if no protections exist" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(None, Seq())
+      mockCacheSave
+      await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq()
+    }
+
+    "return an empty sequence if no protections are amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model =
+        TransformedReadResponseModel(Some(nonAmendableProtection), Seq(nonAmendableProtection, nonAmendableProtection))
+      mockCacheSave
+      await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq()
+    }
+
+    "return a single cache map if only the active protection is amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model =
+        TransformedReadResponseModel(Some(ip2016Protection), Seq(nonAmendableProtection, nonAmendableProtection))
+      mockCacheSave
+      await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap)
+    }
+
+    "return a cache map per inactive elements if only they are amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(ip2016Protection, ip2016Protection))
+      mockCacheSave
+      await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap, mockCacheMap)
+    }
+
+    "return a cache map per element if they are all amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(ip2016Protection, ip2016Protection))
+      mockCacheSave
+      await(controller.saveAmendableProtections(model)(fakeRequest)) shouldBe Seq(
+        mockCacheMap,
+        mockCacheMap,
+        mockCacheMap
+      )
+    }
+  }
+
+  "Calling getNonAmendableProtection" should {
+
+    "return an empty sequence if no protections exist" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(None, Seq())
+
+      controller.getNonAmendableProtections(model) shouldBe Seq()
+    }
+
+    "return an empty sequence if all protections are amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(ip2016Protection, ip2016Protection))
+
+      controller.getNonAmendableProtections(model) shouldBe Seq()
+    }
+
+    "return a single element if only the active protection is non-amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(ip2016Protection, ip2016Protection))
+
+      controller.getNonAmendableProtections(model) shouldBe Seq(nonAmendableProtection)
+    }
+
+    "return all inactive elements if only they are non-amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model =
+        TransformedReadResponseModel(Some(ip2016Protection), Seq(nonAmendableProtection, nonAmendableProtection))
+
+      controller.getNonAmendableProtections(model) shouldBe Seq(nonAmendableProtection, nonAmendableProtection)
+    }
+
+    "return all elements if they are all non-amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model =
+        TransformedReadResponseModel(Some(nonAmendableProtection), Seq(nonAmendableProtection, nonAmendableProtection))
+
+      controller.getNonAmendableProtections(model) shouldBe Seq(
+        nonAmendableProtection,
+        nonAmendableProtection,
+        nonAmendableProtection
+      )
+    }
+  }
+
+  "Calling saveNonAmendableProtection" should {
+
+    "return an empty sequence if no protections exist" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(None, Seq())
+      mockCacheSave
+      await(controller.saveNonAmendableProtections(model)(fakeRequest)) shouldBe Seq()
+    }
+
+    "return an empty sequence if no protections are amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(Some(ip2016Protection), Seq(ip2016Protection, ip2016Protection))
+      mockCacheSave
+      await(controller.saveNonAmendableProtections(model)(fakeRequest)) shouldBe Seq()
+    }
+
+    "return a single cache map if only the active protection is amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model = TransformedReadResponseModel(Some(nonAmendableProtection), Seq(ip2016Protection, ip2016Protection))
+      mockCacheSave
+      await(controller.saveNonAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap)
+    }
+
+    "return a cache map per inactive elements if only they are amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model =
+        TransformedReadResponseModel(Some(ip2016Protection), Seq(nonAmendableProtection, nonAmendableProtection))
+      mockCacheSave
+      await(controller.saveNonAmendableProtections(model)(fakeRequest)) shouldBe Seq(mockCacheMap, mockCacheMap)
+    }
+
+    "return a cache map per element if they are all amendable" in new Setup {
+      when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
+      when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+        .thenReturn(Some(testTransformedReadResponseModel))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      val model =
+        TransformedReadResponseModel(Some(nonAmendableProtection), Seq(nonAmendableProtection, nonAmendableProtection))
+      mockCacheSave
+      await(controller.saveNonAmendableProtections(model)(fakeRequest)) shouldBe Seq(
+        mockCacheMap,
+        mockCacheMap,
+        mockCacheMap
+      )
+    }
+  }
 
   "Calling the currentProtections Action" when {
     "receiving an upstream error" should {
       "return 500 and show the technical error page for existing protections" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testUpstreamErrorResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
+        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+          .thenReturn(Some(testTransformedReadResponseModel))
+        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+          .thenReturn(testExistingProtectionsDisplayModel)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-
 
         val result = controller.currentProtections(fakeRequest)
         status(result) shouldBe 500
@@ -372,8 +444,10 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
     "receiving an MC needed response" should {
       "return 423 and show the MC Needed page" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
+        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+          .thenReturn(Some(testTransformedReadResponseModel))
+        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+          .thenReturn(testExistingProtectionsDisplayModel)
         when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testMCNeededResponse))
         val result = controller.currentProtections(fakeRequest)
         status(result) shouldBe 423
@@ -383,8 +457,10 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
     "receiving incorrect json in the PLA response" should {
       "return 500 and show the technical error page for existing protections" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
+        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+          .thenReturn(Some(testTransformedReadResponseModel))
+        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+          .thenReturn(testExistingProtectionsDisplayModel)
         when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
         when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(None)
 
@@ -399,8 +475,10 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
     "receiving a correct response from PLA" should {
       "return 200 and show the existing protections page" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any())).thenReturn(Future(testSuccessResponse))
-        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any())).thenReturn(Some(testTransformedReadResponseModel))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any())).thenReturn(testExistingProtectionsDisplayModel)
+        when(mockResponseConstructors.createTransformedReadResponseModelFromJson(any()))
+          .thenReturn(Some(testTransformedReadResponseModel))
+        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+          .thenReturn(testExistingProtectionsDisplayModel)
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         val result = controller.currentProtections(fakeRequest)
@@ -409,4 +487,5 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       }
     }
   }
+
 }

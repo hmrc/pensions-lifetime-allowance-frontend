@@ -26,19 +26,17 @@ import uk.gov.hmrc.auth.core.retrieve.Retrieval
 
 import scala.concurrent.Future
 
-trait AuthMock extends MockitoSugar{
+trait AuthMock extends MockitoSugar {
   this: MockitoSugar =>
 
   val mockAuthConnector = mock[PlayAuthConnector]
 
-  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A): OngoingStubbing[Future[A]] = {
+  def mockAuthRetrieval[A](retrieval: Retrieval[A], returnValue: A): OngoingStubbing[Future[A]] =
     when(mockAuthConnector.authorise[A](any(), ArgumentMatchers.eq(retrieval))(any(), any()))
       .thenReturn(Future.successful(returnValue))
-  }
 
-  def mockAuthConnector[T](future: Future[T]): OngoingStubbing[Future[T]] = {
+  def mockAuthConnector[T](future: Future[T]): OngoingStubbing[Future[T]] =
     when(mockAuthConnector.authorise[T](any(), any())(any(), any()))
       .thenReturn(future)
-  }
 
 }

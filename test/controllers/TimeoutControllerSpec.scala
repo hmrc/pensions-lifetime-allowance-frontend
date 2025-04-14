@@ -16,7 +16,6 @@
 
 package controllers
 
-
 import config.{FrontendAppConfig, PlaContext}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -30,24 +29,25 @@ import views.html.pages.timeout
 
 class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
 
-    val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockMCC = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
-    implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-    implicit val mockPlaContext: PlaContext = mock[PlaContext]
-    implicit val system: ActorSystem = ActorSystem()
-    implicit val materializer: Materializer = mock[Materializer]
-    implicit val application: Application = mock[Application]
-    implicit val mockTimeout: timeout = app.injector.instanceOf[timeout]
+  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
+  implicit val system: ActorSystem              = ActorSystem()
+  implicit val materializer: Materializer       = mock[Materializer]
+  implicit val application: Application         = mock[Application]
+  implicit val mockTimeout: timeout             = app.injector.instanceOf[timeout]
 
-    val controller = new TimeoutController(mockMCC, mockTimeout)
+  val controller = new TimeoutController(mockMCC, mockTimeout)
 
-    "Calling the .timeout action" when {
+  "Calling the .timeout action" when {
 
-        "navigated to " should {
-            lazy val result = controller.timeout(FakeRequest())
-            "return a 200" in {
-                status(result) shouldBe 200
-            }
-        }
+    "navigated to " should {
+      lazy val result = controller.timeout(FakeRequest())
+      "return a 200" in {
+        status(result) shouldBe 200
+      }
     }
+  }
+
 }

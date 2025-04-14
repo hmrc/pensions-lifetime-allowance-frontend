@@ -29,13 +29,13 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "Withdraw Confirm view" when {
-    implicit val lang = mock[Lang]
-    val withdrawDate = "2018-01-16"
+    implicit val lang      = mock[Lang]
+    val withdrawDate       = "2018-01-16"
     val withdrawDatePretty = "16 January 2018"
 
     lazy val view = application.injector.instanceOf[withdrawConfirm]
 
-    lazy val doc = Jsoup.parse(view.apply(withdrawDate,"ip14", "dormant").body)
+    lazy val doc = Jsoup.parse(view.apply(withdrawDate, "ip14", "dormant").body)
 
     s"have a title ${"pla.withdraw.what-happens.info-heading"}" in {
       doc.title() shouldBe s"$plaWithdrawWhatHappensInfoHeading - Check your pension protections - GOV.UK"
@@ -50,7 +50,9 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
     }
 
     "have a form action of 'getAction'" in {
-      doc.select("form").attr("action") shouldBe routes.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate).url
+      doc.select("form").attr("action") shouldBe routes.WithdrawProtectionController
+        .displayWithdrawConfirmation(withdrawDate)
+        .url
     }
 
     "have a form method of 'GET'" in {
@@ -90,8 +92,6 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
 
     }
 
-
   }
-
 
 }

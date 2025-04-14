@@ -20,30 +20,29 @@ import config.AppConfig
 import play.api.Configuration
 import play.api.mvc.RequestHeader
 
-
 object MockConfig extends AppConfig {
 
   val NoConfiguration = null
 
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = "_"
-  override val ssoUrl: Option[String] = None
-  override val citizenAuthHost: Option[String] = None
-  override val excludeCopeTab: Boolean = false
-  override val identityVerification: Boolean = true
-  override val confirmFPUrl: String = "/pla/apply-for-fp16"
-  override val ipStartUrl: String = "/pla/apply-for-ip16-pensions-taken"
-  override val ip14StartUrl: String = "/pla/apply-for-ip14-pensions-taken"
-  override val existingProtectionsUrl: String = "/pla/existing-protections"
-  override val notAuthorisedRedirectUrl: String = "/pla/not-authorised"
-  override val verifySignIn = "/verify/login"
-  override val ivUpliftUrl: String = "/iv/uplift"
-  override val ggSignInUrl: String = "/gg/sign-in"
-  override val ptaFrontendUrl: String = ""
-  override val feedbackSurvey: String = "http://localhost:9514/feedback/PLA"
-  override val validStatusMetric: String = ""
-  override val invalidStatusMetric: String = ""
-  override val notFoundStatusMetric: String = ""
-  override val appName: String = ""
+  override val ssoUrl: Option[String]                                                  = None
+  override val citizenAuthHost: Option[String]                                         = None
+  override val excludeCopeTab: Boolean                                                 = false
+  override val identityVerification: Boolean                                           = true
+  override val confirmFPUrl: String                                                    = "/pla/apply-for-fp16"
+  override val ipStartUrl: String                            = "/pla/apply-for-ip16-pensions-taken"
+  override val ip14StartUrl: String                          = "/pla/apply-for-ip14-pensions-taken"
+  override val existingProtectionsUrl: String                = "/pla/existing-protections"
+  override val notAuthorisedRedirectUrl: String              = "/pla/not-authorised"
+  override val verifySignIn                                  = "/verify/login"
+  override val ivUpliftUrl: String                           = "/iv/uplift"
+  override val ggSignInUrl: String                           = "/gg/sign-in"
+  override val ptaFrontendUrl: String                        = ""
+  override val feedbackSurvey: String                        = "http://localhost:9514/feedback/PLA"
+  override val validStatusMetric: String                     = ""
+  override val invalidStatusMetric: String                   = ""
+  override val notFoundStatusMetric: String                  = ""
+  override val appName: String                               = ""
   override val sessionMissingUpliftUrlPrefix: Option[String] = None
-  override val configuration: Configuration = NoConfiguration
+  override val configuration: Configuration                  = NoConfiguration
 }

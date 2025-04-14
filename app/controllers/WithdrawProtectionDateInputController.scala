@@ -33,54 +33,75 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class WithdrawProtectionDateInputController @Inject()(sessionCacheService: SessionCacheService,
-                                                      mcc: MessagesControllerComponents,
-                                                      authFunction: AuthFunction,
-                                                      withdrawDate: views.html.pages.withdraw.withdrawDate,
-                                                      technicalError: views.html.pages.fallback.technicalError
-                                            )(implicit val appConfig: FrontendAppConfig,
-                                              implicit val plaContext: PlaContext,
-                                              implicit val formWithCSRF: FormWithCSRF,
-                                              implicit val application: Application,
-                                              implicit val ec: ExecutionContext)
-extends FrontendController(mcc) with I18nSupport with Logging {
+class WithdrawProtectionDateInputController @Inject() (
+    sessionCacheService: SessionCacheService,
+    mcc: MessagesControllerComponents,
+    authFunction: AuthFunction,
+    withdrawDate: views.html.pages.withdraw.withdrawDate,
+    technicalError: views.html.pages.fallback.technicalError
+)(
+    implicit val appConfig: FrontendAppConfig,
+    implicit val plaContext: PlaContext,
+    implicit val formWithCSRF: FormWithCSRF,
+    implicit val application: Application,
+    implicit val ec: ExecutionContext
+) extends FrontendController(mcc)
+    with I18nSupport
+    with Logging {
 
-  def getWithdrawDateInput: Action[AnyContent] = Action.async {
-    implicit request =>
-      authFunction.genericAuthWithNino("existingProtections") { nino =>
-        sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") map {
-          case Some(currentProtection) =>
-            val protectionStartDate = LocalDateTime.parse(currentProtection.certificateDate.get).toLocalDate
-            Ok(withdrawDate(withdrawDateForm(protectionStartDate),
+  def getWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
+    authFunction.genericAuthWithNino("existingProtections") { nino =>
+      sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").map {
+        case Some(currentProtection) =>
+          val protectionStartDate = LocalDateTime.parse(currentProtection.certificateDate.get).toLocalDate
+          Ok(
+            withdrawDate(
+              withdrawDateForm(protectionStartDate),
               Strings.protectionTypeString(currentProtection.protectionType),
-              Strings.statusString(currentProtection.status)))
-          case _ =>
-            logger.error(s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page")
-            InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache")
-        }
+              Strings.statusString(currentProtection.status)
+            )
+          )
+        case _ =>
+          logger.error(
+            s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page"
+          )
+          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+            .withHeaders(CACHE_CONTROL -> "no-cache")
       }
+    }
   }
 
-  private[controllers] def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) = {
-    withdrawDateForm(minDate = LocalDateTime.parse(protection.certificateDate.get).toLocalDate).bindFromRequest().fold(
-      errors => {
-        Future.successful(BadRequest(withdrawDate(errors, Strings.protectionTypeString(protection.protectionType), Strings.statusString(protection.status))))
-      },
-      form => {
-        sessionCacheService.saveFormData(s"withdrawProtectionForm", form).flatMap {
-          _ => Future.successful(Redirect(routes.WithdrawProtectionDateInputConfirmationController.getSubmitWithdrawDateInput))
-        }
-      }
-    )
-  }
+  private[controllers] def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) =
+    withdrawDateForm(minDate = LocalDateTime.parse(protection.certificateDate.get).toLocalDate)
+      .bindFromRequest()
+      .fold(
+        errors =>
+          Future.successful(
+            BadRequest(
+              withdrawDate(
+                errors,
+                Strings.protectionTypeString(protection.protectionType),
+                Strings.statusString(protection.status)
+              )
+            )
+          ),
+        form =>
+          sessionCacheService.saveFormData(s"withdrawProtectionForm", form).flatMap { _ =>
+            Future
+              .successful(Redirect(routes.WithdrawProtectionDateInputConfirmationController.getSubmitWithdrawDateInput))
+          }
+      )
 
   def postWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("existingProtections") {
-      sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection") flatMap {
+      sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").flatMap {
         case Some(protection) => validateAndSaveWithdrawDateForm(protection)
         case _ =>
           logger.error(s"Could not retrieve protection data for user when loading the withdraw date input page")
-          Future.successful(InternalServerError(technicalError(ApplicationType.existingProtections.toString)).withHeaders(CACHE_CONTROL -> "no-cache"))
+          Future.successful(
+            InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+              .withHeaders(CACHE_CONTROL -> "no-cache")
+          )
       }
     }
   }

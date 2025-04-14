@@ -18,10 +18,9 @@ package services
 
 import com.codahale.metrics.MetricRegistry
 
-
 object MetricsService extends MetricRegistry {
 
-  val identityVerificationTimer = timer("identity-verification-timer")
+  val identityVerificationTimer         = timer("identity-verification-timer")
   val identityVerificationFailedCounter = counter("identity-verification-failed-counter")
 
 }

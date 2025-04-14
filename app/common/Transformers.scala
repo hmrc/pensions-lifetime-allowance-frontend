@@ -20,14 +20,13 @@ import scala.util.{Failure, Success, Try}
 
 object Transformers {
 
-  val stringToOptionalBigDecimal: String => Option[BigDecimal] = (input) => {
+  val stringToOptionalBigDecimal: String => Option[BigDecimal] = input =>
     Try(BigDecimal(input.trim)) match {
       case Success(value) => Some(value)
-      case Failure(_) => None
+      case Failure(_)     => None
     }
-  }
 
-  val optionalBigDecimalToString: Option[BigDecimal] => String = (input) =>
+  val optionalBigDecimalToString: Option[BigDecimal] => String = input =>
     if (input.isEmpty) ""
     else {
       input.get.scale match {
@@ -36,17 +35,16 @@ object Transformers {
       }
     }
 
-  val stringToBigDecimal: String => BigDecimal = (input) => {
+  val stringToBigDecimal: String => BigDecimal = input =>
     Try(BigDecimal(input.trim)) match {
       case Success(value) => value
-      case Failure(_) => BigDecimal(0)
+      case Failure(_)     => BigDecimal(0)
     }
-  }
 
-  val bigDecimalToString: BigDecimal => String = (input) =>
-      input.scale match {
-        case 1 => input.setScale(2).toString()
-        case _ => input.toString
+  val bigDecimalToString: BigDecimal => String = input =>
+    input.scale match {
+      case 1 => input.setScale(2).toString()
+      case _ => input.toString
     }
 
 }

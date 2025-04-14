@@ -20,9 +20,12 @@ import config.{FrontendAppConfig, PlaContext}
 import javax.inject.Inject
 import play.api.i18n.Messages
 
-class PlaTestContext @Inject()(appConfig: FrontendAppConfig) extends PlaContext {
+class PlaTestContext @Inject() (appConfig: FrontendAppConfig) extends PlaContext {
 
-  override def getPageHelpPartial()(messages: Messages): String = s"${appConfig.servicesConfig.baseUrl("contact-frontend")}/contact/problem_reports"
-  override def assetsUrl: String = s"${appConfig.servicesConfig.getString("assets.url")}${appConfig.servicesConfig.getString("assets.version")}/"
+  override def getPageHelpPartial()(messages: Messages): String =
+    s"${appConfig.servicesConfig.baseUrl("contact-frontend")}/contact/problem_reports"
+
+  override def assetsUrl: String =
+    s"${appConfig.servicesConfig.getString("assets.url")}${appConfig.servicesConfig.getString("assets.version")}/"
 
 }

@@ -35,10 +35,10 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class SessionCacheServiceSpec extends FakeApplication with MockitoSugar with ScalaFutures {
 
-  val mockSessionRepository = mock[SessionRepository]
-  val sessionId = UUID.randomUUID.toString
-  implicit val executionContext: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
-  lazy implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  val mockSessionRepository                              = mock[SessionRepository]
+  val sessionId                                          = UUID.randomUUID.toString
+  implicit val executionContext: ExecutionContext        = fakeApplication().injector.instanceOf[ExecutionContext]
+  implicit lazy val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
   object TestsessionCacheService extends SessionCacheService(mockSessionRepository)
 
@@ -53,13 +53,17 @@ class SessionCacheServiceSpec extends FakeApplication with MockitoSugar with Sca
     }
 
     "save form data to repo" in {
-      val testModel = PensionsTakenModel(Some("No"))
+      val testModel        = PensionsTakenModel(Some("No"))
       val returnedCacheMap = CacheMap("haveAddedToPension", Map("data" -> Json.toJson(testModel)))
-      when(mockSessionRepository.putInSession[PensionsTakenModel](DataKey[PensionsTakenModel](any()), any())(any(), any(), any()))
+      when(
+        mockSessionRepository
+          .putInSession[PensionsTakenModel](DataKey[PensionsTakenModel](any()), any())(any(), any(), any())
+      )
         .thenReturn(Future.successful(returnedCacheMap))
 
       lazy val result = TestsessionCacheService.saveFormData("haveAddedToPension", testModel)
       await(result) shouldBe returnedCacheMap
     }
   }
+
 }

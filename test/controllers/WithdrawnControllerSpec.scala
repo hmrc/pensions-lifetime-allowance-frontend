@@ -31,21 +31,20 @@ import views.html.pages.ip2016.withdrawnAP2016
 
 import scala.concurrent.Future
 
-
 class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
 
   lazy val mockMCC: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
 
-  implicit lazy val view2014: withdrawn = app.injector.instanceOf[withdrawn]
+  implicit lazy val view2014: withdrawn       = app.injector.instanceOf[withdrawn]
   implicit lazy val view2016: withdrawnAP2016 = app.injector.instanceOf[withdrawnAP2016]
 
-  val controller = new WithdrawnController(mockMCC, view2014, view2016)
+  val controller                            = new WithdrawnController(mockMCC, view2014, view2016)
   implicit val request: Request[AnyContent] = FakeRequest("GET", "/")
 
   implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(request)
 
-  "Withdrawn controller" should  {
-     "should show withdrawn page for 2014" in {
+  "Withdrawn controller" should {
+    "should show withdrawn page for 2014" in {
       val result = controller.showWithdrawn2014()(request)
       contentAsString(result) should include(view2014().body)
     }
@@ -56,7 +55,7 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
     }
   }
 
-  "IP14 application" should {
+  "IP14 application" should
     Seq(
       "/apply-for-ip14-pensions-taken",
       "/apply-for-ip14-pensions-taken-before",
@@ -67,17 +66,15 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
       "/apply-for-ip14-pension-sharing-order-details",
       "/apply-for-ip14-remove-pension-sharing-order-details",
       "/apply-for-ip14-submit-your-application"
-    ) foreach { path =>
-       s"show withdrawn page for /check-your-pension-protections$path" in {
-         assertRendersWithdrawnAppsPage(
-           controller.showWithdrawn2014()(FakeRequest(GET, s"/check-your-pension-protections$path")),
-           view2014()
-         )
-      }
+    ).foreach { path =>
+      s"show withdrawn page for /check-your-pension-protections$path" in
+        assertRendersWithdrawnAppsPage(
+          controller.showWithdrawn2014()(FakeRequest(GET, s"/check-your-pension-protections$path")),
+          view2014()
+        )
     }
-  }
 
-  "IP16 application" should {
+  "IP16 application" should
     Seq(
       "/apply-for-ip16-pensions-taken",
       "/apply-for-ip16-pensions-taken-before",
@@ -90,21 +87,19 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
       "/apply-for-ip16-pension-sharing-order-details",
       "/apply-for-ip16-remove-pension-sharing-order-details",
       "/apply-for-ip16-submit-your-application"
-    ) foreach { path =>
-      s"show withdrawn page for /check-your-pension-protections$path" in {
+    ).foreach { path =>
+      s"show withdrawn page for /check-your-pension-protections$path" in
         assertRendersWithdrawnAppsPage(
           controller.showWithdrawn2016()(FakeRequest(GET, s"/check-your-pension-protections$path")),
           view2016()
         )
-      }
     }
-  }
 
   private def assertRendersWithdrawnAppsPage(res: Future[Result], expected: Html): Assertion = {
 
     val (result, view) = (Jsoup.parse(contentAsString(res)), Jsoup.parse(expected.body))
 
-    def headingOf(doc: Document): String = doc.getElementById("pageHeading").text()
+    def headingOf(doc: Document): String      = doc.getElementById("pageHeading").text()
     def mainContentOf(doc: Document): Element = doc.getElementById("startAgainText")
 
     result.title() shouldBe view.title()
@@ -112,4 +107,5 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
     mainContentOf(result).text() shouldBe mainContentOf(view).text()
     mainContentOf(result).attr("href") shouldBe mainContentOf(view).attr("href")
   }
+
 }

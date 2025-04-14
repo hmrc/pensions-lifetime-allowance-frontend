@@ -18,31 +18,32 @@ package models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class ProtectionModel(psaCheckReference: Option[String],
-                           protectionID: Option[Long],
-                           certificateDate: Option[String] = None,
-                           version: Option[Int] = None,
-                           protectionType: Option[String] = None,
-                           status: Option[String] = None,
-                           protectedAmount: Option[Double] = None,
-                           relevantAmount: Option[Double] = None,
-                           postADayBenefitCrystallisationEvents: Option[Double] = None,
-                           preADayPensionInPayment: Option[Double] = None,
-                           uncrystallisedRights: Option[Double] = None,
-                           nonUKRights: Option[Double] = None,
-                           pensionDebitAmount: Option[Double] = None,
-                           pensionDebitEnteredAmount: Option[Double] = None,
-                           pensionDebitStartDate: Option[String] = None,
-                           pensionDebitTotalAmount: Option[Double] = None,
-                           pensionDebits: Option[List[PensionDebitModel]] = None,
-                           notificationId: Option[Int] = None,
-                           protectionReference: Option[String] = None,
-                           withdrawnDate: Option[String] = None
-                          )
+case class ProtectionModel(
+    psaCheckReference: Option[String],
+    protectionID: Option[Long],
+    certificateDate: Option[String] = None,
+    version: Option[Int] = None,
+    protectionType: Option[String] = None,
+    status: Option[String] = None,
+    protectedAmount: Option[Double] = None,
+    relevantAmount: Option[Double] = None,
+    postADayBenefitCrystallisationEvents: Option[Double] = None,
+    preADayPensionInPayment: Option[Double] = None,
+    uncrystallisedRights: Option[Double] = None,
+    nonUKRights: Option[Double] = None,
+    pensionDebitAmount: Option[Double] = None,
+    pensionDebitEnteredAmount: Option[Double] = None,
+    pensionDebitStartDate: Option[String] = None,
+    pensionDebitTotalAmount: Option[Double] = None,
+    pensionDebits: Option[List[PensionDebitModel]] = None,
+    notificationId: Option[Int] = None,
+    protectionReference: Option[String] = None,
+    withdrawnDate: Option[String] = None
+)
 
 object ProtectionModel {
   implicit val pensionDebitFormat: OFormat[PensionDebitModel] = PensionDebitModel.pdFormat
-  implicit val format: OFormat[ProtectionModel] = Json.format[ProtectionModel]
+  implicit val format: OFormat[ProtectionModel]               = Json.format[ProtectionModel]
 }
 
 case class PensionDebitModel(startDate: String, amount: Double)

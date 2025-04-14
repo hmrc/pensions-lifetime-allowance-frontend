@@ -22,12 +22,10 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.{CommonErrorMessages, FakeApplication}
 
-class AmendPensionsTakenBeforeFormSpec extends FakeApplication
-  with CommonErrorMessages
-  with MockitoSugar {
+class AmendPensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]
 
-  val messageKey = "pensionsTakenBefore"
+  val messageKey       = "pensionsTakenBefore"
   val amountMessageKey = "pensionsWorthBefore"
 
   "The AmendPensionsTakenBeforeForm" should {
@@ -36,40 +34,40 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
     "produce a valid form with additional validation" when {
 
       "provided with a valid model" in {
-        val model = AmendPensionsTakenBeforeModel("yes")
+        val model  = AmendPensionsTakenBeforeModel("yes")
         val result = amendPensionsTakenBeforeForm("ip2016").fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid form with no amount" in {
-        val model = AmendPensionsTakenBeforeModel("no")
+        val model  = AmendPensionsTakenBeforeModel("no")
         val result = amendPensionsTakenBeforeForm("ip2016").fill(model)
 
         result.data shouldBe Map("amendedPensionsTakenBefore" -> "no")
       }
 
       "provided with a valid map with a zero amount" in {
-        val map = validMap.updated("amendedPensionsTakenBeforeAmt", "0")
+        val map    = validMap.updated("amendedPensionsTakenBeforeAmt", "0")
         val result = amendPensionsTakenBeforeForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes"))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
-        val map = validMap.updated("amendedPensionsTakenBeforeAmt", "0.01")
+        val map    = validMap.updated("amendedPensionsTakenBeforeAmt", "0.01")
         val result = amendPensionsTakenBeforeForm("ip2016").bind(map)
 
         result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes"))
       }
     }
 
-    "produce an invalid form" which {
+    "produce an invalid form".which {
 
       "has one error with the correct error message" when {
 
         "not provided with a value for amendedPensionsTakenBefore" in {
-          val map = validMap - "amendedPensionsTakenBefore"
+          val map    = validMap - "amendedPensionsTakenBefore"
           val result = amendPensionsTakenBeforeForm("ip2016").bind(map)
 
           result.errors.size shouldBe 1
@@ -78,5 +76,5 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication
       }
     }
   }
-}
 
+}

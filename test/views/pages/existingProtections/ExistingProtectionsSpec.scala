@@ -30,14 +30,48 @@ import views.html.pages.existingProtections.existingProtections
 class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtections {
 
   "The Existing Protections page" should {
-    val mockAppConfig: FrontendAppConfig =  mock[FrontendAppConfig]
+    val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
-    lazy val protectionModel = ExistingProtectionDisplayModel("IP2016", "active", Some(Call("", "", "")), Some(tstPSACheckRef), "protectionReference", Some("250.00"), Some(""))
-    lazy val protectionModel2 = ExistingProtectionDisplayModel("IP2014", "dormant", Some(Call("", "", "")), Some(""), "protectionReference", Some(""), Some(""))
+    lazy val protectionModel = ExistingProtectionDisplayModel(
+      "IP2016",
+      "active",
+      Some(Call("", "", "")),
+      Some(tstPSACheckRef),
+      "protectionReference",
+      Some("250.00"),
+      Some("")
+    )
+    lazy val protectionModel2 = ExistingProtectionDisplayModel(
+      "IP2014",
+      "dormant",
+      Some(Call("", "", "")),
+      Some(""),
+      "protectionReference",
+      Some(""),
+      Some("")
+    )
     lazy val tstPSACheckRef = "PSA33456789"
 
-    lazy val tstProtectionDisplayModelActive1 = ExistingProtectionDisplayModel("FP2016", "active", Some(controllers.routes.AmendsController.amendsSummary("ip2014", "active")), Some(tstPSACheckRef), Messages("pla.protection.protectionReference"), Some("100.00"), None, None)
-    lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel("IP2014", "dormant", Some(controllers.routes.AmendsController.amendsSummary("fp2016", "dormant")), Some(tstPSACheckRef), Messages("pla.protection.protectionReference"), Some("100.00"), Some(""), None)
+    lazy val tstProtectionDisplayModelActive1 = ExistingProtectionDisplayModel(
+      "FP2016",
+      "active",
+      Some(controllers.routes.AmendsController.amendsSummary("ip2014", "active")),
+      Some(tstPSACheckRef),
+      Messages("pla.protection.protectionReference"),
+      Some("100.00"),
+      None,
+      None
+    )
+    lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
+      "IP2014",
+      "dormant",
+      Some(controllers.routes.AmendsController.amendsSummary("fp2016", "dormant")),
+      Some(tstPSACheckRef),
+      Messages("pla.protection.protectionReference"),
+      Some("100.00"),
+      Some(""),
+      None
+    )
     lazy val tstProtectionDisplayModelEmpty1 = ExistingProtectionDisplayModel("", "", None, None, "", None, None, None)
 
     val application = new GuiceApplicationBuilder()
@@ -46,21 +80,20 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       .build()
 
     lazy val model = ExistingProtectionsDisplayModel(Some(protectionModel), List(tstProtectionDisplayModelActive1))
-    lazy val view = application.injector.instanceOf[existingProtections]
-    lazy val doc = Jsoup.parse(view.apply(model).body)
+    lazy val view  = application.injector.instanceOf[existingProtections]
+    lazy val doc   = Jsoup.parse(view.apply(model).body)
 
     lazy val model2 = ExistingProtectionsDisplayModel(None, List(tstProtectionDisplayModelEmpty1))
-    lazy val view2 = application.injector.instanceOf[existingProtections]
-    lazy val doc2 = Jsoup.parse(view2.apply(model2).body)
+    lazy val view2  = application.injector.instanceOf[existingProtections]
+    lazy val doc2   = Jsoup.parse(view2.apply(model2).body)
 
     lazy val model2b = ExistingProtectionsDisplayModel(Some(protectionModel2), List(tstProtectionDisplayModelDormant1))
-    lazy val view2b = application.injector.instanceOf[existingProtections]
-    lazy val doc2b = Jsoup.parse(view2b.apply(model2b).body)
+    lazy val view2b  = application.injector.instanceOf[existingProtections]
+    lazy val doc2b   = Jsoup.parse(view2b.apply(model2b).body)
 
     lazy val model3 = ExistingProtectionsDisplayModel(Some(protectionModel), List.empty)
-    lazy val view3 = application.injector.instanceOf[existingProtections]
-    lazy val doc3 = Jsoup.parse(view3.apply(model3).body)
-
+    lazy val view3  = application.injector.instanceOf[existingProtections]
+    lazy val doc3   = Jsoup.parse(view3.apply(model3).body)
 
     "have the correct title" in {
       doc.title() shouldBe plaExistingProtectionsTitleNew
@@ -86,7 +119,6 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
     }
 
-
     "have a protections section display which if active protections are present" should {
 
       "display the protection details section" in {
@@ -99,14 +131,12 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
     }
 
-
     "have another protections list which if no other protections are present" should {
 
       "have the message" in {
         doc3.getElementById("noOtherProtections").text shouldBe plaExistingProtectionsNoOtherProtections
       }
     }
-
 
     "have another protections list which if other protections are present" should {
 
@@ -121,13 +151,14 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     }
 
     "have a view details about taking higher tax-free lump sums with protected allowances and the link which" should {
-      val mockAppConfig: FrontendAppConfig =  mock[FrontendAppConfig]
+      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+
       val application = new GuiceApplicationBuilder()
         .configure("metrics.enabled" -> false)
         .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
         .build()
       lazy val view = application.injector.instanceOf[existingProtections]
-      lazy val doc = Jsoup.parse(view.apply(model).body)
+      lazy val doc  = Jsoup.parse(view.apply(model).body)
 
       lazy val link = doc.select("#main-content > div > div > p > a")
 
@@ -144,6 +175,5 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
     }
   }
+
 }
-
-

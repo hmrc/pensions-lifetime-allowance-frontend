@@ -28,12 +28,15 @@ import scala.concurrent.Future
 
 trait SessionCacheTestHelper {
 
-  def cacheSaveCondition[T](mockSessionCacheService: SessionCacheService, key: Option[String] = None, returnedData: Option[CacheMap] = None): OngoingStubbing[Future[CacheMap]] = {
+  def cacheSaveCondition[T](
+      mockSessionCacheService: SessionCacheService,
+      key: Option[String] = None,
+      returnedData: Option[CacheMap] = None
+  ): OngoingStubbing[Future[CacheMap]] = {
     val keyMatcher = key.map(ArgumentMatchers.contains).getOrElse(anyString())
 
     when(mockSessionCacheService.saveFormData[T](keyMatcher, any())(any[Request[_]](), any()))
       .thenReturn(Future.successful(returnedData.getOrElse(CacheMap("", Map.empty))))
   }
-
 
 }
