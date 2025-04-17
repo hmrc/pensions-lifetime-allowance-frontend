@@ -32,7 +32,7 @@ import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.mvc.MessagesControllerComponents
+import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -42,6 +42,7 @@ import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends._
 import views.html.pages.fallback.{noNotificationId, technicalError}
 import views.html.pages.result.manualCorrespondenceNeeded
+
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -53,7 +54,7 @@ class AmendsOverseasPensionControllerSpec
     with AuthMock
     with I18nSupport {
 
-  implicit lazy val mockMessage =
+  implicit lazy val mockMessage: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   val mockDisplayConstructors: DisplayConstructors   = mock[DisplayConstructors]
@@ -102,15 +103,13 @@ class AmendsOverseasPensionControllerSpec
   implicit val formWithCSRF: FormWithCSRF       = app.injector.instanceOf[FormWithCSRF]
   implicit val ec: ExecutionContext             = app.injector.instanceOf[ExecutionContext]
 
-  override def beforeEach() = {
-    reset(
-      mockSessionCacheService,
-      mockPlaConnector,
-      mockDisplayConstructors,
-      mockAuthConnector,
-      mockEnv,
-      mockResponseConstructors
-    )
+  override def beforeEach(): Unit = {
+    reset(mockSessionCacheService)
+    reset(mockPlaConnector)
+    reset(mockDisplayConstructors)
+    reset(mockAuthConnector)
+    reset(mockEnv)
+    reset(mockResponseConstructors)
     super.beforeEach()
   }
 
@@ -145,10 +144,10 @@ class AmendsOverseasPensionControllerSpec
 
   }
 
-  val sessionId            = UUID.randomUUID.toString
-  implicit val fakeRequest = FakeRequest()
-  val mockUsername         = "mockuser"
-  val mockUserId           = "/auth/oid/" + mockUsername
+  val sessionId                                     = UUID.randomUUID.toString
+  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  val mockUsername                                  = "mockuser"
+  val mockUserId                                    = "/auth/oid/" + mockUsername
 
   val ip2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),

@@ -56,23 +56,6 @@ pla.notFound.title          = Page not found - 404
 pla.notFound.pageHeading    = This page can''t be found
 pla.notFound.paraOne        = Please check that you have entered the correct web address.
 
-## Confirm FP 2016##
-pla.confirmFP16.title       = Get fixed protection 2016 for your lifetime allowance
-pla.confirmFP16.pageHeading = Get fixed protection 2016 for your lifetime allowance
-pla.confirmFP16.para.1      = To get this protection you must agree to these declarations.
-pla.confirmFP16.para.2      = I declare:
-pla.confirmFP16.bullet.1    = on 6 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme
-pla.confirmFP16.bullet.2    = on 6 April 2016 I did not hold enhanced protection, primary protection, fixed protection, or fixed protection 2014
-pla.confirmFP16.bullet.3    = since 6 April 2016 I''ve not had a ''protection cessation event'' (these are specific events that make you ineligible for fixed protection)
-pla.confirmFP16.para.3      = I declare that the information I have provided is true and complete to the best of my knowledge and belief.
-pla.confirmFP16.help        = Help with these conditions
-pla.confirmFP16.hiddenPara.1 = Speak to your pension scheme administrator to get professional help understanding these conditions.
-pla.confirmFP16.hiddenPara.2 = HMRC''s Pensions Tax Manual has
-
-pla.confirmFP16.hiddenPara.linkText = technical guidance about fixed protection
-pla.confirmFP16.declaration = By confirming, you will automatically submit your application for fixed protection 2016.
-
-
 ## Failure Messages ##
 pla.notAuthorised.title         = Not Authorised
 pla.notAuthorised.pageHeading   = We cannot confirm your identity
@@ -122,7 +105,6 @@ pla.noNotificationId.paraOne.afterLink      = at any time.
 
 ## Pensions Taken ##
 pla.pensionsTaken.mandatoryErr              = Please answer this question
-pla.pensionsTaken.title                     = Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?
 pla.pensionsTaken.errors.mandatoryError.ip2016 = Select yes if before 6 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension?
 
 ## IP14 Pensions Taken ##
@@ -262,8 +244,6 @@ pla.currentPensions.amount.errors.max.ip2014 = What your UK pensions were worth 
 
 
 ## PENSION DEBITS ##
-pla.pensionDebits.title                     = Have any of your pensions been shared in a divorce since 5 April 2016?
-pla.pensionDebits.paraOne                   = This is called a pension sharing order and is issued by a court.
 pla.pensionDebits.errors.mandatoryError     = Select yes if any of your pensions been shared in a divorce since 5 April 2016
 
 ## IP14 PENSION DEBITS ##
@@ -276,10 +256,7 @@ pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2021
 pla.psoDetails.dateHintText14               = For example, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
-pla.psoDetails.visitPTA                     = Once you''ve completed this service, you can add a pension sharing order at any time by visiting your personal tax account.
 pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
-pla.psoDetails.removePso                    = This will remove your pension sharing order.
-pla.psoDetails.cancelRemove                 = Do not remove
 pla.psoDetails.amount.errors.mandatoryError = Enter the amount of pension sharing order
 pla.psoDetails.amount.errors.decimal        = The amount of pension sharing order has too many numbers after the decimal point
 pla.psoDetails.amount.errors.negative       = The amount of pension sharing order must be £0 or more
@@ -308,77 +285,8 @@ pso.error.range.max                  = The date of your pension sharing order ca
 
 
 ## SUMMARY ##
-pla.summary.pageHeading                             = Check and submit your protection details
-pla.summary.errorSummaryLabel                       = There''s a problem with your application
-pla.summary.underThresholdError.IP2016              = Your total pension savings were less than £1,000,001 on 5 April 2016. You can only apply for individual protection 2016 if your pension savings were £1,000,001 or more.
 pla.summary.pensionsHeading                         = Value of pensions
-pla.summary.change                                  = Change
-pla.summary.questions.pensionsTaken                 = Before 6 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.summary.hiddenLinkText.pensionsTaken            = Change your response to the question ''have you taken any of your pensions''
-pla.summary.questions.pensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
-pla.summary.hiddenLinkText.pensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
-pla.summary.questions.pensionsWorthBeforeAmt        = What''s the value of the pensions you took before 6 April 2006?
-pla.summary.hiddenLinkText.pensionsWorthBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
-pla.summary.questions.pensionsTakenBetween          = Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.summary.hiddenLinkText.pensionsTakenBetween     = Change your response to the question ''did you get money from your pensions between 6 April 2006 and 5 April 2016''
-pla.summary.questions.pensionsUsedBetweenAmt       = How much lifetime allowance have you used?
-pla.summary.hiddenLinkText.pensionsUsedBetweenAmt  = Change your response to the amount of lifetime allowance used
-pla.summary.questions.overseasPensions              = Have you put money into a pension scheme held overseas?
-pla.summary.hiddenLinkText.overseasPensions         = Change your response to the question ''Have you put money into a pension scheme held overseas?''
-pla.summary.questions.overseasPensionsAmt           = How much did you contribute?
-pla.summary.hiddenLinkText.overseasPensionsAmt      = Change your response to the amount of overseas pensions you put in between 6 April 2006 and 5 April 2016
-pla.summary.questions.currentPensionsAmt            = What were your UK pensions worth on 5 April 2016?
-pla.summary.hiddenLinkText.currentPensionsAmt       = Change your response to the value of your UK pension savings on 5 April 2016
-pla.summary.questions.totalPensionsAmt              = Total value of pensions
 pla.summary.psosHeading                             = Value of pension sharing orders
-pla.summary.questions.pensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2016?
-pla.summary.hiddenLinkText.pensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2016?''
-
-pla.summary.questions.psoDetails                    = Date and amount of pension sharing order
-pla.summary.hiddenLinkText.psoDetails               = Change the details of your pension sharing order
-
-pla.summary.getIP16                                 = Get individual protection 2016
-pla.summary.getIP14                                 = Get individual protection 2014
-
-pla.summary.mustAgree                               = To get this protection you must agree to these declarations.
-pla.summary.confirmation                            = I confirm that:
-pla.summary.confirmBullet1                          = on 5 April 2016 I was a member of an HMRC-registered pension scheme or a relieved member of a relieved non-UK pension scheme
-pla.summary.confirmBullet2                          = on 6 April 2016 I didn''t hold either primary protection or individual protection 2014
-pla.summary.help                                    = Help with these conditions
-pla.summary.hiddenPara.1                            = Speak to your pension scheme administrator to get professional help understanding these conditions.
-pla.summary.hiddenPara.2                            = HMRC''s Pensions Tax Manual has {0}
-pla.summary.hiddenPara.2.nonInput                   = HMRC''s Pensions Tax Manual has
-pla.summary.hiddenPara.linkText                     = technical guidance about individual protection 2016
-pla.summary.hiddenPara.ip14LinkText                 = technical guidance about individual protection 2014
-pla.summary.confirmation2                           = I confirm that the information I have provided is true and complete to the best of my knowledge and belief.
-pla.summary.declaration                             = By confirming, you will automatically submit your application for individual protection 2016.
-pla.summary.ip14Declaration                         = By confirming, you will automatically submit your application for individual protection 2014.
-
-pla.summary.underThresholdError.IP2014                  = Your total pension savings were less than £1,250,001 on 5 April 2014. You can only apply for individual protection 2014 if your pension savings were £1,250,001 or more.
-pla.summary.questions.ip14PensionsTaken                 = Before 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.summary.hiddenLinkText.ip14PensionsTaken            = Change your response to the question ''have you taken any of your pensions''
-pla.summary.questions.ip14PensionsTakenBefore           = Did you get an income from any of your pensions before 6 April 2006?
-pla.summary.hiddenLinkText.ip14PensionsTakenBefore      = Change your response to the question ''Did you get an income from any of your pensions before 6 April 2006?''
-pla.summary.questions.ip14PensionsTakenBeforeAmt        = What''s the value of the pensions you took before 6 April 2006?
-pla.summary.hiddenLinkText.ip14PensionsTakenBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
-pla.summary.questions.ip14PensionsTakenBetween          = Between 6 April 2006 and 5 April 2014, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.summary.hiddenLinkText.ip14PensionsTakenBetween     = Change your response to the question ''did you get money from your pensions between 6 April 2006 and 5 April 2014''
-pla.summary.questions.ip14PensionsTakenBetweenAmt       = How much lifetime allowance have you used?
-pla.summary.hiddenLinkText.ip14PensionsTakenBetweenAmt  = Change your response to the amount of lifetime allowance used
-pla.summary.questions.ip14OverseasPensions              = Have you put money into a pension scheme held overseas?
-pla.summary.hiddenLinkText.ip14OverseasPensions         = Change your response to the question ''Have you put money into a pension scheme held overseas?''
-pla.summary.questions.ip14OverseasPensionsAmt           = How much did you contribute?
-pla.summary.hiddenLinkText.ip14OverseasPensionsAmt      = Change your response to the amount of overseas pensions you put in between 6 April 2006 and 5 April 2014
-pla.summary.questions.ip14CurrentPensionsAmt            = What were your UK pensions worth on 5 April 2014?
-pla.summary.hiddenLinkText.ip14CurrentPensionsAmt       = Change your response to the value of your UK pension savings on 5 April 2014
-pla.summary.questions.ip14TotalPensionsAmt              = Total value of pensions
-pla.summary.ip14PsosHeading                             = Pension sharing orders
-pla.summary.questions.ip14PensionDebits                 = Have any of your pensions been shared in a divorce since 5 April 2014?
-pla.summary.hiddenLinkText.ip14PensionDebits            = Change your response to the question ''Have any of your pensions been shared in a divorce since 5 April 2014?''
-pla.summary.hiddenLinkText.removePsoHint                = Remove your response to the amount or date of your pension sharing order
-
-pla.summary.questions.ip14PsoDetails                    = Date and amount of pension sharing order
-pla.summary.hiddenLinkText.ip14PsoDetails               = Change the details of your pension sharing order
 
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = View your existing protections

@@ -16,17 +16,16 @@
 
 package testHelpers
 
+import auth._
+import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty}
-import play.api.test.FakeRequest
+import org.jsoup._
 import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
-import org.jsoup._
-import auth._
-import org.apache.pekko.stream.Materializer
-import org.apache.pekko.actor.ActorSystem
 import org.scalatestplus.mockito.MockitoSugar
+import play.api.mvc.{Action, AnyContent, AnyContentAsEmpty}
+import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import uk.gov.hmrc.http.SessionKeys
 
@@ -39,11 +38,11 @@ class FakeRequestTo(
     with Matchers
     with OptionValues
     with MockitoSugar {
-  implicit val system            = ActorSystem("test")
-  implicit def mat: Materializer = mock[Materializer]
-  val fakeRequest                = constructRequest(url, sessionId)
-  val result                     = controllerAction(fakeRequest)
-  val jsoupDoc                   = Jsoup.parse(contentAsString(result))
+  implicit val system: ActorSystem = ActorSystem("test")
+  implicit def mat: Materializer   = mock[Materializer]
+  val fakeRequest                  = constructRequest(url, sessionId)
+  val result                       = controllerAction(fakeRequest)
+  val jsoupDoc                     = Jsoup.parse(contentAsString(result))
 
   def constructRequest(url: String, sessionId: Option[String]): FakeRequest[AnyContentAsEmpty.type] =
     sessionId match {
@@ -61,8 +60,8 @@ class AuthorisedFakeRequestTo(controllerAction: Action[AnyContent])
     with Matchers
     with OptionValues
     with MockitoSugar {
-  implicit val system            = ActorSystem("test")
-  implicit def mat: Materializer = mock[Materializer]
-  val result                     = controllerAction(authenticatedFakeRequest())
-  val jsoupDoc                   = Jsoup.parse(contentAsString(result))
+  implicit val system: ActorSystem = ActorSystem("test")
+  implicit def mat: Materializer   = mock[Materializer]
+  val result                       = controllerAction(authenticatedFakeRequest())
+  val jsoupDoc                     = Jsoup.parse(contentAsString(result))
 }

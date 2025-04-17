@@ -14,9 +14,6 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-@import play.api.Application
-@import config.FrontendAppConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components._
 
 @this(
@@ -24,7 +21,7 @@
     govukWarningText : GovukWarningText
 )
 
-@(withdrawDateForm: Any,protectionType: String, status: String)(implicit request: Request[_], messages: Messages, application: Application, context: config.PlaContext, appConfig: FrontendAppConfig)
+@(withdrawDateForm: Any,protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
 
 @layout(
     pageTitle = Messages("pla.withdraw.protection.title", Messages(s"pla.withdraw.protection.${protectionType}.label")),

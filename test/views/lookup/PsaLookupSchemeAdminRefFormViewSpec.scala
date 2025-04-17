@@ -20,12 +20,9 @@ import forms.PSALookupSchemeAdministratorReferenceForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupSchemeAdminRefFormSpecMessages
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.lookup.psa_lookup_scheme_admin_ref_form
 
 class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaLookupSchemeAdminRefFormSpecMessages {
-
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "The Psa Lookup Scheme Admin Ref form view" when {
 

@@ -43,13 +43,6 @@
     </p>
 }
 
-@title = @{
-    if(amendCurrentPensionForm.errors.nonEmpty){
-        messages("site.title.error", messages("pla.currentPensions.title"))
-    } else {
-        messages("pla.currentPensions.title")
-    }
-}
 @layout(
     pageTitle = Messages("pla.currentPensions.title")
 ) {

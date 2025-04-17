@@ -16,18 +16,12 @@
 
 package controllers
 
-import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
+import auth.{AuthFunction, AuthFunctionImpl}
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
 import connectors.PLAConnector
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
-import forms.{
-  AmendCurrentPensionForm,
-  AmendOverseasPensionsForm,
-  AmendPensionsTakenBeforeForm,
-  AmendPensionsTakenBetweenForm
-}
 import mocks.AuthMock
 import models._
 import models.amendModels._
@@ -35,22 +29,21 @@ import models.cache.CacheMap
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.{any, anyString, startsWith}
+import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.libs.json.{JsNull, Json}
-import play.api.mvc.MessagesControllerComponents
+import play.api.libs.json.JsNull
+import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers._
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
 import views.html.pages.amends._
 import views.html.pages.fallback.technicalError
 
@@ -66,7 +59,7 @@ class AmendsPensionSharingOrderControllerSpec
     with AuthMock
     with I18nSupport {
 
-  implicit lazy val mockMessage =
+  implicit lazy val mockMessage: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   val mockDisplayConstructors: DisplayConstructors   = mock[DisplayConstructors]
@@ -88,15 +81,13 @@ class AmendsPensionSharingOrderControllerSpec
   implicit val formWithCSRF: FormWithCSRF       = app.injector.instanceOf[FormWithCSRF]
   implicit val ec: ExecutionContext             = app.injector.instanceOf[ExecutionContext]
 
-  override def beforeEach() = {
-    reset(
-      mockSessionCacheService,
-      mockPlaConnector,
-      mockDisplayConstructors,
-      mockAuthConnector,
-      mockEnv,
-      mockResponseConstructors
-    )
+  override def beforeEach(): Unit = {
+    reset(mockSessionCacheService)
+    reset(mockPlaConnector)
+    reset(mockDisplayConstructors)
+    reset(mockAuthConnector)
+    reset(mockEnv)
+    reset(mockResponseConstructors)
     super.beforeEach()
   }
 
@@ -130,10 +121,10 @@ class AmendsPensionSharingOrderControllerSpec
 
   }
 
-  val sessionId            = UUID.randomUUID.toString
-  implicit val fakeRequest = FakeRequest()
-  val mockUsername         = "mockuser"
-  val mockUserId           = "/auth/oid/" + mockUsername
+  val sessionId                                     = UUID.randomUUID.toString
+  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  val mockUsername                                  = "mockuser"
+  val mockUserId                                    = "/auth/oid/" + mockUsername
 
   val ip2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),

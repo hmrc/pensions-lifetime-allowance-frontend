@@ -14,20 +14,18 @@
  * limitations under the License.
  *@
 
-@this(
-layout: Layout
-)
+@this(layout: Layout)
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-     pageTitle = Messages("pla.withdrawn.ap2016.title"),
+     pageTitle = messages("pla.withdrawn.ap2016.title"),
      backLinkEnabled = false
 ) {
-    <h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.withdrawn.ap2016.pageHeading")</h1>
+    <h1 class="govuk-heading-xl" id="pageHeading">@messages("pla.withdrawn.ap2016.pageHeading")</h1>
 
     <p class="govuk-body" id="startAgainText">
-        @Messages("pla.withdrawn.ap2016.paraOne")
-        <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.withdrawn.ap2016.paraOne.linkText")</a>
+        @messages("pla.withdrawn.ap2016.paraOne")
+        <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@messages("pla.withdrawn.ap2016.paraOne.linkText")</a>
     </p>
 }

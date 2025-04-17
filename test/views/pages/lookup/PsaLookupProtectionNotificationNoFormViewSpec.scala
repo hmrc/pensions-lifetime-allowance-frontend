@@ -20,7 +20,6 @@ import forms.PSALookupProtectionNotificationNoForm
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.lookup.PsaLookupProtectionNotificationNoFormSpecMessages
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.lookup.psa_lookup_protection_notification_no_form
 
 class PsaLookupProtectionNotificationNoFormViewSpec
@@ -28,7 +27,6 @@ class PsaLookupProtectionNotificationNoFormViewSpec
     with PsaLookupProtectionNotificationNoFormSpecMessages {
 
   "The Psa Lookup Protection Notification No Form view" when {
-    implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
     "provided with a form without errors" should {
       lazy val form =

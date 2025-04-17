@@ -33,8 +33,6 @@ class AmendPsoDetailsViewSpec
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
-  private val messageKey: String = "psoDetails"
-
   "the AmendPsoDetailsView" should {
     val pensionsForm = AmendPSODetailsForm
       .amendPsoDetailsForm("")

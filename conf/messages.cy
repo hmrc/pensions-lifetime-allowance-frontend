@@ -62,23 +62,6 @@ pla.notFound.title          = Heb ddod o hyd i''r dudalen – 404
 pla.notFound.pageHeading    = Ni ellir dod o hyd i''r dudalen hon
 pla.notFound.paraOne        = Gwiriwch eich bod wedi nodi''r cyfeiriad gwe cywir.
 
-## Confirm FP 2016##
-pla.confirmFP16.title       = Cael diogelwch sefydlog 2016 ar gyfer eich lwfans oes
-pla.confirmFP16.pageHeading = Cael diogelwch sefydlog 2016 ar gyfer eich lwfans oes
-pla.confirmFP16.para.1      = I gael y diogelwch hwn mae''n rhaid i chi gytuno ar y datganiadau hyn.
-pla.confirmFP16.para.2      = Rwy''n datgan:
-pla.confirmFP16.bullet.1    = ar 6 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi cofrestru gyda CThEF, neu''n aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau sydd ddim yn y DU
-pla.confirmFP16.bullet.2    = ar 6 Ebrill 2016 nid oedd gennyf lefel uwch o ddiogelwch, diogelwch sylfaenol, diogelwch sefydlog , neu ddiogelwch sefydlog 2014
-pla.confirmFP16.bullet.3    = er 6 Ebrill 2016 nid wyf wedi cael ''digwyddiad sy''n dod â diogelwch i ben'' (digwyddiadau penodol yw''r rhain sy''n eich gwneud yn anghymwys ar gyfer diogelwch sefydlog)
-pla.confirmFP16.para.3      = Rwy''n datgan bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
-pla.confirmFP16.help        = Help gyda''r amodau hyn
-pla.confirmFP16.hiddenPara.1 = Siaradwch â gweinyddwr eich cynllun pensiwn i gael help proffesiynol i ddeall yr amodau hyn.
-pla.confirmFP16.hiddenPara.2 = Mae gan Lawlyfr Treth Pensiwn CThEF
-
-pla.confirmFP16.hiddenPara.linkText = arweiniad technegol ynghylch diogelwch sefydlog
-pla.confirmFP16.declaration = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am ddiogelwch sefydlog 2016 yn awtomatig.
-
-
 ## Failure Messages ##
 pla.notAuthorised.title         = Heb ei awdurdodi
 pla.notAuthorised.pageHeading   = Ni allwn gadarnhau pwy ydych
@@ -120,7 +103,6 @@ pla.noNotificationId.paraOne.afterLink      = ar unrhyw adeg.
 
 ## Pensions Taken ##
 pla.pensionsTaken.mandatoryErr              = Atebwch y cwestiwn hwn
-pla.pensionsTaken.title                     = Cyn 6 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 pla.pensionsTaken.errors.mandatoryError.ip2016 = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016
 
 ## IP14 Pensions Taken ##
@@ -264,8 +246,6 @@ pla.currentPensions.amount.errors.max.ip2014 = Mae''n rhaid i werth eich pensiyn
 
 
 ## PENSION DEBITS ##
-pla.pensionDebits.title                     = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?
-pla.pensionDebits.paraOne                   = Gelwir hynny''n orchymyn rhannu pensiwn a gyhoeddir gan lys.
 pla.pensionDebits.errors.mandatoryError     = TODO
 
 ## IP14 PENSION DEBITS ##
@@ -278,10 +258,7 @@ pla.psoDetails.dateQuestionText             = Dyddiad y gorchymyn rhannu pensiwn
 pla.psoDetails.dateHintText                 = Er enghraifft, 18 4 2021
 pla.psoDetails.dateHintText14               = Er enghraifft, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Swm y gorchymyn rhannu pensiwn
-pla.psoDetails.visitPTA                     = Unwaith eich bod wedi cwblhau''r gwasanaeth, gallwch ychwanegu gorchymyn rhannu pensiwn ar unrhyw adeg drwy ymweld â''ch cyfrif treth personol.
 pla.psoDetails.errorQuestion                = Nodwch rif heb comas, er enghraifft 10000.00
-pla.psoDetails.removePso                    = Bydd hyn yn dileu''ch gorchymyn rhannu pensiwn
-pla.psoDetails.cancelRemove                 = Peidiwch â dileu
 pla.psoDetails.amount.errors.mandatoryError = Nodwch swm y gorchymyn rhannu pensiwn
 pla.psoDetails.amount.errors.decimal        = Mae swm y gorchymyn rhannu pensiwn yn cynnwys gormod o rifau ar ôl y pwynt degol
 pla.psoDetails.amount.errors.negative       = Mae''n rhaid i swm y gorchymyn rhannu pensiwn fod yn £0 neu fwy
@@ -310,77 +287,8 @@ pso.error.range.max                  = Ni all dyddiad eich gorchymyn rhannu pens
 
 
 ## SUMMARY ##
-pla.summary.pageHeading                             = Gwirio a chyflwyno''ch manylion diogelwch
-pla.summary.errorSummaryLabel                       = Mae problem gyda''ch cais
-pla.summary.underThresholdError.IP2016              = Roedd cyfanswm eich cynilion pensiwn yn llai na £1,000,001 ar 5 Ebrill 2016. Gallwch wneud cais am ddiogelwch unigol 2016 os oedd eich cynilion pensiwn yn £1,000,001 neu''n fwy.
 pla.summary.pensionsHeading                         = Gwerth pensiynau
-pla.summary.change                                  = Newid
-pla.summary.questions.pensionsTaken                 = Cyn 6 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
-pla.summary.hiddenLinkText.pensionsTaken            = Newidiwch eich ateb i''r cwestiwn "A ydych wedi cymryd unrhyw un o''ch pensiynau?"
-pla.summary.questions.pensionsTakenBefore           = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
-pla.summary.hiddenLinkText.pensionsTakenBefore      = Newidiwch eich ateb i''r cwestiwn "A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?"
-pla.summary.questions.pensionsWorthBeforeAmt        = Beth yw gwerth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006?
-pla.summary.hiddenLinkText.pensionsWorthBeforeAmt   = Newidiwch eich ateb i werth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006
-pla.summary.questions.pensionsTakenBetween          = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
-pla.summary.hiddenLinkText.pensionsTakenBetween     = Newidiwch eich ateb i''r cwestiwn "A gawsoch arian o''ch pensiynau rhwng 6 Ebrill 2006 a 5 Ebrill 2016?"
-pla.summary.questions.pensionsUsedBetweenAmt        = Faint o lwfans oes a ydych wedi''i ddefnyddio?
-pla.summary.hiddenLinkText.pensionsUsedBetweenAmt   = Newidiwch eich ateb i swm y lwfans oes a ddefnyddiwyd
-pla.summary.questions.overseasPensions              = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
-pla.summary.hiddenLinkText.overseasPensions         = Newidiwch eich ateb i''r cwestiwn "A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?"
-pla.summary.questions.overseasPensionsAmt           = Faint gwnaethoch gyfrannu?
-pla.summary.hiddenLinkText.overseasPensionsAmt      = Newidiwch eich ateb i swm y pensiynau dramor a rhoesoch i mewn rhwng 6 Ebrill 2006 a 5 Ebrill 2016
-pla.summary.questions.currentPensionsAmt            = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2016?
-pla.summary.hiddenLinkText.currentPensionsAmt       = Newidiwch eich ateb i werth eich cynilion pensiwn y DU ar 5 Ebrill 2016
-pla.summary.questions.totalPensionsAmt              = Cyfanswm gwerth pensiynau
 pla.summary.psosHeading                             = Gwerth gorchmynion rhannu pensiwn
-pla.summary.questions.pensionDebits                 = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?
-pla.summary.hiddenLinkText.pensionDebits            = Newidiwch eich ateb i''r cwestiwn "A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2016?"
-
-pla.summary.questions.psoDetails                    = Dyddiad a swm y gorchymyn rhannu pensiwn
-pla.summary.hiddenLinkText.psoDetails               = Newidiwch fanylion eich gorchymyn rhannu pensiwn
-
-pla.summary.getIP16                                 = Cael diogelwch unigol 2016
-pla.summary.getIP14                                 = Cael diogelwch unigol 2014
-
-pla.summary.mustAgree                               = I gael y diogelwch hwn mae''n rhaid i chi gytuno ar y datganiadau hyn.
-pla.summary.confirmation                            = Rwy''n cadarnhau''r canlynol:
-pla.summary.confirmBullet1                          = ar 5 Ebrill 2016 roeddwn yn aelod o gynllun pensiwn a oedd wedi''i gofrestru gyda CThEF, neu roeddwn yn aelod wedi''i ryddhau o gynllun pensiwn wedi''i ryddhau nad yw yn y DU
-pla.summary.confirmBullet2                          = ar 6 Ebrill 2016 nid oedd gennyf brif ddiogelwch na diogelwch unigol 2014
-pla.summary.help                                    = Help gyda''r amodau hyn
-pla.summary.hiddenPara.1                            = Siaradwch â gweinyddwr eich cynllun pensiwn i gael help proffesiynol i ddeall yr amodau hyn.
-pla.summary.hiddenPara.2                            = Mae gan Lawlyfr Treth Pensiwn CThEF {0}
-pla.summary.hiddenPara.2.nonInput                   = Mae gan Lawlyfr Treth Pensiwn CThEF
-pla.summary.hiddenPara.linkText                     = arweiniad technegol ynghylch diogelwch unigol 2016
-pla.summary.hiddenPara.ip14LinkText                 = arweiniad technegol ynghylch diogelwch unigol 2014
-pla.summary.confirmation2                           = Rwy''n cadarnhau bod yr wybodaeth a roddwyd gennyf yn gywir ac yn gyflawn hyd eithaf fy ngwybodaeth a''m cred.
-pla.summary.declaration                             = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am ddiogelwch unigol 2016 yn awtomatig.
-pla.summary.ip14Declaration                         = Drwy gadarnhau, byddwch yn cyflwyno''ch cais am ddiogelwch unigol 2014 yn awtomatig.
-
-pla.summary.underThresholdError.IP2014                  = Roedd cyfanswm eich cynilion pensiwn yn llai na £1,250,001 ar 5 Ebrill 2014. Gallwch wneud cais am ddiogelwch unigol 2014 os oedd eich cynilion pensiwn yn £1,250,001 neu''n fwy.
-pla.summary.questions.ip14PensionsTaken                 = Cyn 5 Ebrill 2014, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
-pla.summary.hiddenLinkText.ip14PensionsTaken            = Newidiwch eich ateb i''r cwestiwn "A ydych wedi cymryd unrhyw un o''ch pensiynau?"
-pla.summary.questions.ip14PensionsTakenBefore           = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
-pla.summary.hiddenLinkText.ip14PensionsTakenBefore      = Newidiwch eich ateb i''r cwestiwn "A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?"
-pla.summary.questions.ip14PensionsTakenBeforeAmt        = Beth yw gwerth y pensiynau a gymerwyd gennych cyn 6 Ebrill 2006?
-pla.summary.hiddenLinkText.ip14PensionsTakenBeforeAmt   = Change your response to the value of the pensions you took before 6 April 2006
-pla.summary.questions.ip14PensionsTakenBetween          = Rhwng 6 Ebrill 2006 a 5 Ebrill 2014, a gawsoch arian o''ch pensiynau, a wnaethoch drosglwyddo pensiwn dramor, neu a gawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd?
-pla.summary.hiddenLinkText.ip14PensionsTakenBetween     = Newidiwch eich ateb i''r cwestiwn "A gawsoch arian o''ch pensiynau rhwng 6 Ebrill 2006 a 5 Ebrill 2014?"
-pla.summary.questions.ip14PensionsTakenBetweenAmt       = Faint o lwfans oes a ydych wedi''i ddefnyddio?
-pla.summary.hiddenLinkText.ip14PensionsTakenBetweenAmt  = Newidiwch eich ateb i swm y lwfans oes a ddefnyddiwyd
-pla.summary.questions.ip14OverseasPensions              = A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?
-pla.summary.hiddenLinkText.ip14OverseasPensions         = Newidiwch eich ateb i''r cwestiwn "A ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor?"
-pla.summary.questions.ip14OverseasPensionsAmt           = Faint gwnaethoch gyfrannu?
-pla.summary.hiddenLinkText.ip14OverseasPensionsAmt      = Newidiwch eich ateb i swm y pensiynau dramor a rhoesoch i mewn rhwng 6 Ebrill 2006 a 5 Ebrill 2014
-pla.summary.questions.ip14CurrentPensionsAmt            = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014?
-pla.summary.hiddenLinkText.ip14CurrentPensionsAmt       = Newidiwch eich ateb i werth eich cynilion pensiwn y DU ar 5 Ebrill 2014
-pla.summary.questions.ip14TotalPensionsAmt              = Cyfanswm gwerth pensiynau
-pla.summary.ip14PsosHeading                             = Gorchmynion rhannu pensiwn
-pla.summary.questions.ip14PensionDebits                 = A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?
-pla.summary.hiddenLinkText.ip14PensionDebits            = Newidiwch eich ateb i''r cwestiwn "A oes unrhyw un o''ch pensiynau wedi''i rannu mewn ysgariad er 5 Ebrill 2014?"
-pla.summary.hiddenLinkText.removePsoHint                = Dilëwch eich ateb i swm neu ddyddiad eich gorchymyn rhannu pensiwn
-
-pla.summary.questions.ip14PsoDetails                    = Dyddiad a swm y gorchymyn rhannu pensiwn
-pla.summary.hiddenLinkText.ip14PsoDetails               = Newidiwch fanylion eich gorchymyn rhannu pensiwn
 
 ## EXISTING PROTECTIONS ##
 pla.existingProtections.title                           = Bwrw golwg ar fanylion eich diogelwch presennol

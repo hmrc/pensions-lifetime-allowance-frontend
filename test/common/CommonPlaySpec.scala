@@ -26,7 +26,7 @@ import play.api.mvc.Result
 
 import java.nio.charset.Charset
 import scala.concurrent.ExecutionContext
-import scala.language.{implicitConversions, postfixOps}
+import scala.language.implicitConversions
 
 trait CommonPlaySpec extends AnyWordSpec with Matchers with OptionValues {
 

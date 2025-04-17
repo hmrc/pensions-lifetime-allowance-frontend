@@ -184,17 +184,4 @@ class AmendsController @Inject() (
     Some(List(PensionDebitModel(startDate = date, amount = amt.toDouble)))
   }
 
-  private def updateAndSaveAmendModelWithPso(
-      debits: Option[List[PensionDebitModel]],
-      amendModelOption: Option[AmendProtectionModel],
-      key: String
-  )(implicit request: Request[AnyContent]) = {
-    val amendModel = amendModelOption.getOrElse {
-      throw new Exceptions.RequiredValueNotDefinedException("updateAndSaveAmendModelWithPso", "amendModel")
-    }
-    val newUpdatedProtection = amendModel.updatedProtection.copy(pensionDebits = debits)
-    sessionCacheService
-      .saveFormData[AmendProtectionModel](key, amendModel.copy(updatedProtection = newUpdatedProtection))
-  }
-
 }

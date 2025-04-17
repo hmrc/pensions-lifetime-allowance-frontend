@@ -14,23 +14,15 @@
  * limitations under the License.
  *@
 
-@import play.api.Application
-@import config.FrontendAppConfig
-
 @this(
     layout: Layout,
     govukButton: GovukButton
 )
 
-@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages, application: Application, frontendAppConfig: FrontendAppConfig)
+@(lookupResult: PSALookupResult, timestamp: String)(implicit request: Request[_], messages: Messages)
 
-
-@metrics = {
-    @if(lookupResult.psaCheckResult == 0) {
-        frontendAppConfig.invalidStatusMetric
-    } else {
-        frontendAppConfig.validStatusMetric
-    }
+@protectedAmountValue = @{
+  f"${lookupResult.protectedAmount.get}%1.0f"
 }
 
 @layout(
@@ -64,7 +56,7 @@
                         @if(lookupResult.protectedAmount.isDefined) {
                             <div class="govuk-summary-list__row">
                                 <dt class="govuk-summary-list__key">@Messages("psa.lookup.results.table.row.4")</dt>
-                                <dd id="protected-amount-value" class="govuk-summary-list__value">£@lookupResult.protectedAmount.get.formatted("%,1.0f")</dd>
+                                <dd id="protected-amount-value" class="govuk-summary-list__value">£@protectedAmountValue</dd>
                             </div>
                         }
                     }

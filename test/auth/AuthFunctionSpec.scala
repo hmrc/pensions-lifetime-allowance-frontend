@@ -16,10 +16,10 @@
 
 package auth
 
-import org.apache.pekko.stream.Materializer
-import org.apache.pekko.actor.ActorSystem
 import config.{FrontendAppConfig, PlaContext}
 import mocks.AuthMock
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.Materializer
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -32,10 +32,9 @@ import play.api.{Environment, Mode}
 import testHelpers.{FakeApplication, SessionCacheTestHelper}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.http.HeaderCarrier
-
-import java.net.URLEncoder
 import views.html.pages.fallback.technicalError
 
+import java.net.URLEncoder
 import scala.concurrent.{ExecutionContext, Future}
 
 class AuthFunctionSpec
@@ -59,8 +58,11 @@ class AuthFunctionSpec
   val mockEnv: Environment                  = mock[Environment]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
-  override def beforeEach(): Unit =
-    reset(mockPlayAuthConnector, mockAuthConnector, mockPlaContext)
+  override def beforeEach(): Unit = {
+    reset(mockPlayAuthConnector)
+    reset(mockAuthConnector)
+    reset(mockPlaContext)
+  }
 
   class TestAuthFunction extends AuthFunction {
 

@@ -19,7 +19,6 @@ package views.pages.existingProtections
 import config.FrontendAppConfig
 import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel}
 import org.jsoup.Jsoup
-import org.mockito.Mockito.when
 import play.api.i18n.Messages
 import play.api.inject
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -32,7 +31,6 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
 
   "The Existing Protections page" should {
     val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-    when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(false)
 
     lazy val protectionModel = ExistingProtectionDisplayModel(
       "IP2016",
@@ -152,26 +150,9 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
     }
 
-    "have a view details about other protections and how to apply link which" should {
-
-      lazy val link = doc.select("#main-content > div > div > p > a")
-
-      s"have a link destination of view details about other protections and how to apply" in {
-        link.attr("href") shouldBe plaExistingProtectionsHref
-      }
-
-      s"have the link text $plaExistingProtectionsLinkText" in {
-        link.text shouldBe plaExistingProtectionsLinkText
-      }
-
-      s"have a question of ${"pla.existingProtections.other.protections.link"}" in {
-        doc.select("#main-content > div > div > p").text shouldBe plaExistingProtectionOtherText
-      }
-    }
-
     "have a view details about taking higher tax-free lump sums with protected allowances and the link which" should {
       val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-      when(mockAppConfig.applyFor2016IpAndFpShutterEnabled).thenReturn(true)
+
       val application = new GuiceApplicationBuilder()
         .configure("metrics.enabled" -> false)
         .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))

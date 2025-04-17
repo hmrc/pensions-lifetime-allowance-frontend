@@ -17,7 +17,7 @@
 package views.pages.result
 
 import enums.ApplicationType
-import models.{RejectionDisplayModel, SuccessDisplayModel}
+import models.RejectionDisplayModel
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultRejected

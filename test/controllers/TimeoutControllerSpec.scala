@@ -16,9 +16,9 @@
 
 package controllers
 
+import config.{FrontendAppConfig, PlaContext}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import config.{FrontendAppConfig, PlaContext}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
 import play.api.mvc.MessagesControllerComponents
@@ -35,7 +35,7 @@ class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
   implicit val mockPlaContext: PlaContext       = mock[PlaContext]
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
-  implicit val application                      = mock[Application]
+  implicit val application: Application         = mock[Application]
   implicit val mockTimeout: timeout             = app.injector.instanceOf[timeout]
 
   val controller = new TimeoutController(mockMCC, mockTimeout)

@@ -16,18 +16,20 @@
 
 package controllers
 
-import config.{FrontendAppConfig, PlaContext}
-import javax.inject.Inject
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html.pages.ip2014.withdrawn
+import views.html.pages.ip2016.withdrawnAP2016
 
-import scala.concurrent.Future
+import javax.inject.Inject
 
-class WithdrawnController @Inject() (mcc: MessagesControllerComponents, withdrawn: withdrawn)(
-    implicit val appConfig: FrontendAppConfig,
-    implicit val plaContext: PlaContext
+class WithdrawnController @Inject() (
+    mcc: MessagesControllerComponents,
+    withdrawn2014: withdrawn,
+    withdrawn2016: withdrawnAP2016
 ) extends FrontendController(mcc) {
 
-  def showWithdrawn(): Action[AnyContent] = Action.async(implicit request => Future.successful(Ok(withdrawn())))
+  def showWithdrawn2014(): Action[AnyContent] = Action(implicit request => Ok(withdrawn2014()))
+
+  def showWithdrawn2016(): Action[AnyContent] = Action(implicit request => Ok(withdrawn2016()))
 }

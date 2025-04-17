@@ -34,21 +34,6 @@ class AmendPensionsWorthBeforeViewSpec extends CommonViewSpecHelper with Pension
     lazy val view = application.injector.instanceOf[amendPensionsWorthBefore]
     lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
-    val errorForm = AmendPensionsWorthBeforeForm
-      .amendPensionsWorthBeforeForm("ip2016")
-      .bind(
-        Map(
-          "amendedPensionsWorthBefore"    -> "",
-          "amendedPensionsTakenBeforeAmt" -> "12345",
-          "protectionType"                -> "ip2016",
-          "status"                        -> "open"
-        )
-      )
-    lazy val errorView = application.injector.instanceOf[amendPensionsWorthBefore]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
-
-    lazy val form = doc.select("form")
-
     "have the correct title" in {
       doc.title() shouldBe plaPensionsWorthBeforeTitle
     }

@@ -36,9 +36,6 @@ class SessionCacheService @Inject() (sessionRepository: SessionRepository)(
   def fetchAndGetFormData[T](key: String)(implicit request: Request[_], formats: Format[T]): Future[Option[T]] =
     sessionRepository.getFromSession[T](DataKey(key))
 
-  def fetchAllUserData(implicit request: Request[_]): Future[Option[CacheMap]] =
-    sessionRepository.getAllFromSession
-
   def remove(implicit request: Request[_]): Future[Unit] =
     sessionRepository.clearSession
 

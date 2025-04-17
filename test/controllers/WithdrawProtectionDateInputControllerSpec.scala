@@ -23,31 +23,25 @@ import constructors.DisplayConstructors
 import controllers.helpers.FakeRequestHelper
 import mocks.AuthMock
 import models._
-import models.cache.CacheMap
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.data.Form
-import play.api.http.HeaderNames.CACHE_CONTROL
+import play.api.Application
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc._
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import play.api.{Application, Environment}
 import services.SessionCacheService
-import testHelpers.{AuthorisedFakeRequestToPost, FakeApplication, SessionCacheTestHelper}
+import testHelpers.{FakeApplication, SessionCacheTestHelper}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
 import views.html.pages.fallback.technicalError
-import views.html.pages.withdraw.{withdrawConfirm, withdrawConfirmation, withdrawDate, withdrawImplications}
+import views.html.pages.withdraw.withdrawDate
 
-import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
 class WithdrawProtectionDateInputControllerSpec
@@ -99,7 +93,10 @@ class WithdrawProtectionDateInputControllerSpec
   }
 
   override def beforeEach(): Unit = {
-    reset(mockAuthConnector, mockPlaConnector, mockPlaContext, mockDisplayConstructors)
+    reset(mockAuthConnector)
+    reset(mockPlaConnector)
+    reset(mockPlaContext)
+    reset(mockDisplayConstructors)
     super.beforeEach()
   }
 
@@ -131,6 +128,19 @@ class WithdrawProtectionDateInputControllerSpec
 
         status(result) shouldBe OK
       }
+
+      "there is not stored protection model" should {
+
+        "return 500" in new Setup {
+
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          cacheFetchCondition[ProtectionModel](None)
+
+          lazy val result: Future[Result] = controller.getWithdrawDateInput(fakeRequest)
+
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+        }
+      }
     }
   }
 
@@ -146,7 +156,27 @@ class WithdrawProtectionDateInputControllerSpec
     }
 
     "there is a stored protection model" should {
-      "return 303" in new Setup {
+
+      "return 400 when form is submitted with errors" in new Setup {
+
+        mockAuthConnector(Future.successful {})
+
+        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+        cacheSaveCondition[WithdrawDateFormModel](mockSessionCacheService)
+
+        val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest()
+          .withFormUrlEncodedBody(
+            ("withdrawDate.day", "20"),
+            ("withdrawDate.month", "7"),
+            ("withdrawDate.year", "abcd")
+          )
+          .withMethod("POST")
+
+        lazy val result: Future[Result] = controller.postWithdrawDateInput(request)
+        status(result) shouldBe BAD_REQUEST
+      }
+
+      "return 303 when valid data is submitted" in new Setup {
         mockAuthConnector(Future.successful {})
 
         cacheFetchCondition[ProtectionModel](Some(ip2016Protection))

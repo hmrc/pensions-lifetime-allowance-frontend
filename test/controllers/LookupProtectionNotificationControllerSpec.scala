@@ -35,8 +35,8 @@ import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys, UpstreamErrorResponse}
 import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys, UpstreamErrorResponse}
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
@@ -57,7 +57,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
   implicit val hc: HeaderCarrier                = HeaderCarrier()
-  implicit val application                      = mock[Application]
+  implicit val application: Application         = mock[Application]
 
   implicit val mockPsa_lookup_not_found_results: psa_lookup_not_found_results =
     app.injector.instanceOf[psa_lookup_not_found_results]

@@ -40,7 +40,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.api.{Application, Environment}
 import services.SessionCacheService
-import testHelpers.{AuthorisedFakeRequestToPost, FakeApplication, SessionCacheTestHelper}
+import testHelpers.{FakeApplication, SessionCacheTestHelper}
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
@@ -108,7 +108,10 @@ class WithdrawProtectionControllerSpec
   }
 
   override def beforeEach(): Unit = {
-    reset(mockAuthConnector, mockPlaConnector, mockPlaContext, mockDisplayConstructors)
+    reset(mockAuthConnector)
+    reset(mockPlaConnector)
+    reset(mockPlaContext)
+    reset(mockDisplayConstructors)
     super.beforeEach()
   }
 
