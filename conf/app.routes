@@ -45,7 +45,7 @@ GET         /apply-for-ip16-current-pensions                                    
 
 GET         /apply-for-ip16-pension-sharing-orders                                        @controllers.WithdrawnController.showWithdrawn2016()
 
-POST        /apply-for-ip16-pension-sharing-order-details                                 @controllers.WithdrawnController.showWithdrawn2016()
+GET         /apply-for-ip16-pension-sharing-order-details                                 @controllers.WithdrawnController.showWithdrawn2016()
 
 GET         /apply-for-ip16-remove-pension-sharing-order-details                          @controllers.WithdrawnController.showWithdrawn2016()
 
