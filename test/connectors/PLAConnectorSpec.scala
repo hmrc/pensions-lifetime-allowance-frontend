@@ -100,41 +100,6 @@ class PLAConnectorSpec
   override def beforeEach() =
     reset(mockHttp)
 
-  "Calling applyFP16" should {
-    "should return a 200 from a valid apply FP16 request" in new Setup {
-      when(mockHttp.post(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      val response = connector.applyFP16(nino)
-      await(response).status shouldBe OK
-    }
-  }
-
-  "Calling applyIP14" should {
-    "should return a 200 from a valid apply IP14 request" in new Setup {
-      when(mockHttp.post(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      val tstMap = CacheMap(
-        tstId,
-        Map(
-          negativeIP14PensionsTakenTuple,
-          negativeIP14OverseasPensionsTuple,
-          validIP14CurrentPensionsTuple,
-          validIP14PensionUsedBetweenTuple,
-          negativeIP14PensionDebitsTuple
-        )
-      )
-      val response = connector.applyIP14(nino, tstMap)
-
-      await(response).status shouldBe OK
-    }
-  }
-
   "Calling amendProtection" should {
     "return 200 from a valid amendProtection request" in new Setup {
       when(mockHttp.put(any)(any)).thenReturn(requestBuilder)
