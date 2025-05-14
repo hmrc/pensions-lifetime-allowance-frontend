@@ -44,15 +44,6 @@ class PLAConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2) 
       ResponseHandler.handlePLAResponse(method, url, response)
   }
 
-  def applyFP16(nino: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    val requestJson: JsValue = Json.parse("""{"protectionType":"FP2016"}""")
-    val url                  = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
-    http
-      .post(url"$url")
-      .withBody(Json.toJson(requestJson))
-      .execute[HttpResponse]
-  }
-
   protected val roundDown = of[JsNumber].map { case JsNumber(n) =>
     JsNumber(n.setScale(2, BigDecimal.RoundingMode.DOWN))
   }
@@ -82,20 +73,6 @@ class PLAConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2) 
     }
   }
 
-  protected def transformer(application: IPApplicationModel) = {
-    val fields = List(
-      Symbol("uncrystallisedRights"),
-      Symbol("preADayPensionInPayment"),
-      Symbol("postADayBenefitCrystallisationEvents"),
-      Symbol("nonUKRights"),
-      Symbol("pensionDebits")
-    )
-    val jsonTransformerList = getReads(fields, getProperties(application))
-    jsonTransformerList.filter(_.isDefined).foldLeft((__ \ Symbol("relevantAmount")).json.update(roundDown)) {
-      (combined, reads) => combined.andThen(reads.get)
-    }
-  }
-
   protected def transformer(model: ProtectionModel) = {
     val fields = List(
       Symbol("protectedAmount"),
@@ -118,20 +95,6 @@ class PLAConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2) 
       case _ => list.drop(1).foldLeft(list.head.get)((combined, reads) => combined.andThen(reads.get))
     }
     r
-  }
-
-  def applyIP14(
-      nino: String,
-      userData: CacheMap
-  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
-    implicit val protectionType = ApplicationType.IP2014
-    val application             = IPApplicationConstructor.createIPApplication(userData)
-    val requestJson: JsValue    = Json.toJson[IPApplicationModel](application)
-    val url                     = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
-    http
-      .post(url"$url")
-      .withBody(Json.toJson(requestJson))
-      .execute[HttpResponse]
   }
 
   def readProtections(nino: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
