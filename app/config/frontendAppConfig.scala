@@ -43,7 +43,10 @@ trait AppConfig {
   val appName: String
   val sessionMissingUpliftUrlPrefix: Option[String]
   val configuration: Configuration
+  val basGatewaySignOutUrl: String
   def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String
+
+  def fullSignOutUrl: String = s"$basGatewaySignOutUrl?continue=$feedbackSurvey"
 
 }
 
@@ -96,5 +99,7 @@ class FrontendAppConfig @Inject() (
 
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String =
     accessibilityStatementConfig.url.getOrElse("")
+
+  override val basGatewaySignOutUrl: String = servicesConfig.getString("bas-gateway-frontend.sign-out-url")
 
 }
