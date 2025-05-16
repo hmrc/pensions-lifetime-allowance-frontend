@@ -29,7 +29,7 @@ class AccountController @Inject() (
 ) extends FrontendController(mcc) {
 
   def signOut: Action[AnyContent] = Action.async {
-    Future.successful(Redirect(config.fullSignOutUrl))
+    Future.successful(Redirect(config.fullSignOutUrl).withNewSession)
   }
 
 }
