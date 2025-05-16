@@ -17,17 +17,19 @@
 package controllers
 
 import javax.inject.Inject
+import config.FrontendAppConfig
 import play.api.mvc._
-import uk.gov.hmrc.agent.connectors.BasGatewayConnector
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
+import scala.concurrent.Future
+
 class AccountController @Inject() (
-    basGatewayConnector: BasGatewayConnector,
+    config: FrontendAppConfig,
     mcc: MessagesControllerComponents
 ) extends FrontendController(mcc) {
 
   def signOut: Action[AnyContent] = Action.async {
-    basGatewayConnector.signUserOut()
+    Future.successful(Redirect(config.fullSignOutUrl))
   }
 
 }
