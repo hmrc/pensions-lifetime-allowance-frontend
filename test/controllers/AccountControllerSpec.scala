@@ -43,7 +43,7 @@ class AccountControllerSpec extends FakeApplication with MockitoSugar {
   "redirect to the feedback survey with the origin token PLA" in new Setup {
     object DataItem extends FakeRequestTo("/", controller.signOut, Some("sessionId"))
 
-    redirectLocation(DataItem.result).get shouldBe (MockConfig.feedbackSurvey)
+    redirectLocation(DataItem.result).get shouldBe (MockConfig.fullSignOutUrl)
   }
 
 }
