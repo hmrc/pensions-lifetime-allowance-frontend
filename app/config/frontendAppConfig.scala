@@ -27,6 +27,7 @@ trait AppConfig {
   val citizenAuthHost: Option[String]
   val excludeCopeTab: Boolean
   val identityVerification: Boolean
+  val hipMigrationEnabled: Boolean
   val confirmFPUrl: String
   val ipStartUrl: String
   val ip14StartUrl: String
@@ -71,6 +72,9 @@ class FrontendAppConfig @Inject() (
 
   override val identityVerification: Boolean =
     configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)
+
+  override val hipMigrationEnabled: Boolean =
+    configuration.getOptional[Boolean]("microservice.services.features.hip-migration").getOrElse(false)
 
   override lazy val citizenAuthHost        = configuration.getOptional[String]("citizen-auth.host")
   override lazy val confirmFPUrl           = configuration.getOptional[String]("confirmFP.url").getOrElse("")
