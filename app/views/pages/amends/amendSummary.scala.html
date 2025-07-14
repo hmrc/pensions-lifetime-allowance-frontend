@@ -15,6 +15,7 @@
  *@
 
 @import models.amendModels.AmendmentTypeModel
+@import config.FrontendAppConfig
 
 @this(
     layout: Layout,
@@ -22,7 +23,8 @@
     govukSummaryList: GovukSummaryList,
     govukInsetText: GovukInsetText,
     submitButton: playHelpers.templates.submitButton,
-    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
+    form: uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF,
+    appConfig: FrontendAppConfig
 )
 
 @(model: AmendDisplayModel, protectionType: String, status: String)(implicit request: Request[_], messages: Messages)
@@ -69,11 +71,12 @@
         @amendSection(model.psoSections, model.protectionType)
     }
 
+    @if(!appConfig.hipMigrationEnabled){
     @if(status == "open") {
         <p class="govuk-body">
             <a class="govuk-link" href="@routes.WithdrawProtectionController.withdrawImplications">@Messages("pla.existingProtections.withdrawLinkText")</a>
         </p>
-
+    }
     }
 
     @if(!model.psoAdded){

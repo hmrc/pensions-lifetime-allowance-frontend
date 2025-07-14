@@ -16,8 +16,10 @@
 
 package views.pages.amends
 
+import config.FrontendAppConfig
 import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import org.jsoup.Jsoup
+import org.mockito.Mockito.when
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
@@ -26,6 +28,7 @@ import views.html.pages.amends.amendSummary
 class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
 
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  override implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   lazy val tstPensionContributionPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
@@ -218,6 +221,12 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
           .select("a#pensionDebits-CurrentPsos-psoDetails-change-link")
           .text shouldBe s"$plaBaseChange $plaSummaryQuestionsPsoDetails"
       }
+    }
+
+    "have a link to withdraw the protection" in {
+      doc.select("p.govuk-body a.govuk-link").last().text shouldBe plaAmendsWithdrawProtectionText
+      doc.select("p.govuk-body a.govuk-link").last().attr("href") shouldBe plaAmendsWithdrawProtectionLinkLocation
+
     }
 
     "have a link to withdraw the protection" in {
