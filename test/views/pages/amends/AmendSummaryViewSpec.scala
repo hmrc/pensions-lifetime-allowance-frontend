@@ -29,7 +29,7 @@ import views.html.pages.amends.amendSummary
 
 class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  implicit val formWithCSRF: FormWithCSRF                = app.injector.instanceOf[FormWithCSRF]
   override implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   lazy val tstPensionContributionPsoDisplaySections = Seq(
@@ -227,7 +227,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
     "have link to withdraw the protection for non-HIP flow" in {
 
-      val mockAppConfig: FrontendAppConfig =  mock[FrontendAppConfig]
+      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
       when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
 
       val application = new GuiceApplicationBuilder()
@@ -236,7 +236,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
         .build()
 
       lazy val view = application.injector.instanceOf[amendSummary]
-      lazy val doc = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
+      lazy val doc  = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
 
       doc.select("p.govuk-body a.govuk-link").first().text shouldBe plaAmendsWithdrawProtectionText
       doc.select("p.govuk-body a.govuk-link").first().attr("href") shouldBe plaAmendsWithdrawProtectionLinkLocation
@@ -244,7 +244,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
     "have no link to withdraw the protection for HIP flow" in {
 
-      val mockAppConfig: FrontendAppConfig =  mock[FrontendAppConfig]
+      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
       when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
 
       val application = new GuiceApplicationBuilder()
@@ -253,10 +253,13 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
         .build()
 
       lazy val view = application.injector.instanceOf[amendSummary]
-      lazy val doc = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
+      lazy val doc  = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
 
       doc.select("p.govuk-body a.govuk-link").last().text shouldBe plaAmendsAddAPensionSharingOrderText
-      doc.select("p.govuk-body a.govuk-link").last().attr("href") shouldBe "/check-your-pension-protections/amend-protection/pension-sharing-order/ip2016/open"
+      doc
+        .select("p.govuk-body a.govuk-link")
+        .last()
+        .attr("href") shouldBe "/check-your-pension-protections/amend-protection/pension-sharing-order/ip2016/open"
     }
 
     "have an explanatory declaration paragraph before the submit button" in {
