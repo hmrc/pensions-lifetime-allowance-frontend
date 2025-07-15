@@ -72,11 +72,11 @@
     }
 
     @if(!appConfig.hipMigrationEnabled){
-    @if(status == "open") {
-        <p class="govuk-body">
-            <a class="govuk-link" href="@routes.WithdrawProtectionController.withdrawImplications">@Messages("pla.existingProtections.withdrawLinkText")</a>
-        </p>
-    }
+        @if(status == "open") {
+            <p class="govuk-body">
+                <a class="govuk-link" href="@routes.WithdrawProtectionController.withdrawImplications">@Messages("pla.existingProtections.withdrawLinkText")</a>
+            </p>
+        }
     }
 
     @if(!model.psoAdded){
