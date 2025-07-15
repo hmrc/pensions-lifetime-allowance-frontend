@@ -256,10 +256,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       lazy val doc  = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
 
       doc.select("p.govuk-body a.govuk-link").last().text shouldBe plaAmendsAddAPensionSharingOrderText
-      doc
-        .select("p.govuk-body a.govuk-link")
-        .last()
-        .attr("href") shouldBe "/check-your-pension-protections/amend-protection/pension-sharing-order/ip2016/open"
+      doc.select("p.govuk-body a.govuk-link").last().attr("href") shouldBe plaAmendsAddAPensionSharingOrderTextLink
     }
 
     "have an explanatory declaration paragraph before the submit button" in {
