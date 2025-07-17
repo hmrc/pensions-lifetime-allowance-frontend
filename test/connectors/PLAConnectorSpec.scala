@@ -232,15 +232,15 @@ class PLAConnectorSpec
     "return the response directly" when {
 
       s"response is $OK" in {
-
         val response = HttpResponse(OK, validApplyFP16Json)
+
         ResponseHandler.handlePLAResponse("GET", "/foo", response) shouldBe response
       }
 
       Seq(CONFLICT, LOCKED).foreach { code =>
         s"status code of the response is $code" in {
-
           val response = HttpResponse(code, validApplyFP16Json)
+
           ResponseHandler.handlePLAResponse("GET", "/foo", response) shouldBe response
         }
       }
@@ -248,11 +248,11 @@ class PLAConnectorSpec
 
     "return the response upon handling a response" when {
 
-      s"status code of the response any 4xx/5xx code other than $CONFLICT or $LOCKED" in
+      s"status code of the response any 4xx/5xx code other than $CONFLICT, $LOCKED, or $NOT_FOUND" in
         forAll(
           Gen
             .oneOf(BAD_REQUEST to NETWORK_AUTHENTICATION_REQUIRED)
-            .suchThat(code => code != CONFLICT && code != LOCKED)
+            .suchThat(code => code != CONFLICT && code != LOCKED && code != NOT_FOUND)
         ) { code =>
           val response = HttpResponse(code, validApplyFP16Json)
           val result   = ResponseHandler.handlePLAResponse("GET", "/foo", response)
@@ -264,7 +264,6 @@ class PLAConnectorSpec
     "throw and UpstreamErrorResponse" when {
 
       s"status code of the response is $NOT_FOUND" in {
-
         an[UpstreamErrorResponse] mustBe thrownBy {
           ResponseHandler.handlePLAResponse("GET", "/foo", HttpResponse(NOT_FOUND, validApplyFP16Json))
         }
