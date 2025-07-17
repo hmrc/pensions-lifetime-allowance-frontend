@@ -50,6 +50,9 @@ trait AmendSummaryViewSpecMessages extends SummaryViewMessages {
   val plaAmendsAddAPensionSharingOrderText  = "Add a pension sharing order"
   val plaAmendsWithdrawProtectionLinkLocation = "/check-your-pension-protections/withdraw-protection/implications"
 
+  val plaAmendsAddAPensionSharingOrderTextLink =
+    "/check-your-pension-protections/amend-protection/pension-sharing-order/ip2016/open"
+
   val plaAmendsDeclaration =
     "The information that I have provided is true and complete to the best of my knowledge and belief."
 

@@ -16,8 +16,12 @@
 
 package views.pages.amends
 
+import config.FrontendAppConfig
 import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import org.jsoup.Jsoup
+import org.mockito.Mockito.when
+import play.api.inject
+import play.api.inject.guice.GuiceApplicationBuilder
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
@@ -25,7 +29,8 @@ import views.html.pages.amends.amendSummary
 
 class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
 
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
+  implicit val formWithCSRF: FormWithCSRF                = app.injector.instanceOf[FormWithCSRF]
+  override implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   lazy val tstPensionContributionPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
@@ -220,10 +225,38 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       }
     }
 
-    "have a link to withdraw the protection" in {
-      doc.select("p.govuk-body a.govuk-link").last().text shouldBe plaAmendsWithdrawProtectionText
-      doc.select("p.govuk-body a.govuk-link").last().attr("href") shouldBe plaAmendsWithdrawProtectionLinkLocation
+    "have link to withdraw the protection for non-HIP flow" in {
 
+      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+      when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+      val application = new GuiceApplicationBuilder()
+        .configure("metrics.enabled" -> false)
+        .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
+        .build()
+
+      lazy val view = application.injector.instanceOf[amendSummary]
+      lazy val doc  = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
+
+      doc.select("p.govuk-body a.govuk-link").first().text shouldBe plaAmendsWithdrawProtectionText
+      doc.select("p.govuk-body a.govuk-link").first().attr("href") shouldBe plaAmendsWithdrawProtectionLinkLocation
+    }
+
+    "have no link to withdraw the protection for HIP flow" in {
+
+      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+      when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+
+      val application = new GuiceApplicationBuilder()
+        .configure("metrics.enabled" -> false)
+        .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
+        .build()
+
+      lazy val view = application.injector.instanceOf[amendSummary]
+      lazy val doc  = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
+
+      doc.select("p.govuk-body a.govuk-link").last().text shouldBe plaAmendsAddAPensionSharingOrderText
+      doc.select("p.govuk-body a.govuk-link").last().attr("href") shouldBe plaAmendsAddAPensionSharingOrderTextLink
     }
 
     "have an explanatory declaration paragraph before the submit button" in {
