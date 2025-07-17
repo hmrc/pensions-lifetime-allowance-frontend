@@ -59,6 +59,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
   val testMCNeededResponse      = HttpResponse(423, "")
   val testUpstreamErrorResponse = HttpResponse(503, "")
 
+  private val testNino = "AB123456A"
   private val psaCheckReference           = "PSA12345678A"
   val testReadResponseModel               = ReadResponseModel(psaCheckReference, Seq.empty)
   val testTransformedReadResponseModel    = TransformedReadResponseModel(None, Seq.empty)
@@ -309,7 +310,6 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
           .thenReturn(Future.successful(Right(ReadProtectionsResponse(psaCheckReference))))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
-        val testNino = "AB123456A"
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
 
         controller.currentProtections(fakeRequest).futureValue
@@ -325,7 +325,6 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
           .thenReturn(Future.successful(Right(testReadResponseModel)))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
-        val testNino = "AB123456A"
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
 
         controller.currentProtections(fakeRequest).futureValue
@@ -340,7 +339,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
           .thenReturn(Future.successful(Left(UnexpectedResponseError(503))))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
 
         val result = controller.currentProtections(fakeRequest)
 
@@ -368,7 +367,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
           .thenReturn(Future.successful(Left(IncorrectResponseBodyError)))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
 
         val result = controller.currentProtections(fakeRequest)
 
@@ -383,7 +382,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
           .thenReturn(Future.successful(Right(testReadResponseModel)))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
 
         val result = controller.currentProtections(fakeRequest)
 
