@@ -36,18 +36,8 @@ class ResponseConstructors {
     val responseModel = json.validate[ReadResponseModel]
     responseModel.fold(
       errors => None,
-      valid = success => Some(transformReadResponseModel(success))
+      valid = success => Some(TransformedReadResponseModel.from(success))
     )
-  }
-
-  def transformReadResponseModel(respModel: ReadResponseModel): TransformedReadResponseModel = {
-    val activeProtectionOpt = respModel.lifetimeAllowanceProtections.find(_.status.contains("Open")).map {
-      _.copy(psaCheckReference = Some(respModel.psaCheckReference))
-    }
-    val otherProtections = respModel.lifetimeAllowanceProtections.filterNot(_.status.contains("Open")).map {
-      _.copy(psaCheckReference = Some(respModel.psaCheckReference))
-    }
-    TransformedReadResponseModel(activeProtectionOpt, otherProtections)
   }
 
   def createAmendResponseModelFromJson(json: JsValue): Option[AmendResponseModel] =

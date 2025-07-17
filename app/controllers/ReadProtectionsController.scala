@@ -19,8 +19,8 @@ package controllers
 import auth.AuthFunction
 import common.{Helpers, Strings}
 import config.{FrontendAppConfig, PlaContext}
-import connectors.PLAConnector
 import connectors.PlaConnectorError.ResponseLockedError
+import connectors.{PLAConnector, PlaConnectorError, PlaConnectorV2}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import models._
@@ -30,6 +30,7 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import play.api.{Application, Logging}
 import services.SessionCacheService
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html._
 
@@ -37,17 +38,17 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ReadProtectionsController @Inject() (
-    val plaConnector: PLAConnector,
-    val sessionCacheService: SessionCacheService,
+    plaConnector: PLAConnector,
+    plaConnectorV2: PlaConnectorV2,
+    sessionCacheService: SessionCacheService,
     displayConstructors: DisplayConstructors,
+    appConfig: FrontendAppConfig,
     mcc: MessagesControllerComponents,
-    responseConstructors: ResponseConstructors,
     authFunction: AuthFunction,
     technicalError: views.html.pages.fallback.technicalError,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
     existingProtections: pages.existingProtections.existingProtections
 )(
-    implicit val appConfig: FrontendAppConfig,
     implicit val plaContext: PlaContext,
     implicit val application: Application,
     implicit val ec: ExecutionContext
@@ -59,25 +60,30 @@ class ReadProtectionsController @Inject() (
     implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
 
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      plaConnector
-        .readProtections(nino)
-        .flatMap {
+      fetchProtections(nino).flatMap {
 
-          case Right(readResponseModel: ReadResponseModel) =>
-            val transformedReadResponseModel = responseConstructors.transformReadResponseModel(readResponseModel)
-            saveAndDisplayExistingProtections(transformedReadResponseModel)
+        case Right(transformedReadResponseModel: TransformedReadResponseModel) =>
+          saveAndDisplayExistingProtections(transformedReadResponseModel)
 
-          case Left(ResponseLockedError) => Future.successful(Locked(manualCorrespondenceNeeded()))
+        case Left(ResponseLockedError) => Future.successful(Locked(manualCorrespondenceNeeded()))
 
-          case Left(_) =>
-            Future.successful(
-              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-                .withHeaders(CACHE_CONTROL -> "no-cache")
-            )
-        }
-
+        case Left(_) =>
+          Future.successful(
+            InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+              .withHeaders(CACHE_CONTROL -> "no-cache")
+          )
+      }
     }
   }
+
+  private def fetchProtections(
+      nino: String
+  )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
+    if (appConfig.hipMigrationEnabled) {
+      plaConnectorV2.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
+    } else {
+      plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
+    }
 
   private def saveAndDisplayExistingProtections(
       transformedReadResponseModel: TransformedReadResponseModel
