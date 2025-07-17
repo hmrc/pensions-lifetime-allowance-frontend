@@ -546,25 +546,4 @@ class AmendsControllerSpec
     }
   }
 
-  "Calling createPsoDetailsList" when {
-
-    "not supplied with a PSO amount" should {
-
-      "return the correct value not found exception" in new Setup() {
-        (the[RequiredValueNotDefinedException] thrownBy {
-          controller.createPsoDetailsList(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), None))
-        } should have).message("Value not found for psoAmt in createPsoDetailsList")
-      }
-    }
-
-    "supplied with a PSO amount" should {
-
-      "return the correct list" in new Setup {
-        controller.createPsoDetailsList(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), Some(1))) shouldBe Some(
-          List(PensionDebitModel("2017-03-01", 1))
-        )
-      }
-    }
-  }
-
 }

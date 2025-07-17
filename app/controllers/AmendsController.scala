@@ -29,7 +29,7 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Constants
 
@@ -87,7 +87,7 @@ class AmendsController @Inject() (
         protectionAmendment <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](
           Strings.cacheAmendFetchString(protectionType, status)
         )
-        saveAmendsGA <- sessionCacheService.saveFormData[AmendsGAModel](
+        _ <- sessionCacheService.saveFormData[AmendsGAModel](
           "AmendsGA",
           AmendsGAConstructor.identifyAmendsChanges(
             protectionAmendment.get.updatedProtection,
@@ -100,6 +100,45 @@ class AmendsController @Inject() (
     }
   }
 
+  private def routeViaMCNeededCheck(response: HttpResponse, nino: String)(
+      implicit request: Request[AnyContent]
+  ): Future[Result] =
+    response.status match {
+      case 409 =>
+        logger.warn(s"conflict response returned for amend request for user nino $nino")
+        Future.successful(
+          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+            .withHeaders(CACHE_CONTROL -> "no-cache")
+        )
+      case 423 =>
+        logger.info(s"locked response returned for amend request for user nino $nino")
+        Future.successful(Locked(manualCorrespondenceNeeded()))
+      case _ => saveAndRedirectToDisplay(response, nino)
+    }
+
+  private def saveAndRedirectToDisplay(response: HttpResponse, nino: String)(
+      implicit request: Request[AnyContent]
+  ): Future[Result] =
+    responseConstructors
+      .createAmendResponseModelFromJson(response.json)
+      .map { model =>
+        if (model.protection.notificationId.isDefined) {
+          sessionCacheService.saveFormData[AmendResponseModel]("amendResponseModel", model).map { _ =>
+            Redirect(routes.AmendsController.amendmentOutcome)
+          }
+        } else {
+          logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
+          Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+        }
+      }
+      .getOrElse {
+        logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
+        Future.successful(
+          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+            .withHeaders(CACHE_CONTROL -> "no-cache")
+        )
+      }
+
   def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
@@ -111,7 +150,7 @@ class AmendsController @Inject() (
   }
 
   def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel], nino: String)(
-      implicit request: Request[AnyContent]
+    implicit request: Request[AnyContent]
   ): Future[Result] = {
     if (modelGA.isEmpty) {
       logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
@@ -135,53 +174,6 @@ class AmendsController @Inject() (
             .withHeaders(CACHE_CONTROL -> "no-cache")
         }
     )
-  }
-
-  private def routeViaMCNeededCheck(response: HttpResponse, nino: String)(
-      implicit request: Request[AnyContent]
-  ): Future[Result] =
-    response.status match {
-      case 409 =>
-        logger.warn(s"conflict response returned for amend request for user nino $nino")
-        Future.successful(
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
-        )
-      case 423 =>
-        logger.info(s"locked reponse returned for amend request for user nino $nino")
-        Future.successful(Locked(manualCorrespondenceNeeded()))
-      case _ => saveAndRedirectToDisplay(response, nino)
-    }
-
-  def saveAndRedirectToDisplay(response: HttpResponse, nino: String)(
-      implicit request: Request[AnyContent]
-  ): Future[Result] =
-    responseConstructors
-      .createAmendResponseModelFromJson(response.json)
-      .map { model =>
-        if (model.protection.notificationId.isDefined) {
-          sessionCacheService.saveFormData[AmendResponseModel]("amendResponseModel", model).map { cacheMap =>
-            Redirect(routes.AmendsController.amendmentOutcome)
-          }
-        } else {
-          logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
-          Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
-        }
-      }
-      .getOrElse {
-        logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
-        Future.successful(
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
-        )
-      }
-
-  private[controllers] def createPsoDetailsList(formModel: AmendPSODetailsModel): Option[List[PensionDebitModel]] = {
-    val date = formModel.pso.toString
-    val amt = formModel.psoAmt.getOrElse {
-      throw new Exceptions.RequiredValueNotDefinedException("createPsoDetailsList", "psoAmt")
-    }
-    Some(List(PensionDebitModel(startDate = date, amount = amt.toDouble)))
   }
 
 }
