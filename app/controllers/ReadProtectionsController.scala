@@ -19,8 +19,8 @@ package controllers
 import auth.AuthFunction
 import common.{Helpers, Strings}
 import config.{FrontendAppConfig, PlaContext}
+import connectors.PLAConnector
 import connectors.PlaConnectorError.ResponseLockedError
-import connectors.{PLAConnector, PlaConnectorError}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import models._
@@ -30,7 +30,6 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import play.api.{Application, Logging}
 import services.SessionCacheService
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html._
 
