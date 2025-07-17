@@ -55,54 +55,6 @@ class ResponseConstructorsSpec extends FakeApplication with MockitoSugar {
       val testApplyResponseModel = mockResponseConstructor.createApplyResponseModelFromJson(jsn)
       testApplyResponseModel shouldBe None
     }
-
-    "create the correct TransformedReadResponse model from Json" in {
-      val tstPSACheckRef = "testPsaRef"
-
-      val tstProtectionModelOpen = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(2),
-        status = Some("Open"),
-        version = Some(2)
-      )
-      val tstProtectionModelDormant = ProtectionModel(
-        psaCheckReference = Some(tstPSACheckRef),
-        protectionID = Some(1),
-        status = Some("Withdrawn"),
-        version = Some(1)
-      )
-
-      val jsn: JsValue = Json.parse("""{
-                                      |"psaCheckReference":"testPsaRef",
-                                      |"lifetimeAllowanceProtections":
-                                      |[
-                                      |{
-                                      | "protectionID":1,
-                                      | "status":"Withdrawn",
-                                      | "version":1
-                                      |},
-                                      |{
-                                      |"protectionID":2,
-                                      |"status":"Open",
-                                      |"version":2
-                                      |}
-                                      |]
-                                      |}
-        """.stripMargin)
-      val tstTransformedReadResponseModel =
-        TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
-      mockResponseConstructor.createTransformedReadResponseModelFromJson(jsn) shouldBe Some(
-        tstTransformedReadResponseModel
-      )
-    }
-
-    "return None if a TransformedReadResponse model can't be created" in {
-
-      val jsn: JsValue = Json.parse("""{"psaCheckReference":"wrong"
-                                      |}""".stripMargin)
-
-      mockResponseConstructor.createTransformedReadResponseModelFromJson(jsn) shouldBe None
-    }
   }
 
 }

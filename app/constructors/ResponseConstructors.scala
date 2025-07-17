@@ -32,14 +32,6 @@ class ResponseConstructors {
       )
   }
 
-  def createTransformedReadResponseModelFromJson(json: JsValue): Option[TransformedReadResponseModel] = {
-    val responseModel = json.validate[ReadResponseModel]
-    responseModel.fold(
-      errors => None,
-      valid = success => Some(TransformedReadResponseModel.from(success))
-    )
-  }
-
   def createAmendResponseModelFromJson(json: JsValue): Option[AmendResponseModel] =
     json
       .validate[ProtectionModel]
