@@ -115,9 +115,7 @@ class PLAConnector @Inject() (
       .map(Right(_))
       .recover {
         case _: JsValidationException =>
-          logger.warn(
-            s"Unable to create transformed read response model from microservice response for nino: $nino"
-          )
+          logger.warn(s"Unable to parse response body from pensions-lifetime-allowance for nino: $nino")
           Left(IncorrectResponseBodyError)
 
         case err: UpstreamErrorResponse if err.statusCode == LOCKED =>

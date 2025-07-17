@@ -44,6 +44,8 @@ trait IntegrationBaseSpec
   val localUrl       = s"http://$localHost:$localPort"
 
   def defaultConfiguration: Configuration = Configuration(
+    "metrics.jvm"                                            -> false,
+    "metrics.logback"                                        -> false,
     "testserver.port"                                        -> s"$localPort",
     "application.router"                                     -> "testOnlyDoNotUseInAppConf.Routes",
     "microservice.services.pensions-lifetime-allowance.port" -> s"${WiremockHelper.wiremockPort}",
@@ -55,8 +57,10 @@ trait IntegrationBaseSpec
     .configure(defaultConfiguration)
     .build()
 
-  override def beforeEach() =
+  override def beforeEach() = {
+    super.beforeEach()
     resetWiremock()
+  }
 
   override def beforeAll() = {
     super.beforeAll()
