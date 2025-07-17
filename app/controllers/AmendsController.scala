@@ -104,13 +104,13 @@ class AmendsController @Inject() (
       implicit request: Request[AnyContent]
   ): Future[Result] =
     response.status match {
-      case 409 =>
+      case CONFLICT =>
         logger.warn(s"conflict response returned for amend request for user nino $nino")
         Future.successful(
           InternalServerError(technicalError(ApplicationType.existingProtections.toString))
             .withHeaders(CACHE_CONTROL -> "no-cache")
         )
-      case 423 =>
+      case LOCKED =>
         logger.info(s"locked response returned for amend request for user nino $nino")
         Future.successful(Locked(manualCorrespondenceNeeded()))
       case _ => saveAndRedirectToDisplay(response, nino)

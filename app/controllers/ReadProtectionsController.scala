@@ -19,18 +19,18 @@ package controllers
 import auth.AuthFunction
 import common.{Helpers, Strings}
 import config.{FrontendAppConfig, PlaContext}
-import connectors.PLAConnector
+import connectors.PlaConnectorError.ResponseLockedError
+import connectors.{PLAConnector, PlaConnectorError}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import models._
 import models.amendModels.AmendProtectionModel
 import models.cache.CacheMap
 import play.api.i18n.{I18nSupport, Lang}
-import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.{Application, Logging}
 import services.SessionCacheService
-import uk.gov.hmrc.http.{HttpResponse, NotFoundException, UpstreamErrorResponse}
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import views.html._
 
@@ -62,51 +62,33 @@ class ReadProtectionsController @Inject() (
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       plaConnector
         .readProtections(nino)
-        .flatMap { response =>
-          response.status match {
-            case OK     => handleSuccess(response, nino)
-            case LOCKED => Future.successful(Locked(manualCorrespondenceNeeded()))
-            case num =>
-              logger.error(s"unexpected status $num passed to currentProtections for nino: $nino")
-              Future.successful(
-                InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-                  .withHeaders(CACHE_CONTROL -> "no-cache")
-              )
-          }
+        .flatMap {
+
+          case Right(readResponseModel: ReadResponseModel) =>
+            val transformedReadResponseModel = responseConstructors.transformReadResponseModel(readResponseModel)
+            saveAndDisplayExistingProtections(transformedReadResponseModel)
+
+          case Left(ResponseLockedError) => Future.successful(Locked(manualCorrespondenceNeeded()))
+
+          case Left(_) =>
+            Future.successful(
+              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+                .withHeaders(CACHE_CONTROL -> "no-cache")
+            )
         }
-        .recover {
-          case e: NotFoundException =>
-            logger.warn(s"Error 404 passed to currentProtections for nino: $nino")
-            throw UpstreamErrorResponse(e.message, 404, 500)
-          case otherException: Exception => throw otherException
-        }
+
     }
   }
 
-  private def handleSuccess(
-      response: HttpResponse,
-      nino: String
-  )(implicit request: Request[AnyContent], lang: Lang): Future[Result] =
-    responseConstructors
-      .createTransformedReadResponseModelFromJson(Json.parse(response.body))
-      .map(readResponseModel => saveAndDisplayExistingProtections(readResponseModel))
-      .getOrElse {
-        logger.warn(s"unable to create transformed read response model from microservice response for nino: $nino")
-        Future.successful(
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
-        )
-      }
-
   private def saveAndDisplayExistingProtections(
-      model: TransformedReadResponseModel
-  )(implicit request: Request[AnyContent], lang: Lang): Future[Result] = {
-    val displayModel: ExistingProtectionsDisplayModel = displayConstructors.createExistingProtectionsDisplayModel(model)
+      transformedReadResponseModel: TransformedReadResponseModel
+  )(implicit request: Request[AnyContent], lang: Lang): Future[Result] =
     for {
-      _ <- saveActiveProtection(model.activeProtection)
-      _ <- saveAmendableProtections(model)
+      _ <- saveActiveProtection(transformedReadResponseModel.activeProtection)
+      _ <- saveAmendableProtections(transformedReadResponseModel)
+
+      displayModel = displayConstructors.createExistingProtectionsDisplayModel(transformedReadResponseModel)
     } yield Ok(existingProtections(displayModel))
-  }
 
   def saveActiveProtection(
       activeModel: Option[ProtectionModel]

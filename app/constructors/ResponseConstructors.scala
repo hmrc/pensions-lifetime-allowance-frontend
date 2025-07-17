@@ -40,7 +40,7 @@ class ResponseConstructors {
     )
   }
 
-  private def transformReadResponseModel(respModel: ReadResponseModel): TransformedReadResponseModel = {
+  def transformReadResponseModel(respModel: ReadResponseModel): TransformedReadResponseModel = {
     val activeProtectionOpt = respModel.lifetimeAllowanceProtections.find(_.status.contains("Open")).map {
       _.copy(psaCheckReference = Some(respModel.psaCheckReference))
     }
