@@ -18,17 +18,19 @@ package controllers
 
 import auth.AuthFunction
 import config._
-import connectors.PLAConnector
 import connectors.PlaConnectorError.{IncorrectResponseBodyError, ResponseLockedError, UnexpectedResponseError}
-import constructors.{DisplayConstructors, ResponseConstructors}
+import connectors.{PLAConnector, PlaConnectorV2}
+import constructors.DisplayConstructors
 import mocks.AuthMock
 import models.cache.CacheMap
+import models.pla.response.ReadProtectionsResponse
 import models.{ExistingProtectionsDisplayModel, ProtectionModel, ReadResponseModel, TransformedReadResponseModel}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
-import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.Lang
@@ -49,7 +51,7 @@ import views.html.pages.result.manualCorrespondenceNeeded
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar with AuthMock {
+class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar with AuthMock with ScalaFutures {
 
   val testSuccessResponse =
     HttpResponse(status = 200, json = Json.parse("""{"thisJson":"doesNotMatter"}"""), headers = Map.empty)
@@ -57,22 +59,22 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
   val testMCNeededResponse      = HttpResponse(423, "")
   val testUpstreamErrorResponse = HttpResponse(503, "")
 
-  private val psaCheckReference = "PSA12345678A"
-  val testReadResponseModel    = ReadResponseModel(psaCheckReference, Seq.empty)
+  private val psaCheckReference           = "PSA12345678A"
+  val testReadResponseModel               = ReadResponseModel(psaCheckReference, Seq.empty)
   val testTransformedReadResponseModel    = TransformedReadResponseModel(None, Seq.empty)
   val testExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(None, Seq.empty)
 
-  val mockDisplayConstructors: DisplayConstructors   = mock[DisplayConstructors]
-  val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
-  val mockSessionCacheService: SessionCacheService   = mock[SessionCacheService]
-  val mockPlaConnector: PLAConnector                 = mock[PLAConnector]
+  val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
+  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
+  val mockPlaConnector: PLAConnector               = mock[PLAConnector]
+  val mockPlaConnectorV2: PlaConnectorV2           = mock[PlaConnectorV2]
+  val mockAppConfig: FrontendAppConfig             = mock[FrontendAppConfig]
   val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockActionWithSessionId: ActionWithSessionId = mock[ActionWithSessionId]
   val mockAuthFunction: AuthFunction               = fakeApplication().injector.instanceOf[AuthFunction]
   val mockEnv: Environment                         = mock[Environment]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockAppConfig: FrontendAppConfig   = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext         = mock[PlaContext]
   implicit val system: ActorSystem                = ActorSystem()
   implicit val materializer: Materializer         = mock[Materializer]
@@ -90,6 +92,9 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
 
   class Setup {
 
+    reset(mockAppConfig)
+    when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
     val authFunction = new AuthFunction {
       override implicit val plaContext: PlaContext         = mockPlaContext
       override implicit val appConfig: FrontendAppConfig   = mockAppConfig
@@ -101,10 +106,11 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
 
     val controller = new ReadProtectionsController(
       mockPlaConnector,
+      mockPlaConnectorV2,
       mockSessionCacheService,
       mockDisplayConstructors,
+      mockAppConfig,
       mockMCC,
-      mockResponseConstructors,
       authFunction,
       mockTechnicalError,
       mockManualCorrespondenceNeeded,
@@ -296,6 +302,38 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
 
   "Calling the currentProtections Action" when {
 
+    "AppConfig.hipMigrationEnabled is set to true" should {
+      "call PlaConnectorV2" in new Setup {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+        when(mockPlaConnectorV2.readProtections(any())(any(), any()))
+          .thenReturn(Future.successful(Right(ReadProtectionsResponse(psaCheckReference))))
+        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+          .thenReturn(testExistingProtectionsDisplayModel)
+        val testNino = "AB123456A"
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+
+        controller.currentProtections(fakeRequest).futureValue
+
+        verify(mockPlaConnectorV2).readProtections(eqTo(testNino))(any(), any())
+      }
+    }
+
+    "AppConfig.hipMigrationEnabled is set to false" should {
+      "call PlaConnectorV2" in new Setup {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+        when(mockPlaConnector.readProtections(any())(any(), any()))
+          .thenReturn(Future.successful(Right(testReadResponseModel)))
+        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+          .thenReturn(testExistingProtectionsDisplayModel)
+        val testNino = "AB123456A"
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+
+        controller.currentProtections(fakeRequest).futureValue
+
+        verify(mockPlaConnector).readProtections(eqTo(testNino))(any(), any())
+      }
+    }
+
     "receiving an upstream error" should {
       "return 500 and show the technical error page for existing protections" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any()))
@@ -343,8 +381,6 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       "return 200 and show the existing protections page" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any()))
           .thenReturn(Future.successful(Right(testReadResponseModel)))
-        when(mockResponseConstructors.transformReadResponseModel(any()))
-          .thenReturn(testTransformedReadResponseModel)
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))

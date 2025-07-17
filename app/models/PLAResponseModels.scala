@@ -16,6 +16,7 @@
 
 package models
 
+import models.pla.response.ReadProtectionsResponse
 import play.api.libs.json.{Json, OFormat}
 
 case class ApplyResponseModel(
@@ -33,6 +34,20 @@ case class TransformedReadResponseModel(
 
 object TransformedReadResponseModel {
   implicit val format: OFormat[TransformedReadResponseModel] = Json.format[TransformedReadResponseModel]
+
+  def from(respModel: ReadResponseModel): TransformedReadResponseModel = {
+    val activeProtectionOpt = respModel.lifetimeAllowanceProtections.find(_.status.contains("Open")).map {
+      _.copy(psaCheckReference = Some(respModel.psaCheckReference))
+    }
+    val otherProtections = respModel.lifetimeAllowanceProtections.filterNot(_.status.contains("Open")).map {
+      _.copy(psaCheckReference = Some(respModel.psaCheckReference))
+    }
+    TransformedReadResponseModel(activeProtectionOpt, otherProtections)
+  }
+
+  def from(respModel: ReadProtectionsResponse): TransformedReadResponseModel =
+    TransformedReadResponseModel(None, Seq.empty)
+
 }
 
 case class ReadResponseModel(psaCheckReference: String, lifetimeAllowanceProtections: Seq[ProtectionModel])
