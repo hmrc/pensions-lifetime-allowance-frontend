@@ -19,6 +19,7 @@ package controllers
 import auth.AuthFunction
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
+import connectors.PlaConnectorError.UnexpectedResponseError
 import constructors.DisplayConstructors
 import controllers.helpers.FakeRequestHelper
 import forms.WithdrawDateForm
@@ -225,7 +226,7 @@ class WithdrawProtectionControllerSpec
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
         when(mockPlaConnector.amendProtection(anyString(), any())(any(), any()))
-          .thenReturn(Future.successful(HttpResponse(status = OK, body = "")))
+          .thenReturn(Future.successful(Right(ProtectionModel(None, None))))
         controller.displayWithdrawConfirmation("")(fakeRequest)
       }
       status(result) shouldBe SEE_OTHER
@@ -237,7 +238,7 @@ class WithdrawProtectionControllerSpec
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
         when(mockPlaConnector.amendProtection(anyString(), any())(any(), any()))
-          .thenReturn(Future.successful(HttpResponse(status = INTERNAL_SERVER_ERROR, body = "")))
+          .thenReturn(Future.successful(Left(UnexpectedResponseError(INTERNAL_SERVER_ERROR))))
         controller.displayWithdrawConfirmation("")(fakeRequest)
       }
       status(result) shouldBe INTERNAL_SERVER_ERROR

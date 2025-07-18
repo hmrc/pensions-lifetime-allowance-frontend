@@ -20,7 +20,7 @@ import config.FrontendAppConfig
 import connectors.PlaConnectorError.{
   GenericPlaConnectorError,
   IncorrectResponseBodyError,
-  ResponseLockedError,
+  LockedResponseError,
   UnexpectedResponseError
 }
 import models.pla.response.ReadProtectionsResponse
@@ -61,7 +61,7 @@ class PlaConnectorV2 @Inject() (
           Left(IncorrectResponseBodyError)
 
         case err: UpstreamErrorResponse if err.statusCode == LOCKED =>
-          Left(ResponseLockedError)
+          Left(LockedResponseError)
 
         case err: NotFoundException =>
           logger.warn(s"Error 404 passed to currentProtections for nino: $nino")

@@ -19,9 +19,9 @@ package controllers
 import auth.AuthFunction
 import common.{Helpers, Strings}
 import config.{FrontendAppConfig, PlaContext}
-import connectors.PlaConnectorError.ResponseLockedError
+import connectors.PlaConnectorError.LockedResponseError
 import connectors.{PLAConnector, PlaConnectorError, PlaConnectorV2}
-import constructors.{DisplayConstructors, ResponseConstructors}
+import constructors.DisplayConstructors
 import enums.ApplicationType
 import models._
 import models.amendModels.AmendProtectionModel
@@ -65,7 +65,7 @@ class ReadProtectionsController @Inject() (
         case Right(transformedReadResponseModel: TransformedReadResponseModel) =>
           saveAndDisplayExistingProtections(transformedReadResponseModel)
 
-        case Left(ResponseLockedError) => Future.successful(Locked(manualCorrespondenceNeeded()))
+        case Left(LockedResponseError) => Future.successful(Locked(manualCorrespondenceNeeded()))
 
         case Left(_) =>
           Future.successful(

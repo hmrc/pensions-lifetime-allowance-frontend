@@ -20,7 +20,8 @@ import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
 import connectors.PLAConnector
-import constructors.{DisplayConstructors, ResponseConstructors}
+import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
+import constructors.DisplayConstructors
 import enums.ApplicationType
 import mocks.AuthMock
 import models._
@@ -64,7 +65,6 @@ class AmendsControllerSpec
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   val mockDisplayConstructors: DisplayConstructors   = mock[DisplayConstructors]
-  val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
   val mockSessionCacheService: SessionCacheService   = mock[SessionCacheService]
   val mockPlaConnector: PLAConnector                 = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
@@ -94,7 +94,6 @@ class AmendsControllerSpec
     reset(mockDisplayConstructors)
     reset(mockAuthConnector)
     reset(mockEnv)
-    reset(mockResponseConstructors)
     super.beforeEach()
   }
 
@@ -132,7 +131,6 @@ class AmendsControllerSpec
       mockPlaConnector,
       mockDisplayConstructors,
       mockMCC,
-      mockResponseConstructors,
       authFunction,
       mockManualCorrespondenceNeeded,
       mockNoNotificationID,
@@ -311,7 +309,7 @@ class AmendsControllerSpec
       when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
         .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
       when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
-        .thenReturn(Future.successful(HttpResponse(409, "")))
+        .thenReturn(Future.successful(Left(ConflictResponseError)))
 
       status(DataItem.result) shouldBe 500
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
@@ -329,7 +327,7 @@ class AmendsControllerSpec
       when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
         .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
       when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
-        .thenReturn(Future.successful(HttpResponse(423, "")))
+        .thenReturn(Future.successful(Left(LockedResponseError)))
 
       status(DataItem.result) shouldBe 423
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.mcNeeded.pageHeading")
@@ -346,13 +344,7 @@ class AmendsControllerSpec
     when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
       .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
     when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
-      .thenReturn(
-        Future.successful(
-          HttpResponse(status = 200, json = Json.parse("""{"result":"doesNotMatter"}"""), headers = Map.empty)
-        )
-      )
-    when(mockResponseConstructors.createAmendResponseModelFromJson(any()))
-      .thenReturn(None)
+      .thenReturn(Future.successful(Left(IncorrectResponseBodyError)))
 
     status(result) shouldBe 500
     jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
@@ -370,13 +362,7 @@ class AmendsControllerSpec
     cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
     when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
-      .thenReturn(
-        Future.successful(
-          HttpResponse(status = 200, json = Json.parse("""{"result":"doesNotMatter"}"""), headers = Map.empty)
-        )
-      )
-    when(mockResponseConstructors.createAmendResponseModelFromJson(any()))
-      .thenReturn(Some(AmendResponseModel(noNotificationIdProtection)))
+      .thenReturn(Future.successful(Right(ProtectionModel(None, None))))
     when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
       .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
 
@@ -395,12 +381,7 @@ class AmendsControllerSpec
     cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
     when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
-      .thenReturn(
-        Future.successful(
-          HttpResponse(status = 200, json = Json.parse("""{"result":"doesNotMatter"}"""), headers = Map.empty)
-        )
-      )
-    when(mockResponseConstructors.createAmendResponseModelFromJson(any())).thenReturn(Some(tstActiveAmendResponseModel))
+      .thenReturn(Future.successful(Right(ProtectionModel(None, None, notificationId = Some(33)))))
     when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
       .thenReturn(Future.successful(CacheMap("cacheId", Map.empty)))
 

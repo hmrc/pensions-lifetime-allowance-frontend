@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import config._
-import connectors.PlaConnectorError.{IncorrectResponseBodyError, ResponseLockedError, UnexpectedResponseError}
+import connectors.PlaConnectorError.{IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
 import connectors.{PLAConnector, PlaConnectorV2}
 import constructors.DisplayConstructors
 import mocks.AuthMock
@@ -351,7 +351,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
     "receiving a ResponseLockedError response" should {
       "return 423 and show the Manual Correspondence Needed page" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any()))
-          .thenReturn(Future.successful(Left(ResponseLockedError)))
+          .thenReturn(Future.successful(Left(LockedResponseError)))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
 

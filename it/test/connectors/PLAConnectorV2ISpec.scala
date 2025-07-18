@@ -17,7 +17,7 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlMatching}
-import connectors.PlaConnectorError.{IncorrectResponseBodyError, ResponseLockedError, UnexpectedResponseError}
+import connectors.PlaConnectorError.{IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
 import models.pla.response.ReadProtectionsResponse
 import org.scalatest.concurrent.ScalaFutures
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, LOCKED, NOT_FOUND, OK}
@@ -98,7 +98,7 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
 
         val result = connector.readProtections(testNino).futureValue
 
-        result shouldBe Left(ResponseLockedError)
+        result shouldBe Left(LockedResponseError)
       }
     }
 
