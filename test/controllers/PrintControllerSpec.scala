@@ -24,6 +24,7 @@ import mocks.AuthMock
 import models._
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -32,12 +33,14 @@ import play.api.Environment
 import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
+import utils.Constants
 import views.html.pages.fallback.technicalError
-import views.html.pages.result.resultPrint
+import views.html.pages.result.{resultPrint, resultPrintViewAmendment}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -49,17 +52,19 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
   val fakeRequest: FakeRequest[AnyContent]                 = FakeRequest()
   val mockEnv: Environment                                 = mock[Environment]
-  val resultPrintView: resultPrint                         = fakeApplication().injector.instanceOf[resultPrint]
+  val resultPrintView: resultPrint                         = mock[resultPrint]
+
+  val resultPrintViewAmendment: resultPrintViewAmendment =
+    mock[resultPrintViewAmendment]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockAppConfig: FrontendAppConfig   = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig   = mock[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext         = mock[PlaContext]
   implicit val system: ActorSystem                = ActorSystem()
   implicit val materializer: Materializer         = mock[Materializer]
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
 
   val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
-  val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111))
 
   val testPrintDisplayModel = PrintDisplayModel(
     "Testy",
@@ -70,7 +75,8 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     "PSATestNum",
     "ProtRefTestNum",
     Some("£1,246,500"),
-    Some("3 April 2016")
+    Some("3 April 2016"),
+    8
   )
 
   val authFunction = new AuthFunction {
@@ -87,6 +93,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     mockCitizenDetailsConnector,
     mockDisplayConstructors,
     resultPrintView,
+    resultPrintViewAmendment,
     mockMCC,
     authFunction
   ) {}
@@ -95,26 +102,98 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     reset(mockDisplayConstructors)
     reset(mockSessionCacheService)
     reset(mockCitizenDetailsConnector)
+    reset(resultPrintView)
+    reset(resultPrintViewAmendment)
     reset(mockPlaContext)
+    reset(mockAppConfig)
     super.beforeEach()
   }
 
   "Navigating to print protection" should {
-    "return 200" when {
-      "Valid data is provided" in {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-        when(mockCitizenDetailsConnector.getPersonDetails(any())(any()))
-          .thenReturn(Future.successful(Some(testPersonalDetails)))
-        when(mockSessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
-          .thenReturn(Future.successful(Some(testProtectionModel)))
-        when(mockDisplayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
-          .thenReturn(testPrintDisplayModel)
+    "return 200 when HIP migration is disabled for amendmentCodesList" when
+      Constants.amendmentCodesList.foreach { notificationId =>
+        s"Valid data is provided with notificationId: $notificationId " in {
+          val testProtectionModel = ProtectionModel(
+            psaCheckReference = Some("tstPSACeckRef"),
+            protectionID = Some(1111111),
+            notificationId = Some(notificationId)
+          )
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-        val result = TestPrintController.printView(fakeRequest)
-        status(result) shouldBe 200
+          when(mockCitizenDetailsConnector.getPersonDetails(any())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(mockSessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
+            .thenReturn(Future.successful(Some(testProtectionModel)))
+          when(mockDisplayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
+            .thenReturn(testPrintDisplayModel)
+          when(resultPrintViewAmendment.apply(any())(any(), any()))
+            .thenReturn(HtmlFormat.empty)
+          when(resultPrintView.apply(any())(any(), any()))
+            .thenReturn(HtmlFormat.empty)
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          val result = TestPrintController.printView(fakeRequest)
+          status(result) shouldBe 200
+          verify(resultPrintView).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
+        }
       }
-    }
+
+    "return 200 when HIP migration is enabled" when
+      Constants.amendmentCodesList.foreach { notificationId =>
+        s"Valid data is provided with notificationId: $notificationId " in {
+          val testProtectionModel = ProtectionModel(
+            psaCheckReference = Some("tstPSACeckRef"),
+            protectionID = Some(1111111),
+            notificationId = Some(notificationId)
+          )
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+          when(mockCitizenDetailsConnector.getPersonDetails(any())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(mockSessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
+            .thenReturn(Future.successful(Some(testProtectionModel)))
+          when(mockDisplayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
+            .thenReturn(testPrintDisplayModel)
+          when(resultPrintViewAmendment.apply(any())(any(), any()))
+            .thenReturn(HtmlFormat.empty)
+          when(resultPrintView.apply(any())(any(), any()))
+            .thenReturn(HtmlFormat.empty)
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+
+          val result = TestPrintController.printView(fakeRequest)
+          status(result) shouldBe 200
+          verify(resultPrintViewAmendment).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
+        }
+      }
+
+    "return 200 when HIP migration is enabled" when
+      List(16, 17).foreach { notificationId =>
+        s"Valid data is provided with notificationId: $notificationId " in {
+          val testProtectionModel = ProtectionModel(
+            psaCheckReference = Some("tstPSACeckRef"),
+            protectionID = Some(1111111),
+            notificationId = Some(notificationId)
+          )
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+          when(mockCitizenDetailsConnector.getPersonDetails(any())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(mockSessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
+            .thenReturn(Future.successful(Some(testProtectionModel)))
+          when(mockDisplayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
+            .thenReturn(testPrintDisplayModel)
+          when(resultPrintViewAmendment.apply(any())(any(), any()))
+            .thenReturn(HtmlFormat.empty)
+          when(resultPrintView.apply(any())(any(), any()))
+            .thenReturn(HtmlFormat.empty)
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+
+          val result = TestPrintController.printView(fakeRequest)
+          status(result) shouldBe 200
+          verify(resultPrintView).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
+        }
+      }
 
     "return a 303 redirect" when {
       "InValid data is provided" in {

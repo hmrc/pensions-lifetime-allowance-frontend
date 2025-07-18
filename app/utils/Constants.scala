@@ -46,4 +46,6 @@ object Constants {
 
   // Result codes 4 and 12 are a temporary solution to align with NPS responses for certain amendment outcomes
   val activeAmendmentCodes = List(33, 34, 44, 4, 12)
+
+  val amendmentCodesList = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
 }
