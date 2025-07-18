@@ -19,11 +19,11 @@ package controllers
 import auth.AuthFunction
 import common._
 import config.{FrontendAppConfig, PlaContext}
-import connectors.PLAConnector
+import connectors.{CitizenDetailsConnector, PLAConnector}
 import constructors.{AmendsGAConstructor, DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import models.amendModels._
-import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
+import models.{AmendResponseModel, PensionDebitModel, PersonalDetailsModel, ProtectionModel}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
@@ -38,6 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsController @Inject() (
     val sessionCacheService: SessionCacheService,
+    val citizenDetailsConnector: CitizenDetailsConnector,
     val plaConnector: PLAConnector,
     displayConstructors: DisplayConstructors,
     mcc: MessagesControllerComponents,
@@ -48,6 +49,7 @@ class AmendsController @Inject() (
     technicalError: views.html.pages.fallback.technicalError,
     outcomeActive: views.html.pages.amends.outcomeActive,
     outcomeInactive: views.html.pages.amends.outcomeInactive,
+    outcomeNewAmended: views.html.pages.amends.outcomeNewAmended,
     amendSummary: views.html.pages.amends.amendSummary
 )(
     implicit val appConfig: FrontendAppConfig,
@@ -103,26 +105,40 @@ class AmendsController @Inject() (
   def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
-        modelAR <- sessionCacheService.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
-        modelGA <- sessionCacheService.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
-        result  <- amendmentOutcomeResult(modelAR, modelGA, nino)
+        modelAR              <- sessionCacheService.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
+        modelGA              <- sessionCacheService.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
+        personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
+        result               <- amendmentOutcomeResult(modelAR, modelGA, personalDetailsModel, nino)
       } yield result
     }
   }
 
-  def amendmentOutcomeResult(modelAR: Option[AmendResponseModel], modelGA: Option[AmendsGAModel], nino: String)(
+  def amendmentOutcomeResult(
+      modelAR: Option[AmendResponseModel],
+      modelGA: Option[AmendsGAModel],
+      personalDetailsModel: Option[PersonalDetailsModel],
+      nino: String
+  )(
       implicit request: Request[AnyContent]
   ): Future[Result] = {
     if (modelGA.isEmpty) {
       logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
     }
+
     Future(
       modelAR
         .map { model =>
           val id = model.protection.notificationId.getOrElse {
             throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
           }
-          if (Constants.activeAmendmentCodes.contains(id)) {
+          if (Constants.newAmendmentCodes.contains(id)) {
+            Ok(
+              outcomeNewAmended(
+                displayConstructors.createActiveNewAmendResponseDisplayModel(model, personalDetailsModel, nino),
+                modelGA
+              )
+            )
+          } else if (Constants.activeAmendmentCodes.contains(id)) {
             sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
             Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
           } else {
