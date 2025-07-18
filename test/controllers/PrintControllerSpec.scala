@@ -37,7 +37,7 @@ import testHelpers.FakeApplication
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import views.html.pages.fallback.technicalError
-import views.html.pages.result.resultPrint
+import views.html.pages.result.{resultPrint, resultPrintViewAmendment}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -50,6 +50,9 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   val fakeRequest: FakeRequest[AnyContent]                 = FakeRequest()
   val mockEnv: Environment                                 = mock[Environment]
   val resultPrintView: resultPrint                         = fakeApplication().injector.instanceOf[resultPrint]
+
+  val resultPrintViewAmendment: resultPrintViewAmendment =
+    fakeApplication().injector.instanceOf[resultPrintViewAmendment]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
   implicit val mockAppConfig: FrontendAppConfig   = fakeApplication().injector.instanceOf[FrontendAppConfig]
@@ -70,7 +73,8 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     "PSATestNum",
     "ProtRefTestNum",
     Some("£1,246,500"),
-    Some("3 April 2016")
+    Some("3 April 2016"),
+    8
   )
 
   val authFunction = new AuthFunction {
@@ -87,6 +91,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     mockCitizenDetailsConnector,
     mockDisplayConstructors,
     resultPrintView,
+    resultPrintViewAmendment,
     mockMCC,
     authFunction
   ) {}

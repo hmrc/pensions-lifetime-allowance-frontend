@@ -672,7 +672,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         status = Some("Open"),
         certificateDate = Some("2016-04-17"),
         protectedAmount = Some(1250000),
-        protectionReference = Some("PSA123456")
+        protectionReference = Some("PSA123456"),
+        notificationId = Some(1)
       )
       lazy val tstNino = "testNino"
 
@@ -686,7 +687,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         psaCheckReference = tstPSACheckRef,
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
-        certificateDate = Some("17 April 2016")
+        certificateDate = Some("17 April 2016"),
+        notificationId = 1
       )
       displayConstructor.createPrintDisplayModel(
         Some(tstPersonalDetailsModel),

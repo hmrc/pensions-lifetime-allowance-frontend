@@ -398,13 +398,21 @@ pla.exitSurvey.sendFeedback                             = Anfon adborth
 ## Printing ##
 pla.print.title                             = Argraffu''ch diogelwch sydd ar waith
 pla.print.hmrc                              = Cyllid a Thollau EF
+pla.print.fullName                          = Enw llawn
 pla.print.nino                              = Rhif Yswiriant Gwladol
 pla.print.protectionDetails                 = Manylion diogelwch
 pla.print.applicationDate                   = Dyddiad y cais
-pla.print.protectionType                    = Math o ddiogelwch
+pla.print.protectionType                    = Y math o ddiogelwch
 pla.print.pla                               = Lwfans oes sydd wedi''i ddiogelu
+pla.print.protectedAmount                   = Y swm wedi’i ddiogelu
 pla.print.protectionNotificationNumber      = Rhif hysbysu diogelwch
+pla.print.protectionReferenceNumber         = Cyfeirnod y diogelwch
+pla.print.fixedProtectionReferenceNumber    = Cyfeirnod diogelwch penodol 2016
 pla.print.schemeAdministratorReference      = Cyfeirnod gweinyddwr y cynllun
+pla.print.pensionSchemeAdministratorReference = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
+pla.print.status                            = Statws
+pla.print.withdrawn                         = Wedi’i dynnu''n ôl
+pla.print.dormant                           = Segur
 pla.print.giveToPensionProvider             = Rhowch y manylion hyn i''ch darparwr pensiwn pan fyddwch yn penderfynu cymryd arian o''ch pensiwn.
 pla.print.IP2014.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
 pla.print.IP2016.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
@@ -560,6 +568,94 @@ amendResultCode.43.href.text        = Os yw hyn yn digwydd, mae''n rhaid i chi r
 amendResultCode.44.heading          = Rydych wedi diwygio diogelwch unigol 2016
 amendResultCode.12.heading          = Rydych wedi diwygio diogelwch unigol 2016
 
+#amendsResultPage
+
+pla.amendsResultPage.allowanceSubHeading = Eich swm newydd sydd wedi’i ddiogelu yw
+pla.amendsResultPage.printGuidancePara = Cadwch gopi o fanylion eich diogelwch ar gyfer eich cofnodion. Os byddwch yn penderfynu cymryd arian o’ch pensiwn, rhowch y manylion hyn i’ch darparwr pensiwn.
+pla.amendsResultPage.printLink = Adolygwch fanylion eich diogelwch a’u hargraffu (yn agor tab newydd)
+pla.amendsResultPage.changeDetails = Newid manylion eich diogelwch
+pla.amendsResultPage.changeDetailsParaBeforeLink = Os yw’ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, mae’n rhaid i chi
+pla.amendsResultPage.changeDetailsParaAfterLink = cyn pen 60 diwrnod.
+pla.amendsResultPage.changeDetailsLink = gysylltu â Gwasanaethau Cynlluniau Pensiwn CThEF
+pla.amendsResultPage.changeDetailsSubHeadingBeforeLink = Mae’n rhaid i chi
+pla.amendsResultPage.changeDetailsSubHeadingAfterLink = cyn pen 60 diwrnod os yw’r canlynol yn wir:
+pla.amendsResultPage.changeDetailsSubHeadingLink = gysylltu â Gwasanaethau Cynlluniau Pensiwn CThEF
+pla.amendsResultPage.whatToDoLink = Yr hyn i’w wneud os ydych yn colli eich diogelwch (yn agor tab newydd)
+pla.amendsResultPage.viewDetails.beforeLink = Gallwch
+pla.amendsResultPage.viewDetails.afterLink =  ar unrhyw adeg.
+pla.amendsResultPage.viewDetails.linkText = fwrw golwg dros fanylion eich diogelwch, neu eu newid
+pla.amendsResultPage.giveFeedback = Rhoi adborth i ni
+pla.amendsResultPage.exitSurveyLinkText = Beth oedd eich barn am y gwasanaeth hwn?
+pla.amendsResultPage.exitSurvey = Rydym yn defnyddio’ch adborth i wella ein gwasanaethau.
+pla.amendsResultPage.notWorkingLinkText = A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)
+
+amendResultCode.1.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+
+amendResultCode.2.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendResultCode.2.insetText  = Nid yw’ch diogelwch unigol 2014 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar dystysgrif diogelwch uwch.
+amendResultCode.2.changeDetailsPara = Os ydych yn colli eich diogelwch uwch, bydd eich diogelwch unigol 2014 yn dod yn weithredol, a bydd CThEF yn eich hysbysu o gyfeirnod eich diogelwch a chyfeirnod gwiriad gweinyddu cynlluniau pensiwn.
+amendResultCode.2.bulletPointOne = rydych yn colli eich diogelwch uwch
+amendResultCode.2.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
+
+amendResultCode.3.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendResultCode.3.insetText  = Nid yw’ch diogelwch unigol 2014 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar ddiogelwch penodol.
+amendResultCode.3.changeDetailsPara = Os ydych yn colli eich diogelwch penodol, bydd eich diogelwch unigol 2014 yn dod yn weithredol, a bydd CThEF yn anfon cyfeirnod diogelwch a chyfeirnod gwiriad gweinyddwr cynlluniau pensiwn.
+amendResultCode.3.bulletPointOne = rydych yn colli eich diogelwch penodol
+amendResultCode.3.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
+
+amendResultCode.4.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendResultCode.4.insetText  = Nid yw’ch diogelwch unigol 2014 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar ddiogelwch penodol 2014.
+amendResultCode.4.changeDetailsPara = Os ydych yn colli eich diogelwch penodol 2014, bydd eich diogelwch unigol 2014 yn dod yn weithredol, a bydd CThEF yn anfon rhoi cyfeirnod diogelwch a chyfeirnod gwiriad gweinyddu cynlluniau pensiwn.
+amendResultCode.4.bulletPointOne = rydych yn colli eich diogelwch penodol 2014
+amendResultCode.4.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
+
+amendResultCode.5.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+
+amendResultCode.6.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendResultCode.6.insetText  = Mae eich diogelwch unigol 2014 wedi cael ei dynnu gan bod eich swm newydd wedi’i ddiogelu yn is na £1,250,000.
+
+amendResultCode.7.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendResultCode.7.insetText = Mae eich diogelwch unigol 2014 wedi cael ei dynnu gan bod eich swm newydd wedi’i ddiogelu yn is na £1,250,000.
+amendResultCode.7.insetText2 = Mae eich diogelwch penodol 2016 nawr yn weithredol.
+amendResultCode.7.changeDetailsPara = Rhowch y cyfeirnod ar gyfer eich diogelwch penodol 2016 i’ch darparwr pensiwn pan rydych yn cychwyn cymryd arian o’ch pensiwn.
+amendResultCode.7.bulletPointOne = rydych yn colli eich diogelwch penodol 2016
+amendResultCode.7.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
+
+amendResultCode.8.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+
+amendResultCode.9.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.9.insetText  = Nid yw’ch diogelwch unigol 2016 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar dystysgrif diogelwch uwch.
+amendResultCode.9.changeDetailsPara = Os ydych yn colli eich diogelwch uwch, bydd eich diogelwch unigol 2016 yn dod yn weithredol, a bydd CThEF yn eich hysbysu o gyfeirnod eich diogelwch a chyfeirnod gwiriad gweinyddu cynlluniau pensiwn.
+amendResultCode.9.bulletPointOne = rydych yn colli eich diogelwch uwch
+amendResultCode.9.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
+
+amendResultCode.10.heading   = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.10.insetText  = Nid yw’ch diogelwch unigol 2016 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar ddiogelwch penodol.
+amendResultCode.10.changeDetailsPara = Os ydych yn colli eich diogelwch penodol, bydd eich diogelwch unigol 2016 yn dod yn weithredol, a bydd CThEF yn anfon cyfeirnod diogelwch a chyfeirnod gwiriad gweinyddwr cynlluniau pensiwn.
+amendResultCode.10.bulletPointOne = rydych yn colli eich diogelwch penodol
+amendResultCode.10.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
+
+amendResultCode.11.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.11.insetText  = Nid yw’ch diogelwch unigol 2016 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar ddiogelwch penodol.
+amendResultCode.11.changeDetailsPara =Os ydych yn colli eich diogelwch penodol 2014, bydd eich diogelwch unigol 2016 yn dod yn weithredol, a bydd CThEF yn eich hysbysu o gyfeirnod eich diogelwch a chyfeirnod gwiriad gweinyddu cynlluniau pensiwn.
+amendResultCode.11.bulletPointOne = rydych yn colli eich diogelwch penodol 2014
+amendResultCode.11.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
+
+amendResultCode.12.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.12.insetText  = Nid yw’ch diogelwch unigol 2016 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar ddiogelwch penodol 2016.
+amendResultCode.12.changeDetailsPara = Os ydych yn colli eich diogelwch penodol 2016, bydd eich diogelwch unigol 2016 yn dod yn weithredol, a bydd CThEF yn anfon rhoi cyfeirnod diogelwch a chyfeirnod gwiriad gweinyddu cynlluniau pensiwn.
+amendResultCode.12.bulletPointOne = rydych yn colli eich diogelwch penodol 2016
+amendResultCode.12.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
+
+amendResultCode.13.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.13.insetText  = Mae eich diogelwch unigol 2016 wedi cael ei dynnu gan bod eich swm newydd wedi’i ddiogelu yn is na £1,000,000.
+
+amendResultCode.14.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.14.insetText = Mae eich diogelwch unigol 2016 wedi cael ei dynnu gan bod eich swm newydd wedi’i ddiogelu yn is na £1,000,000.
+amendResultCode.14.insetText2 = Mae eich diogelwch penodol 2016 nawr yn weithredol.
+amendResultCode.14.changeDetailsPara = Rhowch y cyfeirnod ar gyfer eich diogelwch penodol 2016 i’ch darparwr pensiwn pan rydych yn cychwyn cymryd arian o’ch pensiwn.
+amendResultCode.14.bulletPointOne = rydych yn colli eich diogelwch penodol 2016
+amendResultCode.14.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
 
 
 

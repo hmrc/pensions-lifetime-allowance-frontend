@@ -402,13 +402,21 @@ pla.exitSurvey.sendFeedback                             = Send feedback
 ## Printing ##
 pla.print.title                             = Print your active protection
 pla.print.hmrc                              = HM Revenue & Customs
+pla.print.fullName                          = Full Name
 pla.print.nino                              = National Insurance number
 pla.print.protectionDetails                 = Protection details
 pla.print.applicationDate                   = Application date
 pla.print.protectionType                    = Protection type
 pla.print.pla                               = Protected lifetime allowance
+pla.print.protectedAmount                   = Protected amount
 pla.print.protectionNotificationNumber      = Protection notification number
+pla.print.protectionReferenceNumber         = Protection reference number
+pla.print.fixedProtectionReferenceNumber    = Fixed protection 2016 reference number
 pla.print.schemeAdministratorReference      = Scheme administrator reference
+pla.print.pensionSchemeAdministratorReference      = Pension Scheme administrator check reference
+pla.print.status                             = Status
+pla.print.withdrawn                         = Withdrawn
+pla.print.dormant                           = Dormant
 pla.print.giveToPensionProvider             = Give these details to your pension provider when you decide to take money from your pension
 pla.print.IP2014.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
 pla.print.IP2016.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
@@ -573,6 +581,97 @@ amendResultCode.43.href.text = If this happens, you must tell
 amendResultCode.44.heading   = You''ve amended individual protection 2016
 amendResultCode.12.heading   = You''ve amended individual protection 2016
 
+
+#amendsResultPage
+
+pla.amendsResultPage.allowanceSubHeading = Your new protected amount is
+pla.amendsResultPage.printGuidancePara = Keep a copy of your protection details for your records. If you decide to take money from your pension, give these details to your pension provider.
+pla.amendsResultPage.printLink = Review and print your protection details (opens in new tab)
+pla.amendsResultPage.changeDetails = Changing your protection details
+pla.amendsResultPage.changeDetailsParaBeforeLink = If your pension gets shared in a divorce or civil partnership, you must
+pla.amendsResultPage.changeDetailsParaAfterLink = within 60 days.
+pla.amendsResultPage.changeDetailsLink = contact HMRC Pension Scheme services
+pla.amendsResultPage.changeDetailsSubHeadingBeforeLink = You must
+pla.amendsResultPage.changeDetailsSubHeadingAfterLink = within 60 days if:
+pla.amendsResultPage.changeDetailsSubHeadingLink = contact HMRC Pension Scheme services
+pla.amendsResultPage.whatToDoLink = What to do if you lose your protection (opens in new tab)
+pla.amendsResultPage.viewDetails.beforeLink = You can
+pla.amendsResultPage.viewDetails.afterLink = at any time.
+pla.amendsResultPage.viewDetails.linkText = view or change details of your protections
+pla.amendsResultPage.giveFeedback = Give us feedback
+pla.amendsResultPage.exitSurveyLinkText = What did you think of this service?
+pla.amendsResultPage.exitSurvey = We use your feedback to make our services better.
+pla.amendsResultPage.notWorkingLinkText = Is this page not working properly? (opens in new tab)
+
+
+amendResultCode.1.heading    = You have amended your individual protection 2014
+
+
+amendResultCode.2.heading    = You have amended your individual protection 2014
+amendResultCode.2.insetText  = Your individual protection 2014 is currently not active because you already hold an enhanced protection certificate.
+amendResultCode.2.changeDetailsPara = If you lose your enhanced protection, your individual protection 2014 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
+amendResultCode.2.bulletPointOne = you lose your enhanced protection
+amendResultCode.2.bulletPointTwo = your pension is shared in a divorce or civil partnership
+
+amendResultCode.3.heading    = You have amended your individual protection 2014
+amendResultCode.3.insetText  = Your individual protection 2014 is currently not active because you already hold fixed protection.
+amendResultCode.3.changeDetailsPara = If you lose your fixed protection, your individual protection 2014 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
+amendResultCode.3.bulletPointOne = you lose your fixed protection
+amendResultCode.3.bulletPointTwo = your pension is shared in a divorce or civil partnership
+
+amendResultCode.4.heading    = You have amended your individual protection 2014
+amendResultCode.4.insetText  = Your individual protection 2014 is currently not active because you already hold fixed protection 2014.
+amendResultCode.4.changeDetailsPara = If you lose your fixed protection 2014, your individual protection 2014 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
+amendResultCode.4.bulletPointOne = you lose your fixed protection 2014
+amendResultCode.4.bulletPointTwo = your pension is shared in a divorce or civil partnership
+
+amendResultCode.5.heading    = You have amended your individual protection 2014
+
+amendResultCode.6.heading    = You have amended your individual protection 2014
+amendResultCode.6.insetText  = Your individual protection 2014 has been withdrawn because your new protected amount is below £1,250,000.
+
+amendResultCode.7.heading    = You have amended your individual protection 2014
+amendResultCode.7.insetText = Your individual protection 2014 has been withdrawn because your new protected amount is below £1,250,000.
+amendResultCode.7.insetText2 = Your fixed protection 2016 is now active.
+amendResultCode.7.changeDetailsPara = Give your fixed protection 2016 reference number to your pension provider when you start taking money from your pension.
+amendResultCode.7.bulletPointOne = you lose your fixed protection 2016
+amendResultCode.7.bulletPointTwo = your pension is shared in a divorce or civil partnership
+
+amendResultCode.8.heading    = You have amended your individual protection 2016
+
+amendResultCode.9.heading    = You have amended your individual protection 2016
+amendResultCode.9.insetText  = Your individual protection 2016 is currently not active because you already hold an enhanced protection certificate.
+amendResultCode.9.changeDetailsPara = If you lose your enhanced protection, your individual protection 2016 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
+amendResultCode.9.bulletPointOne = you lose your enhanced protection
+amendResultCode.9.bulletPointTwo = your pension is shared in a divorce or civil partnership
+
+amendResultCode.10.heading   = You have amended your individual protection 2016
+amendResultCode.10.insetText  = Your individual protection 2016 is currently not active because you already hold fixed protection.
+amendResultCode.10.changeDetailsPara = If you lose your fixed protection, your individual protection 2016 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
+amendResultCode.10.bulletPointOne = you lose your fixed protection
+amendResultCode.10.bulletPointTwo = your pension is shared in a divorce or civil partnership
+
+amendResultCode.11.heading    = You have amended your individual protection 2016
+amendResultCode.11.insetText  = Your individual protection 2016 is currently not active because you already hold fixed protection 2014.
+amendResultCode.11.changeDetailsPara = If you lose your fixed protection 2014, your individual protection 2016 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
+amendResultCode.11.bulletPointOne = you lose your fixed protection 2014
+amendResultCode.11.bulletPointTwo = your pension is shared in a divorce or civil partnership
+
+amendResultCode.12.heading    = You have amended your individual protection 2016
+amendResultCode.12.insetText  = Your individual protection 2016 is currently not active because you already hold fixed protection 2016.
+amendResultCode.12.changeDetailsPara = If you lose your fixed protection 2016, your individual protection 2016 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
+amendResultCode.12.bulletPointOne = you lose your fixed protection 2016
+amendResultCode.12.bulletPointTwo = your pension is shared in a divorce or civil partnership
+
+amendResultCode.13.heading    = You have amended your individual protection 2016
+amendResultCode.13.insetText  = Your individual protection 2016 has been withdrawn because your new protected amount is below £1,000,000.
+
+amendResultCode.14.heading    = You have amended your individual protection 2016
+amendResultCode.14.insetText = Your individual protection 2016 has been withdrawn because your new protected amount is below £1,000,000.
+amendResultCode.14.insetText2 = Your fixed protection 2016 is now active.
+amendResultCode.14.changeDetailsPara = Give your fixed protection 2016 reference number to your pension provider when you start taking money from your pension.
+amendResultCode.14.bulletPointOne = you lose your fixed protection 2016
+amendResultCode.14.bulletPointTwo = your pension is shared in a divorce or civil partnership
 
 
 

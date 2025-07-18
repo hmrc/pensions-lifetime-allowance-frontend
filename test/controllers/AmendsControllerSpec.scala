@@ -19,7 +19,7 @@ package controllers
 import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
-import connectors.PLAConnector
+import connectors.{CitizenDetailsConnector, PLAConnector}
 import constructors.{DisplayConstructors, ResponseConstructors}
 import enums.ApplicationType
 import mocks.AuthMock
@@ -63,10 +63,11 @@ class AmendsControllerSpec
   implicit lazy val mockMessage: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
-  val mockDisplayConstructors: DisplayConstructors   = mock[DisplayConstructors]
-  val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
-  val mockSessionCacheService: SessionCacheService   = mock[SessionCacheService]
-  val mockPlaConnector: PLAConnector                 = mock[PLAConnector]
+  val mockDisplayConstructors: DisplayConstructors         = mock[DisplayConstructors]
+  val mockResponseConstructors: ResponseConstructors       = mock[ResponseConstructors]
+  val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
+  val mockSessionCacheService: SessionCacheService         = mock[SessionCacheService]
+  val mockPlaConnector: PLAConnector                       = mock[PLAConnector]
   val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction        = mock[AuthFunction]
   val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded = app.injector.instanceOf[manualCorrespondenceNeeded]
@@ -74,6 +75,7 @@ class AmendsControllerSpec
   val mockAmendPsoDetails: amendPsoDetails                       = app.injector.instanceOf[amendPsoDetails]
   val mockTechnicalError: technicalError                         = app.injector.instanceOf[technicalError]
   val mockOutcomeActive: outcomeActive                           = app.injector.instanceOf[outcomeActive]
+  val mockOutcomeAmended: outcomeAmended                         = app.injector.instanceOf[outcomeAmended]
   val mockOutcomeInactive: outcomeInactive                       = app.injector.instanceOf[outcomeInactive]
   val mockRemovePsoDebits: removePsoDebits                       = app.injector.instanceOf[removePsoDebits]
   val mockAmendSummary: amendSummary                             = app.injector.instanceOf[amendSummary]
@@ -89,13 +91,14 @@ class AmendsControllerSpec
   implicit val ec: ExecutionContext             = app.injector.instanceOf[ExecutionContext]
 
   override def beforeEach(): Unit = {
+    super.beforeEach()
     reset(mockSessionCacheService)
+    reset(mockCitizenDetailsConnector)
     reset(mockPlaConnector)
     reset(mockDisplayConstructors)
     reset(mockAuthConnector)
     reset(mockEnv)
     reset(mockResponseConstructors)
-    super.beforeEach()
   }
 
   val testIP16DormantModel = AmendProtectionModel(
@@ -129,6 +132,7 @@ class AmendsControllerSpec
 
     val controller = new AmendsController(
       mockSessionCacheService,
+      mockCitizenDetailsConnector,
       mockPlaConnector,
       mockDisplayConstructors,
       mockMCC,
@@ -139,6 +143,7 @@ class AmendsControllerSpec
       mockTechnicalError,
       mockOutcomeActive,
       mockOutcomeInactive,
+      mockOutcomeAmended,
       mockAmendSummary
     )
 
@@ -410,13 +415,17 @@ class AmendsControllerSpec
 
   "Calling the amendmentOutcome action" when {
     "there is no outcome object stored in cache" in new Setup {
-      lazy val result   = controller.amendmentOutcome()(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendResponseModel](None)
       cacheFetchCondition[AmendsGAModel](None)
+      cacheFetchCondition[PersonalDetailsModel](None)
+      when(mockCitizenDetailsConnector.getPersonDetails(anyString())(any()))
+        .thenReturn(Future.successful(None))
+
+      lazy val result = controller.amendmentOutcome()(fakeRequest)
 
       status(result) shouldBe 500
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
       jsoupDoc.body
         .getElementById("tryAgainLink")
@@ -425,8 +434,6 @@ class AmendsControllerSpec
     }
 
     "there is an active protection outcome in cache" in new Setup {
-      lazy val result   = controller.amendmentOutcome()(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       when(
         mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](startsWith("amendResponseModel"))(any(), any())
@@ -436,28 +443,37 @@ class AmendsControllerSpec
           Some(AmendsGAModel(Some("updatedValue"), Some("changedToYes"), Some("changedToNo"), None, Some("addedPSO")))
         )
       )
+      when(mockCitizenDetailsConnector.getPersonDetails(anyString())(any()))
+        .thenReturn(Future.successful(None))
       when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(any()))
         .thenReturn(tstActiveAmendResponseDisplayModel)
 
+      val result = controller.amendmentOutcome()(fakeRequest)
+
       status(result) shouldBe 200
+      val jsoupDoc = Jsoup.parse(contentAsString(result))
       jsoupDoc.body.getElementsByClass("govuk-panel__title").text shouldEqual Messages("amendResultCode.33.heading")
     }
-  }
 
-  "there is an inactive protection outcome in cache" in new Setup {
-    lazy val result   = controller.amendmentOutcome()(fakeRequest)
-    lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    when(
-      mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](startsWith("amendResponseModel"))(any(), any())
-    ).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
-    when(mockSessionCacheService.fetchAndGetFormData[AmendsGAModel](startsWith("AmendsGA"))(any(), any()))
-      .thenReturn(Future.successful(Some(AmendsGAModel(None, Some("changedToNo"), Some("changedToYes"), None, None))))
-    when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(any()))
-      .thenReturn(tstInactiveAmendResponseDisplayModel)
+    "there is an inactive protection outcome in cache" in new Setup {
 
-    status(result) shouldBe 200
-    jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      when(
+        mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](startsWith("amendResponseModel"))(any(), any())
+      ).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
+      when(mockSessionCacheService.fetchAndGetFormData[AmendsGAModel](startsWith("AmendsGA"))(any(), any()))
+        .thenReturn(Future.successful(Some(AmendsGAModel(None, Some("changedToNo"), Some("changedToYes"), None, None))))
+      when(mockCitizenDetailsConnector.getPersonDetails(anyString())(any()))
+        .thenReturn(Future.successful(None))
+      when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(any()))
+        .thenReturn(tstInactiveAmendResponseDisplayModel)
+
+      val result = controller.amendmentOutcome()(fakeRequest)
+
+      status(result) shouldBe 200
+      val jsoupDoc = Jsoup.parse(contentAsString(result))
+      jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
+    }
   }
 
   "Choosing remove with a valid amend protection model" in new Setup {
@@ -493,7 +509,7 @@ class AmendsControllerSpec
 
     "provided with no models" in new Setup {
       val appType     = ApplicationType.existingProtections
-      lazy val result = controller.amendmentOutcomeResult(None, None, "")(fakeRequest)
+      lazy val result = controller.amendmentOutcomeResult(None, None, None, "")(fakeRequest)
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
       contentAsString(result) shouldBe mockTechnicalError(appType.toString).body
@@ -503,6 +519,7 @@ class AmendsControllerSpec
       lazy val result = controller.amendmentOutcomeResult(
         Some(AmendResponseModel(ProtectionModel(None, None))),
         Some(AmendsGAModel(None, None, None, None, None)),
+        None,
         ""
       )(fakeRequest)
 
@@ -521,7 +538,7 @@ class AmendsControllerSpec
       when(mockDisplayConstructors.createActiveAmendResponseDisplayModel(any()))
         .thenReturn(ActiveAmendResultDisplayModel(ApplicationType.IP2014, "33", "£1,100,000", None))
 
-      lazy val result = controller.amendmentOutcomeResult(Some(model), modelGA, "")
+      lazy val result = controller.amendmentOutcomeResult(Some(model), modelGA, None, "")
 
       contentAsString(result) shouldBe mockOutcomeActive(
         ActiveAmendResultDisplayModel(ApplicationType.IP2014, "33", "£1,100,000", None),
@@ -533,7 +550,7 @@ class AmendsControllerSpec
     "provided with a model with an inactive amendment code" in new Setup {
       val modelGA     = Some(AmendsGAModel(None, None, None, None, None))
       val model       = AmendResponseModel(ProtectionModel(Some("ref"), Some(1), notificationId = Some(41)))
-      lazy val result = controller.amendmentOutcomeResult(Some(model), modelGA, "")
+      lazy val result = controller.amendmentOutcomeResult(Some(model), modelGA, None, "")
 
       when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
         .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))

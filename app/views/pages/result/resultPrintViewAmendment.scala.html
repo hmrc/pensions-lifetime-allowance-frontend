@@ -1,0 +1,105 @@
+@*
+ * Copyright 2023 HM Revenue & Customs
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *@
+
+@import models.PrintDisplayModel
+@import views.html.helper.CSPNonce
+@import utils.Constants
+
+@this(
+layout: Layout
+)
+
+@(model: PrintDisplayModel)(implicit request: Request[_], messages: Messages)
+
+
+@layout(
+pageTitle = messages("pla.print.title"),
+additionalPrintCSS = true
+) {
+
+<script @CSPNonce.attr>
+		window.addEventListener("load", function() {
+			window.print();
+		});
+</script>
+
+<h1 class="govuk-heading-xl" id="userName">@{model.firstName} @{model.surname}</h1>
+<p class="govuk-body" id="userNino">
+		@{messages("pla.print.nino")} @{model.nino}
+</p>
+<h2 class="govuk-heading-l">
+		@messages("pla.print.protectionDetails")
+</h2>
+
+<table class="govuk-table">
+		<tbody class="govuk-table__body">
+		@model.certificateDate.map { cDate =>
+		<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table__header">@messages("pla.print.applicationDate")</th>
+				<td class="govuk-table__cell" id="applicationDate">@{cDate}</td>
+		</tr>
+		}
+		<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table__header">@messages("pla.print.protectionType")</th>
+				<td class="govuk-table__cell" id="protectionType">@messages(s"pla.protection.types.${model.protectionType}")</td>
+		</tr>
+		@model.protectedAmount.map { amt =>
+		<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table__header">@messages("pla.print.protectedAmount")</th>
+				<td class="govuk-table__cell" id="protectedAmount">@{amt}</td>
+		</tr>
+		}
+		@if(model.notificationId == 1 || model.notificationId == 5 || model.notificationId == 8) {
+		<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table__header">@messages("pla.print.protectionReferenceNumber")</th>
+				<td class="govuk-table__cell" id="protectionRefNum">@{model.protectionReference}</td>
+		</tr>
+		}
+		@if(model.notificationId == 7 || model.notificationId == 14) {
+		<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table__header">@messages("pla.print.fixedProtectionReferenceNumber")</th>
+				<td class="govuk-table__cell" id="fixedProtectionRefNum">@{model.protectionReference}</td>
+		</tr>
+		}
+
+		@if(model.notificationId == 1 || model.notificationId == 5 || model.notificationId == 8) {
+		<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table__header">@messages("pla.print.pensionSchemeAdministratorReference")</th>
+				<td class="govuk-table__cell" id="psaCheckRef">@{model.psaCheckReference}</td>
+		</tr>
+		}
+
+		@if(Constants.dormantNotificationIds.contains(model.notificationId)) {
+		<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table__header">@messages("pla.print.status")</th>
+				<td class="govuk-table__cell" id="dormantStatus">@messages("pla.print.dormant")</td>
+		</tr>
+		}
+
+		@if(Constants.withdrawnNotificationIds.contains(model.notificationId)) {
+		<tr class="govuk-table__row">
+				<th scope="row" class="govuk-table__header">@messages("pla.print.status")</th>
+				<td class="govuk-table__cell" id="withdrawnStatus">@messages("pla.print.withdrawn")</td>
+		</tr>
+		}
+		</tbody>
+</table>
+
+<p class="govuk-body">@messages("pla.print.giveToPensionProvider")</p>
+
+<p class="govuk-body" id="contactHMRC">@messages("pla.print.IP2014.contactHMRC")</p>
+
+}
