@@ -20,7 +20,8 @@ sealed trait PlaConnectorError
 
 object PlaConnectorError {
 
-  case object ResponseLockedError                       extends PlaConnectorError
+  case object LockedResponseError                       extends PlaConnectorError
+  case object ConflictResponseError                     extends PlaConnectorError
   case object IncorrectResponseBodyError                extends PlaConnectorError
   case class UnexpectedResponseError(statusCode: Int)   extends PlaConnectorError
   case class GenericPlaConnectorError(cause: Throwable) extends PlaConnectorError
