@@ -75,7 +75,6 @@ class AmendsControllerSpec
   val mockTechnicalError: technicalError                         = app.injector.instanceOf[technicalError]
   val mockOutcomeActive: outcomeActive                           = app.injector.instanceOf[outcomeActive]
   val mockOutcomeInactive: outcomeInactive                       = app.injector.instanceOf[outcomeInactive]
-  val mockRemovePsoDebits: removePsoDebits                       = app.injector.instanceOf[removePsoDebits]
   val mockAmendSummary: amendSummary                             = app.injector.instanceOf[amendSummary]
   val mockEnv: Environment                                       = mock[Environment]
   val messagesApi: MessagesApi                                   = mockMCC.messagesApi
@@ -115,15 +114,6 @@ class AmendsControllerSpec
       mockMCC,
       mockAuthConnector,
       mockTechnicalError
-    )
-
-    val rpsoController = new AmendsRemovePensionSharingOrderController(
-      mockSessionCacheService,
-      mockPlaConnector,
-      mockMCC,
-      authFunction,
-      mockTechnicalError,
-      mockRemovePsoDebits
     )
 
     val controller = new AmendsController(
@@ -301,9 +291,8 @@ class AmendsControllerSpec
   }
 
   "Calling the amendProtection action" when {
-    "the microservice returns a conflict response" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection("IP2014", "dormant"))
 
+    "PlaConnector returns ConflictResponseError should return InternalServerError and technical error page" in new Setup {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
       when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
@@ -311,15 +300,19 @@ class AmendsControllerSpec
       when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
         .thenReturn(Future.successful(Left(ConflictResponseError)))
 
-      status(DataItem.result) shouldBe 500
-      DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-      DataItem.jsoupDoc.body
+      val result = controller.amendProtection("IP2014", "dormant")(fakeRequest)
+
+      status(result) shouldBe 500
+      await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+
+      val jsoupDoc = Jsoup.parse(contentAsString(result))
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+      jsoupDoc.body
         .getElementById("tryAgainLink")
         .attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
-      await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
-    "the microservice returns a manual correspondence needed response" in new Setup {
+    "PlaConnector returns LockedResponseError should return Locked response and manual correspondence page" in new Setup {
       object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection("IP2014", "dormant"))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -332,64 +325,66 @@ class AmendsControllerSpec
       status(DataItem.result) shouldBe 423
       DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.mcNeeded.pageHeading")
     }
-  }
 
-  "the microservice returns an invalid json response" in new Setup {
-    lazy val result =
-      controller.amendProtection("IP2014", "invalidstatus")(authenticatedFakeRequest().withMethod("POST"))
-    lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+    "PlaConnector returns IncorrectResponseBodyError should return InternalServerError and technical error page" in new Setup {
+      lazy val result =
+        controller.amendProtection("IP2014", "invalidstatus")(authenticatedFakeRequest().withMethod("POST"))
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
-    when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
-      .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
-    when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
-      .thenReturn(Future.successful(Left(IncorrectResponseBodyError)))
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
+        .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+      when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
+        .thenReturn(Future.successful(Left(IncorrectResponseBodyError)))
 
-    status(result) shouldBe 500
-    jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
-    jsoupDoc.body
-      .getElementById("tryAgainLink")
-      .attr("href") shouldEqual
-      s"${controllers.routes.ReadProtectionsController.currentProtections}"
-    await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-  }
+      status(result) shouldBe 500
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
+      jsoupDoc.body
+        .getElementById("tryAgainLink")
+        .attr("href") shouldEqual
+        s"${controllers.routes.ReadProtectionsController.currentProtections}"
+      await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+    }
 
-  "the microservice returns a response with no notificationId" in new Setup {
-    object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection("IP2014", "dormant"))
+    "PlaConnector returns a response with no notificationId" in new Setup {
+      object DataItem extends AuthorisedFakeRequestToPost(controller.amendProtection("IP2014", "dormant"))
 
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
-    when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
-      .thenReturn(Future.successful(Right(ProtectionModel(None, None))))
-    when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
-      .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+      when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
+        .thenReturn(Future.successful(Right(ProtectionModel(None, None))))
+      when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
+        .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
 
-    status(DataItem.result) shouldBe 500
-    DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.noNotificationId.title")
-    DataItem.jsoupDoc.body
-      .getElementsByClass("govuk-link")
-      .get(1)
-      .attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
-    await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-  }
+      status(DataItem.result) shouldBe 500
+      DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.noNotificationId.title")
+      DataItem.jsoupDoc.body
+        .getElementsByClass("govuk-link")
+        .get(1)
+        .attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
+      await(DataItem.result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+    }
 
-  "the microservice returns a valid response" in new Setup {
-    lazy val result = controller.amendProtection("IP2014", "dormant")(authenticatedFakeRequest().withMethod("POST"))
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+    "PlaConnector returns a valid response" in new Setup {
+      lazy val result = controller.amendProtection("IP2014", "dormant")(authenticatedFakeRequest().withMethod("POST"))
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
-    when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
-      .thenReturn(Future.successful(Right(ProtectionModel(None, None, notificationId = Some(33)))))
-    when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
-      .thenReturn(Future.successful(CacheMap("cacheId", Map.empty)))
+      when(mockPlaConnector.amendProtection(any(), any())(any(), any()))
+        .thenReturn(Future.successful(Right(ProtectionModel(None, None, notificationId = Some(33)))))
+      when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
+        .thenReturn(Future.successful(CacheMap("cacheId", Map.empty)))
 
-    status(result) shouldBe 303
-    redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendmentOutcome}")
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(s"${routes.AmendsController.amendmentOutcome}")
+    }
+
   }
 
   "Calling the amendmentOutcome action" when {
+
     "there is no outcome object stored in cache" in new Setup {
       lazy val result   = controller.amendmentOutcome()(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
@@ -423,51 +418,22 @@ class AmendsControllerSpec
       status(result) shouldBe 200
       jsoupDoc.body.getElementsByClass("govuk-panel__title").text shouldEqual Messages("amendResultCode.33.heading")
     }
-  }
 
-  "there is an inactive protection outcome in cache" in new Setup {
-    lazy val result   = controller.amendmentOutcome()(fakeRequest)
-    lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    when(
-      mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](startsWith("amendResponseModel"))(any(), any())
-    ).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
-    when(mockSessionCacheService.fetchAndGetFormData[AmendsGAModel](startsWith("AmendsGA"))(any(), any()))
-      .thenReturn(Future.successful(Some(AmendsGAModel(None, Some("changedToNo"), Some("changedToYes"), None, None))))
-    when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(any()))
-      .thenReturn(tstInactiveAmendResponseDisplayModel)
+    "there is an inactive protection outcome in cache" in new Setup {
+      lazy val result   = controller.amendmentOutcome()(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      when(
+        mockSessionCacheService.fetchAndGetFormData[AmendResponseModel](startsWith("amendResponseModel"))(any(), any())
+      ).thenReturn(Future.successful(Some(tstInactiveAmendResponseModel)))
+      when(mockSessionCacheService.fetchAndGetFormData[AmendsGAModel](startsWith("AmendsGA"))(any(), any()))
+        .thenReturn(Future.successful(Some(AmendsGAModel(None, Some("changedToNo"), Some("changedToYes"), None, None))))
+      when(mockDisplayConstructors.createInactiveAmendResponseDisplayModel(any()))
+        .thenReturn(tstInactiveAmendResponseDisplayModel)
 
-    status(result) shouldBe 200
-    jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
-  }
-
-  "Choosing remove with a valid amend protection model" in new Setup {
-    val ip2016Protection = ProtectionModel(
-      psaCheckReference = Some("testPSARef"),
-      uncrystallisedRights = Some(100000.00),
-      nonUKRights = Some(2000.00),
-      preADayPensionInPayment = Some(2000.00),
-      postADayBenefitCrystallisationEvents = Some(2000.00),
-      notificationId = Some(12),
-      protectionID = Some(12345),
-      protectionType = Some("IP2016"),
-      status = Some("open"),
-      certificateDate = Some("2016-04-17"),
-      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0))),
-      protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456")
-    )
-
-    val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
-    object DataItem extends AuthorisedFakeRequestToPost(rpsoController.submitRemovePso("ip2016", "open"))
-
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-    cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
-
-    status(DataItem.result) shouldBe 303
-    redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "open")}")
-
+      status(result) shouldBe 200
+      jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
+    }
   }
 
   "Calling amendmentOutcomeResult" when {

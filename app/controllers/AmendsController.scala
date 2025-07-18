@@ -158,45 +158,6 @@ class AmendsController @Inject() (
       Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
     }
 
-//  private def routeViaMCNeededCheck(response: HttpResponse, nino: String)(
-//      implicit request: Request[AnyContent]
-//  ): Future[Result] =
-//    response.status match {
-//      case CONFLICT =>
-//        logger.warn(s"conflict response returned for amend request for user nino $nino")
-//        Future.successful(
-//          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-//            .withHeaders(CACHE_CONTROL -> "no-cache")
-//        )
-//      case LOCKED =>
-//        logger.info(s"locked response returned for amend request for user nino $nino")
-//        Future.successful(Locked(manualCorrespondenceNeeded()))
-//      case _ => saveAndRedirectToDisplay(response, nino)
-//    }
-//
-//  private def saveAndRedirectToDisplay(response: HttpResponse, nino: String)(
-//      implicit request: Request[AnyContent]
-//  ): Future[Result] =
-//    responseConstructors
-//      .createAmendResponseModelFromJson(response.json)
-//      .map { model =>
-//        if (model.protection.notificationId.isDefined) {
-//          sessionCacheService.saveFormData[AmendResponseModel]("amendResponseModel", model).map { _ =>
-//            Redirect(routes.AmendsController.amendmentOutcome)
-//          }
-//        } else {
-//          logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
-//          Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
-//        }
-//      }
-//      .getOrElse {
-//        logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
-//        Future.successful(
-//          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-//            .withHeaders(CACHE_CONTROL -> "no-cache")
-//        )
-//      }
-
   def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {

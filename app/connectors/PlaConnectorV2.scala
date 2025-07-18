@@ -17,23 +17,13 @@
 package connectors
 
 import config.FrontendAppConfig
-import connectors.PlaConnectorError.{
-  GenericPlaConnectorError,
-  IncorrectResponseBodyError,
-  LockedResponseError,
-  UnexpectedResponseError
-}
-import models.pla.response.ReadProtectionsResponse
+import connectors.PlaConnectorError.{GenericPlaConnectorError, IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
+import models.ProtectionModel
+import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse}
 import play.api.Logging
 import play.api.http.Status.LOCKED
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{
-  HeaderCarrier,
-  JsValidationException,
-  NotFoundException,
-  StringContextOps,
-  UpstreamErrorResponse
-}
+import uk.gov.hmrc.http.{HeaderCarrier, JsValidationException, NotFoundException, StringContextOps, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -75,5 +65,10 @@ class PlaConnectorV2 @Inject() (
           Left(GenericPlaConnectorError(err))
       }
   }
+
+  def amendProtection(
+    nino: String,
+    protection: ProtectionModel
+  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Either[PlaConnectorError, AmendProtectionResponse]] = ???
 
 }

@@ -333,7 +333,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       }
     }
 
-    "receiving an upstream error" should {
+    "receiving UnexpectedResponseError response" should {
       "return 500 and show the technical error page for existing protections" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any()))
           .thenReturn(Future.successful(Left(UnexpectedResponseError(503))))
@@ -348,7 +348,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       }
     }
 
-    "receiving a ResponseLockedError response" should {
+    "receiving ResponseLockedError response" should {
       "return 423 and show the Manual Correspondence Needed page" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any()))
           .thenReturn(Future.successful(Left(LockedResponseError)))
@@ -361,7 +361,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       }
     }
 
-    "receiving incorrect json in the PLA response" should {
+    "receiving IncorrectResponseBodyError response" should {
       "return 500 and show the technical error page for existing protections" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any()))
           .thenReturn(Future.successful(Left(IncorrectResponseBodyError)))
