@@ -560,6 +560,60 @@ amendResultCode.43.href.text        = Os yw hyn yn digwydd, mae''n rhaid i chi r
 amendResultCode.44.heading          = Rydych wedi diwygio diogelwch unigol 2016
 amendResultCode.12.heading          = Rydych wedi diwygio diogelwch unigol 2016
 
+#newAmends
+
+pla.newAmends.allowanceSubHeading = Eich swm newydd sydd wedi’i ddiogelu yw
+pla.newAmends.printGuidancePara = Cadwch gopi o fanylion eich diogelwch ar gyfer eich cofnodion. Os byddwch yn penderfynu cymryd arian o’ch pensiwn, rhowch y manylion hyn i’ch darparwr pensiwn.
+pla.newAmends.printLink = Adolygwch fanylion eich diogelwch a’u hargraffu (yn agor tab newydd)
+pla.newAmends.changeDetails = Newid manylion eich diogelwch
+pla.newAmends.viewDetails.beforeLink = Gallwch
+pla.newAmends.viewDetails.afterLink =  ar unrhyw adeg.
+pla.newAmends.viewDetails.linkText = fwrw golwg dros fanylion eich diogelwch, neu eu newid
+pla.newAmends.giveFeedback = Rhoi adborth i ni
+pla.newAmends.exitSurveyLinkText = Beth oedd eich barn am y gwasanaeth hwn?
+pla.newAmends.exitSurvey = Rydym yn defnyddio’ch adborth i wella ein gwasanaethau.
+pla.newAmends.notWorkingLinkText = A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)
+
+amendResultCode.1.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+
+amendResultCode.2.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendResultCode.2.insetText  = Nid yw’ch diogelwch unigol 2014 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar dystysgrif diogelwch uwch.
+
+amendResultCode.3.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendResultCode.3.insetText  = Nid yw’ch diogelwch unigol 2014 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar ddiogelwch penodol.
+
+amendResultCode.4.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendResultCode.4.insetText  = Nid yw’ch diogelwch unigol 2014 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar ddiogelwch penodol 2014.
+
+amendResultCode.5.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+
+amendResultCode.6.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendResultCode.6.insetText  = Mae eich diogelwch unigol 2014 wedi cael ei dynnu gan bod eich swm newydd wedi’i ddiogelu yn is na £1,250,000.
+
+amendResultCode.7.heading    = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendResultCode.7.insetText1 = Mae eich diogelwch unigol 2014 wedi cael ei dynnu gan bod eich swm newydd wedi’i ddiogelu yn is na £1,250,000.
+amendResultCode.7.insetText2 = Mae eich diogelwch penodol 2016 nawr yn weithredol.
+
+amendResultCode.8.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+
+amendResultCode.9.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.9.insetText  = Nid yw’ch diogelwch unigol 2016 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar dystysgrif diogelwch uwch.
+
+amendResultCode.10.heading   = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.10.insetText  = Nid yw’ch diogelwch unigol 2016 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar ddiogelwch penodol.
+
+amendResultCode.11.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.11.insetText  = Nid yw’ch diogelwch unigol 2016 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar ddiogelwch penodol.
+
+amendResultCode.12.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.12.insetText  = Nid yw’ch diogelwch unigol 2016 yn weithredol ar hyn o bryd gan eich bod eisoes yn meddu ar ddiogelwch penodol 2016.
+
+amendResultCode.13.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.13.insetText  = Mae eich diogelwch unigol 2016 wedi cael ei dynnu gan bod eich swm newydd wedi’i ddiogelu yn is na £1,000,000.
+
+amendResultCode.14.heading    = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendResultCode.14.insetText1 = Mae eich diogelwch unigol 2016 wedi cael ei dynnu gan bod eich swm newydd wedi’i ddiogelu yn is na £1,000,000.
+amendResultCode.14.insetText2 = Mae eich diogelwch penodol 2016 nawr yn weithredol.
 
 
 
