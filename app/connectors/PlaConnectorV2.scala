@@ -16,16 +16,15 @@
 
 package connectors
 
+import common.Exceptions
 import config.FrontendAppConfig
-import connectors.PlaConnectorError.{
-  GenericPlaConnectorError,
-  IncorrectResponseBodyError,
-  LockedResponseError,
-  UnexpectedResponseError
-}
-import models.pla.response.ReadProtectionsResponse
+import connectors.PlaConnectorError._
+import models.ProtectionModel
+import models.pla.request.AmendProtectionRequest
+import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse}
 import play.api.Logging
-import play.api.http.Status.LOCKED
+import play.api.http.Status.{CONFLICT, LOCKED}
+import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
 import uk.gov.hmrc.http.{
   HeaderCarrier,
@@ -74,6 +73,44 @@ class PlaConnectorV2 @Inject() (
         case err =>
           Left(GenericPlaConnectorError(err))
       }
+  }
+
+  def amendProtection(
+      nino: String,
+      protection: ProtectionModel
+  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Either[PlaConnectorError, AmendProtectionResponse]] = {
+    val id = protection.protectionID.getOrElse(
+      throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino)
+    )
+    val requestBody = AmendProtectionRequest(protection.protectionType.getOrElse(""))
+    val url         = s"$serviceUrl/protect-your-lifetime-allowance/v2/individuals/$nino/protections/$id"
+
+    http
+      .post(url"$url")
+      .withBody(Json.toJson(requestBody))
+      .execute[AmendProtectionResponse]
+      .map(Right(_))
+      .recover {
+        case _: JsValidationException =>
+          logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
+          Left(IncorrectResponseBodyError)
+
+        case err: UpstreamErrorResponse if err.statusCode == LOCKED =>
+          logger.info(s"locked response returned for amend request for user nino $nino")
+          Left(LockedResponseError)
+
+        case err: UpstreamErrorResponse if err.statusCode == CONFLICT =>
+          logger.warn(s"conflict response returned for amend request for user nino $nino")
+          Left(ConflictResponseError)
+
+        case err: UpstreamErrorResponse =>
+          logger.error(s"Unexpected status ${err.statusCode} passed to currentProtections for nino: $nino")
+          Left(UnexpectedResponseError(err.statusCode))
+
+        case err =>
+          Left(GenericPlaConnectorError(err))
+      }
+
   }
 
 }

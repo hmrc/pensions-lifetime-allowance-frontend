@@ -16,7 +16,7 @@
 
 package models
 
-import models.pla.response.ReadProtectionsResponse
+import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse}
 import play.api.libs.json.{Json, OFormat}
 
 case class ApplyResponseModel(
@@ -62,4 +62,8 @@ case class AmendResponseModel(
 
 object AmendResponseModel {
   implicit val format: OFormat[AmendResponseModel] = Json.format[AmendResponseModel]
+
+  def from(amendProtectionResponse: AmendProtectionResponse): AmendResponseModel =
+    AmendResponseModel(ProtectionModel(None, None))
+
 }

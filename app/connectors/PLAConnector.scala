@@ -18,7 +18,13 @@ package connectors
 
 import common.Exceptions
 import config.FrontendAppConfig
-import connectors.PlaConnectorError.{ConflictResponseError, GenericPlaConnectorError, IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
+import connectors.PlaConnectorError.{
+  ConflictResponseError,
+  GenericPlaConnectorError,
+  IncorrectResponseBodyError,
+  LockedResponseError,
+  UnexpectedResponseError
+}
 import models._
 import play.api.Logging
 import play.api.http.Status.{CONFLICT, LOCKED}
@@ -147,7 +153,7 @@ class PLAConnector @Inject() (
       .execute[ProtectionModel]
       .map {
         case model: ProtectionModel if model.isEmpty =>
-          logger.warn(s"Unable to parse response body from pensions-lifetime-allowance for nino: $nino")
+          logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
           Left(IncorrectResponseBodyError)
 
         case model: ProtectionModel =>
@@ -155,9 +161,11 @@ class PLAConnector @Inject() (
       }
       .recover {
         case err: UpstreamErrorResponse if err.statusCode == LOCKED =>
+          logger.info(s"locked response returned for amend request for user nino $nino")
           Left(LockedResponseError)
 
         case err: UpstreamErrorResponse if err.statusCode == CONFLICT =>
+          logger.warn(s"conflict response returned for amend request for user nino $nino")
           Left(ConflictResponseError)
 
         case err: UpstreamErrorResponse =>

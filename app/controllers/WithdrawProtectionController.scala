@@ -154,24 +154,6 @@ class WithdrawProtectionController @Inject() (
       )
       .map(_.map(AmendResponseModel(_)))
 
-//  private def routeToWithdrawConfirmation(protectionType: Option[String], response: HttpResponse, nino: String)(
-//      implicit request: Request[AnyContent]
-//  ): Future[Result] =
-//    response.status match {
-//      case OK =>
-//        Future.successful(
-//          Redirect(
-//            routes.WithdrawProtectionController.showWithdrawConfirmation(Strings.protectionTypeString(protectionType))
-//          )
-//        )
-//      case _ =>
-//        logger.error(s"conflict response returned for withdrawal request for user nino $nino")
-//        Future.successful(
-//          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-//            .withHeaders(CACHE_CONTROL -> "no-cache")
-//        )
-//    }
-
   def showWithdrawConfirmation(protectionType: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("existingProtections") {
       sessionCacheService.remove.map(_ => Ok(withdrawConfirmation(protectionType)))

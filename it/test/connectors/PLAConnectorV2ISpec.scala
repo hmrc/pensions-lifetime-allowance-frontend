@@ -16,10 +16,18 @@
 
 package connectors
 
-import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, get, stubFor, urlMatching}
-import connectors.PlaConnectorError.{IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
-import models.pla.response.ReadProtectionsResponse
+import com.github.tomakehurst.wiremock.client.WireMock._
+import connectors.PlaConnectorError.{
+  ConflictResponseError,
+  IncorrectResponseBodyError,
+  LockedResponseError,
+  UnexpectedResponseError
+}
+import models.ProtectionModel
+import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse, UpdatedLifetimeAllowanceProtectionRecord}
 import org.scalatest.concurrent.ScalaFutures
+import play.api.http.Status.CONFLICT
+import play.api.libs.json.Json
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, LOCKED, NOT_FOUND, OK}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.IntegrationBaseSpec
@@ -30,24 +38,141 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
 
   private val connector: PlaConnectorV2 = app.injector.instanceOf[PlaConnectorV2]
 
-  private val testNino = "AB999999C"
-
   private implicit val hc: HeaderCarrier    = HeaderCarrier()
   private implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
+  private val testNino          = "AB999999C"
   private val psaCheckReference = "PSA12345678A"
+  private val protectionId      = 33
 
-  private val correctResponseBodyStr =
-    s"""{
-       |   "pensionSchemeAdministratorCheckReference": "$psaCheckReference"
-       |}""".stripMargin
+  "PlaConnectorV2 on amendProtection" when {
+
+    val inputProtectionModel = ProtectionModel(
+      psaCheckReference = Some(psaCheckReference),
+      uncrystallisedRights = Some(100000.00),
+      nonUKRights = Some(2000.00),
+      preADayPensionInPayment = Some(2000.00),
+      postADayBenefitCrystallisationEvents = Some(2000.00),
+      notificationId = Some(12),
+      protectionID = Some(protectionId),
+      protectionType = Some("IP2016"),
+      status = Some("dormant"),
+      certificateDate = Some("2016-04-17"),
+      protectedAmount = Some(1250000),
+      protectionReference = Some("PSA123456")
+    )
+
+    val correctResponseBodyStr =
+      s"""{
+         |   "updatedLifetimeAllowanceProtectionRecord": {
+         |      "identifier": $protectionId
+         |   }
+         |}""".stripMargin
+
+    val url = s"/protect-your-lifetime-allowance/v2/individuals/$testNino/protections/$protectionId"
+
+    "everything works correctly" should {
+
+      "call correct endpoint and provide correct request body" in {
+        stubFor(
+          post(urlMatching(url))
+            .willReturn(aResponse().withStatus(OK).withBody(correctResponseBodyStr))
+        )
+
+        connector.amendProtection(testNino, inputProtectionModel).futureValue
+
+        val expectedRequestBody =
+          Json.parse(s"""{
+                        |  "typ": "IP2016"
+                        |}""".stripMargin)
+
+        verify(
+          postRequestedFor(urlEqualTo(url)).withRequestBody(equalToJson(expectedRequestBody.toString))
+        )
+      }
+
+      "return Right containing AmendProtectionResponse" in {
+        stubFor(
+          post(urlMatching(url))
+            .willReturn(aResponse().withStatus(OK).withBody(correctResponseBodyStr))
+        )
+
+        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
+
+        result shouldBe Right(
+          AmendProtectionResponse(UpdatedLifetimeAllowanceProtectionRecord(protectionId))
+        )
+      }
+    }
+
+    "it receives response with body in incorrect format" should {
+      "return Left containing IncorrectResponseBodyError" in {
+        val incorrectResponseBody =
+          """{
+            |   "incorrectField": "incorrect-value"
+            |}""".stripMargin
+        stubFor(
+          post(urlMatching(url))
+            .willReturn(aResponse().withStatus(OK).withBody(incorrectResponseBody))
+        )
+
+        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
+
+        result shouldBe Left(IncorrectResponseBodyError)
+      }
+    }
+
+    "it receives Conflict response" should {
+      "return Left containing ConflictResponseError" in {
+        stubFor(
+          post(urlMatching(url))
+            .willReturn(aResponse().withStatus(CONFLICT))
+        )
+
+        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
+
+        result shouldBe Left(ConflictResponseError)
+      }
+    }
+
+    "it receives Locked response" should {
+      "return Left containing LockedResponseError" in {
+        stubFor(
+          post(urlMatching(url))
+            .willReturn(aResponse().withStatus(LOCKED))
+        )
+
+        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
+
+        result shouldBe Left(LockedResponseError)
+      }
+    }
+
+    "it receives a different error response" should {
+      "return Left containing UnexpectedResponseError" in {
+        stubFor(
+          post(urlMatching(url))
+            .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
+        )
+
+        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
+
+        result shouldBe Left(UnexpectedResponseError(INTERNAL_SERVER_ERROR))
+      }
+    }
+  }
 
   "PlaConnectorV2 on readProtections" when {
+
+    val correctResponseBodyStr =
+      s"""{
+         |   "pensionSchemeAdministratorCheckReference": "$psaCheckReference"
+         |}""".stripMargin
 
     val url = s"/protect-your-lifetime-allowance/v2/individuals/$testNino/protections"
 
     "everything works correctly" should {
-      "return Right containing TransformedReadResponseModel" in {
+      "return Right containing ReadProtectionsResponse" in {
         stubFor(
           get(urlMatching(url))
             .willReturn(aResponse().withStatus(OK).withBody(correctResponseBodyStr))

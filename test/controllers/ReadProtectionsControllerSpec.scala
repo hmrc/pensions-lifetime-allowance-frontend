@@ -59,7 +59,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
   val testMCNeededResponse      = HttpResponse(423, "")
   val testUpstreamErrorResponse = HttpResponse(503, "")
 
-  private val testNino = "AB123456A"
+  private val testNino                    = "AB123456A"
   private val psaCheckReference           = "PSA12345678A"
   val testReadResponseModel               = ReadResponseModel(psaCheckReference, Seq.empty)
   val testTransformedReadResponseModel    = TransformedReadResponseModel(None, Seq.empty)
@@ -319,7 +319,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
     }
 
     "AppConfig.hipMigrationEnabled is set to false" should {
-      "call PlaConnectorV2" in new Setup {
+      "call PlaConnector" in new Setup {
         when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
         when(mockPlaConnector.readProtections(any())(any(), any()))
           .thenReturn(Future.successful(Right(testReadResponseModel)))
@@ -333,7 +333,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       }
     }
 
-    "receiving an upstream error" should {
+    "receiving UnexpectedResponseError response" should {
       "return 500 and show the technical error page for existing protections" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any()))
           .thenReturn(Future.successful(Left(UnexpectedResponseError(503))))
@@ -348,7 +348,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       }
     }
 
-    "receiving a ResponseLockedError response" should {
+    "receiving LockedResponseError response" should {
       "return 423 and show the Manual Correspondence Needed page" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any()))
           .thenReturn(Future.successful(Left(LockedResponseError)))
@@ -361,7 +361,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
       }
     }
 
-    "receiving incorrect json in the PLA response" should {
+    "receiving IncorrectResponseBodyError response" should {
       "return 500 and show the technical error page for existing protections" in new Setup {
         when(mockPlaConnector.readProtections(any())(any(), any()))
           .thenReturn(Future.successful(Left(IncorrectResponseBodyError)))
