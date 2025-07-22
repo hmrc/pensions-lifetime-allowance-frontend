@@ -82,7 +82,7 @@ class PlaConnectorV2 @Inject() (
     val id = protection.protectionID.getOrElse(
       throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino)
     )
-    val requestBody = AmendProtectionRequest(protection.protectionType.getOrElse(""))
+    val requestBody = AmendProtectionRequest.from(protection)
     val url         = s"$serviceUrl/protect-your-lifetime-allowance/v2/individuals/$nino/protections/$id"
 
     http

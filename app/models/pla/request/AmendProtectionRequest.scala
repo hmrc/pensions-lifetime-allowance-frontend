@@ -16,6 +16,7 @@
 
 package models.pla.request
 
+import models.ProtectionModel
 import play.api.libs.json.{Format, Json}
 
 case class AmendProtectionRequest(
@@ -24,4 +25,8 @@ case class AmendProtectionRequest(
 
 object AmendProtectionRequest {
   implicit val format: Format[AmendProtectionRequest] = Json.format[AmendProtectionRequest]
+
+  def from(protectionModel: ProtectionModel): AmendProtectionRequest =
+    AmendProtectionRequest(protectionModel.protectionType.getOrElse(""))
+
 }
