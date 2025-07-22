@@ -37,12 +37,10 @@ class PLAConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
 
   private val connector: PLAConnector = app.injector.instanceOf[PLAConnector]
 
-  private val testNino = "AB999999C"
-
   private implicit val hc: HeaderCarrier    = HeaderCarrier()
   private implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
-  private val nino              = "AB999999C"
+  private val testNino          = "AB999999C"
   private val psaCheckReference = "PSA12345678A"
   private val protectionId      = 33
 
@@ -81,7 +79,7 @@ class PLAConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
               .willReturn(aResponse().withStatus(OK).withBody(correctResponseBodyStr))
           )
 
-          connector.amendProtection(nino, inputProtectionModel).futureValue
+          connector.amendProtection(testNino, inputProtectionModel).futureValue
 
           val expectedRequestBody =
             Json.parse(s"""{
@@ -125,7 +123,7 @@ class PLAConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
             protectionReference = Some("PSA123456")
           )
 
-          connector.amendProtection(nino, inputProtectionModelWithTenDecimalPlaces).futureValue
+          connector.amendProtection(testNino, inputProtectionModelWithTenDecimalPlaces).futureValue
 
           val expectedRequestBody =
             Json.parse(s"""{
@@ -153,7 +151,7 @@ class PLAConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(OK).withBody(correctResponseBodyStr))
         )
 
-        val result = connector.amendProtection(nino, inputProtectionModel).futureValue
+        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
 
         result shouldBe Right(
           ProtectionModel(psaCheckReference = Some(psaCheckReference), protectionID = Some(protectionId))
@@ -172,7 +170,7 @@ class PLAConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(OK).withBody(incorrectResponseBody))
         )
 
-        val result = connector.amendProtection(nino, inputProtectionModel).futureValue
+        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
 
         result shouldBe Left(IncorrectResponseBodyError)
       }
@@ -185,7 +183,7 @@ class PLAConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(CONFLICT))
         )
 
-        val result = connector.amendProtection(nino, inputProtectionModel).futureValue
+        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
 
         result shouldBe Left(ConflictResponseError)
       }
@@ -198,7 +196,7 @@ class PLAConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(LOCKED))
         )
 
-        val result = connector.amendProtection(nino, inputProtectionModel).futureValue
+        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
 
         result shouldBe Left(LockedResponseError)
       }
@@ -211,7 +209,7 @@ class PLAConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
         )
 
-        val result = connector.amendProtection(nino, inputProtectionModel).futureValue
+        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
 
         result shouldBe Left(UnexpectedResponseError(INTERNAL_SERVER_ERROR))
       }
