@@ -39,7 +39,10 @@ case class ProtectionModel(
     notificationId: Option[Int] = None,
     protectionReference: Option[String] = None,
     withdrawnDate: Option[String] = None
-)
+) {
+
+  def isEmpty: Boolean = this == ProtectionModel(None, None)
+}
 
 object ProtectionModel {
   implicit val pensionDebitFormat: OFormat[PensionDebitModel] = PensionDebitModel.pdFormat

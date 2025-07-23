@@ -136,6 +136,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
       cacheFetchCondition[AmendProtectionModel](None)
       status(result) shouldBe 500
     }
+
     "show the technical error page for existing protections" in new Setup {
       lazy val result   = controller.removePso("ip2016", "open")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
@@ -148,6 +149,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
         .getElementById("tryAgainLink")
         .attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
     }
+
     "have the correct cache control" in new Setup {
       lazy val result = await(controller.removePso("ip2016", "open")(fakeRequest))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -178,7 +180,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
     }
 
     "return 500 if the an amend protection model could not be retrieved from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.submitRemovePso("ip2016", "open"))
+      object DataItem extends AuthorisedFakeRequestToPost(controller.removePso("ip2016", "open"))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 

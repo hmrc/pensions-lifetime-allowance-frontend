@@ -17,18 +17,20 @@
 package utils
 
 import org.apache.pekko.util.Timeout
-import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatest.{BeforeAndAfterAll, BeforeAndAfterEach, OptionValues}
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
-import play.api.{Application, Configuration}
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.test.DefaultAwaitTimeout
+import play.api.{Application, Configuration}
 
 import scala.concurrent.duration._
 
 trait IntegrationBaseSpec
-  extends AnyWordSpecLike with Matchers with OptionValues
+    extends AnyWordSpecLike
+    with Matchers
+    with OptionValues
     with GuiceOneServerPerSuite
     with WiremockHelper
     with BeforeAndAfterEach
@@ -37,15 +39,18 @@ trait IntegrationBaseSpec
 
   override implicit def defaultAwaitTimeout: Timeout = 5.seconds
 
-  val localHost = "localhost"
+  val localHost      = "localhost"
   val localPort: Int = port
-  val localUrl  = s"http://$localHost:$localPort"
+  val localUrl       = s"http://$localHost:$localPort"
 
   def defaultConfiguration: Configuration = Configuration(
-    "testserver.port" -> s"$localPort",
-      "application.router" -> "testOnlyDoNotUseInAppConf.Routes",
-      "microservice.services.pla-dynamic-stub.port" -> s"${WiremockHelper.wiremockPort}",
-      "auditing.consumer.baseUri.port" -> s"${WiremockHelper.wiremockPort}"
+    "metrics.jvm"                                            -> false,
+    "metrics.logback"                                        -> false,
+    "testserver.port"                                        -> s"$localPort",
+    "application.router"                                     -> "testOnlyDoNotUseInAppConf.Routes",
+    "microservice.services.pensions-lifetime-allowance.port" -> s"${WiremockHelper.wiremockPort}",
+    "microservice.services.pla-dynamic-stub.port"            -> s"${WiremockHelper.wiremockPort}",
+    "auditing.consumer.baseUri.port"                         -> s"${WiremockHelper.wiremockPort}"
   )
 
   override implicit lazy val app: Application = new GuiceApplicationBuilder()
@@ -53,6 +58,7 @@ trait IntegrationBaseSpec
     .build()
 
   override def beforeEach() = {
+    super.beforeEach()
     resetWiremock()
   }
 
@@ -65,4 +71,5 @@ trait IntegrationBaseSpec
     stopWiremock()
     super.afterAll()
   }
+
 }

@@ -19,17 +19,19 @@ package controllers
 import auth.AuthFunction
 import common._
 import config.{FrontendAppConfig, PlaContext}
-import connectors.PLAConnector
-import constructors.{AmendsGAConstructor, DisplayConstructors, ResponseConstructors}
+import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
+import connectors.{PLAConnector, PlaConnectorError, PlaConnectorV2}
+import constructors.{AmendsGAConstructor, DisplayConstructors}
 import enums.ApplicationType
 import models.amendModels._
-import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
+import models.cache.CacheMap
+import models.{AmendResponseModel, ProtectionModel}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Constants
 
@@ -37,11 +39,11 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsController @Inject() (
-    val sessionCacheService: SessionCacheService,
-    val plaConnector: PLAConnector,
+    sessionCacheService: SessionCacheService,
+    plaConnector: PLAConnector,
+    plaConnectorV2: PlaConnectorV2,
     displayConstructors: DisplayConstructors,
     mcc: MessagesControllerComponents,
-    responseConstructors: ResponseConstructors,
     authFunction: AuthFunction,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
     noNotificationId: views.html.pages.fallback.noNotificationId,
@@ -84,21 +86,77 @@ class AmendsController @Inject() (
   def amendProtection(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
-        protectionAmendment <- sessionCacheService.fetchAndGetFormData[AmendProtectionModel](
-          Strings.cacheAmendFetchString(protectionType, status)
-        )
-        saveAmendsGA <- sessionCacheService.saveFormData[AmendsGAModel](
-          "AmendsGA",
-          AmendsGAConstructor.identifyAmendsChanges(
-            protectionAmendment.get.updatedProtection,
-            protectionAmendment.get.originalProtection
-          )
-        )
-        response <- plaConnector.amendProtection(nino, protectionAmendment.get.updatedProtection)
-        result   <- routeViaMCNeededCheck(response, nino)
+        protectionAmendment <- fetchProtectionAmendment(protectionType, status)
+        _                   <- saveAmendsGA(protectionAmendment)
+
+        response <- sendAmendProtectionRequest(nino, protectionAmendment.get.updatedProtection)
+
+        result <- response match {
+
+          case Right(amendResponseModel: AmendResponseModel) =>
+            saveAndRedirectToDisplay(nino, amendResponseModel)
+
+          case Left(LockedResponseError) =>
+            Future.successful(Locked(manualCorrespondenceNeeded()))
+
+          case Left(ConflictResponseError) =>
+            Future.successful(
+              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+                .withHeaders(CACHE_CONTROL -> "no-cache")
+            )
+
+          case Left(IncorrectResponseBodyError) =>
+            Future.successful(
+              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+                .withHeaders(CACHE_CONTROL -> "no-cache")
+            )
+
+          case Left(_) =>
+            Future.successful(
+              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+                .withHeaders(CACHE_CONTROL -> "no-cache")
+            )
+        }
       } yield result
     }
   }
+
+  private def fetchProtectionAmendment(protectionType: String, status: String)(
+      implicit request: Request[AnyContent]
+  ): Future[Option[AmendProtectionModel]] =
+    sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+
+  private def saveAmendsGA(
+      protectionAmendment: Option[AmendProtectionModel]
+  )(implicit request: Request[AnyContent]): Future[CacheMap] =
+    sessionCacheService.saveFormData[AmendsGAModel](
+      "AmendsGA",
+      AmendsGAConstructor.identifyAmendsChanges(
+        protectionAmendment.get.updatedProtection,
+        protectionAmendment.get.originalProtection
+      )
+    )
+
+  private def sendAmendProtectionRequest(nino: String, protection: ProtectionModel)(
+      implicit hc: HeaderCarrier
+  ): Future[Either[PlaConnectorError, AmendResponseModel]] =
+    if (appConfig.hipMigrationEnabled) {
+      plaConnectorV2.amendProtection(nino, protection).map(_.map(AmendResponseModel.from))
+    } else {
+      plaConnector.amendProtection(nino, protection).map(_.map(AmendResponseModel(_)))
+    }
+
+  private def saveAndRedirectToDisplay(nino: String, amendResponseModel: AmendResponseModel)(
+      implicit request: Request[AnyContent]
+  ): Future[Result] =
+    if (amendResponseModel.protection.notificationId.isDefined) {
+      sessionCacheService.saveFormData[AmendResponseModel]("amendResponseModel", amendResponseModel).map { _ =>
+        Redirect(routes.AmendsController.amendmentOutcome)
+      }
+    } else {
+      logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
+      Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+    }
 
   def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
@@ -135,53 +193,6 @@ class AmendsController @Inject() (
             .withHeaders(CACHE_CONTROL -> "no-cache")
         }
     )
-  }
-
-  private def routeViaMCNeededCheck(response: HttpResponse, nino: String)(
-      implicit request: Request[AnyContent]
-  ): Future[Result] =
-    response.status match {
-      case 409 =>
-        logger.warn(s"conflict response returned for amend request for user nino $nino")
-        Future.successful(
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
-        )
-      case 423 =>
-        logger.info(s"locked reponse returned for amend request for user nino $nino")
-        Future.successful(Locked(manualCorrespondenceNeeded()))
-      case _ => saveAndRedirectToDisplay(response, nino)
-    }
-
-  def saveAndRedirectToDisplay(response: HttpResponse, nino: String)(
-      implicit request: Request[AnyContent]
-  ): Future[Result] =
-    responseConstructors
-      .createAmendResponseModelFromJson(response.json)
-      .map { model =>
-        if (model.protection.notificationId.isDefined) {
-          sessionCacheService.saveFormData[AmendResponseModel]("amendResponseModel", model).map { cacheMap =>
-            Redirect(routes.AmendsController.amendmentOutcome)
-          }
-        } else {
-          logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
-          Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
-        }
-      }
-      .getOrElse {
-        logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
-        Future.successful(
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
-        )
-      }
-
-  private[controllers] def createPsoDetailsList(formModel: AmendPSODetailsModel): Option[List[PensionDebitModel]] = {
-    val date = formModel.pso.toString
-    val amt = formModel.psoAmt.getOrElse {
-      throw new Exceptions.RequiredValueNotDefinedException("createPsoDetailsList", "psoAmt")
-    }
-    Some(List(PensionDebitModel(startDate = date, amount = amt.toDouble)))
   }
 
 }

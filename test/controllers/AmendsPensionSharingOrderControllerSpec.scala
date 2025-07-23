@@ -20,7 +20,7 @@ import auth.{AuthFunction, AuthFunctionImpl}
 import common.Exceptions.RequiredValueNotDefinedException
 import config._
 import connectors.PLAConnector
-import constructors.{DisplayConstructors, ResponseConstructors}
+import constructors.DisplayConstructors
 import enums.ApplicationType
 import mocks.AuthMock
 import models._
@@ -62,16 +62,15 @@ class AmendsPensionSharingOrderControllerSpec
   implicit lazy val mockMessage: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
-  val mockDisplayConstructors: DisplayConstructors   = mock[DisplayConstructors]
-  val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
-  val mockSessionCacheService: SessionCacheService   = mock[SessionCacheService]
-  val mockPlaConnector: PLAConnector                 = mock[PLAConnector]
-  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  val mockAuthFunction: AuthFunction        = mock[AuthFunction]
-  val mockAmendPsoDetails: amendPsoDetails  = app.injector.instanceOf[amendPsoDetails]
-  val mockTechnicalError: technicalError    = app.injector.instanceOf[technicalError]
-  val mockEnv: Environment                  = mock[Environment]
-  val messagesApi: MessagesApi              = mockMCC.messagesApi
+  val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
+  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
+  val mockPlaConnector: PLAConnector               = mock[PLAConnector]
+  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
+  val mockAmendPsoDetails: amendPsoDetails         = app.injector.instanceOf[amendPsoDetails]
+  val mockTechnicalError: technicalError           = app.injector.instanceOf[technicalError]
+  val mockEnv: Environment                         = mock[Environment]
+  val messagesApi: MessagesApi                     = mockMCC.messagesApi
 
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext       = mock[PlaContext]
@@ -87,7 +86,6 @@ class AmendsPensionSharingOrderControllerSpec
     reset(mockDisplayConstructors)
     reset(mockAuthConnector)
     reset(mockEnv)
-    reset(mockResponseConstructors)
     super.beforeEach()
   }
 
