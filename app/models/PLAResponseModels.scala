@@ -19,14 +19,6 @@ package models
 import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse}
 import play.api.libs.json.{Json, OFormat}
 
-case class ApplyResponseModel(
-    protection: ProtectionModel
-)
-
-object ApplyResponseModel {
-  implicit val format: OFormat[ApplyResponseModel] = Json.format[ApplyResponseModel]
-}
-
 case class TransformedReadResponseModel(
     activeProtection: Option[ProtectionModel],
     inactiveProtections: Seq[ProtectionModel]
