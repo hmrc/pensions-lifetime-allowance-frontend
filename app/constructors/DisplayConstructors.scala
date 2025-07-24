@@ -91,7 +91,10 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
 
   }
 
-  private def sortByStatus(s1: models.ExistingProtectionDisplayModel, s2: models.ExistingProtectionDisplayModel): Boolean =
+  private def sortByStatus(
+      s1: models.ExistingProtectionDisplayModel,
+      s2: models.ExistingProtectionDisplayModel
+  ): Boolean =
     if (s1.status == s2.status) {
       val typeMap: Map[String, Int] =
         Map("IP2014" -> 1, "FP2016" -> 2, "IP2016" -> 3, "primary" -> 4, "enhanced" -> 5, "fixed" -> 6, "FP2014" -> 7)
@@ -166,8 +169,9 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
   private def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel =
     createNoChangeSection(model, ApplicationStage.CurrentPsos, model.pensionDebitTotalAmount)
 
-  private def createCurrentPsoSection(model: ProtectionModel)(implicit lang: Lang): Option[Seq[AmendDisplaySectionModel]] =
-
+  private def createCurrentPsoSection(
+      model: ProtectionModel
+  )(implicit lang: Lang): Option[Seq[AmendDisplaySectionModel]] =
     model.pensionDebits.flatMap { psoList =>
       if (psoList.length > 1) {
         logger.warn("More than one PSO amendment was found in the protection model, where only one is permitted.")

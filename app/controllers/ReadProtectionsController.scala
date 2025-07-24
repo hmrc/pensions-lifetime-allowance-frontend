@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import common.{Helpers, Strings}
+import common.Strings
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PlaConnectorError.LockedResponseError
 import connectors.{PLAConnector, PlaConnectorError, PlaConnectorV2}
@@ -108,9 +108,8 @@ class ReadProtectionsController @Inject() (
     Future.sequence(getAmendableProtections(model).map(saveProtection))
 
   def getAmendableProtections(model: TransformedReadResponseModel): Seq[ProtectionModel] =
-    model.inactiveProtections.filter(Helpers.protectionIsAmendable) ++ model.activeProtection.filter(
-      Helpers.protectionIsAmendable
-    )
+    model.inactiveProtections.filter(_.isAmendable) ++
+      model.activeProtection.filter(_.isAmendable)
 
   private def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]): Future[CacheMap] =
     sessionCacheService.saveFormData[AmendProtectionModel](
