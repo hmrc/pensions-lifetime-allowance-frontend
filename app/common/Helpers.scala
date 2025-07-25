@@ -22,23 +22,16 @@ import play.api.mvc.Call
 
 object Helpers {
 
-  def protectionIsAmendable(protection: ProtectionModel): Boolean =
-    if (protection.status.exists(_.toLowerCase == "open") || protection.status.exists(_.toLowerCase == "dormant")) {
-      protection.protectionType.exists(_.toLowerCase == "ip2016") || protection.protectionType.exists(
-        _.toLowerCase == "ip2014"
-      )
-    } else false
-
   def createAmendCallIfRequired(protection: ProtectionModel): Option[Call] = {
     val status         = protection.status.map(_.toLowerCase).getOrElse("none")
     val protectionType = protection.protectionType.map(_.toLowerCase).getOrElse("none")
-    if (protectionIsAmendable(protection))
+    if (protection.isAmendable)
       Some(controllers.routes.AmendsController.amendsSummary(protectionType, status))
     else None
   }
 
   def createPsoRemoveCall(protection: ProtectionModel): Option[Call] =
-    if (protectionIsAmendable(protection)) {
+    if (protection.isAmendable) {
       val status         = protection.status.map(_.toLowerCase).getOrElse("none")
       val protectionType = protection.protectionType.map(_.toLowerCase).getOrElse("none")
       Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso(protectionType, status))
@@ -66,7 +59,8 @@ object Helpers {
         controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(protectionType, status)
       case CurrentPensions =>
         controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(protectionType, status)
-      case CurrentPsos => controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails(protectionType, status)
+      case CurrentPsos =>
+        controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails(protectionType, status)
     }
   }
 
