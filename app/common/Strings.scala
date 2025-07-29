@@ -36,9 +36,6 @@ object Strings {
   def cacheProtectionName(protection: ProtectionModel): String =
     statusString(protection.status) + protectionTypeString(protection.protectionType) + "Amendment"
 
-  def cacheNonAmendableProtectionName(protection: ProtectionModel): String =
-    statusString(protection.status).toLowerCase + protectionTypeString(protection.protectionType).toUpperCase
-
   def cacheAmendFetchString(protectionType: String, status: String): String =
     status.toLowerCase + protectionType.toUpperCase + "Amendment"
 

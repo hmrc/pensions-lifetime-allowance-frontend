@@ -91,7 +91,10 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
 
   }
 
-  def sortByStatus(s1: models.ExistingProtectionDisplayModel, s2: models.ExistingProtectionDisplayModel): Boolean =
+  private def sortByStatus(
+      s1: models.ExistingProtectionDisplayModel,
+      s2: models.ExistingProtectionDisplayModel
+  ): Boolean =
     if (s1.status == s2.status) {
       val typeMap: Map[String, Int] =
         Map("IP2014" -> 1, "FP2016" -> 2, "IP2016" -> 3, "primary" -> 4, "enhanced" -> 5, "fixed" -> 6, "FP2014" -> 7)
@@ -102,7 +105,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       if (statusMap(s1.status) < statusMap(s2.status)) true else false
     }
 
-  def createExistingProtectionDisplayModel(
+  private def createExistingProtectionDisplayModel(
       model: ProtectionModel
   )(implicit lang: Lang): ExistingProtectionDisplayModel = {
 
@@ -163,11 +166,12 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     )
   }
 
-  def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel =
+  private def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel =
     createNoChangeSection(model, ApplicationStage.CurrentPsos, model.pensionDebitTotalAmount)
 
-  def createCurrentPsoSection(model: ProtectionModel)(implicit lang: Lang): Option[Seq[AmendDisplaySectionModel]] =
-
+  private def createCurrentPsoSection(
+      model: ProtectionModel
+  )(implicit lang: Lang): Option[Seq[AmendDisplaySectionModel]] =
     model.pensionDebits.flatMap { psoList =>
       if (psoList.length > 1) {
         logger.warn("More than one PSO amendment was found in the protection model, where only one is permitted.")
@@ -194,7 +198,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       }
     }
 
-  def createAmendPensionContributionSectionsFromProtection(
+  private def createAmendPensionContributionSectionsFromProtection(
       protection: ProtectionModel
   ): Seq[AmendDisplaySectionModel] = {
     val currentPensionsSection = createCurrentPensionsSection(protection, ApplicationStage.CurrentPensions)
@@ -314,7 +318,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     }
   }
 
-  def createSection(
+  private def createSection(
       protection: ProtectionModel,
       applicationStage: ApplicationStage.Value,
       amountOption: Option[Double],
@@ -326,14 +330,14 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     createYesNoSection(applicationStage.toString, Some(amendCall), amountOption, displayYesNoOnly, displayAmountOnly)
   }
 
-  def createNoChangeSection(
+  private def createNoChangeSection(
       protection: ProtectionModel,
       applicationStage: ApplicationStage.Value,
       amountOption: Option[Double]
   ): AmendDisplaySectionModel =
     createNoChangeYesNoSection(applicationStage.toString, amountOption)
 
-  def createCurrentPensionsSection(
+  private def createCurrentPensionsSection(
       protection: ProtectionModel,
       applicationStage: ApplicationStage.Value
   ): AmendDisplaySectionModel = {
@@ -358,7 +362,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     )
   }
 
-  def createNoChangeYesNoSection(stage: String, amountOption: Option[Double]) =
+  private def createNoChangeYesNoSection(stage: String, amountOption: Option[Double]): AmendDisplaySectionModel =
     amountOption.fold(
       AmendDisplaySectionModel(stage, Seq(AmendDisplayRowModel("YesNo", None, None, Messages("pla.base.no"))))
     )(amt =>
@@ -375,7 +379,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       }
     )
 
-  def createYesNoSection(
+  private def createYesNoSection(
       stage: String,
       amendCall: Option[Call],
       amountOption: Option[Double],
@@ -469,68 +473,13 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     InactiveAmendResultDisplayModel(notificationId.toString, additionalInfo)
   }
 
-  def getProtectionTypeFromProtection(protection: ProtectionModel): ApplicationType.Value = {
+  private def getProtectionTypeFromProtection(protection: ProtectionModel): ApplicationType.Value = {
     val protectionTypeString = protection.protectionType.getOrElse(
       throw new Exceptions.RequiredValueNotDefinedException("getProtectionTypeFromProtection", "protectionType")
     )
     ApplicationType.fromString(protectionTypeString).getOrElse {
       throw new Exception("Invalid protection type passed to getProtectionTypeFromProtection")
     }
-  }
-
-  // SUCCESSFUL APPLICATION RESPONSE
-  def createSuccessDisplayModel(
-      model: ApplyResponseModel
-  )(implicit protectionType: ApplicationType.Value, lang: Lang): SuccessDisplayModel = {
-    val notificationId = model.protection.notificationId.getOrElse(
-      throw new Exceptions.OptionNotDefinedException(
-        "CreateSuccessDisplayModel",
-        "notification ID",
-        protectionType.toString
-      )
-    )
-    val protectedAmount = model.protection.protectedAmount.getOrElse(
-      if (protectionType == ApplicationType.FP2016) Constants.fpProtectedAmount
-      else
-        throw new Exceptions.OptionNotDefinedException(
-          "ApplyResponseModel",
-          "protected amount",
-          protectionType.toString
-        )
-    )
-    val printable = Constants.activeProtectionCodes.contains(notificationId)
-
-    val details = if (Constants.successCodesRequiringProtectionInfo.contains(notificationId)) {
-      Some(createProtectionDetailsFromProtection(model.protection))
-    } else None
-
-    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
-
-    val additionalInfo = getAdditionalInfo("resultCode", notificationId)
-
-    SuccessDisplayModel(
-      protectionType,
-      notificationId.toString,
-      protectedAmountString,
-      printable,
-      details,
-      additionalInfo
-    )
-  }
-
-  // REJECTED APPLICATION RESPONSE
-  def createRejectionDisplayModel(
-      model: ApplyResponseModel
-  )(implicit protectionType: ApplicationType.Value): RejectionDisplayModel = {
-    val notificationId = model.protection.notificationId.getOrElse(
-      throw new Exceptions.OptionNotDefinedException(
-        "CreateRejectionDisplayModel",
-        "notification ID",
-        protectionType.toString
-      )
-    )
-    val additionalInfo = getAdditionalInfo("resultCode", notificationId)
-    RejectionDisplayModel(notificationId.toString, additionalInfo, protectionType)
   }
 
   private def createProtectionDetailsFromProtection(
@@ -598,8 +547,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     )
   }
 
-  // HELPER FUNCTIONS
-  def getAdditionalInfo(messagesPrefix: String, notificationId: Int): List[String] = {
+  private def getAdditionalInfo(messagesPrefix: String, notificationId: Int): List[String] = {
 
     def loop(notificationId: Int, i: Int = 1, paragraphs: List[String] = List.empty): List[String] = {
       val x: String = s"$messagesPrefix.$notificationId.$i"
