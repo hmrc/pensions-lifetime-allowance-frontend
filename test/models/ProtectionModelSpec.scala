@@ -16,6 +16,8 @@
 
 package models
 
+import models.pla.AmendProtectionLifetimeAllowanceType._
+import models.pla.AmendProtectionRequestStatus
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -25,15 +27,27 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers {
 
     "return true" when {
 
-      val amendableStatuses        = Seq("open", "dormant")
-      val amendableProtectionTypes = Seq("ip2014", "ip2016")
+      val amendableStatuses =
+        Seq(
+          "open",
+          "dormant",
+          AmendProtectionRequestStatus.Open.toString,
+          AmendProtectionRequestStatus.Dormant.toString
+        )
+      val amendableProtectionTypes = Seq(
+        "ip2014",
+        "ip2016",
+        IndividualProtection2014.toString,
+        IndividualProtection2016.toString,
+        IndividualProtection2014Lta.toString,
+        IndividualProtection2016Lta.toString
+      )
       val allAmendableCombinations = for {
         status         <- amendableStatuses
         protectionType <- amendableProtectionTypes
       } yield (status, protectionType)
 
       allAmendableCombinations.foreach { case (status, protectionType) =>
-
         s"ProtectionModel contains status: '$status' and protectionType: '$protectionType''" in {
           val protectionModel = ProtectionModel(
             psaCheckReference = None,
@@ -45,75 +59,44 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers {
           protectionModel.isAmendable shouldBe true
         }
       }
-
     }
 
     "return false" when {
 
-      "ProtectionModel contains status: 'open' and protectionType: 'other'" in {
-        val protectionModel = ProtectionModel(
-          psaCheckReference = None,
-          protectionID = None,
-          status = Some("open"),
-          protectionType = Some("other")
-        )
+      val testScenarios = Seq(
+        Some("open")    -> Some("other"),
+        Some("dormant") -> Some("other"),
+        Some("open")    -> None,
+        Some("dormant") -> None,
+        Some("OPEN")    -> Some("other"),
+        Some("DORMANT") -> Some("other"),
+        Some("OPEN")    -> None,
+        Some("DORMANT") -> None,
+        Some("other")   -> Some("ip2014"),
+        Some("other")   -> Some("ip2016"),
+        None            -> Some("ip2014"),
+        None            -> Some("ip2016"),
+        Some("other")   -> Some(IndividualProtection2014.toString),
+        Some("other")   -> Some(IndividualProtection2016.toString),
+        Some("other")   -> Some(IndividualProtection2014Lta.toString),
+        Some("other")   -> Some(IndividualProtection2016Lta.toString),
+        None            -> Some(IndividualProtection2014.toString),
+        None            -> Some(IndividualProtection2016.toString),
+        None            -> Some(IndividualProtection2014Lta.toString),
+        None            -> Some(IndividualProtection2016Lta.toString)
+      )
 
-        protectionModel.isAmendable shouldBe false
-      }
+      testScenarios.foreach { case (status, protectionType) =>
+        s"ProtectionModel contains status: $status and protectionType: $protectionType" in {
+          val protectionModel = ProtectionModel(
+            psaCheckReference = None,
+            protectionID = None,
+            status = status,
+            protectionType = protectionType
+          )
 
-      "ProtectionModel contains status: 'dormant' and protectionType: 'other'" in {
-        val protectionModel = ProtectionModel(
-          psaCheckReference = None,
-          protectionID = None,
-          status = Some("dormant"),
-          protectionType = Some("other")
-        )
-
-        protectionModel.isAmendable shouldBe false
-      }
-
-      "ProtectionModel contains status: 'open' and empty protectionType'" in {
-        val protectionModel = ProtectionModel(
-          psaCheckReference = None,
-          protectionID = None,
-          status = Some("open"),
-          protectionType = None
-        )
-
-        protectionModel.isAmendable shouldBe false
-      }
-
-      "ProtectionModel contains status: 'other' and protectionType: 'ip2014'" in {
-        val protectionModel = ProtectionModel(
-          psaCheckReference = None,
-          protectionID = None,
-          status = Some("other"),
-          protectionType = Some("ip2014")
-        )
-
-        protectionModel.isAmendable shouldBe false
-      }
-
-      "ProtectionModel contains status: 'other' and protectionType: 'ip2016'" in {
-        val protectionModel = ProtectionModel(
-          psaCheckReference = None,
-          protectionID = None,
-          status = Some("other"),
-          protectionType = Some("ip2016")
-        )
-
-        protectionModel.isAmendable shouldBe false
-      }
-
-      "ProtectionModel contains empty status and protectionType: 'ip2016'" in {
-        val protectionModel = ProtectionModel(
-          psaCheckReference = None,
-          protectionID = None,
-          status = None,
-          protectionType = Some("ip2016")
-        )
-
-        protectionModel.isAmendable shouldBe false
+          protectionModel.isAmendable shouldBe false
+        }
       }
     }
 
