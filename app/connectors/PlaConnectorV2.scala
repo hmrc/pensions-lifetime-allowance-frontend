@@ -26,13 +26,7 @@ import play.api.Logging
 import play.api.http.Status.{CONFLICT, LOCKED}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{
-  HeaderCarrier,
-  JsValidationException,
-  NotFoundException,
-  StringContextOps,
-  UpstreamErrorResponse
-}
+import uk.gov.hmrc.http.{HeaderCarrier, JsValidationException, NotFoundException, StringContextOps, UpstreamErrorResponse}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -92,7 +86,7 @@ class PlaConnectorV2 @Inject() (
       .map(Right(_))
       .recover {
         case _: JsValidationException =>
-          logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
+          logger.warn(s"Unable to create AmendProtectionResponse from PLA response for user nino: $nino")
           Left(IncorrectResponseBodyError)
 
         case err: UpstreamErrorResponse if err.statusCode == LOCKED =>

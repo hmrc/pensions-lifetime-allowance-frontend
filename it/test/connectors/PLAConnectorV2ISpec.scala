@@ -17,18 +17,16 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import connectors.PlaConnectorError.{
-  ConflictResponseError,
-  IncorrectResponseBodyError,
-  LockedResponseError,
-  UnexpectedResponseError
-}
+import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
 import models.ProtectionModel
-import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse, UpdatedLifetimeAllowanceProtectionRecord}
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
+import models.pla.response.ReadProtectionsResponse
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.CONFLICT
 import play.api.libs.json.Json
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, LOCKED, NOT_FOUND, OK}
+import testdata.PlaV2TestData
+import testdata.PlaV2TestData.{amendProtectionInputProtectionModel, amendProtectionRequest, amendProtectionResponse, lifetimeAllowanceIdentifier, lifetimeAllowanceSequenceNumber, protectionReference}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.IntegrationBaseSpec
 
@@ -43,31 +41,32 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
 
   private val testNino          = "AB999999C"
   private val psaCheckReference = "PSA12345678A"
-  private val protectionId      = 33
+  private val protectionId      = PlaV2TestData.lifetimeAllowanceIdentifier
 
   "PlaConnectorV2 on amendProtection" when {
 
-    val inputProtectionModel = ProtectionModel(
-      psaCheckReference = Some(psaCheckReference),
-      uncrystallisedRights = Some(100000.00),
-      nonUKRights = Some(2000.00),
-      preADayPensionInPayment = Some(2000.00),
-      postADayBenefitCrystallisationEvents = Some(2000.00),
-      notificationId = Some(12),
-      protectionID = Some(protectionId),
-      protectionType = Some("IP2016"),
-      status = Some("dormant"),
-      certificateDate = Some("2016-04-17"),
-      protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456")
-    )
-
     val correctResponseBodyStr =
       s"""{
-         |   "updatedLifetimeAllowanceProtectionRecord": {
-         |      "identifier": $protectionId
-         |   }
-         |}""".stripMargin
+         |    "lifetimeAllowanceIdentifier": $lifetimeAllowanceIdentifier,
+         |    "lifetimeAllowanceSequenceNumber": ${lifetimeAllowanceSequenceNumber + 1},
+         |    "lifetimeAllowanceType": "${AmendProtectionLifetimeAllowanceType.IndividualProtection2014.toString}",
+         |    "certificateDate": "2025-07-15",
+         |    "certificateTime": "174312",
+         |    "status": "${AmendProtectionResponseStatus.Dormant.toString}",
+         |    "protectionReference": "$protectionReference",
+         |    "relevantAmount": 105000,
+         |    "preADayPensionInPaymentAmount": 1500,
+         |    "postADayBenefitCrystallisationEventAmount": 2500,
+         |    "uncrystallisedRightsAmount": 75500,
+         |    "nonUKRightsAmount": 0,
+         |    "pensionDebitAmount": 25000,
+         |    "pensionDebitEnteredAmount": 25000,
+         |    "notificationIdentifier": 3,
+         |    "protectedAmount": 120000,
+         |    "pensionDebitStartDate": "2026-07-09",
+         |    "pensionDebitTotalAmount": 40000
+         |}
+         |""".stripMargin
 
     val url = s"/protect-your-lifetime-allowance/v2/individuals/$testNino/protections/$protectionId"
 
@@ -79,16 +78,10 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(OK).withBody(correctResponseBodyStr))
         )
 
-        connector.amendProtection(testNino, inputProtectionModel).futureValue
+        connector.amendProtection(testNino, amendProtectionInputProtectionModel).futureValue
 
-        val expectedRequestBody =
-          Json.parse(s"""{
-                        |  "typ": "IP2016"
-                        |}""".stripMargin)
-
-        verify(
-          postRequestedFor(urlEqualTo(url)).withRequestBody(equalToJson(expectedRequestBody.toString))
-        )
+        val expectedRequestBody = Json.toJson(amendProtectionRequest).toString
+        verify(postRequestedFor(urlEqualTo(url)).withRequestBody(equalToJson(expectedRequestBody)))
       }
 
       "return Right containing AmendProtectionResponse" in {
@@ -97,11 +90,9 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(OK).withBody(correctResponseBodyStr))
         )
 
-        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
+        val result = connector.amendProtection(testNino, amendProtectionInputProtectionModel).futureValue
 
-        result shouldBe Right(
-          AmendProtectionResponse(UpdatedLifetimeAllowanceProtectionRecord(protectionId))
-        )
+        result shouldBe Right(amendProtectionResponse)
       }
     }
 
@@ -116,7 +107,7 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(OK).withBody(incorrectResponseBody))
         )
 
-        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
+        val result = connector.amendProtection(testNino, amendProtectionInputProtectionModel).futureValue
 
         result shouldBe Left(IncorrectResponseBodyError)
       }
@@ -129,7 +120,7 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(CONFLICT))
         )
 
-        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
+        val result = connector.amendProtection(testNino, amendProtectionInputProtectionModel).futureValue
 
         result shouldBe Left(ConflictResponseError)
       }
@@ -142,7 +133,7 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(LOCKED))
         )
 
-        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
+        val result = connector.amendProtection(testNino, amendProtectionInputProtectionModel).futureValue
 
         result shouldBe Left(LockedResponseError)
       }
@@ -155,7 +146,7 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
             .willReturn(aResponse().withStatus(INTERNAL_SERVER_ERROR))
         )
 
-        val result = connector.amendProtection(testNino, inputProtectionModel).futureValue
+        val result = connector.amendProtection(testNino, amendProtectionInputProtectionModel).futureValue
 
         result shouldBe Left(UnexpectedResponseError(INTERNAL_SERVER_ERROR))
       }

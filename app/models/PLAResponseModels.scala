@@ -56,6 +56,35 @@ object AmendResponseModel {
   implicit val format: OFormat[AmendResponseModel] = Json.format[AmendResponseModel]
 
   def from(amendProtectionResponse: AmendProtectionResponse): AmendResponseModel =
-    AmendResponseModel(ProtectionModel(None, None))
+    AmendResponseModel(
+      ProtectionModel(
+        psaCheckReference = None,
+        protectionID = Some(amendProtectionResponse.lifetimeAllowanceIdentifier),
+        certificateDate = buildCertificateDate(amendProtectionResponse),
+        version = Some(amendProtectionResponse.lifetimeAllowanceSequenceNumber),
+        protectionType = Some(amendProtectionResponse.lifetimeAllowanceType.toString),
+        status = Some(amendProtectionResponse.status.toString),
+        protectedAmount = amendProtectionResponse.protectedAmount.map(_.toDouble),
+        relevantAmount = Some(amendProtectionResponse.relevantAmount.toDouble),
+        postADayBenefitCrystallisationEvents = Some(amendProtectionResponse.postADayBenefitCrystallisationEventAmount.toDouble),
+        preADayPensionInPayment = Some(amendProtectionResponse.preADayPensionInPaymentAmount.toDouble),
+        uncrystallisedRights = Some(amendProtectionResponse.uncrystallisedRightsAmount.toDouble),
+        nonUKRights = Some(amendProtectionResponse.nonUKRightsAmount.toDouble),
+        pensionDebitAmount = amendProtectionResponse.pensionDebitAmount.map(_.toDouble),
+        pensionDebitEnteredAmount = amendProtectionResponse.pensionDebitEnteredAmount.map(_.toDouble),
+        pensionDebitStartDate = amendProtectionResponse.pensionDebitStartDate,
+        pensionDebitTotalAmount = amendProtectionResponse.pensionDebitTotalAmount.map(_.toDouble),
+        pensionDebits = None,
+        notificationId = amendProtectionResponse.notificationIdentifier,
+        protectionReference = amendProtectionResponse.protectionReference,
+        withdrawnDate = None
+      )
+    )
+
+  private def buildCertificateDate(amendProtectionResponse: AmendProtectionResponse): Option[String] =
+    for {
+      date <- amendProtectionResponse.certificateDate
+      time <- amendProtectionResponse.certificateTime
+    } yield date + "T" + time
 
 }

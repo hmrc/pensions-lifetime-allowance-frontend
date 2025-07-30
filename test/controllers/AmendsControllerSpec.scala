@@ -27,12 +27,13 @@ import mocks.AuthMock
 import models._
 import models.amendModels._
 import models.cache.CacheMap
-import models.pla.response.{AmendProtectionResponse, UpdatedLifetimeAllowanceProtectionRecord}
+import models.pla.response.AmendProtectionResponse
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo, startsWith}
+import org.mockito.ArgumentMatchers.{any, anyString, startsWith, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -46,6 +47,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
 import testHelpers._
+import testdata.PlaV2TestData.amendProtectionResponse
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends._
@@ -309,7 +311,7 @@ class AmendsControllerSpec
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
         when(mockPlaConnectorV2.amendProtection(any(), any())(any(), any()))
-          .thenReturn(Future.successful(Right(AmendProtectionResponse(UpdatedLifetimeAllowanceProtectionRecord(123)))))
+          .thenReturn(Future.successful(Right(amendProtectionResponse)))
         when(mockSessionCacheService.saveFormData(anyString(), any())(any(), any()))
           .thenReturn(Future.successful(CacheMap("cacheId", Map.empty)))
 
