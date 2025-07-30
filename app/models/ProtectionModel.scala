@@ -16,6 +16,7 @@
 
 package models
 
+import models.pla.response.ProtectionRecord
 import play.api.libs.json.{Json, OFormat}
 
 case class ProtectionModel(
@@ -61,6 +62,34 @@ case class ProtectionModel(
 }
 
 object ProtectionModel {
+
+  def apply(psaCheckReference: String, record: ProtectionRecord): ProtectionModel =
+    ProtectionModel(
+      Some(psaCheckReference),
+      Some(record.identifier),
+      Some(buildRecordDateTime(record)),
+      Some(record.sequenceNumber),
+      Some(record.`type`.toString),
+      Some(record.status.toString),
+      record.protectedAmount.map(_.toDouble),
+      record.relevantAmount.map(_.toDouble),
+      record.postADayBenefitCrystallisationEventAmount.map(_.toDouble),
+      record.preADayPensionInPaymentAmount.map(_.toDouble),
+      record.uncrystallisedRightsAmount.map(_.toDouble),
+      record.nonUKRightsAmount.map(_.toDouble),
+      record.pensionDebitAmount.map(_.toDouble),
+      record.pensionDebitEnteredAmount.map(_.toDouble),
+      record.pensionDebitStartDate,
+      record.pensionDebitTotalAmount.map(_.toDouble),
+      None,
+      None,
+      record.protectionReference,
+      None
+    )
+
+  private def buildRecordDateTime(record: ProtectionRecord): String =
+    s"${record.certificateDate}T${record.certificateTime}"
+
   implicit val pensionDebitFormat: OFormat[PensionDebitModel] = PensionDebitModel.pdFormat
   implicit val format: OFormat[ProtectionModel]               = Json.format[ProtectionModel]
 }

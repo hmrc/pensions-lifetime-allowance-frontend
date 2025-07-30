@@ -19,9 +19,46 @@ package models.pla.response
 import play.api.libs.json.{Format, Json}
 
 case class ReadProtectionsResponse(
-    pensionSchemeAdministratorCheckReference: String
+    pensionSchemeAdministratorCheckReference: String,
+    protectionRecordsList: Seq[ProtectionRecordsList]
 )
 
 object ReadProtectionsResponse {
   implicit val format: Format[ReadProtectionsResponse] = Json.format[ReadProtectionsResponse]
+}
+
+case class ProtectionRecordsList(
+    protectionRecord: ProtectionRecord,
+    historicaldetailsList: Option[Seq[ProtectionRecord]]
+)
+
+object ProtectionRecordsList {
+  implicit val format: Format[ProtectionRecordsList] = Json.format[ProtectionRecordsList]
+}
+
+case class ProtectionRecord(
+    identifier: Int,
+    sequenceNumber: Int,
+    `type`: ProtectionType,
+    certificateDate: String,
+    certificateTime: String,
+    status: ProtectionStatus,
+    protectionReference: Option[String],
+    relevantAmount: Option[Int],
+    preADayPensionInPaymentAmount: Option[Int],
+    postADayBenefitCrystallisationEventAmount: Option[Int],
+    uncrystallisedRightsAmount: Option[Int],
+    nonUKRightsAmount: Option[Int],
+    pensionDebitAmount: Option[Int],
+    pensionDebitEnteredAmount: Option[Int],
+    protectedAmount: Option[Int],
+    pensionDebitStartDate: Option[String],
+    pensionDebitTotalAmount: Option[Int],
+    lumpSumAmount: Option[Int],
+    lumpSumPercentage: Option[Int],
+    enhancementFactor: Option[Double]
+)
+
+object ProtectionRecord {
+  implicit val format: Format[ProtectionRecord] = Json.format[ProtectionRecord]
 }
