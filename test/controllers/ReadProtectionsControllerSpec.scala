@@ -24,7 +24,6 @@ import constructors.DisplayConstructors
 import generators.ModelGenerators
 import mocks.AuthMock
 import models.cache.CacheMap
-import models.pla.response.ReadProtectionsResponse
 import models.{ExistingProtectionsDisplayModel, ProtectionModel, ReadResponseModel, TransformedReadResponseModel}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
