@@ -66,7 +66,8 @@ object AmendResponseModel {
         status = Some(amendProtectionResponse.status.toString),
         protectedAmount = amendProtectionResponse.protectedAmount.map(_.toDouble),
         relevantAmount = Some(amendProtectionResponse.relevantAmount.toDouble),
-        postADayBenefitCrystallisationEvents = Some(amendProtectionResponse.postADayBenefitCrystallisationEventAmount.toDouble),
+        postADayBenefitCrystallisationEvents =
+          Some(amendProtectionResponse.postADayBenefitCrystallisationEventAmount.toDouble),
         preADayPensionInPayment = Some(amendProtectionResponse.preADayPensionInPaymentAmount.toDouble),
         uncrystallisedRights = Some(amendProtectionResponse.uncrystallisedRightsAmount.toDouble),
         nonUKRights = Some(amendProtectionResponse.nonUKRightsAmount.toDouble),

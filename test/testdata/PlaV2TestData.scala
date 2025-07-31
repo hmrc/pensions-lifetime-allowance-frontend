@@ -16,10 +16,9 @@
 
 package testdata
 
-import models.ProtectionModel
 import models.pla.request.AmendProtectionRequest
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus, AmendProtectionResponseStatus}
 import models.pla.response.AmendProtectionResponse
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus, AmendProtectionResponseStatus}
 
 object PlaV2TestData {
 

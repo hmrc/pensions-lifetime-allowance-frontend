@@ -26,7 +26,7 @@ import play.api.Logging
 import play.api.http.Status.{CONFLICT, LOCKED}
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, JsValidationException, NotFoundException, StringContextOps, UpstreamErrorResponse}
+import uk.gov.hmrc.http._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}

@@ -49,29 +49,29 @@ object AmendProtectionRequest {
       s"Cannot create AmendProtectionRequest, because '$fieldName' field is empty in provided ProtectionModel"
 
     val lifetimeAllowanceSequenceNumber =
-      protectionModel.version.getOrElse(throw new IllegalStateException(errorMessage("version")))
+      protectionModel.version.getOrElse(throw new IllegalArgumentException(errorMessage("version")))
     val lifetimeAllowanceType = AmendProtectionLifetimeAllowanceType.from(
-      protectionModel.protectionType.getOrElse(throw new IllegalStateException(errorMessage("protectionType")))
+      protectionModel.protectionType.getOrElse(throw new IllegalArgumentException(errorMessage("protectionType")))
     )
     val status = AmendProtectionRequestStatus.from(
-      protectionModel.status.getOrElse(throw new IllegalStateException(errorMessage("status")))
+      protectionModel.status.getOrElse(throw new IllegalArgumentException(errorMessage("status")))
     )
     val relevantAmount =
-      protectionModel.relevantAmount.getOrElse(throw new IllegalStateException(errorMessage("relevantAmount"))).toInt
+      protectionModel.relevantAmount.getOrElse(throw new IllegalArgumentException(errorMessage("relevantAmount"))).toInt
     val preADayPensionInPayment =
       protectionModel.preADayPensionInPayment
-        .getOrElse(throw new IllegalStateException(errorMessage("preADayPensionInPayment")))
+        .getOrElse(throw new IllegalArgumentException(errorMessage("preADayPensionInPayment")))
         .toInt
     val postADayBenefitCrystallisationEvents =
       protectionModel.postADayBenefitCrystallisationEvents
-        .getOrElse(throw new IllegalStateException(errorMessage("postADayBenefitCrystallisationEvents")))
+        .getOrElse(throw new IllegalArgumentException(errorMessage("postADayBenefitCrystallisationEvents")))
         .toInt
     val uncrystallisedRights =
       protectionModel.uncrystallisedRights
-        .getOrElse(throw new IllegalStateException(errorMessage("uncrystallisedRights")))
+        .getOrElse(throw new IllegalArgumentException(errorMessage("uncrystallisedRights")))
         .toInt
     val nonUKRights =
-      protectionModel.nonUKRights.getOrElse(throw new IllegalStateException(errorMessage("nonUKRights"))).toInt
+      protectionModel.nonUKRights.getOrElse(throw new IllegalArgumentException(errorMessage("nonUKRights"))).toInt
 
     AmendProtectionRequest(
       lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber,
