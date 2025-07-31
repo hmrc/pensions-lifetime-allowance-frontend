@@ -46,6 +46,7 @@ object PlaV2TestData {
     pensionDebitStartDate = Some("2026-07-09"),
     pensionDebitTotalAmount = Some(40000)
   )
+
   val amendProtectionResponse: AmendProtectionResponse = AmendProtectionResponse(
     lifetimeAllowanceIdentifier = lifetimeAllowanceIdentifier,
     lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber + 1,
@@ -62,27 +63,6 @@ object PlaV2TestData {
     pensionDebitAmount = Some(25000),
     pensionDebitEnteredAmount = Some(25000),
     notificationIdentifier = Some(3),
-    protectedAmount = Some(120000),
-    pensionDebitStartDate = Some("2026-07-09"),
-    pensionDebitTotalAmount = Some(40000)
-  )
-
-  val amendProtectionInputProtectionModel: ProtectionModel = ProtectionModel(
-    psaCheckReference = None,
-    protectionID = Some(lifetimeAllowanceIdentifier),
-    version = Some(lifetimeAllowanceSequenceNumber),
-    protectionType = Some("IP2014"),
-    certificateDate = Some("2025-07-15T174312"),
-    status = Some("dormant"),
-    protectionReference = Some(protectionReference),
-    relevantAmount = Some(105000),
-    preADayPensionInPayment = Some(1500.00),
-    postADayBenefitCrystallisationEvents = Some(2500.00),
-    uncrystallisedRights = Some(75500.00),
-    nonUKRights = Some(0.00),
-    pensionDebitAmount = Some(25000),
-    pensionDebitEnteredAmount = Some(25000),
-    notificationId = Some(3),
     protectedAmount = Some(120000),
     pensionDebitStartDate = Some("2026-07-09"),
     pensionDebitTotalAmount = Some(40000)

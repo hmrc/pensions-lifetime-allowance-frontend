@@ -17,16 +17,21 @@
 package connectors
 
 import com.github.tomakehurst.wiremock.client.WireMock._
-import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
+import connectors.PlaConnectorError.{
+  ConflictResponseError,
+  IncorrectResponseBodyError,
+  LockedResponseError,
+  UnexpectedResponseError
+}
 import models.ProtectionModel
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
 import models.pla.response.ReadProtectionsResponse
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
 import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.CONFLICT
 import play.api.libs.json.Json
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, LOCKED, NOT_FOUND, OK}
 import testdata.PlaV2TestData
-import testdata.PlaV2TestData.{amendProtectionInputProtectionModel, amendProtectionRequest, amendProtectionResponse, lifetimeAllowanceIdentifier, lifetimeAllowanceSequenceNumber, protectionReference}
+import testdata.PlaV2TestData._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.IntegrationBaseSpec
 
@@ -44,6 +49,27 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
   private val protectionId      = PlaV2TestData.lifetimeAllowanceIdentifier
 
   "PlaConnectorV2 on amendProtection" when {
+
+    val amendProtectionInputProtectionModel: ProtectionModel = ProtectionModel(
+      psaCheckReference = None,
+      protectionID = Some(lifetimeAllowanceIdentifier),
+      version = Some(lifetimeAllowanceSequenceNumber),
+      protectionType = Some("IP2014"),
+      certificateDate = Some("2025-07-15T174312"),
+      status = Some("dormant"),
+      protectionReference = Some(protectionReference),
+      relevantAmount = Some(105000),
+      preADayPensionInPayment = Some(1500.00),
+      postADayBenefitCrystallisationEvents = Some(2500.00),
+      uncrystallisedRights = Some(75500.00),
+      nonUKRights = Some(0.00),
+      pensionDebitAmount = Some(25000),
+      pensionDebitEnteredAmount = Some(25000),
+      notificationId = Some(3),
+      protectedAmount = Some(120000),
+      pensionDebitStartDate = Some("2026-07-09"),
+      pensionDebitTotalAmount = Some(40000)
+    )
 
     val correctResponseBodyStr =
       s"""{
