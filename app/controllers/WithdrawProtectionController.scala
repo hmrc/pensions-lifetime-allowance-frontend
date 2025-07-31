@@ -19,17 +19,17 @@ package controllers
 import auth.AuthFunction
 import common.{Dates, Strings}
 import config._
-import connectors.PLAConnector
+import connectors.{PLAConnector, PlaConnectorError}
 import enums.ApplicationType
 import forms.WithdrawDateForm._
-import models.{ProtectionModel, WithdrawDateFormModel}
+import models.{AmendResponseModel, ProtectionModel, WithdrawDateFormModel}
 import play.api.data.Form
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import play.api.{Application, Logging}
 import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 import java.time.LocalDateTime
@@ -120,32 +120,39 @@ class WithdrawProtectionController @Inject() (
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
         protectionAmendment <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
-        response <- plaConnector.amendProtection(
-          nino,
-          protectionAmendment.get.copy(withdrawnDate = Some(withdrawDate), status = Some("Withdrawn"))
-        )
-        result <- routeToWithdrawConfirmation(protectionAmendment.get.protectionType, response, nino)
+        response            <- sendWithdrawalRequest(nino, protectionAmendment.get, withdrawDate)
+
+        result <- response match {
+
+          case Right(_: AmendResponseModel) =>
+            Future.successful(
+              Redirect(
+                routes.WithdrawProtectionController.showWithdrawConfirmation(
+                  Strings.protectionTypeString(protectionAmendment.get.protectionType)
+                )
+              )
+            )
+
+          case Left(_) =>
+            logger.error(s"conflict response returned for withdrawal request for user nino $nino")
+            Future.successful(
+              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+                .withHeaders(CACHE_CONTROL -> "no-cache")
+            )
+        }
       } yield result
     }
   }
 
-  private def routeToWithdrawConfirmation(protectionType: Option[String], response: HttpResponse, nino: String)(
-      implicit request: Request[AnyContent]
-  ): Future[Result] =
-    response.status match {
-      case OK =>
-        Future.successful(
-          Redirect(
-            routes.WithdrawProtectionController.showWithdrawConfirmation(Strings.protectionTypeString(protectionType))
-          )
-        )
-      case _ =>
-        logger.error(s"conflict response returned for withdrawal request for user nino $nino")
-        Future.successful(
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
-        )
-    }
+  private def sendWithdrawalRequest(nino: String, protectionAmendment: ProtectionModel, withdrawDate: String)(
+      implicit hc: HeaderCarrier
+  ): Future[Either[PlaConnectorError, AmendResponseModel]] =
+    plaConnector
+      .amendProtection(
+        nino,
+        protectionAmendment.copy(withdrawnDate = Some(withdrawDate), status = Some("Withdrawn"))
+      )
+      .map(_.map(AmendResponseModel(_)))
 
   def showWithdrawConfirmation(protectionType: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithoutNino("existingProtections") {

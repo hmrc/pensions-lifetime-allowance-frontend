@@ -18,21 +18,28 @@ package connectors
 
 import common.Exceptions
 import config.FrontendAppConfig
-import constructors.IPApplicationConstructor
-import enums.ApplicationType
-import javax.inject.Inject
+import connectors.PlaConnectorError.{
+  ConflictResponseError,
+  GenericPlaConnectorError,
+  IncorrectResponseBodyError,
+  LockedResponseError,
+  UnexpectedResponseError
+}
 import models._
 import play.api.Logging
+import play.api.http.Status.{CONFLICT, LOCKED}
 import play.api.libs.json.Reads._
 import play.api.libs.json._
 import uk.gov.hmrc.http._
-import models.cache.CacheMap
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
 import uk.gov.hmrc.http.client.HttpClientV2
 
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class PLAConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2) extends Logging {
+class PLAConnector @Inject() (
+    appConfig: FrontendAppConfig,
+    http: HttpClientV2
+) extends Logging {
 
   val serviceUrl: String = appConfig.servicesConfig.baseUrl("pensions-lifetime-allowance")
 
@@ -97,17 +104,41 @@ class PLAConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2) 
     r
   }
 
-  def readProtections(nino: String)(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+  def readProtections(nino: String)(
+      implicit hc: HeaderCarrier,
+      ex: ExecutionContext
+  ): Future[Either[PlaConnectorError, ReadResponseModel]] = {
     val url = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections"
+
     http
       .get(url"$url")
-      .execute[HttpResponse]
+      .execute[ReadResponseModel]
+      .map(Right(_))
+      .recover {
+        case _: JsValidationException =>
+          logger.warn(s"Unable to parse response body from pensions-lifetime-allowance for nino: $nino")
+          Left(IncorrectResponseBodyError)
+
+        case err: UpstreamErrorResponse if err.statusCode == LOCKED =>
+          Left(LockedResponseError)
+
+        case err: NotFoundException =>
+          logger.warn(s"Error 404 passed to currentProtections for nino: $nino")
+          Left(UnexpectedResponseError(err.responseCode))
+
+        case err: UpstreamErrorResponse =>
+          logger.error(s"Unexpected status ${err.statusCode} passed to currentProtections for nino: $nino")
+          Left(UnexpectedResponseError(err.statusCode))
+
+        case err =>
+          Left(GenericPlaConnectorError(err))
+      }
   }
 
   def amendProtection(
       nino: String,
       protection: ProtectionModel
-  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[HttpResponse] = {
+  )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Either[PlaConnectorError, ProtectionModel]] = {
     val id = protection.protectionID.getOrElse(
       throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino)
     )
@@ -115,10 +146,35 @@ class PLAConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2) 
     val body        = requestJson.transform(transformer(protection)).get
     val url         = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id"
     logger.info(body.toString)
+
     http
       .put(url"$url")
       .withBody(Json.toJson(body))
-      .execute[HttpResponse]
+      .execute[ProtectionModel]
+      .map {
+        case model: ProtectionModel if model.isEmpty =>
+          logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
+          Left(IncorrectResponseBodyError)
+
+        case model: ProtectionModel =>
+          Right(model)
+      }
+      .recover {
+        case err: UpstreamErrorResponse if err.statusCode == LOCKED =>
+          logger.info(s"locked response returned for amend request for user nino $nino")
+          Left(LockedResponseError)
+
+        case err: UpstreamErrorResponse if err.statusCode == CONFLICT =>
+          logger.warn(s"conflict response returned for amend request for user nino $nino")
+          Left(ConflictResponseError)
+
+        case err: UpstreamErrorResponse =>
+          logger.error(s"Unexpected status ${err.statusCode} passed to currentProtections for nino: $nino")
+          Left(UnexpectedResponseError(err.statusCode))
+
+        case err =>
+          Left(GenericPlaConnectorError(err))
+      }
   }
 
   def psaLookup(

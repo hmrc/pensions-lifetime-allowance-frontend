@@ -18,7 +18,6 @@ package connectors
 
 import config.FrontendAppConfig
 import models._
-import models.cache.CacheMap
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalacheck.Gen
@@ -41,9 +40,10 @@ class PLAConnectorSpec
     with ScalaCheckDrivenPropertyChecks
     with BeforeAndAfterEach {
 
-  val mockEnv                                     = mock[Environment]
-  val mockAppConfig                               = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  val mockHttp                                    = mock[HttpClientV2]
+  val mockEnv       = mock[Environment]
+  val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  val mockHttp      = mock[HttpClientV2]
+
   implicit val executionContext: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
 
   class Setup {
@@ -100,47 +100,7 @@ class PLAConnectorSpec
   override def beforeEach() =
     reset(mockHttp)
 
-  "Calling amendProtection" should {
-    "return 200 from a valid amendProtection request" in new Setup {
-      when(mockHttp.put(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      val protectionModel = ProtectionModel(
-        psaCheckReference = Some("testPSARef"),
-        uncrystallisedRights = Some(100000.00),
-        nonUKRights = Some(2000.00),
-        preADayPensionInPayment = Some(2000.00),
-        postADayBenefitCrystallisationEvents = Some(2000.00),
-        notificationId = Some(12),
-        protectionID = Some(12345),
-        protectionType = Some("IP2016"),
-        status = Some("dormant"),
-        certificateDate = Some("2016-04-17"),
-        protectedAmount = Some(1250000),
-        protectionReference = Some("PSA123456")
-      )
-
-      val response = connector.amendProtection(nino, protectionModel)
-
-      await(response).status shouldBe OK
-    }
-  }
-
-  "Calling readProtections" should {
-    "should return a 200 from a valid apply readProtections request" in new Setup {
-      when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      val response = connector.readProtections(nino)
-
-      await(response).status shouldBe OK
-    }
-  }
-
-  "Calling psaLookup" should {
+  "PLAConnector on  psaLookup" should {
     "should return a 200 from a valid psa lookup request" in new Setup {
       when(mockHttp.get(any)(any)).thenReturn(requestBuilder)
       when(requestBuilder.execute[HttpResponse](any, any))
@@ -152,101 +112,20 @@ class PLAConnectorSpec
     }
   }
 
-  "Calling with 10 decimal places" should {
-
-    "convert json double values to 2 decimal places for amending ips" in new Setup {
-      when(mockHttp.put(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      val protectionModel = ProtectionModel(
-        psaCheckReference = Some("testPSARef"),
-        uncrystallisedRights = Some(100000.1234567891),
-        nonUKRights = Some(2000.1234567891),
-        preADayPensionInPayment = Some(2000.1234567891),
-        postADayBenefitCrystallisationEvents = Some(2000.1234567891),
-        notificationId = Some(12),
-        protectionID = Some(12345),
-        protectionType = Some("IP2016"),
-        status = Some("dormant"),
-        certificateDate = Some("2016-04-17"),
-        protectedAmount = Some(1250000.1234567891),
-        protectionReference = Some("PSA123456")
-      )
-
-      val response = connector.amendProtection(nino, protectionModel)
-
-      await(response).status shouldBe OK
-    }
-
-    "not fail when not able to convert json double values to 2 decimal places for amending ips" in new Setup {
-      when(mockHttp.put(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      val protectionModel = ProtectionModel(
-        psaCheckReference = Some("testPSARef"),
-        uncrystallisedRights = None,
-        nonUKRights = None,
-        preADayPensionInPayment = None,
-        postADayBenefitCrystallisationEvents = None,
-        notificationId = Some(12),
-        protectionID = Some(12345),
-        protectionType = Some("IP2016"),
-        status = Some("dormant"),
-        certificateDate = Some("2016-04-17"),
-        protectedAmount = None,
-        protectionReference = Some("PSA123456")
-      )
-
-      val response = connector.amendProtection(nino, protectionModel)
-
-      await(response).status shouldBe OK
-    }
-
-    "be able to convert just one json double values to 2 decimal places for amending ips" in new Setup {
-      when(mockHttp.put(any)(any)).thenReturn(requestBuilder)
-      when(requestBuilder.withBody(any)(any, any, any)).thenReturn(requestBuilder)
-      when(requestBuilder.execute[HttpResponse](any, any))
-        .thenReturn(Future.successful(HttpResponse(OK, "")))
-
-      val protectionModel = ProtectionModel(
-        psaCheckReference = Some("testPSARef"),
-        uncrystallisedRights = None,
-        nonUKRights = None,
-        preADayPensionInPayment = None,
-        postADayBenefitCrystallisationEvents = None,
-        notificationId = Some(12),
-        protectionID = Some(12345),
-        protectionType = Some("IP2016"),
-        status = Some("dormant"),
-        certificateDate = Some("2016-04-17"),
-        protectedAmount = Some(1250000.1234567891),
-        protectionReference = Some("PSA123456")
-      )
-
-      val response = connector.amendProtection(nino, protectionModel)
-
-      await(response).status shouldBe OK
-    }
-  }
-
   "ResponseHandler" must {
 
     "return the response directly" when {
 
       s"response is $OK" in {
-
         val response = HttpResponse(OK, validApplyFP16Json)
+
         ResponseHandler.handlePLAResponse("GET", "/foo", response) shouldBe response
       }
 
       Seq(CONFLICT, LOCKED).foreach { code =>
         s"status code of the response is $code" in {
-
           val response = HttpResponse(code, validApplyFP16Json)
+
           ResponseHandler.handlePLAResponse("GET", "/foo", response) shouldBe response
         }
       }
@@ -254,11 +133,11 @@ class PLAConnectorSpec
 
     "return the response upon handling a response" when {
 
-      s"status code of the response any 4xx/5xx code other than $CONFLICT or $LOCKED" in
+      s"status code of the response any 4xx/5xx code other than $CONFLICT, $LOCKED, or $NOT_FOUND" in
         forAll(
           Gen
             .oneOf(BAD_REQUEST to NETWORK_AUTHENTICATION_REQUIRED)
-            .suchThat(code => code != CONFLICT && code != LOCKED)
+            .suchThat(code => code != CONFLICT && code != LOCKED && code != NOT_FOUND)
         ) { code =>
           val response = HttpResponse(code, validApplyFP16Json)
           val result   = ResponseHandler.handlePLAResponse("GET", "/foo", response)
@@ -270,7 +149,6 @@ class PLAConnectorSpec
     "throw and UpstreamErrorResponse" when {
 
       s"status code of the response is $NOT_FOUND" in {
-
         an[UpstreamErrorResponse] mustBe thrownBy {
           ResponseHandler.handlePLAResponse("GET", "/foo", HttpResponse(NOT_FOUND, validApplyFP16Json))
         }

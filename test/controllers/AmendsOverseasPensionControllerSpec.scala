@@ -19,7 +19,7 @@ package controllers
 import auth.{AuthFunction, AuthFunctionImpl}
 import config._
 import connectors.PLAConnector
-import constructors.{DisplayConstructors, ResponseConstructors}
+import constructors.DisplayConstructors
 import mocks.AuthMock
 import models._
 import models.amendModels._
@@ -57,12 +57,11 @@ class AmendsOverseasPensionControllerSpec
   implicit lazy val mockMessage: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
-  val mockDisplayConstructors: DisplayConstructors   = mock[DisplayConstructors]
-  val mockResponseConstructors: ResponseConstructors = mock[ResponseConstructors]
-  val mockSessionCacheService: SessionCacheService   = mock[SessionCacheService]
-  val mockPlaConnector: PLAConnector                 = mock[PLAConnector]
-  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  val mockAuthFunction: AuthFunction        = mock[AuthFunction]
+  val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
+  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
+  val mockPlaConnector: PLAConnector               = mock[PLAConnector]
+  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
   val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded = app.injector.instanceOf[manualCorrespondenceNeeded]
   val mockNoNotificationID: noNotificationId                     = app.injector.instanceOf[noNotificationId]
   val mockAmendPsoDetails: amendPsoDetails                       = app.injector.instanceOf[amendPsoDetails]
@@ -109,7 +108,6 @@ class AmendsOverseasPensionControllerSpec
     reset(mockDisplayConstructors)
     reset(mockAuthConnector)
     reset(mockEnv)
-    reset(mockResponseConstructors)
     super.beforeEach()
   }
 
