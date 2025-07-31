@@ -165,13 +165,268 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
   "PlaConnectorV2 on readProtections" when {
 
     val correctResponseBodyStr =
-      s"""{
-         |   "pensionSchemeAdministratorCheckReference": "$psaCheckReference"
-         |}""".stripMargin
+      """
+        |{
+        |  "pensionSchemeAdministratorCheckReference": "PSA34728911G",
+        |  "protectionRecordsList": [
+        |    {
+        |      "protectionRecord": {
+        |        "identifier": 20,
+        |        "sequenceNumber": 3,
+        |        "type": "ENHANCED PROTECTION LTA",
+        |        "certificateDate": "2021-02-19",
+        |        "certificateTime": "091732",
+        |        "status": "OPEN",
+        |        "protectionReference": "EPRO1034571625B",
+        |        "lumpSumPercentage": 12
+        |      },
+        |      "historicaldetailsList": [
+        |        {
+        |          "identifier": 21,
+        |          "sequenceNumber": 1,
+        |          "type": "ENHANCED PROTECTION",
+        |          "certificateDate": "2021-02-19",
+        |          "certificateTime": "091732",
+        |          "status": "REJECTED",
+        |          "protectionReference": "EPRO1034571626B",
+        |          "lumpSumPercentage": 99
+        |        },
+        |        {
+        |          "identifier": 21,
+        |          "sequenceNumber": 1,
+        |          "type": "ENHANCED PROTECTION",
+        |          "certificateDate": "2021-02-19",
+        |          "certificateTime": "091732",
+        |          "status": "WITHDRAWN",
+        |          "protectionReference": "EPRO1034571627B",
+        |          "lumpSumPercentage": 99
+        |        }
+        |      ]
+        |    },
+        |    {
+        |      "protectionRecord": {
+        |        "identifier": 1,
+        |        "sequenceNumber": 3,
+        |        "type": "PRIMARY PROTECTION LTA",
+        |        "certificateDate": "2021-02-19",
+        |        "certificateTime": "091732",
+        |        "status": "WITHDRAWN",
+        |        "protectionReference": "PPRO1034571625B",
+        |        "pensionDebitAmount": 25000,
+        |        "pensionDebitEnteredAmount": 25000,
+        |        "pensionDebitStartDate": "2022-07-09",
+        |        "pensionDebitTotalAmount": 40000,
+        |        "lumpSumAmount": 750000,
+        |        "enhancementFactor": 12
+        |      },
+        |      "historicaldetailsList": [
+        |        {
+        |          "identifier": 11,
+        |          "sequenceNumber": 1,
+        |          "type": "PRIMARY PROTECTION",
+        |          "certificateDate": "2021-02-19",
+        |          "certificateTime": "091732",
+        |          "status": "REJECTED",
+        |          "protectionReference": "PPRO1034571625B",
+        |          "pensionDebitAmount": 25000,
+        |          "pensionDebitEnteredAmount": 25000,
+        |          "pensionDebitStartDate": "2022-07-09",
+        |          "pensionDebitTotalAmount": 40000,
+        |          "lumpSumAmount": 750000,
+        |          "enhancementFactor": 12
+        |        }
+        |      ]
+        |    },
+        |    {
+        |      "protectionRecord": {
+        |        "identifier": 2,
+        |        "sequenceNumber": 3,
+        |        "type": "FIXED PROTECTION LTA",
+        |        "certificateDate": "2021-02-19",
+        |        "certificateTime": "091732",
+        |        "status": "WITHDRAWN",
+        |        "protectionReference": "FP121034571625B"
+        |      },
+        |      "historicaldetailsList": [
+        |        {
+        |          "identifier": 12,
+        |          "sequenceNumber": 3,
+        |          "type": "FIXED PROTECTION",
+        |          "certificateDate": "2021-02-19",
+        |          "certificateTime": "091732",
+        |          "status": "WITHDRAWN",
+        |          "protectionReference": "FP121034571625B"
+        |        }
+        |      ]
+        |    },
+        |    {
+        |      "protectionRecord": {
+        |        "identifier": 3,
+        |        "sequenceNumber": 3,
+        |        "type": "FIXED PROTECTION 2014 LTA",
+        |        "certificateDate": "2021-02-19",
+        |        "certificateTime": "091732",
+        |        "status": "WITHDRAWN",
+        |        "protectionReference": "FP141034571625B"
+        |      },
+        |      "historicaldetailsList": [
+        |        {
+        |          "identifier": 13,
+        |          "sequenceNumber": 3,
+        |          "type": "FIXED PROTECTION 2014",
+        |          "certificateDate": "2021-02-19",
+        |          "certificateTime": "091732",
+        |          "status": "WITHDRAWN",
+        |          "protectionReference": "FP141034571625B"
+        |        }
+        |      ]
+        |    },
+        |    {
+        |      "protectionRecord": {
+        |        "identifier": 4,
+        |        "sequenceNumber": 3,
+        |        "type": "INDIVIDUAL PROTECTION 2014 LTA",
+        |        "certificateDate": "2021-02-19",
+        |        "certificateTime": "091732",
+        |        "status": "DORMANT",
+        |        "relevantAmount": 105000,
+        |        "preADayPensionInPaymentAmount": 1500,
+        |        "postADayBenefitCrystallisationEventAmount": 2500,
+        |        "uncrystallisedRightsAmount": 75500,
+        |        "nonUKRightsAmount": 0,
+        |        "pensionDebitAmount": 25000,
+        |        "pensionDebitEnteredAmount": 25000,
+        |        "protectedAmount": 120000,
+        |        "pensionDebitStartDate": "2022-07-09",
+        |        "pensionDebitTotalAmount": 40000
+        |      },
+        |      "historicaldetailsList": [
+        |        {
+        |          "identifier": 14,
+        |          "sequenceNumber": 3,
+        |          "type": "INDIVIDUAL PROTECTION 2014",
+        |          "certificateDate": "2021-02-19",
+        |          "certificateTime": "091732",
+        |          "status": "WITHDRAWN",
+        |          "protectionReference": "IP141034571625B",
+        |          "relevantAmount": 105000,
+        |          "preADayPensionInPaymentAmount": 1500,
+        |          "postADayBenefitCrystallisationEventAmount": 2500,
+        |          "uncrystallisedRightsAmount": 75500,
+        |          "nonUKRightsAmount": 0,
+        |          "pensionDebitAmount": 25000,
+        |          "pensionDebitEnteredAmount": 25000,
+        |          "protectedAmount": 120000,
+        |          "pensionDebitStartDate": "2022-07-09",
+        |          "pensionDebitTotalAmount": 40000
+        |        }
+        |      ]
+        |    },
+        |    {
+        |      "protectionRecord": {
+        |        "identifier": 5,
+        |        "sequenceNumber": 3,
+        |        "type": "FIXED PROTECTION 2016 LTA",
+        |        "certificateDate": "2021-02-19",
+        |        "certificateTime": "091732",
+        |        "status": "WITHDRAWN",
+        |        "protectionReference": "FP161034571625B"
+        |      },
+        |      "historicaldetailsList": [
+        |        {
+        |          "identifier": 15,
+        |          "sequenceNumber": 3,
+        |          "type": "FIXED PROTECTION 2016",
+        |          "certificateDate": "2021-02-19",
+        |          "certificateTime": "091732",
+        |          "status": "WITHDRAWN",
+        |          "protectionReference": "FP161034571625B"
+        |        }
+        |      ]
+        |    },
+        |    {
+        |      "protectionRecord": {
+        |        "identifier": 6,
+        |        "sequenceNumber": 3,
+        |        "type": "INDIVIDUAL PROTECTION 2016 LTA",
+        |        "certificateDate": "2021-02-19",
+        |        "certificateTime": "091732",
+        |        "status": "DORMANT",
+        |        "relevantAmount": 105000,
+        |        "preADayPensionInPaymentAmount": 1500,
+        |        "postADayBenefitCrystallisationEventAmount": 2500,
+        |        "uncrystallisedRightsAmount": 75500,
+        |        "nonUKRightsAmount": 0,
+        |        "pensionDebitAmount": 25000,
+        |        "pensionDebitEnteredAmount": 25000,
+        |        "protectedAmount": 120000,
+        |        "pensionDebitStartDate": "2022-07-09",
+        |        "pensionDebitTotalAmount": 40000
+        |      },
+        |      "historicaldetailsList": [
+        |        {
+        |          "identifier": 16,
+        |          "sequenceNumber": 3,
+        |          "type": "INDIVIDUAL PROTECTION 2016",
+        |          "certificateDate": "2021-02-19",
+        |          "certificateTime": "091732",
+        |          "status": "WITHDRAWN",
+        |          "protectionReference": "IP161034571625B",
+        |          "relevantAmount": 105000,
+        |          "preADayPensionInPaymentAmount": 1500,
+        |          "postADayBenefitCrystallisationEventAmount": 2500,
+        |          "uncrystallisedRightsAmount": 75500,
+        |          "nonUKRightsAmount": 0,
+        |          "pensionDebitAmount": 25000,
+        |          "pensionDebitEnteredAmount": 25000,
+        |          "protectedAmount": 120000,
+        |          "pensionDebitStartDate": "2022-07-09",
+        |          "pensionDebitTotalAmount": 40000
+        |        }
+        |      ]
+        |    },
+        |    {
+        |      "protectionRecord": {
+        |        "identifier": 7,
+        |        "sequenceNumber": 1,
+        |        "type": "INTERNATIONAL ENHANCEMENT (S221)",
+        |        "certificateDate": "2021-02-19",
+        |        "certificateTime": "091732",
+        |        "status": "WITHDRAWN",
+        |        "protectionReference": "IE211034571625B",
+        |        "enhancementFactor": 12
+        |      }
+        |    },
+        |    {
+        |      "protectionRecord": {
+        |        "identifier": 8,
+        |        "sequenceNumber": 1,
+        |        "type": "INTERNATIONAL ENHANCEMENT (S224)",
+        |        "certificateDate": "2021-02-19",
+        |        "certificateTime": "091732",
+        |        "status": "WITHDRAWN",
+        |        "protectionReference": "IE241034571625B",
+        |        "enhancementFactor": 12
+        |      }
+        |    },
+        |    {
+        |      "protectionRecord": {
+        |        "identifier": 9,
+        |        "sequenceNumber": 1,
+        |        "type": "PENSION CREDIT RIGHTS",
+        |        "certificateDate": "2021-02-19",
+        |        "certificateTime": "091732",
+        |        "status": "WITHDRAWN",
+        |        "protectionReference": "PCRD1034571625B",
+        |        "enhancementFactor": 12
+        |      }
+        |    }
+        |  ]
+        |}""".stripMargin
 
     val url = s"/protect-your-lifetime-allowance/v2/individuals/$testNino/protections"
 
-    "everything works correctly" should {
+    "the backend returns 200 with a correct body" should {
       "return Right containing ReadProtectionsResponse" in {
         stubFor(
           get(urlMatching(url))
@@ -180,7 +435,7 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
 
         val result = connector.readProtections(testNino).futureValue
 
-        result shouldBe Right(ReadProtectionsResponse(psaCheckReference))
+        result shouldBe Right(Json.parse(correctResponseBodyStr).as[ReadProtectionsResponse])
       }
     }
 

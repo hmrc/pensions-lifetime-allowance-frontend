@@ -16,6 +16,7 @@
 
 package models
 
+import models.pla.response.ProtectionStatus.Open
 import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse}
 import play.api.libs.json.{Json, OFormat}
 
@@ -37,8 +38,30 @@ object TransformedReadResponseModel {
     TransformedReadResponseModel(activeProtectionOpt, otherProtections)
   }
 
-  def from(respModel: ReadProtectionsResponse): TransformedReadResponseModel =
-    TransformedReadResponseModel(None, Seq.empty)
+  def from(respModel: ReadProtectionsResponse): TransformedReadResponseModel = {
+
+    val protectionRecords = respModel.protectionRecordsList.map(_.protectionRecord)
+
+    val activeProtectionOpt = protectionRecords
+      .find(_.status == Open)
+      .map { protectionRecord =>
+        ProtectionModel(
+          respModel.pensionSchemeAdministratorCheckReference,
+          protectionRecord
+        )
+      }
+
+    val inactiveProtections = protectionRecords
+      .filterNot(_.status == Open)
+      .map { protectionRecord =>
+        ProtectionModel(
+          respModel.pensionSchemeAdministratorCheckReference,
+          protectionRecord
+        )
+      }
+
+    TransformedReadResponseModel(activeProtectionOpt, inactiveProtections)
+  }
 
 }
 
