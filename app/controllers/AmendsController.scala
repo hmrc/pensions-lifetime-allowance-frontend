@@ -19,7 +19,7 @@ package controllers
 import auth.AuthFunction
 import common._
 import config.{FrontendAppConfig, PlaContext}
-import connectors.{CitizenDetailsConnector}
+import connectors.CitizenDetailsConnector
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
 import connectors.{PLAConnector, PlaConnectorError, PlaConnectorV2}
 import constructors.{AmendsGAConstructor, DisplayConstructors}
@@ -190,15 +190,16 @@ class AmendsController @Inject() (
           val id = model.protection.notificationId.getOrElse {
             throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
           }
-          if (Constants.amendmentCodesList.contains(id)) {
+          if (Constants.activeAmendmentCodes.contains(id)) {
+            sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
+            Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
+
+          } else if (Constants.amendmentCodesList.contains(id)) {
             Ok(
               outcomeAmended(
                 displayConstructors.createAmendResponseDisplayModel(model, personalDetailsModel, nino)
               )
             )
-          } else if (Constants.activeAmendmentCodes.contains(id)) {
-            sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-            Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
           } else {
             Ok(outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
           }

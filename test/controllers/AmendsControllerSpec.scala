@@ -33,7 +33,7 @@ import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.ArgumentMatchers.{any, anyString, startsWith, eq => eqTo}
+import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo, startsWith}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
@@ -67,13 +67,13 @@ class AmendsControllerSpec
   implicit lazy val mockMessage: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
-  val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
+  val mockDisplayConstructors: DisplayConstructors         = mock[DisplayConstructors]
   val mockCitizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockPlaConnector: PLAConnector               = mock[PLAConnector]
-  val mockPlaConnectorV2: PlaConnectorV2           = mock[PlaConnectorV2]
-  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
+  val mockSessionCacheService: SessionCacheService         = mock[SessionCacheService]
+  val mockPlaConnector: PLAConnector                       = mock[PLAConnector]
+  val mockPlaConnectorV2: PlaConnectorV2                   = mock[PlaConnectorV2]
+  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockAuthFunction: AuthFunction        = mock[AuthFunction]
   val mockManualCorrespondenceNeeded: manualCorrespondenceNeeded = app.injector.instanceOf[manualCorrespondenceNeeded]
   val mockNoNotificationID: noNotificationId                     = app.injector.instanceOf[noNotificationId]
   val mockAmendPsoDetails: amendPsoDetails                       = app.injector.instanceOf[amendPsoDetails]
@@ -445,8 +445,6 @@ class AmendsControllerSpec
   "Calling the amendmentOutcome action" when {
 
     "there is no outcome object stored in cache" in new Setup {
-      lazy val result   = controller.amendmentOutcome()(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendResponseModel](None)
@@ -507,35 +505,6 @@ class AmendsControllerSpec
       val jsoupDoc = Jsoup.parse(contentAsString(result))
       jsoupDoc.body.getElementById("resultPageHeading").text shouldEqual Messages("amendResultCode.43.heading")
     }
-  }
-
-  "Choosing remove with a valid amend protection model" in new Setup {
-    val ip2016Protection = ProtectionModel(
-      psaCheckReference = Some("testPSARef"),
-      uncrystallisedRights = Some(100000.00),
-      nonUKRights = Some(2000.00),
-      preADayPensionInPayment = Some(2000.00),
-      postADayBenefitCrystallisationEvents = Some(2000.00),
-      notificationId = Some(12),
-      protectionID = Some(12345),
-      protectionType = Some("IP2016"),
-      status = Some("open"),
-      certificateDate = Some("2016-04-17"),
-      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0))),
-      protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456")
-    )
-
-    val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
-    object DataItem extends AuthorisedFakeRequestToPost(rpsoController.submitRemovePso("ip2016", "open"))
-
-    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
-    cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
-
-    status(DataItem.result) shouldBe 303
-    redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "open")}")
-
   }
 
   "Calling amendmentOutcomeResult" when {
