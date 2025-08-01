@@ -66,6 +66,14 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     val certificateDate =
       protectionModel.certificateDate.map(cDate => Display.dateDisplayString(Dates.constructDateFromAPIString(cDate)))
 
+    val notificationId = protectionModel.notificationId.getOrElse(
+      throw new Exceptions.OptionNotDefinedException(
+        "createPrintDisplayModel",
+        "notificationId",
+        protectionModel.protectionType.getOrElse("No protection type in response")
+      )
+    )
+
     PrintDisplayModel(
       firstName,
       surname,
@@ -75,7 +83,8 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       psaCheckReference,
       protectionReference,
       protectedAmount,
-      certificateDate
+      certificateDate,
+      notificationId
     )
   }
 
@@ -457,6 +466,39 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       notificationId.toString,
       protectedAmountString,
       Some(protectionDetails)
+    )
+  }
+
+  def createAmendResponseDisplayModel(
+      model: AmendResponseModel,
+      personalDetailsModelOpt: Option[PersonalDetailsModel],
+      nino: String
+  ): AmendResultDisplayModel = {
+    val printDetails   = createPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
+    val protectionType = getProtectionTypeFromProtection(model.protection)
+
+    val protectedAmount = model.protection.protectedAmount.getOrElse {
+      throw new Exceptions.OptionNotDefinedException(
+        "createActiveAmendResponseDisplayModel",
+        "protectedAmount",
+        model.protection.protectionType.getOrElse("No protection type in response")
+      )
+    }
+    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
+
+    val notificationId = model.protection.notificationId.getOrElse(
+      throw new Exceptions.OptionNotDefinedException(
+        "createActiveAmendResponseDisplayModel",
+        "notificationId",
+        model.protection.protectionType.getOrElse("No protection type in response")
+      )
+    )
+
+    AmendResultDisplayModel(
+      protectionType,
+      notificationId,
+      protectedAmountString,
+      Some(printDetails)
     )
   }
 
