@@ -17,6 +17,7 @@
 package controllers
 
 import auth.AuthFunction
+import common.Exceptions
 import config.{FrontendAppConfig, PlaContext}
 import connectors.CitizenDetailsConnector
 import constructors.DisplayConstructors
@@ -66,11 +67,16 @@ class PrintController @Inject() (
   )(implicit request: Request[AnyContent], lang: Lang): Result =
     protectionModel match {
       case Some(model) =>
-        val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
-        if (Constants.amendmentCodesList.contains(model.notificationId))
-          Ok(resultPrintViewAmendment(displayModel))
-        else
-          Ok(resultPrintView(displayModel))
+
+            val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
+
+        if(Constants.amendmentCodesList.exists(code => model.notificationId.contains(code)) && appConfig.hipMigrationEnabled)
+            {
+            Ok(resultPrintViewAmendment(displayModel))
+          }
+          else
+            Ok(resultPrintView(displayModel))
+
       case _ =>
         logger.warn(s"Forced redirect to PrintView for $nino")
         Redirect(routes.ReadProtectionsController.currentProtections)

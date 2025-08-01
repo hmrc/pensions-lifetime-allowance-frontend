@@ -190,17 +190,19 @@ class AmendsController @Inject() (
           val id = model.protection.notificationId.getOrElse {
             throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
           }
-          if (Constants.activeAmendmentCodes.contains(id)) {
+          if (Constants.amendmentCodesList.contains(id) && appConfig.hipMigrationEnabled) {
             sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-            Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
-
-          } else if (Constants.amendmentCodesList.contains(id)) {
             Ok(
               outcomeAmended(
                 displayConstructors.createAmendResponseDisplayModel(model, personalDetailsModel, nino)
               )
             )
-          } else {
+          }
+          else if (Constants.activeAmendmentCodes.contains(id)) {
+            sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
+            Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
+
+          }  else {
             Ok(outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
           }
         }

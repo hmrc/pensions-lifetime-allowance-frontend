@@ -16,6 +16,7 @@
 
 package models
 
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 import play.api.libs.json.{Json, OFormat}
 
 case class ProtectionModel(
@@ -45,14 +46,15 @@ case class ProtectionModel(
 
   def isAmendable: Boolean = {
     def isStatusAmendable: Boolean = {
-      val amendableStatuses = Seq("open", "dormant").map(Some(_))
+      val amendableStatuses = AmendProtectionRequestStatus.allValues.map(_.toString).map(Some(_))
 
-      amendableStatuses.contains(status.map(_.toLowerCase))
+      amendableStatuses.contains(status.map(_.toUpperCase))
     }
     def isProtectionTypeAmendable: Boolean = {
-      val amendableProtectionTypes = Seq("ip2014", "ip2016").map(Some(_))
+      val amendableProtectionTypes =
+        (Seq("IP2014", "IP2016") ++ AmendProtectionLifetimeAllowanceType.allValues.map(_.toString)).map(Some(_))
 
-      amendableProtectionTypes.contains(protectionType.map(_.toLowerCase))
+      amendableProtectionTypes.contains(protectionType.map(_.toUpperCase))
     }
 
     isStatusAmendable && isProtectionTypeAmendable

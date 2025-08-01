@@ -16,10 +16,28 @@
 
 package models.pla.response
 
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
 import play.api.libs.json.{Format, Json}
 
 case class AmendProtectionResponse(
-    updatedLifetimeAllowanceProtectionRecord: UpdatedLifetimeAllowanceProtectionRecord
+    lifetimeAllowanceIdentifier: Int,
+    lifetimeAllowanceSequenceNumber: Int,
+    lifetimeAllowanceType: AmendProtectionLifetimeAllowanceType,
+    certificateDate: Option[String],
+    certificateTime: Option[String],
+    status: AmendProtectionResponseStatus,
+    protectionReference: Option[String],
+    relevantAmount: Int,
+    preADayPensionInPaymentAmount: Int,
+    postADayBenefitCrystallisationEventAmount: Int,
+    uncrystallisedRightsAmount: Int,
+    nonUKRightsAmount: Int,
+    pensionDebitAmount: Option[Int],
+    pensionDebitEnteredAmount: Option[Int],
+    notificationIdentifier: Option[Int],
+    protectedAmount: Option[Int],
+    pensionDebitStartDate: Option[String],
+    pensionDebitTotalAmount: Option[Int]
 )
 
 object AmendProtectionResponse {
