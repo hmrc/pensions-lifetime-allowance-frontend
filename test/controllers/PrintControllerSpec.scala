@@ -53,19 +53,18 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   val fakeRequest: FakeRequest[AnyContent]                 = FakeRequest()
   val mockEnv: Environment                                 = mock[Environment]
   val resultPrintView: resultPrint                         = mock[resultPrint]
-  val resultPrintViewAmendment: resultPrintViewAmendment =
-   mock[resultPrintViewAmendment]
 
+  val resultPrintViewAmendment: resultPrintViewAmendment =
+    mock[resultPrintViewAmendment]
 
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig   = mock[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext         = mock[PlaContext]
   implicit val system: ActorSystem                = ActorSystem()
   implicit val materializer: Materializer         = mock[Materializer]
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
 
   val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
-
 
   val testPrintDisplayModel = PrintDisplayModel(
     "Testy",
@@ -111,10 +110,14 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   }
 
   "Navigating to print protection" should {
-    "return 200 when hipmigration is disabled for amendmentCodesList" when {
+    "return 200 when hipmigration is disabled for amendmentCodesList" when
       Constants.amendmentCodesList.foreach { notificationId =>
         s"Valid data is provided with notificationId:$notificationId " in {
-          val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111), notificationId = Some(notificationId))
+          val testProtectionModel = ProtectionModel(
+            psaCheckReference = Some("tstPSACeckRef"),
+            protectionID = Some(1111111),
+            notificationId = Some(notificationId)
+          )
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
           when(mockCitizenDetailsConnector.getPersonDetails(any())(any()))
@@ -134,12 +137,15 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
           verify(resultPrintView).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
         }
       }
-    }
 
-    "return 200 when hipmigration is enabled" when {
+    "return 200 when hipmigration is enabled" when
       Constants.amendmentCodesList.foreach { notificationId =>
         s"Valid data is provided with notificationId:$notificationId " in {
-          val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111), notificationId = Some(notificationId))
+          val testProtectionModel = ProtectionModel(
+            psaCheckReference = Some("tstPSACeckRef"),
+            protectionID = Some(1111111),
+            notificationId = Some(notificationId)
+          )
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
           when(mockCitizenDetailsConnector.getPersonDetails(any())(any()))
@@ -159,12 +165,15 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
           verify(resultPrintViewAmendment).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
         }
       }
-    }
 
-    "return 200 when hipmigration is disabled for activeAmendmentCodes" when {
-      Constants.activeAmendmentCodes.foreach { notificationId =>
+    "return 200 when hipmigration is disabled for activeAmendmentCodes" when
+      List(16, 17).foreach { notificationId =>
         s"Valid data is provided with notificationId:$notificationId " in {
-          val testProtectionModel = ProtectionModel(psaCheckReference = Some("tstPSACeckRef"), protectionID = Some(1111111), notificationId = Some(notificationId))
+          val testProtectionModel = ProtectionModel(
+            psaCheckReference = Some("tstPSACeckRef"),
+            protectionID = Some(1111111),
+            notificationId = Some(notificationId)
+          )
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
           when(mockCitizenDetailsConnector.getPersonDetails(any())(any()))
@@ -177,16 +186,15 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
             .thenReturn(HtmlFormat.empty)
           when(resultPrintView.apply(any())(any(), any()))
             .thenReturn(HtmlFormat.empty)
-          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
 
           val result = TestPrintController.printView(fakeRequest)
           status(result) shouldBe 200
           verify(resultPrintView).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
         }
       }
-    }
 
-   "return a 303 redirect" when {
+    "return a 303 redirect" when {
       "InValid data is provided" in {
         when(mockCitizenDetailsConnector.getPersonDetails(any())(any()))
           .thenReturn(Future(Some(testPersonalDetails)))

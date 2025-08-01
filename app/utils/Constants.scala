@@ -47,11 +47,5 @@ object Constants {
   // Result codes 4 and 12 are a temporary solution to align with NPS responses for certain amendment outcomes
   val activeAmendmentCodes = List(33, 34, 44, 4, 12)
 
-  val amendmentCodesList               = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
-  val amendmentCodesForInsetText       = List(2, 3, 4, 6, 7, 9, 10, 11, 12, 13, 14)
-  val amendmentCodesForSecondInsetText = List(7, 14)
-  val changeDetailsOnePara             = List(1, 5, 6, 8, 13)
-  val changeDetailsTwoPara             = List(2, 3, 4, 7, 9, 10, 11, 12, 14)
-  val dormantNotificationIds           = List(2, 3, 4, 9, 10, 11, 12)
-  val withdrawnNotificationIds         = List(6, 13)
+  val amendmentCodesList = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
 }

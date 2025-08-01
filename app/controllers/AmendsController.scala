@@ -197,12 +197,11 @@ class AmendsController @Inject() (
                 displayConstructors.createAmendResponseDisplayModel(model, personalDetailsModel, nino)
               )
             )
-          }
-          else if (Constants.activeAmendmentCodes.contains(id)) {
+          } else if (Constants.activeAmendmentCodes.contains(id)) {
             sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
             Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
 
-          }  else {
+          } else {
             Ok(outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
           }
         }

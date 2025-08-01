@@ -922,6 +922,53 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     }
   }
 
+  "createAmendResponseModel" should {
+    "correctly transform an AmendResponseModel into an AmendResultDisplayModel" in {
+      lazy val tstAmendResponseModel = AmendResponseModel(
+        ProtectionModel(
+          psaCheckReference = Some("psaRef"),
+          protectionID = Some(100003),
+          protectionType = Some("IP2014"),
+          status = Some("Open"),
+          protectionReference = Some("protectionRef"),
+          certificateDate = Some("2016-06-14"),
+          protectedAmount = Some(1350000.45),
+          notificationId = Some(33)
+        )
+      )
+
+      lazy val tstPerson               = Person("McTestface", "Testy")
+      lazy val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
+      lazy val nino                    = "testNino"
+
+      lazy val tstAmendResultDisplayModel = AmendResultDisplayModel(
+        protectionType = ApplicationType.IP2014,
+        notificationId = 33,
+        protectedAmount = "£1,350,000.45",
+        details = Some(
+          PrintDisplayModel(
+            firstName = "Testy",
+            surname = "Mctestface",
+            nino = "testNino",
+            protectionType = "IP2014",
+            status = "open",
+            psaCheckReference = "psaRef",
+            protectionReference = "protectionRef",
+            protectedAmount = Some("£1,350,000.45"),
+            certificateDate = Some("14 June 2016"),
+            notificationId = 33
+          )
+        )
+      )
+
+      displayConstructor.createAmendResponseDisplayModel(
+        tstAmendResponseModel,
+        Some(tstPersonalDetailsModel),
+        nino
+      ) shouldBe tstAmendResultDisplayModel
+    }
+  }
+
   "createInactiveAmendResponseModel" should {
     "correctly transform an AmendResponseModel into an InActiveAmendResultDisplayModel" in {
       lazy val tstAmendsResponseModel = AmendResponseModel(
