@@ -16,12 +16,13 @@
 
 package models
 
+import generators.ModelGenerators
 import models.pla.AmendProtectionLifetimeAllowanceType._
 import models.pla.AmendProtectionRequestStatus
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class ProtectionModelSpec extends AnyWordSpec with Matchers {
+class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators {
 
   "ProtectionModel on isAmendable" should {
 
@@ -100,6 +101,46 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers {
       }
     }
 
+  }
+
+  "ProtectionModel on apply" when {
+
+    "given a psaCheckReference and ProtectionRecord" must {
+
+      "construct an instance of ProtectionModel with the correct fields" in
+        forAll(readProtectionsResponseGen) { readProtectionsResponse =>
+          val protectionRecord = readProtectionsResponse.protectionRecordsList.head.protectionRecord
+
+          val result = ProtectionModel(
+            readProtectionsResponse.pensionSchemeAdministratorCheckReference,
+            protectionRecord
+          )
+
+          result.psaCheckReference shouldBe Some(readProtectionsResponse.pensionSchemeAdministratorCheckReference)
+          result.protectionID shouldBe Some(protectionRecord.identifier)
+          result.certificateDate shouldBe Some(
+            s"${protectionRecord.certificateDate}T${protectionRecord.certificateTime}"
+          )
+          result.version shouldBe Some(protectionRecord.sequenceNumber)
+          result.protectionType shouldBe Some(protectionRecord.`type`.toString)
+          result.status shouldBe Some(protectionRecord.status.toString)
+          result.protectedAmount shouldBe protectionRecord.protectedAmount.map(_.toDouble)
+          result.relevantAmount shouldBe protectionRecord.relevantAmount.map(_.toDouble)
+          result.postADayBenefitCrystallisationEvents shouldBe protectionRecord.postADayBenefitCrystallisationEventAmount
+            .map(_.toDouble)
+          result.preADayPensionInPayment shouldBe protectionRecord.preADayPensionInPaymentAmount.map(_.toDouble)
+          result.uncrystallisedRights shouldBe protectionRecord.uncrystallisedRightsAmount.map(_.toDouble)
+          result.nonUKRights shouldBe protectionRecord.nonUKRightsAmount.map(_.toDouble)
+          result.pensionDebitAmount shouldBe protectionRecord.pensionDebitAmount.map(_.toDouble)
+          result.pensionDebitEnteredAmount shouldBe protectionRecord.pensionDebitEnteredAmount.map(_.toDouble)
+          result.pensionDebitStartDate shouldBe protectionRecord.pensionDebitStartDate
+          result.pensionDebitTotalAmount shouldBe protectionRecord.pensionDebitTotalAmount.map(_.toDouble)
+          result.pensionDebits shouldBe None
+          result.notificationId shouldBe None
+          result.protectionReference shouldBe protectionRecord.protectionReference
+          result.withdrawnDate shouldBe None
+        }
+    }
   }
 
 }

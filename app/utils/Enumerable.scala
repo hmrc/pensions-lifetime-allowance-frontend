@@ -19,16 +19,14 @@ package utils
 import play.api.libs.json._
 
 trait Enumerable[A] {
+
   def findByName(str: String): Option[A]
 }
 
 object Enumerable {
 
   def apply[A](entries: (String, A)*): Enumerable[A] =
-    new Enumerable[A] {
-      override def findByName(str: String): Option[A] =
-        entries.toMap.get(str)
-    }
+    (str: String) => entries.toMap.get(str)
 
   trait Implicits { self =>
 

@@ -18,18 +18,24 @@ package controllers
 
 import auth.AuthFunction
 import config._
-import connectors.PlaConnectorError.{IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
+import connectors.PlaConnectorError.{
+  ConflictResponseError,
+  IncorrectResponseBodyError,
+  LockedResponseError,
+  UnexpectedResponseError
+}
 import connectors.{PLAConnector, PlaConnectorV2}
 import constructors.DisplayConstructors
+import generators.ModelGenerators
 import mocks.AuthMock
 import models.cache.CacheMap
-import models.pla.response.ReadProtectionsResponse
 import models.{ExistingProtectionsDisplayModel, ProtectionModel, ReadResponseModel, TransformedReadResponseModel}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
+import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.HeaderNames.CACHE_CONTROL
@@ -304,10 +310,10 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
   "Calling the currentProtections Action" when {
 
     "AppConfig.hipMigrationEnabled is set to true" should {
-      "call PlaConnectorV2" in new Setup {
+      "call PlaConnectorV2" in new Setup with ModelGenerators {
         when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
         when(mockPlaConnectorV2.readProtections(any())(any(), any()))
-          .thenReturn(Future.successful(Right(ReadProtectionsResponse(psaCheckReference))))
+          .thenReturn(Future.successful(Right(readProtectionsResponseGen.sample.value)))
         when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
           .thenReturn(testExistingProtectionsDisplayModel)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
