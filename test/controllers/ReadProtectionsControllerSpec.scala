@@ -18,7 +18,12 @@ package controllers
 
 import auth.AuthFunction
 import config._
-import connectors.PlaConnectorError.{IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
+import connectors.PlaConnectorError.{
+  ConflictResponseError,
+  IncorrectResponseBodyError,
+  LockedResponseError,
+  UnexpectedResponseError
+}
 import connectors.{PLAConnector, PlaConnectorV2}
 import constructors.DisplayConstructors
 import generators.ModelGenerators

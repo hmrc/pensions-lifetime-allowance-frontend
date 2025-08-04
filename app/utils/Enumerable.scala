@@ -20,29 +20,24 @@ import play.api.libs.json._
 
 trait Enumerable[A] {
 
-  def withName(str: String): Option[A]
+  def findByName(str: String): Option[A]
 }
 
 object Enumerable {
 
   def apply[A](entries: (String, A)*): Enumerable[A] =
-    new Enumerable[A] {
-      override def withName(str: String): Option[A] =
-        entries.toMap.get(str)
-    }
+    (str: String) => entries.toMap.get(str)
 
-  trait Implicits {
-
-    val jsonErrorMessage: String
+  trait Implicits { self =>
 
     implicit def reads[A](implicit ev: Enumerable[A]): Reads[A] =
       Reads {
         case JsString(str) =>
-          ev.withName(str)
+          ev.findByName(str)
             .map(s => JsSuccess(s))
-            .getOrElse(JsError(jsonErrorMessage))
-        case _ =>
-          JsError(jsonErrorMessage)
+            .getOrElse(JsError(s"Received unknown ${self.getClass.getSimpleName}: $str"))
+        case other =>
+          JsError(s"Cannot create ${self.getClass.getSimpleName} instance from: ${other.toString}")
       }
 
     implicit def writes[A: Enumerable]: Writes[A] =
@@ -52,6 +47,6 @@ object Enumerable {
 
 }
 
-class WithName(string: String) {
-  override val toString: String = string
+abstract class EnumerableInstance(name: String) {
+  override val toString: String = name
 }

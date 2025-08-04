@@ -16,31 +16,29 @@
 
 package models.pla.response
 
-import utils.{Enumerable, WithName}
+import utils.{Enumerable, EnumerableInstance}
 
-sealed trait ProtectionType
+sealed abstract class ProtectionType(value: String) extends EnumerableInstance(value)
 
 object ProtectionType extends Enumerable.Implicits {
 
-  override val jsonErrorMessage: String = "error.protectionType"
-
-  case object FixedProtection2016          extends WithName("FIXED PROTECTION 2016") with ProtectionType
-  case object IndividualProtection2014     extends WithName("INDIVIDUAL PROTECTION 2014") with ProtectionType
-  case object IndividualProtection2016     extends WithName("INDIVIDUAL PROTECTION 2016") with ProtectionType
-  case object PrimaryProtection            extends WithName("PRIMARY PROTECTION") with ProtectionType
-  case object EnhancedProtection           extends WithName("ENHANCED PROTECTION") with ProtectionType
-  case object FixedProtection              extends WithName("FIXED PROTECTION") with ProtectionType
-  case object FixedProtection2014          extends WithName("FIXED PROTECTION 2014") with ProtectionType
-  case object PensionCreditRights          extends WithName("PENSION CREDIT RIGHTS") with ProtectionType
-  case object InternationalEnhancementS221 extends WithName("INTERNATIONAL ENHANCEMENT (S221)") with ProtectionType
-  case object InternationalEnhancementS224 extends WithName("INTERNATIONAL ENHANCEMENT (S224)") with ProtectionType
-  case object FixedProtection2016LTA       extends WithName("FIXED PROTECTION 2016 LTA") with ProtectionType
-  case object IndividualProtection2014LTA  extends WithName("INDIVIDUAL PROTECTION 2014 LTA") with ProtectionType
-  case object IndividualProtection2016LTA  extends WithName("INDIVIDUAL PROTECTION 2016 LTA") with ProtectionType
-  case object PrimaryProtectionLTA         extends WithName("PRIMARY PROTECTION LTA") with ProtectionType
-  case object EnhancedProtectionLTA        extends WithName("ENHANCED PROTECTION LTA") with ProtectionType
-  case object FixedProtectionLTA           extends WithName("FIXED PROTECTION LTA") with ProtectionType
-  case object FixedProtection2014LTA       extends WithName("FIXED PROTECTION 2014 LTA") with ProtectionType
+  case object FixedProtection2016          extends ProtectionType("FIXED PROTECTION 2016")
+  case object IndividualProtection2014     extends ProtectionType("INDIVIDUAL PROTECTION 2014")
+  case object IndividualProtection2016     extends ProtectionType("INDIVIDUAL PROTECTION 2016")
+  case object PrimaryProtection            extends ProtectionType("PRIMARY PROTECTION")
+  case object EnhancedProtection           extends ProtectionType("ENHANCED PROTECTION")
+  case object FixedProtection              extends ProtectionType("FIXED PROTECTION")
+  case object FixedProtection2014          extends ProtectionType("FIXED PROTECTION 2014")
+  case object PensionCreditRights          extends ProtectionType("PENSION CREDIT RIGHTS")
+  case object InternationalEnhancementS221 extends ProtectionType("INTERNATIONAL ENHANCEMENT (S221)")
+  case object InternationalEnhancementS224 extends ProtectionType("INTERNATIONAL ENHANCEMENT (S224)")
+  case object FixedProtection2016LTA       extends ProtectionType("FIXED PROTECTION 2016 LTA")
+  case object IndividualProtection2014LTA  extends ProtectionType("INDIVIDUAL PROTECTION 2014 LTA")
+  case object IndividualProtection2016LTA  extends ProtectionType("INDIVIDUAL PROTECTION 2016 LTA")
+  case object PrimaryProtectionLTA         extends ProtectionType("PRIMARY PROTECTION LTA")
+  case object EnhancedProtectionLTA        extends ProtectionType("ENHANCED PROTECTION LTA")
+  case object FixedProtectionLTA           extends ProtectionType("FIXED PROTECTION LTA")
+  case object FixedProtection2014LTA       extends ProtectionType("FIXED PROTECTION 2014 LTA")
 
   val values: Seq[ProtectionType] = Seq(
     FixedProtection2016,

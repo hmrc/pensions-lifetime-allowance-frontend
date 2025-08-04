@@ -16,20 +16,18 @@
 
 package models.pla.response
 
-import utils.{Enumerable, WithName}
+import utils.{Enumerable, EnumerableInstance}
 
-sealed trait ProtectionStatus
+sealed abstract class ProtectionStatus(value: String) extends EnumerableInstance(value)
 
 object ProtectionStatus extends Enumerable.Implicits {
 
-  override val jsonErrorMessage: String = "error.protectionStatus"
-
-  case object Open         extends WithName("OPEN") with ProtectionStatus
-  case object Dormant      extends WithName("DORMANT") with ProtectionStatus
-  case object Withdrawn    extends WithName("WITHDRAWN") with ProtectionStatus
-  case object Expired      extends WithName("EXPIRED") with ProtectionStatus
-  case object Unsuccessful extends WithName("UNSUCCESSFUL") with ProtectionStatus
-  case object Rejected     extends WithName("REJECTED") with ProtectionStatus
+  case object Open         extends ProtectionStatus("OPEN")
+  case object Dormant      extends ProtectionStatus("DORMANT")
+  case object Withdrawn    extends ProtectionStatus("WITHDRAWN")
+  case object Expired      extends ProtectionStatus("EXPIRED")
+  case object Unsuccessful extends ProtectionStatus("UNSUCCESSFUL")
+  case object Rejected     extends ProtectionStatus("REJECTED")
 
   val values: Seq[ProtectionStatus] = Seq(
     Open,
