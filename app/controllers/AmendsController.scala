@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PLAConnector, PlaConnectorError, PlaConnectorV2}
 import constructors.{AmendsGAConstructor, DisplayConstructors}
@@ -30,7 +30,6 @@ import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Constants
@@ -53,12 +52,8 @@ class AmendsController @Inject() (
     outcomeInactive: views.html.pages.amends.outcomeInactive,
     outcomeAmended: views.html.pages.amends.outcomeAmended,
     amendSummary: views.html.pages.amends.amendSummary
-)(
-    implicit val appConfig: FrontendAppConfig,
-    val formWithCSRF: FormWithCSRF,
-    val plaContext: PlaContext,
-    val ec: ExecutionContext
-) extends FrontendController(mcc)
+)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
+    extends FrontendController(mcc)
     with I18nSupport
     with Logging {
 
@@ -166,50 +161,47 @@ class AmendsController @Inject() (
         modelAR              <- sessionCacheService.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
         modelGA              <- sessionCacheService.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
         personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
-        result               <- amendmentOutcomeResult(modelAR, modelGA, personalDetailsModel, nino)
+
+        result = amendmentOutcomeResult(modelAR, modelGA, personalDetailsModel, nino)
       } yield result
     }
   }
 
-  def amendmentOutcomeResult(
+  private def amendmentOutcomeResult(
       modelAR: Option[AmendResponseModel],
       modelGA: Option[AmendsGAModel],
       personalDetailsModel: Option[PersonalDetailsModel],
       nino: String
-  )(
-      implicit request: Request[AnyContent]
-  ): Future[Result] = {
+  )(implicit request: Request[AnyContent]): Result = {
     if (modelGA.isEmpty) {
       logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
     }
 
-    Future(
-      modelAR
-        .map { model =>
-          val id = model.protection.notificationId.getOrElse {
-            throw new Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
-          }
-          if (Constants.amendmentCodesList.contains(id) && appConfig.hipMigrationEnabled) {
-            sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-            Ok(
-              outcomeAmended(
-                displayConstructors.createAmendResponseDisplayModel(model, personalDetailsModel, nino)
-              )
-            )
-          } else if (Constants.activeAmendmentCodes.contains(id)) {
-            sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-            Ok(outcomeActive(displayConstructors.createActiveAmendResponseDisplayModel(model), modelGA))
+    modelAR
+      .map { model =>
+        val id = model.protection.notificationId.getOrElse {
+          throw Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
+        }
+        if (Constants.amendmentCodesList.contains(id) && appConfig.hipMigrationEnabled) {
+          sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
+          val displayModel = displayConstructors.createAmendResponseDisplayModel(model, personalDetailsModel, nino)
+          Ok(outcomeAmended(displayModel))
 
-          } else {
-            Ok(outcomeInactive(displayConstructors.createInactiveAmendResponseDisplayModel(model), modelGA))
-          }
+        } else if (Constants.activeAmendmentCodes.contains(id)) {
+          sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
+          val displayModel = displayConstructors.createActiveAmendResponseDisplayModel(model)
+          Ok(outcomeActive(displayModel, modelGA))
+
+        } else {
+          val displayModel = displayConstructors.createInactiveAmendResponseDisplayModel(model)
+          Ok(outcomeInactive(displayModel, modelGA))
         }
-        .getOrElse {
-          logger.warn(s"Unable to retrieve amendment outcome model from cache for user nino :$nino")
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
-        }
-    )
+      }
+      .getOrElse {
+        logger.warn(s"Unable to retrieve amendment outcome model from cache for user nino :$nino")
+        InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+          .withHeaders(CACHE_CONTROL -> "no-cache")
+      }
   }
 
 }

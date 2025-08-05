@@ -128,7 +128,7 @@ class AmendsPensionSharingOrderController @Inject() (
       key: String
   )(implicit request: Request[AnyContent]) = {
     val amendModel = amendModelOption.getOrElse {
-      throw new Exceptions.RequiredValueNotDefinedException("updateAndSaveAmendModelWithPso", "amendModel")
+      throw Exceptions.RequiredValueNotDefinedException("updateAndSaveAmendModelWithPso", "amendModel")
     }
     val newUpdatedProtection = amendModel.updatedProtection.copy(pensionDebits = debits)
     sessionCacheService
@@ -138,7 +138,7 @@ class AmendsPensionSharingOrderController @Inject() (
   private[controllers] def createPsoDetailsList(formModel: AmendPSODetailsModel): Option[List[PensionDebitModel]] = {
     val date = formModel.pso.toString
     val amt = formModel.psoAmt.getOrElse {
-      throw new Exceptions.RequiredValueNotDefinedException("createPsoDetailsList", "psoAmt")
+      throw Exceptions.RequiredValueNotDefinedException("createPsoDetailsList", "psoAmt")
     }
     Some(List(PensionDebitModel(startDate = date, amount = amt.toDouble)))
   }

@@ -20,22 +20,22 @@ object Exceptions extends Exceptions
 
 trait Exceptions {
 
-  class OptionNotDefinedException(val functionName: String, optionName: String, applicationType: String)
+  case class OptionNotDefinedException(functionName: String, optionName: String, applicationType: String)
       extends Exception(
         s"Option not found for $optionName in $functionName for application type $applicationType"
       )
 
-  class RequiredValueNotDefinedException(val functionName: String, optionName: String)
+  case class RequiredValueNotDefinedException(functionName: String, optionName: String)
       extends Exception(
         s"Value not found for $optionName in $functionName"
       )
 
-  class RequiredValueNotDefinedForNinoException(val functionName: String, optionName: String, nino: String)
+  case class RequiredValueNotDefinedForNinoException(functionName: String, optionName: String, nino: String)
       extends Exception(
         s"Value not found for $optionName in $functionName with nino: $nino"
       )
 
-  class RequiredNotFoundProtectionTypeException(val functionName: String)
+  case class RequiredNotFoundProtectionTypeException(functionName: String)
       extends Exception(
         s"Value not found for protection type in $functionName"
       )

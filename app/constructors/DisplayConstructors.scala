@@ -40,7 +40,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
   )(implicit lang: Lang): PrintDisplayModel = {
 
     val personalDetailsModel = personalDetailsModelOpt.getOrElse {
-      throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")
+      throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")
     }
 
     val firstName = personalDetailsModel.person.firstName.toLowerCase.capitalize
@@ -49,10 +49,10 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     val protectionType = Strings.protectionTypeString(protectionModel.protectionType)
     val status         = Strings.statusString(protectionModel.status)
     val psaCheckReference = protectionModel.psaCheckReference.getOrElse {
-      throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "psaCheckReference")
+      throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "psaCheckReference")
     }
     val protectionReference = protectionModel.protectionReference.getOrElse {
-      throw new Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "protectionReference")
+      throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "protectionReference")
     }
 
     val protectedAmountOption =
@@ -67,7 +67,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       protectionModel.certificateDate.map(cDate => Display.dateDisplayString(Dates.constructDateFromAPIString(cDate)))
 
     val notificationId = protectionModel.notificationId.getOrElse(
-      throw new Exceptions.OptionNotDefinedException(
+      throw Exceptions.OptionNotDefinedException(
         "createPrintDisplayModel",
         "notificationId",
         protectionModel.protectionType.getOrElse("No protection type in response")
@@ -352,7 +352,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
   ): AmendDisplaySectionModel = {
     val amendCall = Helpers.createAmendCall(protection, applicationStage)
     val currentPensions = protection.uncrystallisedRights.getOrElse(
-      throw new Exceptions.OptionNotDefinedException(
+      throw Exceptions.OptionNotDefinedException(
         "createCurrentPensionsSection",
         "currentPensions",
         protection.protectionType.getOrElse("No protection type")
@@ -445,7 +445,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     val protectionType    = getProtectionTypeFromProtection(model.protection)
 
     val protectedAmount = model.protection.protectedAmount.getOrElse {
-      throw new Exceptions.OptionNotDefinedException(
+      throw Exceptions.OptionNotDefinedException(
         "createActiveAmendResponseDisplayModel",
         "protectedAmount",
         model.protection.protectionType.getOrElse("No protection type in response")
@@ -454,7 +454,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
 
     val notificationId = model.protection.notificationId.getOrElse(
-      throw new Exceptions.OptionNotDefinedException(
+      throw Exceptions.OptionNotDefinedException(
         "createActiveAmendResponseDisplayModel",
         "notificationId",
         model.protection.protectionType.getOrElse("No protection type in response")
@@ -478,7 +478,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     val protectionType = getProtectionTypeFromProtection(model.protection)
 
     val protectedAmount = model.protection.protectedAmount.getOrElse {
-      throw new Exceptions.OptionNotDefinedException(
+      throw Exceptions.OptionNotDefinedException(
         "createActiveAmendResponseDisplayModel",
         "protectedAmount",
         model.protection.protectionType.getOrElse("No protection type in response")
@@ -487,7 +487,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
 
     val notificationId = model.protection.notificationId.getOrElse(
-      throw new Exceptions.OptionNotDefinedException(
+      throw Exceptions.OptionNotDefinedException(
         "createActiveAmendResponseDisplayModel",
         "notificationId",
         model.protection.protectionType.getOrElse("No protection type in response")
@@ -505,7 +505,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
   // INACTIVE AMEND RESPONSE
   def createInactiveAmendResponseDisplayModel(model: AmendResponseModel): InactiveAmendResultDisplayModel = {
     val notificationId = model.protection.notificationId.getOrElse(
-      throw new Exceptions.OptionNotDefinedException(
+      throw Exceptions.OptionNotDefinedException(
         "createInactiveAmendResponseDisplayModel",
         "notificationId",
         model.protection.protectionType.getOrElse("No protection type in response")
@@ -517,7 +517,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
 
   private def getProtectionTypeFromProtection(protection: ProtectionModel): ApplicationType.Value = {
     val protectionTypeString = protection.protectionType.getOrElse(
-      throw new Exceptions.RequiredValueNotDefinedException("getProtectionTypeFromProtection", "protectionType")
+      throw Exceptions.RequiredValueNotDefinedException("getProtectionTypeFromProtection", "protectionType")
     )
     ApplicationType.fromString(protectionTypeString).getOrElse {
       throw new Exception("Invalid protection type passed to getProtectionTypeFromProtection")
@@ -529,7 +529,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
   )(implicit lang: Lang): ProtectionDetailsDisplayModel = {
     val protectionReference = protection.protectionReference
     val psaReference = protection.psaCheckReference.getOrElse(
-      throw new Exceptions.OptionNotDefinedException(
+      throw Exceptions.OptionNotDefinedException(
         "createProtectionDetailsFromModel",
         "psaCheckReference",
         protection.protectionType.getOrElse("No protection type in response")
