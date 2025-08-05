@@ -17,69 +17,66 @@
 package controllers
 
 import auth.AuthFunction
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import connectors.CitizenDetailsConnector
 import constructors.DisplayConstructors
-
-import javax.inject.Inject
-import models.{PersonalDetailsModel, ProtectionModel}
+import models.ProtectionModel
 import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Constants
-import views.html.pages.result.resultPrint
-import views.html.pages.result.resultPrintViewAmendment
+import views.html.pages.result.{resultPrint, resultPrintViewAmendment}
 
-import scala.concurrent.ExecutionContext
+import javax.inject.Inject
+import scala.concurrent.{ExecutionContext, Future}
 
 class PrintController @Inject() (
-    val sessionCacheService: SessionCacheService,
-    val citizenDetailsConnector: CitizenDetailsConnector,
+    sessionCacheService: SessionCacheService,
+    citizenDetailsConnector: CitizenDetailsConnector,
     displayConstructors: DisplayConstructors,
     resultPrintView: resultPrint,
     resultPrintViewAmendment: resultPrintViewAmendment,
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction
-)(implicit val appConfig: FrontendAppConfig, implicit val plaContext: PlaContext, implicit val ec: ExecutionContext)
+)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
     extends FrontendController(mcc)
     with I18nSupport
     with Logging {
 
-  lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
+  private lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
 
-  val printView = Action.async { implicit request =>
-    implicit val lang = mcc.messagesApi.preferred(request).lang
+  val printView: Action[AnyContent] = Action.async { implicit request =>
+    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
-        personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
-        protectionModel      <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
-      } yield routePrintView(personalDetailsModel, protectionModel, nino)
+        protectionModel <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
+        result          <- routePrintView(protectionModel, nino)
+      } yield result
     }
   }
 
   private def routePrintView(
-      personalDetailsModel: Option[PersonalDetailsModel],
       protectionModel: Option[ProtectionModel],
       nino: String
-  )(implicit request: Request[AnyContent], lang: Lang): Result =
+  )(implicit request: Request[AnyContent], lang: Lang): Future[Result] =
     protectionModel match {
       case Some(model) =>
+        citizenDetailsConnector.getPersonDetails(nino).map { personalDetailsModel =>
+          val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
 
-        val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
-
-        if (
-          Constants.amendmentCodesList
-            .exists(code => model.notificationId.contains(code)) && appConfig.hipMigrationEnabled
-        ) {
-          Ok(resultPrintViewAmendment(displayModel))
-        } else
-          Ok(resultPrintView(displayModel))
-
+          if (
+            Constants.amendmentCodesList.exists(code => model.notificationId.contains(code)) &&
+            appConfig.hipMigrationEnabled
+          ) {
+            Ok(resultPrintViewAmendment(displayModel))
+          } else
+            Ok(resultPrintView(displayModel))
+        }
       case _ =>
         logger.warn(s"Forced redirect to PrintView for $nino")
-        Redirect(routes.ReadProtectionsController.currentProtections)
+        Future.successful(Redirect(routes.ReadProtectionsController.currentProtections))
     }
 
 }
