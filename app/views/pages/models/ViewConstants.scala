@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package views.pages
+package views.pages.models
 
 object ViewConstants {
 

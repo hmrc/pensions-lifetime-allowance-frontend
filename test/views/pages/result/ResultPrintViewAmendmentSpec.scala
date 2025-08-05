@@ -18,300 +18,175 @@ package views.pages.result
 
 import models.PrintDisplayModel
 import org.jsoup.Jsoup
-import play.api.i18n.Messages
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.result.ResultPrintViewAmendment
 import views.html.pages.result.resultPrintViewAmendment
+import views.pages.models.ViewConstants
 
-class ResultPrintViewAmendmentSpec extends CommonViewSpecHelper with ResultPrintViewAmendment {
+class ResultPrintViewAmendmentSpec extends CommonViewSpecHelper {
 
-  "The Print Result Page" should {
-    lazy val model = PrintDisplayModel(
-      "Jim",
-      "Davis",
-      "nino",
-      "IP2016",
-      "dormant",
-      "PSA33456789",
-      Messages("pla.protection.protectionReference"),
-      Some("100.00"),
-      Some("23/02/2015"),
-      12
-    )
-    lazy val resultPrintView = fakeApplication().injector.instanceOf[resultPrintViewAmendment]
-    lazy val view            = resultPrintView(model)
-    lazy val doc             = Jsoup.parse(view.body)
+  private val resultPrintViewAmendment = fakeApplication().injector.instanceOf[resultPrintViewAmendment]
 
-    lazy val model2 = PrintDisplayModel(
-      "Jim",
-      "Davis",
-      "nino",
-      "IP2014",
-      "withdrawn",
-      "PSA33456789",
-      Messages("pla.protection.protectionReference"),
-      Some("100.00"),
-      Some("23/02/2015"),
-      6
-    )
+  private val printDisplayModel = PrintDisplayModel(
+    "Jim",
+    "Davis",
+    "nino",
+    "IP2016",
+    "dormant",
+    "PSA33456789",
+    "IP14XXXXXX",
+    Some("100.00"),
+    Some("23/02/2015"),
+    15
+  )
 
-    lazy val view2 = resultPrintView(model2)
-    lazy val doc2  = Jsoup.parse(view2.body)
+  private val titleText                     = "Print your active protection - Check your pension protections - GOV.UK"
+  private val serviceNameText               = "Check your pension protections"
+  private val ninoText                      = "National Insurance number"
+  private val protectionDetailsText         = "Protection details"
+  private val applicationDateText           = "Application date"
+  private val protectionTypeText            = "Protection type"
+  private val protectedAmountText           = "Protected amount"
+  private val protectionReferenceNumberText = "Protection reference number"
+  private val fixedProtectionReferenceNumberText      = "Fixed protection 2016 reference number"
+  private val pensionSchemeAdministratorReferenceText = "Pension Scheme administrator check reference"
+  private val statusText                              = "Status"
+  private val dormantStatusText                       = "Dormant"
+  private val withdrawnStatusText                     = "Withdrawn"
 
-    lazy val model3 = PrintDisplayModel(
-      "Jim",
-      "Davis",
-      "nino",
-      "IP2014",
-      "active",
-      "PSA33456789",
-      Messages("pla.protection.protectionReference"),
-      Some("100.00"),
-      Some("23/02/2015"),
-      5
-    )
+  private val giveToPensionProviderText =
+    "Give these details to your pension provider when you decide to take money from your pension"
 
-    lazy val view3 = resultPrintView(model3)
-    lazy val doc3  = Jsoup.parse(view3.body)
+  private val iP2014ContactHmrcText =
+    "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
 
-    "have the new correct title" in {
-      doc.title() shouldBe plaPrintTitle
-    }
+  "resultPrintViewAmendment" when {
 
-    "have a new service name which" should {
+    (1 to 15).foreach { notificationId =>
+      s"provided with PrintDisplayModel containing notificationId: $notificationId" should {
 
-      lazy val serviceName = doc.getElementsByClass("govuk-header__service-name")
+        val model = printDisplayModel.copy(notificationId = notificationId)
+        val doc   = Jsoup.parse(resultPrintViewAmendment(model).body)
 
-      "contain the text" in {
-        serviceName.text shouldBe plaPrintServiceName
+        "contain title" in {
+          doc.title() shouldBe titleText
+        }
+
+        "contain service name" in {
+          doc.getElementsByClass("govuk-header__service-name").text shouldBe serviceNameText
+        }
+
+        "contain first heading with paragraph" in {
+          val header    = doc.select("h1")
+          val paragraph = doc.select("p").get(0)
+
+          header.attr("id") shouldBe "userName"
+          header.text shouldBe "Jim Davis"
+
+          paragraph.attr("id") shouldBe "userNino"
+          paragraph.text shouldBe s"$ninoText nino"
+        }
+
+        "contain second heading" in {
+          doc.select("h2").first().text shouldBe protectionDetailsText
+        }
+
+        "contain table row with certificate date" in {
+          doc.getElementsByClass("govuk-table__header").get(0).text shouldBe applicationDateText
+          doc.getElementsByClass("govuk-table__cell").get(0).text shouldBe "23/02/2015"
+        }
+
+        "contain table row with protection type" in {
+          doc.getElementsByClass("govuk-table__header").get(1).text shouldBe protectionTypeText
+          doc.getElementsByClass("govuk-table__cell").get(1).text shouldBe "Individual protection 2016"
+        }
+
+        "contain table row with protected amount" in {
+          doc.getElementsByClass("govuk-table__header").get(2).text shouldBe protectedAmountText
+          doc.getElementsByClass("govuk-table__cell").get(2).text shouldBe "100.00"
+        }
+
+        "NOT contain table row with certificate date if certificateDate is empty" in {
+          val model = printDisplayModel.copy(notificationId = notificationId, certificateDate = None)
+          val doc   = Jsoup.parse(resultPrintViewAmendment(model).body)
+
+          doc.getElementsByClass("govuk-table__header").text shouldNot include(applicationDateText)
+          doc.getElementsByClass("govuk-table__cell").text shouldNot include("23/02/2015")
+        }
+
+        "NOT contain table row with protected amount if protectedAmount is empty" in {
+          val model = printDisplayModel.copy(notificationId = notificationId, protectedAmount = None)
+          val doc   = Jsoup.parse(resultPrintViewAmendment(model).body)
+
+          doc.getElementsByClass("govuk-table__header").text shouldNot include(protectedAmountText)
+          doc.getElementsByClass("govuk-table__cell").text shouldNot include("100.00")
+        }
+
+        "contain paragraph with 'Give these details to pension provider' text" in {
+          val paragraph = doc.select("div p").get(1)
+
+          paragraph.text shouldBe giveToPensionProviderText
+        }
+
+        "contain paragraph with 'Contact HMRC' text" in {
+          val paragraph = doc.select("div p").get(2)
+
+          paragraph.attr("id") shouldBe "contactHMRC"
+          paragraph.text shouldBe iP2014ContactHmrcText
+        }
       }
     }
 
-    "have a first heading which" should {
+    Seq(1, 5, 8).foreach { notificationId =>
+      s"provided with PrintDisplayModel containing notificationId: $notificationId" should {
 
-      lazy val h1Tag = doc.select("h1")
-      lazy val p1    = doc.select("p").get(0)
+        val model = printDisplayModel.copy(notificationId = notificationId)
+        val doc   = Jsoup.parse(resultPrintViewAmendment(model).body)
 
-      "contain the text" in {
-        h1Tag.text shouldBe "Jim Davis"
-      }
+        "contain table row with protection reference number" in {
+          doc.getElementsByClass("govuk-table__header").get(3).text shouldBe protectionReferenceNumberText
+          doc.getElementsByClass("govuk-table__cell").get(3).text shouldBe "IP14XXXXXX"
+        }
 
-      "have the id" in {
-        h1Tag.attr("id") shouldBe "userName"
-      }
-
-      "also contain a paragraph with the id" in {
-        p1.attr("id") shouldBe "userNino"
-      }
-
-      "contain the paragraph text" in {
-        p1.text shouldBe s"$plaPrintNino nino"
+        "contain table row with pension scheme administrator reference" in {
+          doc.getElementsByClass("govuk-table__header").get(4).text shouldBe pensionSchemeAdministratorReferenceText
+          doc.getElementsByClass("govuk-table__cell").get(4).text shouldBe "PSA33456789"
+        }
       }
     }
 
-    "have a second heading which" should {
+    Seq(7, 14).foreach { notificationId =>
+      s"provided with PrintDisplayModel containing notificationId: $notificationId" should {
+        "contain table row with fixed protection reference number" in {
+          val model = printDisplayModel.copy(notificationId = notificationId)
+          val doc   = Jsoup.parse(resultPrintViewAmendment(model).body)
 
-      "contain the text" in {
-        doc.select("h2").first().text shouldBe plaPrintProtectionDetails
+          doc.getElementsByClass("govuk-table__header").get(3).text shouldBe fixedProtectionReferenceNumberText
+          doc.getElementsByClass("govuk-table__cell").get(3).text shouldBe "IP14XXXXXX"
+        }
       }
     }
 
-    "contain a table which" should {
+    ViewConstants.dormantNotificationIds.foreach { notificationId =>
+      s"provided with PrintDisplayModel containing notificationId: $notificationId" should {
+        "contain table row with status: Dormant" in {
+          val model = printDisplayModel.copy(notificationId = notificationId)
+          val doc   = Jsoup.parse(resultPrintViewAmendment(model).body)
 
-      lazy val tableHeading = doc.select("tr th")
-
-      "contain the following title message information" in {
-        tableHeading.get(0).text shouldBe plaPrintApplicationDate
-        tableHeading.get(1).text shouldBe plaPrintProtectionType
-        tableHeading.get(2).text shouldBe plaPrintPla
-        tableHeading.get(3).text shouldBe status
-      }
-
-      lazy val tableData = doc.select("tr td")
-
-      "contain the following id information" in {
-        tableData.get(0).attr("id") shouldBe "applicationDate"
-        tableData.get(1).attr("id") shouldBe "protectionType"
-        tableData.get(2).attr("id") shouldBe "protectedAmount"
-        tableData.get(3).attr("id") shouldBe "dormantStatus"
-      }
-
-      "contain the following table information" in {
-        tableData.get(0).text shouldBe "23/02/2015"
-        tableData.get(1).text shouldBe "Individual protection 2016"
-        tableData.get(2).text shouldBe "100.00"
-        tableData.get(3).text shouldBe dormantStatus
+          doc.getElementsByClass("govuk-table__header").get(3).text shouldBe statusText
+          doc.getElementsByClass("govuk-table__cell").get(3).text shouldBe dormantStatusText
+        }
       }
     }
 
-    "have an sections paragraph which" should {
+    ViewConstants.withdrawnNotificationIds.foreach { notificationId =>
+      s"provided with PrintDisplayModel containing notificationId: $notificationId" should {
+        "contain table row with status: Withdrawn" in {
+          val model = printDisplayModel.copy(notificationId = notificationId)
+          val doc   = Jsoup.parse(resultPrintViewAmendment(model).body)
 
-      lazy val p2 = doc.select("div p").get(1)
-      lazy val p3 = doc.select("div p").get(2)
-
-      "have a give to pension provider section with the text" in {
-        p2.text shouldBe plaPrintGiveToPensionProvider
-      }
-
-      "have a contact hmrc section with the id" in {
-        p3.attr("id") shouldBe "contactHMRC"
-      }
-
-      "have a contact hmrc section with the text" in {
-        p3.text shouldBe plaPrintIP2014ContactHMRC
-      }
-    }
-
-    "have an sections paragraph (Other Protection) which" should {
-
-      lazy val p2 = doc2.select("div p").get(1)
-
-      "have a give to pension provider section with the text" in {
-        p2.text shouldBe plaPrintGiveToPensionProvider
-      }
-
-    }
-
-    "have the new correct title for model2" in {
-      doc2.title() shouldBe plaPrintTitle
-    }
-
-    "have a new service name which for model2" should {
-
-      lazy val serviceName2 = doc2.getElementsByClass("govuk-header__service-name")
-
-      "contain the text for model2" in {
-        serviceName2.text shouldBe plaPrintServiceName
-      }
-    }
-
-    "have a first heading which for model2" should {
-
-      lazy val h1TagDoc2 = doc2.select("h1")
-      lazy val p1Doc2    = doc2.select("p").get(0)
-
-      "contain the text for model2" in {
-        h1TagDoc2.text shouldBe "Jim Davis"
-      }
-
-      "have the id for model2" in {
-        h1TagDoc2.attr("id") shouldBe "userName"
-      }
-
-      "also contain a paragraph with the id for model2" in {
-        p1Doc2.attr("id") shouldBe "userNino"
-      }
-
-      "contain the paragraph text for model2" in {
-        p1Doc2.text shouldBe s"$plaPrintNino nino"
-      }
-    }
-
-    "have a second heading which for model2" should {
-
-      "contain the text for model2" in {
-        doc2.select("h2").first().text shouldBe plaPrintProtectionDetails
-      }
-    }
-
-    "contain a table for model2 which" should {
-
-      lazy val tableHeading = doc2.select("tr th")
-
-      "contain the following title message information for model2" in {
-        tableHeading.get(0).text shouldBe plaPrintApplicationDate
-        tableHeading.get(1).text shouldBe plaPrintProtectionType
-        tableHeading.get(2).text shouldBe plaPrintPla
-        tableHeading.get(3).text shouldBe status
-      }
-
-      lazy val tableData = doc2.select("tr td")
-
-      "contain the following id information for model2" in {
-        tableData.get(0).attr("id") shouldBe "applicationDate"
-        tableData.get(1).attr("id") shouldBe "protectionType"
-        tableData.get(2).attr("id") shouldBe "protectedAmount"
-        tableData.get(3).attr("id") shouldBe "withdrawnStatus"
-      }
-
-      "contain the following table information for model2" in {
-        tableData.get(0).text shouldBe "23/02/2015"
-        tableData.get(1).text shouldBe "Individual protection 2014"
-        tableData.get(2).text shouldBe "100.00"
-        tableData.get(3).text shouldBe withdrawnStatus
-      }
-    }
-
-    "have the new correct title for model3" in {
-      doc3.title() shouldBe plaPrintTitle
-    }
-
-    "have a new service name which for model3" should {
-
-      lazy val serviceName3 = doc3.getElementsByClass("govuk-header__service-name")
-
-      "contain the text for model2" in {
-        serviceName3.text shouldBe plaPrintServiceName
-      }
-    }
-
-    "have a first heading which for model3" should {
-
-      lazy val h1TagDoc3 = doc3.select("h1")
-      lazy val p1Doc3    = doc3.select("p").get(0)
-
-      "contain the text for model3" in {
-        h1TagDoc3.text shouldBe "Jim Davis"
-      }
-
-      "have the id for model3" in {
-        h1TagDoc3.attr("id") shouldBe "userName"
-      }
-
-      "also contain a paragraph with the id for model3" in {
-        p1Doc3.attr("id") shouldBe "userNino"
-      }
-
-      "contain the paragraph text for model3" in {
-        p1Doc3.text shouldBe s"$plaPrintNino nino"
-      }
-    }
-
-    "have a second heading which for model3" should {
-
-      "contain the text for model3" in {
-        doc3.select("h2").first().text shouldBe plaPrintProtectionDetails
-      }
-    }
-
-    "contain a table for model3 which" should {
-
-      lazy val tableHeading = doc3.select("tr th")
-
-      "contain the following title message information for model3" in {
-        tableHeading.get(0).text shouldBe plaPrintApplicationDate
-        tableHeading.get(1).text shouldBe plaPrintProtectionType
-        tableHeading.get(2).text shouldBe plaPrintPla
-        tableHeading.get(3).text shouldBe plaPrintProtectionNotificationNumber
-        tableHeading.get(4).text shouldBe plaPrintSchemeAdministratorReference
-      }
-
-      lazy val tableData = doc3.select("tr td")
-
-      "contain the following id information for model3" in {
-        tableData.get(0).attr("id") shouldBe "applicationDate"
-        tableData.get(1).attr("id") shouldBe "protectionType"
-        tableData.get(2).attr("id") shouldBe "protectedAmount"
-        tableData.get(3).attr("id") shouldBe "protectionRefNum"
-        tableData.get(4).attr("id") shouldBe "psaCheckRef"
-      }
-
-      "contain the following table information for model3" in {
-        tableData.get(0).text shouldBe "23/02/2015"
-        tableData.get(1).text shouldBe "Individual protection 2014"
-        tableData.get(2).text shouldBe "100.00"
-        tableData.get(3).text shouldBe Messages("pla.protection.protectionReference")
-        tableData.get(4).text shouldBe "PSA33456789"
+          doc.getElementsByClass("govuk-table__header").get(3).text shouldBe statusText
+          doc.getElementsByClass("govuk-table__cell").get(3).text shouldBe withdrawnStatusText
+        }
       }
     }
   }
