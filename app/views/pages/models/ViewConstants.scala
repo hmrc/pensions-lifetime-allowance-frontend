@@ -18,11 +18,12 @@ package views.pages.models
 
 object ViewConstants {
 
-  val amendmentCodesForInsetText       = List(2, 3, 4, 6, 7, 9, 10, 11, 12, 13, 14)
-  val amendmentCodesForSecondInsetText = List(7, 14)
-  val changeDetailsOnePara             = List(1, 5, 6, 8, 13)
-  val changeDetailsTwoPara             = List(2, 3, 4, 7, 9, 10, 11, 12, 14)
-  val dormantNotificationIds           = List(2, 3, 4, 9, 10, 11, 12)
-  val withdrawnNotificationIds         = List(6, 13)
+  val amendmentCodesForInsetText: List[Int]       = List(2, 3, 4, 6, 7, 9, 10, 11, 12, 13, 14)
+  val amendmentCodesForSecondInsetText: List[Int] = List(7, 14)
+  val changeDetailsShortSection: List[Int]        = List(1, 5, 6, 8, 13)
+  val changeDetailsLongSection: List[Int]         = List(2, 3, 4, 7, 9, 10, 11, 12, 14)
+
+  val dormantNotificationIds: List[Int]   = List(2, 3, 4, 9, 10, 11, 12)
+  val withdrawnNotificationIds: List[Int] = List(6, 13)
 
 }

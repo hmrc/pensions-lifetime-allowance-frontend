@@ -19,280 +19,1560 @@ package views.pages.amends
 import enums.ApplicationType
 import models.{AmendResultDisplayModel, PrintDisplayModel}
 import org.jsoup.Jsoup
-import play.api.i18n.Messages
+import org.jsoup.nodes.Document
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.OutcomeAmendedViewSpecMessages
 import views.html.pages.amends.outcomeAmended
 
 class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewSpecMessages {
 
-  val amendsActiveResultModelIP16 = AmendResultDisplayModel(
-    protectionType = ApplicationType.IP2016,
-    notificationId = 12,
-    protectedAmount = "£1,350,000.45",
-    details = Some(
-      PrintDisplayModel(
-        firstName = "Jim",
-        surname = "Davis",
-        nino = "nino",
-        protectionType = "IP2016",
-        status = "dormant",
-        psaCheckReference = "psaRef",
-        protectionReference = Messages("pla.protection.protectionReference"),
-        protectedAmount = Some("1,350,000.45"),
-        certificateDate = Some("14/07/2017"),
-        notificationId = 12
+  private val outcomeAmendedView = fakeApplication().injector.instanceOf[outcomeAmended]
+
+  private val protectedAmountIP14Str = "£1,350,000.11"
+  private val protectedAmountIP16Str = "£1,350,000.45"
+
+  private val iP14Documents = (1 to 7).map { notificationId =>
+    val amendsActiveResultModelIP14 = AmendResultDisplayModel(
+      protectionType = ApplicationType.IP2014,
+      notificationId = 15,
+      protectedAmount = protectedAmountIP14Str,
+      details = Some(
+        PrintDisplayModel(
+          firstName = "Jim",
+          surname = "Davis",
+          nino = "nino",
+          protectionType = "IP2014",
+          status = "dormant",
+          psaCheckReference = "psaRef",
+          protectionReference = "IP14XXXXXX",
+          protectedAmount = Some(protectedAmountIP14Str),
+          certificateDate = Some("14/07/2015"),
+          notificationId = 15
+        )
       )
     )
-  )
+    val printDisplayModel = amendsActiveResultModelIP14.details.get.copy(notificationId = notificationId)
+    val amendsActiveResultModel =
+      amendsActiveResultModelIP14.copy(notificationId = notificationId, details = Some(printDisplayModel))
 
-  val amendsActiveResultModelIP14 = AmendResultDisplayModel(
-    protectionType = ApplicationType.IP2014,
-    notificationId = 5,
-    protectedAmount = "£1,350,000.11",
-    details = Some(
-      PrintDisplayModel(
-        firstName = "Jim",
-        surname = "Davis",
-        nino = "nino",
-        protectionType = "IP2014",
-        status = "dormant",
-        psaCheckReference = "psaRef",
-        protectionReference = Messages("pla.protection.protectionReference"),
-        protectedAmount = Some("1,350,000.11"),
-        certificateDate = Some("14/07/2017"),
-        notificationId = 5
-      )
-    )
-  )
-
-  lazy val outcomeAmendedView = fakeApplication().injector.instanceOf[outcomeAmended]
-  lazy val viewIP16           = outcomeAmendedView(amendsActiveResultModelIP16)
-  lazy val docIP16            = Jsoup.parse(viewIP16.body)
-
-  lazy val viewIP14 = outcomeAmendedView(amendsActiveResultModelIP14)
-  lazy val docIP14  = Jsoup.parse(viewIP14.body)
-
-  "the OutcomeAmendView" should {
-    "have the correct title" in {
-      docIP16.title() shouldBe plaAmendTitle
-    }
-
-    "have the right success message displayed for IP16" in {
-      docIP16.select("h1.govuk-panel__title").text() shouldBe plaAmendIP16Heading
-      docIP16.select("#amendedAllowanceText").text() shouldBe plaAmendAllowanceSubHeading
-      docIP16.select("strong#protectedAmount").text() shouldBe "£1,350,000.45"
-    }
-
-    "have the right inset Text for IP16" in {
-      docIP16
-        .select("div.govuk-inset-text")
-        .text() shouldBe "Your individual protection 2016 is currently not active because you already hold fixed protection 2016."
-    }
-
-    "have a properly structured 'Your protection details' section" when {
-      "looking at the header" in {
-        docIP16.select("h2.govuk-heading-m").eq(0).text() shouldBe plaAmendProtectionDetails
-      }
-
-      "contain a table which" should {
-
-        lazy val tableHeading = docIP16.select("tr th")
-
-        "contain the following title message information" in {
-          tableHeading.get(0).text shouldBe plaAmendName
-          tableHeading.get(1).text shouldBe plaAmendNino
-          tableHeading.get(2).text shouldBe plaAmendProtectionType
-          tableHeading.get(3).text shouldBe plaAmendApplicationDate
-          tableHeading.get(4).text shouldBe plaStatus
-        }
-
-        lazy val tableData = docIP16.select("tr td")
-
-        "contain the following id information" in {
-          tableData.get(0).attr("id") shouldBe "yourFullName"
-          tableData.get(1).attr("id") shouldBe "yourNino"
-          tableData.get(2).attr("id") shouldBe "protectionType"
-          tableData.get(3).attr("id") shouldBe "applicationDate"
-          tableData.get(4).attr("id") shouldBe "dormantStatus"
-        }
-
-        "contain the following table information" in {
-          tableData.get(0).text shouldBe "Jim Davis"
-          tableData.get(1).text shouldBe "nino"
-          tableData.get(2).text shouldBe "Individual protection 2016"
-          tableData.get(3).text shouldBe "14/07/2017"
-          tableData.get(4).text shouldBe "Dormant"
-        }
-      }
-
-      "have the right print message" in {
-        docIP16.select("a#printPage").text() shouldBe plaAmendPrintNew
-        docIP16.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
-      }
-    }
-
-    "have a properly structured 'Changing your protection details' section" when {
-      "looking at the header" in {
-        docIP16.select("h2.govuk-heading-m").eq(1).text() shouldBe plaAmendIPChangeDetails
-      }
-
-      "looking at the changeDetails paragraph" in {
-
-        docIP16
-          .select("#main-content > div > div > p:nth-child(8)")
-          .text() shouldBe "If you lose your fixed protection 2016, your individual protection 2016 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference."
-      }
-
-      "looking at the changeDetails contact paragraph" in {
-
-        docIP16
-          .select("#main-content > div > div > p:nth-child(9)")
-          .text() shouldBe "You must contact HMRC Pension Scheme services within 60 days if:"
-      }
-
-      "should contain a list of other contact options which" should {
-
-        lazy val listOption = docIP16.select("#main-content > div > div > ul")
-
-        s"include the list option fixedProtection2016" in {
-          listOption.select("li:nth-child(1)").text shouldBe "you lose your fixed protection 2016"
-        }
-
-        s"include the list option pensionIsShared" in {
-          listOption.select("li:nth-child(2)").text shouldBe "your pension is shared in a divorce or civil partnership"
-        }
-      }
-
-      "looking at the whatToDo paragraph" in {
-
-        docIP16
-          .select("#main-content > div > div > p:nth-child(11)")
-          .text() shouldBe "What to do if you lose your protection (opens in new tab)"
-      }
-
-      "looking at the explanatory paragraph" in {
-
-        docIP16.select("#main-content > div > div > p:nth-child(12)").text() shouldBe plaResultSuccessViewDetails
-      }
-
-      "using the links" in {
-        docIP16
-          .select("#main-content > div > div > p:nth-child(12) > a")
-          .text() shouldBe plaResultSuccessViewDetailsLinkText
-        docIP16
-          .select("#main-content > div > div > p:nth-child(12) > a")
-          .attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
-      }
-    }
-
-    "have a properly structured 'Give us feedback' section" when {
-      "looking at the header" in {
-        docIP16.select("h2.govuk-heading-m").eq(2).text() shouldBe plaResultSuccessGiveFeedback
-      }
-      "looking at the explanatory paragraph" in {
-        docIP16.select("#main-content > div > div > p:nth-child(14)").text() shouldBe plaResultSuccessExitSurvey
-      }
-      "using the feedback link" in {
-        docIP16.select("#submit-survey-button").text() shouldBe plaResultSuccessExitSurveyLinkText
-      }
-    }
-
+    notificationId -> Jsoup.parse(outcomeAmendedView(amendsActiveResultModel).body)
   }
 
-  "the OutcomeAmendView for IP14" should {
-    "have the correct title for IP14" in {
-      docIP14.title() shouldBe plaAmendTitle
-    }
+  private val iP16Documents = (8 to 14).map { notificationId =>
+    val amendsActiveResultModelIP16 = AmendResultDisplayModel(
+      protectionType = ApplicationType.IP2016,
+      notificationId = 15,
+      protectedAmount = protectedAmountIP16Str,
+      details = Some(
+        PrintDisplayModel(
+          firstName = "Jim",
+          surname = "Davis",
+          nino = "nino",
+          protectionType = "IP2016",
+          status = "dormant",
+          psaCheckReference = "psaRef",
+          protectionReference = "IP16XXXXXX",
+          protectedAmount = Some(protectedAmountIP16Str),
+          certificateDate = Some("14/07/2017"),
+          notificationId = 15
+        )
+      )
+    )
+    val printDisplayModel = amendsActiveResultModelIP16.details.get.copy(notificationId = notificationId)
+    val amendsActiveResultModel =
+      amendsActiveResultModelIP16.copy(notificationId = notificationId, details = Some(printDisplayModel))
 
-    "have the right success message displayed for IP14 for IP14" in {
-      docIP14.select("h1.govuk-panel__title").text() shouldBe plaAmendIP14Heading
-      docIP14.select("#amendedAllowanceText").text() shouldBe plaAmendAllowanceSubHeading
-      docIP14.select("strong#protectedAmount").text() shouldBe "£1,350,000.11"
-    }
+    notificationId -> Jsoup.parse(outcomeAmendedView(amendsActiveResultModel).body)
+  }
 
-    "have a properly structured 'Your protection details' section for IP14" when {
-      "looking at the header for IP14" in {
-        docIP14.select("h2.govuk-heading-m").eq(0).text() shouldBe plaAmendProtectionDetails
+  private val allDocuments = (iP14Documents ++ iP16Documents).toMap
+
+  private def getDocumentFor(notificationId: Int): Document = allDocuments(notificationId)
+
+  "outcomeAmended" when {
+
+    "provided with AmendResultDisplayModel containing notificationId: 1" should {
+
+      val doc = getDocumentFor(1)
+
+      "contain title" in {
+        doc.title() shouldBe title
       }
 
-      "contain a table which for IP14" should {
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+      }
 
-        lazy val tableHeading = docIP14.select("tr th")
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
 
-        "contain the following title message information for IP14" in {
-          tableHeading.get(0).text shouldBe plaAmendName
-          tableHeading.get(1).text shouldBe plaAmendNino
-          tableHeading.get(2).text shouldBe plaAmendProtectionType
-          tableHeading.get(3).text shouldBe plaAmendProtectionRef
-          tableHeading.get(4).text shouldBe plaAmendPsaRef
-          tableHeading.get(5).text shouldBe plaAmendApplicationDate
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
         }
 
-        lazy val tableData = docIP14.select("tr td")
-
-        "contain the following id information for IP14" in {
-          tableData.get(0).attr("id") shouldBe "yourFullName"
-          tableData.get(1).attr("id") shouldBe "yourNino"
-          tableData.get(2).attr("id") shouldBe "protectionType"
-          tableData.get(3).attr("id") shouldBe "protectionRefNum"
-          tableData.get(4).attr("id") shouldBe "psaCheckRef"
-          tableData.get(5).attr("id") shouldBe "applicationDate"
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
         }
 
-        "contain the following table information for IP14" in {
-          tableData.get(0).text shouldBe "Jim Davis"
-          tableData.get(1).text shouldBe "nino"
-          tableData.get(2).text shouldBe "Individual protection 2014"
-          tableData.get(3).text shouldBe Messages("pla.protection.protectionReference")
-          tableData.get(4).text shouldBe "psaRef"
-          tableData.get(5).text shouldBe "14/07/2017"
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contains row for Protection Reference Number" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionRef
+          tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
+        }
+
+        "contains row for PSA Check Reference" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendPsaRef
+          tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
+          tableData.get(rowIndex).text shouldBe "psaRef"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2015"
         }
       }
 
-      "have the right print message for IP14" in {
-        docIP14.select("a#printPage").text() shouldBe plaAmendPrintNew
-        docIP14.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section" in {
+        doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        doc.select("p.govuk-body").get(2).text() shouldBe changingProtectionDetailsText
+        val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+        doc.select("p.govuk-body").get(2).select("a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
       }
     }
 
-    "have a properly structured 'Changing your protection details' section for IP14" when {
-      "looking at the header for IP14" in {
-        docIP14.select("h2.govuk-heading-m").eq(1).text() shouldBe plaAmendIPChangeDetails
+    "provided with AmendResultDisplayModel containing notificationId: 2" should {
+
+      val doc = getDocumentFor(2)
+
+      "contain title" in {
+        doc.title() shouldBe title
       }
 
-      "looking at the suggestion paragraph for IP14" in {
-
-        docIP14.select("#main-content > div > div > p:nth-child(7)").text() shouldBe plaAmendIPPensionSharing
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
       }
 
-      "looking at the explanatory paragraph for IP14" in {
-
-        docIP14.select("#main-content > div > div > p:nth-child(8)").text() shouldBe plaResultSuccessViewDetails
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() shouldBe NotificationId_2.insetText
       }
 
-      "using the links for IP14" in {
-        docIP14
-          .select("#main-content > div > div > p:nth-child(8) > a")
-          .text() shouldBe plaResultSuccessViewDetailsLinkText
-        docIP14
-          .select("#main-content > div > div > p:nth-child(8) > a")
-          .attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2015"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableStatus
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe "Dormant"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section".which {
+
+        "contains header" in {
+          doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        }
+
+        "contains first paragraph" in {
+          doc.select("p.govuk-body").get(2).text() shouldBe NotificationId_2.changingProtectionDetailsText
+        }
+
+        "contains paragraph with bullet points" in {
+          doc.select("p.govuk-body").get(3).text() shouldBe changingProtectionDetailsContactHmrcText
+          doc.select("p.govuk-body").get(3).select("a").text() shouldBe changingProtectionDetailsContactHmrcLinkText
+          val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+          doc.select("p.govuk-body").get(3).select("a").attr("href") shouldBe expectedLink
+
+          val expectedBulletPointText_1 = NotificationId_2.changingProtectionDetailsBulletPointText_1
+          val expectedBulletPointText_2 = NotificationId_2.changingProtectionDetailsBulletPointText_2
+          doc.select("ul.govuk-list > li").get(0).text() shouldBe expectedBulletPointText_1
+          doc.select("ul.govuk-list > li").get(1).text() shouldBe expectedBulletPointText_2
+        }
+
+        "contains 'What to do if you lose your protection' link" in {
+          doc.select("p.govuk-body").get(4).select("a").text() shouldBe whatToDoIfYouLoseProtection
+          val expectedLink = "https://www.gov.uk/guidance/losing-your-lifetime-allowance-protection"
+          doc.select("p.govuk-body").get(4).select("a").attr("href") shouldBe expectedLink
+        }
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
       }
     }
 
-    "have a properly structured 'Give us feedback' section for IP14" when {
-      "looking at the header for IP14" in {
-        docIP14.select("h2.govuk-heading-m").eq(2).text() shouldBe plaResultSuccessGiveFeedback
+    "provided with AmendResultDisplayModel containing notificationId: 3" should {
+
+      val doc = getDocumentFor(3)
+
+      "contain title" in {
+        doc.title() shouldBe title
       }
-      "looking at the explanatory paragraph for IP14" in {
-        docIP14.select("#main-content > div > div > p:nth-child(10)").text() shouldBe plaResultSuccessExitSurvey
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
       }
-      "using the feedback link for IP14" in {
-        docIP14.select("#submit-survey-button").text() shouldBe plaResultSuccessExitSurveyLinkText
+
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() shouldBe NotificationId_3.insetText
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2015"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableStatus
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe "Dormant"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section".which {
+
+        "contains header" in {
+          doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        }
+
+        "contains first paragraph" in {
+          doc.select("p.govuk-body").get(2).text() shouldBe NotificationId_3.changingProtectionDetailsText
+        }
+
+        "contains paragraph with bullet points" in {
+          doc.select("p.govuk-body").get(3).text() shouldBe changingProtectionDetailsContactHmrcText
+          doc.select("p.govuk-body").get(3).select("a").text() shouldBe changingProtectionDetailsContactHmrcLinkText
+          val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+          doc.select("p.govuk-body").get(3).select("a").attr("href") shouldBe expectedLink
+
+          val expectedBulletPointText_1 = NotificationId_3.changingProtectionDetailsBulletPointText_1
+          val expectedBulletPointText_2 = NotificationId_3.changingProtectionDetailsBulletPointText_2
+          doc.select("ul.govuk-list > li").get(0).text() shouldBe expectedBulletPointText_1
+          doc.select("ul.govuk-list > li").get(1).text() shouldBe expectedBulletPointText_2
+        }
+
+        "contains 'What to do if you lose your protection' link" in {
+          doc.select("p.govuk-body").get(4).select("a").text() shouldBe whatToDoIfYouLoseProtection
+          val expectedLink = "https://www.gov.uk/guidance/losing-your-lifetime-allowance-protection"
+          doc.select("p.govuk-body").get(4).select("a").attr("href") shouldBe expectedLink
+        }
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
       }
     }
 
+    "provided with AmendResultDisplayModel containing notificationId: 4" should {
+
+      val doc = getDocumentFor(4)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+      }
+
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() shouldBe NotificationId_4.insetText
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2015"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableStatus
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe "Dormant"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section".which {
+
+        "contains header" in {
+          doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        }
+
+        "contains first paragraph" in {
+          doc.select("p.govuk-body").get(2).text() shouldBe NotificationId_4.changingProtectionDetailsText
+        }
+
+        "contains paragraph with bullet points" in {
+          doc.select("p.govuk-body").get(3).text() shouldBe changingProtectionDetailsContactHmrcText
+          doc.select("p.govuk-body").get(3).select("a").text() shouldBe changingProtectionDetailsContactHmrcLinkText
+          val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+          doc.select("p.govuk-body").get(3).select("a").attr("href") shouldBe expectedLink
+
+          val expectedBulletPointText_1 = NotificationId_4.changingProtectionDetailsBulletPointText_1
+          val expectedBulletPointText_2 = NotificationId_4.changingProtectionDetailsBulletPointText_2
+          doc.select("ul.govuk-list > li").get(0).text() shouldBe expectedBulletPointText_1
+          doc.select("ul.govuk-list > li").get(1).text() shouldBe expectedBulletPointText_2
+        }
+
+        "contains 'What to do if you lose your protection' link" in {
+          doc.select("p.govuk-body").get(4).select("a").text() shouldBe whatToDoIfYouLoseProtection
+          val expectedLink = "https://www.gov.uk/guidance/losing-your-lifetime-allowance-protection"
+          doc.select("p.govuk-body").get(4).select("a").attr("href") shouldBe expectedLink
+        }
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
+
+    "provided with AmendResultDisplayModel containing notificationId: 5" should {
+
+      val doc = getDocumentFor(5)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contains row for Protection Reference Number" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionRef
+          tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
+        }
+
+        "contains row for PSA Check Reference" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendPsaRef
+          tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
+          tableData.get(rowIndex).text shouldBe "psaRef"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2015"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section" in {
+        doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        doc.select("p.govuk-body").get(2).text() shouldBe changingProtectionDetailsText
+        val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+        doc.select("p.govuk-body").get(2).select("a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
+
+    "provided with AmendResultDisplayModel containing notificationId: 6" should {
+
+      val doc = getDocumentFor(6)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+      }
+
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() shouldBe NotificationId_6.insetText
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2015"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableStatus
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe "Withdrawn"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section" in {
+        doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        doc.select("p.govuk-body").get(2).text() shouldBe changingProtectionDetailsText
+        val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+        doc.select("p.govuk-body").get(2).select("a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
+
+    "provided with AmendResultDisplayModel containing notificationId: 7" should {
+
+      val doc = getDocumentFor(7)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+      }
+
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() should include(NotificationId_7.insetText_1)
+        doc.select("div.govuk-inset-text > p").text() should include(NotificationId_7.insetText_2)
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contains row for Fixed Protection 2016 Reference Number" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendFixedProtectionRef
+          tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2015"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section".which {
+
+        "contains header" in {
+          doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        }
+
+        "contains first paragraph" in {
+          doc.select("p.govuk-body").get(2).text() shouldBe NotificationId_7.changingProtectionDetailsText
+        }
+
+        "contains paragraph with bullet points" in {
+          doc.select("p.govuk-body").get(3).text() shouldBe changingProtectionDetailsContactHmrcText
+          doc.select("p.govuk-body").get(3).select("a").text() shouldBe changingProtectionDetailsContactHmrcLinkText
+          val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+          doc.select("p.govuk-body").get(3).select("a").attr("href") shouldBe expectedLink
+
+          val expectedBulletPointText_1 = NotificationId_7.changingProtectionDetailsBulletPointText_1
+          val expectedBulletPointText_2 = NotificationId_7.changingProtectionDetailsBulletPointText_2
+          doc.select("ul.govuk-list > li").get(0).text() shouldBe expectedBulletPointText_1
+          doc.select("ul.govuk-list > li").get(1).text() shouldBe expectedBulletPointText_2
+        }
+
+        "contains 'What to do if you lose your protection' link" in {
+          doc.select("p.govuk-body").get(4).select("a").text() shouldBe whatToDoIfYouLoseProtection
+          val expectedLink = "https://www.gov.uk/guidance/losing-your-lifetime-allowance-protection"
+          doc.select("p.govuk-body").get(4).select("a").attr("href") shouldBe expectedLink
+        }
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
+
+    "provided with AmendResultDisplayModel containing notificationId: 8" should {
+
+      val doc = getDocumentFor(8)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contains row for Protection Reference Number" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionRef
+          tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+        }
+
+        "contains row for PSA Check Reference" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendPsaRef
+          tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
+          tableData.get(rowIndex).text shouldBe "psaRef"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section" in {
+        doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        doc.select("p.govuk-body").get(2).text() shouldBe changingProtectionDetailsText
+        val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+        doc.select("p.govuk-body").get(2).select("a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
+
+    "provided with AmendResultDisplayModel containing notificationId: 9" should {
+
+      val doc = getDocumentFor(9)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+      }
+
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() should include(NotificationId_9.insetText)
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableStatus
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe "Dormant"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section".which {
+
+        "contains header" in {
+          doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        }
+
+        "contains first paragraph" in {
+          doc.select("p.govuk-body").get(2).text() shouldBe NotificationId_9.changingProtectionDetailsText
+        }
+
+        "contains paragraph with bullet points" in {
+          doc.select("p.govuk-body").get(3).text() shouldBe changingProtectionDetailsContactHmrcText
+          doc.select("p.govuk-body").get(3).select("a").text() shouldBe changingProtectionDetailsContactHmrcLinkText
+          val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+          doc.select("p.govuk-body").get(3).select("a").attr("href") shouldBe expectedLink
+
+          val expectedBulletPointText_1 = NotificationId_9.changingProtectionDetailsBulletPointText_1
+          val expectedBulletPointText_2 = NotificationId_9.changingProtectionDetailsBulletPointText_2
+          doc.select("ul.govuk-list > li").get(0).text() shouldBe expectedBulletPointText_1
+          doc.select("ul.govuk-list > li").get(1).text() shouldBe expectedBulletPointText_2
+        }
+
+        "contains 'What to do if you lose your protection' link" in {
+          doc.select("p.govuk-body").get(4).select("a").text() shouldBe whatToDoIfYouLoseProtection
+          val expectedLink = "https://www.gov.uk/guidance/losing-your-lifetime-allowance-protection"
+          doc.select("p.govuk-body").get(4).select("a").attr("href") shouldBe expectedLink
+        }
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
+
+    "provided with AmendResultDisplayModel containing notificationId: 10" should {
+
+      val doc = getDocumentFor(10)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+      }
+
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() should include(NotificationId_10.insetText)
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableStatus
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe "Dormant"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section".which {
+
+        "contains header" in {
+          doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        }
+
+        "contains first paragraph" in {
+          doc.select("p.govuk-body").get(2).text() shouldBe NotificationId_10.changingProtectionDetailsText
+        }
+
+        "contains paragraph with bullet points" in {
+          doc.select("p.govuk-body").get(3).text() shouldBe changingProtectionDetailsContactHmrcText
+          doc.select("p.govuk-body").get(3).select("a").text() shouldBe changingProtectionDetailsContactHmrcLinkText
+          val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+          doc.select("p.govuk-body").get(3).select("a").attr("href") shouldBe expectedLink
+
+          val expectedBulletPointText_1 = NotificationId_10.changingProtectionDetailsBulletPointText_1
+          val expectedBulletPointText_2 = NotificationId_10.changingProtectionDetailsBulletPointText_2
+          doc.select("ul.govuk-list > li").get(0).text() shouldBe expectedBulletPointText_1
+          doc.select("ul.govuk-list > li").get(1).text() shouldBe expectedBulletPointText_2
+        }
+
+        "contains 'What to do if you lose your protection' link" in {
+          doc.select("p.govuk-body").get(4).select("a").text() shouldBe whatToDoIfYouLoseProtection
+          val expectedLink = "https://www.gov.uk/guidance/losing-your-lifetime-allowance-protection"
+          doc.select("p.govuk-body").get(4).select("a").attr("href") shouldBe expectedLink
+        }
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
+
+    "provided with AmendResultDisplayModel containing notificationId: 11" should {
+
+      val doc = getDocumentFor(11)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+      }
+
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() should include(NotificationId_11.insetText)
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableStatus
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe "Dormant"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section".which {
+
+        "contains header" in {
+          doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        }
+
+        "contains first paragraph" in {
+          doc.select("p.govuk-body").get(2).text() shouldBe NotificationId_11.changingProtectionDetailsText
+        }
+
+        "contains paragraph with bullet points" in {
+          doc.select("p.govuk-body").get(3).text() shouldBe changingProtectionDetailsContactHmrcText
+          doc.select("p.govuk-body").get(3).select("a").text() shouldBe changingProtectionDetailsContactHmrcLinkText
+          val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+          doc.select("p.govuk-body").get(3).select("a").attr("href") shouldBe expectedLink
+
+          val expectedBulletPointText_1 = NotificationId_11.changingProtectionDetailsBulletPointText_1
+          val expectedBulletPointText_2 = NotificationId_11.changingProtectionDetailsBulletPointText_2
+          doc.select("ul.govuk-list > li").get(0).text() shouldBe expectedBulletPointText_1
+          doc.select("ul.govuk-list > li").get(1).text() shouldBe expectedBulletPointText_2
+        }
+
+        "contains 'What to do if you lose your protection' link" in {
+          doc.select("p.govuk-body").get(4).select("a").text() shouldBe whatToDoIfYouLoseProtection
+          val expectedLink = "https://www.gov.uk/guidance/losing-your-lifetime-allowance-protection"
+          doc.select("p.govuk-body").get(4).select("a").attr("href") shouldBe expectedLink
+        }
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
+
+    "provided with AmendResultDisplayModel containing notificationId: 12" should {
+
+      val doc = getDocumentFor(12)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+      }
+
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() should include(NotificationId_12.insetText)
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableStatus
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe "Dormant"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section".which {
+
+        "contains header" in {
+          doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        }
+
+        "contains first paragraph" in {
+          doc.select("p.govuk-body").get(2).text() shouldBe NotificationId_12.changingProtectionDetailsText
+        }
+
+        "contains paragraph with bullet points" in {
+          doc.select("p.govuk-body").get(3).text() shouldBe changingProtectionDetailsContactHmrcText
+          doc.select("p.govuk-body").get(3).select("a").text() shouldBe changingProtectionDetailsContactHmrcLinkText
+          val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+          doc.select("p.govuk-body").get(3).select("a").attr("href") shouldBe expectedLink
+
+          val expectedBulletPointText_1 = NotificationId_12.changingProtectionDetailsBulletPointText_1
+          val expectedBulletPointText_2 = NotificationId_12.changingProtectionDetailsBulletPointText_2
+          doc.select("ul.govuk-list > li").get(0).text() shouldBe expectedBulletPointText_1
+          doc.select("ul.govuk-list > li").get(1).text() shouldBe expectedBulletPointText_2
+        }
+
+        "contains 'What to do if you lose your protection' link" in {
+          doc.select("p.govuk-body").get(4).select("a").text() shouldBe whatToDoIfYouLoseProtection
+          val expectedLink = "https://www.gov.uk/guidance/losing-your-lifetime-allowance-protection"
+          doc.select("p.govuk-body").get(4).select("a").attr("href") shouldBe expectedLink
+        }
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
+
+    "provided with AmendResultDisplayModel containing notificationId: 13" should {
+
+      val doc = getDocumentFor(13)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+      }
+
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() should include(NotificationId_13.insetText)
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableStatus
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe "Withdrawn"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section" in {
+        doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        doc.select("p.govuk-body").get(2).text() shouldBe changingProtectionDetailsText
+        val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+        doc.select("p.govuk-body").get(2).select("a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
+
+    "provided with AmendResultDisplayModel containing notificationId: 14" should {
+
+      val doc = getDocumentFor(14)
+
+      "contain title" in {
+        doc.title() shouldBe title
+      }
+
+      "contain (green) govuk panel" in {
+        doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
+        doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+      }
+
+      "contain inset text" in {
+        doc.select("div.govuk-inset-text").text() should include(NotificationId_14.insetText_1)
+        doc.select("div.govuk-inset-text > p").text() should include(NotificationId_14.insetText_2)
+      }
+
+      "contain h2 element" in {
+        doc.select("h2.govuk-heading-m").get(0).text() shouldBe yourProtectionDetails
+      }
+
+      "contain a table".which {
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contains row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe tableAmendName
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contains row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe tableAmendNino
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contains row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contains row for Fixed Protection 2016 Reference Number" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe tableAmendFixedProtectionRef
+          tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+        }
+
+        "contains row for Application Date" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+      }
+
+      "contain print info section" in {
+        doc.select("p.govuk-body").get(0).text() shouldBe printGuidanceParagraph
+        doc.select("a#printPage").text() shouldBe reviewAndPrintProtectionDetails
+        doc.select("a#printPage").attr("href") shouldBe controllers.routes.PrintController.printView.url
+      }
+
+      "contain 'Changing your protection details' section".which {
+
+        "contains header" in {
+          doc.select("h2.govuk-heading-m").get(1).text() shouldBe changingProtectionDetailsHeadingText
+        }
+
+        "contains first paragraph" in {
+          doc.select("p.govuk-body").get(2).text() shouldBe NotificationId_14.changingProtectionDetailsText
+        }
+
+        "contains paragraph with bullet points" in {
+          doc.select("p.govuk-body").get(3).text() shouldBe changingProtectionDetailsContactHmrcText
+          doc.select("p.govuk-body").get(3).select("a").text() shouldBe changingProtectionDetailsContactHmrcLinkText
+          val expectedLink = "https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries"
+          doc.select("p.govuk-body").get(3).select("a").attr("href") shouldBe expectedLink
+
+          val expectedBulletPointText_1 = NotificationId_14.changingProtectionDetailsBulletPointText_1
+          val expectedBulletPointText_2 = NotificationId_14.changingProtectionDetailsBulletPointText_2
+          doc.select("ul.govuk-list > li").get(0).text() shouldBe expectedBulletPointText_1
+          doc.select("ul.govuk-list > li").get(1).text() shouldBe expectedBulletPointText_2
+        }
+
+        "contains 'What to do if you lose your protection' link" in {
+          doc.select("p.govuk-body").get(4).select("a").text() shouldBe whatToDoIfYouLoseProtection
+          val expectedLink = "https://www.gov.uk/guidance/losing-your-lifetime-allowance-protection"
+          doc.select("p.govuk-body").get(4).select("a").attr("href") shouldBe expectedLink
+        }
+      }
+
+      "contain 'view or change details of your protection' paragraph" in {
+        doc.select("#view-or-change-protection-details").text() shouldBe viewOrChangeProtectionDetailsText
+        doc.select("#view-or-change-protection-details > a").text() shouldBe viewOrChangeProtectionDetailsLinkText
+        val expectedLink = controllers.routes.ReadProtectionsController.currentProtections.url
+        doc.select("#view-or-change-protection-details > a").attr("href") shouldBe expectedLink
+      }
+
+      "contain 'Give us feedback' section" in {
+        doc.select("h2.govuk-heading-m").get(2).text() shouldBe giveUsFeedback
+        doc.select("#survey-info").text() shouldBe exitSurveyText
+        doc.select("#submit-survey-button").text() shouldBe exitSurveyLinkText
+        doc.select("#submit-survey-button").attr("href") shouldBe controllers.routes.AccountController.signOut.url
+      }
+    }
   }
 
 }

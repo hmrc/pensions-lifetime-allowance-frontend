@@ -64,13 +64,13 @@
 		@if(ViewConstants.dormantNotificationIds.contains(details.notificationId)) {
 		<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.status")</th>
-				<td class="govuk-table__cell" id="dormantStatus">@messages("pla.printAmend.dormant")</td>
+				<td class="govuk-table__cell" id="status">@messages("pla.printAmend.dormant")</td>
 		</tr>
 		}
 		@if(ViewConstants.withdrawnNotificationIds.contains(details.notificationId)) {
 		<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.status")</th>
-				<td class="govuk-table__cell" id="withdrawnStatus">@messages("pla.printAmend.withdrawn")</td>
+				<td class="govuk-table__cell" id="status">@messages("pla.printAmend.withdrawn")</td>
 		</tr>
 		}
 		</tbody>
