@@ -71,7 +71,7 @@ class LookupController @Inject() (
       sessionCacheService
         .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
         .flatMap {
-          case Some(req@PSALookupRequest(_, Some(_))) =>
+          case Some(req @ PSALookupRequest(_, Some(_))) =>
             Future.successful(Ok(psa_lookup_not_found_results(req, buildTimestamp)))
           case _ =>
             Future.successful(
@@ -80,6 +80,7 @@ class LookupController @Inject() (
         }(executionContext)
     }
   }
+
   def displayLookupResults: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     if (appConfig.psalookupjourneyShutterEnabled) {
       Future.successful(Ok(withdrawnPSALookupJourney()))
