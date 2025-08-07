@@ -32,12 +32,18 @@ class IdentityVerificationConnectorSpec extends IntegrationBaseSpec with MockedA
   implicit val hc: HeaderCarrier = HeaderCarrier()
 
   lazy val missingJourneyId = "1234aa56-7a8a-901a-23aa-aa4a56a78aa9"
-  lazy val identityVerificationConnector: IdentityVerificationConnector = app.injector.instanceOf[IdentityVerificationConnector]
+
+  lazy val identityVerificationConnector: IdentityVerificationConnector =
+    app.injector.instanceOf[IdentityVerificationConnector]
 
   "IdentityVerificationConnector" should {
     "throw an UpstreamErrorResponse with a statusCode of NOT_FOUND" when {
       "IV returns a 404" in {
-        stubGet(s"/mdtp/journey/journeyId/$missingJourneyId", NOT_FOUND, s"[WiremockServer]: No journey found for the supplied journeyId = $missingJourneyId")
+        stubGet(
+          s"/mdtp/journey/journeyId/$missingJourneyId",
+          NOT_FOUND,
+          s"[WiremockServer]: No journey found for the supplied journeyId = $missingJourneyId"
+        )
 
         val thrown = intercept[UpstreamErrorResponse] {
           await(identityVerificationConnector.identityVerificationResponse(missingJourneyId))

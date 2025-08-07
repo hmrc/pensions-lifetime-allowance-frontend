@@ -28,6 +28,7 @@ import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.ActionWithSessionId
+import views.html._
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,7 +38,8 @@ class LookupSchemeAdministratorReferenceController @Inject() (
     val plaConnector: PLAConnector,
     val actionWithSessionId: ActionWithSessionId,
     mcc: MessagesControllerComponents,
-    psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form
+    psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form,
+    withdrawnPSALookupJourney: pages.lookup.withdrawnPSALookupJourney
 )(
     implicit val context: PlaContext,
     implicit val appConfig: FrontendAppConfig,
@@ -56,13 +58,17 @@ class LookupSchemeAdministratorReferenceController @Inject() (
   val lookupResultID  = "psa-lookup-result"
 
   def displaySchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService
-      .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
-      .flatMap {
-        case Some(PSALookupRequest(psaRef, _)) =>
-          Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
-        case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
-      }(executionContext)
+    if (appConfig.psalookupjourneyShutterEnabled) {
+      Future.successful(Ok(withdrawnPSALookupJourney()))
+    } else {
+      sessionCacheService
+        .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+        .flatMap {
+          case Some(PSALookupRequest(psaRef, _)) =>
+            Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
+          case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
+        }(executionContext)
+    }
   }
 
   def submitSchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>

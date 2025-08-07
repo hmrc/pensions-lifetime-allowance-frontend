@@ -54,7 +54,7 @@ class LookupSchemeAdministratorReferenceControllerSpec
   val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
   val mockHttp: HttpClientV2                       = mock[HttpClientV2]
 
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext       = mock[PlaContext]
   implicit val mockMessages: Messages           = mock[Messages]
   implicit val system: ActorSystem              = ActorSystem()
@@ -75,6 +75,9 @@ class LookupSchemeAdministratorReferenceControllerSpec
   implicit val mockPsa_lookup_scheme_admin_ref_form: psa_lookup_scheme_admin_ref_form =
     app.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
 
+  implicit val mockwithdrawnPSALookupJourney: withdrawnPSALookupJourney =
+    app.injector.instanceOf[withdrawnPSALookupJourney]
+
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   class Setup {
@@ -84,7 +87,8 @@ class LookupSchemeAdministratorReferenceControllerSpec
       mockPlaConnector,
       mockActionWithSessionId,
       mockMCC,
-      mockPsa_lookup_scheme_admin_ref_form
+      mockPsa_lookup_scheme_admin_ref_form,
+      mockwithdrawnPSALookupJourney
     )
 
   }
@@ -112,15 +116,29 @@ class LookupSchemeAdministratorReferenceControllerSpec
 
   "LookupSchemeAdministratorReferenceController" should {
     "return 200 with correct message on psaRef form" in new Setup {
+      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
       cacheFetchCondition[PSALookupRequest](None)
 
       val request = FakeRequest().withSession(sessionId)
       val result  = controller.displaySchemeAdministratorReferenceForm.apply(request)
 
       status(result) shouldBe OK
+      contentAsString(result) should include("Enter the Scheme Administrator Reference")
+    }
+
+    "return 200 with correct message on psaRef form when shutter journey is enabled" in new Setup {
+      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(true)
+      cacheFetchCondition[PSALookupRequest](None)
+
+      val request = FakeRequest().withSession(sessionId)
+      val result  = controller.displaySchemeAdministratorReferenceForm.apply(request)
+
+      status(result) shouldBe OK
+      contentAsString(result) should include("Sorry, the service is unavailable")
     }
 
     "submit psaRef form with valid data and redirect to pnn form" in new Setup {
+      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
       val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPSARefForm: _*).withMethod("POST")
 
       cacheSaveCondition[PSALookupRequest](mockCacheMap)
@@ -134,6 +152,7 @@ class LookupSchemeAdministratorReferenceControllerSpec
     }
 
     "display errors when invalid data entered for psaRef form" in new Setup {
+      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
       val request =
         FakeRequest().withSession(sessionId).withFormUrlEncodedBody(invalidPSARefForm: _*).withMethod("POST")
 

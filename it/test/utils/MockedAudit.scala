@@ -18,14 +18,14 @@ package utils
 
 import play.api.http.Status.NO_CONTENT
 
-
 trait MockedAudit {
 
-  self:IntegrationBaseSpec =>
+  self: IntegrationBaseSpec =>
 
   override def beforeEach(): Unit = {
     resetWiremock()
-    stubPost("/write/audit/merged" , NO_CONTENT , "" )
-    stubPost("/write/audit" , NO_CONTENT , "" )
+    stubPost("/write/audit/merged", NO_CONTENT, "")
+    stubPost("/write/audit", NO_CONTENT, "")
   }
+
 }

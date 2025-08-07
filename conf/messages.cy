@@ -719,6 +719,13 @@ resultCode.43.href.text =   Os yw hyn yn digwydd, cysylltwch â
 
 resultCode.44.heading   =   Rydych wedi ychwanegu diogelwch unigol 2016
 
+## PSA Lookup Withdraw
+
+psa.lookup.withdraw.title = Mae’n ddrwg gennym, nid yw’r gwasanaeth ar gael
+psa.lookup.withdraw.pageHeading = Mae’n ddrwg gennym, nid yw’r gwasanaeth ar gael
+psa.lookup.withdraw.paraOne = Mae’r gwasanaeth hwn wedi cau.
+psa.lookup.withdrawLinkText = Gwiriwch  y diogelwch a’r diogelwch uwch ar gyfer aelod o’ch cynllun pensiwn
+
 ## PSA Lookup form
 psa.lookup.form.scheme-admin-ref-form.title            = Nodwch Gyfeirnod Gweinyddwr y Cynllun
 psa.lookup.form.protection-notification-no-form.title  = Nodwch y Rhif Hysbysu Diogelwch
