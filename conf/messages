@@ -550,7 +550,6 @@ amendResultCode.32.href.text = If this happens, you must tell
 amendResultCode.33.heading   = You''ve amended individual protection 2014
 
 amendResultCode.34.heading   = You''ve amended individual protection 2014
-amendResultCode.4.heading    = You''ve amended individual protection 2014
 
 amendResultCode.35.heading   = You''re no longer entitled to individual protection 2016
 amendResultCode.35.1         = This is because your total pension savings are below £1,000,001.
@@ -589,7 +588,6 @@ amendResultCode.43.1         = As you already have fixed protection 2016 in plac
 amendResultCode.43.href.text = If this happens, you must tell
 
 amendResultCode.44.heading   = You''ve amended individual protection 2016
-amendResultCode.12.heading   = You''ve amended individual protection 2016
 
 
 #amendsResultPage

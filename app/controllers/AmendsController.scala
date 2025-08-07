@@ -182,7 +182,7 @@ class AmendsController @Inject() (
         val id = model.protection.notificationId.getOrElse {
           throw Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
         }
-        if (Constants.amendmentCodesList.contains(id) && appConfig.hipMigrationEnabled) {
+        if (Constants.amendmentCodesList.contains(id)) {
           sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
           val displayModel = displayConstructors.createAmendResponseDisplayModel(model, personalDetailsModel, nino)
           Ok(outcomeAmended(displayModel))

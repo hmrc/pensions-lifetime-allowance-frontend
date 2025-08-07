@@ -94,6 +94,12 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
 
   private val testPersonalDetails = PersonalDetailsModel(Person("McTestFace", "Testy"))
 
+  private val testProtectionModel = ProtectionModel(
+    psaCheckReference = Some("tstPSACeckRef"),
+    protectionID = Some(1111111),
+    notificationId = Some(15)
+  )
+
   private val testPrintDisplayModel = PrintDisplayModel(
     "Testy",
     "Mctestface",
@@ -107,102 +113,64 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     8
   )
 
-  "PrintController on printView" should {
+  "PrintController on printView" when {
 
-    "return Ok with resultPrintViewAmendment view" when
-      Constants.amendmentCodesList.foreach { notificationId =>
-        s"ProtectionModel stored in cache contains notificationId: $notificationId and HIP migration is enabled" in {
-          val testProtectionModel = ProtectionModel(
-            psaCheckReference = Some("tstPSACeckRef"),
-            protectionID = Some(1111111),
-            notificationId = Some(notificationId)
-          )
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
-
-          when(citizenDetailsConnector.getPersonDetails(any())(any()))
-            .thenReturn(Future.successful(Some(testPersonalDetails)))
-          when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
-            .thenReturn(Future.successful(Some(testProtectionModel)))
-          when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
-            .thenReturn(testPrintDisplayModel)
-
-          when(appConfig.hipMigrationEnabled).thenReturn(true)
-
-          val result = printController.printView(fakeRequest)
-
-          status(result) shouldBe 200
-          verify(resultPrintViewAmendment).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
-        }
-      }
-
-    "return Ok with resultPrintView view" when {
-
-      "HIP migration is enabled" when
-        Seq(15, 16).foreach { notificationId =>
-          s"Valid data is provided with notificationId: $notificationId " in {
-            val testProtectionModel = ProtectionModel(
-              psaCheckReference = Some("tstPSACeckRef"),
-              protectionID = Some(1111111),
-              notificationId = Some(notificationId)
-            )
-            mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
-
-            when(citizenDetailsConnector.getPersonDetails(any())(any()))
-              .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
-              .thenReturn(Future.successful(Some(testProtectionModel)))
-            when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
-              .thenReturn(testPrintDisplayModel)
-
-            when(appConfig.hipMigrationEnabled).thenReturn(true)
-
-            val result = printController.printView(fakeRequest)
-
-            status(result) shouldBe 200
-            verify(resultPrintView).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
-          }
-        }
-
-      "HIP migration is disabled" when
-        Constants.amendmentCodesList.foreach { notificationId =>
-          s"Valid data is provided with notificationId: $notificationId " in {
-            val testProtectionModel = ProtectionModel(
-              psaCheckReference = Some("tstPSACeckRef"),
-              protectionID = Some(1111111),
-              notificationId = Some(notificationId)
-            )
-            mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
-
-            when(citizenDetailsConnector.getPersonDetails(any())(any()))
-              .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
-              .thenReturn(Future.successful(Some(testProtectionModel)))
-            when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
-              .thenReturn(testPrintDisplayModel)
-
-            when(appConfig.hipMigrationEnabled).thenReturn(false)
-
-            val result = printController.printView(fakeRequest)
-            status(result) shouldBe 200
-            verify(resultPrintView).apply(ArgumentMatchers.eq(testPrintDisplayModel))(any(), any())
-          }
-        }
-
-    }
-
-    "return Redirect to ReadProtectionsController.currentProtections" when {
-      "there is no data in cache" in {
+    "there is no data in cache" should {
+      "return Redirect to ReadProtectionsController.currentProtections" in {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
         when(citizenDetailsConnector.getPersonDetails(any())(any()))
           .thenReturn(Future(Some(testPersonalDetails)))
         when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
           .thenReturn(Future(None))
-        when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
-          .thenReturn(testPrintDisplayModel)
 
         val result = printController.printView(fakeRequest)
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.url)
+      }
+    }
+
+    Constants.amendmentCodesList.foreach { notificationId =>
+      s"ProtectionModel stored in cache contains notificationId: $notificationId" should {
+        "return Ok with resultPrintViewAmendment view" in {
+          val protectionModel   = testProtectionModel.copy(notificationId = Some(notificationId))
+          val printDisplayModel = testPrintDisplayModel.copy(notificationId = notificationId)
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+
+          when(citizenDetailsConnector.getPersonDetails(any())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
+            .thenReturn(Future.successful(Some(protectionModel)))
+          when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
+            .thenReturn(printDisplayModel)
+
+          val result = printController.printView(fakeRequest)
+
+          status(result) shouldBe 200
+          verify(resultPrintViewAmendment).apply(ArgumentMatchers.eq(printDisplayModel))(any(), any())
+        }
+      }
+    }
+
+    Seq(15, 16).foreach { notificationId =>
+      s"Valid data is provided with notificationId: $notificationId" should {
+        "return Ok with resultPrintView view" in {
+          val protectionModel   = testProtectionModel.copy(notificationId = Some(notificationId))
+          val printDisplayModel = testPrintDisplayModel.copy(notificationId = notificationId)
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+
+          when(citizenDetailsConnector.getPersonDetails(any())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
+            .thenReturn(Future.successful(Some(protectionModel)))
+          when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
+            .thenReturn(printDisplayModel)
+
+          val result = printController.printView(fakeRequest)
+
+          status(result) shouldBe 200
+          verify(resultPrintView).apply(ArgumentMatchers.eq(printDisplayModel))(any(), any())
+        }
       }
     }
   }

@@ -538,7 +538,6 @@ amendResultCode.32.href.text        = Os yw hyn yn digwydd, mae''n rhaid i chi r
 amendResultCode.33.heading          = Rydych wedi diwygio diogelwch unigol 2014
 
 amendResultCode.34.heading          = Rydych wedi diwygio diogelwch unigol 2014
-amendResultCode.4.heading           = Rydych wedi diwygio diogelwch unigol 2014
 
 amendResultCode.35.heading          = Nid oes gennych hawl i ddiogelwch unigol 2016 erbyn hyn
 amendResultCode.35.1                = Mae hyn oherwydd bod cyfanswm eich cynilion pensiwn yn is na £1,000,001.
@@ -577,7 +576,6 @@ amendResultCode.43.1                = Gan fod diogelwch sefydlog 2016 wedi''i se
 amendResultCode.43.href.text        = Os yw hyn yn digwydd, mae''n rhaid i chi roi gwybod i
 
 amendResultCode.44.heading          = Rydych wedi diwygio diogelwch unigol 2016
-amendResultCode.12.heading          = Rydych wedi diwygio diogelwch unigol 2016
 
 #amendsResultPage
 

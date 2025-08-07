@@ -66,12 +66,9 @@ class PrintController @Inject() (
         citizenDetailsConnector.getPersonDetails(nino).map { personalDetailsModel =>
           val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
 
-          if (
-            Constants.amendmentCodesList.exists(code => model.notificationId.contains(code)) &&
-            appConfig.hipMigrationEnabled
-          ) {
+          if (Constants.amendmentCodesList.exists(code => model.notificationId.contains(code)))
             Ok(resultPrintViewAmendment(displayModel))
-          } else
+          else
             Ok(resultPrintView(displayModel))
         }
       case _ =>

@@ -33,7 +33,6 @@ import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Environment
 import play.api.i18n.{I18nSupport, MessagesApi}
 import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
@@ -365,180 +364,82 @@ class AmendsControllerSpec
       }
     }
 
-    "HIP migration is enabled" when {
+    Constants.amendmentCodesList.foreach { notificationId =>
+      s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
+        "return Ok status with outcomeAmended view" in {
+          val amendResponseModel =
+            AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
+          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
+          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
+            .thenReturn(Future.successful(CacheMap("", Map.empty)))
 
-      Constants.amendmentCodesList.foreach { notificationId =>
-        s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
-          "return Ok status with outcomeAmended view" in {
-            val amendResponseModel =
-              AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
-            cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-            cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-              .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-              .thenReturn(Future.successful(CacheMap("", Map.empty)))
+          val amendResultDisplayModel = AmendResultDisplayModel(IP2014, notificationId, "£1100000", None)
+          when(displayConstructors.createAmendResponseDisplayModel(any(), any(), anyString()))
+            .thenReturn(amendResultDisplayModel)
 
-            val amendResultDisplayModel = AmendResultDisplayModel(IP2014, notificationId, "£1100000", None)
-            when(displayConstructors.createAmendResponseDisplayModel(any(), any(), anyString()))
-              .thenReturn(amendResultDisplayModel)
+          val result = controller.amendmentOutcome()(fakeRequest)
 
-            when(appConfig.hipMigrationEnabled).thenReturn(true)
-
-            val result = controller.amendmentOutcome()(fakeRequest)
-
-            status(result) shouldBe OK
-            verify(sessionCacheService)
-              .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
-            verify(outcomeAmendedView).apply(eqTo(amendResultDisplayModel))(any(), any())
-          }
-        }
-      }
-
-      Constants.activeAmendmentCodes.diff(Constants.amendmentCodesList).foreach { notificationId =>
-        s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
-          "return Ok status with outcomeActive view" in {
-            val amendResponseModel =
-              AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
-            cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-            cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-              .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-              .thenReturn(Future.successful(CacheMap("", Map.empty)))
-
-            val activeAmendResultDisplayModel =
-              ActiveAmendResultDisplayModel(ApplicationType.IP2014, notificationId.toString, "£1100000", None)
-            when(displayConstructors.createActiveAmendResponseDisplayModel(any()))
-              .thenReturn(activeAmendResultDisplayModel)
-
-            when(appConfig.hipMigrationEnabled).thenReturn(true)
-
-            val result = controller.amendmentOutcome()(fakeRequest)
-
-            status(result) shouldBe OK
-            verify(sessionCacheService)
-              .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
-            verify(outcomeActiveView)
-              .apply(eqTo(activeAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)))(any(), any())
-          }
-        }
-      }
-
-      (1 to 50).diff(Constants.amendmentCodesList).diff(Constants.activeAmendmentCodes).foreach { notificationId =>
-        s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
-          "return Ok status with outcomeInactive view" in {
-            val amendResponseModel =
-              AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
-            cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-            cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-              .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-              .thenReturn(Future.successful(CacheMap("", Map.empty)))
-
-            val inactiveAmendResultDisplayModel = InactiveAmendResultDisplayModel(notificationId.toString, Seq())
-            when(displayConstructors.createInactiveAmendResponseDisplayModel(any()))
-              .thenReturn(inactiveAmendResultDisplayModel)
-
-            when(appConfig.hipMigrationEnabled).thenReturn(true)
-
-            val result = controller.amendmentOutcome()(fakeRequest)
-
-            status(result) shouldBe OK
-            verify(sessionCacheService, times(0)).saveFormData(any(), any())(any(), any())
-            verify(outcomeInactiveView)
-              .apply(eqTo(inactiveAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)))(any(), any())
-          }
+          status(result) shouldBe OK
+          verify(sessionCacheService)
+            .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
+          verify(outcomeAmendedView).apply(eqTo(amendResultDisplayModel))(any(), any())
         }
       }
     }
 
-    "HIP migration is disabled" when {
+    Constants.activeAmendmentCodes.diff(Constants.amendmentCodesList).foreach { notificationId =>
+      s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
+        "return Ok status with outcomeActive view" in {
+          val amendResponseModel =
+            AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
+          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
+          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
+            .thenReturn(Future.successful(CacheMap("", Map.empty)))
 
-      Constants.amendmentCodesList.diff(Constants.activeAmendmentCodes).foreach { notificationId =>
-        s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
-          "return Ok status with outcomeInactive view" in {
-            val amendResponseModel =
-              AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
-            cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-            cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-              .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-              .thenReturn(Future.successful(CacheMap("", Map.empty)))
+          val activeAmendResultDisplayModel =
+            ActiveAmendResultDisplayModel(ApplicationType.IP2014, notificationId.toString, "£1100000", None)
+          when(displayConstructors.createActiveAmendResponseDisplayModel(any()))
+            .thenReturn(activeAmendResultDisplayModel)
 
-            val inactiveAmendResultDisplayModel = InactiveAmendResultDisplayModel(notificationId.toString, Seq())
-            when(displayConstructors.createInactiveAmendResponseDisplayModel(any()))
-              .thenReturn(inactiveAmendResultDisplayModel)
+          val result = controller.amendmentOutcome()(fakeRequest)
 
-            when(appConfig.hipMigrationEnabled).thenReturn(false)
-
-            val result = controller.amendmentOutcome()(fakeRequest)
-
-            status(result) shouldBe OK
-            verify(sessionCacheService, times(0)).saveFormData(any(), any())(any(), any())
-            verify(outcomeInactiveView)
-              .apply(eqTo(inactiveAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)))(any(), any())
-          }
+          status(result) shouldBe OK
+          verify(sessionCacheService)
+            .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
+          verify(outcomeActiveView)
+            .apply(eqTo(activeAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)))(any(), any())
         }
       }
+    }
 
-      Constants.activeAmendmentCodes.foreach { notificationId =>
-        s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
-          "return Ok status with outcomeActive view" in {
-            val amendResponseModel =
-              AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
-            cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-            cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-              .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-              .thenReturn(Future.successful(CacheMap("", Map.empty)))
+    (25 to 44).diff(Constants.activeAmendmentCodes).foreach { notificationId =>
+      s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
+        "return Ok status with outcomeInactive view" in {
+          val amendResponseModel =
+            AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
+          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
+          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
+            .thenReturn(Future.successful(CacheMap("", Map.empty)))
 
-            val activeAmendResultDisplayModel =
-              ActiveAmendResultDisplayModel(ApplicationType.IP2014, notificationId.toString, "£1100000", None)
-            when(displayConstructors.createActiveAmendResponseDisplayModel(any()))
-              .thenReturn(activeAmendResultDisplayModel)
+          val inactiveAmendResultDisplayModel = InactiveAmendResultDisplayModel(notificationId.toString, Seq())
+          when(displayConstructors.createInactiveAmendResponseDisplayModel(any()))
+            .thenReturn(inactiveAmendResultDisplayModel)
 
-            when(appConfig.hipMigrationEnabled).thenReturn(false)
+          val result = controller.amendmentOutcome()(fakeRequest)
 
-            val result = controller.amendmentOutcome()(fakeRequest)
-
-            status(result) shouldBe OK
-            verify(sessionCacheService)
-              .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
-            verify(outcomeActiveView)
-              .apply(eqTo(activeAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)))(any(), any())
-          }
-        }
-      }
-
-      (1 to 50).diff(Constants.amendmentCodesList).diff(Constants.activeAmendmentCodes).foreach { notificationId =>
-        s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
-          "return Ok status with outcomeInactive view" in {
-            val amendResponseModel =
-              AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
-            cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-            cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-            when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-              .thenReturn(Future.successful(Some(testPersonalDetails)))
-            when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-              .thenReturn(Future.successful(CacheMap("", Map.empty)))
-
-            val inactiveAmendResultDisplayModel = InactiveAmendResultDisplayModel(notificationId.toString, Seq())
-            when(displayConstructors.createInactiveAmendResponseDisplayModel(any()))
-              .thenReturn(inactiveAmendResultDisplayModel)
-
-            when(appConfig.hipMigrationEnabled).thenReturn(false)
-
-            val result = controller.amendmentOutcome()(fakeRequest)
-
-            status(result) shouldBe OK
-            verify(sessionCacheService, times(0)).saveFormData(any(), any())(any(), any())
-            verify(outcomeInactiveView)
-              .apply(eqTo(inactiveAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)))(any(), any())
-          }
+          status(result) shouldBe OK
+          verify(sessionCacheService, times(0)).saveFormData(any(), any())(any(), any())
+          verify(outcomeInactiveView)
+            .apply(eqTo(inactiveAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)))(any(), any())
         }
       }
     }
