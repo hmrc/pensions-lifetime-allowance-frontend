@@ -28,6 +28,7 @@ import services.SessionCacheService
 import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.ActionWithSessionId
+import views.html.pages
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, LocalTime, ZoneId}
@@ -41,7 +42,8 @@ class LookupController @Inject() (
     mcc: MessagesControllerComponents,
     psa_lookup_not_found_results: views.html.pages.lookup.psa_lookup_not_found_results,
     pla_protection_guidance: views.html.pages.lookup.pla_protection_guidance,
-    psa_lookup_results: views.html.pages.lookup.psa_lookup_results
+    psa_lookup_results: views.html.pages.lookup.psa_lookup_results,
+    withdrawnPSALookupJourney: pages.lookup.withdrawnPSALookupJourney
 )(
     implicit val context: PlaContext,
     implicit val appConfig: FrontendAppConfig,
@@ -63,30 +65,43 @@ class LookupController @Inject() (
   val lookupResultID  = "psa-lookup-result"
 
   def displayNotFoundResults: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService
-      .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
-      .flatMap {
-        case Some(req @ PSALookupRequest(_, Some(_))) =>
-          Future.successful(Ok(psa_lookup_not_found_results(req, buildTimestamp)))
-        case _ =>
-          Future.successful(
-            Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
-          )
-      }(executionContext)
+    if (appConfig.psalookupjourneyShutterEnabled) {
+      Future.successful(Ok(withdrawnPSALookupJourney()))
+    } else {
+      sessionCacheService
+        .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+        .flatMap {
+          case Some(req@PSALookupRequest(_, Some(_))) =>
+            Future.successful(Ok(psa_lookup_not_found_results(req, buildTimestamp)))
+          case _ =>
+            Future.successful(
+              Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
+            )
+        }(executionContext)
+    }
   }
-
   def displayLookupResults: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService
-      .fetchAndGetFormData[PSALookupResult](lookupResultID)
-      .map {
-        case Some(result) => Ok(psa_lookup_results(result, buildTimestamp))
-        case None =>
-          Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
-      }(executionContext)
+    if (appConfig.psalookupjourneyShutterEnabled) {
+      Future.successful(Ok(withdrawnPSALookupJourney()))
+    } else {
+      sessionCacheService
+        .fetchAndGetFormData[PSALookupResult](lookupResultID)
+        .map {
+          case Some(result) => Ok(psa_lookup_results(result, buildTimestamp))
+          case None =>
+            Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
+        }(executionContext)
+    }
   }
 
   def displayProtectionTypeGuidance: Action[AnyContent] =
-    actionWithSessionId(implicit request => Ok(pla_protection_guidance()))
+    actionWithSessionId { implicit request =>
+      if (appConfig.psalookupjourneyShutterEnabled) {
+        Ok(withdrawnPSALookupJourney())
+      } else {
+        Ok(pla_protection_guidance())
+      }
+    }
 
   def redirectToStart: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     sessionCacheService.remove.map { _ =>
