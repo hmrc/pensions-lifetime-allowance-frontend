@@ -25,11 +25,11 @@ import play.api.i18n.{Messages, MessagesApi}
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import views.html.pages.lookup.withdrawnPSALookupJourney
 
-class WithdrawnPSALookupJourneySpec extends CommonViewSpecHelper with MockitoSugar  {
+class WithdrawnPSALookupJourneySpec extends CommonViewSpecHelper with MockitoSugar {
 
-  lazy val view: withdrawnPSALookupJourney       = app.injector.instanceOf[withdrawnPSALookupJourney]
-  override val mockAppConfig = mock[FrontendAppConfig]
-  implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
+  lazy val view: withdrawnPSALookupJourney = app.injector.instanceOf[withdrawnPSALookupJourney]
+  override val mockAppConfig               = mock[FrontendAppConfig]
+  implicit lazy val messages: Messages     = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
 
   lazy val doc: Document = Jsoup.parse(view()(fakeRequest, messages).body)
 
@@ -48,8 +48,10 @@ class WithdrawnPSALookupJourneySpec extends CommonViewSpecHelper with MockitoSug
     }
 
     "display the correct link" in {
-      when(mockAppConfig.psaLookupWithdrawLinkUrl).thenReturn("http://tax.service.gov.uk/members-protections-and-enhancements/start")
-      doc.getElementById("link").attr("href") shouldBe  mockAppConfig.psaLookupWithdrawLinkUrl
+      when(mockAppConfig.psaLookupWithdrawLinkUrl).thenReturn(
+        "http://tax.service.gov.uk/members-protections-and-enhancements/start"
+      )
+      doc.getElementById("link").attr("href") shouldBe mockAppConfig.psaLookupWithdrawLinkUrl
       doc.getElementById("link").text() shouldBe messages("psa.lookup.withdrawLinkText")
     }
   }
