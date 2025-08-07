@@ -34,12 +34,12 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
   )
 
   lazy val amendsInactiveResultModelIP16 = InactiveAmendResultDisplayModel(
-    notificationId = "43",
+    notificationId = 43,
     additionalInfo = Seq("1", "2")
   )
 
   lazy val amendsInactiveResultModelIP14 = InactiveAmendResultDisplayModel(
-    notificationId = "32",
+    notificationId = 32,
     additionalInfo = Seq("1", "2")
   )
 

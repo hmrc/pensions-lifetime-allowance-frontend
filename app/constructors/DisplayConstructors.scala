@@ -512,7 +512,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       )
     )
     val additionalInfo = getAdditionalInfo("amendResultCode", notificationId)
-    InactiveAmendResultDisplayModel(notificationId.toString, additionalInfo)
+    InactiveAmendResultDisplayModel(notificationId, additionalInfo)
   }
 
   private def getProtectionTypeFromProtection(protection: ProtectionModel): ApplicationType.Value = {

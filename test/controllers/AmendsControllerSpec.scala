@@ -430,7 +430,7 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
 
-          val inactiveAmendResultDisplayModel = InactiveAmendResultDisplayModel(notificationId.toString, Seq())
+          val inactiveAmendResultDisplayModel = InactiveAmendResultDisplayModel(notificationId, Seq())
           when(displayConstructors.createInactiveAmendResponseDisplayModel(any()))
             .thenReturn(inactiveAmendResultDisplayModel)
 

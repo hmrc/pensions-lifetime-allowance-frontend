@@ -105,6 +105,6 @@ case class AmendResultDisplayModel(
 )
 
 case class InactiveAmendResultDisplayModel(
-    notificationId: String,
+    notificationId: Int,
     additionalInfo: Seq[String]
 )
