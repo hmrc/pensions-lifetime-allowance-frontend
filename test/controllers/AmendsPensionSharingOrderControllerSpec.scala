@@ -259,7 +259,7 @@ class AmendsPensionSharingOrderControllerSpec
   val tstInactiveAmendResponseModel = AmendResponseModel(ip2016InactiveAmendmentProtection)
 
   val tstInactiveAmendResponseDisplayModel = InactiveAmendResultDisplayModel(
-    notificationId = "43",
+    notificationId = 43,
     additionalInfo = Seq.empty
   )
 
