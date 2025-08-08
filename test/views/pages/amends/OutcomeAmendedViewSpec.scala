@@ -16,71 +16,29 @@
 
 package views.pages.amends
 
-import enums.ApplicationType
-import models.{AmendResultDisplayModel, PrintDisplayModel}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.OutcomeAmendedViewSpecMessages
+import testdata.AmendProtectionOutcomeViewsTestData._
 import views.html.pages.amends.outcomeAmended
 
 class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewSpecMessages {
 
   private val outcomeAmendedView = fakeApplication().injector.instanceOf[outcomeAmended]
 
-  private val protectedAmountIP14Str = "£1,350,000.11"
-  private val protectedAmountIP16Str = "£1,350,000.45"
-
   private val iP14Documents = (1 to 7).map { notificationId =>
-    val amendsActiveResultModelIP14 = AmendResultDisplayModel(
-      protectionType = ApplicationType.IP2014,
-      notificationId = 15,
-      protectedAmount = protectedAmountIP14Str,
-      details = Some(
-        PrintDisplayModel(
-          firstName = "Jim",
-          surname = "Davis",
-          nino = "nino",
-          protectionType = "IP2014",
-          status = "dormant",
-          psaCheckReference = "psaRef",
-          protectionReference = "IP14XXXXXX",
-          protectedAmount = Some(protectedAmountIP14Str),
-          certificateDate = Some("14/07/2015"),
-          notificationId = 15
-        )
-      )
-    )
-    val printDisplayModel = amendsActiveResultModelIP14.details.get.copy(notificationId = notificationId)
+    val printDisplayModel = amendResultDisplayModelIP14.details.get.copy(notificationId = notificationId)
     val amendsActiveResultModel =
-      amendsActiveResultModelIP14.copy(notificationId = notificationId, details = Some(printDisplayModel))
+      amendResultDisplayModelIP14.copy(notificationId = notificationId, details = Some(printDisplayModel))
 
     notificationId -> Jsoup.parse(outcomeAmendedView(amendsActiveResultModel).body)
   }
 
   private val iP16Documents = (8 to 14).map { notificationId =>
-    val amendsActiveResultModelIP16 = AmendResultDisplayModel(
-      protectionType = ApplicationType.IP2016,
-      notificationId = 15,
-      protectedAmount = protectedAmountIP16Str,
-      details = Some(
-        PrintDisplayModel(
-          firstName = "Jim",
-          surname = "Davis",
-          nino = "nino",
-          protectionType = "IP2016",
-          status = "dormant",
-          psaCheckReference = "psaRef",
-          protectionReference = "IP16XXXXXX",
-          protectedAmount = Some(protectedAmountIP16Str),
-          certificateDate = Some("14/07/2017"),
-          notificationId = 15
-        )
-      )
-    )
-    val printDisplayModel = amendsActiveResultModelIP16.details.get.copy(notificationId = notificationId)
+    val printDisplayModel = amendResultDisplayModelIP16.details.get.copy(notificationId = notificationId)
     val amendsActiveResultModel =
-      amendsActiveResultModelIP16.copy(notificationId = notificationId, details = Some(printDisplayModel))
+      amendResultDisplayModelIP16.copy(notificationId = notificationId, details = Some(printDisplayModel))
 
     notificationId -> Jsoup.parse(outcomeAmendedView(amendsActiveResultModel).body)
   }
