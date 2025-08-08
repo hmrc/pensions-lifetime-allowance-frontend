@@ -16,27 +16,21 @@
 
 package controllers
 
-import config.{FrontendAppConfig, PlaContext}
-import connectors.PLAConnector
-import models.cache.CacheMap
+import config.FrontendAppConfig
 import models.{PSALookupRequest, PSALookupResult}
-import org.apache.pekko.actor.ActorSystem
-import org.apache.pekko.stream.Materializer
-import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.{reset, when}
+import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
+import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Application
-import play.api.i18n.Messages
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
+import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers.FakeApplication
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
-import uk.gov.hmrc.http.client.HttpClientV2
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, SessionKeys}
+import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
@@ -44,64 +38,64 @@ import scala.concurrent.Future
 
 class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with MockitoSugar {
 
-  private val sessionId                            = SessionKeys.sessionId -> "lookup-test"
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockPlaConnector: PLAConnector               = mock[PLAConnector]
-  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
-  val mockHttp: HttpClientV2                       = mock[HttpClientV2]
+  private val sessionId                                = SessionKeys.sessionId -> "lookup-test"
+  private val sessionCacheService: SessionCacheService = mock[SessionCacheService]
 
-  implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
-  implicit val mockMessages: Messages           = mock[Messages]
-  implicit val system: ActorSystem              = ActorSystem()
-  implicit val materializer: Materializer       = mock[Materializer]
-  implicit val hc: HeaderCarrier                = HeaderCarrier()
-  implicit val application: Application         = mock[Application]
+  private val mockMCC: MessagesControllerComponents =
+    fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
-  implicit val mockPsa_lookup_not_found_results: psa_lookup_not_found_results =
-    app.injector.instanceOf[psa_lookup_not_found_results]
+  private val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
 
-  implicit val mockPla_protection_guidance: pla_protection_guidance = app.injector.instanceOf[pla_protection_guidance]
+  private val psa_lookup_not_found_results: psa_lookup_not_found_results = mock[psa_lookup_not_found_results]
+  private val pla_protection_guidance: pla_protection_guidance           = mock[pla_protection_guidance]
+  private val psa_lookup_results: psa_lookup_results                     = mock[psa_lookup_results]
+  private val withdrawnPSALookupJourney: withdrawnPSALookupJourney       = mock[withdrawnPSALookupJourney]
 
-  implicit val mockPsa_lookup_protection_notification_no_form: psa_lookup_protection_notification_no_form =
-    app.injector.instanceOf[psa_lookup_protection_notification_no_form]
+  private implicit val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  private implicit val application: Application     = mock[Application]
+  //  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
+  //  implicit val mockMessages: Messages           = mock[Messages]
+  //  implicit val system: ActorSystem              = ActorSystem()
+  //  implicit val materializer: Materializer       = mock[Materializer]
+  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
-  implicit val mockPsa_lookup_results: psa_lookup_results = app.injector.instanceOf[psa_lookup_results]
+  private val controller = new LookupController(
+    sessionCacheService,
+    mockActionWithSessionId,
+    mockMCC,
+    psa_lookup_not_found_results,
+    pla_protection_guidance,
+    psa_lookup_results,
+    withdrawnPSALookupJourney
+  )
 
-  implicit val mockPsa_lookup_scheme_admin_ref_form: psa_lookup_scheme_admin_ref_form =
-    app.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
+  override def beforeEach(): Unit = {
+    super.beforeEach()
 
-  implicit val mockwithdrawnPSALookupJourney: withdrawnPSALookupJourney =
-    app.injector.instanceOf[withdrawnPSALookupJourney]
+    reset(appConfig)
+    reset(application)
+    reset(psa_lookup_not_found_results)
+    reset(pla_protection_guidance)
+    reset(psa_lookup_results)
+    reset(withdrawnPSALookupJourney)
 
-  implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
-
-  class Setup {
-
-    val controller = new LookupController(
-      mockSessionCacheService,
-      mockPlaConnector,
-      mockActionWithSessionId,
-      mockMCC,
-      mockPsa_lookup_not_found_results,
-      mockPla_protection_guidance,
-      mockPsa_lookup_results,
-      mockwithdrawnPSALookupJourney
-    )
-
+    when(psa_lookup_not_found_results.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(pla_protection_guidance.apply()(any(), any())).thenReturn(HtmlFormat.empty)
+    when(psa_lookup_results.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(withdrawnPSALookupJourney.apply()(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
-  override def beforeEach(): Unit =
-    reset(mockPlaConnector)
+  private val request = FakeRequest().withSession(sessionId)
 
-  private val plaReturnJson = Json.parse("""{
-                                           |  "pensionSchemeAdministratorCheckReference": "PSA12345678A",
-                                           |  "ltaType": 5,
-                                           |  "psaCheckResult": 1,
-                                           |  "protectedAmount": 25000,
-                                           |  "protectionNotificationNumber": "IP14000000000A"
-                                           |}""".stripMargin)
+  private val plaReturnJson = Json.parse(
+    """{
+      |  "pensionSchemeAdministratorCheckReference": "PSA12345678A",
+      |  "ltaType": 5,
+      |  "psaCheckResult": 1,
+      |  "protectedAmount": 25000,
+      |  "protectionNotificationNumber": "IP14000000000A"
+      |}""".stripMargin
+  )
 
   private val psaRequestJson = Json.parse(
     """{
@@ -110,81 +104,149 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
       | }""".stripMargin
   )
 
-  "LookupController" should {
-    "return 200 with correct message on results page" in new Setup {
-      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-      val request = FakeRequest().withSession(sessionId)
-      cacheFetchCondition[PSALookupResult](Some(Json.fromJson[PSALookupResult](plaReturnJson).get))
+  "LookupController on displayNotFoundResults" when {
 
-      val result = controller.displayLookupResults.apply(request)
+    "psalookupjourneyShutterEnabled toggle is disabled" when {
 
-      status(result) shouldBe OK
+      "there is data in session cache" should {
+        "return 200 with psa_lookup_not_found_results view" in {
+          when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
+          cacheFetchCondition[PSALookupRequest](Some(Json.fromJson[PSALookupRequest](psaRequestJson).get))
+
+          val result = controller.displayNotFoundResults.apply(request)
+
+          status(result) shouldBe OK
+          val expectedLookupRequest = Json.fromJson[PSALookupRequest](psaRequestJson).get
+          verify(psa_lookup_not_found_results).apply(eqTo(expectedLookupRequest), anyString())(any(), any())
+        }
+      }
+
+      "there is NO data in session cache" should {
+        "return 303 Redirect" in {
+          when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
+          cacheFetchCondition[PSALookupRequest](None)
+
+          val result = controller.displayNotFoundResults.apply(request)
+
+          status(result) shouldBe SEE_OTHER
+          redirectLocation(
+            result
+          ).get shouldBe routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
+        }
+      }
     }
 
-    "redirect when no result data is stored on results page" in new Setup {
-      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-      val request = FakeRequest().withSession(sessionId)
-      cacheFetchCondition[PSALookupResult](None)
+    "psalookupjourneyShutterEnabled toggle is enabled" should {
+      "return 200 with withdrawnPSALookupJourney view" in {
+        when(appConfig.psalookupjourneyShutterEnabled).thenReturn(true)
 
-      val result = controller.displayLookupResults.apply(request)
+        val result = controller.displayNotFoundResults.apply(request)
 
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(
-        result
-      ).get shouldBe routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
+        status(result) shouldBe OK
+        verify(withdrawnPSALookupJourney).apply()(any(), any())
+      }
+    }
+  }
+
+  "LookupController on displayLookupResults" when {
+
+    "psalookupjourneyShutterEnabled toggle is disabled" when {
+
+      "there is data in session cache" should {
+        "return 200 with psa_lookup_results" in {
+          when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
+          cacheFetchCondition[PSALookupResult](Some(Json.fromJson[PSALookupResult](plaReturnJson).get))
+
+          val result = controller.displayLookupResults.apply(request)
+
+          status(result) shouldBe OK
+          val expectedLookupResult = Json.fromJson[PSALookupResult](plaReturnJson).get
+          verify(psa_lookup_results).apply(eqTo(expectedLookupResult), anyString())(any(), any())
+        }
+      }
+
+      "there is NO data in session cache" should {
+        "return 303 Redirect" in {
+          when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
+          cacheFetchCondition[PSALookupResult](None)
+
+          val result = controller.displayLookupResults.apply(request)
+
+          status(result) shouldBe SEE_OTHER
+          redirectLocation(
+            result
+          ).get shouldBe routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
+        }
+      }
     }
 
-    "return 200 with correct message on not found results page" in new Setup {
-      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-      val request = FakeRequest().withSession(sessionId)
-      cacheFetchCondition[PSALookupRequest](Some(Json.fromJson[PSALookupRequest](psaRequestJson).get))
+    "psalookupjourneyShutterEnabled toggle is enabled" should {
+      "return 200 with withdrawnPSALookupJourney view" in {
+        when(appConfig.psalookupjourneyShutterEnabled).thenReturn(true)
 
-      val result = controller.displayNotFoundResults.apply(request)
+        val result = controller.displayLookupResults.apply(request)
 
-      status(result) shouldBe OK
+        status(result) shouldBe OK
+        verify(withdrawnPSALookupJourney).apply()(any(), any())
+      }
+    }
+  }
+
+  "LookupController on displayProtectionTypeGuidance" when {
+
+    "psalookupjourneyShutterEnabled toggle is disabled" should {
+      "return 200 with pla_protection_guidance" in {
+        when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
+
+        val result = controller.displayProtectionTypeGuidance.apply(request)
+
+        status(result) shouldBe OK
+        verify(pla_protection_guidance).apply()(any(), any())
+      }
     }
 
-    "redirect when no result data is stored on not found results page" in new Setup {
-      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-      val request = FakeRequest().withSession(sessionId)
-      cacheFetchCondition[PSALookupRequest](None)
+    "psalookupjourneyShutterEnabled toggle is enabled" should {
+      "return 200 with withdrawnPSALookupJourney view" in {
+        when(appConfig.psalookupjourneyShutterEnabled).thenReturn(true)
 
-      val result = controller.displayLookupResults.apply(request)
+        val result = controller.displayProtectionTypeGuidance.apply(request)
 
-      status(result) shouldBe SEE_OTHER
-      redirectLocation(
-        result
-      ).get shouldBe routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
+        status(result) shouldBe OK
+        verify(withdrawnPSALookupJourney).apply()(any(), any())
+      }
+    }
+  }
+
+  "LookupController on redirectToStart" when {
+
+    "psalookupjourneyShutterEnabled toggle is disabled" should {
+      "return 303 Redirect" in {
+        when(appConfig.psalookupjourneyShutterEnabled).thenReturn(false)
+        when(sessionCacheService.remove(any())).thenReturn(Future.unit)
+
+        val result = controller.redirectToStart.apply(request)
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(
+          result
+        ).get shouldBe routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm.url
+      }
     }
 
-    "return 200 with correct message on protection type guidance page" in new Setup {
-      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
-      val request = FakeRequest().withSession(sessionId)
-      val result  = controller.displayProtectionTypeGuidance.apply(request)
+    "psalookupjourneyShutterEnabled toggle is enabled" should {
+      "return 200 with withdrawnPSALookupJourney view" in {
+        when(appConfig.psalookupjourneyShutterEnabled).thenReturn(true)
 
-      status(result) shouldBe OK
+        val result = controller.redirectToStart.apply(request)
+
+        status(result) shouldBe OK
+        verify(withdrawnPSALookupJourney).apply()(any(), any())
+      }
     }
-
-    "return 200 with correct message on protection type guidance page when shutter journey is enabled" in new Setup {
-      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(true)
-      val request = FakeRequest().withSession(sessionId)
-      val result  = controller.displayProtectionTypeGuidance.apply(request)
-
-      status(result) shouldBe OK
-      contentAsString(result) should include("Sorry, the service is unavailable")
-    }
-
   }
 
   def cacheFetchCondition[T](data: Option[T]): Unit =
-    when(mockSessionCacheService.fetchAndGetFormData[T](any())(any(), any()))
+    when(sessionCacheService.fetchAndGetFormData[T](any())(any(), any()))
       .thenReturn(Future.successful(data))
-
-  def cacheSaveCondition[T](data: CacheMap): Unit =
-    when(mockSessionCacheService.saveFormData[T](any(), any())(any(), any()))
-      .thenReturn(Future.successful(data))
-
-  def plaConnectorReturn(data: HttpResponse): Unit = when(mockPlaConnector.psaLookup(any(), any())(any(), any()))
-    .thenReturn(Future.successful(data))
 
 }

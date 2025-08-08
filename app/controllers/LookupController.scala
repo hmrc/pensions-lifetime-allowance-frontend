@@ -36,18 +36,15 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class LookupController @Inject() (
-    val sessionCacheService: SessionCacheService,
-    val plaConnector: PLAConnector,
-    val actionWithSessionId: ActionWithSessionId,
+    sessionCacheService: SessionCacheService,
+    actionWithSessionId: ActionWithSessionId,
     mcc: MessagesControllerComponents,
     psa_lookup_not_found_results: views.html.pages.lookup.psa_lookup_not_found_results,
     pla_protection_guidance: views.html.pages.lookup.pla_protection_guidance,
     psa_lookup_results: views.html.pages.lookup.psa_lookup_results,
     withdrawnPSALookupJourney: pages.lookup.withdrawnPSALookupJourney
 )(
-    implicit val context: PlaContext,
     implicit val appConfig: FrontendAppConfig,
-    implicit val formWithCSRF: FormWithCSRF,
     implicit val application: Application
 ) extends FrontendController(mcc)
     with I18nSupport {
@@ -114,7 +111,7 @@ class LookupController @Inject() (
     }
   }
 
-  def buildTimestamp: String = s"${LocalDate.now.format(
+  private def buildTimestamp: String = s"${LocalDate.now.format(
       DateTimeFormatter
         .ofPattern("dd/MM/yyyy")
     )} at ${LocalTime
