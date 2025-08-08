@@ -30,6 +30,7 @@ object MockConfig extends AppConfig {
   override val excludeCopeTab: Boolean                                                 = false
   override val identityVerification: Boolean                                           = true
   override val hipMigrationEnabled: Boolean                                            = true
+  override val psalookupjourneyShutterEnabled: Boolean                                 = true
   override val confirmFPUrl: String                                                    = "/pla/apply-for-fp16"
   override val ipStartUrl: String                            = "/pla/apply-for-ip16-pensions-taken"
   override val ip14StartUrl: String                          = "/pla/apply-for-ip14-pensions-taken"

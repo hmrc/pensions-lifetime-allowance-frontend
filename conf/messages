@@ -744,6 +744,14 @@ pla.withdrawn.ap2016.pageHeading            = Sorry, applications for 2016 prote
 pla.withdrawn.ap2016.paraOne                = You can still
 pla.withdrawn.ap2016.paraOne.linkText       = view previous applications.
 
+## PSA Lookup Withdraw
+
+psa.lookup.withdraw.title = Sorry, the service is unavailable
+psa.lookup.withdraw.pageHeading = Sorry, the service is unavailable
+psa.lookup.withdraw.paraOne = This service has closed.
+psa.lookup.withdrawLinkText = Check your pension scheme member’s protections and enhancements
+
+
 ## PSA Lookup form
 psa.lookup.form.scheme-admin-ref-form.title = Enter the Scheme Administrator Reference
 psa.lookup.form.protection-notification-no-form.title = Enter the Protection Notification Number

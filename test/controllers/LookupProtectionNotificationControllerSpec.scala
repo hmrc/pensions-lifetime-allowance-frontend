@@ -51,7 +51,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
   val mockActionWithSessionId: ActionWithSessionId = fakeApplication().injector.instanceOf[ActionWithSessionId]
   val mockHttp: HttpClientV2                       = mock[HttpClientV2]
 
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext       = mock[PlaContext]
   implicit val mockMessages: Messages           = mock[Messages]
   implicit val system: ActorSystem              = ActorSystem()
@@ -72,6 +72,9 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
   implicit val mockPsa_lookup_scheme_admin_ref_form: psa_lookup_scheme_admin_ref_form =
     app.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
 
+  implicit val mockwithdrawnPSALookupJourney: withdrawnPSALookupJourney =
+    app.injector.instanceOf[withdrawnPSALookupJourney]
+
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   class Setup {
@@ -81,7 +84,8 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
       mockPlaConnector,
       mockActionWithSessionId,
       mockMCC,
-      mockPsa_lookup_protection_notification_no_form
+      mockPsa_lookup_protection_notification_no_form,
+      mockwithdrawnPSALookupJourney
     )
 
   }
@@ -118,6 +122,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
   "LookupProtectionNotificationController" should {
 
     "return 200 with correct message on pnn form" in new Setup {
+      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
       cacheFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSAREF")))
 
       val request = FakeRequest().withSession(sessionId)
@@ -125,8 +130,19 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
 
       status(result) shouldBe OK
     }
+    "return 200 with correct message on pnn form when shutter journey is enabled" in new Setup {
+      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(true)
+      cacheFetchCondition[PSALookupRequest](Some(PSALookupRequest("PSAREF")))
+
+      val request = FakeRequest().withSession(sessionId)
+      val result  = controller.displayProtectionNotificationNoForm.apply(request)
+
+      status(result) shouldBe OK
+      contentAsString(result) should include("Sorry, the service is unavailable")
+    }
 
     "redirect when no data entered on first page for pnn form" in new Setup {
+      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
       cacheFetchCondition[PSALookupRequest](None)
 
       val request = FakeRequest().withSession(sessionId)
@@ -179,6 +195,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
     }
 
     "redirect to the administrator reference form when PSA request data not found on submission" in new Setup {
+      when(mockAppConfig.psalookupjourneyShutterEnabled).thenReturn(false)
       val request = FakeRequest().withSession(sessionId).withFormUrlEncodedBody(validPNNForm: _*).withMethod("POST")
 
       cacheFetchCondition[PSALookupRequest](None)

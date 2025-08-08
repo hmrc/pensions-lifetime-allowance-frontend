@@ -18,7 +18,13 @@ package connectors
 
 import common.Exceptions
 import com.github.tomakehurst.wiremock.client.WireMock._
-import connectors.PlaConnectorError.{ConflictResponseError, GenericPlaConnectorError, IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
+import connectors.PlaConnectorError.{
+  ConflictResponseError,
+  GenericPlaConnectorError,
+  IncorrectResponseBodyError,
+  LockedResponseError,
+  UnexpectedResponseError
+}
 import models.ProtectionModel
 import models.pla.response.ReadProtectionsResponse
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
@@ -119,12 +125,10 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
     }
 
     "it is passed a protection with a missing Protection ID" should {
-      "throw a RequiredValueNotDefinedForNinoException and return a GenericPlaConnectorError" in {
-
-        the [Exceptions.RequiredValueNotDefinedForNinoException] thrownBy {
+      "throw a RequiredValueNotDefinedForNinoException and return a GenericPlaConnectorError" in
+        (the[Exceptions.RequiredValueNotDefinedForNinoException] thrownBy {
           connector.amendProtection(testNino, amendProtectionInputProtectionModel.copy(protectionID = None)).futureValue
-        } should have message(s"Value not found for protectionID in amendProtection with nino: $testNino")
-      }
+        } should have).message(s"Value not found for protectionID in amendProtection with nino: $testNino")
     }
 
     "it receives response with body in incorrect format" should {
