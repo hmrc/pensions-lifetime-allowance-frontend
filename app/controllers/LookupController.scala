@@ -105,9 +105,13 @@ class LookupController @Inject() (
     }
 
   def redirectToStart: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService.remove.map { _ =>
-      Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
-    }(executionContext)
+    if (appConfig.psalookupjourneyShutterEnabled) {
+      Future.successful(Ok(withdrawnPSALookupJourney()))
+    } else {
+      sessionCacheService.remove.map { _ =>
+        Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
+      }(executionContext)
+    }
   }
 
   def buildTimestamp: String = s"${LocalDate.now.format(

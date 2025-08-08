@@ -72,17 +72,21 @@ class LookupSchemeAdministratorReferenceController @Inject() (
   }
 
   def submitSchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    psaRefForm
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
-        validFormData =>
-          sessionCacheService
-            .saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData))
-            .map(_ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm))(
-              executionContext
-            )
-      )
+    if (appConfig.psalookupjourneyShutterEnabled) {
+      Future.successful(Ok(withdrawnPSALookupJourney()))
+    } else {
+      psaRefForm
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
+          validFormData =>
+            sessionCacheService
+              .saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData))
+              .map(_ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm))(
+                executionContext
+              )
+        )
+    }
   }
 
 }
