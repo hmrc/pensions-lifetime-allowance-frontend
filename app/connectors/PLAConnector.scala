@@ -140,7 +140,7 @@ class PLAConnector @Inject() (
       protection: ProtectionModel
   )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Either[PlaConnectorError, ProtectionModel]] = {
     val id = protection.protectionID.getOrElse(
-      throw new Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino)
+      throw Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino)
     )
     val requestJson = Json.toJson[ProtectionModel](protection)
     val body        = requestJson.transform(transformer(protection)).get
