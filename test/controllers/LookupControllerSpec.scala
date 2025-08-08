@@ -30,7 +30,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers.FakeApplication
-import uk.gov.hmrc.http.{HeaderCarrier, SessionKeys}
+import uk.gov.hmrc.http.SessionKeys
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
@@ -53,11 +53,6 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
 
   private implicit val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
   private implicit val application: Application     = mock[Application]
-  //  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
-  //  implicit val mockMessages: Messages           = mock[Messages]
-  //  implicit val system: ActorSystem              = ActorSystem()
-  //  implicit val materializer: Materializer       = mock[Materializer]
-  private implicit val hc: HeaderCarrier = HeaderCarrier()
 
   private val controller = new LookupController(
     sessionCacheService,
