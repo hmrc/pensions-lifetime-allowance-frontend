@@ -22,7 +22,6 @@ import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito.{reset, verify, when}
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Application
 import play.api.libs.json.Json
 import play.api.mvc.MessagesControllerComponents
 import play.api.test.FakeRequest
@@ -34,7 +33,7 @@ import uk.gov.hmrc.http.SessionKeys
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with MockitoSugar {
 
@@ -52,7 +51,7 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
   private val withdrawnPSALookupJourney: withdrawnPSALookupJourney       = mock[withdrawnPSALookupJourney]
 
   private implicit val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  private implicit val application: Application     = mock[Application]
+  private implicit val ec: ExecutionContext         = fakeApplication().injector.instanceOf[ExecutionContext]
 
   private val controller = new LookupController(
     sessionCacheService,
@@ -68,7 +67,6 @@ class LookupControllerSpec extends FakeApplication with BeforeAndAfterEach with 
     super.beforeEach()
 
     reset(appConfig)
-    reset(application)
     reset(psa_lookup_not_found_results)
     reset(pla_protection_guidance)
     reset(psa_lookup_results)

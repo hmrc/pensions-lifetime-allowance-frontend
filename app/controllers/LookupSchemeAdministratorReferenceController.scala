@@ -36,7 +36,7 @@ class LookupSchemeAdministratorReferenceController @Inject() (
     mcc: MessagesControllerComponents,
     psa_lookup_scheme_admin_ref_form: psa_lookup_scheme_admin_ref_form,
     withdrawnPSALookupJourney: withdrawnPSALookupJourney
-)(implicit val appConfig: FrontendAppConfig, ec: ExecutionContext)
+)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
     extends FrontendController(mcc)
     with I18nSupport {
 

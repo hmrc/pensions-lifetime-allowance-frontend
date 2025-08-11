@@ -40,12 +40,9 @@ class LookupProtectionNotificationController @Inject() (
     mcc: MessagesControllerComponents,
     psa_lookup_protection_notification_no_form: psa_lookup_protection_notification_no_form,
     withdrawnPSALookupJourney: withdrawnPSALookupJourney
-)(
-    implicit val appConfig: FrontendAppConfig
-) extends FrontendController(mcc)
+)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
+    extends FrontendController(mcc)
     with I18nSupport {
-
-  private implicit val executionContext: ExecutionContext = mcc.executionContext
 
   private def pnnForm(implicit request: Request[AnyContent]): Form[String] =
     PSALookupProtectionNotificationNoForm.pnnForm

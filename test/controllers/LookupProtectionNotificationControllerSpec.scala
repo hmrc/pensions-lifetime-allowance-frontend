@@ -36,7 +36,7 @@ import uk.gov.hmrc.http.{HttpResponse, SessionKeys, UpstreamErrorResponse}
 import utils.ActionWithSessionId
 import views.html.pages.lookup._
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 class LookupProtectionNotificationControllerSpec extends FakeApplication with BeforeAndAfterEach with MockitoSugar {
 
@@ -49,6 +49,7 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
   private val withdrawnPSALookupJourney                  = mock[withdrawnPSALookupJourney]
 
   private implicit val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
+  private implicit val ec: ExecutionContext         = fakeApplication().injector.instanceOf[ExecutionContext]
 
   private val controller = new LookupProtectionNotificationController(
     sessionCacheService,
