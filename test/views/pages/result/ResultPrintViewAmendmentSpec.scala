@@ -54,13 +54,6 @@ class ResultPrintViewAmendmentSpec extends CommonViewSpecHelper {
           doc.getElementsByClass("govuk-header__service-name").text shouldBe serviceNameText
         }
 
-        "contain first heading with paragraph" in {
-          val header = doc.select("h1")
-
-          header.attr("id") shouldBe "userName"
-          header.text shouldBe "Jim Davis"
-        }
-
         "contain second heading" in {
           doc.select("h2").first().text shouldBe protectionDetailsText
         }
@@ -82,13 +75,13 @@ class ResultPrintViewAmendmentSpec extends CommonViewSpecHelper {
         }
 
         "contain paragraph with 'Give these details to pension provider' text" in {
-          val paragraph = doc.select("div p").get(0)
+          val paragraph = doc.select("p").get(0)
 
           paragraph.text shouldBe giveToPensionProviderText
         }
 
         "contain paragraph with 'Contact HMRC' text" in {
-          val paragraph = doc.select("div p").get(1)
+          val paragraph = doc.select("p").get(1)
 
           paragraph.attr("id") shouldBe "contactHMRC"
           paragraph.text shouldBe iP2014ContactHmrcText

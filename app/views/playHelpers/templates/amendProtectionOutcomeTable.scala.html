@@ -19,59 +19,76 @@
 
 @this()
 
-@(details: PrintDisplayModel)(implicit messages: Messages)
+@(details: PrintDisplayModel, includeProtectedAmount: Boolean = false)(implicit messages: Messages)
 
 <table class="govuk-table">
 	<caption class="govuk-visually-hidden">@messages("pla.printAmend.protectionDetails")</caption>
 	<tbody class="govuk-table__body">
 
 		<tr class="govuk-table__row">
-				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.fullName")</th>
-				<td class="govuk-table__cell" id="yourFullName">@{details.firstName} @{details.surname}</td>
+			<th scope="row" class="govuk-table__header">@messages("pla.printAmend.fullName")</th>
+			<td class="govuk-table__cell" id="yourFullName">@{details.firstName} @{details.surname}</td>
 		</tr>
+
 		<tr class="govuk-table__row">
-				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.nino")</th>
-				<td class="govuk-table__cell" id="yourNino">@{details.nino}</td>
+			<th scope="row" class="govuk-table__header">@messages("pla.printAmend.nino")</th>
+			<td class="govuk-table__cell" id="yourNino">@{details.nino}</td>
 		</tr>
+
+		@if(includeProtectedAmount) {
+			@details.protectedAmount.map { pAmount =>
+				<tr class="govuk-table__row">
+					<th scope="row" class="govuk-table__header">@messages("pla.printAmend.protectedAmount")</th>
+					<td class="govuk-table__cell" id="protectedAmount">@pAmount</td>
+				</tr>
+			}
+		}
+
 		<tr class="govuk-table__row">
-				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.protectionType")</th>
-				<td class="govuk-table__cell" id="protectionType">@messages(s"pla.protection.types.${details.protectionType}")</td>
+			<th scope="row" class="govuk-table__header">@messages("pla.printAmend.protectionType")</th>
+			<td class="govuk-table__cell" id="protectionType">@messages(s"pla.protection.types.${details.protectionType}")</td>
 		</tr>
+
 		@if(details.notificationId == 1 || details.notificationId == 5 || details.notificationId == 8) {
-		<tr class="govuk-table__row">
+			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.protectionReferenceNumber")</th>
 				<td class="govuk-table__cell" id="protectionRefNum">@{details.protectionReference}</td>
-		</tr>
+			</tr>
 		}
+
 		@if(details.notificationId == 7 || details.notificationId == 14) {
-		<tr class="govuk-table__row">
+			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.fixedProtectionReferenceNumber")</th>
 				<td class="govuk-table__cell" id="fixedProtectionRefNum">@{details.protectionReference}</td>
-		</tr>
+			</tr>
 		}
+
 		@if(details.notificationId == 1 || details.notificationId == 5 || details.notificationId == 8)  {
-		<tr class="govuk-table__row">
+			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.pensionSchemeAdministratorReference")</th>
 				<td class="govuk-table__cell" id="psaCheckRef">@{details.psaCheckReference}</td>
-		</tr>
+			</tr>
 		}
+
 		@details.certificateDate.map { cDate =>
-		<tr class="govuk-table__row">
+			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.applicationDate")</th>
 				<td class="govuk-table__cell" id="applicationDate">@{cDate}</td>
-		</tr>
+			</tr>
 		}
+
 		@if(ViewConstants.dormantNotificationIds.contains(details.notificationId)) {
-		<tr class="govuk-table__row">
+			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.status")</th>
 				<td class="govuk-table__cell" id="status">@messages("pla.printAmend.dormant")</td>
-		</tr>
+			</tr>
 		}
+
 		@if(ViewConstants.withdrawnNotificationIds.contains(details.notificationId)) {
-		<tr class="govuk-table__row">
+			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.status")</th>
 				<td class="govuk-table__cell" id="status">@messages("pla.printAmend.withdrawn")</td>
-		</tr>
+			</tr>
 		}
 	</tbody>
 </table>

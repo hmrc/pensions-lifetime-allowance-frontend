@@ -425,12 +425,12 @@ pla.printAmend.protectionType                    = Protection type
 pla.printAmend.protectedAmount                   = Protected amount
 pla.printAmend.protectionReferenceNumber         = Protection reference number
 pla.printAmend.fixedProtectionReferenceNumber    = Fixed protection 2016 reference number
-pla.printAmend.pensionSchemeAdministratorReference      = Pension Scheme administrator check reference
-pla.printAmend.status                             = Status
-pla.printAmend.withdrawn                         = Withdrawn
-pla.printAmend.dormant                           = Dormant
-pla.printAmend.giveToPensionProvider             = Give these details to your pension provider when you decide to take money from your pension
-pla.printAmend.IP2014.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.printAmend.pensionSchemeAdministratorReference  = Pension scheme administrator check reference
+pla.printAmend.status                               = Status
+pla.printAmend.withdrawn                            = Withdrawn
+pla.printAmend.dormant                              = Dormant
+pla.printAmend.giveToPensionProvider                = Give these details to your pension provider when you decide to take money from your pension
+pla.printAmend.IP2014.contactHMRC                   = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
 
 ## Amends ##
 pla.amends.title                                            = Protection summary

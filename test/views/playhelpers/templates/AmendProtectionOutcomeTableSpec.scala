@@ -16,6 +16,7 @@
 
 package views.playhelpers.templates
 
+import models.PrintDisplayModel
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testdata.AmendProtectionOutcomeViewsTestData._
@@ -27,651 +28,842 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
   private val NameHeader               = "Full Name"
   private val NinoHeader               = "National Insurance number"
+  private val ProtectedAmountHeader    = "Protected amount"
   private val ProtectionRefHeader      = "Protection reference number"
   private val FixedProtectionRefHeader = "Fixed protection 2016 reference number"
   private val ProtectionTypeHeader     = "Protection type"
-  private val PsaRefHeader             = "Pension Scheme administrator check reference"
+  private val PsaRefHeader             = "Pension scheme administrator check reference"
   private val ApplicationDateHeader    = "Application date"
   private val StatusHeader             = "Status"
   private val DormantText              = "Dormant"
   private val WithdrawnText            = "Withdrawn"
 
+  private def getPrintDisplayModelFor(notificationId: Int): PrintDisplayModel = {
+    val iP14PrintDisplayModels =
+      (1 to 7).map(notificationId => notificationId -> printDisplayModelIP14.copy(notificationId = notificationId))
+    val iP16PrintDisplayModels =
+      (8 to 14).map(notificationId => notificationId -> printDisplayModelIP16.copy(notificationId = notificationId))
+
+    (iP14PrintDisplayModels ++ iP16PrintDisplayModels).toMap.apply(notificationId)
+  }
+
   "amendProtectionOutcomeTable" when {
 
-    "provided with PrintDisplayModel containing notificationId: 1" should {
+    Seq(1, 5).foreach { notificationId =>
+      s"provided with PrintDisplayModel containing notificationId: $notificationId" when {
 
-      val displayModel = printDisplayModelIP14.copy(notificationId = 1)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+        val printDisplayModel = getPrintDisplayModelFor(notificationId)
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+        "includeProtectedAmount is set to false" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
-      }
+          val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel).body)
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+          val tableHeadings = doc.select("tr th")
+          val tableData     = doc.select("tr td")
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2014"
-      }
+          "contain row for name" in {
+            val rowIndex = 0
+            tableHeadings.get(rowIndex).text shouldBe NameHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+            tableData.get(rowIndex).text shouldBe "Jim Davis"
+          }
 
-      "contain row for Protection Reference Number" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
-        tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
-      }
+          "contain row for National Insurance Number" in {
+            val rowIndex = 1
+            tableHeadings.get(rowIndex).text shouldBe NinoHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.nino
+          }
 
-      "contain row for PSA Check Reference" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe PsaRefHeader
-        tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
-        tableData.get(rowIndex).text shouldBe "psaRef"
-      }
+          "contain row for Protection Type" in {
+            val rowIndex = 2
+            tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+            tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+          }
 
-      "contain row for Application Date" in {
-        val rowIndex = 5
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2015"
-      }
-    }
+          "contain row for Protection Reference Number" in {
+            val rowIndex = 3
+            tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.protectionReference
+          }
 
-    "provided with PrintDisplayModel containing notificationId: 2" should {
+          "contain row for PSA Check Reference" in {
+            val rowIndex = 4
+            tableHeadings.get(rowIndex).text shouldBe PsaRefHeader
+            tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.psaCheckReference
+          }
 
-      val displayModel = printDisplayModelIP14.copy(notificationId = 2)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+          "contain row for Application Date" in {
+            val rowIndex = 5
+            tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
+          }
+        }
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+        "includeProtectedAmount is set to true" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
-      }
+          val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel, includeProtectedAmount = true).body)
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+          val tableHeadings = doc.select("tr th")
+          val tableData     = doc.select("tr td")
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2014"
-      }
+          "contain row for name" in {
+            val rowIndex = 0
+            tableHeadings.get(rowIndex).text shouldBe NameHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+            tableData.get(rowIndex).text shouldBe "Jim Davis"
+          }
 
-      "contain row for Application Date" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2015"
-      }
+          "contain row for National Insurance Number" in {
+            val rowIndex = 1
+            tableHeadings.get(rowIndex).text shouldBe NinoHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.nino
+          }
 
-      "contain row for Status" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe StatusHeader
-        tableData.get(rowIndex).attr("id") shouldBe "status"
-        tableData.get(rowIndex).text shouldBe DormantText
-      }
-    }
+          "contain row for Protected Amount" in {
+            val rowIndex = 2
+            tableHeadings.get(rowIndex).text shouldBe ProtectedAmountHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectedAmount"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.protectedAmount.get
+          }
 
-    "provided with PrintDisplayModel containing notificationId: 3" should {
+          "contain row for Protection Type" in {
+            val rowIndex = 3
+            tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+            tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+          }
 
-      val displayModel = printDisplayModelIP14.copy(notificationId = 3)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+          "contain row for Protection Reference Number" in {
+            val rowIndex = 4
+            tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.protectionReference
+          }
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+          "contain row for PSA Check Reference" in {
+            val rowIndex = 5
+            tableHeadings.get(rowIndex).text shouldBe PsaRefHeader
+            tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.psaCheckReference
+          }
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
-      }
-
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
-
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2014"
-      }
-
-      "contain row for Application Date" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2015"
-      }
-
-      "contain row for Status" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe StatusHeader
-        tableData.get(rowIndex).attr("id") shouldBe "status"
-        tableData.get(rowIndex).text shouldBe DormantText
+          "contain row for Application Date" in {
+            val rowIndex = 6
+            tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
+          }
+        }
       }
     }
 
-    "provided with PrintDisplayModel containing notificationId: 4" should {
+    Seq(2, 3, 4).foreach { notificationId =>
+      s"provided with PrintDisplayModel containing notificationId: $notificationId" should {
 
-      val displayModel = printDisplayModelIP14.copy(notificationId = 4)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+        val printDisplayModel = getPrintDisplayModelFor(notificationId)
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+        "includeProtectedAmount is set to false" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
-      }
+          val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel).body)
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+          val tableHeadings = doc.select("tr th")
+          val tableData     = doc.select("tr td")
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2014"
-      }
+          "contain row for name" in {
+            val rowIndex = 0
+            tableHeadings.get(rowIndex).text shouldBe NameHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+            tableData.get(rowIndex).text shouldBe "Jim Davis"
+          }
 
-      "contain row for Application Date" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2015"
-      }
+          "contain row for National Insurance Number" in {
+            val rowIndex = 1
+            tableHeadings.get(rowIndex).text shouldBe NinoHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.nino
+          }
 
-      "contain row for Status" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe StatusHeader
-        tableData.get(rowIndex).attr("id") shouldBe "status"
-        tableData.get(rowIndex).text shouldBe DormantText
-      }
-    }
+          "contain row for Protection Type" in {
+            val rowIndex = 2
+            tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+            tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+          }
 
-    "provided with PrintDisplayModel containing notificationId: 5" should {
+          "contain row for Application Date" in {
+            val rowIndex = 3
+            tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
+          }
 
-      val displayModel = printDisplayModelIP14.copy(notificationId = 5)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+          "contain row for Status" in {
+            val rowIndex = 4
+            tableHeadings.get(rowIndex).text shouldBe StatusHeader
+            tableData.get(rowIndex).attr("id") shouldBe "status"
+            tableData.get(rowIndex).text shouldBe DormantText
+          }
+        }
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+        "includeProtectedAmount is set to true" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
-      }
+          val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel, includeProtectedAmount = true).body)
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+          val tableHeadings = doc.select("tr th")
+          val tableData     = doc.select("tr td")
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2014"
-      }
+          "contain row for name" in {
+            val rowIndex = 0
+            tableHeadings.get(rowIndex).text shouldBe NameHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+            tableData.get(rowIndex).text shouldBe "Jim Davis"
+          }
 
-      "contain row for Protection Reference Number" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
-        tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
-      }
+          "contain row for National Insurance Number" in {
+            val rowIndex = 1
+            tableHeadings.get(rowIndex).text shouldBe NinoHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.nino
+          }
 
-      "contain row for PSA Check Reference" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe PsaRefHeader
-        tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
-        tableData.get(rowIndex).text shouldBe "psaRef"
-      }
+          "contain row for Protected Amount" in {
+            val rowIndex = 2
+            tableHeadings.get(rowIndex).text shouldBe ProtectedAmountHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectedAmount"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.protectedAmount.get
+          }
 
-      "contain row for Application Date" in {
-        val rowIndex = 5
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2015"
+          "contain row for Protection Type" in {
+            val rowIndex = 3
+            tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+            tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+          }
+
+          "contain row for Application Date" in {
+            val rowIndex = 4
+            tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
+          }
+
+          "contain row for Status" in {
+            val rowIndex = 5
+            tableHeadings.get(rowIndex).text shouldBe StatusHeader
+            tableData.get(rowIndex).attr("id") shouldBe "status"
+            tableData.get(rowIndex).text shouldBe DormantText
+          }
+        }
       }
     }
 
     "provided with PrintDisplayModel containing notificationId: 6" should {
 
-      val displayModel = printDisplayModelIP14.copy(notificationId = 6)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+      val printDisplayModel = getPrintDisplayModelFor(6)
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+      "includeProtectedAmount is set to false" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
+        val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel).body)
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contain row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe NameHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contain row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe NinoHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.nino
+        }
+
+        "contain row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contain row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
+        }
+
+        "contain row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe StatusHeader
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe WithdrawnText
+        }
       }
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+      "includeProtectedAmount is set to true" should {
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2014"
-      }
+        val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel, includeProtectedAmount = true).body)
 
-      "contain row for Application Date" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2015"
-      }
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
 
-      "contain row for Status" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe StatusHeader
-        tableData.get(rowIndex).attr("id") shouldBe "status"
-        tableData.get(rowIndex).text shouldBe WithdrawnText
+        "contain row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe NameHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contain row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe NinoHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.nino
+        }
+
+        "contain row for Protected Amount" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe ProtectedAmountHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectedAmount"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.protectedAmount.get
+        }
+
+        "contain row for Protection Type" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contain row for Application Date" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
+        }
+
+        "contain row for Status" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe StatusHeader
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe WithdrawnText
+        }
       }
     }
 
     "provided with PrintDisplayModel containing notificationId: 7" should {
 
-      val displayModel = printDisplayModelIP14.copy(notificationId = 7)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+      val printDisplayModel = getPrintDisplayModelFor(7)
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+      "includeProtectedAmount is set to false" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
+        val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel).body)
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contain row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe NameHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contain row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe NinoHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contain row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contain row for Fixed Protection 2016 Reference Number" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
+          tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
+        }
+
+        "contain row for Application Date" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2015"
+        }
       }
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+      "includeProtectedAmount is set to true" should {
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2014"
-      }
+        val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel, includeProtectedAmount = true).body)
 
-      "contain row for Fixed Protection 2016 Reference Number" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
-        tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
-        tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
-      }
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
 
-      "contain row for Application Date" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2015"
+        "contain row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe NameHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contain row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe NinoHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contain row for Protected Amount" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe ProtectedAmountHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectedAmount"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.protectedAmount.get
+        }
+
+        "contain row for Protection Type" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+        }
+
+        "contain row for Fixed Protection 2016 Reference Number" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
+          tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
+        }
+
+        "contain row for Application Date" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2015"
+        }
       }
     }
 
     "provided with PrintDisplayModel containing notificationId: 8" should {
 
-      val displayModel = printDisplayModelIP16.copy(notificationId = 8)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+      val printDisplayModel = getPrintDisplayModelFor(8)
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+      "includeProtectedAmount is set to false" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
+        val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel).body)
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contain row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe NameHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contain row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe NinoHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contain row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contain row for Protection Reference Number" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+        }
+
+        "contain row for PSA Check Reference" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe PsaRefHeader
+          tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
+          tableData.get(rowIndex).text shouldBe "psaRef"
+        }
+
+        "contain row for Application Date" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
       }
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+      "includeProtectedAmount is set to true" should {
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2016"
-      }
+        val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel, includeProtectedAmount = true).body)
 
-      "contain row for Protection Reference Number" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
-        tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
-      }
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
 
-      "contain row for PSA Check Reference" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe PsaRefHeader
-        tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
-        tableData.get(rowIndex).text shouldBe "psaRef"
-      }
+        "contain row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe NameHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
 
-      "contain row for Application Date" in {
-        val rowIndex = 5
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2017"
-      }
-    }
+        "contain row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe NinoHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
 
-    "provided with PrintDisplayModel containing notificationId: 9" should {
+        "contain row for Protected Amount" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe ProtectedAmountHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectedAmount"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.protectedAmount.get
+        }
 
-      val displayModel = printDisplayModelIP16.copy(notificationId = 9)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+        "contain row for Protection Type" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+        "contain row for Protection Reference Number" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+        }
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
-      }
+        "contain row for PSA Check Reference" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe PsaRefHeader
+          tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
+          tableData.get(rowIndex).text shouldBe "psaRef"
+        }
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
-
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2016"
-      }
-
-      "contain row for Application Date" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2017"
-      }
-
-      "contain row for Status" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe StatusHeader
-        tableData.get(rowIndex).attr("id") shouldBe "status"
-        tableData.get(rowIndex).text shouldBe DormantText
-      }
-    }
-
-    "provided with PrintDisplayModel containing notificationId: 10" should {
-
-      val displayModel = printDisplayModelIP16.copy(notificationId = 10)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
-
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
-
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
-      }
-
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
-
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2016"
-      }
-
-      "contain row for Application Date" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2017"
-      }
-
-      "contain row for Status" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe StatusHeader
-        tableData.get(rowIndex).attr("id") shouldBe "status"
-        tableData.get(rowIndex).text shouldBe DormantText
+        "contain row for Application Date" in {
+          val rowIndex = 6
+          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
       }
     }
 
-    "provided with PrintDisplayModel containing notificationId: 11" should {
+    Seq(9, 10, 11, 12).foreach { notificationId =>
+      s"provided with PrintDisplayModel containing notificationId: $notificationId" should {
 
-      val displayModel = printDisplayModelIP16.copy(notificationId = 11)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+        val printDisplayModel = getPrintDisplayModelFor(notificationId)
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+        "includeProtectedAmount is set to false" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
-      }
+          val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel).body)
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+          val tableHeadings = doc.select("tr th")
+          val tableData     = doc.select("tr td")
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2016"
-      }
+          "contain row for name" in {
+            val rowIndex = 0
+            tableHeadings.get(rowIndex).text shouldBe NameHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+            tableData.get(rowIndex).text shouldBe "Jim Davis"
+          }
 
-      "contain row for Application Date" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2017"
-      }
+          "contain row for National Insurance Number" in {
+            val rowIndex = 1
+            tableHeadings.get(rowIndex).text shouldBe NinoHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+            tableData.get(rowIndex).text shouldBe "nino"
+          }
 
-      "contain row for Status" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe StatusHeader
-        tableData.get(rowIndex).attr("id") shouldBe "status"
-        tableData.get(rowIndex).text shouldBe DormantText
-      }
-    }
+          "contain row for Protection Type" in {
+            val rowIndex = 2
+            tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+            tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+          }
 
-    "provided with PrintDisplayModel containing notificationId: 12" should {
+          "contain row for Application Date" in {
+            val rowIndex = 3
+            tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+            tableData.get(rowIndex).text shouldBe "14/07/2017"
+          }
 
-      val displayModel = printDisplayModelIP16.copy(notificationId = 12)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+          "contain row for Status" in {
+            val rowIndex = 4
+            tableHeadings.get(rowIndex).text shouldBe StatusHeader
+            tableData.get(rowIndex).attr("id") shouldBe "status"
+            tableData.get(rowIndex).text shouldBe DormantText
+          }
+        }
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+        "includeProtectedAmount is set to true" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
-      }
+          val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel, includeProtectedAmount = true).body)
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+          val tableHeadings = doc.select("tr th")
+          val tableData     = doc.select("tr td")
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2016"
-      }
+          "contain row for name" in {
+            val rowIndex = 0
+            tableHeadings.get(rowIndex).text shouldBe NameHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+            tableData.get(rowIndex).text shouldBe "Jim Davis"
+          }
 
-      "contain row for Application Date" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2017"
-      }
+          "contain row for National Insurance Number" in {
+            val rowIndex = 1
+            tableHeadings.get(rowIndex).text shouldBe NinoHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+            tableData.get(rowIndex).text shouldBe "nino"
+          }
 
-      "contain row for Status" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe StatusHeader
-        tableData.get(rowIndex).attr("id") shouldBe "status"
-        tableData.get(rowIndex).text shouldBe DormantText
+          "contain row for Protected Amount" in {
+            val rowIndex = 2
+            tableHeadings.get(rowIndex).text shouldBe ProtectedAmountHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectedAmount"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.protectedAmount.get
+          }
+
+          "contain row for Protection Type" in {
+            val rowIndex = 3
+            tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+            tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+          }
+
+          "contain row for Application Date" in {
+            val rowIndex = 4
+            tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+            tableData.get(rowIndex).text shouldBe "14/07/2017"
+          }
+
+          "contain row for Status" in {
+            val rowIndex = 5
+            tableHeadings.get(rowIndex).text shouldBe StatusHeader
+            tableData.get(rowIndex).attr("id") shouldBe "status"
+            tableData.get(rowIndex).text shouldBe DormantText
+          }
+        }
       }
     }
 
     "provided with PrintDisplayModel containing notificationId: 13" should {
 
-      val displayModel = printDisplayModelIP16.copy(notificationId = 13)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+      val printDisplayModel = getPrintDisplayModelFor(13)
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+      "includeProtectedAmount is set to false" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
+        val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel).body)
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contain row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe NameHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contain row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe NinoHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contain row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contain row for Application Date" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+
+        "contain row for Status" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe StatusHeader
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe WithdrawnText
+        }
       }
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+      "includeProtectedAmount is set to true" should {
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2016"
-      }
+        val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel, includeProtectedAmount = true).body)
 
-      "contain row for Application Date" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2017"
-      }
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
 
-      "contain row for Status" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe StatusHeader
-        tableData.get(rowIndex).attr("id") shouldBe "status"
-        tableData.get(rowIndex).text shouldBe WithdrawnText
+        "contain row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe NameHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contain row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe NinoHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contain row for Protected Amount" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe ProtectedAmountHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectedAmount"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.protectedAmount.get
+        }
+
+        "contain row for Protection Type" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contain row for Application Date" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+
+        "contain row for Status" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe StatusHeader
+          tableData.get(rowIndex).attr("id") shouldBe "status"
+          tableData.get(rowIndex).text shouldBe WithdrawnText
+        }
       }
     }
 
     "provided with PrintDisplayModel containing notificationId: 14" should {
 
-      val displayModel = printDisplayModelIP16.copy(notificationId = 14)
-      val doc          = Jsoup.parse(amendProtectionOutcomeTable(displayModel).body)
+      val printDisplayModel = getPrintDisplayModelFor(14)
 
-      val tableHeadings = doc.select("tr th")
-      val tableData     = doc.select("tr td")
+      "includeProtectedAmount is set to false" should {
 
-      "contain row for name" in {
-        val rowIndex = 0
-        tableHeadings.get(rowIndex).text shouldBe NameHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
-        tableData.get(rowIndex).text shouldBe "Jim Davis"
+        val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel).body)
+
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
+
+        "contain row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe NameHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contain row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe NinoHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contain row for Protection Type" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contain row for Fixed Protection 2016 Reference Number" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
+          tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+        }
+
+        "contain row for Application Date" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
       }
 
-      "contain row for National Insurance Number" in {
-        val rowIndex = 1
-        tableHeadings.get(rowIndex).text shouldBe NinoHeader
-        tableData.get(rowIndex).attr("id") shouldBe "yourNino"
-        tableData.get(rowIndex).text shouldBe "nino"
-      }
+      "includeProtectedAmount is set to true" should {
 
-      "contain row for Protection Type" in {
-        val rowIndex = 2
-        tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
-        tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-        tableData.get(rowIndex).text shouldBe "Individual protection 2016"
-      }
+        val doc = Jsoup.parse(amendProtectionOutcomeTable(printDisplayModel, includeProtectedAmount = true).body)
 
-      "contain row for Fixed Protection 2016 Reference Number" in {
-        val rowIndex = 3
-        tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
-        tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
-        tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
-      }
+        val tableHeadings = doc.select("tr th")
+        val tableData     = doc.select("tr td")
 
-      "contain row for Application Date" in {
-        val rowIndex = 4
-        tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
-        tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-        tableData.get(rowIndex).text shouldBe "14/07/2017"
+        "contain row for name" in {
+          val rowIndex = 0
+          tableHeadings.get(rowIndex).text shouldBe NameHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+          tableData.get(rowIndex).text shouldBe "Jim Davis"
+        }
+
+        "contain row for National Insurance Number" in {
+          val rowIndex = 1
+          tableHeadings.get(rowIndex).text shouldBe NinoHeader
+          tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+          tableData.get(rowIndex).text shouldBe "nino"
+        }
+
+        "contain row for Protected Amount" in {
+          val rowIndex = 2
+          tableHeadings.get(rowIndex).text shouldBe ProtectedAmountHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectedAmount"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.protectedAmount.get
+        }
+
+        "contain row for Protection Type" in {
+          val rowIndex = 3
+          tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "protectionType"
+          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+        }
+
+        "contain row for Fixed Protection 2016 Reference Number" in {
+          val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
+          tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
+          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+        }
+
+        "contain row for Application Date" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+          tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
       }
     }
   }

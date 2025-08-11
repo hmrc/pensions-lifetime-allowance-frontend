@@ -27,7 +27,7 @@ trait OutcomeAmendedViewSpecMessages {
   val tableAmendNino               = "National Insurance number"
   val tableAmendProtectionRef      = "Protection reference number"
   val tableAmendProtectionType     = "Protection type"
-  val tableAmendPsaRef             = "Pension Scheme administrator check reference"
+  val tableAmendPsaRef             = "Pension scheme administrator check reference"
   val tableAmendFixedProtectionRef = "Fixed protection 2016 reference number"
   val tableAmendApplicationDate    = "Application date"
   val tableStatus                  = "Status"
