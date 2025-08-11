@@ -51,7 +51,12 @@ import views.html.pages.result.manualCorrespondenceNeeded
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar with AuthMock with ScalaFutures {
+class ReadProtectionsControllerSpec
+    extends FakeApplication
+    with MockitoSugar
+    with AuthMock
+    with ScalaFutures
+    with ModelGenerators {
 
   val testSuccessResponse =
     HttpResponse(status = 200, json = Json.parse("""{"thisJson":"doesNotMatter"}"""), headers = Map.empty)
@@ -304,7 +309,7 @@ class ReadProtectionsControllerSpec extends FakeApplication with MockitoSugar wi
   "Calling the currentProtections Action" when {
 
     "AppConfig.hipMigrationEnabled is set to true" should {
-      "call PlaConnectorV2" in new Setup with ModelGenerators {
+      "call PlaConnectorV2" in new Setup {
         when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
         when(mockPlaConnectorV2.readProtections(any())(any(), any()))
           .thenReturn(Future.successful(Right(readProtectionsResponseGen.sample.value)))
