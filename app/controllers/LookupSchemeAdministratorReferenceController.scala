@@ -16,46 +16,34 @@
 
 package controllers
 
-import config.{FrontendAppConfig, PlaContext}
-import connectors.PLAConnector
+import config.FrontendAppConfig
 import forms.PSALookupSchemeAdministratorReferenceForm
 import models.PSALookupRequest
-import play.api.Application
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.ActionWithSessionId
-import views.html._
+import views.html.pages.lookup.{psa_lookup_scheme_admin_ref_form, withdrawnPSALookupJourney}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class LookupSchemeAdministratorReferenceController @Inject() (
-    val sessionCacheService: SessionCacheService,
-    val plaConnector: PLAConnector,
-    val actionWithSessionId: ActionWithSessionId,
+    sessionCacheService: SessionCacheService,
+    actionWithSessionId: ActionWithSessionId,
     mcc: MessagesControllerComponents,
-    psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form,
-    withdrawnPSALookupJourney: pages.lookup.withdrawnPSALookupJourney
-)(
-    implicit val context: PlaContext,
-    implicit val appConfig: FrontendAppConfig,
-    implicit val formWithCSRF: FormWithCSRF,
-    implicit val application: Application
-) extends FrontendController(mcc)
+    psa_lookup_scheme_admin_ref_form: psa_lookup_scheme_admin_ref_form,
+    withdrawnPSALookupJourney: withdrawnPSALookupJourney
+)(implicit val appConfig: FrontendAppConfig, ec: ExecutionContext)
+    extends FrontendController(mcc)
     with I18nSupport {
 
-  implicit val executionContext: ExecutionContext = mcc.executionContext
-  implicit val parser: BodyParser[AnyContent]     = mcc.parsers.defaultBodyParser
-
-  def psaRefForm(implicit request: Request[AnyContent]): Form[String] =
+  private def psaRefForm(implicit request: Request[AnyContent]): Form[String] =
     PSALookupSchemeAdministratorReferenceForm.psaRefForm
 
-  val lookupRequestID = "psa-lookup-request"
-  val lookupResultID  = "psa-lookup-result"
+  private val lookupRequestID = "psa-lookup-request"
 
   def displaySchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
     if (appConfig.psalookupjourneyShutterEnabled) {
@@ -67,7 +55,7 @@ class LookupSchemeAdministratorReferenceController @Inject() (
           case Some(PSALookupRequest(psaRef, _)) =>
             Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
           case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
-        }(executionContext)
+        }
     }
   }
 
@@ -82,9 +70,7 @@ class LookupSchemeAdministratorReferenceController @Inject() (
           validFormData =>
             sessionCacheService
               .saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData))
-              .map(_ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm))(
-                executionContext
-              )
+              .map(_ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm))
         )
     }
   }
