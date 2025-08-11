@@ -40,21 +40,21 @@
 
     @if(model.notificationId == 25 || model.notificationId == 35) {
         @for(infoNum <- model.additionalInfo) {
-            <p class="govuk-body" id=@{s"additionalInfo$infoNum"}>@Html(Messages("amendResultCode." + model.notificationId+ "." + infoNum))</p>
+            <p class="govuk-body" id=@{s"additionalInfo$infoNum"}>@Html(Messages(s"amendResultCode.${model.notificationId}.$infoNum"))</p>
         }
     } else if(model.additionalInfo.nonEmpty) {
         @for(infoNum <- model.additionalInfo.dropRight(1)) {
-            <p class="govuk-body" id=@{s"additionalInfo$infoNum"}>@Html(Messages("amendResultCode." + model.notificationId+ "." + infoNum))</p>
+            <p class="govuk-body" id=@{s"additionalInfo$infoNum"}>@Html(Messages(s"amendResultCode.${model.notificationId}.$infoNum"))</p>
         }
         <p class="govuk-body" id="additionalInfoLink">
-            @Messages("amendResultCode." + model.notificationId + ".href.text")
+            @Messages(s"amendResultCode.${model.notificationId}.href.text")
             <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">@messages("amendResultCode.href.text")</a>.
         </p>
     }
 
     <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.IPChangeDetails")</h2>
 
-    @if(Constants.inactiveSuccessCodes.contains(model.notificationId.toInt)) {
+    @if(Constants.inactiveSuccessCodes.contains(model.notificationId)) {
         <p class="govuk-body" id="ipPensionSharing">
             @Messages("pla.resultSuccess.IPPensionSharing.beforeLink")
             <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">

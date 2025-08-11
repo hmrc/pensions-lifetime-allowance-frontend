@@ -18,12 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import config._
-import connectors.PlaConnectorError.{
-  ConflictResponseError,
-  IncorrectResponseBodyError,
-  LockedResponseError,
-  UnexpectedResponseError
-}
+import connectors.PlaConnectorError.{IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
 import connectors.{PLAConnector, PlaConnectorV2}
 import constructors.DisplayConstructors
 import generators.ModelGenerators
@@ -35,7 +30,6 @@ import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
 import org.mockito.Mockito._
 import org.mockito.stubbing.OngoingStubbing
-import org.scalatest.OptionValues.convertOptionToValuable
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.http.HeaderNames.CACHE_CONTROL
