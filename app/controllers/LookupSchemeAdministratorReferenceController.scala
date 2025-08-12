@@ -16,67 +16,63 @@
 
 package controllers
 
-import config.{FrontendAppConfig, PlaContext}
-import connectors.PLAConnector
+import config.FrontendAppConfig
 import forms.PSALookupSchemeAdministratorReferenceForm
 import models.PSALookupRequest
-import play.api.Application
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.ActionWithSessionId
+import views.html.pages.lookup.{psa_lookup_scheme_admin_ref_form, withdrawnPSALookupJourney}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class LookupSchemeAdministratorReferenceController @Inject() (
-    val sessionCacheService: SessionCacheService,
-    val plaConnector: PLAConnector,
-    val actionWithSessionId: ActionWithSessionId,
+    sessionCacheService: SessionCacheService,
+    actionWithSessionId: ActionWithSessionId,
     mcc: MessagesControllerComponents,
-    psa_lookup_scheme_admin_ref_form: views.html.pages.lookup.psa_lookup_scheme_admin_ref_form
-)(
-    implicit val context: PlaContext,
-    implicit val appConfig: FrontendAppConfig,
-    implicit val formWithCSRF: FormWithCSRF,
-    implicit val application: Application
-) extends FrontendController(mcc)
+    psa_lookup_scheme_admin_ref_form: psa_lookup_scheme_admin_ref_form,
+    withdrawnPSALookupJourney: withdrawnPSALookupJourney
+)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
+    extends FrontendController(mcc)
     with I18nSupport {
 
-  implicit val executionContext: ExecutionContext = mcc.executionContext
-  implicit val parser: BodyParser[AnyContent]     = mcc.parsers.defaultBodyParser
-
-  def psaRefForm(implicit request: Request[AnyContent]): Form[String] =
+  private def psaRefForm(implicit request: Request[AnyContent]): Form[String] =
     PSALookupSchemeAdministratorReferenceForm.psaRefForm
 
-  val lookupRequestID = "psa-lookup-request"
-  val lookupResultID  = "psa-lookup-result"
+  private val lookupRequestID = "psa-lookup-request"
 
   def displaySchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService
-      .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
-      .flatMap {
-        case Some(PSALookupRequest(psaRef, _)) =>
-          Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
-        case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
-      }(executionContext)
+    if (appConfig.psalookupjourneyShutterEnabled) {
+      Future.successful(Ok(withdrawnPSALookupJourney()))
+    } else {
+      sessionCacheService
+        .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+        .flatMap {
+          case Some(PSALookupRequest(psaRef, _)) =>
+            Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm.fill(psaRef))))
+          case _ => Future.successful(Ok(psa_lookup_scheme_admin_ref_form(psaRefForm)))
+        }
+    }
   }
 
   def submitSchemeAdministratorReferenceForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    psaRefForm
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
-        validFormData =>
-          sessionCacheService
-            .saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData))
-            .map(_ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm))(
-              executionContext
-            )
-      )
+    if (appConfig.psalookupjourneyShutterEnabled) {
+      Future.successful(Ok(withdrawnPSALookupJourney()))
+    } else {
+      psaRefForm
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(psa_lookup_scheme_admin_ref_form(formWithErrors))),
+          validFormData =>
+            sessionCacheService
+              .saveFormData[PSALookupRequest](lookupRequestID, PSALookupRequest(validFormData))
+              .map(_ => Redirect(routes.LookupProtectionNotificationController.displayProtectionNotificationNoForm))
+        )
+    }
   }
 
 }

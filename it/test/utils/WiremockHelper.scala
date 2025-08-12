@@ -27,7 +27,7 @@ import play.api.libs.ws.WSClient
 object WiremockHelper {
   val wiremockPort = 11111
   val wiremockHost = "localhost"
-  val url = s"http://$wiremockHost:$wiremockPort"
+  val url          = s"http://$wiremockHost:$wiremockPort"
 }
 
 trait WiremockHelper {
@@ -36,7 +36,7 @@ trait WiremockHelper {
   import WiremockHelper._
 
   val wmConfig: WireMockConfiguration = wireMockConfig().port(wiremockPort)
-  val wireMockServer = new WireMockServer(wmConfig)
+  val wireMockServer                  = new WireMockServer(wmConfig)
 
   def startWiremock() = {
     wireMockServer.start()
@@ -49,49 +49,44 @@ trait WiremockHelper {
 
   lazy val ws = app.injector.instanceOf(classOf[WSClient])
 
-
   def stubGet(url: String, status: Integer, body: String) =
-    stubFor(get(urlMatching(url))
-      .willReturn(
-        aResponse().
-          withStatus(status).
-          withBody(body)
-      )
+    stubFor(
+      get(urlMatching(url))
+        .willReturn(
+          aResponse().withStatus(status).withBody(body)
+        )
     )
 
   def stubPost(url: String, status: Integer, responseBody: String) =
-    stubFor(post(urlMatching(url))
-      .willReturn(
-        aResponse().
-          withStatus(status).
-          withBody(responseBody)
-      )
+    stubFor(
+      post(urlMatching(url))
+        .willReturn(
+          aResponse().withStatus(status).withBody(responseBody)
+        )
     )
 
   def stubPut(url: String, status: Integer, responseBody: String) =
-    stubFor(put(urlMatching(url))
-      .willReturn(
-        aResponse().
-          withStatus(status).
-          withBody(responseBody)
-      )
+    stubFor(
+      put(urlMatching(url))
+        .willReturn(
+          aResponse().withStatus(status).withBody(responseBody)
+        )
     )
 
   def stubPatch(url: String, status: Integer, responseBody: String) =
-    stubFor(patch(urlMatching(url))
-      .willReturn(
-        aResponse().
-          withStatus(status).
-          withBody(responseBody)
-      )
+    stubFor(
+      patch(urlMatching(url))
+        .willReturn(
+          aResponse().withStatus(status).withBody(responseBody)
+        )
     )
 
   def stubDelete(url: String, status: Integer, responseBody: String) =
-    stubFor(delete(urlMatching(url))
-      .willReturn(
-        aResponse().
-          withStatus(status).
-          withBody(responseBody)
-      )
+    stubFor(
+      delete(urlMatching(url))
+        .willReturn(
+          aResponse().withStatus(status).withBody(responseBody)
+        )
     )
+
 }

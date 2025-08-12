@@ -28,6 +28,7 @@ trait AppConfig {
   val excludeCopeTab: Boolean
   val identityVerification: Boolean
   val hipMigrationEnabled: Boolean
+  val psalookupjourneyShutterEnabled: Boolean
   val confirmFPUrl: String
   val ipStartUrl: String
   val ip14StartUrl: String
@@ -62,6 +63,8 @@ class FrontendAppConfig @Inject() (
 
   lazy val signOutUrl = "/check-your-pension-protections/sign-out"
 
+  lazy val psaLookupWithdrawLinkUrl: String = configuration.get[String]("psa.lookup.withdrawLink.url")
+
   lazy val urBannerLink =
     "https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113"
 
@@ -75,6 +78,11 @@ class FrontendAppConfig @Inject() (
 
   override val hipMigrationEnabled: Boolean =
     configuration.getOptional[Boolean]("microservice.services.features.hip-migration").getOrElse(false)
+
+  override val psalookupjourneyShutterEnabled: Boolean =
+    configuration
+      .getOptional[Boolean]("microservice.services.features.psa-lookup-journeyShutterEnabled")
+      .getOrElse(false)
 
   override lazy val citizenAuthHost        = configuration.getOptional[String]("citizen-auth.host")
   override lazy val confirmFPUrl           = configuration.getOptional[String]("confirmFP.url").getOrElse("")

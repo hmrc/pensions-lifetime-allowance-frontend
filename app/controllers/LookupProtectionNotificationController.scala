@@ -16,92 +16,95 @@
 
 package controllers
 
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import connectors.PLAConnector
 import forms.PSALookupProtectionNotificationNoForm
 import models.{PSALookupRequest, PSALookupResult}
-import play.api.Application
 import play.api.data.Form
 import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.SessionCacheService
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import uk.gov.hmrc.http.UpstreamErrorResponse
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.ActionWithSessionId
+import views.html.pages.lookup.{psa_lookup_protection_notification_no_form, withdrawnPSALookupJourney}
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class LookupProtectionNotificationController @Inject() (
-    val sessionCacheService: SessionCacheService,
-    val plaConnector: PLAConnector,
-    val actionWithSessionId: ActionWithSessionId,
+    sessionCacheService: SessionCacheService,
+    plaConnector: PLAConnector,
+    actionWithSessionId: ActionWithSessionId,
     mcc: MessagesControllerComponents,
-    psa_lookup_protection_notification_no_form: views.html.pages.lookup.psa_lookup_protection_notification_no_form
-)(
-    implicit val context: PlaContext,
-    implicit val appConfig: FrontendAppConfig,
-    implicit val formWithCSRF: FormWithCSRF,
-    implicit val application: Application
-) extends FrontendController(mcc)
+    psa_lookup_protection_notification_no_form: psa_lookup_protection_notification_no_form,
+    withdrawnPSALookupJourney: withdrawnPSALookupJourney
+)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
+    extends FrontendController(mcc)
     with I18nSupport {
 
-  implicit val executionContext: ExecutionContext = mcc.executionContext
-  implicit val parser: BodyParser[AnyContent]     = mcc.parsers.defaultBodyParser
-
-  def pnnForm(implicit request: Request[AnyContent]): Form[String] =
+  private def pnnForm(implicit request: Request[AnyContent]): Form[String] =
     PSALookupProtectionNotificationNoForm.pnnForm
 
-  val lookupRequestID = "psa-lookup-request"
-  val lookupResultID  = "psa-lookup-result"
+  private val lookupRequestID = "psa-lookup-request"
+  private val lookupResultID  = "psa-lookup-result"
 
   def displayProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    sessionCacheService
-      .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
-      .flatMap {
-        case Some(_) => Future.successful(Ok(psa_lookup_protection_notification_no_form(pnnForm)))
-        case _ =>
-          Future.successful(
-            Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
-          )
-      }(executionContext)
+    if (appConfig.psalookupjourneyShutterEnabled) {
+      Future.successful(Ok(withdrawnPSALookupJourney()))
+    } else {
+      sessionCacheService
+        .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+        .flatMap {
+          case Some(_) => Future.successful(Ok(psa_lookup_protection_notification_no_form(pnnForm)))
+          case _ =>
+            Future.successful(
+              Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
+            )
+        }
+    }
   }
 
   def submitProtectionNotificationNoForm: Action[AnyContent] = actionWithSessionId.async { implicit request =>
-    pnnForm
-      .bindFromRequest()
-      .fold(
-        formWithErrors => Future.successful(BadRequest(psa_lookup_protection_notification_no_form(formWithErrors))),
-        validFormData =>
-          sessionCacheService
-            .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
-            .flatMap {
-              case Some(PSALookupRequest(psaRef, _)) =>
-                val pnn = validFormData.toUpperCase
-                plaConnector
-                  .psaLookup(psaRef, pnn)(hc, executionContext)
-                  .flatMap { result =>
-                    val resultData    = Json.fromJson[PSALookupResult](result.json).get
-                    val updatedResult = resultData.copy(protectionNotificationNumber = Some(pnn))
-                    sessionCacheService
-                      .saveFormData[PSALookupResult](lookupResultID, updatedResult)
-                      .map(_ => Redirect(routes.LookupController.displayLookupResults))(executionContext)
-                  }(executionContext)
-                  .recoverWith {
-                    case r: UpstreamErrorResponse if r.statusCode == NOT_FOUND =>
-                      val fullResult = PSALookupRequest(psaRef, Some(pnn))
+    if (appConfig.psalookupjourneyShutterEnabled) {
+      Future.successful(Ok(withdrawnPSALookupJourney()))
+    } else {
+      pnnForm
+        .bindFromRequest()
+        .fold(
+          formWithErrors => Future.successful(BadRequest(psa_lookup_protection_notification_no_form(formWithErrors))),
+          validFormData =>
+            sessionCacheService
+              .fetchAndGetFormData[PSALookupRequest](lookupRequestID)
+              .flatMap {
+                case Some(PSALookupRequest(psaRef, _)) =>
+                  val pnn = validFormData.toUpperCase
+                  plaConnector
+                    .psaLookup(psaRef, pnn)
+                    .flatMap { result =>
+                      val resultData    = Json.fromJson[PSALookupResult](result.json).get
+                      val updatedResult = resultData.copy(protectionNotificationNumber = Some(pnn))
                       sessionCacheService
-                        .saveFormData[PSALookupRequest](lookupRequestID, fullResult)
-                        .map(_ => Redirect(routes.LookupController.displayNotFoundResults))(executionContext)
-                  }(executionContext)
-              case _ =>
-                Future.successful(
-                  Redirect(routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm)
-                )
-            }(executionContext)
-      )
+                        .saveFormData[PSALookupResult](lookupResultID, updatedResult)
+                        .map(_ => Redirect(routes.LookupController.displayLookupResults))
+                    }
+                    .recoverWith {
+                      case r: UpstreamErrorResponse if r.statusCode == NOT_FOUND =>
+                        val fullResult = PSALookupRequest(psaRef, Some(pnn))
+                        sessionCacheService
+                          .saveFormData[PSALookupRequest](lookupRequestID, fullResult)
+                          .map(_ => Redirect(routes.LookupController.displayNotFoundResults))
+                    }
+                case _ =>
+                  Future.successful(
+                    Redirect(
+                      routes.LookupSchemeAdministratorReferenceController.displaySchemeAdministratorReferenceForm
+                    )
+                  )
+              }
+        )
+    }
   }
 
 }
