@@ -20,7 +20,7 @@
 
 @this(
 	layout: Layout,
-	resultAmendDetails: playHelpers.templates.resultAmendDetails
+	protectionDetailsTable: playHelpers.templates.amendProtectionOutcomeTable
 )
 
 @(model: AmendResultDisplayModel)(implicit request: Request[_], messages: Messages)
@@ -50,7 +50,7 @@
 	<h2 class="govuk-heading-m">@messages("pla.amendsResultPage.protectionDetails")</h2>
 
 	@model.details.map{ details =>
-		@resultAmendDetails(details)
+		@protectionDetailsTable(details)
 	}
 
 	<p class="govuk-body">@messages("pla.amendsResultPage.printGuidancePara")</p>
