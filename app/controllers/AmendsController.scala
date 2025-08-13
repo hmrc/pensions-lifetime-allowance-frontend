@@ -158,11 +158,11 @@ class AmendsController @Inject() (
   def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
-        modelAR              <- sessionCacheService.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
-        modelGA              <- sessionCacheService.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
-        personalDetailsModel <- citizenDetailsConnector.getPersonDetails(nino)
+        modelAR                 <- sessionCacheService.fetchAndGetFormData[AmendResponseModel]("amendResponseModel")
+        modelGA                 <- sessionCacheService.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
+        personalDetailsModelOpt <- citizenDetailsConnector.getPersonDetails(nino)
 
-        result = amendmentOutcomeResult(modelAR, modelGA, personalDetailsModel, nino)
+        result = amendmentOutcomeResult(modelAR, modelGA, personalDetailsModelOpt, nino)
       } yield result
     }
   }
@@ -170,7 +170,7 @@ class AmendsController @Inject() (
   private def amendmentOutcomeResult(
       modelAR: Option[AmendResponseModel],
       modelGA: Option[AmendsGAModel],
-      personalDetailsModel: Option[PersonalDetailsModel],
+      personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
   )(implicit request: Request[AnyContent]): Result = {
     if (modelGA.isEmpty) {
@@ -184,13 +184,14 @@ class AmendsController @Inject() (
         }
         if (Constants.amendmentCodesList.contains(id)) {
           sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-          val displayModel = displayConstructors.createAmendResultDisplayModel(model, personalDetailsModel, nino)
+          val displayModel = displayConstructors.createAmendResultDisplayModel(model, personalDetailsModelOpt, nino)
           Ok(outcomeAmended(displayModel))
 
         } else if (Constants.activeAmendmentCodes.contains(id)) {
           sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-          val displayModel = displayConstructors.createActiveAmendResponseDisplayModel(model)
-          Ok(outcomeActive(displayModel, modelGA))
+          val displayModel =
+            displayConstructors.createActiveAmendResponseDisplayModel(model, personalDetailsModelOpt, nino)
+          Ok(outcomeActive(displayModel, modelGA, appConfig))
 
         } else {
           val displayModel = displayConstructors.createInactiveAmendResponseDisplayModel(model)

@@ -40,6 +40,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers._
+import testdata.AmendProtectionOutcomeViewsTestData.{amendResultDisplayModelIP14, amendsActiveResultModelIP14}
 import testdata.PlaV2TestData.amendProtectionResponse
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import utils.Constants
@@ -125,7 +126,7 @@ class AmendsControllerSpec
     when(manualCorrespondenceNeededView.apply()(any(), any())).thenReturn(HtmlFormat.empty)
     when(noNotificationIdView.apply()(any(), any())).thenReturn(HtmlFormat.empty)
     when(technicalErrorView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(outcomeActiveView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(outcomeActiveView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(outcomeInactiveView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(outcomeAmendedView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(amendSummaryView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
@@ -376,7 +377,7 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
 
-          val amendResultDisplayModel = AmendResultDisplayModel(IP2014, notificationId, "£1100000", None)
+          val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
           when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
             .thenReturn(amendResultDisplayModel)
 
@@ -402,9 +403,8 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
 
-          val activeAmendResultDisplayModel =
-            ActiveAmendResultDisplayModel(ApplicationType.IP2014, notificationId.toString, "£1100000", None)
-          when(displayConstructors.createActiveAmendResponseDisplayModel(any()))
+          val activeAmendResultDisplayModel = amendsActiveResultModelIP14.copy(notificationId = notificationId.toString)
+          when(displayConstructors.createActiveAmendResponseDisplayModel(any(), any(), any()))
             .thenReturn(activeAmendResultDisplayModel)
 
           val result = controller.amendmentOutcome()(fakeRequest)
@@ -413,7 +413,7 @@ class AmendsControllerSpec
           verify(sessionCacheService)
             .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
           verify(outcomeActiveView)
-            .apply(eqTo(activeAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)))(any(), any())
+            .apply(eqTo(activeAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)), eqTo(appConfig))(any(), any())
         }
       }
     }

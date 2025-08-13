@@ -17,12 +17,53 @@
 package testdata
 
 import enums.ApplicationType
-import models.{AmendPrintDisplayModel, AmendResultDisplayModel, PrintDisplayModel}
+import models.amendModels.AmendsGAModel
+import models._
 
 object AmendProtectionOutcomeViewsTestData {
 
   val protectedAmountIP14Str = "£1,350,000.11"
   val protectedAmountIP16Str = "£1,350,000.45"
+
+  val amendsGAModel: AmendsGAModel = AmendsGAModel(
+    current = Some("current"),
+    before = Some("before"),
+    between = Some("between"),
+    overseas = Some("overseas"),
+    pso = Some("pso")
+  )
+
+  val amendsActiveResultModelIP16: ActiveAmendResultDisplayModel = ActiveAmendResultDisplayModel(
+    firstName = "Jim",
+    surname = "Davis",
+    nino = "nino",
+    protectionType = ApplicationType.IP2016,
+    notificationId = "44",
+    protectedAmount = "£1,350,000.45",
+    details = Some(
+      ProtectionDetailsDisplayModel(
+        protectionReference = Some("protectionRef"),
+        psaReference = "psaRef",
+        applicationDate = Some("14 June 2017")
+      )
+    )
+  )
+
+  val amendsActiveResultModelIP14: ActiveAmendResultDisplayModel = ActiveAmendResultDisplayModel(
+    firstName = "Jim",
+    surname = "Davis",
+    nino = "nino",
+    protectionType = ApplicationType.IP2014,
+    notificationId = "33",
+    protectedAmount = "£1,350,000.11",
+    details = Some(
+      ProtectionDetailsDisplayModel(
+        protectionReference = Some("protectionRef"),
+        psaReference = "psaRef",
+        applicationDate = Some("14 June 2017")
+      )
+    )
+  )
 
   val printDisplayModelIP14: AmendPrintDisplayModel = AmendPrintDisplayModel(
     firstName = "Jim",

@@ -342,6 +342,7 @@ pla.resultSuccess.title                 = Success
 pla.resultSuccess.allowanceSubHeading   = Your protected lifetime allowance is
 pla.resultSuccess.protectionDetails     = Your protection details
 pla.resultSuccess.detailsContent        = When you decide to take money from your pension, give these details to your pension provider:
+pla.resultSuccess.printGuidancePara     = Keep a copy of your protection details for your records. If you decide to take money from your pension, give these details to your pension provider.
 pla.resultSuccess.protectionRef         = protection notification number
 pla.resultSuccess.psaRef                = scheme administrator reference
 pla.resultSuccess.applicationDate       = application date
@@ -362,8 +363,14 @@ pla.resultSuccess.giveFeedback          = Give us feedback
 pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
 pla.resultSuccess.exitSurvey            = We use your feedback to make our services better.
 
-pla.resultSuccess.yourName              = your full name
-pla.resultSuccess.yourNino              = your National Insurance number
+pla.resultSuccess.yourName = your full name
+pla.resultSuccess.yourNino = your National Insurance number
+
+pla.resultSuccess.table.fullName        = Full name
+pla.resultSuccess.table.nino            = National Insurance number
+pla.resultSuccess.table.protectionRef   = Protection notification number
+pla.resultSuccess.table.psaRef          = Scheme administrator reference
+pla.resultSuccess.table.applicationDate = Application date
 
 pla.resultSuccess.dismissBanner = No thanks
 pla.resultSuccess.userResearchLink.title = Help improve GOV.UK
@@ -418,7 +425,7 @@ pla.print.FP2016.contactHMRC                = If you or your employer adds to yo
 
 pla.printAmend.title                             = Print your active protection
 pla.printAmend.hmrc                              = HM Revenue & Customs
-pla.printAmend.fullName                          = Full Name
+pla.printAmend.fullName                          = Full name
 pla.printAmend.nino                              = National Insurance number
 pla.printAmend.protectionDetails                 = Protection details
 pla.printAmend.applicationDate                   = Application date
