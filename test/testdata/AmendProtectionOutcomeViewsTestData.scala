@@ -17,14 +17,14 @@
 package testdata
 
 import enums.ApplicationType
-import models.{AmendResultDisplayModel, PrintDisplayModel}
+import models.{AmendPrintDisplayModel, AmendResultDisplayModel, PrintDisplayModel}
 
 object AmendProtectionOutcomeViewsTestData {
 
   val protectedAmountIP14Str = "£1,350,000.11"
   val protectedAmountIP16Str = "£1,350,000.45"
 
-  val printDisplayModelIP14: PrintDisplayModel = PrintDisplayModel(
+  val printDisplayModelIP14: AmendPrintDisplayModel = AmendPrintDisplayModel(
     firstName = "Jim",
     surname = "Davis",
     nino = "nino",
@@ -44,7 +44,7 @@ object AmendProtectionOutcomeViewsTestData {
     details = Some(printDisplayModelIP14)
   )
 
-  val printDisplayModelIP16: PrintDisplayModel = PrintDisplayModel(
+  val printDisplayModelIP16: AmendPrintDisplayModel = AmendPrintDisplayModel(
     firstName = "Jim",
     surname = "Davis",
     nino = "nino",

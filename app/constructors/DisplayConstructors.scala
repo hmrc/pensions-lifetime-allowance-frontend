@@ -18,13 +18,14 @@ package constructors
 
 import common._
 import enums.{ApplicationStage, ApplicationType}
-import javax.inject.Inject
 import models._
 import models.amendModels.AmendProtectionModel
 import play.api.Logging
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Call
 import utils.Constants
+
+import javax.inject.Inject
 
 class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends Logging {
 
@@ -66,14 +67,6 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     val certificateDate =
       protectionModel.certificateDate.map(cDate => Display.dateDisplayString(Dates.constructDateFromAPIString(cDate)))
 
-    val notificationId = protectionModel.notificationId.getOrElse(
-      throw Exceptions.OptionNotDefinedException(
-        "createPrintDisplayModel",
-        "notificationId",
-        protectionModel.protectionType.getOrElse("No protection type in response")
-      )
-    )
-
     PrintDisplayModel(
       firstName,
       surname,
@@ -83,7 +76,35 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       psaCheckReference,
       protectionReference,
       protectedAmount,
-      certificateDate,
+      certificateDate
+    )
+  }
+
+  def createAmendPrintDisplayModel(
+      personalDetailsModelOpt: Option[PersonalDetailsModel],
+      protectionModel: ProtectionModel,
+      nino: String
+  )(implicit lang: Lang): AmendPrintDisplayModel = {
+    val printDisplayModel = createPrintDisplayModel(personalDetailsModelOpt, protectionModel, nino)
+
+    val notificationId = protectionModel.notificationId.getOrElse(
+      throw Exceptions.OptionNotDefinedException(
+        "createAmendPrintDisplayModel",
+        "notificationId",
+        protectionModel.protectionType.getOrElse("No protection type in response")
+      )
+    )
+
+    AmendPrintDisplayModel(
+      printDisplayModel.firstName,
+      printDisplayModel.surname,
+      printDisplayModel.nino,
+      printDisplayModel.protectionType,
+      printDisplayModel.status,
+      printDisplayModel.psaCheckReference,
+      printDisplayModel.protectionReference,
+      printDisplayModel.protectedAmount,
+      printDisplayModel.certificateDate,
       notificationId
     )
   }
@@ -101,8 +122,8 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
   }
 
   private def sortByStatus(
-      s1: models.ExistingProtectionDisplayModel,
-      s2: models.ExistingProtectionDisplayModel
+      s1: ExistingProtectionDisplayModel,
+      s2: ExistingProtectionDisplayModel
   ): Boolean =
     if (s1.status == s2.status) {
       val typeMap: Map[String, Int] =
@@ -469,12 +490,12 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     )
   }
 
-  def createAmendResponseDisplayModel(
+  def createAmendResultDisplayModel(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
   ): AmendResultDisplayModel = {
-    val printDetails   = createPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
+    val printDetails   = createAmendPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
     val protectionType = getProtectionTypeFromProtection(model.protection)
 
     val protectedAmount = model.protection.protectedAmount.getOrElse {

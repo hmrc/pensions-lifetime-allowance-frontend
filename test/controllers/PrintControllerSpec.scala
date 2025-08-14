@@ -33,6 +33,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers.FakeApplication
+import testdata.AmendProtectionOutcomeViewsTestData.printDisplayModelIP14
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import utils.Constants
@@ -109,8 +110,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     "PSATestNum",
     "ProtRefTestNum",
     Some("£1,246,500"),
-    Some("3 April 2016"),
-    8
+    Some("3 April 2016")
   )
 
   "PrintController on printView" when {
@@ -134,14 +134,14 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
       s"ProtectionModel stored in cache contains notificationId: $notificationId" should {
         "return Ok with resultPrintViewAmendment view" in {
           val protectionModel   = testProtectionModel.copy(notificationId = Some(notificationId))
-          val printDisplayModel = testPrintDisplayModel.copy(notificationId = notificationId)
+          val printDisplayModel = printDisplayModelIP14.copy(notificationId = notificationId)
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
 
           when(citizenDetailsConnector.getPersonDetails(any())(any()))
             .thenReturn(Future.successful(Some(testPersonalDetails)))
           when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
             .thenReturn(Future.successful(Some(protectionModel)))
-          when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
+          when(displayConstructors.createAmendPrintDisplayModel(any(), any(), any())(any()))
             .thenReturn(printDisplayModel)
 
           val result = printController.printView(fakeRequest)
@@ -156,7 +156,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
       s"Valid data is provided with notificationId: $notificationId" should {
         "return Ok with resultPrintView view" in {
           val protectionModel   = testProtectionModel.copy(notificationId = Some(notificationId))
-          val printDisplayModel = testPrintDisplayModel.copy(notificationId = notificationId)
+          val printDisplayModel = testPrintDisplayModel
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
 
           when(citizenDetailsConnector.getPersonDetails(any())(any()))

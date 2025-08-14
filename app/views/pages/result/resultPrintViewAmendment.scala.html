@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.PrintDisplayModel
+@import models.AmendPrintDisplayModel
 @import views.html.helper.CSPNonce
 @import views.pages.models.ViewConstants
 
@@ -23,7 +23,7 @@
   protectionDetailsTable: playHelpers.templates.amendProtectionOutcomeTable
 )
 
-@(model: PrintDisplayModel)(implicit request: Request[_], messages: Messages)
+@(model: AmendPrintDisplayModel)(implicit request: Request[_], messages: Messages)
 
 @layout(
 	pageTitle = messages("pla.printAmend.title"),

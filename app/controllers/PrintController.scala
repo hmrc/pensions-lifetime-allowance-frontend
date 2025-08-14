@@ -64,12 +64,13 @@ class PrintController @Inject() (
     protectionModel match {
       case Some(model) =>
         citizenDetailsConnector.getPersonDetails(nino).map { personalDetailsModel =>
-          val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
-
-          if (Constants.amendmentCodesList.exists(code => model.notificationId.contains(code)))
+          if (Constants.amendmentCodesList.exists(code => model.notificationId.contains(code))) {
+            val displayModel = displayConstructors.createAmendPrintDisplayModel(personalDetailsModel, model, nino)
             Ok(resultPrintViewAmendment(displayModel))
-          else
+          } else {
+            val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
             Ok(resultPrintView(displayModel))
+          }
         }
       case _ =>
         logger.warn(s"Forced redirect to PrintView for $nino")

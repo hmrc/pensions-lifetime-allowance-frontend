@@ -35,8 +35,7 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       "PSA33456789",
       Messages("pla.protection.protectionReference"),
       Some("100.00"),
-      Some("23/02/2015"),
-      35
+      Some("23/02/2015")
     )
     lazy val resultPrintView = fakeApplication().injector.instanceOf[resultPrint]
     lazy val view            = resultPrintView(model)
@@ -50,8 +49,7 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       "PSA33456789",
       Messages("pla.protection.protectionReference"),
       Some("100.00"),
-      Some("23/02/2015"),
-      35
+      Some("23/02/2015")
     )
     lazy val view2 = resultPrintView(model2)
     lazy val doc2  = Jsoup.parse(view2.body)
