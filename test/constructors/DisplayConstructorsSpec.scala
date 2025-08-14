@@ -661,8 +661,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
   "createPrintDisplayModel" should {
 
-    "create PrintDisplayModel" in {
-      val tstPerson               = Person("McTestface", "Testy")
+    "create a Print Display model" in {
+      val tstPerson               = Person(firstName = "Testy", lastName = "McTestface")
       val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
       val tstProtectionModel = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
@@ -687,6 +687,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016")
       )
+
       displayConstructor.createPrintDisplayModel(
         Some(tstPersonalDetailsModel),
         tstProtectionModel,
@@ -697,7 +698,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
   "createAmendPrintDisplayModel" should {
 
-    val person               = Person("McTestface", "Testy")
+    val person               = Person(firstName = "Testy", lastName = "McTestface")
     val personalDetailsModel = PersonalDetailsModel(person)
     val protectionModel = ProtectionModel(
       psaCheckReference = Some(tstPSACheckRef),
@@ -893,7 +894,6 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     }
 
     "correctly produce a display section for any current PSO's" in {
-
       val tstNewPsoAmountProtection = ProtectionModel(
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
@@ -939,7 +939,6 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     }
 
     "should not create a display section for current PSO's if there is more than one pension debit in the model" in {
-
       val tstNewPsoAmountProtection = ProtectionModel(
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
@@ -970,8 +969,9 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
   }
 
   "createActiveAmendResponseModel" should {
+
     "correctly transform an AmendResponseModel into an ActiveAmendResultDisplayModel" in {
-      val tstAmendResponseModel = AmendResponseModel(
+      val amendResponseModel = AmendResponseModel(
         ProtectionModel(
           psaCheckReference = Some("psaRef"),
           protectionID = Some(100003),
@@ -983,7 +983,14 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         )
       )
 
-      val tstActiveAmendResultDisplayModel = ActiveAmendResultDisplayModel(
+      val person               = Person(firstName = "Jim", lastName = "Davis")
+      val personalDetailsModel = PersonalDetailsModel(person)
+      val nino                 = "testNino"
+
+      val activeAmendResultDisplayModel = ActiveAmendResultDisplayModel(
+        firstName = "Jim",
+        surname = "Davis",
+        nino = nino,
         protectionType = ApplicationType.IP2014,
         notificationId = "33",
         protectedAmount = "£1,350,000.45",
@@ -997,8 +1004,63 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       )
 
       displayConstructor.createActiveAmendResponseDisplayModel(
-        tstAmendResponseModel
-      ) shouldBe tstActiveAmendResultDisplayModel
+        amendResponseModel,
+        Some(personalDetailsModel),
+        nino
+      ) shouldBe activeAmendResultDisplayModel
+    }
+
+    "throw exception" when {
+
+      "protected amount is NOT present" in {
+        val amendResponseModel = AmendResponseModel(
+          ProtectionModel(
+            psaCheckReference = Some("psaRef"),
+            protectionID = Some(100003),
+            protectionType = Some("IP2014"),
+            protectionReference = Some("protectionRef"),
+            certificateDate = Some("2016-06-14"),
+            protectedAmount = None,
+            notificationId = Some(33)
+          )
+        )
+
+        val person               = Person(firstName = "Jim", lastName = "Davis")
+        val personalDetailsModel = PersonalDetailsModel(person)
+        val nino                 = "testNino"
+
+        val exc = the[OptionNotDefinedException] thrownBy
+          displayConstructor.createActiveAmendResponseDisplayModel(amendResponseModel, Some(personalDetailsModel), nino)
+
+        exc.functionName shouldBe "createActiveAmendResponseDisplayModel"
+        exc.optionName shouldBe "protectedAmount"
+        exc.applicationType shouldBe "IP2014"
+      }
+
+      "notification ID is NOT present" in {
+        val amendResponseModel = AmendResponseModel(
+          ProtectionModel(
+            psaCheckReference = Some("psaRef"),
+            protectionID = Some(100003),
+            protectionType = Some("IP2014"),
+            protectionReference = Some("protectionRef"),
+            certificateDate = Some("2016-06-14"),
+            protectedAmount = Some(1350000.45),
+            notificationId = None
+          )
+        )
+
+        val person               = Person(firstName = "Jim", lastName = "Davis")
+        val personalDetailsModel = PersonalDetailsModel(person)
+        val nino                 = "testNino"
+
+        val exc = the[OptionNotDefinedException] thrownBy
+          displayConstructor.createActiveAmendResponseDisplayModel(amendResponseModel, Some(personalDetailsModel), nino)
+
+        exc.functionName shouldBe "createActiveAmendResponseDisplayModel"
+        exc.optionName shouldBe "notificationId"
+        exc.applicationType shouldBe "IP2014"
+      }
     }
   }
 
@@ -1017,7 +1079,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         )
       )
 
-      val tstPerson               = Person("McTestface", "Testy")
+      val tstPerson               = Person(firstName = "Testy", lastName = "McTestface")
       val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
       val nino                    = "testNino"
 

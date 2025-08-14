@@ -19,16 +19,18 @@
 @import play.api.i18n._
 @import enums.ApplicationType
 @import utils.Constants
+@import config.FrontendAppConfig
 
 @this(
     layout: Layout,
-    resultDetails: playHelpers.templates.resultDetails
+    resultDetails: playHelpers.templates.resultDetails,
+    resultDetailsTable: playHelpers.templates.resultDetailsTable
 )
 
-@(model: ActiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], messages: Messages)
+@(model: ActiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel], appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = Messages("pla.activeAmend.title")
+    pageTitle = messages("pla.activeAmend.title")
 ) {
 
     @gaModel.map{ gaModel =>
@@ -41,40 +43,47 @@
 
     <div class="govuk-panel govuk-panel--confirmation">
         <h1 class="govuk-panel__title">
-            @Messages(s"amendResultCode.${model.notificationId}.heading")
+            @messages(s"amendResultCode.${model.notificationId}.heading")
         </h1>
         <div class="govuk-panel__body">
-            <div id="amendedAllowanceText">@Messages("pla.resultSuccess.allowanceSubHeading")</div><strong id="protectedAmount">@model.protectedAmount</strong>
+            <div id="amendedAllowanceText">@messages("pla.resultSuccess.allowanceSubHeading")</div><strong id="protectedAmount">@model.protectedAmount</strong>
         </div>
     </div>
 
-    <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.protectionDetails")</h2>
-    <p class="govuk-body">@Messages("pla.resultSuccess.detailsContent")</p>
+    <h2 class="govuk-heading-m">@messages("pla.resultSuccess.protectionDetails")</h2>
 
-    @model.details.map{ details =>
+    @if(appConfig.hipMigrationEnabled) {
+      @resultDetailsTable(model)
+
+      <p class="govuk-body">@messages("pla.resultSuccess.printGuidancePara")</p>
+    } else {
+      <p class="govuk-body">@messages("pla.resultSuccess.detailsContent")</p>
+
+      @model.details.map { details =>
         @resultDetails(details)
+      }
     }
 
-    <p class="govuk-body"><a class="govuk-link" id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" rel="noopener noreferrer">@Messages("pla.resultSuccess.print") (@Messages("pla.base.newTab"))</a></p>
+    <p class="govuk-body"><a class="govuk-link" id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" rel="noopener noreferrer">@messages("pla.resultSuccess.print") (@messages("pla.base.newTab"))</a></p>
 
-    <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.IPChangeDetails")</h2>
+    <h2 class="govuk-heading-m">@messages("pla.resultSuccess.IPChangeDetails")</h2>
 
     <p class="govuk-body" id="ipPensionSharing">
-        @Messages("pla.resultSuccess.IPPensionSharing.beforeLink")
+        @messages("pla.resultSuccess.IPPensionSharing.beforeLink")
         <a class="govuk-link" href="https://www.gov.uk/government/organisations/hm-revenue-customs/contact/pension-scheme-enquiries">@Messages("pla.resultSuccess.IPPensionSharing.linkText")</a>
-        @Messages("pla.resultSuccess.IPPensionSharing.afterLink")
+        @messages("pla.resultSuccess.IPPensionSharing.afterLink")
     </p>
 
     <p class="govuk-body">
-        @Messages("pla.activeAmend.viewDetails.beforeLink")
+        @messages("pla.activeAmend.viewDetails.beforeLink")
         <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.activeAmend.viewDetails.linkText")</a>
-        @Messages("pla.activeAmend.viewDetails.afterLink")
+        @messages("pla.activeAmend.viewDetails.afterLink")
     </p>
 
-    <h2 class="govuk-heading-m">@Messages("pla.resultSuccess.giveFeedback")</h2>
+    <h2 class="govuk-heading-m">@messages("pla.resultSuccess.giveFeedback")</h2>
 
     <p class="govuk-body"><a class="govuk-link" id="submit-survey-button" href=@controllers.routes.AccountController.signOut role="button" onclick="submitExitSurvey()">
-        @Messages("pla.resultSuccess.exitSurveyLinkText")</a> @Messages("pla.resultSuccess.exitSurvey")</p>
+        @messages("pla.resultSuccess.exitSurveyLinkText")</a> @messages("pla.resultSuccess.exitSurvey")</p>
 
 }
 

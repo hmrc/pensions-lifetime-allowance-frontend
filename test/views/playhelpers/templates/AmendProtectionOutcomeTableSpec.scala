@@ -26,7 +26,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
   private val amendProtectionOutcomeTable = fakeApplication().injector.instanceOf[amendProtectionOutcomeTable]
 
-  private val NameHeader               = "Full Name"
+  private val NameHeader               = "Full name"
   private val NinoHeader               = "National Insurance number"
   private val ProtectedAmountHeader    = "Protected amount"
   private val ProtectionRefHeader      = "Protection reference number"
