@@ -16,7 +16,7 @@
 
 package views.playhelpers.templates
 
-import models.PrintDisplayModel
+import models.{AmendPrintDisplayModel, PrintDisplayModel}
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testdata.AmendProtectionOutcomeViewsTestData._
@@ -38,7 +38,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
   private val DormantText              = "Dormant"
   private val WithdrawnText            = "Withdrawn"
 
-  private def getPrintDisplayModelFor(notificationId: Int): PrintDisplayModel = {
+  private def getPrintDisplayModelFor(notificationId: Int): AmendPrintDisplayModel = {
     val iP14PrintDisplayModels =
       (1 to 7).map(notificationId => notificationId -> printDisplayModelIP14.copy(notificationId = notificationId))
     val iP16PrintDisplayModels =

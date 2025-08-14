@@ -377,7 +377,7 @@ class AmendsControllerSpec
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
 
           val amendResultDisplayModel = AmendResultDisplayModel(IP2014, notificationId, "£1100000", None)
-          when(displayConstructors.createAmendResponseDisplayModel(any(), any(), anyString()))
+          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
             .thenReturn(amendResultDisplayModel)
 
           val result = controller.amendmentOutcome()(fakeRequest)

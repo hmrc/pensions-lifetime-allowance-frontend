@@ -184,7 +184,7 @@ class AmendsController @Inject() (
         }
         if (Constants.amendmentCodesList.contains(id)) {
           sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-          val displayModel = displayConstructors.createAmendResponseDisplayModel(model, personalDetailsModel, nino)
+          val displayModel = displayConstructors.createAmendResultDisplayModel(model, personalDetailsModel, nino)
           Ok(outcomeAmended(displayModel))
 
         } else if (Constants.activeAmendmentCodes.contains(id)) {
