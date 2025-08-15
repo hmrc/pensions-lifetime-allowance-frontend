@@ -43,10 +43,10 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
     additionalInfo = Seq("1", "2")
   )
 
-  lazy val viewIP16 = application.injector.instanceOf[outcomeInactive]
+  lazy val viewIP16 = app.injector.instanceOf[outcomeInactive]
   lazy val docIP16  = Jsoup.parse(viewIP16.apply(amendsInactiveResultModelIP16, Some(amendsGAModel)).body)
 
-  lazy val viewIP14 = application.injector.instanceOf[outcomeInactive]
+  lazy val viewIP14 = app.injector.instanceOf[outcomeInactive]
   lazy val docIP14  = Jsoup.parse(viewIP14.apply(amendsInactiveResultModelIP14, Some(amendsGAModel)).body)
 
   "the OutcomeInactiveView" should {

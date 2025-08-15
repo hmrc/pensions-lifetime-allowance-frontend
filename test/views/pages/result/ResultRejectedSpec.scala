@@ -29,7 +29,7 @@ class ResultRejectedSpec extends CommonViewSpecHelper with ResultRejected {
 
   "The Result Rejected Page" should {
 
-    lazy val view = application.injector.instanceOf[resultRejected]
+    lazy val view = app.injector.instanceOf[resultRejected]
     lazy val doc  = Jsoup.parse(view.apply(rejectionDisplayModel, false).body)
 
     "have the correct title" in {

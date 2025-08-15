@@ -33,7 +33,7 @@ class ResultSuccessInactiveSpec extends CommonViewSpecHelper with ResultSuccessI
     lazy val fp2016Model =
       SuccessDisplayModel(ApplicationType.FP2016, "16", "100.00", false, Some(protectionmodel), Seq("1", "2"))
 
-    lazy val view = application.injector.instanceOf[resultSuccessInactive]
+    lazy val view = app.injector.instanceOf[resultSuccessInactive]
 
     lazy val doc  = Jsoup.parse(view.apply(ip2016Model, false).body)
     lazy val doc2 = Jsoup.parse(view.apply(fp2016Model, false).body)

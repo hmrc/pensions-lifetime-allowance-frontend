@@ -60,10 +60,10 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
     )
   )
 
-  lazy val viewIP16 = application.injector.instanceOf[outcomeActive]
+  lazy val viewIP16 = app.injector.instanceOf[outcomeActive]
   lazy val docIP16  = Jsoup.parse(viewIP16.apply(amendsActiveResultModelIP16, Some(amendsGAModel)).body)
 
-  lazy val viewIP14 = application.injector.instanceOf[outcomeActive]
+  lazy val viewIP14 = app.injector.instanceOf[outcomeActive]
   lazy val docIP14  = Jsoup.parse(viewIP14.apply(amendsActiveResultModelIP14, Some(amendsGAModel)).body)
 
   "the OutcomeActiveView" should {

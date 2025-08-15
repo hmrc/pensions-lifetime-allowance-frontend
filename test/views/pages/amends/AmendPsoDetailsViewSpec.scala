@@ -45,7 +45,7 @@ class AmendPsoDetailsViewSpec
         )
       )
 
-    lazy val view = application.injector.instanceOf[amendPsoDetails]
+    lazy val view = app.injector.instanceOf[amendPsoDetails]
     lazy val doc  = Jsoup.parse(view(pensionsForm, "ip2016", "open", true).body)
 
     lazy val errorForm = AmendPSODetailsForm
@@ -59,7 +59,7 @@ class AmendPsoDetailsViewSpec
         )
       )
 
-    lazy val errorView = application.injector.instanceOf[amendPsoDetails]
+    lazy val errorView = app.injector.instanceOf[amendPsoDetails]
     lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "", false).body)
     lazy val pageTitle = s"$plaPsoDetailsTitle - $plaBaseAppName - GOV.UK"
 

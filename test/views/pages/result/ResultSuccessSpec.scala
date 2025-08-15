@@ -19,6 +19,7 @@ package views.pages.result
 import enums.ApplicationType
 import models.{ProtectionDetailsDisplayModel, SuccessDisplayModel}
 import org.jsoup.Jsoup
+import org.mockito.Mockito.when
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultSuccess
 import views.html.pages.result.resultSuccess
@@ -47,13 +48,22 @@ class ResultSuccessSpec extends CommonViewSpecHelper with ResultSuccess {
       Seq("1", "2")
     )
 
-    lazy val view = application.injector.instanceOf[resultSuccess]
+    def view = app.injector.instanceOf[resultSuccess]
 
-    lazy val ip2016Doc = Jsoup.parse(view.apply(ip2016Model, false).body)
-    lazy val fp2016Doc = Jsoup.parse(view.apply(fp2016Model, false).body)
+    def ip2016Doc = Jsoup.parse(view.apply(ip2016Model, false).body)
+    def fp2016Doc = Jsoup.parse(view.apply(fp2016Model, false).body)
 
-    "have the correct title" in {
-      ip2016Doc.title() shouldBe plaResultSuccessTitle
+    "have the correct title" when {
+
+      "HIP migration feature toggle is enabled" in {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+        ip2016Doc.title() shouldBe plaResultSuccessTitleHip
+      }
+
+      "HIP migration feature toggle is disabled" in {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+        ip2016Doc.title() shouldBe plaResultSuccessTitle
+      }
     }
 
     "have a results section which" should {

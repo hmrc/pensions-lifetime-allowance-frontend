@@ -37,7 +37,7 @@ class WithdrawDateSpec extends CommonViewSpecHelper with WithdrawDateSpecMessage
     withdrawDateForm(LocalDate.now())
       .bind(Map[String, String]("withdrawDate.date" -> "", "withdrawDate.month" -> "", "withdrawDate.year" -> "2018"))
 
-  lazy val view: withdrawDate             = application.injector.instanceOf[withdrawDate]
+  lazy val view: withdrawDate             = app.injector.instanceOf[withdrawDate]
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "Withdraw Date view with form without errors" when {
