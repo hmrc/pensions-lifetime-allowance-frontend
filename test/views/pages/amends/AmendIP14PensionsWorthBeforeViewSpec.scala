@@ -34,7 +34,7 @@ class AmendIP14PensionsWorthBeforeViewSpec
     val pensionsForm = AmendPensionsWorthBeforeForm
       .amendPensionsWorthBeforeForm("ip2016")
       .bind(Map("amendedPensionsWorthBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
-    lazy val view = application.injector.instanceOf[amendIP14PensionsWorthBefore]
+    lazy val view = app.injector.instanceOf[amendIP14PensionsWorthBefore]
     lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
     "have the correct old title when applyFor2016IPAndFpShutterEnabled is disabled" in {

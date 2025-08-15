@@ -32,7 +32,7 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
   val withdrawDateForModel: Form[WithdrawDateFormModel] = withdrawDateForm(LocalDate.now()): Form[WithdrawDateFormModel]
 
   "Withdraw Implication view for IP2014" when {
-    lazy val view = application.injector.instanceOf[withdrawImplications]
+    lazy val view = app.injector.instanceOf[withdrawImplications]
     lazy val doc  = Jsoup.parse(view.apply(withdrawDateForModel, "IP2014", "dormant").body)
 
     s"have a title ${"pla.withdraw.protection.title"}" in {
@@ -92,7 +92,7 @@ class WithdrawImplicationsSpec extends CommonViewSpecHelper with WithdrawImplica
   }
 
   "Withdraw Implication view for IP2016" when {
-    lazy val view = application.injector.instanceOf[withdrawImplications]
+    lazy val view = app.injector.instanceOf[withdrawImplications]
     lazy val doc  = Jsoup.parse(view.apply(withdrawDateForModel, "IP2016", "dormant").body)
 
     s"have a title ${"pla.withdraw.protection.title"}" in {

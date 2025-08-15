@@ -1,6 +1,6 @@
 ## Base ##
-service.name                    = Gwirio’ch diogelwch pensiwn
-pla.base.appName                = Gwirio’ch diogelwch pensiwn
+service.name                    = Gwirio’r diogelwch a’r diogelwch uwch ar gyfer eich pensiwn
+psa.service.name                = Gwirio’ch diogelwch pensiwn
 pla.base.yes                    = Iawn
 pla.base.no                     = Na
 pla.base.continue               = Parhau
@@ -55,6 +55,7 @@ pla.links.signout                       = Allgofnodi
 pla.timeout.pageHeading = Rydych wedi''ch allgofnodi o ganlyniad i anweithgarwch
 pla.timeout.returnToPTA.href.1 = Gallwch ddechrau eto o''r dudalen
 pla.timeout.returnToPTA.href.2 = gwirio’ch diogelwch pensiwn
+pla.timeout.returnToPTA.href.linkText = gwirio’r diogelwch a’r diogelwch uwch ar gyfer eich pensiwn
 pla.timeout.returnToPTA.href.3 = .
 
 ## Not Found ##

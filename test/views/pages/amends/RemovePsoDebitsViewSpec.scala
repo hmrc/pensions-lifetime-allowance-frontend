@@ -27,7 +27,7 @@ class RemovePsoDebitsViewSpec extends CommonViewSpecHelper with RemovePsoDetails
   implicit val formWithCSRF: FormWithCSRF = app.injector.instanceOf[FormWithCSRF]
 
   "the RemovePsoDetailsView" should {
-    lazy val view = application.injector.instanceOf[removePsoDebits]
+    lazy val view = app.injector.instanceOf[removePsoDebits]
     lazy val doc  = Jsoup.parse(view.apply("ip2016", "open").body)
     lazy val form = doc.select("form")
 

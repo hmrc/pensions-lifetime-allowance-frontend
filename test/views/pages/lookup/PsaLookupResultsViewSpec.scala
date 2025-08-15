@@ -28,7 +28,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with no optional values" should {
       val psaLookupResults = PSALookupResult("reference", 1, 0, None, None)
-      lazy val view        = application.injector.instanceOf[psa_lookup_results]
+      lazy val view        = app.injector.instanceOf[psa_lookup_results]
       lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
       "have the correct title" in {
@@ -109,7 +109,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with all optional values" should {
       val psaLookupResults = PSALookupResult("reference", 1, 0, Some(3), Some("data"))
-      lazy val view        = application.injector.instanceOf[psa_lookup_results]
+      lazy val view        = app.injector.instanceOf[psa_lookup_results]
       lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
       "have a table".which {
@@ -171,7 +171,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of FP2016" should {
       val psaLookupResults = PSALookupResult("reference", 1, 1, None, None)
-      lazy val view        = application.injector.instanceOf[psa_lookup_results]
+      lazy val view        = app.injector.instanceOf[psa_lookup_results]
       lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
       "have a table".which {
@@ -232,7 +232,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of IP2014" should {
       val psaLookupResults = PSALookupResult("reference", 2, 1, None, None)
-      lazy val view        = application.injector.instanceOf[psa_lookup_results]
+      lazy val view        = app.injector.instanceOf[psa_lookup_results]
       lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
       "have a table".which {
@@ -293,7 +293,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of IP2016 with a value" should {
       val psaLookupResults = PSALookupResult("reference", 3, 1, Some(2), None)
-      lazy val view        = application.injector.instanceOf[psa_lookup_results]
+      lazy val view        = app.injector.instanceOf[psa_lookup_results]
       lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
       "have a table".which {
@@ -366,7 +366,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of Primary" should {
       val psaLookupResults = PSALookupResult("reference", 4, 1, None, None)
-      lazy val view        = application.injector.instanceOf[psa_lookup_results]
+      lazy val view        = app.injector.instanceOf[psa_lookup_results]
       lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "").body)
 
       "have a table".which {
@@ -391,7 +391,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of Enhanced" should {
       val psaLookupResults = PSALookupResult("reference", 5, 1, None, None)
-      lazy val view        = application.injector.instanceOf[psa_lookup_results]
+      lazy val view        = app.injector.instanceOf[psa_lookup_results]
       lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "").body)
 
       "have a table".which {
@@ -416,7 +416,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of FP2012" should {
       val psaLookupResults = PSALookupResult("reference", 6, 1, None, None)
-      lazy val view        = application.injector.instanceOf[psa_lookup_results]
+      lazy val view        = app.injector.instanceOf[psa_lookup_results]
       lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "").body)
 
       "have a table".which {
@@ -441,7 +441,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of" should {
       val psaLookupResults = PSALookupResult("reference", 7, 1, None, None)
-      lazy val view        = application.injector.instanceOf[psa_lookup_results]
+      lazy val view        = app.injector.instanceOf[psa_lookup_results]
       lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "").body)
 
       "have a table".which {

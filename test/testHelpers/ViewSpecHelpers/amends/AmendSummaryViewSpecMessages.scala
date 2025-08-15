@@ -20,6 +20,7 @@ import testHelpers.ViewSpecHelpers.ip2016.SummaryViewMessages
 
 trait AmendSummaryViewSpecMessages extends SummaryViewMessages {
   val plaAmendsSummaryTitle       = "Protection summary - Check your pension protections - GOV.UK"
+  val plaAmendsSummaryTitleHip    = "Protection summary - Check your pension protections and enhancements - GOV.UK"
   val plaAmendsHeaderOne          = "Check your answers and submit the changes"
   val plaAmendsSummaryPageHeading = "Your individual protection 2016 details"
 

@@ -35,11 +35,11 @@ class AmendIP14PensionsUsedBetweenViewSpec
     val pensionsForm = AmendPensionsUsedBetweenForm
       .amendPensionsUsedBetweenForm("ip2016")
       .bind(Map("amendedPensionsUsedBetweenAmt" -> "12345"))
-    lazy val view = application.injector.instanceOf[amendIP14PensionsUsedBetween]
+    lazy val view = app.injector.instanceOf[amendIP14PensionsUsedBetween]
     lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
     val errorForm = AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm("ip2016").bind(Map.empty[String, String])
-    lazy val errorView = application.injector.instanceOf[amendIP14PensionsUsedBetween]
+    lazy val errorView = app.injector.instanceOf[amendIP14PensionsUsedBetween]
     lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
 
     lazy val form = doc.select("form")

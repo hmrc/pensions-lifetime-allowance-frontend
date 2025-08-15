@@ -34,7 +34,7 @@ class AmendPensionsUsedBetweenViewSpec
     val pensionsForm = AmendPensionsUsedBetweenForm
       .amendPensionsUsedBetweenForm("ip2016")
       .bind(Map("amendedPensionsUsedBetween" -> "yes", "amendedPensionsUsedBetweenAmt" -> "12345"))
-    lazy val view = application.injector.instanceOf[amendPensionsUsedBetween]
+    lazy val view = app.injector.instanceOf[amendPensionsUsedBetween]
     lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
 
     "have the correct title" in {

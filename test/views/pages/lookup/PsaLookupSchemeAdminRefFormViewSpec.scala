@@ -30,7 +30,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm.bind(
         Map("pensionSchemeAdministratorCheckReference" -> "PSA12345678A")
       )
-      lazy val view = application.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
+      lazy val view = app.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
       lazy val doc  = Jsoup.parse(view.apply(form).body)
 
       "have the correct title" in {
@@ -86,7 +86,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
       lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm.bind(
         Map("pensionSchemeAdministratorCheckReference" -> "A")
       )
-      lazy val view = application.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
+      lazy val view = app.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
       lazy val doc  = Jsoup.parse(view.apply(form).body)
 
       "have an error summary" in {
@@ -108,7 +108,7 @@ class PsaLookupSchemeAdminRefFormViewSpec extends CommonViewSpecHelper with PsaL
 
     "provided with an empty form" should {
       lazy val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm
-      lazy val view = application.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
+      lazy val view = app.injector.instanceOf[psa_lookup_scheme_admin_ref_form]
       lazy val doc  = Jsoup.parse(view.apply(form).body)
 
       "have no error summary" in {

@@ -19,8 +19,9 @@ package testHelpers.ViewSpecHelpers
 import config.wiring.SessionCookieCryptoFilterWrapper
 import config.{FrontendAppConfig, PlaContext}
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.Application
+import play.api.{Application, inject}
 import play.api.i18n.Messages
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import testHelpers.FakeApplication
@@ -28,15 +29,18 @@ import uk.gov.hmrc.http.client.HttpClientV2
 
 trait CommonViewSpecHelper extends FakeApplication with CommonMessages with MockitoSugar {
 
-  implicit val application: Application                  = fakeApplication()
+  implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+
+  override implicit lazy val app: Application = GuiceApplicationBuilder()
+    .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
+    .build()
+
   val http                                               = mock[HttpClientV2]
   val sessionCookieCryptoFilterWrapper                   = mock[SessionCookieCryptoFilterWrapper]
   implicit lazy val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-
-  implicit val mockMessage: Messages =
-    fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit lazy val mockMessage: Messages =
+    app.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   implicit val plaContext: PlaContext = mock[PlaContext]
 

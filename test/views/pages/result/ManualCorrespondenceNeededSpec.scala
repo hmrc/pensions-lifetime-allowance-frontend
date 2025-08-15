@@ -25,7 +25,7 @@ class ManualCorrespondenceNeededSpec extends CommonViewSpecHelper with ManualCor
 
   "The Manual Correspondence needed page" should {
 
-    lazy val view = application.injector.instanceOf[manualCorrespondenceNeeded]
+    lazy val view = app.injector.instanceOf[manualCorrespondenceNeeded]
     lazy val doc  = Jsoup.parse(view().body)
 
     "have the correct title" in {
