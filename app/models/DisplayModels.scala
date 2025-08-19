@@ -65,6 +65,18 @@ case class PrintDisplayModel(
     psaCheckReference: String,
     protectionReference: String,
     protectedAmount: Option[String],
+    certificateDate: Option[String]
+)
+
+case class AmendPrintDisplayModel(
+    firstName: String,
+    surname: String,
+    nino: String,
+    protectionType: String,
+    status: String,
+    psaCheckReference: String,
+    protectionReference: String,
+    protectedAmount: Option[String],
     certificateDate: Option[String],
     notificationId: Int
 )
@@ -91,6 +103,9 @@ case class AmendDisplayRowModel(
 )
 
 case class ActiveAmendResultDisplayModel(
+    firstName: String,
+    surname: String,
+    nino: String,
     protectionType: ApplicationType.Value,
     notificationId: String,
     protectedAmount: String,
@@ -101,7 +116,7 @@ case class AmendResultDisplayModel(
     protectionType: ApplicationType.Value,
     notificationId: Int,
     protectedAmount: String,
-    details: Option[PrintDisplayModel]
+    details: Option[AmendPrintDisplayModel]
 )
 
 case class InactiveAmendResultDisplayModel(

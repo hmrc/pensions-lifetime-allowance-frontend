@@ -23,7 +23,7 @@ trait OutcomeAmendedViewSpecMessages {
   val yourNewProtectedAmount = "Your new protected amount is"
   val yourProtectionDetails  = "Your protection details"
 
-  val tableAmendName               = "Full Name"
+  val tableAmendName               = "Full name"
   val tableAmendNino               = "National Insurance number"
   val tableAmendProtectionRef      = "Protection reference number"
   val tableAmendProtectionType     = "Protection type"

@@ -347,6 +347,7 @@ pla.resultSuccess.title                 = Wedi llwyddo
 pla.resultSuccess.allowanceSubHeading   = Eich lwfans oes sydd wedi''i ddiogelu yw
 pla.resultSuccess.protectionDetails     = Eich manylion diogelwch
 pla.resultSuccess.detailsContent        = Pan fyddwch yn penderfynu cymryd arian o''ch pensiwn, rhowch y manylion hyn i''ch darparwr pensiwn:
+pla.resultSuccess.printGuidancePara     = Cadwch gopi o fanylion eich diogelwch ar gyfer eich cofnodion. Os byddwch yn penderfynu cymryd arian o’ch pensiwn, rhowch y manylion hyn i’ch darparwr pensiwn.
 pla.resultSuccess.protectionRef         = rhif hysbysu diogelwch
 pla.resultSuccess.psaRef                = cyfeirnod gweinyddwr y cynllun
 pla.resultSuccess.applicationDate       = dyddiad y cais
@@ -367,6 +368,17 @@ pla.resultSuccess.exitSurvey            = Rydym yn defnyddio''ch adborth i wella
 
 pla.resultSuccess.yourName              = eich enw llawn
 pla.resultSuccess.yourNino              = eich rhif Yswiriant Gwladol
+
+pla.resultSuccess.table.fullName        = Enw llawn
+pla.resultSuccess.table.nino            = Rhif Yswiriant Gwladol
+pla.resultSuccess.table.protectionRef   = Rhif hysbysu diogelwch
+pla.resultSuccess.table.psaRef          = Cyfeirnod gweinyddwr y cynllun
+pla.resultSuccess.table.applicationDate = Dyddiad y cais
+
+pla.resultSuccess.dismissBanner           = No thanks
+pla.resultSuccess.userResearchLink.title  = Help improve GOV.UK
+pla.resultSuccess.userResearchLink.text   = Help improve this digital service by joining the HMRC user panel (opens in new window)
+pla.resultSuccess.userResearchLink        = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Aflwyddiannus
@@ -1013,10 +1025,6 @@ pla.existingProtections.withdrawnDate                 = Dyddiad y tynnwyd yn ôl
 
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails.changeHint   = Newidiwch fanylion eich gorchymyn rhannu pensiwn
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails.removeHint   = Dilëwch eich ateb i swm neu ddyddiad eich gorchymyn rhannu pensiwn
-pla.resultSuccess.dismissBanner                                     = No thanks
-pla.resultSuccess.userResearchLink.title                            = Help improve GOV.UK
-pla.resultSuccess.userResearchLink.text                             = Help improve this digital service by joining the HMRC user panel (opens in new window)
-pla.resultSuccess.userResearchLink                                  = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113
 
 ## 2014 Application Period Ended ##
 pla.withdrawn.pageHeading                                           = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben

@@ -243,13 +243,6 @@ class AmendsPensionSharingOrderControllerSpec
 
   val tstActiveAmendResponseModel = AmendResponseModel(ip2014ActiveAmendmentProtection)
 
-  val tstActiveAmendResponseDisplayModel = ActiveAmendResultDisplayModel(
-    protectionType = ApplicationType.IP2014,
-    notificationId = "33",
-    protectedAmount = "£1,100,000",
-    details = None
-  )
-
   val ip2016InactiveAmendmentProtection = ProtectionModel(
     psaCheckReference = Some("psaRef"),
     protectionID = Some(12345),
