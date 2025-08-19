@@ -16,20 +16,21 @@
 
 @import play.api.i18n._
 @import models.ExistingProtectionDisplayModel
+@import config.FrontendAppConfig
 
-@this()
+@this(appConfig: FrontendAppConfig)
 
 @(protection: ExistingProtectionDisplayModel, statusGroup: String, protectionNum: Int)(implicit messages: Messages)
 
 @changeLink = {
-    @protection.amendCall.map{ call =>
-        <a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link-${protectionNum}"}>
-            @Messages("pla.existingProtections.amendLinkText")
-            <span class="govuk-visually-hidden">
+@protection.amendCall.map{ call =>
+<a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status}-${protection.protectionType}-amend-link-${protectionNum}"}>
+    @Messages("pla.existingProtections.amendLinkText")
+    <span class="govuk-visually-hidden">
                 @Messages("pla.protection.types." + protection.protectionType) @protection.protectionReference
             </span>
-        </a>
-    }
+</a>
+}
 }
 
 <h3 class="govuk-heading-m" id="activeProtection">
@@ -39,6 +40,17 @@
     </span>
 </h3>
 <dl class="govuk-summary-list">
+    @if(appConfig.hipMigrationEnabled){
+    @protection.protectedAmount.map { amt =>
+    @protectionDetails(Messages("pla.existingProtections.protectedAmountHip"), amt, "activeProtectedAmount", Some(changeLink))
+    }
+
+    @protectionDetails(Messages("pla.existingProtections.protectionRefHip"), protection.protectionReference, "activeProtectionReference")
+
+    @protection.psaCheckReference.map { checkRef =>
+    @protectionDetails(Messages("pla.existingProtections.psaRefHip"), checkRef, "activePSACheckRef")
+    }
+    }else{
     @protection.protectedAmount.map { amt =>
     @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount", Some(changeLink))
     }
@@ -48,7 +60,7 @@
     @protection.psaCheckReference.map { checkRef =>
     @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, "activePSACheckRef")
     }
-
+    }
     @protection.certificateDate.map{ cDate =>
     @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, "activeCertificateDate")
     }
