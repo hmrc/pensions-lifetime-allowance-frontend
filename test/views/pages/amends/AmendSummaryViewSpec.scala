@@ -131,11 +131,10 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
   )
 
   "the AmendSummaryView" should {
-    def view           = app.injector.instanceOf[amendSummary]
-    def viewWithoutPso = app.injector.instanceOf[amendSummary]
+    def view = app.injector.instanceOf[amendSummary]
 
     def doc           = Jsoup.parse(view.apply(amendDisplayModel, "ip2016", "open").body)
-    def docWithoutPso = Jsoup.parse(viewWithoutPso.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
+    def docWithoutPso = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 

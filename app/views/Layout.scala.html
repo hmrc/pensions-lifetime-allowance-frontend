@@ -33,7 +33,7 @@
 
 @(
     pageTitle: String,
-    serviceNameOpt: Option[String] = None,
+    isPSALookupPage: Boolean = false,
     backLinkEnabled: Boolean = true,
     isUserResearchBannerVisible: Boolean = false,
     timeoutEnabled: Boolean = true,
@@ -47,10 +47,10 @@
 )
 
 @serviceName = @{
-  if(appConfig.hipMigrationEnabled) {
-    serviceNameOpt.fold(messages("service.name"))(messages(_))
-  } else {
-    messages("psa.service.name")
+  (appConfig.hipMigrationEnabled, isPSALookupPage) match {
+    case (_, true)      => messages("psa.service.name")
+    case (true, false)  => messages("service.name")
+    case (false, false) => messages("psa.service.name")
   }
 }
 

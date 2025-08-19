@@ -23,9 +23,9 @@ appConfig: FrontendAppConfig,
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-     pageTitle = messages("psa.lookup.withdraw.title"),
-     serviceNameOpt = Some(messages("psa.service.name")),
-     backLinkEnabled = false
+    pageTitle = messages("psa.lookup.withdraw.title"),
+    isPSALookupPage = true,
+    backLinkEnabled = false
 ) {
     <h1 class="govuk-heading-xl" id="pageHeading">@messages("psa.lookup.withdraw.pageHeading")</h1>
 

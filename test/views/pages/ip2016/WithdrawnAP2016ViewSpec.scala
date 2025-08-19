@@ -16,36 +16,14 @@
 
 package views.pages.ip2016
 
-import config.FrontendAppConfig
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.when
-import org.scalatest.BeforeAndAfterEach
-import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpecLike
-import org.scalatestplus.mockito.MockitoSugar
-import org.scalatestplus.play.guice.GuiceOneAppPerSuite
-import play.api.Application
 import play.api.i18n.{Messages, MessagesApi}
-import play.api.inject.bind
-import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.FakeRequest
+import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import views.html.pages.ip2016.withdrawnAP2016
 
-class WithdrawnAP2016ViewSpec
-    extends AnyWordSpecLike
-    with Matchers
-    with MockitoSugar
-    with BeforeAndAfterEach
-    with GuiceOneAppPerSuite {
-
-  val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-
-  override implicit lazy val app: Application = GuiceApplicationBuilder()
-    .overrides(bind[FrontendAppConfig].toInstance(mockAppConfig))
-    .build()
-
-  val fakeRequest = FakeRequest()
+class WithdrawnAP2016ViewSpec extends CommonViewSpecHelper {
 
   def view: withdrawnAP2016            = app.injector.instanceOf[withdrawnAP2016]
   implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)

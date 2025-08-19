@@ -18,6 +18,8 @@ package testHelpers.ViewSpecHelpers
 
 import config.wiring.SessionCookieCryptoFilterWrapper
 import config.{FrontendAppConfig, PlaContext}
+import org.mockito.Mockito.reset
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.{Application, inject}
 import play.api.i18n.Messages
@@ -27,7 +29,7 @@ import play.api.test.FakeRequest
 import testHelpers.FakeApplication
 import uk.gov.hmrc.http.client.HttpClientV2
 
-trait CommonViewSpecHelper extends FakeApplication with CommonMessages with MockitoSugar {
+trait CommonViewSpecHelper extends FakeApplication with CommonMessages with MockitoSugar with BeforeAndAfterEach {
 
   implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
@@ -43,5 +45,10 @@ trait CommonViewSpecHelper extends FakeApplication with CommonMessages with Mock
     app.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   implicit val plaContext: PlaContext = mock[PlaContext]
+
+  override def beforeEach(): Unit = {
+    reset(mockAppConfig)
+    super.beforeEach()
+  }
 
 }
