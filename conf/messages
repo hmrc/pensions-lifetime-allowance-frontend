@@ -342,6 +342,7 @@ pla.resultSuccess.title                 = Success
 pla.resultSuccess.allowanceSubHeading   = Your protected lifetime allowance is
 pla.resultSuccess.protectionDetails     = Your protection details
 pla.resultSuccess.detailsContent        = When you decide to take money from your pension, give these details to your pension provider:
+pla.resultSuccess.printGuidancePara     = Keep a copy of your protection details for your records. If you decide to take money from your pension, give these details to your pension provider.
 pla.resultSuccess.protectionRef         = protection notification number
 pla.resultSuccess.psaRef                = scheme administrator reference
 pla.resultSuccess.applicationDate       = application date
@@ -362,13 +363,20 @@ pla.resultSuccess.giveFeedback          = Give us feedback
 pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
 pla.resultSuccess.exitSurvey            = We use your feedback to make our services better.
 
-pla.resultSuccess.yourName              = your full name
-pla.resultSuccess.yourNino              = your National Insurance number
+pla.resultSuccess.yourName = your full name
+pla.resultSuccess.yourNino = your National Insurance number
+
+pla.resultSuccess.table.fullName        = Full name
+pla.resultSuccess.table.nino            = National Insurance number
+pla.resultSuccess.table.protectionRef   = Protection notification number
+pla.resultSuccess.table.psaRef          = Scheme administrator reference
+pla.resultSuccess.table.applicationDate = Application date
 
 pla.resultSuccess.dismissBanner = No thanks
 pla.resultSuccess.userResearchLink.title = Help improve GOV.UK
 pla.resultSuccess.userResearchLink.text = Help improve this digital service by joining the HMRC user panel (opens in new window)
 pla.resultSuccess.userResearchLink      = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113
+
 
 ## Result Rejection ##
 pla.resultRejection.title                 = Unsuccessful
@@ -417,7 +425,7 @@ pla.print.FP2016.contactHMRC                = If you or your employer adds to yo
 
 pla.printAmend.title                             = Print your active protection
 pla.printAmend.hmrc                              = HM Revenue & Customs
-pla.printAmend.fullName                          = Full Name
+pla.printAmend.fullName                          = Full name
 pla.printAmend.nino                              = National Insurance number
 pla.printAmend.protectionDetails                 = Protection details
 pla.printAmend.applicationDate                   = Application date
@@ -615,7 +623,6 @@ pla.amendsResultPage.notWorkingLinkText = Is this page not working properly? (op
 
 
 amendCode.1.heading    = You have amended your individual protection 2014
-
 
 amendCode.2.heading    = You have amended your individual protection 2014
 amendCode.2.insetText  = Your individual protection 2014 is currently not active because you already hold an enhanced protection certificate.

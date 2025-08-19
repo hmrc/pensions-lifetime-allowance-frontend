@@ -461,9 +461,20 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     }
 
   // ACTIVE AMEND RESPONSE
-  def createActiveAmendResponseDisplayModel(model: AmendResponseModel): ActiveAmendResultDisplayModel = {
+  def createActiveAmendResponseDisplayModel(
+      model: AmendResponseModel,
+      personalDetailsModelOpt: Option[PersonalDetailsModel],
+      nino: String
+  ): ActiveAmendResultDisplayModel = {
     val protectionDetails = createProtectionDetailsFromProtection(model.protection)
     val protectionType    = getProtectionTypeFromProtection(model.protection)
+
+    val personalDetailsModel = personalDetailsModelOpt.getOrElse {
+      throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")
+    }
+
+    val firstName = personalDetailsModel.person.firstName.toLowerCase.capitalize
+    val surname   = personalDetailsModel.person.lastName.toLowerCase.capitalize
 
     val protectedAmount = model.protection.protectedAmount.getOrElse {
       throw Exceptions.OptionNotDefinedException(
@@ -483,6 +494,9 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     )
 
     ActiveAmendResultDisplayModel(
+      firstName,
+      surname,
+      nino,
       protectionType,
       notificationId.toString,
       protectedAmountString,
@@ -558,6 +572,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     )
     val applicationDate =
       protection.certificateDate.map(dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt)))
+
     ProtectionDetailsDisplayModel(protectionReference, psaReference, applicationDate)
   }
 

@@ -103,6 +103,9 @@ case class AmendDisplayRowModel(
 )
 
 case class ActiveAmendResultDisplayModel(
+    firstName: String,
+    surname: String,
+    nino: String,
     protectionType: ApplicationType.Value,
     notificationId: String,
     protectedAmount: String,
