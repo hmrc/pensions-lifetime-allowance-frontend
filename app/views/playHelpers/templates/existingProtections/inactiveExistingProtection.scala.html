@@ -16,8 +16,9 @@
 
 @import play.api.i18n._
 @import models.ExistingProtectionDisplayModel
+@import config.FrontendAppConfig
 
-@this()
+@this(appConfig: FrontendAppConfig)
 
 @(protection: ExistingProtectionDisplayModel, statusGroup: String, protectionNum: Int)(implicit messages: Messages)
 
@@ -33,6 +34,16 @@
 }
 
 <dl class="govuk-summary-list">
+    @if(appConfig.hipMigrationEnabled){
+        @protection.protectedAmount.map { amt =>
+        @protectionDetails(Messages("pla.existingProtections.protectedAmountHip"), amt, s"${protection.status}InactiveProtectedAmount${protectionNum}", Some(changeLink))
+        }
+        @protectionDetails(Messages("pla.existingProtections.protectionRefHip"), protection.protectionReference, s"${protection.status}InactiveProtectionReference${protectionNum}")
+
+        @protection.psaCheckReference.map { checkRef =>
+        @protectionDetails(Messages("pla.existingProtections.psaRefHip"), checkRef, s"${protection.status}InactivePSACheckRef${protectionNum}")
+        }
+    }else{
     @protection.protectedAmount.map { amt =>
         @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, s"${protection.status}InactiveProtectedAmount${protectionNum}", Some(changeLink))
         }
@@ -41,7 +52,7 @@
         @protection.psaCheckReference.map { checkRef =>
         @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, s"${protection.status}InactivePSACheckRef${protectionNum}")
         }
-
+     }
         @protection.certificateDate.map{ cDate =>
         @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, s"${protection.status}InactiveCertificateDate${protectionNum}")
         }
@@ -49,6 +60,7 @@
         @protection.withdrawnDate.map{ wDate =>
         @protectionDetails(Messages("pla.existingProtections.withdrawnDate"), wDate, s"${protection.status}InactiveWithdrawnDate${protectionNum}")
     }
+
 </dl>
 
 
