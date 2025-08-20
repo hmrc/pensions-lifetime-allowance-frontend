@@ -1,6 +1,6 @@
 ## Base ##
-service.name                    = Check your pension protections
-pla.base.appName                = Check your pension protections
+service.name                    = Check your pension protections and enhancements
+psa.service.name                = Check your pension protections
 pla.base.yes                    = Yes
 pla.base.no                     = No
 pla.base.continue               = Continue
@@ -48,6 +48,7 @@ pla.links.signout                       = Sign out
 pla.timeout.pageHeading = You''ve been signed out due to inactivity
 pla.timeout.returnToPTA.href.1 = You can start again from the
 pla.timeout.returnToPTA.href.2 = check your pension protections
+pla.timeout.returnToPTA.href.linkText = check your pension protections and enhancements
 pla.timeout.returnToPTA.href.3 = page.
 
 

@@ -24,7 +24,7 @@ import views.html.pages.withdraw.withdrawConfirmation
 class WithdrawConfirmationViewSpec extends CommonViewSpecHelper with WithdrawConfirmationSpecMessages {
 
   "Withdraw Confirmation view" when {
-    lazy val view = application.injector.instanceOf[withdrawConfirmation]
+    lazy val view = app.injector.instanceOf[withdrawConfirmation]
     lazy val doc  = Jsoup.parse(view("IP2014").body)
 
     s"have a title ${"pla.withdraw.confirmation.message"}" in {

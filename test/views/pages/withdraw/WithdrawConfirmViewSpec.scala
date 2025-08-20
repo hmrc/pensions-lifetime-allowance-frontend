@@ -33,7 +33,7 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
     val withdrawDate       = "2018-01-16"
     val withdrawDatePretty = "16 January 2018"
 
-    lazy val view = application.injector.instanceOf[withdrawConfirm]
+    lazy val view = app.injector.instanceOf[withdrawConfirm]
 
     lazy val doc = Jsoup.parse(view.apply(withdrawDate, "ip14", "dormant").body)
 

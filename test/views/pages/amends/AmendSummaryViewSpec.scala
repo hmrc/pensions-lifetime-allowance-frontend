@@ -16,21 +16,14 @@
 
 package views.pages.amends
 
-import config.FrontendAppConfig
 import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import org.jsoup.Jsoup
 import org.mockito.Mockito.when
-import play.api.inject
-import play.api.inject.guice.GuiceApplicationBuilder
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages
-import uk.gov.hmrc.govukfrontend.views.html.components.FormWithCSRF
 import views.html.pages.amends.amendSummary
 
 class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
-
-  implicit val formWithCSRF: FormWithCSRF                = app.injector.instanceOf[FormWithCSRF]
-  override implicit val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   lazy val tstPensionContributionPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
@@ -138,16 +131,23 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
   )
 
   "the AmendSummaryView" should {
-    lazy val view           = application.injector.instanceOf[amendSummary]
-    lazy val viewWithoutPso = application.injector.instanceOf[amendSummary]
+    def view = app.injector.instanceOf[amendSummary]
 
-    lazy val doc           = Jsoup.parse(view.apply(amendDisplayModel, "ip2016", "open").body)
-    lazy val docWithoutPso = Jsoup.parse(viewWithoutPso.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
+    def doc           = Jsoup.parse(view.apply(amendDisplayModel, "ip2016", "open").body)
+    def docWithoutPso = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
 
     lazy val form = doc.select("form")
 
-    "have the correct title" in {
-      doc.title() shouldBe plaAmendsSummaryTitle
+    "have the correct title" when {
+
+      "HIP migration feature toggle is enabled" in {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+        doc.title() shouldBe plaAmendsSummaryTitleHip
+      }
+      "HIP migration feature toggle is disabled" in {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+        doc.title() shouldBe plaAmendsSummaryTitle
+      }
     }
 
     "have the correct and properly formatted header" in {
@@ -227,15 +227,9 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
     "have link to withdraw the protection for non-HIP flow" in {
 
-      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
       when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
 
-      val application = new GuiceApplicationBuilder()
-        .configure("metrics.enabled" -> false)
-        .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
-        .build()
-
-      lazy val view = application.injector.instanceOf[amendSummary]
+      lazy val view = app.injector.instanceOf[amendSummary]
       lazy val doc  = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
 
       doc.select("p.govuk-body a.govuk-link").first().text shouldBe plaAmendsWithdrawProtectionText
@@ -244,15 +238,9 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
     "have no link to withdraw the protection for HIP flow" in {
 
-      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
       when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
 
-      val application = new GuiceApplicationBuilder()
-        .configure("metrics.enabled" -> false)
-        .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
-        .build()
-
-      lazy val view = application.injector.instanceOf[amendSummary]
+      lazy val view = app.injector.instanceOf[amendSummary]
       lazy val doc  = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
 
       doc.select("p.govuk-body a.govuk-link").last().text shouldBe plaAmendsAddAPensionSharingOrderText

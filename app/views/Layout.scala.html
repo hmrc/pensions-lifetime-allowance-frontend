@@ -33,7 +33,8 @@
 
 @(
     pageTitle: String,
-    backLinkEnabled: Boolean= true,
+    isPSALookupPage: Boolean = false,
+    backLinkEnabled: Boolean = true,
     isUserResearchBannerVisible: Boolean = false,
     timeoutEnabled: Boolean = true,
     additionalPrintCSS: Boolean = false,
@@ -44,6 +45,13 @@
     implicit request: RequestHeader,
     messages: Messages
 )
+
+@serviceName = @{
+  (appConfig.hipMigrationEnabled, isPSALookupPage) match {
+    case (true, false) => messages("service.name")
+    case _             => messages("psa.service.name")
+  }
+}
 
 @head = {
     @if(timeoutEnabled) {
@@ -79,8 +87,8 @@
         banners = Banners(
             userResearchBanner = Option.when(isUserResearchBannerVisible){ UserResearchBanner(url = appConfig.urBannerLink) }
         ),
-        serviceName = Some(messages("service.name")),
-        pageTitle = Some(s"""$pageTitle - ${messages("service.name")} - GOV.UK"""),
+        serviceName = serviceName.toOption,
+        pageTitle = Some(s"""$pageTitle - $serviceName - GOV.UK"""),
         templateOverrides = TemplateOverrides(
             additionalHeadBlock = Some(head),
             beforeContentBlock = Some(beforeContentBlock),

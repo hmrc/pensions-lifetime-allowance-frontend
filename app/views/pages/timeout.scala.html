@@ -15,17 +15,27 @@
  *@
 
 @import common.Links
+@import config.FrontendAppConfig
 
 @this(
-   layout: Layout
+   layout: Layout,
+   appConfig: FrontendAppConfig
 )
 
 @()(implicit request: Request[_], messages: Messages)
 
+@linkText = @{
+  if(appConfig.hipMigrationEnabled) {
+    messages("pla.timeout.returnToPTA.href.linkText")
+  } else {
+    messages("pla.timeout.returnToPTA.href.2")
+  }
+}
+
 @returnToPTALink = {
    <p class="govuk-body">
        @messages("pla.timeout.returnToPTA.href.1")
-       <a href="@Links.plaMain" class="govuk-link" rel="external">@messages("pla.timeout.returnToPTA.href.2")</a> @messages("pla.timeout.returnToPTA.href.3")
+       <a href="@Links.plaMain" class="govuk-link" rel="external">@linkText</a> @messages("pla.timeout.returnToPTA.href.3")
    </p>
 }
 

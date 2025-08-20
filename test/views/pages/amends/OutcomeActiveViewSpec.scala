@@ -16,10 +16,8 @@
 
 package views.pages.amends
 
-import config.FrontendAppConfig
 import org.jsoup.Jsoup
 import org.mockito.Mockito.when
-import org.scalatest.BeforeAndAfterEach
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.OutcomeActiveViewSpecMessages
 import testdata.AmendProtectionOutcomeViewsTestData.{
@@ -29,16 +27,18 @@ import testdata.AmendProtectionOutcomeViewsTestData.{
 }
 import views.html.pages.amends.outcomeActive
 
-class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewSpecMessages with BeforeAndAfterEach {
+class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewSpecMessages {
 
-  private val appConfig = mock[FrontendAppConfig]
-
-  private val viewIP16 = application.injector.instanceOf[outcomeActive]
+  private val view = app.injector.instanceOf[outcomeActive]
 
   private val docIP16HipMigrationDisabled = {
-    when(appConfig.hipMigrationEnabled).thenReturn(false)
-    Jsoup.parse(viewIP16.apply(amendsActiveResultModelIP16, Some(amendsGAModel), appConfig).body)
+    when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+    Jsoup.parse(view.apply(amendsActiveResultModelIP16, Some(amendsGAModel), mockAppConfig).body)
   }
+
+  lazy val docIP16 = Jsoup.parse(view.apply(amendsActiveResultModelIP16, Some(amendsGAModel), mockAppConfig).body)
+
+  lazy val docIP14 = Jsoup.parse(view.apply(amendsActiveResultModelIP14, Some(amendsGAModel), mockAppConfig).body)
 
   private val NameHeader            = "Full name"
   private val NinoHeader            = "National Insurance number"
@@ -59,10 +59,9 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
     }
 
     "have the right success message displayed for IP14" in {
-      val viewIP14 = application.injector.instanceOf[outcomeActive]
       val docIP14HipMigrationDisabled = {
-        when(appConfig.hipMigrationEnabled).thenReturn(false)
-        Jsoup.parse(viewIP14.apply(amendsActiveResultModelIP14, Some(amendsGAModel), appConfig).body)
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+        Jsoup.parse(view.apply(amendsActiveResultModelIP14, Some(amendsGAModel), mockAppConfig).body)
       }
 
       docIP14HipMigrationDisabled.select("h1.govuk-panel__title").text() shouldBe plaResultSuccessIP14Heading
@@ -140,8 +139,8 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
         "ActiveAmendResultDisplayModel contains non-empty details" when {
 
           val docIP16HipMigrationEnabled = {
-            when(appConfig.hipMigrationEnabled).thenReturn(true)
-            Jsoup.parse(viewIP16.apply(amendsActiveResultModelIP16, Some(amendsGAModel), appConfig).body)
+            when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+            Jsoup.parse(view.apply(amendsActiveResultModelIP16, Some(amendsGAModel), mockAppConfig).body)
           }
           val tableHeadings = docIP16HipMigrationEnabled.select("tr th")
           val tableData     = docIP16HipMigrationEnabled.select("tr td")
@@ -185,9 +184,9 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
         "ActiveAmendResultDisplayModel contains empty details" when {
 
           val docIP16HipMigrationEnabled = {
-            when(appConfig.hipMigrationEnabled).thenReturn(true)
+            when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
             Jsoup.parse(
-              viewIP16.apply(amendsActiveResultModelIP16.copy(details = None), Some(amendsGAModel), appConfig).body
+              view.apply(amendsActiveResultModelIP16.copy(details = None), Some(amendsGAModel), mockAppConfig).body
             )
           }
           val tableHeadings = docIP16HipMigrationEnabled.select("tr th")

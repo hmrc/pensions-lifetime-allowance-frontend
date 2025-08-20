@@ -24,7 +24,7 @@ import views.html.pages.lookup.pla_protection_guidance
 class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with ProtectionGuidanceSpecMessages {
 
   "The PLA Protection Guidance View" should {
-    lazy val view = application.injector.instanceOf[pla_protection_guidance]
+    lazy val view = app.injector.instanceOf[pla_protection_guidance]
     lazy val doc  = Jsoup.parse(view().body)
 
     "have a header with the correct content" in {

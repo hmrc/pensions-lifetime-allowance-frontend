@@ -30,11 +30,11 @@ class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPens
   "the AmendCurrentPensionsView" should {
     val amendCurrentPensionsForm =
       AmendCurrentPensionForm.amendCurrentPensionForm("ip2016").bind(Map("amendedUKPensionAmt" -> "12000"))
-    lazy val view = application.injector.instanceOf[amendCurrentPensions]
+    lazy val view = app.injector.instanceOf[amendCurrentPensions]
     lazy val doc  = Jsoup.parse(view.apply(amendCurrentPensionsForm, "ip2016", "open").body)
 
     val errorForm = AmendCurrentPensionForm.amendCurrentPensionForm("ip2016").bind(Map("amendedUKPensionAmt" -> "a"))
-    lazy val errorView = application.injector.instanceOf[amendCurrentPensions]
+    lazy val errorView = app.injector.instanceOf[amendCurrentPensions]
     lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
     lazy val form      = doc.select("form")
 

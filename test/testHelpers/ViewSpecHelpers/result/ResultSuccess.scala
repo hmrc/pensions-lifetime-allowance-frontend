@@ -19,6 +19,10 @@ package testHelpers.ViewSpecHelpers.result
 trait ResultSuccess {
 
   val plaResultSuccessTitle = "You've added fixed protection 2016 - Check your pension protections - GOV.UK"
+
+  val plaResultSuccessTitleHip =
+    "You've added fixed protection 2016 - Check your pension protections and enhancements - GOV.UK"
+
   val plaResultSuccessAllowanceSubHeading = "Your protected lifetime allowance is"
   val plaResultSuccessProtectionDetails   = "Your protection details"
 
