@@ -25,6 +25,17 @@ pla.base.date.fields.month      = Mis
 pla.base.date.fields.year       = Blwyddyn
 pla.base.moneyInput.hint        = Er enghraifft, £600 neu £193.54
 
+common.header.protectedAmount = Y swm wedi’i ddiogelu
+common.header.protectionReferenceNumber = Cyfeirnod y diogelwch
+common.header.pensionSchemeAdministratorCheckReference = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
+common.header.protectedLifetimeAllowance = Lwfans oes sydd wedi''i ddiogelu
+common.header.protectionNotificationNumber = Rhif hysbysu diogelwch
+common.header.schemeAdministratorReference = Cyfeirnod gweinyddwr y cynllun
+
+pla.resultSuccess.protectionRefHip      = protection reference number
+pla.resultSuccess.psaRefHip             = pension scheme administrator check reference
+
+
 pla.license.1    = Mae''r holl gynnwys ar gael dan y
 pla.license.link = Drwydded Llywodraeth Agored, fersiwn 3.0
 pla.license.2    = , oni nodir yn wahanol
@@ -303,9 +314,6 @@ pla.existingProtections.noOtherProtections              = Nid oes gennych unrhyw
 pla.existingProtections.protectedAmount                 = Lwfans oes sydd wedi''i ddiogelu
 pla.existingProtections.protectionRef                   = Rhif hysbysu diogelwch
 pla.existingProtections.psaRef                          = Cyfeirnod gweinyddwr y cynllun
-pla.existingProtections.protectedAmountHip              = Y swm wedi’i ddiogelu
-pla.existingProtections.protectionRefHip                = Cyfeirnod y diogelwch
-pla.existingProtections.psaRefHip                       = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
 pla.existingProtections.backToHome                      = Yn ôl i hafan y cyfrif
 pla.existingProtections.amendLinkText                   = bwrw golwg drosto neu ei newid
 pla.existingProtections.withdrawLinkText                = Tynnu''n ôl eich diogelwch sydd ar agor
