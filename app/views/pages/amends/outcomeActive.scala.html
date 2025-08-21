@@ -45,9 +45,16 @@
         <h1 class="govuk-panel__title">
             @messages(s"amendResultCode.${model.notificationId}.heading")
         </h1>
+        @if(appConfig.hipMigrationEnabled) {
+        <div class="govuk-panel__body">
+            <div id="amendedAllowanceTextHip">@messages("pla.resultSuccess.allowanceSubHeadingHip")</div><strong id="protectedAmountHip">@model.protectedAmount</strong>
+        </div>
+        }
+        else{
         <div class="govuk-panel__body">
             <div id="amendedAllowanceText">@messages("pla.resultSuccess.allowanceSubHeading")</div><strong id="protectedAmount">@model.protectedAmount</strong>
         </div>
+        }
     </div>
 
     <h2 class="govuk-heading-m">@messages("pla.resultSuccess.protectionDetails")</h2>

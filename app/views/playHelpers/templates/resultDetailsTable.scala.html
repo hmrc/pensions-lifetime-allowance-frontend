@@ -15,6 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
+@import views.HeaderContent
 
 @this(appConfig: FrontendAppConfig)
 
@@ -33,27 +34,11 @@
       <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.nino")</th>
       <td class="govuk-table__cell" id="yourNino">@{displayModel.nino}</td>
     </tr>
-    @if(appConfig.hipMigrationEnabled){
-    @displayModel.details.map { details =>
-    @details.protectionReference.map { protectionRef =>
-    <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.protectionRefHip")</th>
-        <td class="govuk-table__cell" id="protectionRefHip">@protectionRef</td>
-    </tr>
-    }
-    }
 
-    @displayModel.details.map { details =>
-    <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.psaRefHip")</th>
-        <td class="govuk-table__cell" id="psaRefHip">@{details.psaReference}</td>
-    </tr>
-    }
-    } else {
     @displayModel.details.map { details =>
       @details.protectionReference.map { protectionRef =>
         <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.protectionRef")</th>
+          <th scope="row" class="govuk-table__header">@messages(HeaderContent.getProtectionNotificatioNumber(appConfig))</th>
           <td class="govuk-table__cell" id="protectionRef">@protectionRef</td>
         </tr>
       }
@@ -61,11 +46,11 @@
 
     @displayModel.details.map { details =>
       <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.psaRef")</th>
+        <th scope="row" class="govuk-table__header">@messages(HeaderContent.getSchemeAdministratorReference(appConfig))</th>
         <td class="govuk-table__cell" id="psaRef">@{details.psaReference}</td>
       </tr>
     }
-}
+
     @displayModel.details.map { details =>
       @details.applicationDate.map { applicationDate =>
         <tr class="govuk-table__row">

@@ -42,4 +42,18 @@ object HeaderContent {
       messages("common.header.schemeAdministratorReference")
     }
 
+  def getProtectionReferenceNumber(frontendAppConfig: FrontendAppConfig)(implicit messages: Messages): String =
+    if (frontendAppConfig.hipMigrationEnabled) {
+      messages("common.header.protectionRef")
+    } else {
+      messages("pla.resultSuccess.protectionRef")
+    }
+
+  def getPensionSchemeAdministratorCheckReference(frontendAppConfig: FrontendAppConfig)(implicit messages: Messages): String =
+    if (frontendAppConfig.hipMigrationEnabled) {
+      messages("common.header.psaRef")
+    } else {
+      messages("pla.resultSuccess.psaRef")
+    }
+
 }

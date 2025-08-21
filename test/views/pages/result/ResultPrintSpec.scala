@@ -116,8 +116,6 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       lazy val tableHeading = doc.select("tr th")
 
       "contain the following title message information when  hip is enabled" in {
-        val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
-        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
         tableHeading.get(2).text shouldBe plaPrintPlaHip
         tableHeading.get(3).text shouldBe plaPrintProtectionNotificationNumberHip
         tableHeading.get(4).text shouldBe plaPrintSchemeAdministratorReferenceHip
@@ -129,7 +127,6 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       lazy val tableHeading = doc.select("tr th")
 
       "contain the following title message information" in {
-        val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
         when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
         tableHeading.get(0).text shouldBe plaPrintApplicationDate
         tableHeading.get(1).text shouldBe plaPrintProtectionType

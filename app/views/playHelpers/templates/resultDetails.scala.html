@@ -16,6 +16,7 @@
 
 @import models.ProtectionDetailsDisplayModel
 @import config.FrontendAppConfig
+@import views.HeaderContent
 
 @this(appConfig: FrontendAppConfig)
 
@@ -24,13 +25,8 @@
 <ul class="govuk-list govuk-list--bullet">
     <li id="yourFullName">@Messages("pla.resultSuccess.yourName")</li>
     <li id="yourNino">@Messages("pla.resultSuccess.yourNino")</li>
-    @if(appConfig.hipMigrationEnabled){
-        @if(details.protectionReference.isDefined) {<li id="protectionRefHip">@Messages("pla.resultSuccess.protectionRef"): @details.protectionReference.get</li>}
-        <li id="psaRefHip">@Messages("pla.resultSuccess.psaRef"): @details.psaReference</li>
-    }else{
-        @if(details.protectionReference.isDefined) {<li id="protectionRef">@Messages("pla.resultSuccess.protectionRef"): @details.protectionReference.get</li>}
-        <li id="psaRef">@Messages("pla.resultSuccess.psaRef"): @details.psaReference</li>
-    }
+    @if(details.protectionReference.isDefined) {<li id="protectionRef">@Messages(HeaderContent.getProtectionReferenceNumber(appConfig)): @details.protectionReference.get</li>}
+    <li id="psaRef">@Messages(HeaderContent.getPensionSchemeAdministratorCheckReference(appConfig)): @details.psaReference</li>
     @if(details.applicationDate.isDefined) {<li id="applicationDate">@Messages("pla.resultSuccess.applicationDate"): @details.applicationDate.get</li>}
 </ul>
 

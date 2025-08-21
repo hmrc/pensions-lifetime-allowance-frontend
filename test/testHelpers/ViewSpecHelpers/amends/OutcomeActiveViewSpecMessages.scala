@@ -31,6 +31,8 @@ trait OutcomeActiveViewSpecMessages {
   val plaResultSuccessYourNino        = "your National Insurance number"
   val plaResultSuccessProtectionRef   = "protection notification number"
   val plaResultSuccessPsaRef          = "scheme administrator reference"
+  val plaResultSuccessProtectionRefHip   = "protection reference number"
+  val plaResultSuccessPsaRefHip          = "pension scheme administrator check reference"
   val plaResultSuccessApplicationDate = "application date"
   val plaResultSuccessPrint           = "Review and print your protection details (opens in a new window)"
   val plaResultSuccessPrintNew        = "Review and print your protection details (opens in new tab)"
