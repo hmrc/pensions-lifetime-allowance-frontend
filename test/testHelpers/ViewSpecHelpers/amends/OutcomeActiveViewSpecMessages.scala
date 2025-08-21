@@ -17,26 +17,27 @@
 package testHelpers.ViewSpecHelpers.amends
 
 trait OutcomeActiveViewSpecMessages {
-  val plaResultSuccessOutcomeActiveTitle    = "Protection amended"
-  val plaResultSuccessOutcomeActiveTitleNew = "Protection amended - Check your pension protections - GOV.UK"
-  val plaResultSuccessIP16Heading           = "You've amended individual protection 2016"
-  val plaResultSuccessIP14Heading           = "You've amended individual protection 2014"
-  val plaResultSuccessAllowanceSubHeading   = "Your protected lifetime allowance is"
-  val plaResultSuccessProtectionDetails     = "Your protection details"
+  val plaResultSuccessOutcomeActiveTitle     = "Protection amended"
+  val plaResultSuccessOutcomeActiveTitleNew  = "Protection amended - Check your pension protections - GOV.UK"
+  val plaResultSuccessIP16Heading            = "You've amended individual protection 2016"
+  val plaResultSuccessIP14Heading            = "You've amended individual protection 2014"
+  val plaResultSuccessAllowanceSubHeading    = "Your protected lifetime allowance is"
+  val plaResultSuccessAllowanceSubHeadingHip = "Your protected amount is"
+  val plaResultSuccessProtectionDetails      = "Your protection details"
 
   val plaResultSuccessDetailsContent =
     "When you decide to take money from your pension, give these details to your pension provider:"
 
-  val plaResultSuccessYourName        = "your full name"
-  val plaResultSuccessYourNino        = "your National Insurance number"
-  val plaResultSuccessProtectionRef   = "protection notification number"
-  val plaResultSuccessPsaRef          = "scheme administrator reference"
-  val plaResultSuccessProtectionRefHip   = "protection reference number"
-  val plaResultSuccessPsaRefHip          = "pension scheme administrator check reference"
-  val plaResultSuccessApplicationDate = "application date"
-  val plaResultSuccessPrint           = "Review and print your protection details (opens in a new window)"
-  val plaResultSuccessPrintNew        = "Review and print your protection details (opens in new tab)"
-  val plaResultSuccessIPChangeDetails = "Changing your protection details"
+  val plaResultSuccessYourName         = "your full name"
+  val plaResultSuccessYourNino         = "your National Insurance number"
+  val plaResultSuccessProtectionRef    = "protection notification number"
+  val plaResultSuccessPsaRef           = "scheme administrator reference"
+  val plaResultSuccessProtectionRefHip = "protection reference number"
+  val plaResultSuccessPsaRefHip        = "pension scheme administrator check reference"
+  val plaResultSuccessApplicationDate  = "application date"
+  val plaResultSuccessPrint            = "Review and print your protection details (opens in a new window)"
+  val plaResultSuccessPrintNew         = "Review and print your protection details (opens in new tab)"
+  val plaResultSuccessIPChangeDetails  = "Changing your protection details"
 
   val plaResultSuccessIPPensionSharing =
     "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
