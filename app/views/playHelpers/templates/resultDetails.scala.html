@@ -15,16 +15,22 @@
  *@
 
 @import models.ProtectionDetailsDisplayModel
+@import config.FrontendAppConfig
 
-@this()
+@this(appConfig: FrontendAppConfig)
 
 @(details: ProtectionDetailsDisplayModel)(implicit messages: Messages)
 
 <ul class="govuk-list govuk-list--bullet">
     <li id="yourFullName">@Messages("pla.resultSuccess.yourName")</li>
     <li id="yourNino">@Messages("pla.resultSuccess.yourNino")</li>
-    @if(details.protectionReference.isDefined) {<li id="protectionRef">@Messages("pla.resultSuccess.protectionRef"): @details.protectionReference.get</li>}
-    <li id="psaRef">@Messages("pla.resultSuccess.psaRef"): @details.psaReference</li>
+    @if(appConfig.hipMigrationEnabled){
+        @if(details.protectionReference.isDefined) {<li id="protectionRefHip">@Messages("pla.resultSuccess.protectionRef"): @details.protectionReference.get</li>}
+        <li id="psaRefHip">@Messages("pla.resultSuccess.psaRef"): @details.psaReference</li>
+    }else{
+        @if(details.protectionReference.isDefined) {<li id="protectionRef">@Messages("pla.resultSuccess.protectionRef"): @details.protectionReference.get</li>}
+        <li id="psaRef">@Messages("pla.resultSuccess.psaRef"): @details.psaReference</li>
+    }
     @if(details.applicationDate.isDefined) {<li id="applicationDate">@Messages("pla.resultSuccess.applicationDate"): @details.applicationDate.get</li>}
 </ul>
 

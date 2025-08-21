@@ -376,6 +376,8 @@ pla.resultSuccess.table.nino            = Rhif Yswiriant Gwladol
 pla.resultSuccess.table.protectionRef   = Rhif hysbysu diogelwch
 pla.resultSuccess.table.psaRef          = Cyfeirnod gweinyddwr y cynllun
 pla.resultSuccess.table.applicationDate = Dyddiad y cais
+pla.resultSuccess.table.protectionRefHip   = Cyfeirnod y diogelwch
+pla.resultSuccess.table.psaRefHip          = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
 
 pla.resultSuccess.dismissBanner           = No thanks
 pla.resultSuccess.userResearchLink.title  = Help improve GOV.UK

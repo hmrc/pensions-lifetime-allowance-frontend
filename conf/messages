@@ -348,6 +348,8 @@ pla.resultSuccess.detailsContent        = When you decide to take money from you
 pla.resultSuccess.printGuidancePara     = Keep a copy of your protection details for your records. If you decide to take money from your pension, give these details to your pension provider.
 pla.resultSuccess.protectionRef         = protection notification number
 pla.resultSuccess.psaRef                = scheme administrator reference
+pla.resultSuccess.protectionRefHip         = protection reference number
+pla.resultSuccess.psaRefHip                = pension scheme administrator check reference
 pla.resultSuccess.applicationDate       = application date
 pla.resultSuccess.print                 = Review and print your protection details
 pla.resultSuccess.IPChangeDetails       = Changing your protection details
@@ -373,6 +375,8 @@ pla.resultSuccess.table.fullName        = Full name
 pla.resultSuccess.table.nino            = National Insurance number
 pla.resultSuccess.table.protectionRef   = Protection notification number
 pla.resultSuccess.table.psaRef          = Scheme administrator reference
+pla.resultSuccess.table.protectionRefHip   = Protection reference number
+pla.resultSuccess.table.psaRefHip          = Pension scheme administrator check reference
 pla.resultSuccess.table.applicationDate = Application date
 
 pla.resultSuccess.dismissBanner = No thanks
