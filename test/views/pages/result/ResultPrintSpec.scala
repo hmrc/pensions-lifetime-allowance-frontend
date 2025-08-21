@@ -100,7 +100,6 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       }
     }
 
-
     "contain a table which" should {
 
       val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
@@ -138,7 +137,6 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
         tableHeading.get(3).text shouldBe plaPrintProtectionNotificationNumber
         tableHeading.get(4).text shouldBe plaPrintSchemeAdministratorReference
       }
-
 
       lazy val tableData = doc.select("tr td")
 
