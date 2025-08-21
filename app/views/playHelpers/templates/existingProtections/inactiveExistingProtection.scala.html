@@ -43,8 +43,8 @@
         @protection.psaCheckReference.map { checkRef =>
         @protectionDetails(Messages("pla.existingProtections.psaRefHip"), checkRef, s"${protection.status}InactivePSACheckRef${protectionNum}")
         }
-    }else{
-    @protection.protectedAmount.map { amt =>
+    } else {
+        @protection.protectedAmount.map { amt =>
         @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, s"${protection.status}InactiveProtectedAmount${protectionNum}", Some(changeLink))
         }
         @protectionDetails(Messages("pla.existingProtections.protectionRef"), protection.protectionReference, s"${protection.status}InactiveProtectionReference${protectionNum}")

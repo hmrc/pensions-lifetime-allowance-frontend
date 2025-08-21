@@ -16,9 +16,13 @@
 
 package views.pages.result
 
+import config.FrontendAppConfig
 import models.PrintDisplayModel
 import org.jsoup.Jsoup
+import org.mockito.Mockito.when
 import play.api.i18n.Messages
+import play.api.inject
+import play.api.inject.guice.GuiceApplicationBuilder
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultPrint
 import views.html.pages.result.resultPrint
@@ -96,17 +100,45 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       }
     }
 
+
+    "contain a table which" should {
+
+      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+      when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+
+      val application = new GuiceApplicationBuilder()
+        .configure("metrics.enabled" -> false)
+        .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
+        .build()
+      lazy val resultPrintView = application.injector.instanceOf[resultPrint]
+      lazy val view            = resultPrintView(model)
+      lazy val doc             = Jsoup.parse(view.body)
+
+      lazy val tableHeading = doc.select("tr th")
+
+      "contain the following title message information when  hip is enabled" in {
+        val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+        tableHeading.get(2).text shouldBe plaPrintPlaHip
+        tableHeading.get(3).text shouldBe plaPrintProtectionNotificationNumberHip
+        tableHeading.get(4).text shouldBe plaPrintSchemeAdministratorReferenceHip
+      }
+    }
+
     "contain a table which" should {
 
       lazy val tableHeading = doc.select("tr th")
 
       "contain the following title message information" in {
+        val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
         tableHeading.get(0).text shouldBe plaPrintApplicationDate
         tableHeading.get(1).text shouldBe plaPrintProtectionType
         tableHeading.get(2).text shouldBe plaPrintPla
         tableHeading.get(3).text shouldBe plaPrintProtectionNotificationNumber
         tableHeading.get(4).text shouldBe plaPrintSchemeAdministratorReference
       }
+
 
       lazy val tableData = doc.select("tr td")
 

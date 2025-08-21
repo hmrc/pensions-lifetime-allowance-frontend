@@ -50,7 +50,7 @@
         @protection.psaCheckReference.map { checkRef =>
         @protectionDetails(Messages("pla.existingProtections.psaRefHip"), checkRef, "activePSACheckRef")
         }
-    }else{
+    } else {
         @protection.protectedAmount.map { amt =>
         @protectionDetails(Messages("pla.existingProtections.protectedAmount"), amt, "activeProtectedAmount", Some(changeLink))
         }
@@ -61,9 +61,9 @@
         @protectionDetails(Messages("pla.existingProtections.psaRef"), checkRef, "activePSACheckRef")
         }
     }
-    @protection.certificateDate.map{ cDate =>
-    @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, "activeCertificateDate")
-    }
+        @protection.certificateDate.map{ cDate =>
+        @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, "activeCertificateDate")
+        }
 </dl>
 
 <a class="govuk-body govuk-link" id="printLink" href="@controllers.routes.PrintController.printView" target="_blank">

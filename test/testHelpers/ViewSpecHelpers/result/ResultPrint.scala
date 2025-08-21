@@ -27,6 +27,9 @@ trait ResultPrint {
   val plaPrintPla                          = "Protected lifetime allowance"
   val plaPrintProtectionNotificationNumber = "Protection notification number"
   val plaPrintSchemeAdministratorReference = "Scheme administrator reference"
+  val plaPrintPlaHip                          = "Protected amount"
+  val plaPrintProtectionNotificationNumberHip = "Protection reference number"
+  val plaPrintSchemeAdministratorReferenceHip = "Pension scheme administrator check reference"
 
   val plaPrintGiveToPensionProvider =
     "Give these details to your pension provider when you decide to take money from your pension"

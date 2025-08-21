@@ -16,9 +16,11 @@
 
 @import models.PrintDisplayModel
 @import views.html.helper.CSPNonce
+@import config.FrontendAppConfig
 
 @this(
-    layout: Layout
+    layout: Layout,
+    appConfig: FrontendAppConfig
 )
 
 @(model: PrintDisplayModel)(implicit request: Request[_], messages: Messages)
@@ -56,6 +58,22 @@
             <th scope="row" class="govuk-table__header">@Messages("pla.print.protectionType")</th>
             <td class="govuk-table__cell" id="protectionType">@Messages(s"pla.protection.types.${model.protectionType}")</td>
         </tr>
+        @if(appConfig.hipMigrationEnabled){
+        @model.protectedAmount.map { amt =>
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">@Messages("pla.print.plaHip")</th>
+            <td class="govuk-table__cell" id="protectedAmountHip">@{amt}</td>
+        </tr>
+        }
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">@Messages("pla.print.protectionNotificationNumberHip")</th>
+            <td class="govuk-table__cell" id="protectionRefHip">@{model.protectionReference}</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th scope="row" class="govuk-table__header">@Messages("pla.print.schemeAdministratorReferenceHip")</th>
+            <td class="govuk-table__cell" id="psaRefHip">@{model.psaCheckReference}</td>
+        </tr>
+        }else{
         @model.protectedAmount.map { amt =>
         <tr class="govuk-table__row">
             <th scope="row" class="govuk-table__header">@Messages("pla.print.pla")</th>
@@ -70,6 +88,8 @@
             <th scope="row" class="govuk-table__header">@Messages("pla.print.schemeAdministratorReference")</th>
             <td class="govuk-table__cell" id="psaRef">@{model.psaCheckReference}</td>
         </tr>
+        }
+
         </tbody>
     </table>
 
