@@ -353,7 +353,7 @@ pla.hidden.expired                                      = ar gyfer ceisiadau syd
 ## Result Success ##
 pla.resultSuccess.title                 = Wedi llwyddo
 pla.resultSuccess.allowanceSubHeading   = Eich lwfans oes sydd wedi''i ddiogelu yw
-pla.resultSuccess.allowanceSubHeadingHip  = Your protected amount is
+pla.resultSuccess.allowanceSubHeadingHip  = Eich Y swm wedi’i ddiogelu yw
 pla.resultSuccess.protectionDetails     = Eich manylion diogelwch
 pla.resultSuccess.detailsContent        = Pan fyddwch yn penderfynu cymryd arian o''ch pensiwn, rhowch y manylion hyn i''ch darparwr pensiwn:
 pla.resultSuccess.printGuidancePara     = Cadwch gopi o fanylion eich diogelwch ar gyfer eich cofnodion. Os byddwch yn penderfynu cymryd arian o’ch pensiwn, rhowch y manylion hyn i’ch darparwr pensiwn.
