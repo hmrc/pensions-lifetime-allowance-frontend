@@ -41,6 +41,11 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       Some("100.00"),
       Some("23/02/2015")
     )
+    val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+    val application = new GuiceApplicationBuilder()
+      .configure("metrics.enabled" -> false)
+      .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
+      .build()
     lazy val resultPrintView = fakeApplication().injector.instanceOf[resultPrint]
     lazy val view            = resultPrintView(model)
     lazy val doc             = Jsoup.parse(view.body)
@@ -101,19 +106,11 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
     }
 
     "contain a table which" should {
-
-      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
       when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
-
-      val application = new GuiceApplicationBuilder()
-        .configure("metrics.enabled" -> false)
-        .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
-        .build()
       lazy val resultPrintView = application.injector.instanceOf[resultPrint]
       lazy val view            = resultPrintView(model)
       lazy val doc             = Jsoup.parse(view.body)
-
-      lazy val tableHeading = doc.select("tr th")
+      lazy val tableHeading    = doc.select("tr th")
 
       "contain the following title message information when  hip is enabled" in {
         tableHeading.get(2).text shouldBe plaPrintPlaHip
@@ -124,10 +121,13 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
 
     "contain a table which" should {
 
-      lazy val tableHeading = doc.select("tr th")
-
       "contain the following title message information" in {
         when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+        lazy val resultPrintView = application.injector.instanceOf[resultPrint]
+        lazy val view            = resultPrintView(model)
+        lazy val doc             = Jsoup.parse(view.body)
+        lazy val tableHeading    = doc.select("tr th")
+
         tableHeading.get(0).text shouldBe plaPrintApplicationDate
         tableHeading.get(1).text shouldBe plaPrintProtectionType
         tableHeading.get(2).text shouldBe plaPrintPla

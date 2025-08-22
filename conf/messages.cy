@@ -31,8 +31,7 @@ common.header.pensionSchemeAdministratorCheckReference = Cyfeirnod gwiriad gwein
 common.header.protectedLifetimeAllowance = Lwfans oes sydd wedi''i ddiogelu
 common.header.protectionNotificationNumber = Rhif hysbysu diogelwch
 common.header.schemeAdministratorReference = Cyfeirnod gweinyddwr y cynllun
-common.header.protectionRef      = cyfeirnod y diogelwch
-common.header.psaRef             = cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
+
 
 pla.license.1    = Mae''r holl gynnwys ar gael dan y
 pla.license.link = Drwydded Llywodraeth Agored, fersiwn 3.0

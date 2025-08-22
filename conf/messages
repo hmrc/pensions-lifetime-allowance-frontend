@@ -30,8 +30,7 @@ common.header.pensionSchemeAdministratorCheckReference = Pension scheme administ
 common.header.protectedLifetimeAllowance = Protected lifetime allowance
 common.header.protectionNotificationNumber = Protection notification number
 common.header.schemeAdministratorReference = Scheme administrator reference
-common.header.protectionRef     = protection reference number
-common.header.psaRef            = pension scheme administrator check reference
+
 
 
 pla.license.1    = All content is available under the
@@ -378,8 +377,8 @@ pla.resultSuccess.yourNino = your National Insurance number
 
 pla.resultSuccess.table.fullName        = Full name
 pla.resultSuccess.table.nino            = National Insurance number
-pla.resultSuccess.table.protectionRef   = Protection notification number
-pla.resultSuccess.table.psaRef          = Scheme administrator reference
+pla.resultSuccess.table.protectionRef   = Protection reference number
+pla.resultSuccess.table.psaRef          = Pension scheme administrator check reference
 pla.resultSuccess.table.applicationDate = Application date
 
 pla.resultSuccess.dismissBanner = No thanks

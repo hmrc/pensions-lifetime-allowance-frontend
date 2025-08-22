@@ -14,51 +14,48 @@
  * limitations under the License.
  *@
 
-@import config.FrontendAppConfig
-@import views.HeaderContent
-
-@this(appConfig: FrontendAppConfig)
+@this()
 
 @(displayModel: ActiveAmendResultDisplayModel)(implicit messages: Messages)
 
 <table class="govuk-table">
-  <caption class="govuk-visually-hidden">@messages("pla.resultSuccess.protectionDetails")</caption>
-  <tbody class="govuk-table__body">
+    <caption class="govuk-visually-hidden">@messages("pla.resultSuccess.protectionDetails")</caption>
+    <tbody class="govuk-table__body">
 
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.fullName")</th>
-      <td class="govuk-table__cell" id="yourFullName">@{displayModel.firstName} @{displayModel.surname}</td>
+        <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.fullName")</th>
+        <td class="govuk-table__cell" id="yourFullName">@{displayModel.firstName} @{displayModel.surname}</td>
     </tr>
 
     <tr class="govuk-table__row">
-      <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.nino")</th>
-      <td class="govuk-table__cell" id="yourNino">@{displayModel.nino}</td>
+        <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.nino")</th>
+        <td class="govuk-table__cell" id="yourNino">@{displayModel.nino}</td>
     </tr>
 
     @displayModel.details.map { details =>
-      @details.protectionReference.map { protectionRef =>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">@messages(HeaderContent.getProtectionNotificatioNumber(appConfig))</th>
-          <td class="govuk-table__cell" id="protectionRef">@protectionRef</td>
-        </tr>
-      }
+    @details.protectionReference.map { protectionRef =>
+    <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.protectionRef")</th>
+        <td class="govuk-table__cell" id="protectionRef">@protectionRef</td>
+    </tr>
+    }
     }
 
     @displayModel.details.map { details =>
-      <tr class="govuk-table__row">
-        <th scope="row" class="govuk-table__header">@messages(HeaderContent.getSchemeAdministratorReference(appConfig))</th>
+    <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.psaRef")</th>
         <td class="govuk-table__cell" id="psaRef">@{details.psaReference}</td>
-      </tr>
+    </tr>
     }
 
     @displayModel.details.map { details =>
-      @details.applicationDate.map { applicationDate =>
-        <tr class="govuk-table__row">
-          <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.applicationDate")</th>
-          <td class="govuk-table__cell" id="applicationDate">@applicationDate</td>
-        </tr>
-      }
+    @details.applicationDate.map { applicationDate =>
+    <tr class="govuk-table__row">
+        <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.applicationDate")</th>
+        <td class="govuk-table__cell" id="applicationDate">@applicationDate</td>
+    </tr>
+    }
     }
 
-  </tbody>
+    </tbody>
 </table>

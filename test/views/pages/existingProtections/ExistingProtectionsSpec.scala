@@ -31,7 +31,6 @@ import views.html.pages.existingProtections.existingProtections
 class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtections {
 
   "The Existing Protections page" should {
-    val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
     lazy val protectionModel = ExistingProtectionDisplayModel(
       "IP2016",
@@ -74,6 +73,8 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       None
     )
     lazy val tstProtectionDisplayModelEmpty1 = ExistingProtectionDisplayModel("", "", None, None, "", None, None, None)
+
+    val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
     val application = new GuiceApplicationBuilder()
       .configure("metrics.enabled" -> false)
@@ -152,30 +153,16 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     }
 
     s"have a content for Existing Protections page when hip migration is enabled " in {
-      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
       when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
-
-      val application = new GuiceApplicationBuilder()
-        .configure("metrics.enabled" -> false)
-        .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
-        .build()
-      lazy val view = application.injector.instanceOf[existingProtections]
-      lazy val doc  = Jsoup.parse(view.apply(model).body)
+      lazy val doc = Jsoup.parse(view.apply(model).body)
       doc.select("#activeProtectedAmountHeading").text shouldBe plaExistingProtectionsProtectedAmountHip
       doc.select("#activeProtectionReferenceHeading").text shouldBe plaExistingProtectionsProtectionRefHip
       doc.select("#activePSACheckRefHeading").text shouldBe plaExistingProtectionsPSARefHip
     }
 
     s"have a content for Existing Protections page for inactive protection when hip migration is enabled  " in {
-      val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
       when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
-
-      val application = new GuiceApplicationBuilder()
-        .configure("metrics.enabled" -> false)
-        .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
-        .build()
-      lazy val view2b = application.injector.instanceOf[existingProtections]
-      lazy val doc2b  = Jsoup.parse(view2b.apply(model2b).body)
+      lazy val doc2b = Jsoup.parse(view2b.apply(model2b).body)
       doc2b.select("#dormantInactiveProtectedAmount1Heading").text shouldBe plaExistingProtectionsProtectedAmountHip
       doc2b.select("#dormantInactiveProtectionReference1Heading").text shouldBe plaExistingProtectionsProtectionRefHip
       doc2b.select("#dormantInactivePSACheckRef1Heading").text shouldBe plaExistingProtectionsPSARefHip
@@ -183,6 +170,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
 
     s"have a content for Existing Protections page when hip migration is disabled " in {
       when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+      lazy val doc = Jsoup.parse(view.apply(model).body)
       doc.select("#activeProtectedAmountHeading").text shouldBe plaExistingProtectionsProtectedAmount
       doc.select("#activeProtectionReferenceHeading").text shouldBe plaExistingProtectionsProtectionRef
       doc.select("#activePSACheckRefHeading").text shouldBe plaExistingProtectionsPSARef
