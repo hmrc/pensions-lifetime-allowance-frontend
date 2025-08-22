@@ -70,7 +70,7 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
       docIP14HipMigrationDisabled.select("strong#protectedAmount").text() shouldBe "£1,350,000.11"
     }
 
-    "have the right success message displayed for IP14 hip " in {
+    "have the right success message displayed for IP14  when hip enabled" in {
       val viewIP14 = application.injector.instanceOf[outcomeActive]
       val docIP14HipMigrationEnabled = {
         when(appConfig.hipMigrationEnabled).thenReturn(true)
@@ -81,7 +81,7 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
         .text() shouldBe plaResultSuccessAllowanceSubHeadingHip
     }
 
-    "have the right success message displayed for IP16 hip " in {
+    "have the right success message displayed for IP16 when hip enabled " in {
       val viewIP16 = application.injector.instanceOf[outcomeActive]
       val docIP16HipMigrationEnabled = {
         when(appConfig.hipMigrationEnabled).thenReturn(true)

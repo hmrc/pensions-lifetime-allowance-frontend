@@ -379,8 +379,8 @@ pla.resultSuccess.yourNino              = eich rhif Yswiriant Gwladol
 
 pla.resultSuccess.table.fullName        = Enw llawn
 pla.resultSuccess.table.nino            = Rhif Yswiriant Gwladol
-pla.resultSuccess.table.protectionRef   = Rhif hysbysu diogelwch
-pla.resultSuccess.table.psaRef          = Cyfeirnod gweinyddwr y cynllun
+pla.resultSuccess.table.protectionRef   = Cyfeirnod y diogelwch
+pla.resultSuccess.table.psaRef          = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
 pla.resultSuccess.table.applicationDate = Dyddiad y cais
 
 
