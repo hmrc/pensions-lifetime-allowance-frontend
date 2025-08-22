@@ -19,6 +19,7 @@ package views.pages.existingProtections
 import config.FrontendAppConfig
 import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel}
 import org.jsoup.Jsoup
+import org.mockito.Mockito.when
 import play.api.i18n.Messages
 import play.api.inject
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -30,7 +31,6 @@ import views.html.pages.existingProtections.existingProtections
 class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtections {
 
   "The Existing Protections page" should {
-    val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
     lazy val protectionModel = ExistingProtectionDisplayModel(
       "IP2016",
@@ -73,6 +73,8 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       None
     )
     lazy val tstProtectionDisplayModelEmpty1 = ExistingProtectionDisplayModel("", "", None, None, "", None, None, None)
+
+    val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
     val application = new GuiceApplicationBuilder()
       .configure("metrics.enabled" -> false)
@@ -148,6 +150,30 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
         doc2b.select("#listProtections > h3").text shouldBe "Individual protection 2014 for dormant protections"
         doc2b.select("#dormantInactiveProtectedAmount1Content").text shouldBe "100.00"
       }
+    }
+
+    s"have a content for Existing Protections page when hip migration is enabled " in {
+      when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+      lazy val doc = Jsoup.parse(view.apply(model).body)
+      doc.select("#activeProtectedAmountHeading").text shouldBe plaExistingProtectionsProtectedAmountHip
+      doc.select("#activeProtectionReferenceHeading").text shouldBe plaExistingProtectionsProtectionRefHip
+      doc.select("#activePSACheckRefHeading").text shouldBe plaExistingProtectionsPSARefHip
+    }
+
+    s"have a content for Existing Protections page for inactive protection when hip migration is enabled  " in {
+      when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+      lazy val doc2b = Jsoup.parse(view2b.apply(model2b).body)
+      doc2b.select("#dormantInactiveProtectedAmount1Heading").text shouldBe plaExistingProtectionsProtectedAmountHip
+      doc2b.select("#dormantInactiveProtectionReference1Heading").text shouldBe plaExistingProtectionsProtectionRefHip
+      doc2b.select("#dormantInactivePSACheckRef1Heading").text shouldBe plaExistingProtectionsPSARefHip
+    }
+
+    s"have a content for Existing Protections page when hip migration is disabled " in {
+      when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+      lazy val doc = Jsoup.parse(view.apply(model).body)
+      doc.select("#activeProtectedAmountHeading").text shouldBe plaExistingProtectionsProtectedAmount
+      doc.select("#activeProtectionReferenceHeading").text shouldBe plaExistingProtectionsProtectionRef
+      doc.select("#activePSACheckRefHeading").text shouldBe plaExistingProtectionsPSARef
     }
 
     "have a view details about taking higher tax-free lump sums with protected allowances and the link which" should {

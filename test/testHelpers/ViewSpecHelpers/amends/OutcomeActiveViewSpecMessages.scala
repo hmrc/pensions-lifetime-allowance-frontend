@@ -17,12 +17,13 @@
 package testHelpers.ViewSpecHelpers.amends
 
 trait OutcomeActiveViewSpecMessages {
-  val plaResultSuccessOutcomeActiveTitle    = "Protection amended"
-  val plaResultSuccessOutcomeActiveTitleNew = "Protection amended - Check your pension protections - GOV.UK"
-  val plaResultSuccessIP16Heading           = "You've amended individual protection 2016"
-  val plaResultSuccessIP14Heading           = "You've amended individual protection 2014"
-  val plaResultSuccessAllowanceSubHeading   = "Your protected lifetime allowance is"
-  val plaResultSuccessProtectionDetails     = "Your protection details"
+  val plaResultSuccessOutcomeActiveTitle     = "Protection amended"
+  val plaResultSuccessOutcomeActiveTitleNew  = "Protection amended - Check your pension protections - GOV.UK"
+  val plaResultSuccessIP16Heading            = "You've amended individual protection 2016"
+  val plaResultSuccessIP14Heading            = "You've amended individual protection 2014"
+  val plaResultSuccessAllowanceSubHeading    = "Your protected lifetime allowance is"
+  val plaResultSuccessAllowanceSubHeadingHip = "Your protected amount is"
+  val plaResultSuccessProtectionDetails      = "Your protection details"
 
   val plaResultSuccessDetailsContent =
     "When you decide to take money from your pension, give these details to your pension provider:"

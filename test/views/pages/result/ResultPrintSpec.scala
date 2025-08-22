@@ -16,9 +16,13 @@
 
 package views.pages.result
 
+import config.FrontendAppConfig
 import models.PrintDisplayModel
 import org.jsoup.Jsoup
+import org.mockito.Mockito.when
 import play.api.i18n.Messages
+import play.api.inject
+import play.api.inject.guice.GuiceApplicationBuilder
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.result.ResultPrint
 import views.html.pages.result.resultPrint
@@ -37,6 +41,11 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       Some("100.00"),
       Some("23/02/2015")
     )
+    val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
+    val application = new GuiceApplicationBuilder()
+      .configure("metrics.enabled" -> false)
+      .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
+      .build()
     lazy val resultPrintView = fakeApplication().injector.instanceOf[resultPrint]
     lazy val view            = resultPrintView(model)
     lazy val doc             = Jsoup.parse(view.body)
@@ -97,10 +106,28 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
     }
 
     "contain a table which" should {
+      when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+      lazy val resultPrintView = application.injector.instanceOf[resultPrint]
+      lazy val view            = resultPrintView(model)
+      lazy val doc             = Jsoup.parse(view.body)
+      lazy val tableHeading    = doc.select("tr th")
 
-      lazy val tableHeading = doc.select("tr th")
+      "contain the following title message information when  hip is enabled" in {
+        tableHeading.get(2).text shouldBe plaPrintPlaHip
+        tableHeading.get(3).text shouldBe plaPrintProtectionNotificationNumberHip
+        tableHeading.get(4).text shouldBe plaPrintSchemeAdministratorReferenceHip
+      }
+    }
+
+    "contain a table which" should {
 
       "contain the following title message information" in {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+        lazy val resultPrintView = application.injector.instanceOf[resultPrint]
+        lazy val view            = resultPrintView(model)
+        lazy val doc             = Jsoup.parse(view.body)
+        lazy val tableHeading    = doc.select("tr th")
+
         tableHeading.get(0).text shouldBe plaPrintApplicationDate
         tableHeading.get(1).text shouldBe plaPrintProtectionType
         tableHeading.get(2).text shouldBe plaPrintPla

@@ -30,6 +30,9 @@ trait ExistingProtections {
   val plaExistingProtectionsProtectedAmount            = "Protected lifetime allowance"
   val plaExistingProtectionsProtectionRef              = "Protection notification number"
   val plaExistingProtectionsPSARef                     = "Scheme administrator reference"
+  val plaExistingProtectionsProtectedAmountHip         = "Protected amount"
+  val plaExistingProtectionsProtectionRefHip           = "Protection reference number"
+  val plaExistingProtectionsPSARefHip                  = "Pension scheme administrator check reference"
   val plaExistingProtectionsLinkText2016ShutterEnabled = "Taking higher tax-free lump sums with protected allowances"
 
   val plaExistingProtectionOtherText2016ShutterEnabled =

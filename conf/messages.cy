@@ -25,6 +25,14 @@ pla.base.date.fields.month      = Mis
 pla.base.date.fields.year       = Blwyddyn
 pla.base.moneyInput.hint        = Er enghraifft, £600 neu £193.54
 
+common.header.protectedAmount = Y swm wedi’i ddiogelu
+common.header.protectionReferenceNumber = Cyfeirnod y diogelwch
+common.header.pensionSchemeAdministratorCheckReference = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
+common.header.protectedLifetimeAllowance = Lwfans oes sydd wedi''i ddiogelu
+common.header.protectionNotificationNumber = Rhif hysbysu diogelwch
+common.header.schemeAdministratorReference = Cyfeirnod gweinyddwr y cynllun
+
+
 pla.license.1    = Mae''r holl gynnwys ar gael dan y
 pla.license.link = Drwydded Llywodraeth Agored, fersiwn 3.0
 pla.license.2    = , oni nodir yn wahanol
@@ -345,6 +353,7 @@ pla.hidden.expired                                      = ar gyfer ceisiadau syd
 ## Result Success ##
 pla.resultSuccess.title                 = Wedi llwyddo
 pla.resultSuccess.allowanceSubHeading   = Eich lwfans oes sydd wedi''i ddiogelu yw
+pla.resultSuccess.allowanceSubHeadingHip  = Eich Y swm wedi’i ddiogelu yw
 pla.resultSuccess.protectionDetails     = Eich manylion diogelwch
 pla.resultSuccess.detailsContent        = Pan fyddwch yn penderfynu cymryd arian o''ch pensiwn, rhowch y manylion hyn i''ch darparwr pensiwn:
 pla.resultSuccess.printGuidancePara     = Cadwch gopi o fanylion eich diogelwch ar gyfer eich cofnodion. Os byddwch yn penderfynu cymryd arian o’ch pensiwn, rhowch y manylion hyn i’ch darparwr pensiwn.
@@ -371,9 +380,10 @@ pla.resultSuccess.yourNino              = eich rhif Yswiriant Gwladol
 
 pla.resultSuccess.table.fullName        = Enw llawn
 pla.resultSuccess.table.nino            = Rhif Yswiriant Gwladol
-pla.resultSuccess.table.protectionRef   = Rhif hysbysu diogelwch
-pla.resultSuccess.table.psaRef          = Cyfeirnod gweinyddwr y cynllun
+pla.resultSuccess.table.protectionRef   = Cyfeirnod y diogelwch
+pla.resultSuccess.table.psaRef          = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
 pla.resultSuccess.table.applicationDate = Dyddiad y cais
+
 
 pla.resultSuccess.dismissBanner           = No thanks
 pla.resultSuccess.userResearchLink.title  = Help improve GOV.UK
