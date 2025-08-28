@@ -42,8 +42,8 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
 
   private val NameHeader            = "Full name"
   private val NinoHeader            = "National Insurance number"
-  private val ProtectionRefHeader   = "Protection notification number"
-  private val PsaRefHeader          = "Scheme administrator reference"
+  private val ProtectionRefHeader   = "Protection reference number"
+  private val PsaRefHeader          = "Pension scheme administrator check reference"
   private val ApplicationDateHeader = "Application date"
 
   "the OutcomeActiveView" should {
@@ -67,6 +67,28 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
       docIP14HipMigrationDisabled.select("h1.govuk-panel__title").text() shouldBe plaResultSuccessIP14Heading
       docIP14HipMigrationDisabled.select("#amendedAllowanceText").text() shouldBe plaResultSuccessAllowanceSubHeading
       docIP14HipMigrationDisabled.select("strong#protectedAmount").text() shouldBe "£1,350,000.11"
+    }
+
+    "have the right success message displayed for IP14  when hip enabled" in {
+      val viewIP14 = application.injector.instanceOf[outcomeActive]
+      val docIP14HipMigrationEnabled = {
+        when(appConfig.hipMigrationEnabled).thenReturn(true)
+        Jsoup.parse(viewIP14.apply(amendsActiveResultModelIP14, Some(amendsGAModel), appConfig).body)
+      }
+      docIP14HipMigrationEnabled
+        .select("#amendedAllowanceTextHip")
+        .text() shouldBe plaResultSuccessAllowanceSubHeadingHip
+    }
+
+    "have the right success message displayed for IP16 when hip enabled " in {
+      val viewIP16 = application.injector.instanceOf[outcomeActive]
+      val docIP16HipMigrationEnabled = {
+        when(appConfig.hipMigrationEnabled).thenReturn(true)
+        Jsoup.parse(viewIP16.apply(amendsActiveResultModelIP16, Some(amendsGAModel), appConfig).body)
+      }
+      docIP16HipMigrationEnabled
+        .select("#amendedAllowanceTextHip")
+        .text() shouldBe plaResultSuccessAllowanceSubHeadingHip
     }
 
     "have a properly structured 'Your protection details' section" when {
@@ -94,7 +116,6 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
           .select("li#applicationDate")
           .text() shouldBe plaResultSuccessApplicationDate + s": ${details.applicationDate.get}"
       }
-
       "have the right print message" in {
         docIP16HipMigrationDisabled.select("a#printPage").text() shouldBe plaResultSuccessPrintNew
         docIP16HipMigrationDisabled

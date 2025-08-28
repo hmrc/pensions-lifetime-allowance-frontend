@@ -18,15 +18,18 @@ package testHelpers.ViewSpecHelpers.result
 
 trait ResultPrint {
 
-  val plaPrintTitle                        = "Print your active protection - Check your pension protections - GOV.UK"
-  val plaPrintServiceName                  = "Check your pension protections"
-  val plaPrintNino                         = "National Insurance number"
-  val plaPrintProtectionDetails            = "Protection details"
-  val plaPrintApplicationDate              = "Application date"
-  val plaPrintProtectionType               = "Protection type"
-  val plaPrintPla                          = "Protected lifetime allowance"
-  val plaPrintProtectionNotificationNumber = "Protection notification number"
-  val plaPrintSchemeAdministratorReference = "Scheme administrator reference"
+  val plaPrintTitle                           = "Print your active protection - Check your pension protections - GOV.UK"
+  val plaPrintServiceName                     = "Check your pension protections"
+  val plaPrintNino                            = "National Insurance number"
+  val plaPrintProtectionDetails               = "Protection details"
+  val plaPrintApplicationDate                 = "Application date"
+  val plaPrintProtectionType                  = "Protection type"
+  val plaPrintPla                             = "Protected lifetime allowance"
+  val plaPrintProtectionNotificationNumber    = "Protection notification number"
+  val plaPrintSchemeAdministratorReference    = "Scheme administrator reference"
+  val plaPrintPlaHip                          = "Protected amount"
+  val plaPrintProtectionNotificationNumberHip = "Protection reference number"
+  val plaPrintSchemeAdministratorReferenceHip = "Pension scheme administrator check reference"
 
   val plaPrintGiveToPensionProvider =
     "Give these details to your pension provider when you decide to take money from your pension"

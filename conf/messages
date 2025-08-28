@@ -24,6 +24,14 @@ pla.base.date.fields.day        = Day
 pla.base.date.fields.month      = Month
 pla.base.date.fields.year       = Year
 pla.base.moneyInput.hint        = For example, £600 or £193.54
+common.header.protectedAmount = Protected amount
+common.header.protectionReferenceNumber = Protection reference number
+common.header.pensionSchemeAdministratorCheckReference = Pension scheme administrator check reference
+common.header.protectedLifetimeAllowance = Protected lifetime allowance
+common.header.protectionNotificationNumber = Protection notification number
+common.header.schemeAdministratorReference = Scheme administrator reference
+
+
 
 pla.license.1    = All content is available under the
 pla.license.link = Open Government Licence v3.0
@@ -341,6 +349,7 @@ pla.hidden.expired                                      = for expired applicatio
 ## Result Success ##
 pla.resultSuccess.title                 = Success
 pla.resultSuccess.allowanceSubHeading   = Your protected lifetime allowance is
+pla.resultSuccess.allowanceSubHeadingHip  = Your protected amount is
 pla.resultSuccess.protectionDetails     = Your protection details
 pla.resultSuccess.detailsContent        = When you decide to take money from your pension, give these details to your pension provider:
 pla.resultSuccess.printGuidancePara     = Keep a copy of your protection details for your records. If you decide to take money from your pension, give these details to your pension provider.
@@ -369,8 +378,8 @@ pla.resultSuccess.yourNino = your National Insurance number
 
 pla.resultSuccess.table.fullName        = Full name
 pla.resultSuccess.table.nino            = National Insurance number
-pla.resultSuccess.table.protectionRef   = Protection notification number
-pla.resultSuccess.table.psaRef          = Scheme administrator reference
+pla.resultSuccess.table.protectionRef   = Protection reference number
+pla.resultSuccess.table.psaRef          = Pension scheme administrator check reference
 pla.resultSuccess.table.applicationDate = Application date
 
 pla.resultSuccess.dismissBanner = No thanks

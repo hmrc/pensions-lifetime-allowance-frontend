@@ -16,9 +16,12 @@
 
 @import models.PrintDisplayModel
 @import views.html.helper.CSPNonce
+@import views.HeaderContent
+@import config.FrontendAppConfig
 
 @this(
-    layout: Layout
+    layout: Layout,
+    appConfig: FrontendAppConfig
 )
 
 @(model: PrintDisplayModel)(implicit request: Request[_], messages: Messages)
@@ -58,16 +61,16 @@
         </tr>
         @model.protectedAmount.map { amt =>
         <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header">@Messages("pla.print.pla")</th>
+            <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getProtectedLifetimeAllowance(appConfig))</th>
             <td class="govuk-table__cell" id="protectedAmount">@{amt}</td>
         </tr>
         }
         <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header">@Messages("pla.print.protectionNotificationNumber")</th>
+            <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getProtectionNotificatioNumber(appConfig))</th>
             <td class="govuk-table__cell" id="protectionRef">@{model.protectionReference}</td>
         </tr>
         <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header">@Messages("pla.print.schemeAdministratorReference")</th>
+            <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getSchemeAdministratorReference(appConfig))</th>
             <td class="govuk-table__cell" id="psaRef">@{model.psaCheckReference}</td>
         </tr>
         </tbody>
