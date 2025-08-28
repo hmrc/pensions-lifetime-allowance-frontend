@@ -46,6 +46,7 @@ class AmendsRemovePensionSharingOrderController @Inject() (
     val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
+    with AmendControllerCacheHelper
     with I18nSupport
     with Logging {
 
@@ -68,21 +69,15 @@ class AmendsRemovePensionSharingOrderController @Inject() (
 
   def submitRemovePso(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService
-        .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+      val cacheKey = Strings.cacheAmendFetchString(protectionType, status)
+      fetchAmendProtectionModel(cacheKey)
         .flatMap {
           case Some(model) =>
             val updated        = model.updatedProtection.copy(pensionDebits = None)
             val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
             val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
-            sessionCacheService
-              .saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel)
-              .map { _ =>
-                Redirect(
-                  routes.AmendsController
-                    .amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase)
-                )
-              }
+
+            saveAndRedirectToSummary(cacheKey, amendProtModel)
 
           case None =>
             logger.warn(

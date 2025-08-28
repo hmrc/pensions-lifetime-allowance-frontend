@@ -23,8 +23,8 @@ import play.api.mvc.Call
 object Helpers {
 
   def createAmendCallIfRequired(protection: ProtectionModel): Option[Call] = {
-    val status         = protection.status.map(_.toLowerCase).getOrElse("none")
-    val protectionType = protection.protectionType.map(_.toLowerCase).getOrElse("none")
+    val status         = Strings.statusString(protection.status).toLowerCase
+    val protectionType = Strings.protectionTypeString(protection.protectionType).toLowerCase
     if (protection.isAmendable)
       Some(controllers.routes.AmendsController.amendsSummary(protectionType, status))
     else None
@@ -32,18 +32,14 @@ object Helpers {
 
   def createPsoRemoveCall(protection: ProtectionModel): Option[Call] =
     if (protection.isAmendable) {
-      val status         = protection.status.map(_.toLowerCase).getOrElse("none")
-      val protectionType = protection.protectionType.map(_.toLowerCase).getOrElse("none")
+      val status         = Strings.statusString(protection.status).toLowerCase
+      val protectionType = Strings.protectionTypeString(protection.protectionType).toLowerCase
       Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso(protectionType, status))
     } else None
 
   def createAmendCall(protection: ProtectionModel, applicationSection: ApplicationStage.Value): Call = {
-    val protectionType = protection.protectionType
-      .getOrElse(throw Exceptions.RequiredValueNotDefinedException("createAmendCall", "protectionType"))
-      .toLowerCase
-    val status = protection.status
-      .getOrElse(throw Exceptions.RequiredValueNotDefinedException("createAmendCall", "protectionStatus"))
-      .toLowerCase
+    val protectionType = Strings.protectionTypeString(protection.protectionType).toLowerCase
+    val status         = Strings.statusString(protection.status).toLowerCase
 
     import ApplicationStage._
     applicationSection match {

@@ -46,14 +46,14 @@ class AmendsCurrentPensionController @Inject() (
     val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
+    with AmendControllerCacheHelper
     with I18nSupport
     with Logging {
 
   def amendCurrentPensions(protectionType: String, status: String): Action[AnyContent] =
     Action.async { implicit request =>
       authFunction.genericAuthWithNino("existingProtections") { nino =>
-        sessionCacheService
-          .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+        fetchAmendProtectionModel(Strings.cacheAmendFetchString(protectionType, status))
           .map {
             case Some(data) =>
               protectionType match {
@@ -111,9 +111,9 @@ class AmendsCurrentPensionController @Inject() (
                 case "ip2016" => Future.successful(BadRequest(amendCurrentPensions(errors, protectionType, status)))
                 case "ip2014" => Future.successful(BadRequest(amendIP14CurrentPensions(errors, protectionType, status)))
               },
-            success =>
-              sessionCacheService
-                .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+            success => {
+              val cacheKey = Strings.cacheAmendFetchString(protectionType, status)
+              fetchAmendProtectionModel(cacheKey)
                 .flatMap {
                   case Some(model) =>
                     val updated = model.updatedProtection
@@ -121,14 +121,7 @@ class AmendsCurrentPensionController @Inject() (
                     val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                     val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                    sessionCacheService
-                      .saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel)
-                      .map { _ =>
-                        Redirect(
-                          routes.AmendsController
-                            .amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase)
-                        )
-                      }
+                    saveAndRedirectToSummary(cacheKey, amendProtModel)
 
                   case _ =>
                     logger.warn(
@@ -139,6 +132,7 @@ class AmendsCurrentPensionController @Inject() (
                         .withHeaders(CACHE_CONTROL -> "no-cache")
                     )
                 }
+            }
           )
       }
     }

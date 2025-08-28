@@ -46,6 +46,7 @@ class AmendsPensionWorthBeforeController @Inject() (
     val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
+    with AmendControllerCacheHelper
     with I18nSupport
     with Logging {
 
@@ -112,9 +113,9 @@ class AmendsPensionWorthBeforeController @Inject() (
                 case "ip2014" =>
                   Future.successful(BadRequest(amendIP14PensionsWorthBefore(errors, protectionType, status)))
               },
-            success =>
-              sessionCacheService
-                .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+            success => {
+              val cacheKey = Strings.cacheAmendFetchString(protectionType, status)
+              fetchAmendProtectionModel(cacheKey)
                 .flatMap {
                   case Some(model) =>
                     val updatedAmount  = success.amendedPensionsTakenBeforeAmt.get.toDouble
@@ -122,14 +123,7 @@ class AmendsPensionWorthBeforeController @Inject() (
                     val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                     val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                    sessionCacheService
-                      .saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel)
-                      .map { _ =>
-                        Redirect(
-                          routes.AmendsController
-                            .amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase)
-                        )
-                      }
+                    saveAndRedirectToSummary(cacheKey, amendProtModel)
 
                   case _ =>
                     logger.warn(
@@ -140,6 +134,7 @@ class AmendsPensionWorthBeforeController @Inject() (
                         .withHeaders(CACHE_CONTROL -> "no-cache")
                     )
                 }
+            }
           )
       }
     }

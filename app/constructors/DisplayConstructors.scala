@@ -20,6 +20,7 @@ import common._
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
+import models.pla.response.ProtectionType.FixedProtection2016
 import play.api.Logging
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Call
@@ -60,8 +61,9 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       protectionModel.protectedAmount.map(amt => Display.currencyDisplayString(BigDecimal(amt)))
 
     val protectedAmount = protectionModel.protectionType match {
-      case Some("FP2016") => Some(Display.currencyDisplayString(Constants.fpProtectedAmount))
-      case _              => protectedAmountOption
+      case Some("FP2016") | Some(FixedProtection2016.toString) =>
+        Some(Display.currencyDisplayString(Constants.fpProtectedAmount))
+      case _ => protectedAmountOption
     }
 
     val certificateDate =

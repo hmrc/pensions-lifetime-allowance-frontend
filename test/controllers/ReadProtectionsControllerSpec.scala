@@ -24,6 +24,7 @@ import constructors.DisplayConstructors
 import generators.ModelGenerators
 import mocks.AuthMock
 import models.cache.CacheMap
+import models.pla.response.ProtectionStatus.{Dormant, Rejected}
 import models.{ExistingProtectionsDisplayModel, ProtectionModel, ReadResponseModel, TransformedReadResponseModel}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -115,12 +116,16 @@ class ReadProtectionsControllerSpec
       mockPlaConnectorV2,
       mockSessionCacheService,
       mockDisplayConstructors,
-      mockAppConfig,
       mockMCC,
       authFunction,
       mockTechnicalError,
       mockManualCorrespondenceNeeded,
       mockExistingProtections
+    )(
+      mockPlaContext,
+      application,
+      mockAppConfig,
+      executionContext
     )
 
   }
@@ -134,7 +139,7 @@ class ReadProtectionsControllerSpec
     notificationId = Some(12),
     protectionID = Some(12345),
     protectionType = Some("IP2016"),
-    status = Some("dormant"),
+    status = Some(Dormant.toString),
     certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
@@ -149,7 +154,7 @@ class ReadProtectionsControllerSpec
     notificationId = Some(12),
     protectionID = Some(12345),
     protectionType = Some("IP2016"),
-    status = Some("rejected"),
+    status = Some(Rejected.toString),
     certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")

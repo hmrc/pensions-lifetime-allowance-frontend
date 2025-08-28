@@ -46,6 +46,7 @@ class AmendsPensionTakenBetweenController @Inject() (
     val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
+    with AmendControllerCacheHelper
     with I18nSupport
     with Logging {
 
@@ -100,9 +101,9 @@ class AmendsPensionTakenBetweenController @Inject() (
                 case "ip2014" =>
                   Future.successful(BadRequest(amendIP14PensionsTakenBetween(errors, protectionType, status)))
               },
-            success =>
-              sessionCacheService
-                .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+            success => {
+              val cacheKey = Strings.cacheAmendFetchString(protectionType, status)
+              fetchAmendProtectionModel(cacheKey)
                 .flatMap {
                   case Some(model) =>
                     success.amendedPensionsTakenBetween match {
@@ -118,14 +119,7 @@ class AmendsPensionTakenBetweenController @Inject() (
                         val updatedTotal = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                         val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                        sessionCacheService
-                          .saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel)
-                          .map { _ =>
-                            Redirect(
-                              routes.AmendsController
-                                .amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase)
-                            )
-                          }
+                        saveAndRedirectToSummary(cacheKey, amendProtModel)
                     }
                   case _ =>
                     logger.warn(
@@ -136,6 +130,7 @@ class AmendsPensionTakenBetweenController @Inject() (
                         .withHeaders(CACHE_CONTROL -> "no-cache")
                     )
                 }
+            }
           )
       }
     }

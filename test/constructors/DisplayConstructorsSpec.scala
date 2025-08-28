@@ -21,6 +21,7 @@ import common.Helpers
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
+import models.pla.response.ProtectionStatus.Open
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesProvider}
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, MessagesControllerComponents}
@@ -44,7 +45,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     psaCheckReference = Some("psaRef"),
     protectionID = Some(100001),
     protectionType = Some("IP2016"),
-    status = Some("active"),
+    status = Some(Open.toString),
     protectedAmount = Some(1100000.34),
     relevantAmount = Some(1100000.34),
     preADayPensionInPayment = None,
@@ -57,7 +58,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     psaCheckReference = Some("psaRef"),
     protectionID = Some(100001),
     protectionType = Some("IP2016"),
-    status = Some("active"),
+    status = Some(Open.toString),
     protectedAmount = Some(1100000.34),
     relevantAmount = Some(1100000.34),
     preADayPensionInPayment = None,
@@ -78,7 +79,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "active")),
+          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "open")),
           None,
           "No"
         )
@@ -89,7 +90,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")),
+          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "open")),
           None,
           "No"
         )
@@ -100,13 +101,13 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")),
+          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")),
+          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
           None,
           "£100,000"
         )
@@ -117,7 +118,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "active")),
+          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "open")),
           None,
           "£1,000,000.34"
         )
@@ -137,7 +138,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "active")),
+          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "open")),
           None,
           "No"
         )
@@ -148,7 +149,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")),
+          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "open")),
           None,
           "No"
         )
@@ -159,13 +160,13 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")),
+          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")),
+          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
           None,
           "£100,000"
         )
@@ -176,7 +177,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "active")),
+          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "open")),
           None,
           "£1,000,000.34"
         )
@@ -871,7 +872,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
         protectionType = Some("IP2016"),
-        status = Some("active"),
+        status = Some(Open.toString),
         protectedAmount = Some(1100000.34),
         relevantAmount = Some(1100000.34),
         preADayPensionInPayment = None,
@@ -898,7 +899,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
         protectionType = Some("IP2016"),
-        status = Some("active"),
+        status = Some(Open.toString),
         protectedAmount = Some(1100000.34),
         relevantAmount = Some(1100000.34),
         preADayPensionInPayment = None,
@@ -918,8 +919,9 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
             AmendDisplayRowModel(
               "CurrentPsos-psoDetails",
               changeLinkCall =
-                Some(controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "active")),
-              removeLinkCall = None,
+                Some(controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "open")),
+              removeLinkCall =
+                Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso("ip2016", "open")),
               "£1,000",
               "2 March 2017"
             )
@@ -943,7 +945,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
         protectionType = Some("IP2016"),
-        status = Some("active"),
+        status = Some(Open.toString),
         protectedAmount = Some(1000000.34),
         relevantAmount = Some(1000000.34),
         preADayPensionInPayment = None,

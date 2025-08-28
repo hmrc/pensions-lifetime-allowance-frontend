@@ -42,7 +42,6 @@ class ReadProtectionsController @Inject() (
     plaConnectorV2: PlaConnectorV2,
     sessionCacheService: SessionCacheService,
     displayConstructors: DisplayConstructors,
-    appConfig: FrontendAppConfig,
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction,
     technicalError: views.html.pages.fallback.technicalError,
@@ -51,6 +50,7 @@ class ReadProtectionsController @Inject() (
 )(
     implicit val plaContext: PlaContext,
     implicit val application: Application,
+    implicit val appConfig: FrontendAppConfig,
     implicit val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with I18nSupport
