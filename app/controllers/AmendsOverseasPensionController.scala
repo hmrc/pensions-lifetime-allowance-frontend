@@ -53,7 +53,7 @@ class AmendsOverseasPensionController @Inject() (
   def amendOverseasPensions(protectionType: String, status: String): Action[AnyContent] =
     Action.async { implicit request =>
       authFunction.genericAuthWithNino("existingProtections") { nino =>
-        fetchAmendProtectionModel(Strings.cacheAmendFetchString(protectionType, status))
+        fetchAmendProtectionModel(protectionType, status)
           .map {
             case Some(data) =>
               val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
@@ -111,9 +111,8 @@ class AmendsOverseasPensionController @Inject() (
                 case "ip2014" =>
                   Future.successful(BadRequest(amendIP14OverseasPensions(errors, protectionType, status)))
               },
-            success => {
-              val cacheKey = Strings.cacheAmendFetchString(protectionType, status)
-              fetchAmendProtectionModel(cacheKey)
+            success =>
+              fetchAmendProtectionModel(protectionType, status)
                 .flatMap {
                   case Some(model) =>
                     val updatedAmount = success.amendedOverseasPensions match {
@@ -124,7 +123,8 @@ class AmendsOverseasPensionController @Inject() (
                     val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                     val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                    saveAndRedirectToSummary(cacheKey, amendProtModel)
+                    saveAmendProtectionModel(protectionType, status, amendProtModel)
+                      .map(_ => redirectToSummary(amendProtModel))
 
                   case _ =>
                     logger.warn(
@@ -135,7 +135,6 @@ class AmendsOverseasPensionController @Inject() (
                         .withHeaders(CACHE_CONTROL -> "no-cache")
                     )
                 }
-            }
           )
       }
     }

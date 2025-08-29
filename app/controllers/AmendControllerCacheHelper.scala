@@ -18,6 +18,7 @@ package controllers
 
 import common.Strings
 import models.ProtectionModel
+import models.cache.CacheMap
 import play.api.mvc.Results.Redirect
 import services.SessionCacheService
 import models.amendModels._
@@ -29,18 +30,29 @@ trait AmendControllerCacheHelper {
 
   val sessionCacheService: SessionCacheService
 
-  def fetchAmendProtectionModel(cacheKey: String)(implicit request: MessagesRequest[_]): Future[Option[AmendProtectionModel]] = {
-    sessionCacheService.fetchAndGetFormData[AmendProtectionModel](cacheKey)
-  }
+  private def cacheKey(protectionType: String, status: String): String =
+    Strings.cacheAmendFetchString(protectionType, status)
 
-  def saveAndRedirectToSummary(cacheKey: String, amendModel: AmendProtectionModel)(implicit request: MessagesRequest[_], ec: ExecutionContext): Future[Result] = {
+  def fetchAmendProtectionModel(protectionType: String, status: String)(
+      implicit request: MessagesRequest[_]
+  ): Future[Option[AmendProtectionModel]] =
+    sessionCacheService.fetchAndGetFormData[AmendProtectionModel](cacheKey(protectionType, status))
+
+  def saveAmendProtectionModel(protectionType: String, status: String, amendModel: AmendProtectionModel)(
+      implicit request: MessagesRequest[_],
+      ec: ExecutionContext
+  ): Future[CacheMap] =
     sessionCacheService
-      .saveFormData[AmendProtectionModel](cacheKey, amendModel)
-      .map { _ =>
-        val updatedProtectionType = Strings.protectionTypeString(amendModel.updatedProtection.protectionType).toLowerCase
-        val updatedStatus = Strings.statusString(amendModel.updatedProtection.status).toLowerCase
+      .saveFormData[AmendProtectionModel](cacheKey(protectionType, status), amendModel)
 
-        Redirect(routes.AmendsController.amendsSummary(updatedProtectionType, updatedStatus))
-      }
+  def redirectToSummary(amendModel: AmendProtectionModel)(
+      implicit request: MessagesRequest[_]
+  ): Result = {
+    val updatedProtectionType =
+      Strings.protectionTypeString(amendModel.updatedProtection.protectionType).toLowerCase
+    val updatedStatus = Strings.statusString(amendModel.updatedProtection.status).toLowerCase
+
+    Redirect(routes.AmendsController.amendsSummary(updatedProtectionType, updatedStatus))
   }
+
 }

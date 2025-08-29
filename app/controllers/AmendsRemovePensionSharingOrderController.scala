@@ -52,8 +52,7 @@ class AmendsRemovePensionSharingOrderController @Inject() (
 
   def removePso(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService
-        .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+      fetchAmendProtectionModel(protectionType, status)
         .map {
           case Some(_) =>
             Ok(removePsoDebits(protectionType, status))
@@ -69,15 +68,14 @@ class AmendsRemovePensionSharingOrderController @Inject() (
 
   def submitRemovePso(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      val cacheKey = Strings.cacheAmendFetchString(protectionType, status)
-      fetchAmendProtectionModel(cacheKey)
+      fetchAmendProtectionModel(protectionType, status)
         .flatMap {
           case Some(model) =>
             val updated        = model.updatedProtection.copy(pensionDebits = None)
             val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
             val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-            saveAndRedirectToSummary(cacheKey, amendProtModel)
+            saveAmendProtectionModel(protectionType, status, amendProtModel).map(_ => redirectToSummary(amendProtModel))
 
           case None =>
             logger.warn(
