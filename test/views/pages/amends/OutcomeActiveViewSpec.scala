@@ -70,10 +70,9 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
     }
 
     "have the right success message displayed for IP14  when hip enabled" in {
-      val viewIP14 = application.injector.instanceOf[outcomeActive]
       val docIP14HipMigrationEnabled = {
-        when(appConfig.hipMigrationEnabled).thenReturn(true)
-        Jsoup.parse(viewIP14.apply(amendsActiveResultModelIP14, Some(amendsGAModel), appConfig).body)
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+        Jsoup.parse(view.apply(amendsActiveResultModelIP14, Some(amendsGAModel), mockAppConfig).body)
       }
       docIP14HipMigrationEnabled
         .select("#amendedAllowanceTextHip")
@@ -81,10 +80,9 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
     }
 
     "have the right success message displayed for IP16 when hip enabled " in {
-      val viewIP16 = application.injector.instanceOf[outcomeActive]
       val docIP16HipMigrationEnabled = {
-        when(appConfig.hipMigrationEnabled).thenReturn(true)
-        Jsoup.parse(viewIP16.apply(amendsActiveResultModelIP16, Some(amendsGAModel), appConfig).body)
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+        Jsoup.parse(view.apply(amendsActiveResultModelIP16, Some(amendsGAModel), mockAppConfig).body)
       }
       docIP16HipMigrationEnabled
         .select("#amendedAllowanceTextHip")
