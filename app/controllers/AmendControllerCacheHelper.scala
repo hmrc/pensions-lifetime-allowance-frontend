@@ -39,15 +39,12 @@ trait AmendControllerCacheHelper {
     sessionCacheService.fetchAndGetFormData[AmendProtectionModel](cacheKey(protectionType, status))
 
   def saveAmendProtectionModel(protectionType: String, status: String, amendModel: AmendProtectionModel)(
-      implicit request: MessagesRequest[_],
-      ec: ExecutionContext
+      implicit request: MessagesRequest[_]
   ): Future[CacheMap] =
     sessionCacheService
       .saveFormData[AmendProtectionModel](cacheKey(protectionType, status), amendModel)
 
-  def redirectToSummary(amendModel: AmendProtectionModel)(
-      implicit request: MessagesRequest[_]
-  ): Result = {
+  def redirectToSummary(amendModel: AmendProtectionModel): Result = {
     val updatedProtectionType =
       Strings.protectionTypeString(amendModel.updatedProtection.protectionType).toLowerCase
     val updatedStatus = Strings.statusString(amendModel.updatedProtection.status).toLowerCase
