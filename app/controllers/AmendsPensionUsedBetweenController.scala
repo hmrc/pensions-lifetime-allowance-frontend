@@ -46,14 +46,14 @@ class AmendsPensionUsedBetweenController @Inject() (
     val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
+    with AmendControllerCacheHelper
     with I18nSupport
     with Logging {
 
   def amendPensionsUsedBetween(protectionType: String, status: String): Action[AnyContent] =
     Action.async { implicit request =>
       authFunction.genericAuthWithNino("existingProtections") { nino =>
-        sessionCacheService
-          .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+        fetchAmendProtectionModel(protectionType, status)
           .map {
             case Some(data) =>
               protectionType match {
@@ -113,8 +113,7 @@ class AmendsPensionUsedBetweenController @Inject() (
                   Future.successful(BadRequest(amendIP14PensionsUsedBetween(errors, protectionType, status)))
               },
             success =>
-              sessionCacheService
-                .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+              fetchAmendProtectionModel(protectionType, status)
                 .flatMap {
                   case Some(model) =>
                     val updatedAmount = success.amendedPensionsUsedBetweenAmt.get.toDouble
@@ -123,14 +122,8 @@ class AmendsPensionUsedBetweenController @Inject() (
                     val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                     val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                    sessionCacheService
-                      .saveFormData[AmendProtectionModel](Strings.cacheProtectionName(updated), amendProtModel)
-                      .map { _ =>
-                        Redirect(
-                          routes.AmendsController
-                            .amendsSummary(updated.protectionType.get.toLowerCase, updated.status.get.toLowerCase)
-                        )
-                      }
+                    saveAmendProtectionModel(protectionType, status, amendProtModel)
+                      .map(_ => redirectToSummary(amendProtModel))
 
                   case _ =>
                     logger.warn(

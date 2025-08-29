@@ -18,6 +18,8 @@ package common
 
 import enums.ApplicationType
 import models.ProtectionModel
+import models.pla.response.ProtectionStatus._
+import models.pla.response.ProtectionType._
 
 object Strings {
 
@@ -39,27 +41,27 @@ object Strings {
   def cacheAmendFetchString(protectionType: String, status: String): String =
     status.toLowerCase + protectionType.toUpperCase + "Amendment"
 
-  def protectionTypeString(modelProtectionType: Option[String]) =
+  def protectionTypeString(modelProtectionType: Option[String]): String =
     modelProtectionType match {
-      case Some("FP2016")   => "FP2016"
-      case Some("IP2014")   => "IP2014"
-      case Some("IP2016")   => "IP2016"
-      case Some("Primary")  => "primary"
-      case Some("Enhanced") => "enhanced"
-      case Some("Fixed")    => "fixed"
-      case Some("FP2014")   => "FP2014"
-      case _                => "notRecorded"
+      case Some("FP2016") | Some(FixedProtection2016.toString)      => "FP2016"
+      case Some("IP2014") | Some(IndividualProtection2014.toString) => "IP2014"
+      case Some("IP2016") | Some(IndividualProtection2016.toString) => "IP2016"
+      case Some("Primary") | Some(PrimaryProtection.toString)       => "primary"
+      case Some("Enhanced") | Some(EnhancedProtection.toString)     => "enhanced"
+      case Some("Fixed") | Some(FixedProtection.toString)           => "fixed"
+      case Some("FP2014") | Some(FixedProtection2014.toString)      => "FP2014"
+      case _                                                        => "notRecorded"
     }
 
   def statusString(modelStatus: Option[String]): String =
     modelStatus match {
-      case Some("Open")         => "open"
-      case Some("Dormant")      => "dormant"
-      case Some("Withdrawn")    => "withdrawn"
-      case Some("Expired")      => "expired"
-      case Some("Unsuccessful") => "unsuccessful"
-      case Some("Rejected")     => "rejected"
-      case _                    => "notRecorded"
+      case Some("Open") | Some(Open.toString)                 => "open"
+      case Some("Dormant") | Some(Dormant.toString)           => "dormant"
+      case Some("Withdrawn") | Some(Withdrawn.toString)       => "withdrawn"
+      case Some("Expired") | Some(Expired.toString)           => "expired"
+      case Some("Unsuccessful") | Some(Unsuccessful.toString) => "unsuccessful"
+      case Some("Rejected") | Some(Rejected.toString)         => "rejected"
+      case _                                                  => "notRecorded"
     }
 
 }

@@ -21,6 +21,7 @@ import config._
 import mocks.AuthMock
 import models._
 import models.amendModels._
+import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
@@ -87,7 +88,7 @@ class AmendsPensionUsedBetweenControllerSpec
       None,
       None,
       protectionType = Some("IP2016"),
-      status = Some("dormant"),
+      status = Some(Dormant.toString),
       relevantAmount = Some(100000),
       uncrystallisedRights = Some(100000)
     )
@@ -126,7 +127,7 @@ class AmendsPensionUsedBetweenControllerSpec
     notificationId = Some(12),
     protectionID = Some(12345),
     protectionType = Some("IP2016"),
-    status = Some("dormant"),
+    status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
@@ -143,7 +144,7 @@ class AmendsPensionUsedBetweenControllerSpec
     notificationId = Some(12),
     protectionID = Some(12345),
     protectionType = Some("IP2014"),
-    status = Some("dormant"),
+    status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
@@ -160,7 +161,7 @@ class AmendsPensionUsedBetweenControllerSpec
     notificationId = Some(12),
     protectionID = Some(12345),
     protectionType = Some("IP2016"),
-    status = Some("dormant"),
+    status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")

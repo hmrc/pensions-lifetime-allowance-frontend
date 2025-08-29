@@ -47,6 +47,7 @@ class AmendsPensionSharingOrderController @Inject() (
     val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
+    with AmendControllerCacheHelper
     with I18nSupport
     with Logging {
 
@@ -61,13 +62,9 @@ class AmendsPensionSharingOrderController @Inject() (
             success => {
               val details = createPsoDetailsList(success)
               for {
-                amendModel <- sessionCacheService
-                  .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
-                storedModel <- updateAndSaveAmendModelWithPso(
-                  details,
-                  amendModel,
-                  Strings.cacheAmendFetchString(protectionType, status)
-                )
+                amendModel <- fetchAmendProtectionModel(protectionType, status)
+                storedModel = updateAmendModelWithPso(details, amendModel)
+                _ <- saveAmendProtectionModel(protectionType, status, storedModel)
               } yield Redirect(routes.AmendsController.amendsSummary(protectionType.toLowerCase, status.toLowerCase))
             }
           )
@@ -76,8 +73,7 @@ class AmendsPensionSharingOrderController @Inject() (
 
   def amendPsoDetails(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService
-        .fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+      fetchAmendProtectionModel(protectionType, status)
         .map {
           case Some(amendProtectionModel) =>
             amendProtectionModel.updatedProtection.pensionDebits match {
@@ -122,17 +118,16 @@ class AmendsPensionSharingOrderController @Inject() (
     AmendPSODetailsModel(date, Some(Display.currencyInputDisplayFormat(psoDetails.amount)))
   }
 
-  private def updateAndSaveAmendModelWithPso(
+  private def updateAmendModelWithPso(
       debits: Option[List[PensionDebitModel]],
-      amendModelOption: Option[AmendProtectionModel],
-      key: String
-  )(implicit request: Request[AnyContent]) = {
+      amendModelOption: Option[AmendProtectionModel]
+  )(implicit request: Request[AnyContent]): AmendProtectionModel = {
     val amendModel = amendModelOption.getOrElse {
-      throw Exceptions.RequiredValueNotDefinedException("updateAndSaveAmendModelWithPso", "amendModel")
+      throw Exceptions.RequiredValueNotDefinedException("updateAmendModelWithPso", "amendModel")
     }
     val newUpdatedProtection = amendModel.updatedProtection.copy(pensionDebits = debits)
-    sessionCacheService
-      .saveFormData[AmendProtectionModel](key, amendModel.copy(updatedProtection = newUpdatedProtection))
+
+    amendModel.copy(updatedProtection = newUpdatedProtection)
   }
 
   private[controllers] def createPsoDetailsList(formModel: AmendPSODetailsModel): Option[List[PensionDebitModel]] = {
