@@ -78,10 +78,10 @@ case class AmendResponseModel(
 object AmendResponseModel {
   implicit val format: OFormat[AmendResponseModel] = Json.format[AmendResponseModel]
 
-  def from(amendProtectionResponse: AmendProtectionResponse): AmendResponseModel =
+  def from(amendProtectionResponse: AmendProtectionResponse, psaCheckReference: Option[String]): AmendResponseModel =
     AmendResponseModel(
       ProtectionModel(
-        psaCheckReference = None,
+        psaCheckReference = psaCheckReference,
         protectionID = Some(amendProtectionResponse.lifetimeAllowanceIdentifier),
         certificateDate = buildCertificateDate(amendProtectionResponse),
         version = Some(amendProtectionResponse.lifetimeAllowanceSequenceNumber),

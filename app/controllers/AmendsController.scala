@@ -138,7 +138,7 @@ class AmendsController @Inject() (
       implicit hc: HeaderCarrier
   ): Future[Either[PlaConnectorError, AmendResponseModel]] =
     if (appConfig.hipMigrationEnabled) {
-      plaConnectorV2.amendProtection(nino, protection).map(_.map(AmendResponseModel.from))
+      plaConnectorV2.amendProtection(nino, protection).map(_.map(AmendResponseModel.from(_, protection.psaCheckReference)))
     } else {
       plaConnector.amendProtection(nino, protection).map(_.map(AmendResponseModel(_)))
     }
