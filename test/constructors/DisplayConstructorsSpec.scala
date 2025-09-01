@@ -1086,7 +1086,6 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val nino                    = "testNino"
 
       val tstAmendResultDisplayModel = AmendResultDisplayModel(
-        protectionType = ApplicationType.IP2014,
         notificationId = 33,
         protectedAmount = "£1,350,000.45",
         details = Some(
