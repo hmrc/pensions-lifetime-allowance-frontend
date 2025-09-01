@@ -511,8 +511,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
   ): AmendResultDisplayModel = {
-    val printDetails   = createAmendPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
-    val protectionType = getProtectionTypeFromProtection(model.protection)
+    val printDetails = createAmendPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
 
     val protectedAmount = model.protection.protectedAmount.getOrElse {
       throw Exceptions.OptionNotDefinedException(
@@ -532,7 +531,6 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     )
 
     AmendResultDisplayModel(
-      protectionType,
       notificationId,
       protectedAmountString,
       Some(printDetails)

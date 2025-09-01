@@ -28,7 +28,7 @@ class AmendResponseModelSpec extends AnyWordSpec with Matchers {
     "return correct AmendResponseModel" in {
       val expectedResult = AmendResponseModel(
         ProtectionModel(
-          psaCheckReference = None,
+          psaCheckReference = Some("testPSARef"),
           protectionID = Some(lifetimeAllowanceIdentifier),
           version = Some(lifetimeAllowanceSequenceNumber + 1),
           protectionType = Some(AmendProtectionLifetimeAllowanceType.IndividualProtection2014.toString),
@@ -49,7 +49,7 @@ class AmendResponseModelSpec extends AnyWordSpec with Matchers {
         )
       )
 
-      AmendResponseModel.from(amendProtectionResponse) shouldBe expectedResult
+      AmendResponseModel.from(amendProtectionResponse, Some("testPSARef")) shouldBe expectedResult
     }
   }
 

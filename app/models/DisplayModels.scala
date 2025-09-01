@@ -113,7 +113,6 @@ case class ActiveAmendResultDisplayModel(
 )
 
 case class AmendResultDisplayModel(
-    protectionType: ApplicationType.Value,
     notificationId: Int,
     protectedAmount: String,
     details: Option[AmendPrintDisplayModel]

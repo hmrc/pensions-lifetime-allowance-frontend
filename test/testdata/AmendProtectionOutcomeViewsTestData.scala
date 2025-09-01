@@ -79,7 +79,6 @@ object AmendProtectionOutcomeViewsTestData {
   )
 
   val amendResultDisplayModelIP14: AmendResultDisplayModel = AmendResultDisplayModel(
-    protectionType = ApplicationType.IP2014,
     notificationId = 15,
     protectedAmount = protectedAmountIP14Str,
     details = Some(printDisplayModelIP14)
@@ -99,7 +98,6 @@ object AmendProtectionOutcomeViewsTestData {
   )
 
   val amendResultDisplayModelIP16: AmendResultDisplayModel = AmendResultDisplayModel(
-    protectionType = ApplicationType.IP2016,
     notificationId = 15,
     protectedAmount = protectedAmountIP16Str,
     details = Some(printDisplayModelIP16)
