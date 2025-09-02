@@ -16,16 +16,22 @@
 
 package forms
 
+import org.scalatestplus.mockito.MockitoSugar
 import play.api.data.{Form, FormError}
-import play.api.i18n.Messages
+import play.api.i18n.{Lang, Messages, MessagesImpl, MessagesProvider}
 import play.api.libs.json.Json
-import testHelpers.FakeApplication
+import play.api.mvc.MessagesControllerComponents
+import testHelpers.{CommonErrorMessages, FakeApplication}
 
-import javax.inject.Inject
+import java.util.Locale
 
-class PSARefFormSpec @Inject() (implicit val messages: Messages) extends FakeApplication {
+class PSARefFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
 
-  private val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm
+  val mcc                                        = app.injector.instanceOf[MessagesControllerComponents]
+  val messagesApi                                = mcc.messagesApi
+  implicit val messageProvider: MessagesProvider = MessagesImpl(Lang(Locale.ENGLISH), messagesApi)
+
+  private val form = PSALookupSchemeAdministratorReferenceForm.psaRefForm(messageProvider)
 
   "PSA ref form" must {
     "return no errors with valid data" in {
@@ -69,7 +75,10 @@ class PSARefFormSpec @Inject() (implicit val messages: Messages) extends FakeApp
       assert(validatedForm.errors.size == 1)
       assert(
         validatedForm.errors.contains(
-          FormError("pensionSchemeAdministratorCheckReference", List(Messages("psa.lookup.form.psaref.invalid")))
+          FormError(
+            "pensionSchemeAdministratorCheckReference",
+            List(Messages("psa.lookup.form.psaref.invalid")(messageProvider))
+          )
         )
       )
     }
