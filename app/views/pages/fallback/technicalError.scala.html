@@ -28,8 +28,11 @@
 }
 
 @linkText = @{
-    if(pType != "existingProtections") Messages("pla.techError.startAgain")
-    else Messages("pla.techError.retry")
+    if(pType != "existingProtections") {
+        Messages("pla.techError.startAgain")
+    } else {
+        Messages("pla.techError.retry")
+    }
 }
 
 @layout(
