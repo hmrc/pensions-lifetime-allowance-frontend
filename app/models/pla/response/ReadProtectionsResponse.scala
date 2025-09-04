@@ -20,7 +20,7 @@ import play.api.libs.json.{Format, Json}
 
 case class ReadProtectionsResponse(
     pensionSchemeAdministratorCheckReference: String,
-    protectionRecordsList: Seq[ProtectionRecordsList]
+    protectionRecordsList: Option[Seq[ProtectionRecordsList]]
 )
 
 object ReadProtectionsResponse {

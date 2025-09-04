@@ -109,8 +109,7 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
 
       "construct an instance of ProtectionModel with the correct fields" in
         forAll(readProtectionsResponseGen) { readProtectionsResponse =>
-          val protectionRecord = readProtectionsResponse.protectionRecordsList.head.protectionRecord
-
+          val protectionRecord = readProtectionsResponse.protectionRecordsList.get.head.protectionRecord
           val result = ProtectionModel(
             readProtectionsResponse.pensionSchemeAdministratorCheckReference,
             protectionRecord
