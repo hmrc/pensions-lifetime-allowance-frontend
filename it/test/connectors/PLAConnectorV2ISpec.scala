@@ -465,6 +465,25 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
       }
     }
 
+    "the backend returns 200 with a correct body, with no protectionRecordsList field" should {
+      "return Right containing ReadProtectionsResponse" in {
+        val responseBodyMissingProtectionRecordsListStr =
+          """
+            |{
+            |  "pensionSchemeAdministratorCheckReference": "PSA34728911G"
+            |}""".stripMargin
+
+        stubFor(
+          get(urlMatching(url))
+            .willReturn(aResponse().withStatus(OK).withBody(responseBodyMissingProtectionRecordsListStr))
+        )
+
+        val result = connector.readProtections(testNino).futureValue
+
+        result shouldBe Right(Json.parse(responseBodyMissingProtectionRecordsListStr).as[ReadProtectionsResponse])
+      }
+    }
+
     "it receives response with body in incorrect format" should {
       "return Left containing IncorrectResponseBodyError" in {
         val incorrectResponseBody =
