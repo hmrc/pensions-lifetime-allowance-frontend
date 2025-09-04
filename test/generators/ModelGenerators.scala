@@ -90,15 +90,15 @@ trait ModelGenerators extends ScalaCheckDrivenPropertyChecks {
 
   val protectionRecordsListGen: Gen[ProtectionRecordsList] = for {
     protectionRecord      <- protectionRecordGen
-    historicaldetailsList <- Gen.option(Gen.nonEmptyListOf(protectionRecordGen))
-  } yield ProtectionRecordsList(protectionRecord, historicaldetailsList)
+    historicalDetailsList <- Gen.option(Gen.nonEmptyListOf(protectionRecordGen))
+  } yield ProtectionRecordsList(protectionRecord, historicalDetailsList)
 
   val readProtectionsResponseGen: Gen[ReadProtectionsResponse] = for {
     pensionSchemeAdministratorCheckReference <- Gen.alphaNumStr.suchThat(_.nonEmpty)
     protectionRecordsList                    <- Gen.nonEmptyListOf(protectionRecordsListGen)
   } yield ReadProtectionsResponse(
     pensionSchemeAdministratorCheckReference,
-    protectionRecordsList
+    Some(protectionRecordsList)
   )
 
 }

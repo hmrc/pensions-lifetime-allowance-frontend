@@ -40,7 +40,7 @@ object TransformedReadResponseModel {
 
   def from(respModel: ReadProtectionsResponse): TransformedReadResponseModel = {
 
-    val protectionRecords = respModel.protectionRecordsList.map(_.protectionRecord)
+    val protectionRecords = respModel.protectionRecordsList.toList.flatten.map(_.protectionRecord)
 
     val activeProtectionOpt = protectionRecords
       .find(_.status == Open)
