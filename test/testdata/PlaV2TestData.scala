@@ -22,7 +22,7 @@ import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestS
 
 object PlaV2TestData {
 
-  val lifetimeAllowanceIdentifier: Int     = 42
+  val lifetimeAllowanceIdentifier: Long    = 12960000000123L
   val lifetimeAllowanceSequenceNumber: Int = 13
   val protectionReference: String          = "IP141034571625B"
 
