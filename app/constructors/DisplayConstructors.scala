@@ -123,29 +123,36 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
 
     val activeProtection = model.activeProtection.map(createExistingProtectionDisplayModel)
 
-    val inactiveProtections = model.inactiveProtections.nonEmpty
-    val noProtections = activeProtection.isEmpty && !inactiveProtections
-
     val dormantProtections = protectionsByStatus(ProtectionStatus.Dormant, model.inactiveProtections)
     val withdrawnProtections = protectionsByStatus(ProtectionStatus.Withdrawn, model.inactiveProtections)
     val unsuccessfulProtections = protectionsByStatus(ProtectionStatus.Unsuccessful, model.inactiveProtections)
     val rejectedProtections = protectionsByStatus(ProtectionStatus.Rejected, model.inactiveProtections)
     val expiredProtections = protectionsByStatus(ProtectionStatus.Expired, model.inactiveProtections)
 
+    val inactiveProtections = if (dormantProtections.size + withdrawnProtections.size + unsuccessfulProtections.size + rejectedProtections.size + expiredProtections.size == 0) {
+      None
+    }
+    else {
+      Some(ExistingInactiveProtectionsDisplayModel(
+        dormantProtections = dormantProtections,
+        withdrawnProtections = withdrawnProtections,
+        unsuccessfulProtections = unsuccessfulProtections,
+        rejectedProtections = rejectedProtections,
+        expiredProtections = expiredProtections
+      ))
+    }
+
     ExistingProtectionsDisplayModel(
-      noProtections = noProtections,
       activeProtection = activeProtection,
       inactiveProtections = inactiveProtections,
-      dormantProtections = dormantProtections,
-      withdrawnProtections = withdrawnProtections,
-      unsuccessfulProtections = unsuccessfulProtections,
-      rejectedProtections = rejectedProtections,
-      expiredProtections = expiredProtections,
     )
 
   }
 
-  private def protectionsByStatus(status: ProtectionStatus, protections: Seq[ProtectionModel]): SeqMap[String, Seq[ExistingProtectionDisplayModel]] = {
+  private def protectionsByStatus(
+                                   status: ProtectionStatus,
+                                   protections: Seq[ProtectionModel]
+                                 ): SeqMap[String, Seq[ExistingProtectionDisplayModel]] = {
     val filtered = protections
       .filter(_.status.contains(status.toString))
       .groupMap(_.protectionType)(createExistingProtectionDisplayModel)
@@ -154,9 +161,8 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     SeqMap.from(filtered.toSeq.sortWith((s1, s2) => sortByProtectionType(s1._1, s2._1)))
   }
 
-  private def createOrderingMap[T](items: T*): Map[String, Int] = {
+  private def createOrderingMap[T](items: T*): Map[String, Int] =
     items.map(_.toString).zipWithIndex.toMap
-  }
 
   private val protectionTypeOrder: Map[String, Int] = createOrderingMap(
     ProtectionType.IndividualProtection2016,
@@ -176,7 +182,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     ProtectionType.InternationalEnhancementS221,
     ProtectionType.InternationalEnhancementS224,
     ProtectionType.PensionCreditRights,
-    ProtectionType.PrimaryProtectionLTA,
+    ProtectionType.PrimaryProtectionLTA
   )
 
   private def sortByProtectionType(t1: String, t2: String): Boolean = protectionTypeOrder(t1) < protectionTypeOrder(t2)

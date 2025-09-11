@@ -17,7 +17,7 @@
 package views.pages.existingProtections
 
 import config.FrontendAppConfig
-import models.{ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel}
+import models.{ExistingInactiveProtectionsDisplayModel, ExistingProtectionDisplayModel, ExistingProtectionsDisplayModel}
 import org.jsoup.Jsoup
 import org.mockito.Mockito.when
 import play.api.i18n.Messages
@@ -27,6 +27,8 @@ import play.api.mvc.Call
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.existingProtections.ExistingProtections
 import views.html.pages.existingProtections.existingProtections
+
+import scala.collection.SeqMap
 
 class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtections {
 
@@ -52,16 +54,6 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     )
     lazy val tstPSACheckRef = "PSA33456789"
 
-    lazy val tstProtectionDisplayModelActive1 = ExistingProtectionDisplayModel(
-      "FP2016",
-      "active",
-      Some(controllers.routes.AmendsController.amendsSummary("ip2014", "active")),
-      Some(tstPSACheckRef),
-      Messages("pla.protection.protectionReference"),
-      Some("100.00"),
-      None,
-      None
-    )
     lazy val tstProtectionDisplayModelDormant1 = ExistingProtectionDisplayModel(
       "IP2014",
       "dormant",
@@ -72,7 +64,6 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       Some(""),
       None
     )
-    lazy val tstProtectionDisplayModelEmpty1 = ExistingProtectionDisplayModel("", "", None, None, "", None, None, None)
 
     val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
@@ -81,29 +72,61 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
       .build()
 
-    lazy val model = ExistingProtectionsDisplayModel(Some(protectionModel), List(tstProtectionDisplayModelActive1))
-    lazy val view  = application.injector.instanceOf[existingProtections]
-    lazy val doc   = Jsoup.parse(view.apply(model).body)
+    lazy val modelOnlyActive = ExistingProtectionsDisplayModel(
+      inactiveProtections = None,
+      activeProtection = Some(protectionModel),
+    )
+    lazy val viewOnlyActive = application.injector.instanceOf[existingProtections]
+    lazy val docOnlyActive = Jsoup.parse(viewOnlyActive.apply(modelOnlyActive).body)
 
-    lazy val model2 = ExistingProtectionsDisplayModel(None, List(tstProtectionDisplayModelEmpty1))
-    lazy val view2  = application.injector.instanceOf[existingProtections]
-    lazy val doc2   = Jsoup.parse(view2.apply(model2).body)
+    lazy val modelOnlyInactive = ExistingProtectionsDisplayModel(
+      activeProtection = None,
+      inactiveProtections = Some(ExistingInactiveProtectionsDisplayModel(
+        dormantProtections = SeqMap(
+          "IP2014" -> List(
+            tstProtectionDisplayModelDormant1,
+          ),
+        ),
+        withdrawnProtections = SeqMap.empty,
+        unsuccessfulProtections = SeqMap.empty,
+        rejectedProtections = SeqMap.empty,
+        expiredProtections = SeqMap.empty,
+      )),
+    )
+    lazy val viewOnlyInactive = application.injector.instanceOf[existingProtections]
+    lazy val docOnlyInactive = Jsoup.parse(viewOnlyInactive.apply(modelOnlyInactive).body)
 
-    lazy val model2b = ExistingProtectionsDisplayModel(Some(protectionModel2), List(tstProtectionDisplayModelDormant1))
-    lazy val view2b  = application.injector.instanceOf[existingProtections]
-    lazy val doc2b   = Jsoup.parse(view2b.apply(model2b).body)
+    lazy val modelActiveAndInactive = ExistingProtectionsDisplayModel(
+      activeProtection = Some(protectionModel2),
+      inactiveProtections = Some(ExistingInactiveProtectionsDisplayModel(
+        dormantProtections = SeqMap(
+          "IP2014" -> List(
+            tstProtectionDisplayModelDormant1
+          )
+        ),
+        withdrawnProtections = SeqMap.empty,
+        unsuccessfulProtections = SeqMap.empty,
+        rejectedProtections = SeqMap.empty,
+        expiredProtections = SeqMap.empty
+      ))
+    )
+    lazy val viewActiveAndInactive = application.injector.instanceOf[existingProtections]
+    lazy val docActiveAndInactive = Jsoup.parse(viewActiveAndInactive.apply(modelActiveAndInactive).body)
 
-    lazy val model3 = ExistingProtectionsDisplayModel(Some(protectionModel), List.empty)
-    lazy val view3  = application.injector.instanceOf[existingProtections]
-    lazy val doc3   = Jsoup.parse(view3.apply(model3).body)
+    lazy val modelNoProtections = ExistingProtectionsDisplayModel(
+      activeProtection = None,
+      inactiveProtections = None,
+    )
+    lazy val viewNoProtections = application.injector.instanceOf[existingProtections]
+    lazy val docNoProtections = Jsoup.parse(viewNoProtections.apply(modelNoProtections).body)
 
     "have the correct title" in {
-      doc.title() shouldBe plaExistingProtectionsTitleNew
+      docOnlyActive.title() shouldBe plaExistingProtectionsTitleNew
     }
 
     "have the correct heading which" should {
 
-      lazy val h1Tag = doc.select("H1")
+      lazy val h1Tag = docOnlyActive.select("H1")
 
       s"contain the text '$plaExistingProtectionsPageHeading'" in {
         h1Tag.text shouldBe plaExistingProtectionsPageHeading
@@ -113,48 +136,48 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     "have a protections section display which if no active protections are present" should {
 
       "have the id" in {
-        doc2.select("#listProtections").size() shouldBe 1
+        docOnlyInactive.select("#listProtections").size() shouldBe 1
       }
 
       "have the message" in {
-        doc2.select("div p").get(0).text shouldBe plaExistingProtectionsNoActiveProtections
+        docOnlyInactive.select("div p").get(0).text shouldBe plaExistingProtectionsNoActiveProtections
       }
     }
 
     "have a protections section display which if active protections are present" should {
 
       "display the protection details section" in {
-        doc.select("div div").hasClass("protection-detail") shouldBe true
+        docOnlyActive.select("div div").hasClass("protection-detail") shouldBe true
       }
 
       "contain the correct data" in {
-        doc.select("#listProtections > div > h3").text shouldBe "Individual protection 2016 for active protection"
-        doc.select("#activeProtectedAmountContent").text shouldBe "250.00"
+        docOnlyActive.select("#listProtections > div > h3").text shouldBe "Individual protection 2016 for active protection"
+        docOnlyActive.select("#activeProtectedAmountContent").text shouldBe "250.00"
       }
     }
 
     "have another protections list which if no other protections are present" should {
 
       "have the message" in {
-        doc3.getElementById("noOtherProtections").text shouldBe plaExistingProtectionsNoOtherProtections
+        docOnlyActive.getElementById("noOtherProtections").text shouldBe plaExistingProtectionsNoOtherProtections
       }
     }
 
     "have another protections list which if other protections are present" should {
 
       "display the correct html including the print link" in {
-        doc2b.select("a#printLink").attr("href") shouldBe "/check-your-pension-protections/print-protection"
+        docActiveAndInactive.select("a#printLink").attr("href") shouldBe "/check-your-pension-protections/print-protection"
       }
 
       "contain the data" in {
-        doc2b.select("#listProtections > h3").text shouldBe "Individual protection 2014 for dormant protections"
-        doc2b.select("#dormantInactiveProtectedAmount1Content").text shouldBe "100.00"
+        docActiveAndInactive.select("#listProtections > h3").text shouldBe "Individual protection 2014 for dormant protections"
+        docActiveAndInactive.select("#dormantInactiveProtectedAmount1Content").text shouldBe "100.00"
       }
     }
 
     s"have a content for Existing Protections page when hip migration is enabled " in {
       when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
-      lazy val doc = Jsoup.parse(view.apply(model).body)
+      lazy val doc = Jsoup.parse(viewOnlyActive.apply(modelOnlyActive).body)
       doc.select("#activeProtectedAmountHeading").text shouldBe plaExistingProtectionsProtectedAmountHip
       doc.select("#activeProtectionReferenceHeading").text shouldBe plaExistingProtectionsProtectionRefHip
       doc.select("#activePSACheckRefHeading").text shouldBe plaExistingProtectionsPSARefHip
@@ -162,7 +185,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
 
     s"have a content for Existing Protections page for inactive protection when hip migration is enabled  " in {
       when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
-      lazy val doc2b = Jsoup.parse(view2b.apply(model2b).body)
+      lazy val doc2b = Jsoup.parse(viewActiveAndInactive.apply(modelActiveAndInactive).body)
       doc2b.select("#dormantInactiveProtectedAmount1Heading").text shouldBe plaExistingProtectionsProtectedAmountHip
       doc2b.select("#dormantInactiveProtectionReference1Heading").text shouldBe plaExistingProtectionsProtectionRefHip
       doc2b.select("#dormantInactivePSACheckRef1Heading").text shouldBe plaExistingProtectionsPSARefHip
@@ -170,7 +193,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
 
     s"have a content for Existing Protections page when hip migration is disabled " in {
       when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
-      lazy val doc = Jsoup.parse(view.apply(model).body)
+      lazy val doc = Jsoup.parse(viewOnlyActive.apply(modelOnlyActive).body)
       doc.select("#activeProtectedAmountHeading").text shouldBe plaExistingProtectionsProtectedAmount
       doc.select("#activeProtectionReferenceHeading").text shouldBe plaExistingProtectionsProtectionRef
       doc.select("#activePSACheckRefHeading").text shouldBe plaExistingProtectionsPSARef
@@ -184,7 +207,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
         .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
         .build()
       lazy val view = application.injector.instanceOf[existingProtections]
-      lazy val doc  = Jsoup.parse(view.apply(model).body)
+      lazy val doc = Jsoup.parse(view.apply(modelOnlyActive).body)
 
       lazy val link = doc.select("#main-content > div > div > p > a")
 

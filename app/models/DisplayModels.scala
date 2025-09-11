@@ -54,14 +54,16 @@ case class ExistingProtectionDisplayModel(
 )
 
 case class ExistingProtectionsDisplayModel(
-    noProtections: Boolean,
     activeProtection: Option[ExistingProtectionDisplayModel],
-    inactiveProtections: Boolean,
+    inactiveProtections: Option[ExistingInactiveProtectionsDisplayModel],
+)
+
+case class ExistingInactiveProtectionsDisplayModel(
     dormantProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
     withdrawnProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
     unsuccessfulProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
     rejectedProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
-    expiredProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
+    expiredProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]]
 )
 
 case class PrintDisplayModel(
