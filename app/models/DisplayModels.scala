@@ -19,6 +19,8 @@ package models
 import enums.ApplicationType
 import play.api.mvc.Call
 
+import scala.collection.SeqMap
+
 case class SuccessDisplayModel(
     protectionType: ApplicationType.Value,
     notificationId: String,
@@ -52,8 +54,14 @@ case class ExistingProtectionDisplayModel(
 )
 
 case class ExistingProtectionsDisplayModel(
+    noProtections: Boolean,
     activeProtection: Option[ExistingProtectionDisplayModel],
-    otherProtections: Seq[ExistingProtectionDisplayModel]
+    inactiveProtections: Boolean,
+    dormantProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
+    withdrawnProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
+    unsuccessfulProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
+    rejectedProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
+    expiredProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
 )
 
 case class PrintDisplayModel(
