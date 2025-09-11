@@ -250,13 +250,15 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
       val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
         activeProtection = Some(tstExistingProtectionDisplayModelOpen),
-        inactiveProtections = Some(ExistingInactiveProtectionsDisplayModel(
-          dormantProtections = SeqMap("IP2014" -> List(tstExistingProtectionDisplayModelDormant)),
-          withdrawnProtections = SeqMap.empty,
-          unsuccessfulProtections = SeqMap.empty,
-          rejectedProtections = SeqMap.empty,
-          expiredProtections = SeqMap.empty
-        )),
+        inactiveProtections = Some(
+          ExistingInactiveProtectionsDisplayModel(
+            dormantProtections = SeqMap("IP2014" -> List(tstExistingProtectionDisplayModelDormant)),
+            withdrawnProtections = SeqMap.empty,
+            unsuccessfulProtections = SeqMap.empty,
+            rejectedProtections = SeqMap.empty,
+            expiredProtections = SeqMap.empty
+          )
+        )
       )
 
       displayConstructor.createExistingProtectionsDisplayModel(
@@ -448,35 +450,37 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
       val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
         activeProtection = Some(tstProtectionDisplayModelOpen),
-        inactiveProtections = Some(ExistingInactiveProtectionsDisplayModel(
-          dormantProtections = SeqMap(
-            "IP2016" -> List(
-              tstProtectionDisplayModelDormant3
+        inactiveProtections = Some(
+          ExistingInactiveProtectionsDisplayModel(
+            dormantProtections = SeqMap(
+              "IP2016" -> List(
+                tstProtectionDisplayModelDormant3
+              ),
+              "IP2014" -> List(
+                tstProtectionDisplayModelDormant1
+              ),
+              "FP2016" -> List(
+                tstProtectionDisplayModelDormant2
+              ),
+              "FP2014" -> List(
+                tstProtectionDisplayModelDormant7
+              ),
+              "primary" -> List(
+                tstProtectionDisplayModelDormant4
+              ),
+              "enhanced" -> List(
+                tstProtectionDisplayModelDormant5
+              ),
+              "fixed" -> List(
+                tstProtectionDisplayModelDormant6
+              )
             ),
-            "IP2014" -> List(
-              tstProtectionDisplayModelDormant1
-            ),
-            "FP2016" -> List(
-              tstProtectionDisplayModelDormant2
-            ),
-            "FP2014" -> List(
-              tstProtectionDisplayModelDormant7
-            ),
-            "primary" -> List(
-              tstProtectionDisplayModelDormant4
-            ),
-            "enhanced" -> List(
-              tstProtectionDisplayModelDormant5
-            ),
-            "fixed" -> List(
-              tstProtectionDisplayModelDormant6
-            )
-          ),
-          withdrawnProtections = SeqMap.empty,
-          unsuccessfulProtections = SeqMap.empty,
-          rejectedProtections = SeqMap.empty,
-          expiredProtections = SeqMap.empty
-        )),
+            withdrawnProtections = SeqMap.empty,
+            unsuccessfulProtections = SeqMap.empty,
+            rejectedProtections = SeqMap.empty,
+            expiredProtections = SeqMap.empty
+          )
+        )
       )
 
       displayConstructor.createExistingProtectionsDisplayModel(
@@ -670,43 +674,44 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
       val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
         activeProtection = None,
-        inactiveProtections = Some(ExistingInactiveProtectionsDisplayModel(
-          dormantProtections = SeqMap(
-            "enhanced" -> List(
-              tstProtectionDisplayModelDormantEnhanced
+        inactiveProtections = Some(
+          ExistingInactiveProtectionsDisplayModel(
+            dormantProtections = SeqMap(
+              "enhanced" -> List(
+                tstProtectionDisplayModelDormantEnhanced
+              ),
+              "fixed" -> List(
+                tstProtectionDisplayModelDormantFixed
+              )
             ),
-            "fixed" -> List(
-              tstProtectionDisplayModelDormantFixed
-            )
-          ),
-          withdrawnProtections = SeqMap(
-            "IP2016" -> List(
-              tstProtectionDisplayModelWithdrawnIP2016
+            withdrawnProtections = SeqMap(
+              "IP2016" -> List(
+                tstProtectionDisplayModelWithdrawnIP2016
+              ),
+              "primary" -> List(
+                tstProtectionDisplayModelWithdrawnPrimary
+              )
             ),
-            "primary" -> List(
-              tstProtectionDisplayModelWithdrawnPrimary
-            )
-          ),
-          unsuccessfulProtections = SeqMap(
-            "IP2014" -> List(
-              tstProtectionDisplayModelUnsuccessfulIP2014
-            )
-          ),
-          rejectedProtections = SeqMap(
-            "IP2014" -> List(
-              tstProtectionDisplayModelRejectedIP2014
-            )
-          ),
-          expiredProtections = SeqMap(
-            "FP2016" -> List(
-              tstProtectionDisplayModelExpiredFP2016
+            unsuccessfulProtections = SeqMap(
+              "IP2014" -> List(
+                tstProtectionDisplayModelUnsuccessfulIP2014
+              )
             ),
-            "FP2014" -> List(
-              tstProtectionDisplayModelExpiredFP2014
+            rejectedProtections = SeqMap(
+              "IP2014" -> List(
+                tstProtectionDisplayModelRejectedIP2014
+              )
+            ),
+            expiredProtections = SeqMap(
+              "FP2016" -> List(
+                tstProtectionDisplayModelExpiredFP2016
+              ),
+              "FP2014" -> List(
+                tstProtectionDisplayModelExpiredFP2014
+              )
             )
           )
-
-        ))
+        )
       )
 
       displayConstructor.createExistingProtectionsDisplayModel(

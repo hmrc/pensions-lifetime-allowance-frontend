@@ -72,7 +72,7 @@ class ReadProtectionsControllerSpec
 
   val testExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
     inactiveProtections = None,
-    activeProtection = None,
+    activeProtection = None
   )
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
