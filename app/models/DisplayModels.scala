@@ -55,7 +55,7 @@ case class ExistingProtectionDisplayModel(
 
 case class ExistingProtectionsDisplayModel(
     activeProtection: Option[ExistingProtectionDisplayModel],
-    inactiveProtections: Option[ExistingInactiveProtectionsDisplayModel],
+    inactiveProtections: Option[ExistingInactiveProtectionsDisplayModel]
 )
 
 case class ExistingInactiveProtectionsDisplayModel(
