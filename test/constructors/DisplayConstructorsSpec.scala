@@ -220,7 +220,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       )
       val tstExistingProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
-        status = "OPEN",
+        status = "open",
         amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "open")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = "PSA123456",
@@ -239,7 +239,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       )
       val tstExistingProtectionDisplayModelDormant = ExistingProtectionDisplayModel(
         protectionType = "IP2014",
-        status = "DORMANT",
+        status = "dormant",
         amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "dormant")),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -268,8 +268,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelOpen = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("IP2014"),
-        status = Some("Open"),
+        protectionType = Some("INDIVIDUAL PROTECTION 2014"),
+        status = Some("OPEN"),
         certificateDate = Some("2016-04-17"),
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456"),
@@ -289,8 +289,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormant7 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("FP2014"),
-        status = Some("Dormant"),
+        protectionType = Some("FIXED PROTECTION 2014"),
+        status = Some("DORMANT"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -310,8 +310,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormant6 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("Fixed"),
-        status = Some("Dormant"),
+        protectionType = Some("FIXED PROTECTION"),
+        status = Some("DORMANT"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -331,8 +331,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormant5 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("Enhanced"),
-        status = Some("Dormant"),
+        protectionType = Some("ENHANCED PROTECTION"),
+        status = Some("DORMANT"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -352,8 +352,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormant4 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("Primary"),
-        status = Some("Dormant"),
+        protectionType = Some("PRIMARY PROTECTION"),
+        status = Some("DORMANT"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -373,8 +373,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormant3 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("IP2016"),
-        status = Some("Dormant"),
+        protectionType = Some("INDIVIDUAL PROTECTION 2016"),
+        status = Some("DORMANT"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -394,8 +394,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormant2 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("FP2016"),
-        status = Some("Dormant"),
+        protectionType = Some("FIXED PROTECTION 2016"),
+        status = Some("DORMANT"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -415,8 +415,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormant1 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("IP2014"),
-        status = Some("Dormant"),
+        protectionType = Some("INDIVIDUAL PROTECTION 2014"),
+        status = Some("DORMANT"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -489,8 +489,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelExpiredFP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("FP2014"),
-        status = Some("Expired"),
+        protectionType = Some("FIXED PROTECTION 2014"),
+        status = Some("EXPIRED"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -510,8 +510,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelExpiredFP2016 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("FP2016"),
-        status = Some("Expired"),
+        protectionType = Some("FIXED PROTECTION 2016"),
+        status = Some("EXPIRED"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -531,8 +531,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelRejectedIP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("IP2014"),
-        status = Some("Rejected"),
+        protectionType = Some("INDIVIDUAL PROTECTION 2014"),
+        status = Some("REJECTED"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -552,8 +552,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelUnsuccessfulIP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("IP2014"),
-        status = Some("Unsuccessful"),
+        protectionType = Some("INDIVIDUAL PROTECTION 2014"),
+        status = Some("UNSUCCESSFUL"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -573,8 +573,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelWithdrawnPrimary = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("Primary"),
-        status = Some("Withdrawn"),
+        protectionType = Some("PRIMARY PROTECTION"),
+        status = Some("WITHDRAWN"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -594,8 +594,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelWithdrawnIP2016 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("IP2016"),
-        status = Some("Withdrawn"),
+        protectionType = Some("INDIVIDUAL PROTECTION 2016"),
+        status = Some("WITHDRAWN"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -615,8 +615,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantFixed = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("Fixed"),
-        status = Some("Dormant"),
+        protectionType = Some("FIXED PROTECTION"),
+        status = Some("DORMANT"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
@@ -636,8 +636,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantEnhanced = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("Enhanced"),
-        status = Some("Dormant"),
+        protectionType = Some("ENHANCED PROTECTION"),
+        status = Some("DORMANT"),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,

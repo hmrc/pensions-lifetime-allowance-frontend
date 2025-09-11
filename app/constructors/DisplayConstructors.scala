@@ -153,16 +153,22 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
                                    status: ProtectionStatus,
                                    protections: Seq[ProtectionModel]
                                  ): SeqMap[String, Seq[ExistingProtectionDisplayModel]] = {
-    val filtered = protections
+    val grouped = protections
       .filter(_.status.contains(status.toString))
-      .groupMap(_.protectionType)(createExistingProtectionDisplayModel)
-      .flatMap(x => x._1.zip(Some(x._2)))
+      .map(createExistingProtectionDisplayModel)
+      .groupBy(_.protectionType)
 
-    SeqMap.from(filtered.toSeq.sortWith((s1, s2) => sortByProtectionType(s1._1, s2._1)))
+    SeqMap.from(grouped.toSeq.sortWith((s1, s2) => sortByProtectionType(s1._1, s2._1)))
   }
 
-  private def createOrderingMap[T](items: T*): Map[String, Int] =
-    items.map(_.toString).zipWithIndex.toMap
+  private def createOrderingMap[T](items: T*): Map[String, Int] = items
+    .map(_.toString)
+    .zipWithIndex
+    .flatMap { case (string, index) => Seq(
+      (string, index),
+      (Strings.protectionTypeString(Some(string)), index)
+    )}
+    .toMap
 
   private val protectionTypeOrder: Map[String, Int] = createOrderingMap(
     ProtectionType.IndividualProtection2016,
