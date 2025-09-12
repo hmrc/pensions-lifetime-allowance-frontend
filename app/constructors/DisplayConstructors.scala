@@ -117,10 +117,6 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
   def createExistingProtectionsDisplayModel(
       model: TransformedReadResponseModel
   )(implicit lang: Lang): ExistingProtectionsDisplayModel = {
-    val modelJson = TransformedReadResponseModel.format.writes(model)
-
-    logger.info(s"Model Json: $modelJson")
-
     val activeProtection = model.activeProtection.map(createExistingProtectionDisplayModel)
 
     val dormantProtections      = protectionsByStatus(ProtectionStatus.Dormant, model.inactiveProtections)
