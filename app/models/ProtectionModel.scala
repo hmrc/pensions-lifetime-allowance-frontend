@@ -52,8 +52,7 @@ case class ProtectionModel(
       amendableStatuses.contains(status.map(_.toUpperCase))
     }
     def isProtectionTypeAmendable: Boolean = {
-      val amendableProtectionTypes =
-        (Seq("IP2014", "IP2016") ++ AmendProtectionLifetimeAllowanceType.allValues.map(_.toString)).map(Some(_))
+      val amendableProtectionTypes = AmendProtectionLifetimeAllowanceType.allValues.map(_.toString).map(Some(_))
 
       amendableProtectionTypes.contains(protectionType.map(_.toUpperCase))
     }
@@ -71,8 +70,8 @@ object ProtectionModel {
       Some(record.identifier),
       Some(buildRecordDateTime(record)),
       Some(record.sequenceNumber),
-      Some(record.`type`.toString),
-      Some(record.status.toString),
+      Some(record.`type`.key),
+      Some(record.status.key),
       record.protectedAmount.map(_.toDouble),
       record.relevantAmount.map(_.toDouble),
       record.postADayBenefitCrystallisationEventAmount.map(_.toDouble),

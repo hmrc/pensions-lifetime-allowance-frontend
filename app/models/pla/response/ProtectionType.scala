@@ -18,46 +18,53 @@ package models.pla.response
 
 import utils.{Enumerable, EnumerableInstance}
 
-sealed abstract class ProtectionType(value: String) extends EnumerableInstance(value)
+sealed abstract class ProtectionType(value: String, _key: String) extends EnumerableInstance(value) {
+  val key: String = _key
+}
 
 object ProtectionType extends Enumerable.Implicits {
 
-  case object FixedProtection2016          extends ProtectionType("FIXED PROTECTION 2016")
-  case object IndividualProtection2014     extends ProtectionType("INDIVIDUAL PROTECTION 2014")
-  case object IndividualProtection2016     extends ProtectionType("INDIVIDUAL PROTECTION 2016")
-  case object PrimaryProtection            extends ProtectionType("PRIMARY PROTECTION")
-  case object EnhancedProtection           extends ProtectionType("ENHANCED PROTECTION")
-  case object FixedProtection              extends ProtectionType("FIXED PROTECTION")
-  case object FixedProtection2014          extends ProtectionType("FIXED PROTECTION 2014")
-  case object PensionCreditRights          extends ProtectionType("PENSION CREDIT RIGHTS")
-  case object InternationalEnhancementS221 extends ProtectionType("INTERNATIONAL ENHANCEMENT (S221)")
-  case object InternationalEnhancementS224 extends ProtectionType("INTERNATIONAL ENHANCEMENT (S224)")
-  case object FixedProtection2016LTA       extends ProtectionType("FIXED PROTECTION 2016 LTA")
-  case object IndividualProtection2014LTA  extends ProtectionType("INDIVIDUAL PROTECTION 2014 LTA")
-  case object IndividualProtection2016LTA  extends ProtectionType("INDIVIDUAL PROTECTION 2016 LTA")
-  case object PrimaryProtectionLTA         extends ProtectionType("PRIMARY PROTECTION LTA")
-  case object EnhancedProtectionLTA        extends ProtectionType("ENHANCED PROTECTION LTA")
-  case object FixedProtectionLTA           extends ProtectionType("FIXED PROTECTION LTA")
-  case object FixedProtection2014LTA       extends ProtectionType("FIXED PROTECTION 2014 LTA")
+  case object EnhancedProtection          extends ProtectionType("ENHANCED PROTECTION", "enhanced")
+  case object EnhancedProtectionLTA       extends ProtectionType("ENHANCED PROTECTION LTA", "enhancedLTA")
+  case object FixedProtection             extends ProtectionType("FIXED PROTECTION", "fixed")
+  case object FixedProtection2014         extends ProtectionType("FIXED PROTECTION 2014", "fixed2014")
+  case object FixedProtection2014LTA      extends ProtectionType("FIXED PROTECTION 2014 LTA", "fixed2014LTA")
+  case object FixedProtection2016         extends ProtectionType("FIXED PROTECTION 2016", "fixed2016")
+  case object FixedProtection2016LTA      extends ProtectionType("FIXED PROTECTION 2016 LTA", "fixed2016LTA")
+  case object FixedProtectionLTA          extends ProtectionType("FIXED PROTECTION LTA", "fixedLTA")
+  case object IndividualProtection2014    extends ProtectionType("INDIVIDUAL PROTECTION 2014", "individual2014")
+  case object IndividualProtection2014LTA extends ProtectionType("INDIVIDUAL PROTECTION 2014 LTA", "individual2014LTA")
+  case object IndividualProtection2016    extends ProtectionType("INDIVIDUAL PROTECTION 2016", "individual2016")
+  case object IndividualProtection2016LTA extends ProtectionType("INDIVIDUAL PROTECTION 2016 LTA", "individual2016LTA")
+
+  case object InternationalEnhancementS221
+      extends ProtectionType("INTERNATIONAL ENHANCEMENT (S221)", "internationalEnhancementS221")
+
+  case object InternationalEnhancementS224
+      extends ProtectionType("INTERNATIONAL ENHANCEMENT (S224)", "internationalEnhancementS224")
+
+  case object PensionCreditRights  extends ProtectionType("PENSION CREDIT RIGHTS", "pensionCreditRights")
+  case object PrimaryProtection    extends ProtectionType("PRIMARY PROTECTION", "primary")
+  case object PrimaryProtectionLTA extends ProtectionType("PRIMARY PROTECTION LTA", "primaryLTA")
 
   val values: Seq[ProtectionType] = Seq(
-    FixedProtection2016,
-    IndividualProtection2014,
-    IndividualProtection2016,
-    PrimaryProtection,
     EnhancedProtection,
+    EnhancedProtectionLTA,
     FixedProtection,
     FixedProtection2014,
-    PensionCreditRights,
+    FixedProtection2014LTA,
+    FixedProtection2016,
+    FixedProtection2016LTA,
+    FixedProtectionLTA,
+    IndividualProtection2014,
+    IndividualProtection2014LTA,
+    IndividualProtection2016,
+    IndividualProtection2016LTA,
     InternationalEnhancementS221,
     InternationalEnhancementS224,
-    FixedProtection2016LTA,
-    IndividualProtection2014LTA,
-    IndividualProtection2016LTA,
-    PrimaryProtectionLTA,
-    EnhancedProtectionLTA,
-    FixedProtectionLTA,
-    FixedProtection2014LTA
+    PensionCreditRights,
+    PrimaryProtection,
+    PrimaryProtectionLTA
   )
 
   implicit val enumerable: Enumerable[ProtectionType] =

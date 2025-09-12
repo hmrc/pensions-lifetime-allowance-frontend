@@ -18,16 +18,18 @@ package models.pla.response
 
 import utils.{Enumerable, EnumerableInstance}
 
-sealed abstract class ProtectionStatus(value: String) extends EnumerableInstance(value)
+sealed abstract class ProtectionStatus(value: String, _key: String) extends EnumerableInstance(value) {
+  val key = _key
+}
 
 object ProtectionStatus extends Enumerable.Implicits {
 
-  case object Open         extends ProtectionStatus("OPEN")
-  case object Dormant      extends ProtectionStatus("DORMANT")
-  case object Withdrawn    extends ProtectionStatus("WITHDRAWN")
-  case object Expired      extends ProtectionStatus("EXPIRED")
-  case object Unsuccessful extends ProtectionStatus("UNSUCCESSFUL")
-  case object Rejected     extends ProtectionStatus("REJECTED")
+  case object Open         extends ProtectionStatus("OPEN", "open")
+  case object Dormant      extends ProtectionStatus("DORMANT", "dormant")
+  case object Withdrawn    extends ProtectionStatus("WITHDRAWN", "withdrawn")
+  case object Expired      extends ProtectionStatus("EXPIRED", "expired")
+  case object Unsuccessful extends ProtectionStatus("UNSUCCESSFUL", "unsuccessful")
+  case object Rejected     extends ProtectionStatus("REJECTED", "rejected")
 
   val values: Seq[ProtectionStatus] = Seq(
     Open,
