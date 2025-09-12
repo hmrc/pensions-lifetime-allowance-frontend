@@ -148,9 +148,11 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
     }
 
     "have a noProtections section display if no protections are present" should {
+
       "display the noProtections section" in {
         docNoProtections.select("#noProtections").text shouldBe plaExistingProtectionsNoProtections
       }
+
     }
 
     "have a protections section display which if active protections are present" should {

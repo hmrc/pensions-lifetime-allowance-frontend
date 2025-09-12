@@ -70,26 +70,26 @@
             @if(protections.activeProtection.isDefined && protections.inactiveProtections.isEmpty) {
                 <p class="govuk-body" id="noOtherProtections">@Messages("pla.existingProtections.noOtherProtections")</p>
             } else {
-                  @if(protections.inactiveProtections.dormantProtections.nonEmpty) {
-                      <h2 class="govuk-heading-l govuk-!-margin-top-9" id="dormant">@Messages("pla.protection.statuses.dormant")</h2>
-                      @protectionsFor(protections.inactiveProtections.dormantProtections)
+                @if(protections.inactiveProtections.dormantProtections.nonEmpty) {
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="dormant">@Messages("pla.protection.statuses.dormant")</h2>
+                    @protectionsFor(protections.inactiveProtections.dormantProtections)
+                }
+                @if(protections.inactiveProtections.withdrawnProtections.nonEmpty) {
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="withdraw">@Messages("pla.protection.statuses.withdrawn")</h2>
+                    @protectionsFor(protections.inactiveProtections.withdrawnProtections)
+                }
+                @if(protections.inactiveProtections.unsuccessfulProtections.nonEmpty) {
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="unsuccessful">@Messages("pla.protection.statuses.unsuccessful")</h2>
+                    @protectionsFor(protections.inactiveProtections.unsuccessfulProtections)
                   }
-                  @if(protections.inactiveProtections.withdrawnProtections.nonEmpty) {
-                      <h2 class="govuk-heading-l govuk-!-margin-top-9" id="withdraw">@Messages("pla.protection.statuses.withdrawn")</h2>
-                      @protectionsFor(protections.inactiveProtections.withdrawnProtections)
-                  }
-                  @if(protections.inactiveProtections.unsuccessfulProtections.nonEmpty) {
-                      <h2 class="govuk-heading-l govuk-!-margin-top-9" id="unsuccessful">@Messages("pla.protection.statuses.unsuccessful")</h2>
-                      @protectionsFor(protections.inactiveProtections.unsuccessfulProtections)
-                  }
-                  @if(protections.inactiveProtections.rejectedProtections.nonEmpty) {
-                      <h2 class="govuk-heading-l govuk-!-margin-top-9" id="rejected">@Messages("pla.protection.statuses.rejected")</h2>
-                      @protectionsFor(protections.inactiveProtections.rejectedProtections)
-                  }
-                  @if(protections.inactiveProtections.expiredProtections.nonEmpty) {
-                      <h2 class="govuk-heading-l govuk-!-margin-top-9" id="expired">@Messages("pla.protection.statuses.expired")</h2>
-                      @protectionsFor(protections.inactiveProtections.expiredProtections)
-                  }
+                @if(protections.inactiveProtections.rejectedProtections.nonEmpty) {
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="rejected">@Messages("pla.protection.statuses.rejected")</h2>
+                    @protectionsFor(protections.inactiveProtections.rejectedProtections)
+                }
+                @if(protections.inactiveProtections.expiredProtections.nonEmpty) {
+                    <h2 class="govuk-heading-l govuk-!-margin-top-9" id="expired">@Messages("pla.protection.statuses.expired")</h2>
+                    @protectionsFor(protections.inactiveProtections.expiredProtections)
+                }
             }
         </div>
     }
