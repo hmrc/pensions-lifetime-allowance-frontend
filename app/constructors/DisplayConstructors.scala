@@ -28,7 +28,6 @@ import play.api.mvc.Call
 import utils.Constants
 
 import javax.inject.Inject
-import scala.collection.SeqMap
 
 class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends Logging {
 
@@ -125,22 +124,13 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     val rejectedProtections     = protectionsByStatus(ProtectionStatus.Rejected, model.inactiveProtections)
     val expiredProtections      = protectionsByStatus(ProtectionStatus.Expired, model.inactiveProtections)
 
-    val inactiveProtections =
-      if (
-        dormantProtections.size + withdrawnProtections.size + unsuccessfulProtections.size + rejectedProtections.size + expiredProtections.size == 0
-      ) {
-        None
-      } else {
-        Some(
-          ExistingInactiveProtectionsDisplayModel(
-            dormantProtections = dormantProtections,
-            withdrawnProtections = withdrawnProtections,
-            unsuccessfulProtections = unsuccessfulProtections,
-            rejectedProtections = rejectedProtections,
-            expiredProtections = expiredProtections
-          )
-        )
-      }
+    val inactiveProtections = ExistingInactiveProtectionsDisplayModel(
+      dormantProtections = dormantProtections,
+      withdrawnProtections = withdrawnProtections,
+      unsuccessfulProtections = unsuccessfulProtections,
+      rejectedProtections = rejectedProtections,
+      expiredProtections = expiredProtections
+    )
 
     ExistingProtectionsDisplayModel(
       activeProtection = activeProtection,
@@ -152,13 +142,17 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
   private def protectionsByStatus(
       status: ProtectionStatus,
       protections: Seq[ProtectionModel]
-  ): SeqMap[String, Seq[ExistingProtectionDisplayModel]] = {
+  ): ExistingInactiveProtectionsByType = {
     val grouped = protections
       .filter(_.status.contains(status.toString))
       .map(createExistingProtectionDisplayModel)
       .groupBy(_.protectionType)
+      .toSeq
+      .sortWith((s1, s2) => sortByProtectionType(s1._1, s2._1))
 
-    SeqMap.from(grouped.toSeq.sortWith((s1, s2) => sortByProtectionType(s1._1, s2._1)))
+    ExistingInactiveProtectionsByType(
+      grouped: _*
+    )
   }
 
   private def createOrderingMap[T](items: T*): Map[String, Int] = items

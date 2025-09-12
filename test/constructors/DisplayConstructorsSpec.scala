@@ -28,8 +28,6 @@ import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, MessagesController
 import play.api.test.FakeRequest
 import testHelpers.FakeApplication
 
-import scala.collection.SeqMap
-
 class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
   implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
@@ -250,14 +248,13 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         TransformedReadResponseModel(Some(tstProtectionModelOpen), List(tstProtectionModelDormant))
       val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
         activeProtection = Some(tstExistingProtectionDisplayModelOpen),
-        inactiveProtections = Some(
-          ExistingInactiveProtectionsDisplayModel(
-            dormantProtections = SeqMap("IP2014" -> List(tstExistingProtectionDisplayModelDormant)),
-            withdrawnProtections = SeqMap.empty,
-            unsuccessfulProtections = SeqMap.empty,
-            rejectedProtections = SeqMap.empty,
-            expiredProtections = SeqMap.empty
-          )
+        inactiveProtections = ExistingInactiveProtectionsDisplayModel(
+          dormantProtections =
+            ExistingInactiveProtectionsByType("IP2014" -> List(tstExistingProtectionDisplayModelDormant)),
+          withdrawnProtections = ExistingInactiveProtectionsByType.empty,
+          unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
+          rejectedProtections = ExistingInactiveProtectionsByType.empty,
+          expiredProtections = ExistingInactiveProtectionsByType.empty
         )
       )
 
@@ -450,36 +447,34 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
       val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
         activeProtection = Some(tstProtectionDisplayModelOpen),
-        inactiveProtections = Some(
-          ExistingInactiveProtectionsDisplayModel(
-            dormantProtections = SeqMap(
-              "IP2016" -> List(
-                tstProtectionDisplayModelDormant3
-              ),
-              "IP2014" -> List(
-                tstProtectionDisplayModelDormant1
-              ),
-              "FP2016" -> List(
-                tstProtectionDisplayModelDormant2
-              ),
-              "FP2014" -> List(
-                tstProtectionDisplayModelDormant7
-              ),
-              "primary" -> List(
-                tstProtectionDisplayModelDormant4
-              ),
-              "enhanced" -> List(
-                tstProtectionDisplayModelDormant5
-              ),
-              "fixed" -> List(
-                tstProtectionDisplayModelDormant6
-              )
+        inactiveProtections = ExistingInactiveProtectionsDisplayModel(
+          dormantProtections = ExistingInactiveProtectionsByType(
+            "IP2016" -> List(
+              tstProtectionDisplayModelDormant3
             ),
-            withdrawnProtections = SeqMap.empty,
-            unsuccessfulProtections = SeqMap.empty,
-            rejectedProtections = SeqMap.empty,
-            expiredProtections = SeqMap.empty
-          )
+            "IP2014" -> List(
+              tstProtectionDisplayModelDormant1
+            ),
+            "FP2016" -> List(
+              tstProtectionDisplayModelDormant2
+            ),
+            "FP2014" -> List(
+              tstProtectionDisplayModelDormant7
+            ),
+            "primary" -> List(
+              tstProtectionDisplayModelDormant4
+            ),
+            "enhanced" -> List(
+              tstProtectionDisplayModelDormant5
+            ),
+            "fixed" -> List(
+              tstProtectionDisplayModelDormant6
+            )
+          ),
+          withdrawnProtections = ExistingInactiveProtectionsByType.empty,
+          unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
+          rejectedProtections = ExistingInactiveProtectionsByType.empty,
+          expiredProtections = ExistingInactiveProtectionsByType.empty
         )
       )
 
@@ -674,41 +669,39 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
       val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
         activeProtection = None,
-        inactiveProtections = Some(
-          ExistingInactiveProtectionsDisplayModel(
-            dormantProtections = SeqMap(
-              "enhanced" -> List(
-                tstProtectionDisplayModelDormantEnhanced
-              ),
-              "fixed" -> List(
-                tstProtectionDisplayModelDormantFixed
-              )
+        inactiveProtections = ExistingInactiveProtectionsDisplayModel(
+          dormantProtections = ExistingInactiveProtectionsByType(
+            "enhanced" -> List(
+              tstProtectionDisplayModelDormantEnhanced
             ),
-            withdrawnProtections = SeqMap(
-              "IP2016" -> List(
-                tstProtectionDisplayModelWithdrawnIP2016
-              ),
-              "primary" -> List(
-                tstProtectionDisplayModelWithdrawnPrimary
-              )
+            "fixed" -> List(
+              tstProtectionDisplayModelDormantFixed
+            )
+          ),
+          withdrawnProtections = ExistingInactiveProtectionsByType(
+            "IP2016" -> List(
+              tstProtectionDisplayModelWithdrawnIP2016
             ),
-            unsuccessfulProtections = SeqMap(
-              "IP2014" -> List(
-                tstProtectionDisplayModelUnsuccessfulIP2014
-              )
+            "primary" -> List(
+              tstProtectionDisplayModelWithdrawnPrimary
+            )
+          ),
+          unsuccessfulProtections = ExistingInactiveProtectionsByType(
+            "IP2014" -> List(
+              tstProtectionDisplayModelUnsuccessfulIP2014
+            )
+          ),
+          rejectedProtections = ExistingInactiveProtectionsByType(
+            "IP2014" -> List(
+              tstProtectionDisplayModelRejectedIP2014
+            )
+          ),
+          expiredProtections = ExistingInactiveProtectionsByType(
+            "FP2016" -> List(
+              tstProtectionDisplayModelExpiredFP2016
             ),
-            rejectedProtections = SeqMap(
-              "IP2014" -> List(
-                tstProtectionDisplayModelRejectedIP2014
-              )
-            ),
-            expiredProtections = SeqMap(
-              "FP2016" -> List(
-                tstProtectionDisplayModelExpiredFP2016
-              ),
-              "FP2014" -> List(
-                tstProtectionDisplayModelExpiredFP2014
-              )
+            "FP2014" -> List(
+              tstProtectionDisplayModelExpiredFP2014
             )
           )
         )

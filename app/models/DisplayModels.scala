@@ -19,8 +19,6 @@ package models
 import enums.ApplicationType
 import play.api.mvc.Call
 
-import scala.collection.SeqMap
-
 case class SuccessDisplayModel(
     protectionType: ApplicationType.Value,
     notificationId: String,
@@ -55,16 +53,51 @@ case class ExistingProtectionDisplayModel(
 
 case class ExistingProtectionsDisplayModel(
     activeProtection: Option[ExistingProtectionDisplayModel],
-    inactiveProtections: Option[ExistingInactiveProtectionsDisplayModel]
+    inactiveProtections: ExistingInactiveProtectionsDisplayModel
 )
 
 case class ExistingInactiveProtectionsDisplayModel(
-    dormantProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
-    withdrawnProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
-    unsuccessfulProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
-    rejectedProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]],
-    expiredProtections: SeqMap[String, Seq[ExistingProtectionDisplayModel]]
-)
+    dormantProtections: ExistingInactiveProtectionsByType,
+    withdrawnProtections: ExistingInactiveProtectionsByType,
+    unsuccessfulProtections: ExistingInactiveProtectionsByType,
+    rejectedProtections: ExistingInactiveProtectionsByType,
+    expiredProtections: ExistingInactiveProtectionsByType
+) {
+
+  def isEmpty: Boolean =
+    dormantProtections.isEmpty && withdrawnProtections.isEmpty && unsuccessfulProtections.isEmpty && rejectedProtections.isEmpty && expiredProtections.isEmpty
+
+  def nonEmpty: Boolean = !isEmpty
+
+}
+
+object ExistingInactiveProtectionsDisplayModel {
+
+  def empty =
+    ExistingInactiveProtectionsDisplayModel(
+      ExistingInactiveProtectionsByType.empty,
+      ExistingInactiveProtectionsByType.empty,
+      ExistingInactiveProtectionsByType.empty,
+      ExistingInactiveProtectionsByType.empty,
+      ExistingInactiveProtectionsByType.empty
+    )
+
+}
+
+case class ExistingInactiveProtectionsByType(
+    protections: (String, Seq[ExistingProtectionDisplayModel])*
+) {
+  def isEmpty: Boolean = protections.isEmpty
+
+  def nonEmpty: Boolean = protections.nonEmpty
+
+}
+
+object ExistingInactiveProtectionsByType {
+
+  def empty = ExistingInactiveProtectionsByType()
+
+}
 
 case class PrintDisplayModel(
     firstName: String,
