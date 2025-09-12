@@ -15,30 +15,16 @@
  *@
 
 @import models.ExistingProtectionsDisplayModel
+@import models.ExistingInactiveProtectionsByType
 
 @this(
     layout: Layout,
     inactiveExistingProtection : playHelpers.templates.existingProtections.inactiveExistingProtection,
     activeExistingProtection: playHelpers.templates.existingProtections.activeExistingProtection
 )
-
 @(protections: ExistingProtectionsDisplayModel)(implicit request: Request[_], messages: Messages)
 
-@dormantProtections = @{protections.otherProtections.filter(_.status == "dormant")}
-@withdrawnProtections = @{protections.otherProtections.filter(_.status == "withdrawn")}
-@unsuccessfulProtections = @{protections.otherProtections.filter(_.status == "unsuccessful")}
-@rejectedProtections = @{protections.otherProtections.filter(_.status == "rejected")}
-@expiredProtections = @{protections.otherProtections.filter(_.status == "expired")}
-
-@filterIp2014(newProtections: Seq[ExistingProtectionDisplayModel]) = @{newProtections.filter(_.protectionType == "IP2014")}
-@filterIp2016(newProtections: Seq[ExistingProtectionDisplayModel]) = @{newProtections.filter(_.protectionType == "IP2016")}
-@filterFp2016(newProtections: Seq[ExistingProtectionDisplayModel]) = @{newProtections.filter(_.protectionType == "FP2016")}
-@filterFp2014(newProtections: Seq[ExistingProtectionDisplayModel]) = @{newProtections.filter(_.protectionType == "FP2014")}
-@filterPrimary(newProtections: Seq[ExistingProtectionDisplayModel]) = @{newProtections.filter(_.protectionType == "primary")}
-@filterEnhanced(newProtections: Seq[ExistingProtectionDisplayModel]) = @{newProtections.filter(_.protectionType == "enhanced")}
-@filterFixed(newProtections: Seq[ExistingProtectionDisplayModel]) = @{newProtections.filter(_.protectionType == "fixed")}
-
-@getProtections(protections: Seq[ExistingProtectionDisplayModel]) = {
+@protectionsOfType(protections: Seq[ExistingProtectionDisplayModel]) = {
     @if(protections.nonEmpty){
         <h3 class="govuk-heading-m">
             @Messages("pla.protection.types." + protections.head.protectionType)
@@ -52,14 +38,10 @@
     }
 }
 
-@getAllProtectionsFor(protections: Seq[ExistingProtectionDisplayModel]) = {
-    @getProtections((filterIp2016(protections)))
-    @getProtections((filterIp2014(protections)))
-    @getProtections((filterFp2016(protections)))
-    @getProtections((filterFp2014(protections)))
-    @getProtections((filterPrimary(protections)))
-    @getProtections((filterEnhanced(protections)))
-    @getProtections((filterFixed(protections)))
+@protectionsFor(protectionsByType: ExistingInactiveProtectionsByType) = {
+    @for((protectionType, protections) <- protectionsByType.protections) {
+        @protectionsOfType(protections)
+    }
 }
 
 @layout(
@@ -69,11 +51,11 @@
 
     <h1 class="govuk-heading-xl">@Messages("pla.existingProtections.title")</h1>
 
-    @if(protections.activeProtection.isEmpty && protections.otherProtections.size == 0) {
+    @if(protections.activeProtection.isEmpty && protections.inactiveProtections.isEmpty) {
         <p class="govuk-body" id="noProtections">@Messages("pla.existingProtections.noProtections")</p>
     } else {
         <div id="listProtections">
-            @if(protections.activeProtection.isEmpty && protections.otherProtections.size > 0) {
+            @if(protections.activeProtection.isEmpty && protections.inactiveProtections.nonEmpty) {
                 <p class="govuk-body" id="noActiveProtections">@Messages("pla.existingProtections.noActiveProtections")</p>
             } else {
                 <h2 class="govuk-heading-l">@Messages("pla.existingProtections.active.heading")</h2>
@@ -85,28 +67,28 @@
 
             }
 
-            @if(protections.otherProtections.size == 0 && protections.activeProtection.isDefined) {
+            @if(protections.activeProtection.isDefined && protections.inactiveProtections.isEmpty) {
                 <p class="govuk-body" id="noOtherProtections">@Messages("pla.existingProtections.noOtherProtections")</p>
             } else {
-                @if(dormantProtections.size != 0){
+                @if(protections.inactiveProtections.dormantProtections.nonEmpty) {
                     <h2 class="govuk-heading-l govuk-!-margin-top-9" id="dormant">@Messages("pla.protection.statuses.dormant")</h2>
-                    @getAllProtectionsFor(dormantProtections)
+                    @protectionsFor(protections.inactiveProtections.dormantProtections)
                 }
-                @if(withdrawnProtections.size != 0){
+                @if(protections.inactiveProtections.withdrawnProtections.nonEmpty) {
                     <h2 class="govuk-heading-l govuk-!-margin-top-9" id="withdraw">@Messages("pla.protection.statuses.withdrawn")</h2>
-                    @getAllProtectionsFor(withdrawnProtections)
+                    @protectionsFor(protections.inactiveProtections.withdrawnProtections)
                 }
-                @if(unsuccessfulProtections.size != 0){
+                @if(protections.inactiveProtections.unsuccessfulProtections.nonEmpty) {
                     <h2 class="govuk-heading-l govuk-!-margin-top-9" id="unsuccessful">@Messages("pla.protection.statuses.unsuccessful")</h2>
-                    @getAllProtectionsFor(unsuccessfulProtections)
-                }
-                @if(rejectedProtections.size != 0){
+                    @protectionsFor(protections.inactiveProtections.unsuccessfulProtections)
+                  }
+                @if(protections.inactiveProtections.rejectedProtections.nonEmpty) {
                     <h2 class="govuk-heading-l govuk-!-margin-top-9" id="rejected">@Messages("pla.protection.statuses.rejected")</h2>
-                    @getAllProtectionsFor(rejectedProtections)
+                    @protectionsFor(protections.inactiveProtections.rejectedProtections)
                 }
-                @if(expiredProtections.size != 0){
+                @if(protections.inactiveProtections.expiredProtections.nonEmpty) {
                     <h2 class="govuk-heading-l govuk-!-margin-top-9" id="expired">@Messages("pla.protection.statuses.expired")</h2>
-                    @getAllProtectionsFor(expiredProtections)
+                    @protectionsFor(protections.inactiveProtections.expiredProtections)
                 }
             }
         </div>

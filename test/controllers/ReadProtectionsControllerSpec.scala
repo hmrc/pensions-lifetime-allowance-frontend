@@ -25,7 +25,13 @@ import generators.ModelGenerators
 import mocks.AuthMock
 import models.cache.CacheMap
 import models.pla.response.ProtectionStatus.{Dormant, Rejected}
-import models.{ExistingProtectionsDisplayModel, ProtectionModel, ReadResponseModel, TransformedReadResponseModel}
+import models.{
+  ExistingInactiveProtectionsDisplayModel,
+  ExistingProtectionsDisplayModel,
+  ProtectionModel,
+  ReadResponseModel,
+  TransformedReadResponseModel
+}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
@@ -65,11 +71,15 @@ class ReadProtectionsControllerSpec
   val testMCNeededResponse      = HttpResponse(423, "")
   val testUpstreamErrorResponse = HttpResponse(503, "")
 
-  private val testNino                    = "AB123456A"
-  private val psaCheckReference           = "PSA12345678A"
-  val testReadResponseModel               = ReadResponseModel(psaCheckReference, Seq.empty)
-  val testTransformedReadResponseModel    = TransformedReadResponseModel(None, Seq.empty)
-  val testExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(None, Seq.empty)
+  private val testNino                 = "AB123456A"
+  private val psaCheckReference        = "PSA12345678A"
+  val testReadResponseModel            = ReadResponseModel(psaCheckReference, Seq.empty)
+  val testTransformedReadResponseModel = TransformedReadResponseModel(None, Seq.empty)
+
+  val testExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
+    inactiveProtections = ExistingInactiveProtectionsDisplayModel.empty,
+    activeProtection = None
+  )
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]

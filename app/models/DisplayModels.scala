@@ -53,8 +53,51 @@ case class ExistingProtectionDisplayModel(
 
 case class ExistingProtectionsDisplayModel(
     activeProtection: Option[ExistingProtectionDisplayModel],
-    otherProtections: Seq[ExistingProtectionDisplayModel]
+    inactiveProtections: ExistingInactiveProtectionsDisplayModel
 )
+
+case class ExistingInactiveProtectionsDisplayModel(
+    dormantProtections: ExistingInactiveProtectionsByType,
+    withdrawnProtections: ExistingInactiveProtectionsByType,
+    unsuccessfulProtections: ExistingInactiveProtectionsByType,
+    rejectedProtections: ExistingInactiveProtectionsByType,
+    expiredProtections: ExistingInactiveProtectionsByType
+) {
+
+  def isEmpty: Boolean =
+    dormantProtections.isEmpty && withdrawnProtections.isEmpty && unsuccessfulProtections.isEmpty && rejectedProtections.isEmpty && expiredProtections.isEmpty
+
+  def nonEmpty: Boolean = !isEmpty
+
+}
+
+object ExistingInactiveProtectionsDisplayModel {
+
+  def empty =
+    ExistingInactiveProtectionsDisplayModel(
+      ExistingInactiveProtectionsByType.empty,
+      ExistingInactiveProtectionsByType.empty,
+      ExistingInactiveProtectionsByType.empty,
+      ExistingInactiveProtectionsByType.empty,
+      ExistingInactiveProtectionsByType.empty
+    )
+
+}
+
+case class ExistingInactiveProtectionsByType(
+    protections: (String, Seq[ExistingProtectionDisplayModel])*
+) {
+  def isEmpty: Boolean = protections.isEmpty
+
+  def nonEmpty: Boolean = protections.nonEmpty
+
+}
+
+object ExistingInactiveProtectionsByType {
+
+  def empty = ExistingInactiveProtectionsByType()
+
+}
 
 case class PrintDisplayModel(
     firstName: String,

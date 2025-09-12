@@ -35,3 +35,7 @@ bin
 ExternalLibraries
 *.sublime*
 /.bsp
+.metals/
+.bloop/
+project/.blooop
+project/metals.sbt
