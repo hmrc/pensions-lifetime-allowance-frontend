@@ -18,14 +18,22 @@ package models.pla
 
 import utils.{Enumerable, EnumerableInstanceWithKey}
 
-sealed abstract class AmendProtectionLifetimeAllowanceType(readsWrites: String, toString: String) extends EnumerableInstanceWithKey(readsWrites, toString)
+sealed abstract class AmendProtectionLifetimeAllowanceType(readsWrites: String, toString: String)
+    extends EnumerableInstanceWithKey(readsWrites, toString)
 
 object AmendProtectionLifetimeAllowanceType extends Enumerable.Implicits {
 
-  case object IndividualProtection2014    extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2014", "IP2014")
-  case object IndividualProtection2016    extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2016", "IP2016")
-  case object IndividualProtection2014Lta extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2014 LTA", "IP2014LTA")
-  case object IndividualProtection2016Lta extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2016 LTA", "IP2016LTA")
+  case object IndividualProtection2014
+      extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2014", "IP2014")
+
+  case object IndividualProtection2016
+      extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2016", "IP2016")
+
+  case object IndividualProtection2014Lta
+      extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2014 LTA", "IP2014LTA")
+
+  case object IndividualProtection2016Lta
+      extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2016 LTA", "IP2016LTA")
 
   val allValues: Seq[AmendProtectionLifetimeAllowanceType] = Seq(
     IndividualProtection2014,
@@ -38,18 +46,10 @@ object AmendProtectionLifetimeAllowanceType extends Enumerable.Implicits {
     Enumerable(allValues.map(v => v.readsWrites -> v): _*)
 
   def from(str: String): AmendProtectionLifetimeAllowanceType =
-    allValues.find(_.toString == str).getOrElse(convertFromNpsStatuses(str))
-
-  private def convertFromNpsStatuses(str: String): AmendProtectionLifetimeAllowanceType = {
-    val npsStatusesMapping: Map[String, AmendProtectionLifetimeAllowanceType] = Map(
-      "IP2014" -> IndividualProtection2014,
-      "IP2016" -> IndividualProtection2016
-    )
-
-    npsStatusesMapping.getOrElse(
-      str.toUpperCase,
-      throw new IllegalArgumentException(s"Cannot create AmendProtectionLifetimeAllowanceType from String: $str")
-    )
-  }
+    allValues
+      .find(_.toString.equalsIgnoreCase(str))
+      .getOrElse(
+        throw new IllegalArgumentException(s"Cannot create AmendProtectionLifetimeAllowanceType from String: $str")
+      )
 
 }

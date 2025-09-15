@@ -33,7 +33,7 @@ object AmendProtectionRequestStatus extends Enumerable.Implicits {
 
   def from(str: String): AmendProtectionRequestStatus =
     allValues
-      .find(_.toString == str.toLowerCase)
+      .find(_.toString.equalsIgnoreCase(str.toLowerCase))
       .getOrElse(throw new IllegalArgumentException(s"Cannot create AmendProtectionRequestStatus from String: $str"))
 
 }

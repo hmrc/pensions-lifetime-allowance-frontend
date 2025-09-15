@@ -49,12 +49,12 @@ case class ProtectionModel(
     def isStatusAmendable: Boolean = {
       val amendableStatuses = AmendProtectionRequestStatus.allValues.map(_.toString).map(Some(_))
 
-      amendableStatuses.contains(status.map(_.toUpperCase))
+      amendableStatuses.contains(status)
     }
     def isProtectionTypeAmendable: Boolean = {
       val amendableProtectionTypes = AmendProtectionLifetimeAllowanceType.allValues.map(_.toString).map(Some(_))
 
-      amendableProtectionTypes.contains(protectionType.map(_.toUpperCase))
+      amendableProtectionTypes.contains(protectionType)
     }
 
     isStatusAmendable && isProtectionTypeAmendable

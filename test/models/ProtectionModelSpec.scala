@@ -18,7 +18,7 @@ package models
 
 import generators.ModelGenerators
 import models.pla.AmendProtectionLifetimeAllowanceType._
-import models.pla.AmendProtectionRequestStatus
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -28,21 +28,9 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
 
     "return true" when {
 
-      val amendableStatuses =
-        Seq(
-          "open",
-          "dormant",
-          AmendProtectionRequestStatus.Open.toString,
-          AmendProtectionRequestStatus.Dormant.toString
-        )
-      val amendableProtectionTypes = Seq(
-        "ip2014",
-        "ip2016",
-        IndividualProtection2014.toString,
-        IndividualProtection2016.toString,
-        IndividualProtection2014Lta.toString,
-        IndividualProtection2016Lta.toString
-      )
+      val amendableStatuses        = AmendProtectionRequestStatus.allValues.map(_.toString)
+      val amendableProtectionTypes = AmendProtectionLifetimeAllowanceType.allValues.map(_.toString)
+
       val allAmendableCombinations = for {
         status         <- amendableStatuses
         protectionType <- amendableProtectionTypes

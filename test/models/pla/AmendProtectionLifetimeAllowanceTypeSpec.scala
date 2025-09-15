@@ -27,12 +27,10 @@ class AmendProtectionLifetimeAllowanceTypeSpec extends AnyWordSpec with Matchers
     "return correct AmendProtectionLifetimeAllowanceType" when {
 
       val testScenarios = Seq(
-        "IP2014"                         -> IndividualProtection2014,
-        "IP2016"                         -> IndividualProtection2016,
-        "INDIVIDUAL PROTECTION 2014"     -> IndividualProtection2014,
-        "INDIVIDUAL PROTECTION 2016"     -> IndividualProtection2016,
-        "INDIVIDUAL PROTECTION 2014 LTA" -> IndividualProtection2014Lta,
-        "INDIVIDUAL PROTECTION 2016 LTA" -> IndividualProtection2016Lta
+        "IP2014"    -> IndividualProtection2014,
+        "IP2016"    -> IndividualProtection2016,
+        "IP2014LTA" -> IndividualProtection2014Lta,
+        "IP2016LTA" -> IndividualProtection2016Lta
       )
 
       testScenarios.foreach { case (input, expectedType) =>

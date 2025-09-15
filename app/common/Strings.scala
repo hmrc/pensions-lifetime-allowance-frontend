@@ -18,6 +18,7 @@ package common
 
 import enums.ApplicationType
 import models.ProtectionModel
+import models.pla.response.{ProtectionStatus, ProtectionType}
 
 object Strings {
 
@@ -39,8 +40,14 @@ object Strings {
   def cacheAmendFetchString(protectionType: String, status: String): String =
     status.toLowerCase + protectionType.toUpperCase + "Amendment"
 
-  def protectionTypeString(modelProtectionType: Option[String]): String = modelProtectionType.getOrElse("notRecorded")
+  private val protectionTypeStrings = ProtectionType.values.map(_.toString)
 
-  def statusString(modelStatus: Option[String]): String = modelStatus.getOrElse("notRecorded")
+  def protectionTypeString(modelProtectionType: Option[String]): String =
+    modelProtectionType.filter(protectionTypeStrings.contains(_)).getOrElse("notRecorded")
+
+  private val statusStrings = ProtectionStatus.values.map(_.toString)
+
+  def statusString(modelStatus: Option[String]): String =
+    modelStatus.filter(statusStrings.contains(_)).getOrElse("notRecorded")
 
 }

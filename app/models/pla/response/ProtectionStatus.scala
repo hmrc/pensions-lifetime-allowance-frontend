@@ -18,7 +18,8 @@ package models.pla.response
 
 import utils.{Enumerable, EnumerableInstanceWithKey}
 
-sealed abstract class ProtectionStatus(readsWrites: String, toString: String) extends EnumerableInstanceWithKey(readsWrites, toString)
+sealed abstract class ProtectionStatus(readsWrites: String, toString: String)
+    extends EnumerableInstanceWithKey(readsWrites, toString)
 
 object ProtectionStatus extends Enumerable.Implicits {
 

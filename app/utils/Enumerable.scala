@@ -48,10 +48,11 @@ object Enumerable {
 }
 
 abstract class EnumerableInstance(name: String) {
-  val readsWrites: String    = name
+  val readsWrites: String       = name
   override val toString: String = name
 }
 
-abstract class EnumerableInstanceWithKey(readsWrites: String, _toString: String) extends EnumerableInstance(readsWrites) {
+abstract class EnumerableInstanceWithKey(readsWrites: String, _toString: String)
+    extends EnumerableInstance(readsWrites) {
   override val toString: String = _toString
 }

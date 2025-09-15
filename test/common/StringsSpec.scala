@@ -18,6 +18,7 @@ package common
 
 import org.scalatest.OptionValues
 import enums.ApplicationType
+import models.pla.response.{ProtectionStatus, ProtectionType}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
@@ -42,24 +43,26 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
   }
 
   "statusString" should {
+    import ProtectionStatus._
+
     "Populate the protection status string" when {
       "the protection is open" in {
-        Strings.statusString(Some("Open")) shouldBe "open"
+        Strings.statusString(Some(Open.toString)) shouldBe Open.toString
       }
       "the protection is dormant" in {
-        Strings.statusString(Some("Dormant")) shouldBe "dormant"
+        Strings.statusString(Some(Dormant.toString)) shouldBe Dormant.toString
       }
       "the protection is withdrawn" in {
-        Strings.statusString(Some("Withdrawn")) shouldBe "withdrawn"
+        Strings.statusString(Some(Withdrawn.toString)) shouldBe Withdrawn.toString
       }
       "the protection is expired" in {
-        Strings.statusString(Some("Expired")) shouldBe "expired"
+        Strings.statusString(Some(Expired.toString)) shouldBe Expired.toString
       }
       "the protection is unsuccessful" in {
-        Strings.statusString(Some("Unsuccessful")) shouldBe "unsuccessful"
+        Strings.statusString(Some(Unsuccessful.toString)) shouldBe Unsuccessful.toString
       }
       "the protection is rejected" in {
-        Strings.statusString(Some("Rejected")) shouldBe "rejected"
+        Strings.statusString(Some(Rejected.toString)) shouldBe Rejected.toString
       }
       "there is no status recorded" in {
         Strings.statusString(None) shouldBe "notRecorded"
@@ -69,27 +72,13 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
 
   "protectionTypeString" should {
     "Populate the protection type string" when {
-      "the protection is FP2016" in {
-        Strings.protectionTypeString(Some("FP2016")) shouldBe "FP2016"
-      }
-      "the protection is IP2014" in {
-        Strings.protectionTypeString(Some("IP2014")) shouldBe "IP2014"
-      }
-      "the protection is IP2016" in {
-        Strings.protectionTypeString(Some("IP2016")) shouldBe "IP2016"
-      }
-      "the protection is primary" in {
-        Strings.protectionTypeString(Some("Primary")) shouldBe "primary"
-      }
-      "the protection is enhanced" in {
-        Strings.protectionTypeString(Some("Enhanced")) shouldBe "enhanced"
-      }
-      "the protection is fixed" in {
-        Strings.protectionTypeString(Some("Fixed")) shouldBe "fixed"
-      }
-      "the protection is FP2014" in {
-        Strings.protectionTypeString(Some("FP2014")) shouldBe "FP2014"
-      }
+
+      ProtectionType.values.foreach(protectionType =>
+        s"the protection is $protectionType" in {
+          Strings.protectionTypeString(Some(protectionType.toString)) shouldBe protectionType.toString
+        }
+      )
+
       "the protection type is not recorded" in {
         Strings.protectionTypeString(None) shouldBe "notRecorded"
       }
