@@ -77,10 +77,10 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
       s"""{
          |    "lifetimeAllowanceIdentifier": $lifetimeAllowanceIdentifier,
          |    "lifetimeAllowanceSequenceNumber": ${lifetimeAllowanceSequenceNumber + 1},
-         |    "lifetimeAllowanceType": "${AmendProtectionLifetimeAllowanceType.IndividualProtection2014.toString}",
+         |    "lifetimeAllowanceType": "${AmendProtectionLifetimeAllowanceType.IndividualProtection2014.readsWrites}",
          |    "certificateDate": "2025-07-15",
          |    "certificateTime": "174312",
-         |    "status": "${AmendProtectionResponseStatus.Dormant.toString}",
+         |    "status": "${AmendProtectionResponseStatus.Dormant.readsWrites}",
          |    "protectionReference": "$protectionReference",
          |    "relevantAmount": 105000,
          |    "preADayPensionInPaymentAmount": 1500,

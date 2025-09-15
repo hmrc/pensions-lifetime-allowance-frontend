@@ -120,7 +120,7 @@ object ExistingInactiveProtectionsByType {
     ProtectionType.FixedProtectionLTA,
     ProtectionType.InternationalEnhancementS221,
     ProtectionType.InternationalEnhancementS224,
-    ProtectionType.PensionCreditRights,
+    ProtectionType.PensionCreditRights
   )
     .map(_.toString)
     .zipWithIndex

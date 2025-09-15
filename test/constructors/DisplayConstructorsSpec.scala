@@ -250,8 +250,9 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
         activeProtection = Some(tstExistingProtectionDisplayModelOpen),
         inactiveProtections = ExistingInactiveProtectionsDisplayModel(
-          dormantProtections =
-            ExistingInactiveProtectionsByType(Seq(IndividualProtection2014.toString -> List(tstExistingProtectionDisplayModelDormant))),
+          dormantProtections = ExistingInactiveProtectionsByType(
+            Seq(IndividualProtection2014.toString -> List(tstExistingProtectionDisplayModelDormant))
+          ),
           withdrawnProtections = ExistingInactiveProtectionsByType.empty,
           unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
           rejectedProtections = ExistingInactiveProtectionsByType.empty,
