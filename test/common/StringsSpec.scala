@@ -79,7 +79,11 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
         }
       )
 
-      "the protection type is not recorded" in {
+      "the protection type is not recorded for an unknown value" in {
+        Strings.protectionTypeString(Some("unknown protection type")) shouldBe "notRecorded"
+      }
+
+      "the protection type is not recorded for a missing value" in {
         Strings.protectionTypeString(None) shouldBe "notRecorded"
       }
     }
