@@ -86,8 +86,10 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       activeProtection = None,
       inactiveProtections = ExistingInactiveProtectionsDisplayModel(
         dormantProtections = ExistingInactiveProtectionsByType(
-          "IP2014" -> List(
-            tstProtectionDisplayModelDormant1
+          Seq(
+            "IP2014" -> List(
+              tstProtectionDisplayModelDormant1
+            )
           )
         ),
         withdrawnProtections = ExistingInactiveProtectionsByType.empty,
@@ -103,8 +105,10 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       activeProtection = Some(protectionModel2),
       inactiveProtections = ExistingInactiveProtectionsDisplayModel(
         dormantProtections = ExistingInactiveProtectionsByType(
-          "IP2014" -> List(
-            tstProtectionDisplayModelDormant1
+          Seq(
+            "IP2014" -> List(
+              tstProtectionDisplayModelDormant1
+            )
           )
         ),
         withdrawnProtections = ExistingInactiveProtectionsByType.empty,

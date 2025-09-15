@@ -16,7 +16,9 @@
 
 package models
 
+import common.Strings
 import enums.ApplicationType
+import models.pla.response.ProtectionType
 import play.api.mvc.Call
 
 case class SuccessDisplayModel(
@@ -85,18 +87,53 @@ object ExistingInactiveProtectionsDisplayModel {
 }
 
 case class ExistingInactiveProtectionsByType(
-    protections: (String, Seq[ExistingProtectionDisplayModel])*
+    protections: Seq[(String, Seq[ExistingProtectionDisplayModel])]
 ) {
   def isEmpty: Boolean = protections.isEmpty
 
   def nonEmpty: Boolean = protections.nonEmpty
 
+  def sorted: ExistingInactiveProtectionsByType = ExistingInactiveProtectionsByType(
+    protections.sortWith((s1, s2) => ExistingInactiveProtectionsByType.sortByProtectionType(s1._1, s2._1))
+  )
+
 }
 
 object ExistingInactiveProtectionsByType {
 
-  def empty = ExistingInactiveProtectionsByType()
+  def empty = ExistingInactiveProtectionsByType(Seq.empty)
 
+  private val protectionTypeOrder: Map[String, Int] = Seq(
+    ProtectionType.IndividualProtection2016,
+    ProtectionType.IndividualProtection2014,
+    ProtectionType.FixedProtection2016,
+    ProtectionType.FixedProtection2014,
+    ProtectionType.PrimaryProtection,
+    ProtectionType.EnhancedProtection,
+    ProtectionType.FixedProtection,
+    // Below just in alphabetical order, may be subject to change.
+    ProtectionType.EnhancedProtectionLTA,
+    ProtectionType.FixedProtection2014LTA,
+    ProtectionType.FixedProtection2016LTA,
+    ProtectionType.FixedProtectionLTA,
+    ProtectionType.IndividualProtection2014LTA,
+    ProtectionType.IndividualProtection2016LTA,
+    ProtectionType.InternationalEnhancementS221,
+    ProtectionType.InternationalEnhancementS224,
+    ProtectionType.PensionCreditRights,
+    ProtectionType.PrimaryProtectionLTA
+  )
+    .map(_.toString)
+    .zipWithIndex
+    .flatMap { case (string, index) =>
+      Seq(
+        (string, index),
+        (Strings.protectionTypeString(Some(string)), index)
+      )
+    }
+    .toMap
+
+  private def sortByProtectionType(t1: String, t2: String): Boolean = protectionTypeOrder(t1) < protectionTypeOrder(t2)
 }
 
 case class PrintDisplayModel(

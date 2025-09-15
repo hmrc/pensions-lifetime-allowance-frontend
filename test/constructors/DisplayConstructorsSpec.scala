@@ -250,7 +250,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         activeProtection = Some(tstExistingProtectionDisplayModelOpen),
         inactiveProtections = ExistingInactiveProtectionsDisplayModel(
           dormantProtections =
-            ExistingInactiveProtectionsByType("IP2014" -> List(tstExistingProtectionDisplayModelDormant)),
+            ExistingInactiveProtectionsByType(Seq("IP2014" -> List(tstExistingProtectionDisplayModelDormant))),
           withdrawnProtections = ExistingInactiveProtectionsByType.empty,
           unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
           rejectedProtections = ExistingInactiveProtectionsByType.empty,
@@ -449,26 +449,28 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         activeProtection = Some(tstProtectionDisplayModelOpen),
         inactiveProtections = ExistingInactiveProtectionsDisplayModel(
           dormantProtections = ExistingInactiveProtectionsByType(
-            "IP2016" -> List(
-              tstProtectionDisplayModelDormantIP2016
-            ),
-            "IP2014" -> List(
-              tstProtectionDisplayModelDormantIP2014
-            ),
-            "FP2016" -> List(
-              tstProtectionDisplayModelDormantFP2016
-            ),
-            "FP2014" -> List(
-              tstProtectionDisplayModelDormantFP2014
-            ),
-            "primary" -> List(
-              tstProtectionDisplayModelDormantPrimary
-            ),
-            "enhanced" -> List(
-              tstProtectionDisplayModelDormantEnhanced
-            ),
-            "fixed" -> List(
-              tstProtectionDisplayModelDormantFixed
+            Seq(
+              "IP2016" -> List(
+                tstProtectionDisplayModelDormantIP2016
+              ),
+              "IP2014" -> List(
+                tstProtectionDisplayModelDormantIP2014
+              ),
+              "FP2016" -> List(
+                tstProtectionDisplayModelDormantFP2016
+              ),
+              "FP2014" -> List(
+                tstProtectionDisplayModelDormantFP2014
+              ),
+              "primary" -> List(
+                tstProtectionDisplayModelDormantPrimary
+              ),
+              "enhanced" -> List(
+                tstProtectionDisplayModelDormantEnhanced
+              ),
+              "fixed" -> List(
+                tstProtectionDisplayModelDormantFixed
+              )
             )
           ),
           withdrawnProtections = ExistingInactiveProtectionsByType.empty,
@@ -671,37 +673,47 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         activeProtection = None,
         inactiveProtections = ExistingInactiveProtectionsDisplayModel(
           dormantProtections = ExistingInactiveProtectionsByType(
-            "enhanced" -> List(
-              tstProtectionDisplayModelDormantEnhanced
-            ),
-            "fixed" -> List(
-              tstProtectionDisplayModelDormantFixed
+            Seq(
+              "enhanced" -> List(
+                tstProtectionDisplayModelDormantEnhanced
+              ),
+              "fixed" -> List(
+                tstProtectionDisplayModelDormantFixed
+              )
             )
           ),
           withdrawnProtections = ExistingInactiveProtectionsByType(
-            "IP2016" -> List(
-              tstProtectionDisplayModelWithdrawnIP2016
-            ),
-            "primary" -> List(
-              tstProtectionDisplayModelWithdrawnPrimary
+            Seq(
+              "IP2016" -> List(
+                tstProtectionDisplayModelWithdrawnIP2016
+              ),
+              "primary" -> List(
+                tstProtectionDisplayModelWithdrawnPrimary
+              )
             )
           ),
           unsuccessfulProtections = ExistingInactiveProtectionsByType(
-            "IP2014" -> List(
-              tstProtectionDisplayModelUnsuccessfulIP2014
+            Seq(
+              "IP2014" -> List(
+                tstProtectionDisplayModelUnsuccessfulIP2014
+              )
             )
           ),
           rejectedProtections = ExistingInactiveProtectionsByType(
-            "IP2014" -> List(
-              tstProtectionDisplayModelRejectedIP2014
+            Seq(
+              "IP2014" -> List(
+                tstProtectionDisplayModelRejectedIP2014
+              )
             )
           ),
           expiredProtections = ExistingInactiveProtectionsByType(
-            "FP2016" -> List(
-              tstProtectionDisplayModelExpiredFP2016
-            ),
-            "FP2014" -> List(
-              tstProtectionDisplayModelExpiredFP2014
+            Seq(
+              "FP2016" -> List(
+                tstProtectionDisplayModelExpiredFP2016
+              ),
+              "FP2014" -> List(
+                tstProtectionDisplayModelExpiredFP2014
+              )
             )
           )
         )
