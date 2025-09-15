@@ -105,32 +105,25 @@ object ExistingInactiveProtectionsByType {
 
   private val protectionTypeOrder: Map[String, Int] = Seq(
     ProtectionType.IndividualProtection2016,
-    ProtectionType.IndividualProtection2014,
-    ProtectionType.FixedProtection2016,
-    ProtectionType.FixedProtection2014,
-    ProtectionType.PrimaryProtection,
-    ProtectionType.EnhancedProtection,
-    ProtectionType.FixedProtection,
-    // Below just in alphabetical order, may be subject to change.
-    ProtectionType.EnhancedProtectionLTA,
-    ProtectionType.FixedProtection2014LTA,
-    ProtectionType.FixedProtection2016LTA,
-    ProtectionType.FixedProtectionLTA,
-    ProtectionType.IndividualProtection2014LTA,
     ProtectionType.IndividualProtection2016LTA,
+    ProtectionType.IndividualProtection2014,
+    ProtectionType.IndividualProtection2014LTA,
+    ProtectionType.FixedProtection2016,
+    ProtectionType.FixedProtection2016LTA,
+    ProtectionType.FixedProtection2014,
+    ProtectionType.FixedProtection2014LTA,
+    ProtectionType.PrimaryProtection,
+    ProtectionType.PrimaryProtectionLTA,
+    ProtectionType.EnhancedProtection,
+    ProtectionType.EnhancedProtectionLTA,
+    ProtectionType.FixedProtection,
+    ProtectionType.FixedProtectionLTA,
     ProtectionType.InternationalEnhancementS221,
     ProtectionType.InternationalEnhancementS224,
     ProtectionType.PensionCreditRights,
-    ProtectionType.PrimaryProtectionLTA
   )
     .map(_.toString)
     .zipWithIndex
-    .flatMap { case (string, index) =>
-      Seq(
-        (string, index),
-        (Strings.protectionTypeString(Some(string)), index)
-      )
-    }
     .toMap
 
   private def sortByProtectionType(t1: String, t2: String): Boolean = protectionTypeOrder(t1) < protectionTypeOrder(t2)

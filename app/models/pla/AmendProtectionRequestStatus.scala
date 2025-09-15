@@ -16,23 +16,24 @@
 
 package models.pla
 
-import utils.{Enumerable, EnumerableInstance}
+import utils.{Enumerable, EnumerableInstanceWithKey}
 
-sealed abstract class AmendProtectionRequestStatus(value: String) extends EnumerableInstance(value)
+sealed abstract class AmendProtectionRequestStatus(readsWrites: String, toString: String)
+    extends EnumerableInstanceWithKey(readsWrites, toString)
 
 object AmendProtectionRequestStatus extends Enumerable.Implicits {
 
-  case object Open    extends AmendProtectionRequestStatus("OPEN")
-  case object Dormant extends AmendProtectionRequestStatus("DORMANT")
+  case object Open    extends AmendProtectionRequestStatus("OPEN", "open")
+  case object Dormant extends AmendProtectionRequestStatus("DORMANT", "dormant")
 
   val allValues: Seq[AmendProtectionRequestStatus] = Seq(Open, Dormant)
 
   implicit val toEnumerable: Enumerable[AmendProtectionRequestStatus] =
-    Enumerable(allValues.map(v => v.toString -> v): _*)
+    Enumerable(allValues.map(v => v.readsWrites -> v): _*)
 
   def from(str: String): AmendProtectionRequestStatus =
     allValues
-      .find(_.toString == str.toUpperCase)
+      .find(_.toString == str.toLowerCase)
       .getOrElse(throw new IllegalArgumentException(s"Cannot create AmendProtectionRequestStatus from String: $str"))
 
 }

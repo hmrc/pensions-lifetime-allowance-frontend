@@ -16,11 +16,9 @@
 
 package models.pla.response
 
-import utils.{Enumerable, EnumerableInstance}
+import utils.{Enumerable, EnumerableInstanceWithKey}
 
-sealed abstract class ProtectionStatus(value: String, _key: String) extends EnumerableInstance(value) {
-  val key = _key
-}
+sealed abstract class ProtectionStatus(readsWrites: String, toString: String) extends EnumerableInstanceWithKey(readsWrites, toString)
 
 object ProtectionStatus extends Enumerable.Implicits {
 
@@ -41,6 +39,6 @@ object ProtectionStatus extends Enumerable.Implicits {
   )
 
   implicit val enumerable: Enumerable[ProtectionStatus] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.readsWrites -> v): _*)
 
 }

@@ -40,13 +40,18 @@ object Enumerable {
           JsError(s"Cannot create ${self.getClass.getSimpleName} instance from: ${other.toString}")
       }
 
-    implicit def writes[A: Enumerable]: Writes[A] =
-      Writes(value => JsString(value.toString))
+    implicit def writes[A <: EnumerableInstance]: Writes[A] =
+      Writes(value => JsString(value.readsWrites))
 
   }
 
 }
 
 abstract class EnumerableInstance(name: String) {
+  val readsWrites: String    = name
   override val toString: String = name
+}
+
+abstract class EnumerableInstanceWithKey(readsWrites: String, _toString: String) extends EnumerableInstance(readsWrites) {
+  override val toString: String = _toString
 }

@@ -149,8 +149,8 @@ class ReadProtectionsControllerSpec
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
     protectionID = Some(12345),
-    protectionType = Some(IndividualProtection2016.key),
-    status = Some(Dormant.key),
+    protectionType = Some(IndividualProtection2016.toString),
+    status = Some(Dormant.toString),
     certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
@@ -164,8 +164,8 @@ class ReadProtectionsControllerSpec
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
     protectionID = Some(12345),
-    protectionType = Some(IndividualProtection2016.key),
-    status = Some(Rejected.key),
+    protectionType = Some(IndividualProtection2016.toString),
+    status = Some(Rejected.toString),
     certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")

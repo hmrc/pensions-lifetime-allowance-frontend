@@ -16,16 +16,16 @@
 
 package models.pla
 
-import utils.{Enumerable, EnumerableInstance}
+import utils.{Enumerable, EnumerableInstanceWithKey}
 
-sealed abstract class AmendProtectionLifetimeAllowanceType(value: String) extends EnumerableInstance(value)
+sealed abstract class AmendProtectionLifetimeAllowanceType(readsWrites: String, toString: String) extends EnumerableInstanceWithKey(readsWrites, toString)
 
 object AmendProtectionLifetimeAllowanceType extends Enumerable.Implicits {
 
-  case object IndividualProtection2014    extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2014")
-  case object IndividualProtection2016    extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2016")
-  case object IndividualProtection2014Lta extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2014 LTA")
-  case object IndividualProtection2016Lta extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2016 LTA")
+  case object IndividualProtection2014    extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2014", "IP2014")
+  case object IndividualProtection2016    extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2016", "IP2016")
+  case object IndividualProtection2014Lta extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2014 LTA", "IP2014LTA")
+  case object IndividualProtection2016Lta extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2016 LTA", "IP2016LTA")
 
   val allValues: Seq[AmendProtectionLifetimeAllowanceType] = Seq(
     IndividualProtection2014,
@@ -35,7 +35,7 @@ object AmendProtectionLifetimeAllowanceType extends Enumerable.Implicits {
   )
 
   implicit val toEnumerable: Enumerable[AmendProtectionLifetimeAllowanceType] =
-    Enumerable(allValues.map(v => v.toString -> v): _*)
+    Enumerable(allValues.map(v => v.readsWrites -> v): _*)
 
   def from(str: String): AmendProtectionLifetimeAllowanceType =
     allValues.find(_.toString == str).getOrElse(convertFromNpsStatuses(str))
