@@ -118,11 +118,11 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
   )(implicit lang: Lang): ExistingProtectionsDisplayModel = {
     val activeProtection = model.activeProtection.map(createExistingProtectionDisplayModel)
 
-    val dormantProtections      = protectionsByStatus(ProtectionStatus.Dormant, model.inactiveProtections)
-    val withdrawnProtections    = protectionsByStatus(ProtectionStatus.Withdrawn, model.inactiveProtections)
-    val unsuccessfulProtections = protectionsByStatus(ProtectionStatus.Unsuccessful, model.inactiveProtections)
-    val rejectedProtections     = protectionsByStatus(ProtectionStatus.Rejected, model.inactiveProtections)
-    val expiredProtections      = protectionsByStatus(ProtectionStatus.Expired, model.inactiveProtections)
+    val dormantProtections      = protectionsOfStatusByType(ProtectionStatus.Dormant, model.inactiveProtections)
+    val withdrawnProtections    = protectionsOfStatusByType(ProtectionStatus.Withdrawn, model.inactiveProtections)
+    val unsuccessfulProtections = protectionsOfStatusByType(ProtectionStatus.Unsuccessful, model.inactiveProtections)
+    val rejectedProtections     = protectionsOfStatusByType(ProtectionStatus.Rejected, model.inactiveProtections)
+    val expiredProtections      = protectionsOfStatusByType(ProtectionStatus.Expired, model.inactiveProtections)
 
     val inactiveProtections = ExistingInactiveProtectionsDisplayModel(
       dormantProtections = dormantProtections,
@@ -139,7 +139,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
 
   }
 
-  private def protectionsByStatus(
+  private def protectionsOfStatusByType(
       status: ProtectionStatus,
       protections: Seq[ProtectionModel]
   ): ExistingInactiveProtectionsByType = {
