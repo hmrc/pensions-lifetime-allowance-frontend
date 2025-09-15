@@ -22,6 +22,7 @@ import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import models.pla.response.ProtectionStatus._
+import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesProvider}
@@ -725,6 +726,104 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         tstExistingProtectionModel
       ) shouldBe tstExistingProtectionsDisplayModel
     }
+
+    "Handle all protection types" when
+      ProtectionType.values.foreach(protectionType =>
+        s"protection type is $protectionType" in {
+          val protectionModel = ProtectionModel(
+            psaCheckReference = Some(tstPSACheckRef),
+            protectionID = Some(12345),
+            protectionType = Some(protectionType.toString),
+            status = Some(Withdrawn.toString),
+            certificateDate = Some("2016-04-17"),
+            protectedAmount = Some(1250000),
+            protectionReference = Some("PSA654321"),
+            notificationId = Some(1)
+          )
+
+          val transformedReadResponseModel = TransformedReadResponseModel(
+            activeProtection = None,
+            inactiveProtections = Seq(protectionModel)
+          )
+
+          val existingProtectionDisplayModel = ExistingProtectionDisplayModel(
+            protectionType = protectionType.toString,
+            status = Withdrawn.toString,
+            amendCall = None,
+            psaCheckReference = Some(tstPSACheckRef),
+            protectionReference = "PSA654321",
+            protectedAmount = Some("£1,250,000"),
+            certificateDate = Some("17 April 2016")
+          )
+
+          val existingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
+            activeProtection = None,
+            inactiveProtections = ExistingInactiveProtectionsDisplayModel(
+              dormantProtections = ExistingInactiveProtectionsByType.empty,
+              withdrawnProtections = ExistingInactiveProtectionsByType(
+                Seq(
+                  protectionType.toString -> Seq(existingProtectionDisplayModel)
+                )
+              ),
+              unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
+              rejectedProtections = ExistingInactiveProtectionsByType.empty,
+              expiredProtections = ExistingInactiveProtectionsByType.empty
+            )
+          )
+
+          displayConstructor.createExistingProtectionsDisplayModel(
+            transformedReadResponseModel
+          ) shouldBe existingProtectionsDisplayModel
+        }
+      )
+
+    "Handle an unknown protection type as notRecorded" in {
+      val protectionModel = ProtectionModel(
+        psaCheckReference = Some(tstPSACheckRef),
+        protectionID = Some(12345),
+        protectionType = Some("unknown protection type"),
+        status = Some(Withdrawn.toString),
+        certificateDate = Some("2016-04-17"),
+        protectedAmount = Some(1250000),
+        protectionReference = Some("PSA654321"),
+        notificationId = Some(1)
+      )
+
+      val transformedReadResponseModel = TransformedReadResponseModel(
+        activeProtection = None,
+        inactiveProtections = Seq(protectionModel)
+      )
+
+      val existingProtectionDisplayModel = ExistingProtectionDisplayModel(
+        protectionType = "notRecorded",
+        status = Withdrawn.toString,
+        amendCall = None,
+        psaCheckReference = Some(tstPSACheckRef),
+        protectionReference = "PSA654321",
+        protectedAmount = Some("£1,250,000"),
+        certificateDate = Some("17 April 2016")
+      )
+
+      val existingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
+        activeProtection = None,
+        inactiveProtections = ExistingInactiveProtectionsDisplayModel(
+          dormantProtections = ExistingInactiveProtectionsByType.empty,
+          withdrawnProtections = ExistingInactiveProtectionsByType(
+            Seq(
+              "notRecorded" -> Seq(existingProtectionDisplayModel)
+            )
+          ),
+          unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
+          rejectedProtections = ExistingInactiveProtectionsByType.empty,
+          expiredProtections = ExistingInactiveProtectionsByType.empty
+        )
+      )
+
+      displayConstructor.createExistingProtectionsDisplayModel(
+        transformedReadResponseModel
+      ) shouldBe existingProtectionsDisplayModel
+    }
+
   }
 
   "createPrintDisplayModel" should {
