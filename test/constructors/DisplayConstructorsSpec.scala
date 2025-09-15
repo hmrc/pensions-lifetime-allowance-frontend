@@ -437,13 +437,13 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstExistingProtectionModel = TransformedReadResponseModel(
         Some(tstProtectionModelOpen),
         List(
-          tstProtectionModelDormant3,
-          tstProtectionModelDormant7,
-          tstProtectionModelDormant2,
-          tstProtectionModelDormant6,
-          tstProtectionModelDormant1,
-          tstProtectionModelDormant5,
-          tstProtectionModelDormant4
+          tstProtectionModelDormantIP2016,
+          tstProtectionModelDormantFP2014,
+          tstProtectionModelDormantFP2016,
+          tstProtectionModelDormantFixed,
+          tstProtectionModelDormantIP2014,
+          tstProtectionModelDormantEnhanced,
+          tstProtectionModelDormantPrimary
         )
       )
 
