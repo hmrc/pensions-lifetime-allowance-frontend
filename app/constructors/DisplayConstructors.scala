@@ -21,6 +21,7 @@ import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import models.pla.response.ProtectionType.FixedProtection2016
+import models.pla.response.{ProtectionStatus, ProtectionType}
 import play.api.Logging
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Call
@@ -116,26 +117,40 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       model: TransformedReadResponseModel
   )(implicit lang: Lang): ExistingProtectionsDisplayModel = {
     val activeProtection = model.activeProtection.map(createExistingProtectionDisplayModel)
-    val otherProtectionsList =
-      model.inactiveProtections.map(createExistingProtectionDisplayModel).sortWith(sortByStatus)
 
-    ExistingProtectionsDisplayModel(activeProtection, otherProtectionsList)
+    val dormantProtections      = protectionsOfStatusByType(ProtectionStatus.Dormant, model.inactiveProtections)
+    val withdrawnProtections    = protectionsOfStatusByType(ProtectionStatus.Withdrawn, model.inactiveProtections)
+    val unsuccessfulProtections = protectionsOfStatusByType(ProtectionStatus.Unsuccessful, model.inactiveProtections)
+    val rejectedProtections     = protectionsOfStatusByType(ProtectionStatus.Rejected, model.inactiveProtections)
+    val expiredProtections      = protectionsOfStatusByType(ProtectionStatus.Expired, model.inactiveProtections)
+
+    val inactiveProtections = ExistingInactiveProtectionsDisplayModel(
+      dormantProtections = dormantProtections,
+      withdrawnProtections = withdrawnProtections,
+      unsuccessfulProtections = unsuccessfulProtections,
+      rejectedProtections = rejectedProtections,
+      expiredProtections = expiredProtections
+    )
+
+    ExistingProtectionsDisplayModel(
+      activeProtection = activeProtection,
+      inactiveProtections = inactiveProtections
+    )
 
   }
 
-  private def sortByStatus(
-      s1: ExistingProtectionDisplayModel,
-      s2: ExistingProtectionDisplayModel
-  ): Boolean =
-    if (s1.status == s2.status) {
-      val typeMap: Map[String, Int] =
-        Map("IP2014" -> 1, "FP2016" -> 2, "IP2016" -> 3, "primary" -> 4, "enhanced" -> 5, "fixed" -> 6, "FP2014" -> 7)
-      if (typeMap(s1.protectionType) < typeMap(s2.protectionType)) true else false
-    } else {
-      val statusMap: Map[String, Int] =
-        Map("dormant" -> 1, "withdrawn" -> 2, "unsuccessful" -> 3, "rejected" -> 4, "expired" -> 5)
-      if (statusMap(s1.status) < statusMap(s2.status)) true else false
-    }
+  private def protectionsOfStatusByType(
+      status: ProtectionStatus,
+      protections: Seq[ProtectionModel]
+  ): ExistingInactiveProtectionsByType = {
+    val grouped = protections
+      .filter(_.status.contains(status.toString))
+      .map(createExistingProtectionDisplayModel)
+      .groupBy(_.protectionType)
+      .toSeq
+
+    ExistingInactiveProtectionsByType(grouped).sorted
+  }
 
   private def createExistingProtectionDisplayModel(
       model: ProtectionModel

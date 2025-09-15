@@ -27,6 +27,7 @@ trait ExistingProtections {
   val plaExistingProtectionsApplicationDate            = "Application date"
   val plaExistingProtectionsNoActiveProtections        = "You currently have no active protection."
   val plaExistingProtectionsNoOtherProtections         = "You have no other protections."
+  val plaExistingProtectionsNoProtections              = "You currently have no protections."
   val plaExistingProtectionsProtectedAmount            = "Protected lifetime allowance"
   val plaExistingProtectionsProtectionRef              = "Protection notification number"
   val plaExistingProtectionsPSARef                     = "Scheme administrator reference"
