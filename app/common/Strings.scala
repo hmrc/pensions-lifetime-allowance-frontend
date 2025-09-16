@@ -36,10 +36,13 @@ object Strings {
     }
 
   def cacheProtectionName(protection: ProtectionModel): String =
-    statusString(protection.status) + protectionTypeString(protection.protectionType) + "Amendment"
+    cacheAmendmentKey(protection.protectionType, protection.status)
 
   def cacheAmendFetchString(protectionType: String, status: String): String =
-    status.toLowerCase + protectionType.toUpperCase + "Amendment"
+    cacheAmendmentKey(Some(protectionType), Some(status))
+
+  private def cacheAmendmentKey(protectionType: Option[String], status: Option[String]): String =
+    statusString(status) + protectionTypeCacheKeyString(protectionType) + "Amendment"
 
   def protectionTypeString(modelProtectionType: Option[String]): String =
     modelProtectionType.flatMap(ProtectionType.from).map(_.toString).getOrElse("notRecorded")
@@ -49,6 +52,14 @@ object Strings {
       .flatMap(AmendProtectionLifetimeAllowanceType.fromOption)
       .map(_.urlValue)
       .getOrElse("notRecorded")
+
+  def protectionTypeElementIdString(modelProtectionType: Option[String]): String = protectionTypeUrlString(
+    modelProtectionType
+  ).toUpperCase
+
+  private def protectionTypeCacheKeyString(modelProtectionType: Option[String]): String = protectionTypeElementIdString(
+    modelProtectionType
+  )
 
   def statusString(modelStatus: Option[String]): String =
     modelStatus.flatMap(ProtectionStatus.from).map(_.toString).getOrElse("notRecorded")

@@ -16,9 +16,14 @@
 
 package connectors
 
-import com.github.tomakehurst.wiremock.client.WireMock._
 import common.Exceptions
-import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
+import com.github.tomakehurst.wiremock.client.WireMock._
+import connectors.PlaConnectorError.{
+  ConflictResponseError,
+  IncorrectResponseBodyError,
+  LockedResponseError,
+  UnexpectedResponseError
+}
 import models.ProtectionModel
 import models.pla.response.ReadProtectionsResponse
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}

@@ -145,7 +145,6 @@ class PLAConnector @Inject() (
     val requestJson = Json.toJson[ProtectionModel](protection)
     val body        = requestJson.transform(transformer(protection)).get
     val url         = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id"
-    logger.info(body.toString)
 
     http
       .put(url"$url")

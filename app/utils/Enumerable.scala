@@ -48,6 +48,6 @@ object Enumerable {
 }
 
 abstract class EnumerableInstance(name: String) {
-  val jsonValue         = name
-  override val toString = name
+  val jsonValue: String         = name
+  override val toString: String = name
 }
