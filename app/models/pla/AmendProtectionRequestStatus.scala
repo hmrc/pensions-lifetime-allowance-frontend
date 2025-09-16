@@ -16,24 +16,28 @@
 
 package models.pla
 
-import utils.{Enumerable, EnumerableInstanceWithKey}
+import utils.{Enumerable, EnumerableInstance}
 
-sealed abstract class AmendProtectionRequestStatus(readsWrites: String, toString: String)
-    extends EnumerableInstanceWithKey(readsWrites, toString)
+sealed abstract class AmendProtectionRequestStatus(name: String, override val jsonValue: String)
+    extends EnumerableInstance(name) {
+  val urlValue: String = name.toLowerCase
+}
 
 object AmendProtectionRequestStatus extends Enumerable.Implicits {
 
-  case object Open    extends AmendProtectionRequestStatus("OPEN", "open")
-  case object Dormant extends AmendProtectionRequestStatus("DORMANT", "dormant")
+  case object Open    extends AmendProtectionRequestStatus("Open", "OPEN")
+  case object Dormant extends AmendProtectionRequestStatus("Dormant", "DORMANT")
 
-  val allValues: Seq[AmendProtectionRequestStatus] = Seq(Open, Dormant)
+  val values: Seq[AmendProtectionRequestStatus] = Seq(Open, Dormant)
 
   implicit val toEnumerable: Enumerable[AmendProtectionRequestStatus] =
-    Enumerable(allValues.map(v => v.readsWrites -> v): _*)
+    Enumerable(values.map(v => v.jsonValue -> v): _*)
 
-  def from(str: String): AmendProtectionRequestStatus =
-    allValues
-      .find(_.toString.equalsIgnoreCase(str.toLowerCase))
-      .getOrElse(throw new IllegalArgumentException(s"Cannot create AmendProtectionRequestStatus from String: $str"))
+  def from(str: String): AmendProtectionRequestStatus = fromOption(str)
+    .getOrElse(throw new IllegalArgumentException(s"Cannot create AmendProtectionRequestStatus from String: $str"))
+
+  private def valuesLowerCase = values.map(status => status.toString.toLowerCase -> status).toMap
+
+  def fromOption(str: String): Option[AmendProtectionRequestStatus] = valuesLowerCase.get(str.toLowerCase)
 
 }

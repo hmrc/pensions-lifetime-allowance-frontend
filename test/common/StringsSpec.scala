@@ -16,9 +16,10 @@
 
 package common
 
-import org.scalatest.OptionValues
 import enums.ApplicationType
+import models.pla.AmendProtectionLifetimeAllowanceType
 import models.pla.response.{ProtectionStatus, ProtectionType}
+import org.scalatest.OptionValues
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
@@ -72,19 +73,85 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
 
   "protectionTypeString" should {
     "Populate the protection type string" when {
+      import ProtectionType._
+
+      "the protection is FP2016" in {
+        Strings.protectionTypeString(Some("FP2016")) shouldBe FixedProtection2016.toString
+      }
+      "the protection is IP2014" in {
+        Strings.protectionTypeString(Some("IP2014")) shouldBe IndividualProtection2014.toString
+      }
+      "the protection is IP2014-LTA" in {
+        Strings.protectionTypeString(Some("IP2014-LTA")) shouldBe IndividualProtection2014LTA.toString
+      }
+      "the protection is IP2016" in {
+        Strings.protectionTypeString(Some("IP2016")) shouldBe IndividualProtection2016.toString
+      }
+      "the protection is IP2016-LTA" in {
+        Strings.protectionTypeString(Some("IP2016-LTA")) shouldBe IndividualProtection2016LTA.toString
+      }
+      "the protection is primary" in {
+        Strings.protectionTypeString(Some("Primary")) shouldBe PrimaryProtection.toString
+      }
+      "the protection is enhanced" in {
+        Strings.protectionTypeString(Some("Enhanced")) shouldBe EnhancedProtection.toString
+      }
+      "the protection is fixed" in {
+        Strings.protectionTypeString(Some("Fixed")) shouldBe FixedProtection.toString
+      }
+      "the protection is FP2014" in {
+        Strings.protectionTypeString(Some("FP2014")) shouldBe FixedProtection2014.toString
+      }
 
       ProtectionType.values.foreach(protectionType =>
         s"the protection is $protectionType" in {
           Strings.protectionTypeString(Some(protectionType.toString)) shouldBe protectionType.toString
         }
       )
+    }
 
-      "the protection type is not recorded for an unknown value" in {
+    "Populate the protection type string with notRecorded" when {
+      "the protection type is an unknown value" in {
         Strings.protectionTypeString(Some("unknown protection type")) shouldBe "notRecorded"
       }
 
-      "the protection type is not recorded for a missing value" in {
+      "the protection type is missing" in {
         Strings.protectionTypeString(None) shouldBe "notRecorded"
+      }
+    }
+  }
+
+  "protectionTypeUrlString" should {
+    "Populate the protection type URL string" when {
+      import AmendProtectionLifetimeAllowanceType._
+
+      "the protection is IP2014" in {
+        Strings.protectionTypeUrlString(Some("IP2014")) shouldBe IndividualProtection2014.urlValue
+      }
+      "the protection is IP2014-LTA" in {
+        Strings.protectionTypeUrlString(Some("IP2014-LTA")) shouldBe IndividualProtection2014LTA.urlValue
+      }
+      "the protection is IP2016" in {
+        Strings.protectionTypeUrlString(Some("IP2016")) shouldBe IndividualProtection2016.urlValue
+      }
+      "the protection is IP2016-LTA" in {
+        Strings.protectionTypeUrlString(Some("IP2016-LTA")) shouldBe IndividualProtection2016LTA.urlValue
+      }
+
+      AmendProtectionLifetimeAllowanceType.values.foreach(protectionType =>
+        s"the protection is $protectionType" in {
+          Strings.protectionTypeUrlString(Some(protectionType.toString)) shouldBe protectionType.urlValue
+        }
+      )
+    }
+
+    "Populate the protection type URL string with notRecorded" when {
+      "the protection type is an unknown value" in {
+        Strings.protectionTypeUrlString(Some("unknown protection type")) shouldBe "notRecorded"
+      }
+
+      "the protection type is missing" in {
+        Strings.protectionTypeUrlString(None) shouldBe "notRecorded"
       }
     }
   }

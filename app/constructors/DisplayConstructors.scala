@@ -21,7 +21,7 @@ import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import models.pla.response.ProtectionType.FixedProtection2016
-import models.pla.response.{ProtectionStatus, ProtectionType}
+import models.pla.response.ProtectionStatus
 import play.api.Logging
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Call
@@ -570,7 +570,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       throw Exceptions.RequiredValueNotDefinedException("getProtectionTypeFromProtection", "protectionType")
     )
     ApplicationType.fromString(protectionTypeString).getOrElse {
-      throw new Exception("Invalid protection type passed to getProtectionTypeFromProtection")
+      throw new Exception(s"Invalid protection type passed to getProtectionTypeFromProtection: $protectionTypeString")
     }
   }
 

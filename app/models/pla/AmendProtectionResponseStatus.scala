@@ -16,21 +16,21 @@
 
 package models.pla
 
-import utils.{Enumerable, EnumerableInstanceWithKey}
+import utils.{Enumerable, EnumerableInstance}
 
-sealed abstract class AmendProtectionResponseStatus(readsWrites: String, toString: String)
-    extends EnumerableInstanceWithKey(readsWrites, toString)
+sealed abstract class AmendProtectionResponseStatus(name: String, override val jsonValue: String)
+    extends EnumerableInstance(name)
 
 object AmendProtectionResponseStatus extends Enumerable.Implicits {
 
-  case object Open      extends AmendProtectionResponseStatus("OPEN", "open")
-  case object Dormant   extends AmendProtectionResponseStatus("DORMANT", "dormant")
-  case object Withdrawn extends AmendProtectionResponseStatus("WITHDRAWN", "withdrawn")
+  case object Open      extends AmendProtectionResponseStatus("Open", "OPEN")
+  case object Dormant   extends AmendProtectionResponseStatus("Dormant", "DORMANT")
+  case object Withdrawn extends AmendProtectionResponseStatus("Withdrawn", "WITHDRAWN")
 
   private val allValues: Seq[AmendProtectionResponseStatus] =
     Seq(Open, Dormant, Withdrawn)
 
   implicit val toEnumerable: Enumerable[AmendProtectionResponseStatus] =
-    Enumerable(allValues.map(v => v.readsWrites -> v): _*)
+    Enumerable(allValues.map(v => v.jsonValue -> v): _*)
 
 }

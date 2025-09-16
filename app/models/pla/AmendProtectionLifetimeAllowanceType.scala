@@ -16,40 +16,61 @@
 
 package models.pla
 
-import utils.{Enumerable, EnumerableInstanceWithKey}
+import utils.{Enumerable, EnumerableInstance}
 
-sealed abstract class AmendProtectionLifetimeAllowanceType(readsWrites: String, toString: String)
-    extends EnumerableInstanceWithKey(readsWrites, toString)
+sealed abstract class AmendProtectionLifetimeAllowanceType(
+    name: String,
+    override val jsonValue: String,
+    val urlValue: String
+) extends EnumerableInstance(name)
 
 object AmendProtectionLifetimeAllowanceType extends Enumerable.Implicits {
 
   case object IndividualProtection2014
-      extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2014", "IP2014")
+      extends AmendProtectionLifetimeAllowanceType("IndividualProtection2014", "INDIVIDUAL PROTECTION 2014", "ip2014")
 
   case object IndividualProtection2016
-      extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2016", "IP2016")
+      extends AmendProtectionLifetimeAllowanceType("IndividualProtection2016", "INDIVIDUAL PROTECTION 2016", "ip2016")
 
-  case object IndividualProtection2014Lta
-      extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2014 LTA", "IP2014LTA")
+  case object IndividualProtection2014LTA
+      extends AmendProtectionLifetimeAllowanceType(
+        "IndividualProtection2014LTA",
+        "INDIVIDUAL PROTECTION 2014 LTA",
+        "ip2014-lta"
+      )
 
-  case object IndividualProtection2016Lta
-      extends AmendProtectionLifetimeAllowanceType("INDIVIDUAL PROTECTION 2016 LTA", "IP2016LTA")
+  case object IndividualProtection2016LTA
+      extends AmendProtectionLifetimeAllowanceType(
+        "IndividualProtection2016LTA",
+        "INDIVIDUAL PROTECTION 2016 LTA",
+        "ip2016-lta"
+      )
 
-  val allValues: Seq[AmendProtectionLifetimeAllowanceType] = Seq(
+  val values: Seq[AmendProtectionLifetimeAllowanceType] = Seq(
     IndividualProtection2014,
     IndividualProtection2016,
-    IndividualProtection2014Lta,
-    IndividualProtection2016Lta
+    IndividualProtection2014LTA,
+    IndividualProtection2016LTA
   )
 
   implicit val toEnumerable: Enumerable[AmendProtectionLifetimeAllowanceType] =
-    Enumerable(allValues.map(v => v.readsWrites -> v): _*)
+    Enumerable(values.map(v => v.jsonValue -> v): _*)
 
-  def from(str: String): AmendProtectionLifetimeAllowanceType =
-    allValues
-      .find(_.toString.equalsIgnoreCase(str))
-      .getOrElse(
-        throw new IllegalArgumentException(s"Cannot create AmendProtectionLifetimeAllowanceType from String: $str")
-      )
+  def from(str: String): AmendProtectionLifetimeAllowanceType = fromOption(str)
+    .getOrElse(
+      throw new IllegalArgumentException(s"Cannot create AmendProtectionLifetimeAllowanceType from String: $str")
+    )
+
+  private val valuesLowerCase =
+    values.map(protectionType => protectionType.toString.toLowerCase -> protectionType).toMap
+
+  def fromOption(str: String): Option[AmendProtectionLifetimeAllowanceType] =
+    str.toLowerCase match {
+      case "ip2014"     => Some(IndividualProtection2014)
+      case "ip2016"     => Some(IndividualProtection2016)
+      case "ip2014-lta" => Some(IndividualProtection2014LTA)
+      case "ip2016-lta" => Some(IndividualProtection2016LTA)
+      case str          => valuesLowerCase.get(str)
+    }
 
 }

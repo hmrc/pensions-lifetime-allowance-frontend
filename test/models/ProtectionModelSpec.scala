@@ -28,8 +28,13 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
 
     "return true" when {
 
-      val amendableStatuses        = AmendProtectionRequestStatus.allValues.map(_.toString)
-      val amendableProtectionTypes = AmendProtectionLifetimeAllowanceType.allValues.map(_.toString)
+      val amendableStatuses = AmendProtectionRequestStatus.values.map(_.toString)
+      val amendableProtectionTypes = Seq(
+        "ip2014",
+        "ip2016",
+        "ip2014-lta",
+        "ip2016-lta"
+      ) ++ AmendProtectionLifetimeAllowanceType.values.map(_.toString)
 
       val allAmendableCombinations = for {
         status         <- amendableStatuses
@@ -63,16 +68,20 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
         Some("DORMANT") -> None,
         Some("other")   -> Some("ip2014"),
         Some("other")   -> Some("ip2016"),
+        Some("other")   -> Some("ip2014-lta"),
+        Some("other")   -> Some("ip2016-lta"),
         None            -> Some("ip2014"),
         None            -> Some("ip2016"),
+        None            -> Some("ip2014-lta"),
+        None            -> Some("ip2016-lta"),
         Some("other")   -> Some(IndividualProtection2014.toString),
         Some("other")   -> Some(IndividualProtection2016.toString),
-        Some("other")   -> Some(IndividualProtection2014Lta.toString),
-        Some("other")   -> Some(IndividualProtection2016Lta.toString),
+        Some("other")   -> Some(IndividualProtection2014LTA.toString),
+        Some("other")   -> Some(IndividualProtection2016LTA.toString),
         None            -> Some(IndividualProtection2014.toString),
         None            -> Some(IndividualProtection2016.toString),
-        None            -> Some(IndividualProtection2014Lta.toString),
-        None            -> Some(IndividualProtection2016Lta.toString)
+        None            -> Some(IndividualProtection2014LTA.toString),
+        None            -> Some(IndividualProtection2016LTA.toString)
       )
 
       testScenarios.foreach { case (status, protectionType) =>

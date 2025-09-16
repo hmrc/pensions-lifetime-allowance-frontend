@@ -46,7 +46,7 @@ trait AmendControllerCacheHelper {
 
   def redirectToSummary(amendModel: AmendProtectionModel): Result = {
     val updatedProtectionType =
-      Strings.protectionTypeString(amendModel.updatedProtection.protectionType).toLowerCase
+      Strings.protectionTypeUrlString(amendModel.updatedProtection.protectionType).toLowerCase
     val updatedStatus = Strings.statusString(amendModel.updatedProtection.status).toLowerCase
 
     Redirect(routes.AmendsController.amendsSummary(updatedProtectionType, updatedStatus))

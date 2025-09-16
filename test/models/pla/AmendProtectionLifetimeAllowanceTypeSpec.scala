@@ -26,8 +26,12 @@ class AmendProtectionLifetimeAllowanceTypeSpec extends AnyWordSpec with Matchers
 
     "return correct AmendProtectionLifetimeAllowanceType" when {
 
-      val testScenarios =
-        AmendProtectionLifetimeAllowanceType.allValues.map(protectionType => protectionType.toString -> protectionType)
+      val testScenarios = Seq(
+        "IP2014"     -> IndividualProtection2014,
+        "IP2014-LTA" -> IndividualProtection2014LTA,
+        "IP2016"     -> IndividualProtection2016,
+        "IP2016-LTA" -> IndividualProtection2016LTA
+      ) ++ AmendProtectionLifetimeAllowanceType.values.map(protectionType => protectionType.toString -> protectionType)
 
       testScenarios.foreach { case (input, expectedType) =>
         s"provided with '$input' value" in {
@@ -36,14 +40,40 @@ class AmendProtectionLifetimeAllowanceTypeSpec extends AnyWordSpec with Matchers
       }
     }
 
-    "throw IllegalArgumentException" when
-      Seq("Unknown", "FP2016", "Primary", "Enhanced", "Fixed", "FP2014").foreach { input =>
+    "throw IllegalArgumentException" when {
+      import models.pla.response.ProtectionType._
+
+      val testValues = Seq(
+        "Unknown",
+        "FP2016",
+        "Primary",
+        "Enhanced",
+        "Fixed",
+        "FP2014"
+      ) ++ Seq(
+        FixedProtection2016,
+        FixedProtection2016LTA,
+        FixedProtection2014,
+        FixedProtection2014LTA,
+        FixedProtection,
+        FixedProtectionLTA,
+        PrimaryProtection,
+        PrimaryProtectionLTA,
+        EnhancedProtection,
+        EnhancedProtectionLTA,
+        PensionCreditRights,
+        InternationalEnhancementS221,
+        InternationalEnhancementS224
+      ).map(_.toString)
+
+      testValues.foreach { input =>
         s"provided with '$input' value" in {
           val exc = the[IllegalArgumentException] thrownBy AmendProtectionLifetimeAllowanceType.from(input)
 
           exc.getMessage shouldBe s"Cannot create AmendProtectionLifetimeAllowanceType from String: $input"
         }
       }
+    }
   }
 
 }

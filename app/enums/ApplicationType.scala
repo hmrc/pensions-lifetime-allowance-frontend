@@ -26,11 +26,14 @@ object ApplicationType extends Enumeration {
 
   def fromString(applicationType: String): Option[Value] =
     applicationType.toLowerCase match {
-      case "ip2014"              => Some(IP2014)
-      case "ip2016"              => Some(IP2016)
-      case "fp2016"              => Some(FP2016)
-      case "existingprotections" => Some(existingProtections)
-      case _                     => None
+      case "ip2014"                   => Some(IP2014)
+      case "individualprotection2014" => Some(IP2014)
+      case "ip2016"                   => Some(IP2016)
+      case "individualprotection2016" => Some(IP2016)
+      case "fp2016"                   => Some(FP2016)
+      case "fixedprotection2016"      => Some(FP2016)
+      case "existingprotections"      => Some(existingProtections)
+      case _                          => None
     }
 
 }

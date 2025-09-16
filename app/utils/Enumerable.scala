@@ -41,18 +41,13 @@ object Enumerable {
       }
 
     implicit def writes[A <: EnumerableInstance]: Writes[A] =
-      Writes(value => JsString(value.readsWrites))
+      Writes(value => JsString(value.jsonValue))
 
   }
 
 }
 
 abstract class EnumerableInstance(name: String) {
-  val readsWrites: String       = name
-  override val toString: String = name
-}
-
-abstract class EnumerableInstanceWithKey(readsWrites: String, _toString: String)
-    extends EnumerableInstance(readsWrites) {
-  override val toString: String = _toString
+  val jsonValue         = name
+  override val toString = name
 }

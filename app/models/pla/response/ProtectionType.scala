@@ -16,35 +16,39 @@
 
 package models.pla.response
 
-import utils.{Enumerable, EnumerableInstanceWithKey}
+import utils.{Enumerable, EnumerableInstance}
 
-sealed abstract class ProtectionType(readsWrites: String, toString: String)
-    extends EnumerableInstanceWithKey(readsWrites, toString)
+sealed abstract class ProtectionType(name: String, override val jsonValue: String) extends EnumerableInstance(name)
 
 object ProtectionType extends Enumerable.Implicits {
 
-  case object EnhancedProtection          extends ProtectionType("ENHANCED PROTECTION", "enhanced")
-  case object EnhancedProtectionLTA       extends ProtectionType("ENHANCED PROTECTION LTA", "enhancedLTA")
-  case object FixedProtection             extends ProtectionType("FIXED PROTECTION", "fixed")
-  case object FixedProtection2014         extends ProtectionType("FIXED PROTECTION 2014", "FP2014")
-  case object FixedProtection2014LTA      extends ProtectionType("FIXED PROTECTION 2014 LTA", "FP2014LTA")
-  case object FixedProtection2016         extends ProtectionType("FIXED PROTECTION 2016", "FP2016")
-  case object FixedProtection2016LTA      extends ProtectionType("FIXED PROTECTION 2016 LTA", "FP2016LTA")
-  case object FixedProtectionLTA          extends ProtectionType("FIXED PROTECTION LTA", "fixedLTA")
-  case object IndividualProtection2014    extends ProtectionType("INDIVIDUAL PROTECTION 2014", "IP2014")
-  case object IndividualProtection2014LTA extends ProtectionType("INDIVIDUAL PROTECTION 2014 LTA", "IP2014LTA")
-  case object IndividualProtection2016    extends ProtectionType("INDIVIDUAL PROTECTION 2016", "IP2016")
-  case object IndividualProtection2016LTA extends ProtectionType("INDIVIDUAL PROTECTION 2016 LTA", "IP2016LTA")
+  case object EnhancedProtection       extends ProtectionType("EnhancedProtection", "ENHANCED PROTECTION")
+  case object EnhancedProtectionLTA    extends ProtectionType("EnhancedProtectionLTA", "ENHANCED PROTECTION LTA")
+  case object FixedProtection          extends ProtectionType("FixedProtection", "FIXED PROTECTION")
+  case object FixedProtection2014      extends ProtectionType("FixedProtection2014", "FIXED PROTECTION 2014")
+  case object FixedProtection2014LTA   extends ProtectionType("FixedProtection2014LTA", "FIXED PROTECTION 2014 LTA")
+  case object FixedProtection2016      extends ProtectionType("FixedProtection2016", "FIXED PROTECTION 2016")
+  case object FixedProtection2016LTA   extends ProtectionType("FixedProtection2016LTA", "FIXED PROTECTION 2016 LTA")
+  case object FixedProtectionLTA       extends ProtectionType("FixedProtectionLTA", "FIXED PROTECTION LTA")
+  case object IndividualProtection2014 extends ProtectionType("IndividualProtection2014", "INDIVIDUAL PROTECTION 2014")
+
+  case object IndividualProtection2014LTA
+      extends ProtectionType("IndividualProtection2014LTA", "INDIVIDUAL PROTECTION 2014 LTA")
+
+  case object IndividualProtection2016 extends ProtectionType("IndividualProtection2016", "INDIVIDUAL PROTECTION 2016")
+
+  case object IndividualProtection2016LTA
+      extends ProtectionType("IndividualProtection2016LTA", "INDIVIDUAL PROTECTION 2016 LTA")
 
   case object InternationalEnhancementS221
-      extends ProtectionType("INTERNATIONAL ENHANCEMENT (S221)", "internationalEnhancementS221")
+      extends ProtectionType("InternationalEnhancementS221", "INTERNATIONAL ENHANCEMENT (S221)")
 
   case object InternationalEnhancementS224
-      extends ProtectionType("INTERNATIONAL ENHANCEMENT (S224)", "internationalEnhancementS224")
+      extends ProtectionType("InternationalEnhancementS224", "INTERNATIONAL ENHANCEMENT (S224)")
 
-  case object PensionCreditRights  extends ProtectionType("PENSION CREDIT RIGHTS", "pensionCreditRights")
-  case object PrimaryProtection    extends ProtectionType("PRIMARY PROTECTION", "primary")
-  case object PrimaryProtectionLTA extends ProtectionType("PRIMARY PROTECTION LTA", "primaryLTA")
+  case object PensionCreditRights  extends ProtectionType("PensionCreditRights", "PENSION CREDIT RIGHTS")
+  case object PrimaryProtection    extends ProtectionType("PrimaryProtection", "PRIMARY PROTECTION")
+  case object PrimaryProtectionLTA extends ProtectionType("PrimaryProtectionLTA", "PRIMARY PROTECTION LTA")
 
   val values: Seq[ProtectionType] = Seq(
     EnhancedProtection,
@@ -67,6 +71,23 @@ object ProtectionType extends Enumerable.Implicits {
   )
 
   implicit val enumerable: Enumerable[ProtectionType] =
-    Enumerable(values.map(v => v.readsWrites -> v): _*)
+    Enumerable(values.map(v => v.jsonValue -> v): _*)
+
+  private val valuesLowerCase =
+    values.map(protectionType => protectionType.toString.toLowerCase -> protectionType).toMap
+
+  def from(str: String): Option[ProtectionType] =
+    str.toLowerCase match {
+      case "ip2014"     => Some(IndividualProtection2014)
+      case "ip2014-lta" => Some(IndividualProtection2014LTA)
+      case "ip2016"     => Some(IndividualProtection2016)
+      case "ip2016-lta" => Some(IndividualProtection2016LTA)
+      case "fp2014"     => Some(FixedProtection2014)
+      case "fp2016"     => Some(FixedProtection2016)
+      case "fixed"      => Some(FixedProtection)
+      case "primary"    => Some(PrimaryProtection)
+      case "enhanced"   => Some(EnhancedProtection)
+      case str          => valuesLowerCase.get(str)
+    }
 
 }
