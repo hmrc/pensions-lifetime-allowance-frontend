@@ -47,10 +47,14 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
   "cache key" should {
     "correctly generate the cache key" when {
       val testValues = Seq(
-        ("ip2014", "open")        -> "OpenIP2014Amendment",
-        ("ip2016", "dormant")     -> "DormantIP2016Amendment",
-        ("ip2014-lta", "dormant") -> "DormantIP2014-LTAAmendment",
-        ("ip2016-lta", "open")    -> "OpenIP2016-LTAAmendment"
+        ("ip2014", "open")                         -> "OpenIP2014Amendment",
+        ("IndividualProtection2014", "Open")       -> "OpenIP2014Amendment",
+        ("ip2016", "dormant")                      -> "DormantIP2016Amendment",
+        ("IndividualProtection2016", "Dormant")    -> "DormantIP2016Amendment",
+        ("ip2014-lta", "dormant")                  -> "DormantIP2014-LTAAmendment",
+        ("IndividualProtection2014LTA", "Dormant") -> "DormantIP2014-LTAAmendment",
+        ("ip2016-lta", "open")                     -> "OpenIP2016-LTAAmendment",
+        ("IndividualProtection2016LTA", "Open")    -> "OpenIP2016-LTAAmendment"
       )
 
       "saving a protection model to cache" when
@@ -79,21 +83,23 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
     "use same cache key for saving and retrieving" when {
 
       val testValues = for {
-        protectionType <- AmendProtectionLifetimeAllowanceType.values.map(_.urlValue)
-        status         <- AmendProtectionRequestStatus.values.map(_.urlValue)
+        protectionType <- AmendProtectionLifetimeAllowanceType.values
+        status         <- AmendProtectionRequestStatus.values
       } yield (protectionType, status)
 
       testValues.foreach { case (protectionType, status) =>
         s"protection type is $protectionType and status is $status" in {
           val protectionModel = ProtectionModel(
-            protectionType = Some(protectionType),
-            status = Some(status),
+            protectionType = Some(protectionType.toString),
+            status = Some(status.toString),
             psaCheckReference = None,
             protectionID = None,
             version = None
           )
 
-          Strings.cacheAmendFetchString(protectionType, status) shouldBe Strings.cacheProtectionName(protectionModel)
+          Strings.cacheAmendFetchString(protectionType.urlValue, status.urlValue) shouldBe Strings.cacheProtectionName(
+            protectionModel
+          )
         }
       }
     }
