@@ -30,7 +30,7 @@ object Enumerable {
 
   trait Implicits { self =>
 
-    implicit def reads[A](implicit ev: Enumerable[A]): Reads[A] =
+    implicit def reads[A <: EnumerableInstance](implicit ev: Enumerable[A]): Reads[A] =
       Reads {
         case JsString(str) =>
           ev.findByName(str)
