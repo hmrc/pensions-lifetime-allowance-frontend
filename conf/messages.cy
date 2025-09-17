@@ -352,9 +352,9 @@ pla.protection.types.EnhancedProtectionLTA              = Diogelwch uwch
 pla.protection.types.fixed                              = Diogelwch penodol
 pla.protection.types.FixedProtection                    = Diogelwch penodol
 pla.protection.types.FixedProtectionLTA                 = Diogelwch penodol
-pla.protection.types.InternationalEnhancementS221       = PLACEHOLDER DO NOT MERGE
-pla.protection.types.InternationalEnhancementS224       = PLACEHOLDER DO NOT MERGE
-pla.protection.types.PensionCreditRights                = PLACEHOLDER DO NOT MERGE
+pla.protection.types.InternationalEnhancementS221       = Ffactor dibreswyl i unigolyn tramor perthnasol
+pla.protection.types.InternationalEnhancementS224       = Ffactor dibreswyl i drosglwyddiad o gynllun pensiwn tramor
+pla.protection.types.PensionCreditRights                = Ffactor credyd pensiwn i gredydau pensiwn ar gyfer hawliau blaenorol sydd wedi’u crisialu
 pla.protection.types.notRecorded                        = Dim un
 pla.protection.protectionReference                      = Dim un
 
