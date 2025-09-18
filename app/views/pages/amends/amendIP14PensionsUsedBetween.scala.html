@@ -15,7 +15,7 @@
  *@
 
 @import models.amendModels.AmendPensionsUsedBetweenModel
-@import common.Links
+@import common.{Links, Strings}
 
 @this(
     layout: Layout,
@@ -66,7 +66,7 @@
     @errorSummary(amendPensionsUsedBetweenForm.errors, Some("amendedPensionsUsedBetweenAmt"))
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsUsedBetween.question")</h1>
     <p class="govuk-body govuk-!-margin-top-4">@Messages("pla.pensionsUsedBetween.para.1")</p>
-    @form(action = routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween(protectionType, status)) {
+    @form(action = routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
         @helpTextAccordion(
             id = "ip14-amend-pensions-used-between-help",
             summaryText = Messages("pla.pensionsUsedBetween.help"),

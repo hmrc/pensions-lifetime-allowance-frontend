@@ -31,9 +31,7 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
       val amendableStatuses = AmendProtectionRequestStatus.values.map(_.toString)
       val amendableProtectionTypes = Seq(
         "ip2014",
-        "ip2016",
-        "ip2014-lta",
-        "ip2016-lta"
+        "ip2016"
       ) ++ AmendProtectionLifetimeAllowanceType.values.map(_.toString)
 
       val allAmendableCombinations = for {
@@ -68,12 +66,8 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
         Some("DORMANT") -> None,
         Some("other")   -> Some("ip2014"),
         Some("other")   -> Some("ip2016"),
-        Some("other")   -> Some("ip2014-lta"),
-        Some("other")   -> Some("ip2016-lta"),
         None            -> Some("ip2014"),
         None            -> Some("ip2016"),
-        None            -> Some("ip2014-lta"),
-        None            -> Some("ip2016-lta"),
         Some("other")   -> Some(IndividualProtection2014.toString),
         Some("other")   -> Some(IndividualProtection2016.toString),
         Some("other")   -> Some(IndividualProtection2014LTA.toString),

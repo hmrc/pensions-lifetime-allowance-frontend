@@ -18,6 +18,7 @@ package forms
 
 import forms.AmendPensionsTakenBeforeForm._
 import models.amendModels.AmendPensionsTakenBeforeModel
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.{CommonErrorMessages, FakeApplication}
@@ -35,28 +36,28 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorM
 
       "provided with a valid model" in {
         val model  = AmendPensionsTakenBeforeModel("yes")
-        val result = amendPensionsTakenBeforeForm("ip2016").fill(model)
+        val result = amendPensionsTakenBeforeForm(IndividualProtection2016.toString).fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid form with no amount" in {
         val model  = AmendPensionsTakenBeforeModel("no")
-        val result = amendPensionsTakenBeforeForm("ip2016").fill(model)
+        val result = amendPensionsTakenBeforeForm(IndividualProtection2016.toString).fill(model)
 
         result.data shouldBe Map("amendedPensionsTakenBefore" -> "no")
       }
 
       "provided with a valid map with a zero amount" in {
         val map    = validMap.updated("amendedPensionsTakenBeforeAmt", "0")
-        val result = amendPensionsTakenBeforeForm("ip2016").bind(map)
+        val result = amendPensionsTakenBeforeForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes"))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map    = validMap.updated("amendedPensionsTakenBeforeAmt", "0.01")
-        val result = amendPensionsTakenBeforeForm("ip2016").bind(map)
+        val result = amendPensionsTakenBeforeForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(AmendPensionsTakenBeforeModel("yes"))
       }
@@ -68,10 +69,13 @@ class AmendPensionsTakenBeforeFormSpec extends FakeApplication with CommonErrorM
 
         "not provided with a value for amendedPensionsTakenBefore" in {
           val map    = validMap - "amendedPensionsTakenBefore"
-          val result = amendPensionsTakenBeforeForm("ip2016").bind(map)
+          val result = amendPensionsTakenBeforeForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBefore").get.message shouldBe errorQuestion(messageKey, "ip2016")
+          result.error("amendedPensionsTakenBefore").get.message shouldBe errorQuestion(
+            messageKey,
+            IndividualProtection2016.toString
+          )
         }
       }
     }

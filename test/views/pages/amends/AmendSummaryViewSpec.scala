@@ -16,6 +16,8 @@
 
 package views.pages.amends
 
+import common.Strings
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import org.jsoup.Jsoup
 import org.mockito.Mockito.when
@@ -31,13 +33,19 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "active")),
+          Some(
+            controllers.routes.AmendsPensionTakenBeforeController
+              .amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "active")
+          ),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "active")),
+          Some(
+            controllers.routes.AmendsPensionTakenBeforeController
+              .amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "active")
+          ),
           None,
           "£100,000"
         )
@@ -48,13 +56,19 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")),
+          Some(
+            controllers.routes.AmendsPensionTakenBetweenController
+              .amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "active")
+          ),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "active")),
+          Some(
+            controllers.routes.AmendsPensionTakenBetweenController
+              .amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "active")
+          ),
           None,
           "£100,000"
         )
@@ -65,13 +79,19 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController
+              .amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "active")
+          ),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "active")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController
+              .amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "active")
+          ),
           None,
           "£100,000"
         )
@@ -82,7 +102,10 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "active")),
+          Some(
+            controllers.routes.AmendsCurrentPensionController
+              .amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "active")
+          ),
           None,
           "£1,000,000.34"
         )
@@ -103,8 +126,14 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       Seq(
         AmendDisplayRowModel(
           "CurrentPsos-psoDetails",
-          Some(controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "open")),
-          Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsPensionSharingOrderController
+              .amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+          ),
+          Some(
+            controllers.routes.AmendsRemovePensionSharingOrderController
+              .removePso(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+          ),
           "£123456",
           "2 March 2017"
         )
@@ -133,8 +162,11 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
   "the AmendSummaryView" should {
     def view = app.injector.instanceOf[amendSummary]
 
-    def doc           = Jsoup.parse(view.apply(amendDisplayModel, "ip2016", "open").body)
-    def docWithoutPso = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
+    def doc =
+      Jsoup.parse(view.apply(amendDisplayModel, IndividualProtection2016.toString, "open").body)
+    def docWithoutPso = Jsoup.parse(
+      view.apply(amendDisplayModelWithoutPso, IndividualProtection2016.toString, "open").body
+    )
 
     lazy val form = doc.select("form")
 
@@ -164,7 +196,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
     "have a link to add a new Pension sharing order" in {
       docWithoutPso.select("a#addPsoLink").text() shouldBe plaAmendsAddAPensionSharingOrderText
       docWithoutPso.select("a#addPsoLink").attr("href") shouldBe controllers.routes.AmendsPensionSharingOrderController
-        .amendPsoDetails("ip2016", "open")
+        .amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
         .url
     }
 
@@ -230,7 +262,9 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
 
       lazy val view = app.injector.instanceOf[amendSummary]
-      lazy val doc  = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
+      lazy val doc = Jsoup.parse(
+        view.apply(amendDisplayModelWithoutPso, IndividualProtection2016.toString, "open").body
+      )
 
       doc.select("p.govuk-body a.govuk-link").first().text shouldBe plaAmendsWithdrawProtectionText
       doc.select("p.govuk-body a.govuk-link").first().attr("href") shouldBe plaAmendsWithdrawProtectionLinkLocation
@@ -241,7 +275,9 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
 
       lazy val view = app.injector.instanceOf[amendSummary]
-      lazy val doc  = Jsoup.parse(view.apply(amendDisplayModelWithoutPso, "ip2016", "open").body)
+      lazy val doc = Jsoup.parse(
+        view.apply(amendDisplayModelWithoutPso, IndividualProtection2016.toString, "open").body
+      )
 
       doc.select("p.govuk-body a.govuk-link").last().text shouldBe plaAmendsAddAPensionSharingOrderText
       doc.select("p.govuk-body a.govuk-link").last().attr("href") shouldBe plaAmendsAddAPensionSharingOrderTextLink
@@ -253,7 +289,9 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
 
     "have a valid form submission" in {
       form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController.amendProtection("ip2016", "open").url
+      form.attr("action") shouldBe controllers.routes.AmendsController
+        .amendProtection(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+        .url
     }
 
     "have a continue button" in {

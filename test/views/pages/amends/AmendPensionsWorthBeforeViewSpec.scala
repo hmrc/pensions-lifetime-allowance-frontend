@@ -17,6 +17,7 @@
 package views.pages.amends
 
 import forms.AmendPensionsWorthBeforeForm
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.PensionsWorthBeforeViewMessages
@@ -29,10 +30,11 @@ class AmendPensionsWorthBeforeViewSpec extends CommonViewSpecHelper with Pension
 
   "the AmendPensionsWorthBeforeView" should {
     val pensionsForm = AmendPensionsWorthBeforeForm
-      .amendPensionsWorthBeforeForm("ip2016")
+      .amendPensionsWorthBeforeForm(IndividualProtection2016.toString)
       .bind(Map("amendedPensionsWorthBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val view = app.injector.instanceOf[amendPensionsWorthBefore]
-    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc =
+      Jsoup.parse(view.apply(pensionsForm, IndividualProtection2016.toString, "open").body)
 
     "have the correct title" in {
       doc.title() shouldBe plaPensionsWorthBeforeTitle

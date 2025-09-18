@@ -17,6 +17,7 @@
 package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
+import common.Strings
 import config._
 import mocks.AuthMock
 import models._
@@ -163,7 +164,10 @@ class AmendsPensionTakenBeforeControllerSpec
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsPensionTakenBeforeController
+              .amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "No"
         )
@@ -178,7 +182,8 @@ class AmendsPensionTakenBeforeControllerSpec
   "In AmendsPensionTakenBeforeController calling the .amendPensionsTakenBefore action" when {
 
     "not supplied with a stored model" in new Setup {
-      lazy val result = controller.amendPensionsTakenBefore("ip2016", "open")(fakeRequest)
+      lazy val result =
+        controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
@@ -192,7 +197,8 @@ class AmendsPensionTakenBeforeControllerSpec
 
     "supplied with the stored test model for (dormant, IP2016, preADay = £2000)" in new Setup {
 
-      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
@@ -200,7 +206,8 @@ class AmendsPensionTakenBeforeControllerSpec
     }
 
     "should take the user to the pensions taken before page" in new Setup {
-      lazy val result   = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -212,7 +219,10 @@ class AmendsPensionTakenBeforeControllerSpec
     "return some HTML that" should {
 
       "contain some text and use the character set utf-8" in new Setup {
-        lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+        lazy val result =
+          controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(
+            fakeRequest
+          )
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
@@ -231,7 +241,8 @@ class AmendsPensionTakenBeforeControllerSpec
       }
     }
     "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" in new Setup {
-      lazy val result = controller.amendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -242,7 +253,10 @@ class AmendsPensionTakenBeforeControllerSpec
   "Submitting Amend IP16 Pensions Taken Before data" when {
 
     "the data is invalid" in new Setup {
-      lazy val result = controller.submitAmendPensionsTakenBefore("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(
+          fakeRequest
+        )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
       status(result) shouldBe 400
@@ -252,7 +266,7 @@ class AmendsPensionTakenBeforeControllerSpec
   "the data is invalidated by additional validation" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore("ip2016", "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
           ("amendedPensionsTakenBefore", "1")
         )
 
@@ -264,7 +278,7 @@ class AmendsPensionTakenBeforeControllerSpec
   "the model can't be fetched from cache" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore("ip2016", "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
           ("amendedPensionsTakenBefore", "no"),
           ("amendedPensionsTakenBeforeAmt", "0")
         )
@@ -278,7 +292,7 @@ class AmendsPensionTakenBeforeControllerSpec
   "the data is valid with a no for IP16" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore("ip2016", "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
           ("amendedPensionsTakenBefore", "no"),
           ("amendedPensionsTakenBeforeAmt", "0")
         )
@@ -288,13 +302,15 @@ class AmendsPensionTakenBeforeControllerSpec
     cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
     status(DataItem.result) shouldBe 303
-    redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+    redirectLocation(DataItem.result) shouldBe Some(
+      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")}"
+    )
   }
 
   "the data is valid with a yes for IP16" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore("ip2016", "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
           ("amendedPensionsTakenBefore", "yes")
         )
 
@@ -305,14 +321,14 @@ class AmendsPensionTakenBeforeControllerSpec
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
-      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore("ip2016", "dormant")}"
+      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")}"
     )
   }
 
   "the data is valid with a no for IP14" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore("ip2014", "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
           ("amendedPensionsTakenBefore", "no"),
           ("amendedPensionsTakenBeforeAmt", "0")
         )
@@ -322,13 +338,15 @@ class AmendsPensionTakenBeforeControllerSpec
     cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
     status(DataItem.result) shouldBe 303
-    redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+    redirectLocation(DataItem.result) shouldBe Some(
+      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")}"
+    )
   }
 
   "the data is valid with a yes for IP14" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore("ip2014", "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
           ("amendedPensionsTakenBefore", "yes")
         )
 
@@ -339,7 +357,7 @@ class AmendsPensionTakenBeforeControllerSpec
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
-      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore("ip2014", "dormant")}"
+      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")}"
     )
   }
 

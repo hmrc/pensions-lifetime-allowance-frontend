@@ -115,6 +115,7 @@ pla.noNotificationId.paraOne.afterLink      = at any time.
 ## Pensions Taken ##
 pla.pensionsTaken.mandatoryErr              = Please answer this question
 pla.pensionsTaken.errors.mandatoryError.ip2016 = Select yes if before 6 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension?
+pla.pensionsTaken.errors.mandatoryError.IndividualProtection2016 = Select yes if before 6 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension?
 
 ## IP14 Pensions Taken ##
 pla.ip14PensionsTaken.title                 = Did any of the following happen before 6 April 2014?
@@ -124,6 +125,7 @@ pla.ip14PensionsTaken.legend                = Before 6 April 2014, did you turn 
 ## Pensions Taken Before ##
 pla.pensionsTakenBefore.title               = Did you get an income from any of your pensions before 6 April 2006?
 pla.pensionsTakenBefore.errors.mandatoryError.ip2016 = Select yes if you got an income from any of your pensions before 6 April 2006
+pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2016 = Select yes if you got an income from any of your pensions before 6 April 2006
 
 ## Pensions Worth Before ##
 pla.pensionsWorthBefore.title               = What were these pensions worth on 5 April 2016?
@@ -139,20 +141,31 @@ pla.pensionsWorthBefore.bullet.2            = you have a drawdown pension
 pla.pensionsWorthBefore.para.3              = Find out how in this
 pla.pensionsWorthBefore.helpLinkText        = technical guidance on valuing your pensions
 pla.pensionsWorthBefore.amount.errors.mandatoryError.ip2016 = Enter what these pensions were worth on 5 April 2016
+pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2016 = Enter what these pensions were worth on 5 April 2016
 pla.pensionsWorthBefore.amount.errors.notReal.ip2016        = What these pensions were worth on the 5 April 2016 must be a number, like 10000.00
+pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2016        = What these pensions were worth on the 5 April 2016 must be a number, like 10000.00
 pla.pensionsWorthBefore.amount.errors.decimal.ip2016        = What these pensions were worth on 5 April 2016 has too many numbers after the decimal point
+pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2016        = What these pensions were worth on 5 April 2016 has too many numbers after the decimal point
 pla.pensionsWorthBefore.amount.errors.negative.ip2016       = What these pensions were worth on 5 April 2016 must be £0 or more
+pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2016       = What these pensions were worth on 5 April 2016 must be £0 or more
 pla.pensionsWorthBefore.amount.errors.max.ip2016            = What these pensions were worth on 5 April 2016 must be £1,000,000,000 or less
+pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2016            = What these pensions were worth on 5 April 2016 must be £1,000,000,000 or less
 
 ## IP14 Pensions Worth Before ##
 pla.pensionsWorthBefore.amount.errors.mandatoryError.ip2014 = Enter what these pensions were worth on 5 April 2014
+pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2014 = Enter what these pensions were worth on 5 April 2014
 pla.pensionsWorthBefore.amount.errors.notReal.ip2014        = What these pensions were worth on the 5 April 2014 must be a number, like 10000.00
+pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2014        = What these pensions were worth on the 5 April 2014 must be a number, like 10000.00
 pla.pensionsWorthBefore.amount.errors.decimal.ip2014        = What these pensions were worth on 5 April 2014 has too many numbers after the decimal point
+pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2014        = What these pensions were worth on 5 April 2014 has too many numbers after the decimal point
 pla.pensionsWorthBefore.amount.errors.negative.ip2014       = What these pensions were worth on 5 April 2014 must be £0 or more
+pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2014       = What these pensions were worth on 5 April 2014 must be £0 or more
 pla.pensionsWorthBefore.amount.errors.max.ip2014            = What these pensions were worth on 5 April 2014 must be £1,000,000,000 or less
+pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2014            = What these pensions were worth on 5 April 2014 must be £1,000,000,000 or less
 
 ## IP14 Pensions Taken Before ##
 pla.pensionsTakenBefore.errors.mandatoryError.ip2014 = Select yes if you got an income from any of your pensions before 6 April 2006
+pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2014 = Select yes if you got an income from any of your pensions before 6 April 2006
 pla.ip14PensionsTakenBefore.question        = What were these pensions worth on 5 April 2014?
 pla.ip14PensionsTakenBefore.step.2          = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014.
 
@@ -162,11 +175,13 @@ pla.pensionsTakenBetween.bullet.1           = you got money from your pensions
 pla.pensionsTakenBetween.bullet.2           = you transferred a pension to a scheme held overseas
 pla.pensionsTakenBetween.bullet.3           = you turned 75 with pension savings which you hadn''t yet taken
 pla.pensionsTakenBetween.errors.mandatoryError.ip2016 = Select yes if between 6 April 2006 and 5 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
+pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2016 = Select yes if between 6 April 2006 and 5 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
 
 pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
 ## IP14 Pensions Taken Between ##
 pla.pensionsTakenBetween.errors.mandatoryError.ip2014 = Select yes if between 6 April 2006 and 5 April 2014, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
+pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2014 = Select yes if between 6 April 2006 and 5 April 2014, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
 pla.ip14PensionsTakenBetween.title          = Did any of these events happen between 6 April 2006 and 5 April 2014?
 pla.ip14PensionsTakenBetween.step.1         = Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened.
 pla.ip14PensionsTakenBetween.para.2         = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2014.
@@ -187,17 +202,27 @@ pla.pensionsUsedBetween.para.3.nonInput    = Read technical guidance on
 pla.pensionsUsedBetween.help               = How do I work out the value?
 pla.pensionsUsedBetween.helpLinkText       = working out how much lifetime allowance you''ve used
 pla.pensionsUsedBetween.amount.errors.mandatoryError.ip2016 = Enter how much lifetime allowance you have used
+pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2016 = Enter how much lifetime allowance you have used
 pla.pensionsUsedBetween.amount.errors.notReal.ip2016        = How much lifetime allowance you have used must be a number, like 10000.00
+pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2016        = How much lifetime allowance you have used must be a number, like 10000.00
 pla.pensionsUsedBetween.amount.errors.decimal.ip2016        = How much lifetime allowance you have used has too many numbers after the decimal point
+pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016        = How much lifetime allowance you have used has too many numbers after the decimal point
 pla.pensionsUsedBetween.amount.errors.negative.ip2016       = How much lifetime allowance you have used must be £0 or more
+pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2016       = How much lifetime allowance you have used must be £0 or more
 pla.pensionsUsedBetween.amount.errors.max.ip2016            = How much lifetime allowance you have used must be £1,000,000,000 or less
+pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2016            = How much lifetime allowance you have used must be £1,000,000,000 or less
 
 ## IP14 Pensions Used Between ##
 pla.pensionsUsedBetween.amount.errors.mandatoryError.ip2014 = Enter how much lifetime allowance you have used
+pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2014 = Enter how much lifetime allowance you have used
 pla.pensionsUsedBetween.amount.errors.notReal.ip2014        = How much lifetime allowance you have used must be a number, like 10000.00
+pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2014        = How much lifetime allowance you have used must be a number, like 10000.00
 pla.pensionsUsedBetween.amount.errors.decimal.ip2014        = How much lifetime allowance you have used has too many numbers after the decimal point
+pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2014        = How much lifetime allowance you have used has too many numbers after the decimal point
 pla.pensionsUsedBetween.amount.errors.negative.ip2014       = How much lifetime allowance you have used must be £0 or more
+pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2014       = How much lifetime allowance you have used must be £0 or more
 pla.pensionsUsedBetween.amount.errors.max.ip2014            = How much lifetime allowance you have used must be £1,000,000,000 or less
+pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014            = How much lifetime allowance you have used must be £1,000,000,000 or less
 
 ## Overseas Pensions ##
 pla.overseasPensions.title                  = Have you put money into a pension scheme held overseas?
@@ -205,21 +230,33 @@ pla.overseasPensions.question               = Only include contributions you mad
 pla.overseasPensions.questionTwo            = How much did you contribute?
 pla.overseasPensions.legend                 = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2016?
 pla.overseasPensions.errors.mandatoryError.ip2016  = Select yes if you have put money into a pension scheme held overseas
+pla.overseasPensions.errors.mandatoryError.IndividualProtection2016  = Select yes if you have put money into a pension scheme held overseas
 pla.overseasPensions.amount.errors.mandatoryError.ip2016 = Enter how much you contributed
+pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016 = Enter how much you contributed
 pla.overseasPensions.amount.errors.notReal.ip2016 = How much you contributed must be a number, like 10000.00
+pla.overseasPensions.amount.errors.notReal.IndividualProtection2016 = How much you contributed must be a number, like 10000.00
 pla.overseasPensions.amount.errors.decimal.ip2016 = How much you contributed has too many numbers after the decimal point
+pla.overseasPensions.amount.errors.decimal.IndividualProtection2016 = How much you contributed has too many numbers after the decimal point
 pla.overseasPensions.amount.errors.negative.ip2016 = How much you contributed must be £0 or more
+pla.overseasPensions.amount.errors.negative.IndividualProtection2016 = How much you contributed must be £0 or more
 pla.overseasPensions.amount.errors.max.ip2016 = How much you contributed must be £1,000,000,000 or less
+pla.overseasPensions.amount.errors.max.IndividualProtection2016 = How much you contributed must be £1,000,000,000 or less
 
 ## IP14 Overseas Pensions ##
 pla.ip14OverseasPensions.question           = Only include contributions you made between 6 April 2006 and 5 April 2014 that you got UK tax relief on.
 pla.ip14OverseasPensions.legend             = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2014?
 pla.overseasPensions.errors.mandatoryError.ip2014  = Select yes if you have put money into a pension scheme held overseas
+pla.overseasPensions.errors.mandatoryError.IndividualProtection2014  = Select yes if you have put money into a pension scheme held overseas
 pla.overseasPensions.amount.errors.mandatoryError.ip2014 = Enter how much you contributed
+pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014 = Enter how much you contributed
 pla.overseasPensions.amount.errors.notReal.ip2014 = How much you contributed must be a number, like 10000.00
+pla.overseasPensions.amount.errors.notReal.IndividualProtection2014 = How much you contributed must be a number, like 10000.00
 pla.overseasPensions.amount.errors.decimal.ip2014 = How much you contributed has too many numbers after the decimal point
+pla.overseasPensions.amount.errors.decimal.IndividualProtection2014 = How much you contributed has too many numbers after the decimal point
 pla.overseasPensions.amount.errors.negative.ip2014 = How much you contributed must be £0 or more
+pla.overseasPensions.amount.errors.negative.IndividualProtection2014 = How much you contributed must be £0 or more
 pla.overseasPensions.amount.errors.max.ip2014 = How much you contributed must be £1,000,000,000 or less
+pla.overseasPensions.amount.errors.max.IndividualProtection2014 = How much you contributed must be £1,000,000,000 or less
 
 ## CURRENT PENSIONS ##
 pla.currentPensions.title                   = What were your UK pensions worth on 5 April 2016?
@@ -235,19 +272,29 @@ pla.currentPensions.readGuidance.nonInput   = Read technical guidance on
 pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
 pla.currentPensions.question                = Do not include pensions you''ve already taken or the State Pension.
 pla.currentPensions.amount.errors.mandatoryError.ip2016 = Enter what your UK pensions were worth on 5 April 2016
+pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2016 = Enter what your UK pensions were worth on 5 April 2016
 pla.currentPensions.amount.errors.notReal.ip2016 = What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00
+pla.currentPensions.amount.errors.notReal.IndividualProtection2016 = What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00
 pla.currentPensions.amount.errors.decimal.ip2016 = What your UK pensions were worth on 5 April 2016 has too many numbers after the decimal point
+pla.currentPensions.amount.errors.decimal.IndividualProtection2016 = What your UK pensions were worth on 5 April 2016 has too many numbers after the decimal point
 pla.currentPensions.amount.errors.negative.ip2016 = What your UK pensions were worth on 5 April 2016 must be £0 or more
+pla.currentPensions.amount.errors.negative.IndividualProtection2016 = What your UK pensions were worth on 5 April 2016 must be £0 or more
 pla.currentPensions.amount.errors.max.ip2016 = What your UK pensions were worth on 5 April 2016 must be £1,000,000,000 or less
+pla.currentPensions.amount.errors.max.IndividualProtection2016 = What your UK pensions were worth on 5 April 2016 must be £1,000,000,000 or less
 
 ## IP14 CURRENT PENSIONS ##
 pla.ip14CurrentPensions.title               = What were your UK pensions worth on 5 April 2014?
 pla.ip14CurrentPensions.hiddenTextPara      = Use figures that were correct at 5 April 2014.
 pla.currentPensions.amount.errors.mandatoryError.ip2014 = Enter what your UK pensions were worth on 5 April 2014
+pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014 = Enter what your UK pensions were worth on 5 April 2014
 pla.currentPensions.amount.errors.notReal.ip2014 = What your UK pensions were worth on 5 April 2014 must be a number, like 10000.00
+pla.currentPensions.amount.errors.notReal.IndividualProtection2014 = What your UK pensions were worth on 5 April 2014 must be a number, like 10000.00
 pla.currentPensions.amount.errors.decimal.ip2014 = What your UK pensions were worth on 5 April 2014 has too many numbers after the decimal point
+pla.currentPensions.amount.errors.decimal.IndividualProtection2014 = What your UK pensions were worth on 5 April 2014 has too many numbers after the decimal point
 pla.currentPensions.amount.errors.negative.ip2014 = What your UK pensions were worth on 5 April 2014 must be £0 or more
+pla.currentPensions.amount.errors.negative.IndividualProtection2014 = What your UK pensions were worth on 5 April 2014 must be £0 or more
 pla.currentPensions.amount.errors.max.ip2014 = What your UK pensions were worth on 5 April 2014 must be £1,000,000,000 or less
+pla.currentPensions.amount.errors.max.IndividualProtection2014 = What your UK pensions were worth on 5 April 2014 must be £1,000,000,000 or less
 
 
 

@@ -16,8 +16,7 @@
 
 @import models.amendModels.AmendPSODetailsModel
 @import play.api.data._
-@import play.api.Application
-@import config.FrontendAppConfig
+@import common.Strings
 
 @this(
     layout: Layout,
@@ -46,7 +45,7 @@
 
     <h1 class="govuk-heading-xl">@Messages("pla.psoDetails.title")</h1>
 
-    @form(action = routes.AmendsPensionSharingOrderController.submitAmendPsoDetails(protectionType, status, existingPSO)) {
+    @form(action = routes.AmendsPensionSharingOrderController.submitAmendPsoDetails(Strings.protectionTypeUrlString(Some(protectionType)), status, existingPSO)) {
 
         @formInlineDateInput(
             content = Messages("pla.psoDetails.dateQuestionText"),

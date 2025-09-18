@@ -78,16 +78,14 @@ object ProtectionType extends Enumerable.Implicits {
 
   def from(str: String): Option[ProtectionType] =
     str.toLowerCase match {
-      case "ip2014"     => Some(IndividualProtection2014)
-      case "ip2014-lta" => Some(IndividualProtection2014LTA)
-      case "ip2016"     => Some(IndividualProtection2016)
-      case "ip2016-lta" => Some(IndividualProtection2016LTA)
-      case "fp2014"     => Some(FixedProtection2014)
-      case "fp2016"     => Some(FixedProtection2016)
-      case "fixed"      => Some(FixedProtection)
-      case "primary"    => Some(PrimaryProtection)
-      case "enhanced"   => Some(EnhancedProtection)
-      case str          => valuesLowerCase.get(str)
+      case "ip2014"   => Some(IndividualProtection2014)
+      case "ip2016"   => Some(IndividualProtection2016)
+      case "fp2014"   => Some(FixedProtection2014)
+      case "fp2016"   => Some(FixedProtection2016)
+      case "fixed"    => Some(FixedProtection)
+      case "primary"  => Some(PrimaryProtection)
+      case "enhanced" => Some(EnhancedProtection)
+      case str        => valuesLowerCase.get(str.replace("-", ""))
     }
 
 }

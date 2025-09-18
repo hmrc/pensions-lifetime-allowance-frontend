@@ -18,6 +18,7 @@ package forms
 
 import forms.PensionsTakenBetweenForm._
 import models.PensionsTakenBetweenModel
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.{CommonErrorMessages, FakeApplication}
@@ -31,14 +32,14 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
 
       "supplied with a valid model" in {
         val model  = PensionsTakenBetweenModel("text")
-        val result = pensionsTakenBetweenForm("ip2016").fill(model)
+        val result = pensionsTakenBetweenForm(IndividualProtection2016.toString).fill(model)
 
         result.data shouldBe Map("pensionsTakenBetween" -> "text")
       }
 
       "supplied with a valid form" in {
         val map    = Map("pensionsTakenBetween" -> "yes")
-        val result = pensionsTakenBetweenForm("ip2016").bind(map)
+        val result = pensionsTakenBetweenForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(PensionsTakenBetweenModel("yes"))
       }
@@ -48,18 +49,24 @@ class PensionsTakenBetweenFormSpec extends FakeApplication with CommonErrorMessa
 
       "not provided with a pensionsTakenBetween value" in {
         val map    = Map.empty[String, String]
-        val result = pensionsTakenBetweenForm("ip2016").bind(map)
+        val result = pensionsTakenBetweenForm(IndividualProtection2016.toString).bind(map)
 
         result.errors.size shouldBe 1
-        result.error("pensionsTakenBetween").get.message shouldBe errorQuestion("pensionsTakenBetween", "ip2016")
+        result.error("pensionsTakenBetween").get.message shouldBe errorQuestion(
+          "pensionsTakenBetween",
+          IndividualProtection2016.toString
+        )
       }
 
       "provided with a invalid pensionsTakenBetween value" in {
         val map    = Map("pensionsTakenBetween" -> "some-value")
-        val result = pensionsTakenBetweenForm("ip2016").bind(map)
+        val result = pensionsTakenBetweenForm(IndividualProtection2016.toString).bind(map)
 
         result.errors.size shouldBe 1
-        result.error("pensionsTakenBetween").get.message shouldBe errorQuestion("pensionsTakenBetween", "ip2016")
+        result.error("pensionsTakenBetween").get.message shouldBe errorQuestion(
+          "pensionsTakenBetween",
+          IndividualProtection2016.toString
+        )
       }
     }
   }

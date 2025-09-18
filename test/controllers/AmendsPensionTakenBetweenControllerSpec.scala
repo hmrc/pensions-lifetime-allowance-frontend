@@ -17,6 +17,7 @@
 package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
+import common.Strings
 import config._
 import mocks.AuthMock
 import models._
@@ -164,7 +165,8 @@ class AmendsPensionTakenBetweenControllerSpec
   "In AmendsPensionTakenBetweenController calling the .amendPensionsTakenBetween action" when {
     "not supplied with a stored model" in new Setup {
 
-      lazy val result = controller.amendPensionsTakenBetween("ip2016", "open")(fakeRequest)
+      lazy val result =
+        controller.amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
@@ -172,7 +174,8 @@ class AmendsPensionTakenBetweenControllerSpec
 
     }
     "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" in new Setup {
-      lazy val result   = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -183,14 +186,16 @@ class AmendsPensionTakenBetweenControllerSpec
 
   "supplied with the stored test model for (dormant, IP2016, preADay = £2000)" in new Setup {
 
-    lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+    lazy val result =
+      controller.amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
     status(result) shouldBe 200
   }
 
   "should take the user to the pensions taken before page" in new Setup {
-    lazy val result   = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+    lazy val result =
+      controller.amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
     lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -201,7 +206,8 @@ class AmendsPensionTakenBetweenControllerSpec
   "return some HTML that" should {
 
     "contain some text and use the character set utf-8" in new Setup {
-      lazy val result = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
@@ -210,7 +216,8 @@ class AmendsPensionTakenBetweenControllerSpec
     }
 
     "have the value of the check box set as 'Yes' by default" in new Setup {
-      lazy val result   = controller.amendPensionsTakenBetween("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -221,7 +228,8 @@ class AmendsPensionTakenBetweenControllerSpec
   }
 
   "supplied with the stored test model for (dormant, IP2014, preADay = £2000))" in new Setup {
-    lazy val result = controller.amendPensionsTakenBetween("ip2014", "dormant")(fakeRequest)
+    lazy val result =
+      controller.amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")(fakeRequest)
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -233,7 +241,7 @@ class AmendsPensionTakenBetweenControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsTakenBetween("ip2016", "dormant"),
+            controller.submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedPensionsTakenBetween", "no")
           )
 
@@ -246,7 +254,7 @@ class AmendsPensionTakenBetweenControllerSpec
     "the data is valid with a no response" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsTakenBetween("ip2016", "dormant"),
+            controller.submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedPensionsTakenBetween", "no")
           )
 
@@ -256,13 +264,16 @@ class AmendsPensionTakenBetweenControllerSpec
 
       status(DataItem.result) shouldBe 303
 
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeURL.IndividualProtection2016,
+          Strings.StatusURL.Dormant
+        )}")
     }
 
     "the data is valid with a yes response" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsTakenBetween("ip2016", "dormant"),
+            controller.submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedPensionsTakenBetween", "yes")
           )
 
@@ -273,15 +284,15 @@ class AmendsPensionTakenBetweenControllerSpec
       status(DataItem.result) shouldBe 303
 
       redirectLocation(DataItem.result) shouldBe Some(
-        s"${routes.AmendsPensionUsedBetweenController.amendPensionsUsedBetween("ip2016", "dormant")}"
+        s"${routes.AmendsPensionUsedBetweenController.amendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")}"
       )
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsTakenBetween("ip2016", "dormant"),
-            ("protectionType", "ip2016"),
+            controller.submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
+            ("protectionType", Strings.ProtectionTypeURL.IndividualProtection2016),
             ("status", "dormant")
           )
 
@@ -292,7 +303,7 @@ class AmendsPensionTakenBetweenControllerSpec
     "the data is invalid on additional validation" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsTakenBetween("ip2016", "dormant"),
+            controller.submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedPensionsTakenBetween", "1")
           )
 
@@ -306,7 +317,7 @@ class AmendsPensionTakenBetweenControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsTakenBetween("ip2014", "dormant"),
+            controller.submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
             ("amendedPensionsTakenBetween", "no")
           )
 
@@ -319,7 +330,7 @@ class AmendsPensionTakenBetweenControllerSpec
     "the data is valid with a no response" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsTakenBetween("ip2014", "dormant"),
+            controller.submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
             ("amendedPensionsTakenBetween", "no")
           )
 
@@ -329,13 +340,16 @@ class AmendsPensionTakenBetweenControllerSpec
 
       status(DataItem.result) shouldBe 303
 
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeURL.IndividualProtection2014,
+          Strings.StatusURL.Dormant
+        )}")
     }
 
     "the data is valid with a yes response" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsTakenBetween("ip2014", "dormant"),
+            controller.submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
             ("amendedPensionsTakenBetween", "yes")
           )
 
@@ -346,15 +360,15 @@ class AmendsPensionTakenBetweenControllerSpec
       status(DataItem.result) shouldBe 303
 
       redirectLocation(DataItem.result) shouldBe Some(
-        s"${routes.AmendsPensionUsedBetweenController.amendPensionsUsedBetween("ip2014", "dormant")}"
+        s"${routes.AmendsPensionUsedBetweenController.amendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")}"
       )
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsTakenBetween("ip2014", "dormant"),
-            ("protectionType", "ip2016"),
+            controller.submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
+            ("protectionType", Strings.ProtectionTypeURL.IndividualProtection2016),
             ("status", "dormant")
           )
 
@@ -365,7 +379,7 @@ class AmendsPensionTakenBetweenControllerSpec
     "the data is invalid on additional validation" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsTakenBetween("ip2014", "dormant"),
+            controller.submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
             ("amendedPensionsTakenBetween", "1")
           )
 

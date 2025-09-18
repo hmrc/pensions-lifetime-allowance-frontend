@@ -19,9 +19,7 @@ package models.pla
 import utils.{Enumerable, EnumerableInstance}
 
 sealed abstract class AmendProtectionRequestStatus(name: String, override val jsonValue: String)
-    extends EnumerableInstance(name) {
-  val urlValue: String = name.toLowerCase
-}
+    extends EnumerableInstance(name) {}
 
 object AmendProtectionRequestStatus extends Enumerable.Implicits {
 

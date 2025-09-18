@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import common.Strings
 @import models.amendModels.AmendOverseasPensionsModel
 @import play.api.data._
 
@@ -64,7 +65,7 @@
 
     <p class="govuk-body">@Messages("pla.overseasPensions.question")</p>
 
-    @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions(protectionType, status)) {
+    @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
         @formHiddenYesNoRadio(
             field = amendOverseasPensionsForm("amendedOverseasPensions"),
             question = Messages("pla.overseasPensions.legend"),

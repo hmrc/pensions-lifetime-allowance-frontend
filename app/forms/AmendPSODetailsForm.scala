@@ -19,6 +19,7 @@ package forms
 import common.Validation._
 import forms.formatters.DateFormatter
 import models.amendModels.AmendPSODetailsModel
+import models.pla.AmendProtectionLifetimeAllowanceType
 import play.api.data.Forms._
 import play.api.data._
 import play.api.i18n.Messages
@@ -36,7 +37,14 @@ object AmendPSODetailsForm extends CommonBinders {
       key -> of(
         DateFormatter(
           key,
-          optMinDate = Some(if (protectionType == "ip2016") Constants.minIP16PSODate else Constants.minIP14PSODate),
+          optMinDate = Some(
+            if (
+              AmendProtectionLifetimeAllowanceType
+                .fromOption(protectionType)
+                .contains(AmendProtectionLifetimeAllowanceType.IndividualProtection2016)
+            ) Constants.minIP16PSODate
+            else Constants.minIP14PSODate
+          ),
           optMaxDate = Some(LocalDate.now.plusDays(1))
         )
       ),

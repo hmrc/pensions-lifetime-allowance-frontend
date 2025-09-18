@@ -16,7 +16,9 @@
 
 package views.pages.amends
 
+import common.Strings
 import forms.AmendPensionsUsedBetweenForm
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.{PensionsTakenBetweenViewMessages, PensionsUsedBetweenViewMessages}
@@ -32,10 +34,10 @@ class AmendPensionsUsedBetweenViewSpec
 
   "the AmendPensionsUsedBetweenView" should {
     val pensionsForm = AmendPensionsUsedBetweenForm
-      .amendPensionsUsedBetweenForm("ip2016")
+      .amendPensionsUsedBetweenForm(IndividualProtection2016.toString)
       .bind(Map("amendedPensionsUsedBetween" -> "yes", "amendedPensionsUsedBetweenAmt" -> "12345"))
     lazy val view = app.injector.instanceOf[amendPensionsUsedBetween]
-    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, IndividualProtection2016.toString, "open").body)
 
     "have the correct title" in {
       doc.title() shouldBe plaPensionsUsedBetweenTitle

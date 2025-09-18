@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import common.Strings
 @import models.amendModels.AmendPensionsTakenBeforeModel
 @import play.api.data._
 
@@ -41,7 +42,7 @@
 
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBefore.title")</h1>
 
-    @form(action = routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(protectionType, status)) {
+    @form(action = routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
 
         @plaInputRadioGroup(
             legend = Messages("pla.pensionsTakenBefore.title"),

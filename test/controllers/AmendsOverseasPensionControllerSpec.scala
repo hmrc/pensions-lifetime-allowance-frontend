@@ -17,6 +17,7 @@
 package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
+import common.Strings
 import config._
 import connectors.PLAConnector
 import constructors.DisplayConstructors
@@ -206,7 +207,8 @@ class AmendsOverseasPensionControllerSpec
   "In AmendsOverseasPensionController calling the .amendOverseasPensions action" when {
 
     "not supplied with a stored model" in new Setup {
-      lazy val result = controller.amendOverseasPensions("ip2016", "open")(fakeRequest)
+      lazy val result =
+        controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
@@ -214,7 +216,8 @@ class AmendsOverseasPensionControllerSpec
     }
 
     "supplied with the stored test model for (dormant, IP2016, nonUKRights = £0.0)" in new Setup {
-      lazy val result   = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -227,7 +230,8 @@ class AmendsOverseasPensionControllerSpec
 
     "supplied with the stored test model for (dormant, IP2016, nonUKRights = £2000)" in new Setup {
 
-      lazy val result = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
@@ -235,7 +239,8 @@ class AmendsOverseasPensionControllerSpec
     }
 
     "should take the user to the overseas pensions page" in new Setup {
-      lazy val result   = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -248,7 +253,8 @@ class AmendsOverseasPensionControllerSpec
     "return some HTML that" should {
 
       "contain some text and use the character set utf-8" in new Setup {
-        lazy val result = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
+        lazy val result =
+          controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
 
@@ -258,7 +264,8 @@ class AmendsOverseasPensionControllerSpec
 
       "have the value of the check box set as 'Yes' by default" in new Setup {
 
-        lazy val result   = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
+        lazy val result =
+          controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
         lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -271,7 +278,8 @@ class AmendsOverseasPensionControllerSpec
       }
 
       "have the value of the input field set to 2000 by default" in new Setup {
-        lazy val result   = controller.amendOverseasPensions("ip2016", "dormant")(fakeRequest)
+        lazy val result =
+          controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
         lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -283,7 +291,8 @@ class AmendsOverseasPensionControllerSpec
     }
 
     "supplied with the stored test model for (dormant, IP2014, nonUKRights = £2000)" in new Setup {
-      lazy val result = controller.amendOverseasPensions("ip2014", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
 
@@ -294,7 +303,10 @@ class AmendsOverseasPensionControllerSpec
   "Submitting Amend IP16 Overseas Pensions data" when {
 
     "there is an error reading the form" in new Setup {
-      lazy val result = controller.submitAmendOverseasPensions("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(
+          fakeRequest
+        )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
       status(result) shouldBe 400
@@ -303,7 +315,7 @@ class AmendsOverseasPensionControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendOverseasPensions("ip2016", "dormant"),
+            controller.submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedOverseasPensions", "no"),
             ("amendedOverseasPensionsAmt", "0")
           )
@@ -317,7 +329,7 @@ class AmendsOverseasPensionControllerSpec
     "the data is valid with a no response" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendOverseasPensions("ip2016", "dormant"),
+            controller.submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedOverseasPensions", "no"),
             ("amendedOverseasPensionsAmt", "0")
           )
@@ -327,13 +339,16 @@ class AmendsOverseasPensionControllerSpec
       cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeURL.IndividualProtection2016,
+          Strings.StatusURL.Dormant
+        )}")
     }
 
     "the data is valid with a yes response" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendOverseasPensions("ip2016", "dormant"),
+            controller.submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedOverseasPensions", "yes"),
             ("amendedOverseasPensionsAmt", "10")
           )
@@ -343,13 +358,16 @@ class AmendsOverseasPensionControllerSpec
       cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeURL.IndividualProtection2016,
+          Strings.StatusURL.Dormant
+        )}")
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendOverseasPensions("ip2016", "dormant"),
+            controller.submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedOverseasPensions", "yes"),
             ("amendedOverseasPensionsAmt", "")
           )
@@ -358,7 +376,7 @@ class AmendsOverseasPensionControllerSpec
 
       status(DataItem.result) shouldBe 400
       DataItem.jsoupDoc.getElementsByClass("govuk-error-message").text should include(
-        Messages("pla.overseasPensions.amount.errors.mandatoryError.ip2016")
+        Messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016")
       )
     }
   }
@@ -366,7 +384,10 @@ class AmendsOverseasPensionControllerSpec
   "Submitting Amend IP14 Overseas Pensions data" when {
 
     "there is an error reading the form" in new Setup {
-      lazy val result = controller.submitAmendOverseasPensions("ip2014", "dormant")(fakeRequest)
+      lazy val result =
+        controller.submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")(
+          fakeRequest
+        )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
       status(result) shouldBe 400
@@ -375,7 +396,7 @@ class AmendsOverseasPensionControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendOverseasPensions("ip2014", "dormant"),
+            controller.submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
             ("amendedOverseasPensions", "no"),
             ("amendedOverseasPensionsAmt", "0")
           )
@@ -389,7 +410,7 @@ class AmendsOverseasPensionControllerSpec
     "the data is valid with a no response" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendOverseasPensions("ip2014", "dormant"),
+            controller.submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
             ("amendedOverseasPensions", "no"),
             ("amendedOverseasPensionsAmt", "0")
           )
@@ -399,13 +420,16 @@ class AmendsOverseasPensionControllerSpec
       cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeURL.IndividualProtection2014,
+          Strings.StatusURL.Dormant
+        )}")
     }
 
     "the data is valid with a yes response" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendOverseasPensions("ip2014", "dormant"),
+            controller.submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
             ("amendedOverseasPensions", "yes"),
             ("amendedOverseasPensionsAmt", "10")
           )
@@ -415,13 +439,16 @@ class AmendsOverseasPensionControllerSpec
       cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
       status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeURL.IndividualProtection2014,
+          Strings.StatusURL.Dormant
+        )}")
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendOverseasPensions("ip2014", "dormant"),
+            controller.submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
             ("amendedOverseasPensions", "yes"),
             ("amendedOverseasPensionsAmt", "")
           )
@@ -430,7 +457,7 @@ class AmendsOverseasPensionControllerSpec
 
       status(DataItem.result) shouldBe 400
       DataItem.jsoupDoc.getElementsByClass("govuk-error-message").text should include(
-        Messages("pla.overseasPensions.amount.errors.mandatoryError.ip2014")
+        Messages("pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014")
       )
     }
   }

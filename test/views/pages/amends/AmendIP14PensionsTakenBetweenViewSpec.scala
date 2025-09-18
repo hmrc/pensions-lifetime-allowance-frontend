@@ -16,7 +16,9 @@
 
 package views.pages.amends
 
+import common.Strings
 import forms.AmendPensionsTakenBetweenForm
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBetweenViewSpecMessages
@@ -33,15 +35,17 @@ class AmendIP14PensionsTakenBetweenViewSpec
 
   "the AmendIP14PensionsTakenBetweenView" should {
     val pensionsForm = AmendPensionsTakenBetweenForm
-      .amendPensionsTakenBetweenForm("ip2016")
+      .amendPensionsTakenBetweenForm(IndividualProtection2016.toString)
       .bind(Map("amendedPensionsTakenBetween" -> "yes", "amendedPensionsTakenBetweenAmt" -> "12345"))
     lazy val view = app.injector.instanceOf[amendIP14PensionsTakenBetween]
-    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, IndividualProtection2016.toString, "open").body)
 
     val errorForm =
-      AmendPensionsTakenBetweenForm.amendPensionsTakenBetweenForm("ip2016").bind(Map.empty[String, String])
+      AmendPensionsTakenBetweenForm
+        .amendPensionsTakenBetweenForm(IndividualProtection2016.toString)
+        .bind(Map.empty[String, String])
     lazy val errorView = app.injector.instanceOf[amendIP14PensionsTakenBetween]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "open").body)
 
     lazy val form = doc.select("form")
 
@@ -62,7 +66,7 @@ class AmendIP14PensionsTakenBetweenViewSpec
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController
-        .submitAmendPensionsTakenBetween("ip2016", "open")
+        .submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
         .url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaIP14PensionsTakenBetweenLegendText
     }

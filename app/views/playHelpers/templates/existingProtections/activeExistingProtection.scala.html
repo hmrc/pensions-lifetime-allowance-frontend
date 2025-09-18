@@ -26,7 +26,7 @@
 
 @changeLink = {
 @protection.amendCall.map{ call =>
-<a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status.toLowerCase}-${Strings.protectionTypeElementIdString(Some(protection.protectionType))}-amend-link-$protectionNum"}>
+<a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status.toLowerCase}-${Strings.protectionTypeString(Some(protection.protectionType))}-amend-link-$protectionNum"}>
     @Messages("pla.existingProtections.amendLinkText")
     <span class="govuk-visually-hidden">
                 @Messages("pla.protection.types." + protection.protectionType) @protection.protectionReference

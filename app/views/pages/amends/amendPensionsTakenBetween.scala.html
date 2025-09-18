@@ -16,7 +16,7 @@
 
 @import models.amendModels.AmendPensionsTakenBetweenModel
 @import play.api.data._
-@import common.Links
+@import common.Strings
 
 @this(
     layout: Layout,
@@ -45,7 +45,7 @@
 
     <h1 class="govuk-heading-l">@Messages("pla.pensionsTakenBetween.title")</h1>
 
-    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)) {
+    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
         @plaInputRadioGroup(
             legend = Messages("pla.pensionsTakenBetween.title"),
             legendClass = Some("govuk-visually-hidden"),

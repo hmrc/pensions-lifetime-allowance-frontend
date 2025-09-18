@@ -18,6 +18,7 @@ package forms
 
 import forms.AmendPensionsWorthBeforeForm.amendPensionsWorthBeforeForm
 import models.amendModels.AmendPensionsWorthBeforeModel
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.{CommonErrorMessages, FakeApplication}
@@ -35,28 +36,28 @@ class AmendPensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorM
 
       "provided with a valid model" in {
         val model  = AmendPensionsWorthBeforeModel(Some(1000.0))
-        val result = amendPensionsWorthBeforeForm("ip2016").fill(model)
+        val result = amendPensionsWorthBeforeForm(IndividualProtection2016.toString).fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid map with an amount equal to the maximum" in {
         val map    = validMap.updated("amendedPensionsTakenBeforeAmt", { Constants.npsMaxCurrency - 1 }.toString)
-        val result = amendPensionsWorthBeforeForm("ip2016").bind(map)
+        val result = amendPensionsWorthBeforeForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(AmendPensionsWorthBeforeModel(Some(Constants.npsMaxCurrency - 1)))
       }
 
       "provided with a valid map with an amount equal zero" in {
         val map    = validMap.updated("amendedPensionsTakenBeforeAmt", "0")
-        val result = amendPensionsWorthBeforeForm("ip2016").bind(map)
+        val result = amendPensionsWorthBeforeForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(AmendPensionsWorthBeforeModel(Some(0)))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map    = validMap.updated("amendedPensionsTakenBeforeAmt", "0.01")
-        val result = amendPensionsWorthBeforeForm("ip2016").bind(map)
+        val result = amendPensionsWorthBeforeForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(AmendPensionsWorthBeforeModel(Some(0.01)))
       }
@@ -67,10 +68,10 @@ class AmendPensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorM
       "has one error with the correct error message" when {
         "provided with an invalid value for amendedPensionsTakenBeforeAmt" in {
           val map    = validMap.updated("amendedPensionsTakenBeforeAmt", "-1")
-          val result = amendPensionsWorthBeforeForm("ip2016").bind(map)
+          val result = amendPensionsWorthBeforeForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorNegative(messageKey, "ip2016")
+          result.errors.head.message shouldBe errorNegative(messageKey, IndividualProtection2016.toString)
         }
       }
     }
@@ -81,35 +82,35 @@ class AmendPensionsWorthBeforeFormSpec extends FakeApplication with CommonErrorM
 
         "provided an answer of yes for amendedPensionsWorthBefore with no value for amendedPensionsTakenBeforeAmt" in {
           val map    = validMap.updated("amendedPensionsTakenBeforeAmt", "")
-          val result = amendPensionsWorthBeforeForm("ip2016").bind(map)
+          val result = amendPensionsWorthBeforeForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMissingAmount(messageKey, "ip2016")
+          result.errors.head.message shouldBe errorMissingAmount(messageKey, IndividualProtection2016.toString)
         }
 
         "provided an answer of yes for amendedPensionsWorthBefore with a value for amendedPensionsTakenBeforeAmt larger than the maximum" in {
           val map = validMap.updated("amendedPensionsTakenBeforeAmt", s"${Constants.npsMaxCurrency + 1}")
 
-          val result = amendPensionsWorthBeforeForm("ip2016").bind(map)
+          val result = amendPensionsWorthBeforeForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMaximum(messageKey, "ip2016")
+          result.errors.head.message shouldBe errorMaximum(messageKey, IndividualProtection2016.toString)
         }
 
         "provided an answer of yes for amendedPensionsWorthBefore with a value for amendedPensionsTakenBeforeAmt that is negative" in {
           val map    = validMap.updated("amendedPensionsTakenBeforeAmt", "-0.01")
-          val result = amendPensionsWorthBeforeForm("ip2016").bind(map)
+          val result = amendPensionsWorthBeforeForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorNegative(messageKey, "ip2016")
+          result.errors.head.message shouldBe errorNegative(messageKey, IndividualProtection2016.toString)
         }
 
         "provided an answer of yes for amendedPensionsWorthBefore with a value for amendedPensionsTakenBeforeAmt that has more than two decimal places" in {
           val map    = validMap.updated("amendedPensionsTakenBeforeAmt", "0.001")
-          val result = amendPensionsWorthBeforeForm("ip2016").bind(map)
+          val result = amendPensionsWorthBeforeForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorDecimal(messageKey, "ip2016")
+          result.errors.head.message shouldBe errorDecimal(messageKey, IndividualProtection2016.toString)
         }
       }
     }

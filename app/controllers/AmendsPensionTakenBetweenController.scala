@@ -22,6 +22,8 @@ import config.{FrontendAppConfig, PlaContext}
 import enums.ApplicationType
 import forms.AmendPensionsTakenBetweenForm._
 import models.amendModels._
+import models.pla.AmendProtectionLifetimeAllowanceType
+import models.pla.AmendProtectionLifetimeAllowanceType._
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -59,20 +61,22 @@ class AmendsPensionTakenBetweenController @Inject() (
               val yesNoValue =
                 if (data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes"
                 else "no"
-              protectionType match {
-                case "ip2016" =>
+              AmendProtectionLifetimeAllowanceType.fromOption(protectionType) match {
+                case Some(IndividualProtection2016) =>
                   Ok(
                     amendPensionsTakenBetween(
-                      amendPensionsTakenBetweenForm(protectionType).fill(AmendPensionsTakenBetweenModel(yesNoValue)),
-                      protectionType,
+                      amendPensionsTakenBetweenForm(IndividualProtection2016.toString)
+                        .fill(AmendPensionsTakenBetweenModel(yesNoValue)),
+                      IndividualProtection2016.toString,
                       status
                     )
                   )
-                case "ip2014" =>
+                case Some(IndividualProtection2014) =>
                   Ok(
                     amendIP14PensionsTakenBetween(
-                      amendPensionsTakenBetweenForm(protectionType).fill(AmendPensionsTakenBetweenModel(yesNoValue)),
-                      protectionType,
+                      amendPensionsTakenBetweenForm(IndividualProtection2014.toString)
+                        .fill(AmendPensionsTakenBetweenModel(yesNoValue)),
+                      IndividualProtection2014.toString,
                       status
                     )
                   )
@@ -94,11 +98,15 @@ class AmendsPensionTakenBetweenController @Inject() (
           .bindFromRequest()
           .fold(
             errors =>
-              protectionType match {
-                case "ip2016" =>
-                  Future.successful(BadRequest(amendPensionsTakenBetween(errors, protectionType, status)))
-                case "ip2014" =>
-                  Future.successful(BadRequest(amendIP14PensionsTakenBetween(errors, protectionType, status)))
+              AmendProtectionLifetimeAllowanceType.fromOption(protectionType) match {
+                case Some(IndividualProtection2016) =>
+                  Future.successful(
+                    BadRequest(amendPensionsTakenBetween(errors, IndividualProtection2016.toString, status))
+                  )
+                case Some(IndividualProtection2014) =>
+                  Future.successful(
+                    BadRequest(amendIP14PensionsTakenBetween(errors, IndividualProtection2014.toString, status))
+                  )
               },
             success =>
               fetchAmendProtectionModel(protectionType, status)

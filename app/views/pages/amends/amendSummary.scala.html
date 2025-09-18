@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.amendModels.AmendmentTypeModel
+@import common.Strings
 @import config.FrontendAppConfig
 
 @this(
@@ -81,11 +81,11 @@
 
     @if(!model.psoAdded){
         <p class="govuk-body">
-            <a class="govuk-link" href="@routes.AmendsPensionSharingOrderController.amendPsoDetails(model.protectionType.toLowerCase(), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
+            <a class="govuk-link" href="@routes.AmendsPensionSharingOrderController.amendPsoDetails(Strings.protectionTypeUrlString(Some(model.protectionType)), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
         </p>
     }
 
-    @form(action = routes.AmendsController.amendProtection(protectionType, status)) {
+    @form(action = routes.AmendsController.amendProtection(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
         @if(model.amended) {
             @govukInsetText(InsetText(
                 id = Some("declaration"),

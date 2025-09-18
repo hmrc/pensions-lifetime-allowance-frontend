@@ -15,7 +15,7 @@
  *@
 
 @import models.amendModels.AmendPensionsTakenBetweenModel
-@import common.Links
+@import common.Strings
 
 @this(
     layout: Layout,
@@ -41,7 +41,7 @@
     @errorSummary(amendPensionsTakenBetweenForm.errors)
     <h1 class="govuk-heading-xl">@Messages("pla.ip14PensionsTakenBetween.title")</h1>
 
-    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(protectionType, status)) {
+    @form(action = routes.AmendsPensionTakenBetweenController.submitAmendPensionsTakenBetween(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
         <ul class="govuk-list govuk-list--bullet">
             <li>@Messages("pla.pensionsTakenBetween.bullet.1")</li>
             <li>@Messages("pla.pensionsTakenBetween.bullet.2")</li>

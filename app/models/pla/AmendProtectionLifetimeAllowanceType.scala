@@ -20,31 +20,22 @@ import utils.{Enumerable, EnumerableInstance}
 
 sealed abstract class AmendProtectionLifetimeAllowanceType(
     name: String,
-    override val jsonValue: String,
-    val urlValue: String
+    override val jsonValue: String
 ) extends EnumerableInstance(name)
 
 object AmendProtectionLifetimeAllowanceType extends Enumerable.Implicits {
 
   case object IndividualProtection2014
-      extends AmendProtectionLifetimeAllowanceType("IndividualProtection2014", "INDIVIDUAL PROTECTION 2014", "ip2014")
+      extends AmendProtectionLifetimeAllowanceType("IndividualProtection2014", "INDIVIDUAL PROTECTION 2014")
 
   case object IndividualProtection2016
-      extends AmendProtectionLifetimeAllowanceType("IndividualProtection2016", "INDIVIDUAL PROTECTION 2016", "ip2016")
+      extends AmendProtectionLifetimeAllowanceType("IndividualProtection2016", "INDIVIDUAL PROTECTION 2016")
 
   case object IndividualProtection2014LTA
-      extends AmendProtectionLifetimeAllowanceType(
-        "IndividualProtection2014LTA",
-        "INDIVIDUAL PROTECTION 2014 LTA",
-        "ip2014-lta"
-      )
+      extends AmendProtectionLifetimeAllowanceType("IndividualProtection2014LTA", "INDIVIDUAL PROTECTION 2014 LTA")
 
   case object IndividualProtection2016LTA
-      extends AmendProtectionLifetimeAllowanceType(
-        "IndividualProtection2016LTA",
-        "INDIVIDUAL PROTECTION 2016 LTA",
-        "ip2016-lta"
-      )
+      extends AmendProtectionLifetimeAllowanceType("IndividualProtection2016LTA", "INDIVIDUAL PROTECTION 2016 LTA")
 
   val values: Seq[AmendProtectionLifetimeAllowanceType] = Seq(
     IndividualProtection2014,
@@ -66,11 +57,9 @@ object AmendProtectionLifetimeAllowanceType extends Enumerable.Implicits {
 
   def fromOption(str: String): Option[AmendProtectionLifetimeAllowanceType] =
     str.toLowerCase match {
-      case "ip2014"     => Some(IndividualProtection2014)
-      case "ip2016"     => Some(IndividualProtection2016)
-      case "ip2014-lta" => Some(IndividualProtection2014LTA)
-      case "ip2016-lta" => Some(IndividualProtection2016LTA)
-      case str          => valuesLowerCase.get(str)
+      case "ip2014" => Some(IndividualProtection2014)
+      case "ip2016" => Some(IndividualProtection2016)
+      case str      => valuesLowerCase.get(str.replace("-", ""))
     }
 
 }

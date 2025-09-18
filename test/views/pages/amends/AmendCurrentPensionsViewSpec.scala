@@ -16,7 +16,9 @@
 
 package views.pages.amends
 
+import common.Strings
 import forms.AmendCurrentPensionForm
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.CurrentPensionsViewMessages
@@ -29,13 +31,17 @@ class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPens
 
   "the AmendCurrentPensionsView" should {
     val amendCurrentPensionsForm =
-      AmendCurrentPensionForm.amendCurrentPensionForm("ip2016").bind(Map("amendedUKPensionAmt" -> "12000"))
+      AmendCurrentPensionForm
+        .amendCurrentPensionForm(IndividualProtection2016.toString)
+        .bind(Map("amendedUKPensionAmt" -> "12000"))
     lazy val view = app.injector.instanceOf[amendCurrentPensions]
-    lazy val doc  = Jsoup.parse(view.apply(amendCurrentPensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(amendCurrentPensionsForm, IndividualProtection2016.toString, "open").body)
 
-    val errorForm = AmendCurrentPensionForm.amendCurrentPensionForm("ip2016").bind(Map("amendedUKPensionAmt" -> "a"))
+    val errorForm = AmendCurrentPensionForm
+      .amendCurrentPensionForm(IndividualProtection2016.toString)
+      .bind(Map("amendedUKPensionAmt" -> "a"))
     lazy val errorView = app.injector.instanceOf[amendCurrentPensions]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "open").body)
     lazy val form      = doc.select("form")
 
     "have the correct title" in {
@@ -67,7 +73,7 @@ class AmendCurrentPensionsViewSpec extends CommonViewSpecHelper with CurrentPens
     "has a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsCurrentPensionController
-        .submitAmendCurrentPension("ip2016", "open")
+        .submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
         .url
       form.select("div.govuk-form-group > label").text() shouldBe plaCurrentPensionsLegendText
     }

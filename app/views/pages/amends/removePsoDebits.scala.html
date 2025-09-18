@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.amendModels.AmendmentTypeModel
+@import common.Strings
 
 
 @this(
@@ -33,11 +33,11 @@
 
     <p class="govuk-body">@Messages("pla.amends.pensionDebits.removePso")</p>
 
-    @form(action = routes.AmendsRemovePensionSharingOrderController.submitRemovePso(protectionType, status)) {
+    @form(action = routes.AmendsRemovePensionSharingOrderController.submitRemovePso(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
 
         @submitButton(Messages("pla.base.remove"))
 
-        <p class="govuk-body"><a class="govuk-link" href="@routes.AmendsController.amendsSummary(protectionType, status)" id="cancel-link">@Messages("pla.amends.pensionDebits.cancelRemove")</a></p>
+        <p class="govuk-body"><a class="govuk-link" href="@routes.AmendsController.amendsSummary(Strings.protectionTypeUrlString(Some(protectionType)), status)" id="cancel-link">@Messages("pla.amends.pensionDebits.cancelRemove")</a></p>
 
     }
 }

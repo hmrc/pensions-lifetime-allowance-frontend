@@ -17,11 +17,10 @@
 package constructors
 
 import common.Exceptions.{OptionNotDefinedException, RequiredValueNotDefinedException}
-import common.Helpers
+import common.{Helpers, Strings}
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 import models.pla.response.ProtectionStatus._
 import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType._
@@ -82,7 +81,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "No"
         )
@@ -93,7 +97,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "No"
         )
@@ -104,13 +113,23 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "£100,000"
         )
@@ -121,7 +140,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "£1,000,000.34"
         )
@@ -141,7 +165,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "No"
         )
@@ -152,7 +181,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "No"
         )
@@ -163,13 +197,23 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "£100,000"
         )
@@ -180,7 +224,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "£1,000,000.34"
         )
@@ -224,8 +273,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         status = Open.toString,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            AmendProtectionLifetimeAllowanceType.IndividualProtection2014.urlValue,
-            AmendProtectionRequestStatus.Open.urlValue
+            Strings.ProtectionTypeURL.IndividualProtection2014,
+            Strings.StatusURL.Open
           )
         ),
         psaCheckReference = Some(tstPSACheckRef),
@@ -248,8 +297,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         status = Dormant.toString,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            AmendProtectionLifetimeAllowanceType.IndividualProtection2014.urlValue,
-            AmendProtectionRequestStatus.Dormant.urlValue
+            Strings.ProtectionTypeURL.IndividualProtection2014,
+            Strings.StatusURL.Dormant
           )
         ),
         psaCheckReference = Some(tstPSACheckRef),
@@ -293,8 +342,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         status = Open.toString,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            AmendProtectionLifetimeAllowanceType.IndividualProtection2014.urlValue,
-            AmendProtectionRequestStatus.Open.urlValue
+            Strings.ProtectionTypeURL.IndividualProtection2014,
+            Strings.StatusURL.Open
           )
         ),
         psaCheckReference = Some(tstPSACheckRef),
@@ -403,8 +452,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         status = Dormant.toString,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            AmendProtectionLifetimeAllowanceType.IndividualProtection2016.urlValue,
-            AmendProtectionRequestStatus.Dormant.urlValue
+            Strings.ProtectionTypeURL.IndividualProtection2016,
+            Strings.StatusURL.Dormant
           )
         ),
         psaCheckReference = Some(tstPSACheckRef),
@@ -450,8 +499,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         status = Dormant.toString,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            AmendProtectionLifetimeAllowanceType.IndividualProtection2014.urlValue,
-            AmendProtectionRequestStatus.Dormant.urlValue
+            Strings.ProtectionTypeURL.IndividualProtection2014,
+            Strings.StatusURL.Dormant
           )
         ),
         psaCheckReference = Some(tstPSACheckRef),
@@ -1110,10 +1159,18 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
           Seq(
             AmendDisplayRowModel(
               "CurrentPsos-psoDetails",
-              changeLinkCall =
-                Some(controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "open")),
-              removeLinkCall =
-                Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso("ip2016", "open")),
+              changeLinkCall = Some(
+                controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails(
+                  Strings.ProtectionTypeURL.IndividualProtection2016,
+                  Strings.StatusURL.Open
+                )
+              ),
+              removeLinkCall = Some(
+                controllers.routes.AmendsRemovePensionSharingOrderController.removePso(
+                  Strings.ProtectionTypeURL.IndividualProtection2016,
+                  Strings.StatusURL.Open
+                )
+              ),
               "£1,000",
               "2 March 2017"
             )

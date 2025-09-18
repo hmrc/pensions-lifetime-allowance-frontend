@@ -16,7 +16,9 @@
 
 package views.pages.amends
 
+import common.Strings
 import forms.AmendPensionsTakenBeforeForm
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBeforeViewSpecMessages
@@ -31,16 +33,18 @@ class AmendIP14PensionsTakenBeforeViewSpec
 
   "the AmendIP14PensionsTakenBeforeView" should {
     val pensionsForm = AmendPensionsTakenBeforeForm
-      .amendPensionsTakenBeforeForm("ip2016")
+      .amendPensionsTakenBeforeForm(IndividualProtection2016.toString)
       .bind(Map("amendedPensionsTakenBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val view = app.injector.instanceOf[amendIP14PensionsTakenBefore]
-    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc =
+      Jsoup.parse(view.apply(pensionsForm, IndividualProtection2016.toString, "open").body)
 
     val errorForm = AmendPensionsTakenBeforeForm
-      .amendPensionsTakenBeforeForm("ip2016")
+      .amendPensionsTakenBeforeForm(IndividualProtection2016.toString)
       .bind(Map("amendedPensionsTakenBefore" -> "", "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val errorView = app.injector.instanceOf[amendIP14PensionsTakenBefore]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc =
+      Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "open").body)
 
     lazy val form = doc.select("form")
 
@@ -55,7 +59,7 @@ class AmendIP14PensionsTakenBeforeViewSpec
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController
-        .submitAmendPensionsTakenBefore("ip2016", "open")
+        .submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
         .url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
     }

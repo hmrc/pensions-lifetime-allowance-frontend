@@ -17,6 +17,7 @@
 package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
+import common.Strings
 import config._
 import mocks.AuthMock
 import models._
@@ -176,7 +177,8 @@ class AmendsPensionUsedBetweenControllerSpec
   "In AmendsPensionUsedBetweenController calling the .amendPensionsUsedBetween action" when {
     "not supplied with a stored model" in new Setup {
 
-      lazy val result = controller.amendPensionsUsedBetween("ip2016", "open")(fakeRequest)
+      lazy val result =
+        controller.amendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
@@ -184,7 +186,8 @@ class AmendsPensionUsedBetweenControllerSpec
 
     }
     "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" in new Setup {
-      lazy val result   = controller.amendPensionsUsedBetween("ip2016", "dormant")(fakeRequest)
+      lazy val result =
+        controller.amendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -200,7 +203,7 @@ class AmendsPensionUsedBetweenControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween("ip2016", "dormant"),
+            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedPensionsUsedBetweenAmt", "0")
           )
 
@@ -213,7 +216,7 @@ class AmendsPensionUsedBetweenControllerSpec
     "the data is invalid on validation" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween("ip2016", "dormant"),
+            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedPensionsUsedBetweenAmt", "yes")
           )
 
@@ -224,7 +227,7 @@ class AmendsPensionUsedBetweenControllerSpec
     "the data is valid with a no response" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween("ip2016", "dormant"),
+            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
             ("amendedPensionsUsedBetweenAmt", "0")
           )
 
@@ -234,7 +237,10 @@ class AmendsPensionUsedBetweenControllerSpec
 
       status(DataItem.result) shouldBe 303
 
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "dormant")}")
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeURL.IndividualProtection2016,
+          Strings.StatusURL.Dormant
+        )}")
     }
   }
 
@@ -243,7 +249,7 @@ class AmendsPensionUsedBetweenControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween("ip2014", "dormant"),
+            controller.submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
             ("amendedPensionsUsedBetweenAmt", "0")
           )
 
@@ -256,7 +262,10 @@ class AmendsPensionUsedBetweenControllerSpec
     "the data is invalid on validation" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween("ip2014", "dormant"),
+            controller.submitAmendPensionsUsedBetween(
+              Strings.ProtectionTypeURL.IndividualProtection2014,
+              Strings.StatusURL.Dormant
+            ),
             ("amendedPensionsUsedBetweenAmt", "yes")
           )
 
@@ -267,7 +276,10 @@ class AmendsPensionUsedBetweenControllerSpec
     "the data is valid with a no response" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsUsedBetween("ip2014", "dormant"),
+            controller.submitAmendPensionsUsedBetween(
+              Strings.ProtectionTypeURL.IndividualProtection2014,
+              Strings.StatusURL.Dormant
+            ),
             ("amendedPensionsUsedBetweenAmt", "0")
           )
 
@@ -277,7 +289,10 @@ class AmendsPensionUsedBetweenControllerSpec
 
       status(DataItem.result) shouldBe 303
 
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "dormant")}")
+      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
+          Strings.ProtectionTypeURL.IndividualProtection2014,
+          Strings.StatusURL.Dormant
+        )}")
     }
   }
 

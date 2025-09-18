@@ -113,6 +113,7 @@ pla.noNotificationId.paraOne.afterLink      = ar unrhyw adeg.
 ## Pensions Taken ##
 pla.pensionsTaken.mandatoryErr              = Atebwch y cwestiwn hwn
 pla.pensionsTaken.errors.mandatoryError.ip2016 = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016
+pla.pensionsTaken.errors.mandatoryError.IndividualProtection2016 = Dewiswch ''Iawn'' os digwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2016
 
 ## IP14 Pensions Taken ##
 pla.ip14PensionsTaken.title                 = A ddigwyddodd unrhyw un o''r canlynol cyn 6 Ebrill 2014?
@@ -122,6 +123,7 @@ pla.ip14PensionsTaken.legend                = Cyn 6 Ebrill 2014, a gawsoch eich 
 ## Pensions Taken Before ##
 pla.pensionsTakenBefore.title               = A gawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006?
 pla.pensionsTakenBefore.errors.mandatoryError.ip2016 = Dewiswch ''Iawn'' os cawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
+pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2016 = Dewiswch ''Iawn'' os cawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
 
 ## Pensions Worth Before ##
 pla.pensionsWorthBefore.title               = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2016?
@@ -137,21 +139,32 @@ pla.pensionsWorthBefore.bullet.2            = mae gennych bensiwn a godir o''r g
 pla.pensionsWorthBefore.para.3              = Darganfyddwch sut yn
 pla.pensionsWorthBefore.helpLinkText        = yr arweiniad technegol hwn ar werthuso''ch pensiynau
 pla.pensionsWorthBefore.amount.errors.mandatoryError.ip2016 = Nodwch werth y pensiynau hyn ar 5 Ebrill 2016
+pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2016 = Nodwch werth y pensiynau hyn ar 5 Ebrill 2016
 pla.pensionsWorthBefore.amount.errors.notReal.ip2016        = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn rhif, megis 10000.00
+pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2016        = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn rhif, megis 10000.00
 pla.pensionsWorthBefore.amount.errors.decimal.ip2016 = Mae gwerth y pensiynau hyn ar 5 Ebrill 2016 yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2016 = Mae gwerth y pensiynau hyn ar 5 Ebrill 2016 yn cynnwys gormod o rifau ar ôl y pwynt degol
 pla.pensionsWorthBefore.amount.errors.negative.ip2016 = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £0 neu fwy
+pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2016 = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £0 neu fwy
 pla.pensionsWorthBefore.amount.errors.max.ip2016 = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
+pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2016 = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
 
 ## IP14 Pensions Worth Before ##
 pla.pensionsWorthBefore.amount.errors.mandatoryError.ip2014 = Nodwch werth y pensiynau hyn ar 5 Ebrill 2014
+pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2014 = Nodwch werth y pensiynau hyn ar 5 Ebrill 2014
 pla.pensionsWorthBefore.amount.errors.notReal.ip2014        = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn rhif, megis 10000.00
+pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2014        = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn rhif, megis 10000.00
 pla.pensionsWorthBefore.amount.errors.decimal.ip2014 = Mae gwerth y pensiynau hyn ar 5 Ebrill 2014 yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2014 = Mae gwerth y pensiynau hyn ar 5 Ebrill 2014 yn cynnwys gormod o rifau ar ôl y pwynt degol
 pla.pensionsWorthBefore.amount.errors.negative.ip2014 = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £0 neu fwy
+pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2014 = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £0 neu fwy
 pla.pensionsWorthBefore.amount.errors.max.ip2014 = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
+pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2014 = Mae''n rhaid i werth y pensiynau hyn ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
 
 
 ## IP14 Pensions Taken Before ##
 pla.pensionsTakenBefore.errors.mandatoryError.ip2014 = Dewiswch ''Iawn'' os cawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
+pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2014 = Dewiswch ''Iawn'' os cawsoch incwm o unrhyw un o''ch pensiynau cyn 6 Ebrill 2006
 pla.ip14PensionsTakenBefore.question        = Beth oedd gwerth y pensiynau hyn ar 5 Ebrill 2014?
 pla.ip14PensionsTakenBefore.step.2          = Cyfrifwch y swm blynyddol yr oeddech yn gallu''i gael o''r pensiynau hyn (y gyfradd flynyddol) ar 5 Ebrill 2014.
 
@@ -161,11 +174,13 @@ pla.pensionsTakenBetween.bullet.1           = cawsoch arian o''ch pensiynau
 pla.pensionsTakenBetween.bullet.2           = trosglwyddwyd pensiwn gennych i gynllun a ddelir dramor
 pla.pensionsTakenBetween.bullet.3           = cawsoch eich pen-blwydd yn 75 ac roedd gennych gynilion pensiwn nad oeddech wedi cymryd hyd hynny
 pla.pensionsTakenBetween.errors.mandatoryError.ip2016 = Dewiswch ''Iawn'' os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o''ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
+pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2016 = Dewiswch ''Iawn'' os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o''ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
 
 pla.pensionsTakenBetween.legend             = Rhwng 6 Ebrill 2006 a 5 Ebrill 2016, a gawsoch eich pen-blwydd yn 75, a gymeroch arian o''ch pensiynau, neu a wnaethoch drosglwyddiad i bensiwn dramor?
 
 ## IP14 Pensions Taken Between ##
 pla.pensionsTakenBetween.errors.mandatoryError.ip2014 = Dewiswch ''Iawn'' os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o''ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
+pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2014 = Dewiswch ''Iawn'' os rhwng 6 Ebrill 2006 a 5 Ebrill 2016, cawsoch arian o''ch pensiynau, gwnaethoch drosglwyddo pensiwn dramor, neu cawsoch eich pen-blwydd yn 75 gydag arian mewn pensiwn o hyd.
 pla.ip14PensionsTakenBetween.title          = A ddigwyddodd unrhyw un o''r canlynol rhwng 6 Ebrill 2006 a 5 Ebrill 2014?
 pla.ip14PensionsTakenBetween.step.1         = Cymerwch y lwfans oes ar 5 Ebrill 2014 (£1.5m) a rhannwch ef â gwerth eich lwfans oes ar ddyddiad y digwyddiad.
 pla.ip14PensionsTakenBetween.para.2         = Gallwch ofyn i weinyddwr eich cynllun pensiwn roi gwybod i chi swm y lwfans oes yr ydych wedi''i ddefnyddio ar gyfer diogelwch unigol 2014.
@@ -186,17 +201,27 @@ pla.pensionsUsedBetween.para.3                      = Darllenwch arweiniad techn
 pla.pensionsUsedBetween.para.3.nonInput             = Darllenwch arweiniad technegol ar
 pla.pensionsUsedBetween.helpLinkText                = cyfrifo faint o lwfans oes yr ydych wedi''i ddefnyddio
 pla.pensionsUsedBetween.amount.errors.mandatoryError.ip2016= Nodwch faint o lwfans oes yr ydych wedi''i ddefnyddio
+pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2016= Nodwch faint o lwfans oes yr ydych wedi''i ddefnyddio
 pla.pensionsUsedBetween.amount.errors.notReal.ip2016       = Mae''n rhaid i faint o lwfans oes rydych wedi''i ddefnyddio fod yn rhif, megis 10000.00
+pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2016       = Mae''n rhaid i faint o lwfans oes rydych wedi''i ddefnyddio fod yn rhif, megis 10000.00
 pla.pensionsUsedBetween.amount.errors.decimal.ip2016       = Mae ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016       = Mae ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
 pla.pensionsUsedBetween.amount.errors.negative.ip2016      = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
+pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2016      = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
 pla.pensionsUsedBetween.amount.errors.max.ip2016           = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
+pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2016           = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
 
 ## IP14 Pensions Used Between ##
 pla.pensionsUsedBetween.amount.errors.mandatoryError.ip2014= Nodwch faint o lwfans oes yr ydych wedi''i ddefnyddio
+pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2014= Nodwch faint o lwfans oes yr ydych wedi''i ddefnyddio
 pla.pensionsUsedBetween.amount.errors.notReal.ip2014       = Mae''n rhaid i faint o lwfans oes rydych wedi''i ddefnyddio fod yn rhif, megis 10000.00
+pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2014       = Mae''n rhaid i faint o lwfans oes rydych wedi''i ddefnyddio fod yn rhif, megis 10000.00
 pla.pensionsUsedBetween.amount.errors.decimal.ip2014       = Mae ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2014       = Mae ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
 pla.pensionsUsedBetween.amount.errors.negative.ip2014      = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
+pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2014      = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £0 neu fwy
 pla.pensionsUsedBetween.amount.errors.max.ip2014           = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
+pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014           = Mae''n rhaid i ''Faint o lwfans oes yr ydych wedi''i ddefnyddio?'' fod yn £1,000,000,000 neu lai
 
 
 ## Overseas Pensions ##
@@ -205,21 +230,33 @@ pla.overseasPensions.question               = Dim ond cyfraniadau a wnaed rhwng 
 pla.overseasPensions.questionTwo            = Faint gwnaethoch gyfrannu?
 pla.overseasPensions.legend                 = A wnaethoch roi arian i mewn i gynllun pensiwn dramor rhwng 6 Ebrill 2006 a 5 Ebrill 2016?
 pla.overseasPensions.errors.mandatoryError.ip2016  = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.overseasPensions.errors.mandatoryError.IndividualProtection2016  = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
 pla.overseasPensions.amount.errors.mandatoryError.ip2016 = Nodwch faint y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016 = Nodwch faint y gwnaethoch ei gyfrannu
 pla.overseasPensions.amount.errors.notReal.ip2016 = Mae''n rhaid i faint y gwnaethoch ei gyfrannu fod yn rhif, megis 10000.00
+pla.overseasPensions.amount.errors.notReal.IndividualProtection2016 = Mae''n rhaid i faint y gwnaethoch ei gyfrannu fod yn rhif, megis 10000.00
 pla.overseasPensions.amount.errors.decimal.ip2016 = Mae ''Faint y gwnaethoch ei gyfrannu?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.overseasPensions.amount.errors.decimal.IndividualProtection2016 = Mae ''Faint y gwnaethoch ei gyfrannu?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
 pla.overseasPensions.amount.errors.negative.ip2016 = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £0 neu fwy
+pla.overseasPensions.amount.errors.negative.IndividualProtection2016 = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £0 neu fwy
 pla.overseasPensions.amount.errors.max.ip2016 = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £1,000,000,000 neu lai
+pla.overseasPensions.amount.errors.max.IndividualProtection2016 = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £1,000,000,000 neu lai
 
 ## IP14 Overseas Pensions ##
 pla.ip14OverseasPensions.question           = Dim ond cyfraniadau a wnaed rhwng 6 Ebrill 2006 a 5 Ebrill 2014 y cawsoch ryddhad treth y DU arnynt, y dylech eu cynnwys.
 pla.ip14OverseasPensions.legend             = A wnaethoch roi arian i mewn i gynllun pensiwn dramor rhwng 6 Ebrill 2006 a 5 Ebrill 2014?
 pla.overseasPensions.errors.mandatoryError.ip2014  = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
+pla.overseasPensions.errors.mandatoryError.IndividualProtection2014  = Dewiswch ''Iawn'' os ydych wedi rhoi arian mewn cynllun pensiwn a ddelir dramor
 pla.overseasPensions.amount.errors.mandatoryError.ip2014 = Nodwch faint y gwnaethoch ei gyfrannu
+pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014 = Nodwch faint y gwnaethoch ei gyfrannu
 pla.overseasPensions.amount.errors.notReal.ip2014 = Mae''n rhaid i faint y gwnaethoch ei gyfrannu fod yn rhif, megis 10000.00
+pla.overseasPensions.amount.errors.notReal.IndividualProtection2014 = Mae''n rhaid i faint y gwnaethoch ei gyfrannu fod yn rhif, megis 10000.00
 pla.overseasPensions.amount.errors.decimal.ip2014 = Mae ''Faint y gwnaethoch ei gyfrannu?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.overseasPensions.amount.errors.decimal.IndividualProtection2014 = Mae ''Faint y gwnaethoch ei gyfrannu?'' yn cynnwys gormod o rifau ar ôl y pwynt degol
 pla.overseasPensions.amount.errors.negative.ip2014 = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £0 neu fwy
+pla.overseasPensions.amount.errors.negative.IndividualProtection2014 = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £0 neu fwy
 pla.overseasPensions.amount.errors.max.ip2014 = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £1,000,000,000 neu lai
+pla.overseasPensions.amount.errors.max.IndividualProtection2014 = Mae''n rhaid i ''Faint y gwnaethoch ei gyfrannu?'' fod yn £1,000,000,000 neu lai
 
 
 ## CURRENT PENSIONS ##
@@ -236,20 +273,30 @@ pla.currentPensions.readGuidance.nonInput   = Darllenwch arweiniad technegol ar
 pla.currentPensions.helpLinkText            = sut i werthuso pensiynau nad ydych wedi''u cymryd hyd yn hyn?
 pla.currentPensions.question                = Peidiwch â chynnwys pensiynau yr ydych eisoes wedi''u cymryd na Phensiwn y Wladwriaeth.
 pla.currentPensions.amount.errors.mandatoryError.ip2016 = Nodwch werth eich pensiynau yn y DU ar 5 Ebrill 2016
+pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2016 = Nodwch werth eich pensiynau yn y DU ar 5 Ebrill 2016
 pla.currentPensions.amount.errors.notReal.ip2016 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn rhif, megis 10000.00
+pla.currentPensions.amount.errors.notReal.IndividualProtection2016 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn rhif, megis 10000.00
 pla.currentPensions.amount.errors.decimal.ip2016 = Mae gwerth eich pensiynau yn y DU ar 5 Ebrill 2016 yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.currentPensions.amount.errors.decimal.IndividualProtection2016 = Mae gwerth eich pensiynau yn y DU ar 5 Ebrill 2016 yn cynnwys gormod o rifau ar ôl y pwynt degol
 pla.currentPensions.amount.errors.negative.ip2016 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn £0 neu fwy
+pla.currentPensions.amount.errors.negative.IndividualProtection2016 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn £0 neu fwy
 pla.currentPensions.amount.errors.max.ip2016 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
+pla.currentPensions.amount.errors.max.IndividualProtection2016 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2016 fod yn £1,000,000,000 neu lai
 
 
 ## IP14 CURRENT PENSIONS ##
 pla.ip14CurrentPensions.title               = Beth oedd gwerth eich pensiynau''r DU ar 5 Ebrill 2014?
 pla.ip14CurrentPensions.hiddenTextPara      = Defnyddiwch ffigurau a oedd yn gywir ar 5 Ebrill 2014.
 pla.currentPensions.amount.errors.mandatoryError.ip2014 = Nodwch werth eich pensiynau yn y DU ar 5 Ebrill 2014
+pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014 = Nodwch werth eich pensiynau yn y DU ar 5 Ebrill 2014
 pla.currentPensions.amount.errors.notReal.ip2014 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn rhif, megis 10000.00
+pla.currentPensions.amount.errors.notReal.IndividualProtection2014 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn rhif, megis 10000.00
 pla.currentPensions.amount.errors.decimal.ip2014 = Mae gwerth eich pensiynau yn y DU ar 5 Ebrill 2014 yn cynnwys gormod o rifau ar ôl y pwynt degol
+pla.currentPensions.amount.errors.decimal.IndividualProtection2014 = Mae gwerth eich pensiynau yn y DU ar 5 Ebrill 2014 yn cynnwys gormod o rifau ar ôl y pwynt degol
 pla.currentPensions.amount.errors.negative.ip2014 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn £0 neu fwy
+pla.currentPensions.amount.errors.negative.IndividualProtection2014 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn £0 neu fwy
 pla.currentPensions.amount.errors.max.ip2014 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
+pla.currentPensions.amount.errors.max.IndividualProtection2014 = Mae''n rhaid i werth eich pensiynau yn y DU ar 5 Ebrill 2014 fod yn £1,000,000,000 neu lai
 
 
 

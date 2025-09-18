@@ -18,7 +18,7 @@ package common
 
 import enums.ApplicationType
 import models.ProtectionModel
-import models.pla.AmendProtectionLifetimeAllowanceType
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 import models.pla.response.{ProtectionStatus, ProtectionType}
 
 object Strings {
@@ -42,26 +42,47 @@ object Strings {
     cacheAmendmentKey(Some(protectionType), Some(status))
 
   private def cacheAmendmentKey(protectionType: Option[String], status: Option[String]): String =
-    statusString(status) + protectionTypeCacheKeyString(protectionType) + "Amendment"
+    statusString(status) + protectionTypeString(protectionType) + "Amendment"
 
   def protectionTypeString(modelProtectionType: Option[String]): String =
     modelProtectionType.flatMap(ProtectionType.from).map(_.toString).getOrElse("notRecorded")
 
-  def protectionTypeUrlString(modelProtectionType: Option[String]): String =
-    modelProtectionType
-      .flatMap(AmendProtectionLifetimeAllowanceType.fromOption)
-      .map(_.urlValue)
-      .getOrElse("notRecorded")
+  def protectionTypeUrlString(modelProtectionType: Option[String]): String = {
+    import AmendProtectionLifetimeAllowanceType._
 
-  def protectionTypeElementIdString(modelProtectionType: Option[String]): String = protectionTypeUrlString(
     modelProtectionType
-  ).toUpperCase
+      .flatMap(AmendProtectionLifetimeAllowanceType.fromOption) match {
+      case Some(IndividualProtection2014)    => ProtectionTypeURL.IndividualProtection2014
+      case Some(IndividualProtection2016)    => ProtectionTypeURL.IndividualProtection2016
+      case Some(IndividualProtection2014LTA) => ProtectionTypeURL.IndividualProtection2014LTA
+      case Some(IndividualProtection2016LTA) => ProtectionTypeURL.IndividualProtection2016LTA
+      case _                                 => "notRecorded"
+    }
+  }
 
-  private def protectionTypeCacheKeyString(modelProtectionType: Option[String]): String = protectionTypeElementIdString(
-    modelProtectionType
-  )
+  object ProtectionTypeURL {
+    val IndividualProtection2014: String    = "individual-protection-2014"
+    val IndividualProtection2016: String    = "individual-protection-2016"
+    val IndividualProtection2014LTA: String = "individual-protection-2014-lta"
+    val IndividualProtection2016LTA: String = "individual-protection-2016-lta"
+  }
 
   def statusString(modelStatus: Option[String]): String =
     modelStatus.flatMap(ProtectionStatus.from).map(_.toString).getOrElse("notRecorded")
+
+  def statusUrlString(modelStatus: Option[String]): String = {
+    import AmendProtectionRequestStatus._
+
+    modelStatus.flatMap(AmendProtectionRequestStatus.fromOption) match {
+      case Some(Open)    => StatusURL.Open
+      case Some(Dormant) => StatusURL.Dormant
+      case _             => "notRecorded"
+    }
+  }
+
+  object StatusURL {
+    val Open: String    = "open"
+    val Dormant: String = "dormant"
+  }
 
 }

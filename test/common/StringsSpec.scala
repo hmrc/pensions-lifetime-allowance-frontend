@@ -47,14 +47,12 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
   "cache key" should {
     "correctly generate the cache key" when {
       val testValues = Seq(
-        ("ip2014", "open")                         -> "OpenIP2014Amendment",
-        ("IndividualProtection2014", "Open")       -> "OpenIP2014Amendment",
-        ("ip2016", "dormant")                      -> "DormantIP2016Amendment",
-        ("IndividualProtection2016", "Dormant")    -> "DormantIP2016Amendment",
-        ("ip2014-lta", "dormant")                  -> "DormantIP2014-LTAAmendment",
-        ("IndividualProtection2014LTA", "Dormant") -> "DormantIP2014-LTAAmendment",
-        ("ip2016-lta", "open")                     -> "OpenIP2016-LTAAmendment",
-        ("IndividualProtection2016LTA", "Open")    -> "OpenIP2016-LTAAmendment"
+        ("ip2014", "open")                         -> "OpenIndividualProtection2014Amendment",
+        ("IndividualProtection2014", "Open")       -> "OpenIndividualProtection2014Amendment",
+        ("ip2016", "dormant")                      -> "DormantIndividualProtection2016Amendment",
+        ("IndividualProtection2016", "Dormant")    -> "DormantIndividualProtection2016Amendment",
+        ("IndividualProtection2014LTA", "Dormant") -> "DormantIndividualProtection2014LTAAmendment",
+        ("IndividualProtection2016LTA", "Open")    -> "OpenIndividualProtection2016LTAAmendment"
       )
 
       "saving a protection model to cache" when
@@ -97,7 +95,10 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
             version = None
           )
 
-          Strings.cacheAmendFetchString(protectionType.urlValue, status.urlValue) shouldBe Strings.cacheProtectionName(
+          val protectionTypeUrlString = Strings.protectionTypeUrlString(Some(protectionType.toString))
+          val statusUrlString         = Strings.statusUrlString(Some(status.toString))
+
+          Strings.cacheAmendFetchString(protectionTypeUrlString, statusUrlString) shouldBe Strings.cacheProtectionName(
             protectionModel
           )
         }
@@ -143,14 +144,8 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
       "the protection is IP2014" in {
         Strings.protectionTypeString(Some("IP2014")) shouldBe IndividualProtection2014.toString
       }
-      "the protection is IP2014-LTA" in {
-        Strings.protectionTypeString(Some("IP2014-LTA")) shouldBe IndividualProtection2014LTA.toString
-      }
       "the protection is IP2016" in {
         Strings.protectionTypeString(Some("IP2016")) shouldBe IndividualProtection2016.toString
-      }
-      "the protection is IP2016-LTA" in {
-        Strings.protectionTypeString(Some("IP2016-LTA")) shouldBe IndividualProtection2016LTA.toString
       }
       "the protection is primary" in {
         Strings.protectionTypeString(Some("Primary")) shouldBe PrimaryProtection.toString
@@ -185,76 +180,32 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
 
   "protectionTypeUrlString" should {
     "Populate the protection type URL string" when {
+      import Strings.{ProtectionTypeURL => urlString}
       import AmendProtectionLifetimeAllowanceType._
 
-      "the protection is IP2014" in {
-        Strings.protectionTypeUrlString(Some("IP2014")) shouldBe IndividualProtection2014.urlValue
-      }
-      "the protection is IP2014-LTA" in {
-        Strings.protectionTypeUrlString(Some("IP2014-LTA")) shouldBe IndividualProtection2014LTA.urlValue
-      }
-      "the protection is IP2016" in {
-        Strings.protectionTypeUrlString(Some("IP2016")) shouldBe IndividualProtection2016.urlValue
-      }
-      "the protection is IP2016-LTA" in {
-        Strings.protectionTypeUrlString(Some("IP2016-LTA")) shouldBe IndividualProtection2016LTA.urlValue
-      }
-
-      AmendProtectionLifetimeAllowanceType.values.foreach(protectionType =>
-        s"the protection is $protectionType" in {
-          Strings.protectionTypeUrlString(Some(protectionType.toString)) shouldBe protectionType.urlValue
-        }
+      val testCases = Seq(
+        "IP2014"                             -> urlString.IndividualProtection2014,
+        "IP2016"                             -> urlString.IndividualProtection2016,
+        IndividualProtection2014.toString    -> urlString.IndividualProtection2014,
+        IndividualProtection2016.toString    -> urlString.IndividualProtection2016,
+        IndividualProtection2014LTA.toString -> urlString.IndividualProtection2014LTA,
+        IndividualProtection2016LTA.toString -> urlString.IndividualProtection2016LTA
       )
-    }
 
-    "Populate the protection type URL string with notRecorded" when {
-      "the protection type is an unknown value" in {
-        Strings.protectionTypeUrlString(Some("unknown protection type")) shouldBe "notRecorded"
-      }
-
-      "the protection type is missing" in {
-        Strings.protectionTypeUrlString(None) shouldBe "notRecorded"
-      }
-    }
-  }
-
-  "protectionTypeElementIdString" should {
-    "Populate the protection type element Id string" when {
-      import AmendProtectionLifetimeAllowanceType._
-
-      "the protection is IP2014" in {
-        Strings.protectionTypeElementIdString(Some("IP2014")) shouldBe IndividualProtection2014.urlValue.toUpperCase
-      }
-      "the protection is IP2014-LTA" in {
-        Strings.protectionTypeElementIdString(
-          Some("IP2014-LTA")
-        ) shouldBe IndividualProtection2014LTA.urlValue.toUpperCase
-      }
-      "the protection is IP2016" in {
-        Strings.protectionTypeElementIdString(Some("IP2016")) shouldBe IndividualProtection2016.urlValue.toUpperCase
-      }
-      "the protection is IP2016-LTA" in {
-        Strings.protectionTypeElementIdString(
-          Some("IP2016-LTA")
-        ) shouldBe IndividualProtection2016LTA.urlValue.toUpperCase
-      }
-
-      AmendProtectionLifetimeAllowanceType.values.foreach(protectionType =>
-        s"the protection is $protectionType" in {
-          Strings.protectionTypeElementIdString(
-            Some(protectionType.toString)
-          ) shouldBe protectionType.urlValue.toUpperCase
+      testCases.foreach { case (protectionType, urlString) =>
+        s"the protection type is $protectionType" in {
+          Strings.protectionTypeUrlString(Some(protectionType)) shouldBe urlString
         }
-      )
-    }
-
-    "Populate the protection type element Id string with notRecorded" when {
-      "the protection type is an unknown value" in {
-        Strings.protectionTypeElementIdString(Some("unknown protection type")) shouldBe "NOTRECORDED"
       }
 
-      "the protection type is missing" in {
-        Strings.protectionTypeElementIdString(None) shouldBe "NOTRECORDED"
+      "Populate the protection type URL string with notRecorded" when {
+        "the protection type is an unknown value" in {
+          Strings.protectionTypeUrlString(Some("unknown protection type")) shouldBe "notRecorded"
+        }
+
+        "the protection type is missing" in {
+          Strings.protectionTypeUrlString(None) shouldBe "notRecorded"
+        }
       }
     }
   }

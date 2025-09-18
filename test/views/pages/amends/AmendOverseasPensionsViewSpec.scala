@@ -16,7 +16,9 @@
 
 package views.pages.amends
 
+import common.Strings
 import forms.AmendOverseasPensionsForm
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.OverseasPensionsViewMessages
@@ -29,16 +31,17 @@ class AmendOverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPe
 
   "the AmendOverseasPensionsView" should {
     val oPensionsForm = AmendOverseasPensionsForm
-      .amendOverseasPensionsForm("ip2016")
+      .amendOverseasPensionsForm(IndividualProtection2016.toString)
       .bind(Map("amendedOverseasPensions" -> "yes", "amendedOverseasPensionsAmt" -> "1234"))
     lazy val view = app.injector.instanceOf[amendOverseasPensions]
-    lazy val doc  = Jsoup.parse(view.apply(oPensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(oPensionsForm, IndividualProtection2016.toString, "open").body)
 
     val errorForm = AmendOverseasPensionsForm
-      .amendOverseasPensionsForm("ip2016")
+      .amendOverseasPensionsForm(IndividualProtection2016.toString)
       .bind(Map("amendedOverseasPensions" -> "", "amendedOverseasPensionsAmt" -> "1234"))
     lazy val errorView = app.injector.instanceOf[amendOverseasPensions]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc =
+      Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "open").body)
 
     lazy val form = doc.select("form")
     "have the correct title" in {
@@ -67,7 +70,7 @@ class AmendOverseasPensionsViewSpec extends CommonViewSpecHelper with OverseasPe
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsOverseasPensionController
-        .submitAmendOverseasPensions("ip2016", "open")
+        .submitAmendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
         .url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaOverseasPensionsLegendText
     }

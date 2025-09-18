@@ -18,6 +18,7 @@ package forms
 
 import forms.CurrentPensionsForm._
 import models.CurrentPensionsModel
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.{CommonErrorMessages, FakeApplication}
@@ -34,28 +35,28 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
 
       "provided with a valid model" in {
         val model  = CurrentPensionsModel(Some(1))
-        val result = currentPensionsForm("ip2016").fill(model)
+        val result = currentPensionsForm(IndividualProtection2016.toString).fill(model)
 
         result.data shouldBe Map("currentPensionsAmt" -> "1")
       }
 
       "provided with a valid form with an amount with two decimal places" in {
         val map    = Map("currentPensionsAmt" -> "0.01")
-        val result = currentPensionsForm("ip2016").bind(map)
+        val result = currentPensionsForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(CurrentPensionsModel(Some(0.01)))
       }
 
       "provided with a valid form with a zero amount" in {
         val map    = Map("currentPensionsAmt" -> "0")
-        val result = currentPensionsForm("ip2016").bind(map)
+        val result = currentPensionsForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(CurrentPensionsModel(Some(0)))
       }
 
       "provided with a valid form with the maximum amount" in {
         val map    = Map("currentPensionsAmt" -> { Constants.npsMaxCurrency - 1 }.toString)
-        val result = currentPensionsForm("ip2016").bind(map)
+        val result = currentPensionsForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(CurrentPensionsModel(Some(Constants.npsMaxCurrency - 1)))
       }
@@ -67,34 +68,46 @@ class CurrentPensionsFormSpec extends FakeApplication with CommonErrorMessages w
 
         "provided with no amount value" in {
           val map    = Map.empty[String, String]
-          val result = currentPensionsForm("ip2016").bind(map)
+          val result = currentPensionsForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.error("currentPensionsAmt").get.message shouldBe errorMissingAmount(messageKey, "ip2016")
+          result.error("currentPensionsAmt").get.message shouldBe errorMissingAmount(
+            messageKey,
+            IndividualProtection2016.toString
+          )
         }
 
         "provided with an amount value with over two decimal places" in {
           val map    = Map("currentPensionsAmt" -> "0.001")
-          val result = currentPensionsForm("ip2016").bind(map)
+          val result = currentPensionsForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.error("currentPensionsAmt").get.message shouldBe errorDecimal(messageKey, "ip2016")
+          result.error("currentPensionsAmt").get.message shouldBe errorDecimal(
+            messageKey,
+            IndividualProtection2016.toString
+          )
         }
 
         "provided with a negative amount value" in {
           val map    = Map("currentPensionsAmt" -> "-0.01")
-          val result = currentPensionsForm("ip2016").bind(map)
+          val result = currentPensionsForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.error("currentPensionsAmt").get.message shouldBe errorNegative(messageKey, "ip2016")
+          result.error("currentPensionsAmt").get.message shouldBe errorNegative(
+            messageKey,
+            IndividualProtection2016.toString
+          )
         }
 
         "provided with an amount value above the maximum" in {
           val map    = Map("currentPensionsAmt" -> Constants.npsMaxCurrency.toString)
-          val result = currentPensionsForm("ip2016").bind(map)
+          val result = currentPensionsForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.error("currentPensionsAmt").get.message shouldBe errorMaximum(messageKey, "ip2016")
+          result.error("currentPensionsAmt").get.message shouldBe errorMaximum(
+            messageKey,
+            IndividualProtection2016.toString
+          )
         }
       }
     }
