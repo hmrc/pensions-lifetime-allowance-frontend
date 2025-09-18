@@ -35,13 +35,10 @@ object Strings {
       case _                      => name
     }
 
-  def cacheProtectionName(protection: ProtectionModel): String =
-    cacheAmendmentKey(protection.protectionType, protection.status)
+  def protectionCacheKey(protectionType: String, status: String): String =
+    protectionCacheKey(Some(protectionType), Some(status))
 
-  def cacheAmendFetchString(protectionType: String, status: String): String =
-    cacheAmendmentKey(Some(protectionType), Some(status))
-
-  private def cacheAmendmentKey(protectionType: Option[String], status: Option[String]): String =
+  def protectionCacheKey(protectionType: Option[String], status: Option[String]): String =
     statusString(status) + protectionTypeString(protectionType) + "Amendment"
 
   def protectionTypeString(modelProtectionType: Option[String]): String =

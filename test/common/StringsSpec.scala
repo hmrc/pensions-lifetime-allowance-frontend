@@ -55,52 +55,9 @@ class StringsSpec extends AnyWordSpecLike with Matchers with OptionValues {
         ("IndividualProtection2016LTA", "Open")    -> "OpenIndividualProtection2016LTAAmendment"
       )
 
-      "saving a protection model to cache" when
-        testValues.foreach { case ((protectionType, status), expected) =>
-          s"protection type is $protectionType and status is $status" in {
-            val protectionModel = ProtectionModel(
-              protectionType = Some(protectionType),
-              status = Some(status),
-              psaCheckReference = None,
-              version = None,
-              protectionID = None
-            )
-
-            Strings.cacheProtectionName(protectionModel) shouldBe expected
-          }
-        }
-
-      "retrieving a protection from the cache" when
-        testValues.foreach { case ((protectionType, status), expected) =>
-          s"protection type is $protectionType and status is $status" in {
-            Strings.cacheAmendFetchString(protectionType, status) shouldBe expected
-          }
-        }
-    }
-
-    "use same cache key for saving and retrieving" when {
-
-      val testValues = for {
-        protectionType <- AmendProtectionLifetimeAllowanceType.values
-        status         <- AmendProtectionRequestStatus.values
-      } yield (protectionType, status)
-
-      testValues.foreach { case (protectionType, status) =>
+      testValues.foreach { case ((protectionType, status), expected) =>
         s"protection type is $protectionType and status is $status" in {
-          val protectionModel = ProtectionModel(
-            protectionType = Some(protectionType.toString),
-            status = Some(status.toString),
-            psaCheckReference = None,
-            protectionID = None,
-            version = None
-          )
-
-          val protectionTypeUrlString = Strings.protectionTypeUrlString(Some(protectionType.toString))
-          val statusUrlString         = Strings.statusUrlString(Some(status.toString))
-
-          Strings.cacheAmendFetchString(protectionTypeUrlString, statusUrlString) shouldBe Strings.cacheProtectionName(
-            protectionModel
-          )
+          Strings.protectionCacheKey(protectionType, status) shouldBe expected
         }
       }
     }

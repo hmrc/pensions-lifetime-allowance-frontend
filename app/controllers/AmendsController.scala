@@ -60,7 +60,7 @@ class AmendsController @Inject() (
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
     authFunction.genericAuthWithNino("existingProtections") { nino =>
-      val protectionKey = Strings.cacheAmendFetchString(protectionType, status)
+      val protectionKey = Strings.protectionCacheKey(protectionType, status)
       sessionCacheService.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
         case Some(amendModel) =>
           Ok(
@@ -121,7 +121,7 @@ class AmendsController @Inject() (
   private def fetchProtectionAmendment(protectionType: String, status: String)(
       implicit request: Request[AnyContent]
   ): Future[Option[AmendProtectionModel]] =
-    sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.cacheAmendFetchString(protectionType, status))
+    sessionCacheService.fetchAndGetFormData[AmendProtectionModel](Strings.protectionCacheKey(protectionType, status))
 
   private def saveAmendsGA(
       protectionAmendment: Option[AmendProtectionModel]

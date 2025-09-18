@@ -31,7 +31,7 @@ trait AmendControllerCacheHelper {
   val sessionCacheService: SessionCacheService
 
   private def cacheKey(protectionType: String, status: String): String =
-    Strings.cacheAmendFetchString(protectionType, status)
+    Strings.protectionCacheKey(protectionType, status)
 
   def fetchAmendProtectionModel(protectionType: String, status: String)(
       implicit request: MessagesRequest[_]
