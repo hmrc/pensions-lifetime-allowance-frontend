@@ -59,7 +59,7 @@ class AmendsOverseasPensionController @Inject() (
           .map {
             case Some(data) =>
               val yesNoValue = if (data.updatedProtection.nonUKRights.getOrElse[Double](0) > 0) "yes" else "no"
-              AmendProtectionLifetimeAllowanceType.fromOption(protectionType) match {
+              AmendProtectionLifetimeAllowanceType.tryFrom(protectionType) match {
                 case Some(IndividualProtection2016) =>
                   Ok(
                     amendOverseasPensions(
@@ -108,7 +108,7 @@ class AmendsOverseasPensionController @Inject() (
           .bindFromRequest()
           .fold(
             errors =>
-              AmendProtectionLifetimeAllowanceType.fromOption(protectionType) match {
+              AmendProtectionLifetimeAllowanceType.tryFrom(protectionType) match {
                 case Some(IndividualProtection2016) =>
                   Future
                     .successful(BadRequest(amendOverseasPensions(errors, IndividualProtection2016.toString, status)))

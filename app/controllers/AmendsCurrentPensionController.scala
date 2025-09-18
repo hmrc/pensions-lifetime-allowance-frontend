@@ -58,7 +58,7 @@ class AmendsCurrentPensionController @Inject() (
         fetchAmendProtectionModel(protectionType, status)
           .map {
             case Some(data) =>
-              AmendProtectionLifetimeAllowanceType.fromOption(protectionType) match {
+              AmendProtectionLifetimeAllowanceType.tryFrom(protectionType) match {
                 case Some(IndividualProtection2016) =>
                   Ok(
                     amendCurrentPensions(
@@ -109,7 +109,7 @@ class AmendsCurrentPensionController @Inject() (
           .bindFromRequest()
           .fold(
             errors =>
-              AmendProtectionLifetimeAllowanceType.fromOption(protectionType) match {
+              AmendProtectionLifetimeAllowanceType.tryFrom(protectionType) match {
                 case Some(IndividualProtection2016) =>
                   Future.successful(BadRequest(amendCurrentPensions(errors, IndividualProtection2016.toString, status)))
                 case Some(IndividualProtection2014) =>

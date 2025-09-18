@@ -47,9 +47,9 @@ case class ProtectionModel(
 
   def isAmendable: Boolean = {
     def isStatusAmendable: Boolean =
-      status.flatMap(AmendProtectionRequestStatus.fromOption).isDefined
+      status.flatMap(AmendProtectionRequestStatus.tryFrom).isDefined
     def isProtectionTypeAmendable: Boolean =
-      protectionType.flatMap(AmendProtectionLifetimeAllowanceType.fromOption).isDefined
+      protectionType.flatMap(AmendProtectionLifetimeAllowanceType.tryFrom).isDefined
 
     isStatusAmendable && isProtectionTypeAmendable
   }

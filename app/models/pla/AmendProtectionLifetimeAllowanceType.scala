@@ -47,7 +47,7 @@ object AmendProtectionLifetimeAllowanceType extends Enumerable.Implicits {
   implicit val toEnumerable: Enumerable[AmendProtectionLifetimeAllowanceType] =
     Enumerable(values.map(v => v.jsonValue -> v): _*)
 
-  def from(str: String): AmendProtectionLifetimeAllowanceType = fromOption(str)
+  def from(str: String): AmendProtectionLifetimeAllowanceType = tryFrom(str)
     .getOrElse(
       throw new IllegalArgumentException(s"Cannot create AmendProtectionLifetimeAllowanceType from String: $str")
     )
@@ -55,7 +55,7 @@ object AmendProtectionLifetimeAllowanceType extends Enumerable.Implicits {
   private val valuesLowerCase =
     values.map(protectionType => protectionType.toString.toLowerCase -> protectionType).toMap
 
-  def fromOption(str: String): Option[AmendProtectionLifetimeAllowanceType] =
+  def tryFrom(str: String): Option[AmendProtectionLifetimeAllowanceType] =
     str.toLowerCase match {
       case "ip2014" => Some(IndividualProtection2014)
       case "ip2016" => Some(IndividualProtection2016)

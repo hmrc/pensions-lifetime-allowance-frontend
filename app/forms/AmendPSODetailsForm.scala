@@ -40,7 +40,7 @@ object AmendPSODetailsForm extends CommonBinders {
           optMinDate = Some(
             if (
               AmendProtectionLifetimeAllowanceType
-                .fromOption(protectionType)
+                .tryFrom(protectionType)
                 .contains(AmendProtectionLifetimeAllowanceType.IndividualProtection2016)
             ) Constants.minIP16PSODate
             else Constants.minIP14PSODate

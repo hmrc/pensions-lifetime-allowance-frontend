@@ -45,13 +45,13 @@ object Strings {
     statusString(status) + protectionTypeString(protectionType) + "Amendment"
 
   def protectionTypeString(modelProtectionType: Option[String]): String =
-    modelProtectionType.flatMap(ProtectionType.from).map(_.toString).getOrElse("notRecorded")
+    modelProtectionType.flatMap(ProtectionType.tryFrom).map(_.toString).getOrElse("notRecorded")
 
   def protectionTypeUrlString(modelProtectionType: Option[String]): String = {
     import AmendProtectionLifetimeAllowanceType._
 
     modelProtectionType
-      .flatMap(AmendProtectionLifetimeAllowanceType.fromOption) match {
+      .flatMap(AmendProtectionLifetimeAllowanceType.tryFrom) match {
       case Some(IndividualProtection2014)    => ProtectionTypeURL.IndividualProtection2014
       case Some(IndividualProtection2016)    => ProtectionTypeURL.IndividualProtection2016
       case Some(IndividualProtection2014LTA) => ProtectionTypeURL.IndividualProtection2014LTA
@@ -68,12 +68,12 @@ object Strings {
   }
 
   def statusString(modelStatus: Option[String]): String =
-    modelStatus.flatMap(ProtectionStatus.from).map(_.toString).getOrElse("notRecorded")
+    modelStatus.flatMap(ProtectionStatus.tryFrom).map(_.toString).getOrElse("notRecorded")
 
   def statusUrlString(modelStatus: Option[String]): String = {
     import AmendProtectionRequestStatus._
 
-    modelStatus.flatMap(AmendProtectionRequestStatus.fromOption) match {
+    modelStatus.flatMap(AmendProtectionRequestStatus.tryFrom) match {
       case Some(Open)    => StatusURL.Open
       case Some(Dormant) => StatusURL.Dormant
       case _             => "notRecorded"

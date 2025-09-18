@@ -76,7 +76,7 @@ object ProtectionType extends Enumerable.Implicits {
   private val valuesLowerCase =
     values.map(protectionType => protectionType.toString.toLowerCase -> protectionType).toMap
 
-  def from(str: String): Option[ProtectionType] =
+  def tryFrom(str: String): Option[ProtectionType] =
     str.toLowerCase match {
       case "ip2014"   => Some(IndividualProtection2014)
       case "ip2016"   => Some(IndividualProtection2016)

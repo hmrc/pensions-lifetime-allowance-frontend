@@ -61,7 +61,7 @@ class AmendsPensionTakenBetweenController @Inject() (
               val yesNoValue =
                 if (data.updatedProtection.postADayBenefitCrystallisationEvents.getOrElse[Double](0) > 0) "yes"
                 else "no"
-              AmendProtectionLifetimeAllowanceType.fromOption(protectionType) match {
+              AmendProtectionLifetimeAllowanceType.tryFrom(protectionType) match {
                 case Some(IndividualProtection2016) =>
                   Ok(
                     amendPensionsTakenBetween(
@@ -98,7 +98,7 @@ class AmendsPensionTakenBetweenController @Inject() (
           .bindFromRequest()
           .fold(
             errors =>
-              AmendProtectionLifetimeAllowanceType.fromOption(protectionType) match {
+              AmendProtectionLifetimeAllowanceType.tryFrom(protectionType) match {
                 case Some(IndividualProtection2016) =>
                   Future.successful(
                     BadRequest(amendPensionsTakenBetween(errors, IndividualProtection2016.toString, status))

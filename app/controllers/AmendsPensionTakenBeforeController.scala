@@ -60,7 +60,7 @@ class AmendsPensionTakenBeforeController @Inject() (
             case Some(data) =>
               val yesNoValue =
                 if (data.updatedProtection.preADayPensionInPayment.getOrElse[Double](0) > 0) "yes" else "no"
-              AmendProtectionLifetimeAllowanceType.fromOption(protectionType) match {
+              AmendProtectionLifetimeAllowanceType.tryFrom(protectionType) match {
                 case Some(IndividualProtection2016) =>
                   Ok(
                     amendPensionsTakenBefore(
@@ -97,7 +97,7 @@ class AmendsPensionTakenBeforeController @Inject() (
           .bindFromRequest()
           .fold(
             errors =>
-              AmendProtectionLifetimeAllowanceType.fromOption(protectionType) match {
+              AmendProtectionLifetimeAllowanceType.tryFrom(protectionType) match {
                 case Some(IndividualProtection2016) =>
                   Future
                     .successful(BadRequest(amendPensionsTakenBefore(errors, IndividualProtection2016.toString, status)))

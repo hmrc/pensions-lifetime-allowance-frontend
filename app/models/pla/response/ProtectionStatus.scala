@@ -43,6 +43,6 @@ object ProtectionStatus extends Enumerable.Implicits {
 
   private val valuesLowerCase = values.map(status => status.toString.toLowerCase -> status).toMap
 
-  def from(str: String): Option[ProtectionStatus] = valuesLowerCase.get(str.toLowerCase)
+  def tryFrom(str: String): Option[ProtectionStatus] = valuesLowerCase.get(str.toLowerCase)
 
 }

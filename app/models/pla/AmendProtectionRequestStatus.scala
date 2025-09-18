@@ -31,11 +31,11 @@ object AmendProtectionRequestStatus extends Enumerable.Implicits {
   implicit val toEnumerable: Enumerable[AmendProtectionRequestStatus] =
     Enumerable(values.map(v => v.jsonValue -> v): _*)
 
-  def from(str: String): AmendProtectionRequestStatus = fromOption(str)
+  def from(str: String): AmendProtectionRequestStatus = tryFrom(str)
     .getOrElse(throw new IllegalArgumentException(s"Cannot create AmendProtectionRequestStatus from String: $str"))
 
   private def valuesLowerCase = values.map(status => status.toString.toLowerCase -> status).toMap
 
-  def fromOption(str: String): Option[AmendProtectionRequestStatus] = valuesLowerCase.get(str.toLowerCase)
+  def tryFrom(str: String): Option[AmendProtectionRequestStatus] = valuesLowerCase.get(str.toLowerCase)
 
 }
