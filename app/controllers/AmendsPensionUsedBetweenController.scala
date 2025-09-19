@@ -22,6 +22,8 @@ import config.{FrontendAppConfig, PlaContext}
 import enums.ApplicationType
 import forms.AmendPensionsUsedBetweenForm._
 import models.amendModels._
+import models.pla.AmendProtectionLifetimeAllowanceType
+import models.pla.AmendProtectionLifetimeAllowanceType._
 import play.api.Logging
 import play.api.i18n.I18nSupport
 import play.api.mvc._
@@ -56,11 +58,11 @@ class AmendsPensionUsedBetweenController @Inject() (
         fetchAmendProtectionModel(protectionType, status)
           .map {
             case Some(data) =>
-              protectionType match {
-                case "ip2016" =>
+              AmendProtectionLifetimeAllowanceType.tryFrom(protectionType) match {
+                case Some(IndividualProtection2016) =>
                   Ok(
                     amendPensionsUsedBetween(
-                      amendPensionsUsedBetweenForm(protectionType).fill(
+                      amendPensionsUsedBetweenForm(IndividualProtection2016.toString).fill(
                         AmendPensionsUsedBetweenModel(
                           Some(
                             Display.currencyInputDisplayFormat(
@@ -69,14 +71,14 @@ class AmendsPensionUsedBetweenController @Inject() (
                           )
                         )
                       ),
-                      protectionType,
+                      IndividualProtection2016.toString,
                       status
                     )
                   )
-                case "ip2014" =>
+                case Some(IndividualProtection2014) =>
                   Ok(
                     amendIP14PensionsUsedBetween(
-                      amendPensionsUsedBetweenForm(protectionType).fill(
+                      amendPensionsUsedBetweenForm(IndividualProtection2014.toString).fill(
                         AmendPensionsUsedBetweenModel(
                           Some(
                             Display.currencyInputDisplayFormat(
@@ -85,7 +87,7 @@ class AmendsPensionUsedBetweenController @Inject() (
                           )
                         )
                       ),
-                      protectionType,
+                      IndividualProtection2014.toString,
                       status
                     )
                   )
@@ -107,10 +109,14 @@ class AmendsPensionUsedBetweenController @Inject() (
           .bindFromRequest()
           .fold(
             errors =>
-              protectionType match {
-                case "ip2016" => Future.successful(BadRequest(amendPensionsUsedBetween(errors, protectionType, status)))
-                case "ip2014" =>
-                  Future.successful(BadRequest(amendIP14PensionsUsedBetween(errors, protectionType, status)))
+              AmendProtectionLifetimeAllowanceType.tryFrom(protectionType) match {
+                case Some(IndividualProtection2016) =>
+                  Future
+                    .successful(BadRequest(amendPensionsUsedBetween(errors, IndividualProtection2016.toString, status)))
+                case Some(IndividualProtection2014) =>
+                  Future.successful(
+                    BadRequest(amendIP14PensionsUsedBetween(errors, IndividualProtection2014.toString, status))
+                  )
               },
             success =>
               fetchAmendProtectionModel(protectionType, status)

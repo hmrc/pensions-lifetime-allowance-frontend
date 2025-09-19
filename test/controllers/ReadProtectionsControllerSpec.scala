@@ -24,6 +24,7 @@ import constructors.DisplayConstructors
 import generators.ModelGenerators
 import mocks.AuthMock
 import models.cache.CacheMap
+import models.pla.response.ProtectionType.IndividualProtection2016
 import models.pla.response.ProtectionStatus.{Dormant, Rejected}
 import models.{
   ExistingInactiveProtectionsDisplayModel,
@@ -148,7 +149,7 @@ class ReadProtectionsControllerSpec
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
     protectionID = Some(12345),
-    protectionType = Some("IP2016"),
+    protectionType = Some(IndividualProtection2016.toString),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
@@ -163,7 +164,7 @@ class ReadProtectionsControllerSpec
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
     protectionID = Some(12345),
-    protectionType = Some("IP2016"),
+    protectionType = Some(IndividualProtection2016.toString),
     status = Some(Rejected.toString),
     certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),

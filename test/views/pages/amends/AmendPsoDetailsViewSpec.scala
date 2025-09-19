@@ -16,7 +16,9 @@
 
 package views.pages.amends
 
+import common.Strings
 import forms.AmendPSODetailsForm
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.CommonErrorMessages
@@ -46,7 +48,8 @@ class AmendPsoDetailsViewSpec
       )
 
     lazy val view = app.injector.instanceOf[amendPsoDetails]
-    lazy val doc  = Jsoup.parse(view(pensionsForm, "ip2016", "open", true).body)
+    lazy val doc =
+      Jsoup.parse(view(pensionsForm, IndividualProtection2016.toString, "open", true).body)
 
     lazy val errorForm = AmendPSODetailsForm
       .amendPsoDetailsForm("")
@@ -60,7 +63,8 @@ class AmendPsoDetailsViewSpec
       )
 
     lazy val errorView = app.injector.instanceOf[amendPsoDetails]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "", false).body)
+    lazy val errorDoc =
+      Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "", false).body)
     lazy val pageTitle = s"$plaPsoDetailsTitle - $plaBaseAppName - GOV.UK"
 
     lazy val form = doc.select("form")
@@ -93,7 +97,7 @@ class AmendPsoDetailsViewSpec
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionSharingOrderController
-        .submitAmendPsoDetails("ip2016", "open", true)
+        .submitAmendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open", true)
         .url
     }
 

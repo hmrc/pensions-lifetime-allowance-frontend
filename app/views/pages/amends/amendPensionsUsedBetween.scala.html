@@ -16,7 +16,7 @@
 
 @import models.amendModels.AmendPensionsUsedBetweenModel
 @import play.api.data._
-@import common.Links
+@import common.{Links, Strings}
 
 @this(
     layout: Layout,
@@ -70,7 +70,7 @@
     <h1 class="govuk-heading-xl">@Messages("pla.pensionsUsedBetween.question")</h1>
     <p class="govuk-body">@Messages("pla.pensionsUsedBetween.para.1")</p>
 
-    @form(action = routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween(protectionType, status)) {
+    @form(action = routes.AmendsPensionUsedBetweenController.submitAmendPensionsUsedBetween(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
         @helpTextAccordion(
             id = "ip16-amend-pensions-used-between-help",
             summaryText = Messages("pla.pensionsUsedBetween.help"),

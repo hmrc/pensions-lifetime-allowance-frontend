@@ -18,6 +18,7 @@ package forms
 
 import forms.AmendPensionsTakenBetweenForm._
 import models.amendModels.AmendPensionsTakenBetweenModel
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.{CommonErrorMessages, FakeApplication}
@@ -34,14 +35,14 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
 
       "provided with a valid model" in {
         val model  = AmendPensionsTakenBetweenModel("yes")
-        val result = amendPensionsTakenBetweenForm("ip2016").fill(model)
+        val result = amendPensionsTakenBetweenForm(IndividualProtection2016.toString).fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid map with no amount" in {
         val map    = Map("amendedPensionsTakenBetween" -> "no")
-        val result = amendPensionsTakenBetweenForm("ip2016").bind(map)
+        val result = amendPensionsTakenBetweenForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(AmendPensionsTakenBetweenModel("no"))
       }
@@ -53,10 +54,13 @@ class AmendPensionsTakenBetweenFormSpec extends FakeApplication with CommonError
 
         "not provided with a value for amendedPensionsTakenBetween" in {
           val map    = validMap - "amendedPensionsTakenBetween"
-          val result = amendPensionsTakenBetweenForm("ip2016").bind(map)
+          val result = amendPensionsTakenBetweenForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.error("amendedPensionsTakenBetween").get.message shouldBe errorQuestion(messageKey, "ip2016")
+          result.error("amendedPensionsTakenBetween").get.message shouldBe errorQuestion(
+            messageKey,
+            IndividualProtection2016.toString
+          )
         }
       }
     }

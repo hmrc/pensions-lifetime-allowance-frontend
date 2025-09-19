@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunctionImpl
-import common.Exceptions
+import common.{Exceptions, Strings}
 import config._
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PLAConnector, PlaConnectorV2}
@@ -159,13 +159,19 @@ class AmendsControllerSpec
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController
+              .amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController
+              .amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "£100,000"
         )
@@ -176,7 +182,10 @@ class AmendsControllerSpec
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsCurrentPensionController
+              .amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "£1,000,000"
         )
@@ -210,7 +219,10 @@ class AmendsControllerSpec
     "there is no stored amends model" in {
       cacheFetchCondition[AmendProtectionModel](anyString())(None)
 
-      val result = controller.amendsSummary("ip2016", "open")(fakeRequest)
+      val result = controller.amendsSummary(
+        Strings.ProtectionTypeURL.IndividualProtection2016,
+        Strings.StatusURL.Open
+      )(fakeRequest)
 
       status(result) shouldBe 500
       verify(technicalErrorView).apply(eqTo(ApplicationType.existingProtections.toString))(any(), any())

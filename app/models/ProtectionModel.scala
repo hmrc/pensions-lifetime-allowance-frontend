@@ -46,17 +46,10 @@ case class ProtectionModel(
   def isEmpty: Boolean = this == ProtectionModel(None, None)
 
   def isAmendable: Boolean = {
-    def isStatusAmendable: Boolean = {
-      val amendableStatuses = AmendProtectionRequestStatus.allValues.map(_.toString).map(Some(_))
-
-      amendableStatuses.contains(status.map(_.toUpperCase))
-    }
-    def isProtectionTypeAmendable: Boolean = {
-      val amendableProtectionTypes =
-        (Seq("IP2014", "IP2016") ++ AmendProtectionLifetimeAllowanceType.allValues.map(_.toString)).map(Some(_))
-
-      amendableProtectionTypes.contains(protectionType.map(_.toUpperCase))
-    }
+    def isStatusAmendable: Boolean =
+      status.flatMap(AmendProtectionRequestStatus.tryFrom).isDefined
+    def isProtectionTypeAmendable: Boolean =
+      protectionType.flatMap(AmendProtectionLifetimeAllowanceType.tryFrom).isDefined
 
     isStatusAmendable && isProtectionTypeAmendable
   }

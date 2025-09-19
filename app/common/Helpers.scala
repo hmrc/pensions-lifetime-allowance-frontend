@@ -24,7 +24,7 @@ object Helpers {
 
   def createAmendCallIfRequired(protection: ProtectionModel): Option[Call] = {
     val status         = Strings.statusString(protection.status).toLowerCase
-    val protectionType = Strings.protectionTypeString(protection.protectionType).toLowerCase
+    val protectionType = Strings.protectionTypeUrlString(protection.protectionType).toLowerCase
     if (protection.isAmendable)
       Some(controllers.routes.AmendsController.amendsSummary(protectionType, status))
     else None
@@ -33,12 +33,12 @@ object Helpers {
   def createPsoRemoveCall(protection: ProtectionModel): Option[Call] =
     if (protection.isAmendable) {
       val status         = Strings.statusString(protection.status).toLowerCase
-      val protectionType = Strings.protectionTypeString(protection.protectionType).toLowerCase
+      val protectionType = Strings.protectionTypeUrlString(protection.protectionType).toLowerCase
       Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso(protectionType, status))
     } else None
 
   def createAmendCall(protection: ProtectionModel, applicationSection: ApplicationStage.Value): Call = {
-    val protectionType = Strings.protectionTypeString(protection.protectionType).toLowerCase
+    val protectionType = Strings.protectionTypeUrlString(protection.protectionType).toLowerCase
     val status         = Strings.statusString(protection.status).toLowerCase
 
     import ApplicationStage._

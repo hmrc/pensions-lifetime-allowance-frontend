@@ -16,7 +16,9 @@
 
 package views.pages.amends
 
+import common.Strings
 import forms.AmendPensionsUsedBetweenForm
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendIP14PensionsTakenBetweenViewSpecMessages
@@ -33,14 +35,16 @@ class AmendIP14PensionsUsedBetweenViewSpec
 
   "the AmendIP14PensionsUsedBetweenView" should {
     val pensionsForm = AmendPensionsUsedBetweenForm
-      .amendPensionsUsedBetweenForm("ip2016")
+      .amendPensionsUsedBetweenForm(IndividualProtection2016.toString)
       .bind(Map("amendedPensionsUsedBetweenAmt" -> "12345"))
     lazy val view = app.injector.instanceOf[amendIP14PensionsUsedBetween]
-    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, IndividualProtection2016.toString, "open").body)
 
-    val errorForm = AmendPensionsUsedBetweenForm.amendPensionsUsedBetweenForm("ip2016").bind(Map.empty[String, String])
+    val errorForm = AmendPensionsUsedBetweenForm
+      .amendPensionsUsedBetweenForm(IndividualProtection2016.toString)
+      .bind(Map.empty[String, String])
     lazy val errorView = app.injector.instanceOf[amendIP14PensionsUsedBetween]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "open").body)
 
     lazy val form = doc.select("form")
 
@@ -86,7 +90,7 @@ class AmendIP14PensionsUsedBetweenViewSpec
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionUsedBetweenController
-        .submitAmendPensionsUsedBetween("ip2016", "open")
+        .submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
         .url
     }
 

@@ -18,8 +18,8 @@ package common
 
 import enums.ApplicationType
 import models.ProtectionModel
-import models.pla.response.ProtectionStatus._
-import models.pla.response.ProtectionType._
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
+import models.pla.response.{ProtectionStatus, ProtectionType}
 
 object Strings {
 
@@ -35,33 +35,51 @@ object Strings {
       case _                      => name
     }
 
-  def cacheProtectionName(protection: ProtectionModel): String =
-    statusString(protection.status) + protectionTypeString(protection.protectionType) + "Amendment"
+  def protectionCacheKey(protectionType: String, status: String): String =
+    protectionCacheKey(Some(protectionType), Some(status))
 
-  def cacheAmendFetchString(protectionType: String, status: String): String =
-    status.toLowerCase + protectionType.toUpperCase + "Amendment"
+  def protectionCacheKey(protectionType: Option[String], status: Option[String]): String =
+    statusString(status) + protectionTypeString(protectionType) + "Amendment"
 
   def protectionTypeString(modelProtectionType: Option[String]): String =
-    modelProtectionType match {
-      case Some("FP2016") | Some(FixedProtection2016.toString)      => "FP2016"
-      case Some("IP2014") | Some(IndividualProtection2014.toString) => "IP2014"
-      case Some("IP2016") | Some(IndividualProtection2016.toString) => "IP2016"
-      case Some("Primary") | Some(PrimaryProtection.toString)       => "primary"
-      case Some("Enhanced") | Some(EnhancedProtection.toString)     => "enhanced"
-      case Some("Fixed") | Some(FixedProtection.toString)           => "fixed"
-      case Some("FP2014") | Some(FixedProtection2014.toString)      => "FP2014"
-      case _                                                        => "notRecorded"
+    modelProtectionType.flatMap(ProtectionType.tryFrom).map(_.toString).getOrElse("notRecorded")
+
+  def protectionTypeUrlString(modelProtectionType: Option[String]): String = {
+    import AmendProtectionLifetimeAllowanceType._
+
+    modelProtectionType
+      .flatMap(AmendProtectionLifetimeAllowanceType.tryFrom) match {
+      case Some(IndividualProtection2014)    => ProtectionTypeURL.IndividualProtection2014
+      case Some(IndividualProtection2016)    => ProtectionTypeURL.IndividualProtection2016
+      case Some(IndividualProtection2014LTA) => ProtectionTypeURL.IndividualProtection2014LTA
+      case Some(IndividualProtection2016LTA) => ProtectionTypeURL.IndividualProtection2016LTA
+      case _                                 => "notRecorded"
     }
+  }
+
+  object ProtectionTypeURL {
+    val IndividualProtection2014: String    = "individual-protection-2014"
+    val IndividualProtection2016: String    = "individual-protection-2016"
+    val IndividualProtection2014LTA: String = "individual-protection-2014-lta"
+    val IndividualProtection2016LTA: String = "individual-protection-2016-lta"
+  }
 
   def statusString(modelStatus: Option[String]): String =
-    modelStatus match {
-      case Some("Open") | Some(Open.toString)                 => "open"
-      case Some("Dormant") | Some(Dormant.toString)           => "dormant"
-      case Some("Withdrawn") | Some(Withdrawn.toString)       => "withdrawn"
-      case Some("Expired") | Some(Expired.toString)           => "expired"
-      case Some("Unsuccessful") | Some(Unsuccessful.toString) => "unsuccessful"
-      case Some("Rejected") | Some(Rejected.toString)         => "rejected"
-      case _                                                  => "notRecorded"
+    modelStatus.flatMap(ProtectionStatus.tryFrom).map(_.toString).getOrElse("notRecorded")
+
+  def statusUrlString(modelStatus: Option[String]): String = {
+    import AmendProtectionRequestStatus._
+
+    modelStatus.flatMap(AmendProtectionRequestStatus.tryFrom) match {
+      case Some(Open)    => StatusURL.Open
+      case Some(Dormant) => StatusURL.Dormant
+      case _             => "notRecorded"
     }
+  }
+
+  object StatusURL {
+    val Open: String    = "open"
+    val Dormant: String = "dormant"
+  }
 
 }

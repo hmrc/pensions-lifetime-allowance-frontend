@@ -17,6 +17,7 @@
 package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
+import common.Strings
 import config._
 import connectors.PLAConnector
 import mocks.AuthMock
@@ -132,14 +133,14 @@ class AmendsRemovePensionSharingOrderControllerSpec
     )
 
     "there is no amend protection model fetched from cache" in new Setup {
-      lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
+      lazy val result = controller.removePso(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
       status(result) shouldBe 500
     }
 
     "show the technical error page for existing protections" in new Setup {
-      lazy val result   = controller.removePso("ip2016", "open")(fakeRequest)
+      lazy val result   = controller.removePso(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -152,7 +153,8 @@ class AmendsRemovePensionSharingOrderControllerSpec
     }
 
     "have the correct cache control" in new Setup {
-      lazy val result = await(controller.removePso("ip2016", "open")(fakeRequest))
+      lazy val result =
+        await(controller.removePso(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest))
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
@@ -160,7 +162,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
     }
 
     "a valid amend protection model is fetched from cache" in new Setup {
-      lazy val result = controller.removePso("ip2016", "open")(fakeRequest)
+      lazy val result = controller.removePso(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
         Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList))
@@ -169,7 +171,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
     }
 
     "show the remove pso page with correct details" in new Setup {
-      lazy val result   = controller.removePso("ip2016", "open")(fakeRequest)
+      lazy val result   = controller.removePso(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -181,7 +183,10 @@ class AmendsRemovePensionSharingOrderControllerSpec
     }
 
     "return 500 if the an amend protection model could not be retrieved from cache" in new Setup {
-      object DataItem extends AuthorisedFakeRequestToPost(controller.removePso("ip2016", "open"))
+      object DataItem
+          extends AuthorisedFakeRequestToPost(
+            controller.removePso(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+          )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
@@ -207,14 +212,19 @@ class AmendsRemovePensionSharingOrderControllerSpec
     )
 
     val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
-    object DataItem extends AuthorisedFakeRequestToPost(controller.submitRemovePso("ip2016", "open"))
+    object DataItem
+        extends AuthorisedFakeRequestToPost(
+          controller.submitRemovePso(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+        )
 
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
     cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
     status(DataItem.result) shouldBe 303
-    redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "open")}")
+    redirectLocation(DataItem.result) shouldBe Some(
+      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2016, "open")}"
+    )
 
   }
 

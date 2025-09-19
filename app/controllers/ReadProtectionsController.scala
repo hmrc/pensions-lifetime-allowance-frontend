@@ -111,10 +111,12 @@ class ReadProtectionsController @Inject() (
     model.inactiveProtections.filter(_.isAmendable) ++
       model.activeProtection.filter(_.isAmendable)
 
-  private def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]): Future[CacheMap] =
+  private def saveProtection(protection: ProtectionModel)(implicit request: Request[AnyContent]): Future[CacheMap] = {
+    val cacheKey = Strings.protectionCacheKey(protection.protectionType, protection.status)
     sessionCacheService.saveFormData[AmendProtectionModel](
-      Strings.cacheProtectionName(protection),
+      cacheKey,
       AmendProtectionModel(protection, protection)
     )
+  }
 
 }

@@ -18,6 +18,7 @@ package forms
 
 import forms.AmendPensionsUsedBetweenForm._
 import models.amendModels.AmendPensionsUsedBetweenModel
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.{CommonErrorMessages, FakeApplication}
@@ -35,28 +36,28 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
 
       "provided with a valid model" in {
         val model  = AmendPensionsUsedBetweenModel(Some(1000.0))
-        val result = amendPensionsUsedBetweenForm("ip2016").fill(model)
+        val result = amendPensionsUsedBetweenForm(IndividualProtection2016.toString).fill(model)
 
         result.data shouldBe validMap
       }
 
       "provided with a valid map with an amount equal to the maximum" in {
         val map    = validMap.updated("amendedPensionsUsedBetweenAmt", { Constants.npsMaxCurrency - 1 }.toString)
-        val result = amendPensionsUsedBetweenForm("ip2016").bind(map)
+        val result = amendPensionsUsedBetweenForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(Constants.npsMaxCurrency - 1)))
       }
 
       "provided with a valid map with an amount equal zero" in {
         val map    = validMap.updated("amendedPensionsUsedBetweenAmt", "0")
-        val result = amendPensionsUsedBetweenForm("ip2016").bind(map)
+        val result = amendPensionsUsedBetweenForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(0)))
       }
 
       "provided with a valid map with an amount with two decimal places" in {
         val map    = validMap.updated("amendedPensionsUsedBetweenAmt", "0.01")
-        val result = amendPensionsUsedBetweenForm("ip2016").bind(map)
+        val result = amendPensionsUsedBetweenForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(AmendPensionsUsedBetweenModel(Some(0.01)))
       }
@@ -67,10 +68,10 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
       "has one error with the correct error message" when {
         "provided with an invalid value for amendedPensionsUsedBetweenAmt" in {
           val map    = validMap.updated("amendedPensionsUsedBetweenAmt", "-1")
-          val result = amendPensionsUsedBetweenForm("ip2016").bind(map)
+          val result = amendPensionsUsedBetweenForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorNegative(messageKey, "ip2016")
+          result.errors.head.message shouldBe errorNegative(messageKey, IndividualProtection2016.toString)
         }
       }
     }
@@ -81,35 +82,35 @@ class AmendPensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorM
 
         "provided an answer of yes for amendedPensionsUsedBetween with no value for amendedPensionsUsedBetweenAmt" in {
           val map    = validMap.updated("amendedPensionsUsedBetweenAmt", "")
-          val result = amendPensionsUsedBetweenForm("ip2016").bind(map)
+          val result = amendPensionsUsedBetweenForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMissingAmount(messageKey, "ip2016")
+          result.errors.head.message shouldBe errorMissingAmount(messageKey, IndividualProtection2016.toString)
         }
 
         "provided an answer of yes for amendedPensionsUsedBetween with a value for amendedPensionsUsedBetweenAmt larger than the maximum" in {
           val map = validMap.updated("amendedPensionsUsedBetweenAmt", s"${Constants.npsMaxCurrency + 1}")
 
-          val result = amendPensionsUsedBetweenForm("ip2016").bind(map)
+          val result = amendPensionsUsedBetweenForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorMaximum(messageKey, "ip2016")
+          result.errors.head.message shouldBe errorMaximum(messageKey, IndividualProtection2016.toString)
         }
 
         "provided an answer of yes for amendedPensionsUsedBetween with a value for amendedPensionsUsedBetweenAmt that is negative" in {
           val map    = validMap.updated("amendedPensionsUsedBetweenAmt", "-0.01")
-          val result = amendPensionsUsedBetweenForm("ip2016").bind(map)
+          val result = amendPensionsUsedBetweenForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorNegative(messageKey, "ip2016")
+          result.errors.head.message shouldBe errorNegative(messageKey, IndividualProtection2016.toString)
         }
 
         "provided an answer of yes for amendedPensionsUsedBetween with a value for amendedPensionsUsedBetweenAmt that has more than two decimal places" in {
           val map    = validMap.updated("amendedPensionsUsedBetweenAmt", "0.001")
-          val result = amendPensionsUsedBetweenForm("ip2016").bind(map)
+          val result = amendPensionsUsedBetweenForm(IndividualProtection2016.toString).bind(map)
 
           result.errors.size shouldBe 1
-          result.errors.head.message shouldBe errorDecimal(messageKey, "ip2016")
+          result.errors.head.message shouldBe errorDecimal(messageKey, IndividualProtection2016.toString)
         }
       }
     }

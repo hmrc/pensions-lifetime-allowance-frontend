@@ -14,6 +14,7 @@
  * limitations under the License.
  *@
 
+@import common.Strings
 @import models.amendModels.AmendOverseasPensionsModel
 @import play.api.data._
 
@@ -53,7 +54,7 @@
 
     <h1 class="govuk-heading-xl">@Messages("pla.overseasPensions.title")</h1>
 
-    @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions(protectionType, status)) {
+    @form(action = routes.AmendsOverseasPensionController.submitAmendOverseasPensions(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
 
         <p class="govuk-body">@Messages("pla.ip14OverseasPensions.question")</p>
 

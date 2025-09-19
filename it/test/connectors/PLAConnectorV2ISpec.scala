@@ -20,7 +20,6 @@ import common.Exceptions
 import com.github.tomakehurst.wiremock.client.WireMock._
 import connectors.PlaConnectorError.{
   ConflictResponseError,
-  GenericPlaConnectorError,
   IncorrectResponseBodyError,
   LockedResponseError,
   UnexpectedResponseError
@@ -77,10 +76,10 @@ class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
       s"""{
          |    "lifetimeAllowanceIdentifier": $lifetimeAllowanceIdentifier,
          |    "lifetimeAllowanceSequenceNumber": ${lifetimeAllowanceSequenceNumber + 1},
-         |    "lifetimeAllowanceType": "${AmendProtectionLifetimeAllowanceType.IndividualProtection2014.toString}",
+         |    "lifetimeAllowanceType": "${AmendProtectionLifetimeAllowanceType.IndividualProtection2014.jsonValue}",
          |    "certificateDate": "2025-07-15",
          |    "certificateTime": "174312",
-         |    "status": "${AmendProtectionResponseStatus.Dormant.toString}",
+         |    "status": "${AmendProtectionResponseStatus.Dormant.jsonValue}",
          |    "protectionReference": "$protectionReference",
          |    "relevantAmount": 105000,
          |    "preADayPensionInPaymentAmount": 1500,

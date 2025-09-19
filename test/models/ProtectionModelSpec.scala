@@ -18,7 +18,7 @@ package models
 
 import generators.ModelGenerators
 import models.pla.AmendProtectionLifetimeAllowanceType._
-import models.pla.AmendProtectionRequestStatus
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
@@ -28,21 +28,12 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
 
     "return true" when {
 
-      val amendableStatuses =
-        Seq(
-          "open",
-          "dormant",
-          AmendProtectionRequestStatus.Open.toString,
-          AmendProtectionRequestStatus.Dormant.toString
-        )
+      val amendableStatuses = AmendProtectionRequestStatus.values.map(_.toString)
       val amendableProtectionTypes = Seq(
         "ip2014",
-        "ip2016",
-        IndividualProtection2014.toString,
-        IndividualProtection2016.toString,
-        IndividualProtection2014Lta.toString,
-        IndividualProtection2016Lta.toString
-      )
+        "ip2016"
+      ) ++ AmendProtectionLifetimeAllowanceType.values.map(_.toString)
+
       val allAmendableCombinations = for {
         status         <- amendableStatuses
         protectionType <- amendableProtectionTypes
@@ -79,12 +70,12 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
         None            -> Some("ip2016"),
         Some("other")   -> Some(IndividualProtection2014.toString),
         Some("other")   -> Some(IndividualProtection2016.toString),
-        Some("other")   -> Some(IndividualProtection2014Lta.toString),
-        Some("other")   -> Some(IndividualProtection2016Lta.toString),
+        Some("other")   -> Some(IndividualProtection2014LTA.toString),
+        Some("other")   -> Some(IndividualProtection2016LTA.toString),
         None            -> Some(IndividualProtection2014.toString),
         None            -> Some(IndividualProtection2016.toString),
-        None            -> Some(IndividualProtection2014Lta.toString),
-        None            -> Some(IndividualProtection2016Lta.toString)
+        None            -> Some(IndividualProtection2014LTA.toString),
+        None            -> Some(IndividualProtection2016LTA.toString)
       )
 
       testScenarios.foreach { case (status, protectionType) =>

@@ -18,16 +18,16 @@ package models.pla.response
 
 import utils.{Enumerable, EnumerableInstance}
 
-sealed abstract class ProtectionStatus(value: String) extends EnumerableInstance(value)
+sealed abstract class ProtectionStatus(name: String, override val jsonValue: String) extends EnumerableInstance(name)
 
 object ProtectionStatus extends Enumerable.Implicits {
 
-  case object Open         extends ProtectionStatus("OPEN")
-  case object Dormant      extends ProtectionStatus("DORMANT")
-  case object Withdrawn    extends ProtectionStatus("WITHDRAWN")
-  case object Expired      extends ProtectionStatus("EXPIRED")
-  case object Unsuccessful extends ProtectionStatus("UNSUCCESSFUL")
-  case object Rejected     extends ProtectionStatus("REJECTED")
+  case object Open         extends ProtectionStatus("Open", "OPEN")
+  case object Dormant      extends ProtectionStatus("Dormant", "DORMANT")
+  case object Withdrawn    extends ProtectionStatus("Withdrawn", "WITHDRAWN")
+  case object Expired      extends ProtectionStatus("Expired", "EXPIRED")
+  case object Unsuccessful extends ProtectionStatus("Unsuccessful", "UNSUCCESSFUL")
+  case object Rejected     extends ProtectionStatus("Rejected", "REJECTED")
 
   val values: Seq[ProtectionStatus] = Seq(
     Open,
@@ -39,6 +39,10 @@ object ProtectionStatus extends Enumerable.Implicits {
   )
 
   implicit val enumerable: Enumerable[ProtectionStatus] =
-    Enumerable(values.map(v => v.toString -> v): _*)
+    Enumerable(values.map(v => v.jsonValue -> v): _*)
+
+  private val valuesLowerCase = values.map(status => status.toString.toLowerCase -> status).toMap
+
+  def tryFrom(str: String): Option[ProtectionStatus] = valuesLowerCase.get(str.toLowerCase)
 
 }

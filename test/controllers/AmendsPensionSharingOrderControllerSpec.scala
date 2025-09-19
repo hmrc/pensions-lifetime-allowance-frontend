@@ -18,6 +18,7 @@ package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl}
 import common.Exceptions.RequiredValueNotDefinedException
+import common.Strings
 import config._
 import connectors.PLAConnector
 import constructors.DisplayConstructors
@@ -196,13 +197,19 @@ class AmendsPensionSharingOrderControllerSpec
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController
+              .amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController
+              .amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "£100,000"
         )
@@ -213,7 +220,10 @@ class AmendsPensionSharingOrderControllerSpec
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsCurrentPensionController
+              .amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "£1,000,000"
         )
@@ -289,14 +299,16 @@ class AmendsPensionSharingOrderControllerSpec
 
     "there is no amendment model fetched from cache" in new Setup {
 
-      lazy val result = controller.amendPsoDetails("ip2014", "open")(fakeRequest)
+      lazy val result =
+        controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2014, "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
       status(result) shouldBe 500
     }
     "show the technical error page for existing protections" in new Setup {
-      lazy val result   = controller.amendPsoDetails("ip2014", "open")(fakeRequest)
+      lazy val result =
+        controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2014, "open")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -311,7 +323,8 @@ class AmendsPensionSharingOrderControllerSpec
 
     "there is no PSO list stored in the AmendProtectionModel" in new Setup {
 
-      lazy val result   = controller.amendPsoDetails("ip2014", "open")(fakeRequest)
+      lazy val result =
+        controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2014, "open")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -328,7 +341,8 @@ class AmendsPensionSharingOrderControllerSpec
 
     "there is an empty PSO list stored in the AmendProtectionModel" in new Setup {
 
-      lazy val result   = controller.amendPsoDetails("ip2016", "open")(fakeRequest)
+      lazy val result =
+        controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -345,7 +359,10 @@ class AmendsPensionSharingOrderControllerSpec
 
     "there is a PSO list of one PSO stored in the AmendProtectionModel" in new Setup {
 
-      object DataItem extends AuthorisedFakeRequestTo(controller.amendPsoDetails("ip2016", "open"))
+      object DataItem
+          extends AuthorisedFakeRequestTo(
+            controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+          )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
@@ -363,7 +380,8 @@ class AmendsPensionSharingOrderControllerSpec
 
     "there is a PSO list of more then one PSO stored in the AmendProtectionModel" in new Setup {
 
-      lazy val result   = controller.amendPsoDetails("ip2016", "open")(fakeRequest)
+      lazy val result =
+        controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -386,7 +404,11 @@ class AmendsPensionSharingOrderControllerSpec
 
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPsoDetails(protectionType = "ip2014", status = "open", existingPSO = true),
+            controller.submitAmendPsoDetails(
+              protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
+              status = "open",
+              existingPSO = true
+            ),
             ("pso.day", "6"),
             ("pso.month", "4"),
             ("pso.year", "2014"),
@@ -399,14 +421,20 @@ class AmendsPensionSharingOrderControllerSpec
         .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
       status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2014", "open")}")
+      redirectLocation(DataItem.result) shouldBe Some(
+        s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2014, "open")}"
+      )
     }
 
     "submitting valid data for IP16" in new Setup {
 
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPsoDetails(protectionType = "ip2016", status = "open", existingPSO = true),
+            controller.submitAmendPsoDetails(
+              protectionType = Strings.ProtectionTypeURL.IndividualProtection2016,
+              status = "open",
+              existingPSO = true
+            ),
             ("pso.day", "6"),
             ("pso.month", "4"),
             ("pso.year", "2016"),
@@ -419,14 +447,20 @@ class AmendsPensionSharingOrderControllerSpec
         .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
       status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary("ip2016", "open")}")
+      redirectLocation(DataItem.result) shouldBe Some(
+        s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2016, "open")}"
+      )
     }
 
     "submitting invalid data" in new Setup {
 
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPsoDetails(protectionType = "ip2014", status = "open", existingPSO = true),
+            controller.submitAmendPsoDetails(
+              protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
+              status = "open",
+              existingPSO = true
+            ),
             ("pso.day", ""),
             ("pso.month", "1"),
             ("pso.year", "2015"),
@@ -441,7 +475,11 @@ class AmendsPensionSharingOrderControllerSpec
 
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPsoDetails(protectionType = "ip2014", status = "open", existingPSO = true),
+            controller.submitAmendPsoDetails(
+              protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
+              status = "open",
+              existingPSO = true
+            ),
             ("pso.day", "36"),
             ("pso.month", "1"),
             ("pso.year", "2015"),

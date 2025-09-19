@@ -17,6 +17,7 @@
 package views.pages.amends
 
 import forms.AmendPensionsWorthBeforeForm
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import org.scalatestplus.mockito.MockitoSugar
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
@@ -32,10 +33,11 @@ class AmendIP14PensionsWorthBeforeViewSpec
 
   "the AmendIP14PensionsWorthBeforeView" should {
     val pensionsForm = AmendPensionsWorthBeforeForm
-      .amendPensionsWorthBeforeForm("ip2016")
+      .amendPensionsWorthBeforeForm(IndividualProtection2016.toString)
       .bind(Map("amendedPensionsWorthBefore" -> "yes", "amendedPensionsTakenBeforeAmt" -> "12345"))
     lazy val view = app.injector.instanceOf[amendIP14PensionsWorthBefore]
-    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc =
+      Jsoup.parse(view.apply(pensionsForm, IndividualProtection2016.toString, "open").body)
 
     "have the correct old title when applyFor2016IPAndFpShutterEnabled is disabled" in {
       doc.title() shouldBe plaIP14PensionsWorthBeforeTitle

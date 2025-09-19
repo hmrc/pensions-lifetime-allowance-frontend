@@ -16,7 +16,9 @@
 
 package views.pages.amends
 
+import common.Strings
 import forms.AmendPensionsTakenBetweenForm
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.ip2016.{PensionsTakenBetweenViewMessages, PensionsUsedBetweenViewMessages}
@@ -32,23 +34,23 @@ class AmendPensionsTakenBetweenViewSpec
 
   "the AmendPensionsTakenBetweenView" should {
     val pensionsForm = AmendPensionsTakenBetweenForm
-      .amendPensionsTakenBetweenForm("ip2016")
+      .amendPensionsTakenBetweenForm(IndividualProtection2016.toString)
       .bind(Map("amendedPensionsTakenBetween" -> "yes", "amendedPensionsTakenBetweenAmt" -> "12345"))
     lazy val view = app.injector.instanceOf[amendPensionsTakenBetween]
-    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, "ip2016", "open").body)
+    lazy val doc  = Jsoup.parse(view.apply(pensionsForm, IndividualProtection2016.toString, "open").body)
 
     val errorForm = AmendPensionsTakenBetweenForm
-      .amendPensionsTakenBetweenForm("ip2016")
+      .amendPensionsTakenBetweenForm(IndividualProtection2016.toString)
       .bind(
         Map(
           "amendedPensionsTakenBetween"    -> "",
           "amendedPensionsTakenBetweenAmt" -> "12345",
-          "protectionType"                 -> "ip2016",
+          "protectionType"                 -> IndividualProtection2016.toString,
           "status"                         -> "open"
         )
       )
     lazy val errorView = app.injector.instanceOf[amendPensionsTakenBetween]
-    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, "ip2016", "open").body)
+    lazy val errorDoc  = Jsoup.parse(errorView.apply(errorForm, IndividualProtection2016.toString, "open").body)
 
     lazy val form = doc.select("form")
 
@@ -63,7 +65,7 @@ class AmendPensionsTakenBetweenViewSpec
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController
-        .submitAmendPensionsTakenBetween("ip2016", "open")
+        .submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
         .url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBetweenLegendText
     }

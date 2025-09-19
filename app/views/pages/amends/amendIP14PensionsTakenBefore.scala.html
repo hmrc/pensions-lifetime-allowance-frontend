@@ -16,7 +16,7 @@
 
 @import models.amendModels.AmendPensionsTakenBeforeModel
 @import play.api.data._
-@import common.Links
+@import common.Strings
 
 @this(
     layout: Layout,
@@ -43,7 +43,7 @@
 
     @errorSummary(amendPensionsTakenBeforeForm.errors, Some("amendedPensionsTakenBeforeAmt"))
 
-    @form(action = routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(protectionType, status)) {
+    @form(action = routes.AmendsPensionTakenBeforeController.submitAmendPensionsTakenBefore(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
 
         <h1 class="govuk-heading-xl">@Messages("pla.pensionsTakenBefore.title")</h1>
 

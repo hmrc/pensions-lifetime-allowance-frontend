@@ -17,11 +17,13 @@
 package constructors
 
 import common.Exceptions.{OptionNotDefinedException, RequiredValueNotDefinedException}
-import common.Helpers
+import common.{Helpers, Strings}
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
-import models.pla.response.ProtectionStatus.Open
+import models.pla.response.ProtectionStatus._
+import models.pla.response.ProtectionType
+import models.pla.response.ProtectionType._
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesProvider}
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, MessagesControllerComponents}
@@ -44,7 +46,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
   val tstProtection: ProtectionModel = ProtectionModel(
     psaCheckReference = Some("psaRef"),
     protectionID = Some(100001),
-    protectionType = Some("IP2016"),
+    protectionType = Some(IndividualProtection2016.toString),
     status = Some(Open.toString),
     protectedAmount = Some(1100000.34),
     relevantAmount = Some(1100000.34),
@@ -57,7 +59,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
   val tstWithPsoProtection: ProtectionModel = ProtectionModel(
     psaCheckReference = Some("psaRef"),
     protectionID = Some(100001),
-    protectionType = Some("IP2016"),
+    protectionType = Some(IndividualProtection2016.toString),
     status = Some(Open.toString),
     protectedAmount = Some(1100000.34),
     relevantAmount = Some(1100000.34),
@@ -79,7 +81,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "No"
         )
@@ -90,7 +97,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "No"
         )
@@ -101,13 +113,23 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "£100,000"
         )
@@ -118,7 +140,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "£1,000,000.34"
         )
@@ -138,7 +165,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "No"
         )
@@ -149,7 +181,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "No"
         )
@@ -160,13 +197,23 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "£100,000"
         )
@@ -177,7 +224,12 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2016", "open")),
+          Some(
+            controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(
+              Strings.ProtectionTypeURL.IndividualProtection2016,
+              Strings.StatusURL.Open
+            )
+          ),
           None,
           "£1,000,000.34"
         )
@@ -210,16 +262,21 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelOpen = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("IP2014"),
-        status = Some("OPEN"),
+        protectionType = Some(IndividualProtection2014.toString),
+        status = Some(Open.toString),
         certificateDate = Some("2016-04-17"),
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456")
       )
       val tstExistingProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
-        protectionType = "IP2014",
-        status = "open",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "open")),
+        protectionType = IndividualProtection2014.toString,
+        status = Open.toString,
+        amendCall = Some(
+          controllers.routes.AmendsController.amendsSummary(
+            Strings.ProtectionTypeURL.IndividualProtection2014,
+            Strings.StatusURL.Open
+          )
+        ),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
@@ -229,16 +286,21 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormant = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("IP2014"),
-        status = Some("DORMANT"),
+        protectionType = Some(IndividualProtection2014.toString),
+        status = Some(Dormant.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None
       )
       val tstExistingProtectionDisplayModelDormant = ExistingProtectionDisplayModel(
-        protectionType = "IP2014",
-        status = "dormant",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "dormant")),
+        protectionType = IndividualProtection2014.toString,
+        status = Dormant.toString,
+        amendCall = Some(
+          controllers.routes.AmendsController.amendsSummary(
+            Strings.ProtectionTypeURL.IndividualProtection2014,
+            Strings.StatusURL.Dormant
+          )
+        ),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
@@ -249,8 +311,9 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
         activeProtection = Some(tstExistingProtectionDisplayModelOpen),
         inactiveProtections = ExistingInactiveProtectionsDisplayModel(
-          dormantProtections =
-            ExistingInactiveProtectionsByType(Seq("IP2014" -> List(tstExistingProtectionDisplayModelDormant))),
+          dormantProtections = ExistingInactiveProtectionsByType(
+            Seq(IndividualProtection2014.toString -> List(tstExistingProtectionDisplayModelDormant))
+          ),
           withdrawnProtections = ExistingInactiveProtectionsByType.empty,
           unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
           rejectedProtections = ExistingInactiveProtectionsByType.empty,
@@ -267,17 +330,22 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelOpen = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("INDIVIDUAL PROTECTION 2014"),
-        status = Some("OPEN"),
+        protectionType = Some(IndividualProtection2014.toString),
+        status = Some(Open.toString),
         certificateDate = Some("2016-04-17"),
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456"),
         withdrawnDate = None
       )
       val tstProtectionDisplayModelOpen = ExistingProtectionDisplayModel(
-        protectionType = "IP2014",
-        status = "open",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "open")),
+        protectionType = IndividualProtection2014.toString,
+        status = Open.toString,
+        amendCall = Some(
+          controllers.routes.AmendsController.amendsSummary(
+            Strings.ProtectionTypeURL.IndividualProtection2014,
+            Strings.StatusURL.Open
+          )
+        ),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
@@ -288,16 +356,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantFP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("FIXED PROTECTION 2014"),
-        status = Some("DORMANT"),
+        protectionType = Some(FixedProtection2014.toString),
+        status = Some(Dormant.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelDormantFP2014 = ExistingProtectionDisplayModel(
-        protectionType = "FP2014",
-        status = "dormant",
+        protectionType = FixedProtection2014.toString,
+        status = Dormant.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -309,16 +377,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantFixed = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("FIXED PROTECTION"),
-        status = Some("DORMANT"),
+        protectionType = Some(FixedProtection.toString),
+        status = Some(Dormant.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelDormantFixed = ExistingProtectionDisplayModel(
-        protectionType = "fixed",
-        status = "dormant",
+        protectionType = FixedProtection.toString,
+        status = Dormant.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -330,16 +398,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantEnhanced = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("ENHANCED PROTECTION"),
-        status = Some("DORMANT"),
+        protectionType = Some(EnhancedProtection.toString),
+        status = Some(Dormant.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelDormantEnhanced = ExistingProtectionDisplayModel(
-        protectionType = "enhanced",
-        status = "dormant",
+        protectionType = EnhancedProtection.toString,
+        status = Dormant.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -351,16 +419,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantPrimary = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("PRIMARY PROTECTION"),
-        status = Some("DORMANT"),
+        protectionType = Some(PrimaryProtection.toString),
+        status = Some(Dormant.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelDormantPrimary = ExistingProtectionDisplayModel(
-        protectionType = "primary",
-        status = "dormant",
+        protectionType = PrimaryProtection.toString,
+        status = Dormant.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -372,17 +440,22 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantIP2016 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("INDIVIDUAL PROTECTION 2016"),
-        status = Some("DORMANT"),
+        protectionType = Some(IndividualProtection2016.toString),
+        status = Some(Dormant.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelDormantIP2016 = ExistingProtectionDisplayModel(
-        protectionType = "IP2016",
-        status = "dormant",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2016", "dormant")),
+        protectionType = IndividualProtection2016.toString,
+        status = Dormant.toString,
+        amendCall = Some(
+          controllers.routes.AmendsController.amendsSummary(
+            Strings.ProtectionTypeURL.IndividualProtection2016,
+            Strings.StatusURL.Dormant
+          )
+        ),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
@@ -393,16 +466,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantFP2016 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("FIXED PROTECTION 2016"),
-        status = Some("DORMANT"),
+        protectionType = Some(FixedProtection2016.toString),
+        status = Some(Dormant.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelDormantFP2016 = ExistingProtectionDisplayModel(
-        protectionType = "FP2016",
-        status = "dormant",
+        protectionType = FixedProtection2016.toString,
+        status = Dormant.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -414,17 +487,22 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantIP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("INDIVIDUAL PROTECTION 2014"),
-        status = Some("DORMANT"),
+        protectionType = Some(IndividualProtection2014.toString),
+        status = Some(Dormant.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelDormantIP2014 = ExistingProtectionDisplayModel(
-        protectionType = "IP2014",
-        status = "dormant",
-        amendCall = Some(controllers.routes.AmendsController.amendsSummary("ip2014", "dormant")),
+        protectionType = IndividualProtection2014.toString,
+        status = Dormant.toString,
+        amendCall = Some(
+          controllers.routes.AmendsController.amendsSummary(
+            Strings.ProtectionTypeURL.IndividualProtection2014,
+            Strings.StatusURL.Dormant
+          )
+        ),
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
         protectedAmount = None,
@@ -450,25 +528,25 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         inactiveProtections = ExistingInactiveProtectionsDisplayModel(
           dormantProtections = ExistingInactiveProtectionsByType(
             Seq(
-              "IP2016" -> List(
+              IndividualProtection2016.toString -> List(
                 tstProtectionDisplayModelDormantIP2016
               ),
-              "IP2014" -> List(
+              IndividualProtection2014.toString -> List(
                 tstProtectionDisplayModelDormantIP2014
               ),
-              "FP2016" -> List(
+              FixedProtection2016.toString -> List(
                 tstProtectionDisplayModelDormantFP2016
               ),
-              "FP2014" -> List(
+              FixedProtection2014.toString -> List(
                 tstProtectionDisplayModelDormantFP2014
               ),
-              "primary" -> List(
+              PrimaryProtection.toString -> List(
                 tstProtectionDisplayModelDormantPrimary
               ),
-              "enhanced" -> List(
+              EnhancedProtection.toString -> List(
                 tstProtectionDisplayModelDormantEnhanced
               ),
-              "fixed" -> List(
+              FixedProtection.toString -> List(
                 tstProtectionDisplayModelDormantFixed
               )
             )
@@ -490,16 +568,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelExpiredFP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("FIXED PROTECTION 2014"),
-        status = Some("EXPIRED"),
+        protectionType = Some(FixedProtection2014.toString),
+        status = Some(Expired.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelExpiredFP2014 = ExistingProtectionDisplayModel(
-        protectionType = "FP2014",
-        status = "expired",
+        protectionType = FixedProtection2014.toString,
+        status = Expired.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -511,16 +589,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelExpiredFP2016 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("FIXED PROTECTION 2016"),
-        status = Some("EXPIRED"),
+        protectionType = Some(FixedProtection2016.toString),
+        status = Some(Expired.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelExpiredFP2016 = ExistingProtectionDisplayModel(
-        protectionType = "FP2016",
-        status = "expired",
+        protectionType = FixedProtection2016.toString,
+        status = Expired.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -532,16 +610,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelRejectedIP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("INDIVIDUAL PROTECTION 2014"),
-        status = Some("REJECTED"),
+        protectionType = Some(IndividualProtection2014.toString),
+        status = Some(Rejected.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelRejectedIP2014 = ExistingProtectionDisplayModel(
-        protectionType = "IP2014",
-        status = "rejected",
+        protectionType = IndividualProtection2014.toString,
+        status = Rejected.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -553,16 +631,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelUnsuccessfulIP2014 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("INDIVIDUAL PROTECTION 2014"),
-        status = Some("UNSUCCESSFUL"),
+        protectionType = Some(IndividualProtection2014.toString),
+        status = Some(Unsuccessful.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelUnsuccessfulIP2014 = ExistingProtectionDisplayModel(
-        protectionType = "IP2014",
-        status = "unsuccessful",
+        protectionType = IndividualProtection2014.toString,
+        status = Unsuccessful.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -574,16 +652,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelWithdrawnPrimary = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("PRIMARY PROTECTION"),
-        status = Some("WITHDRAWN"),
+        protectionType = Some(PrimaryProtection.toString),
+        status = Some(Withdrawn.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelWithdrawnPrimary = ExistingProtectionDisplayModel(
-        protectionType = "primary",
-        status = "withdrawn",
+        protectionType = PrimaryProtection.toString,
+        status = Withdrawn.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -595,16 +673,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelWithdrawnIP2016 = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("INDIVIDUAL PROTECTION 2016"),
-        status = Some("WITHDRAWN"),
+        protectionType = Some(IndividualProtection2016.toString),
+        status = Some(Withdrawn.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelWithdrawnIP2016 = ExistingProtectionDisplayModel(
-        protectionType = "IP2016",
-        status = "withdrawn",
+        protectionType = IndividualProtection2016.toString,
+        status = Withdrawn.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -616,16 +694,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantFixed = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("FIXED PROTECTION"),
-        status = Some("DORMANT"),
+        protectionType = Some(FixedProtection.toString),
+        status = Some(Dormant.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelDormantFixed = ExistingProtectionDisplayModel(
-        protectionType = "fixed",
-        status = "dormant",
+        protectionType = FixedProtection.toString,
+        status = Dormant.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -637,16 +715,16 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModelDormantEnhanced = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("ENHANCED PROTECTION"),
-        status = Some("DORMANT"),
+        protectionType = Some(EnhancedProtection.toString),
+        status = Some(Dormant.toString),
         certificateDate = None,
         protectedAmount = None,
         protectionReference = None,
         withdrawnDate = None
       )
       val tstProtectionDisplayModelDormantEnhanced = ExistingProtectionDisplayModel(
-        protectionType = "enhanced",
-        status = "dormant",
+        protectionType = EnhancedProtection.toString,
+        status = Dormant.toString,
         amendCall = None,
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = Messages("pla.protection.protectionReference"),
@@ -674,44 +752,44 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         inactiveProtections = ExistingInactiveProtectionsDisplayModel(
           dormantProtections = ExistingInactiveProtectionsByType(
             Seq(
-              "enhanced" -> List(
+              EnhancedProtection.toString -> List(
                 tstProtectionDisplayModelDormantEnhanced
               ),
-              "fixed" -> List(
+              FixedProtection.toString -> List(
                 tstProtectionDisplayModelDormantFixed
               )
             )
           ),
           withdrawnProtections = ExistingInactiveProtectionsByType(
             Seq(
-              "IP2016" -> List(
+              IndividualProtection2016.toString -> List(
                 tstProtectionDisplayModelWithdrawnIP2016
               ),
-              "primary" -> List(
+              PrimaryProtection.toString -> List(
                 tstProtectionDisplayModelWithdrawnPrimary
               )
             )
           ),
           unsuccessfulProtections = ExistingInactiveProtectionsByType(
             Seq(
-              "IP2014" -> List(
+              IndividualProtection2014.toString -> List(
                 tstProtectionDisplayModelUnsuccessfulIP2014
               )
             )
           ),
           rejectedProtections = ExistingInactiveProtectionsByType(
             Seq(
-              "IP2014" -> List(
+              IndividualProtection2014.toString -> List(
                 tstProtectionDisplayModelRejectedIP2014
               )
             )
           ),
           expiredProtections = ExistingInactiveProtectionsByType(
             Seq(
-              "FP2016" -> List(
+              FixedProtection2016.toString -> List(
                 tstProtectionDisplayModelExpiredFP2016
               ),
-              "FP2014" -> List(
+              FixedProtection2014.toString -> List(
                 tstProtectionDisplayModelExpiredFP2014
               )
             )
@@ -723,6 +801,104 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         tstExistingProtectionModel
       ) shouldBe tstExistingProtectionsDisplayModel
     }
+
+    "Handle all protection types" when
+      ProtectionType.values.foreach(protectionType =>
+        s"protection type is $protectionType" in {
+          val protectionModel = ProtectionModel(
+            psaCheckReference = Some(tstPSACheckRef),
+            protectionID = Some(12345),
+            protectionType = Some(protectionType.toString),
+            status = Some(Withdrawn.toString),
+            certificateDate = Some("2016-04-17"),
+            protectedAmount = Some(1250000),
+            protectionReference = Some("PSA654321"),
+            notificationId = Some(1)
+          )
+
+          val transformedReadResponseModel = TransformedReadResponseModel(
+            activeProtection = None,
+            inactiveProtections = Seq(protectionModel)
+          )
+
+          val existingProtectionDisplayModel = ExistingProtectionDisplayModel(
+            protectionType = protectionType.toString,
+            status = Withdrawn.toString,
+            amendCall = None,
+            psaCheckReference = Some(tstPSACheckRef),
+            protectionReference = "PSA654321",
+            protectedAmount = Some("£1,250,000"),
+            certificateDate = Some("17 April 2016")
+          )
+
+          val existingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
+            activeProtection = None,
+            inactiveProtections = ExistingInactiveProtectionsDisplayModel(
+              dormantProtections = ExistingInactiveProtectionsByType.empty,
+              withdrawnProtections = ExistingInactiveProtectionsByType(
+                Seq(
+                  protectionType.toString -> Seq(existingProtectionDisplayModel)
+                )
+              ),
+              unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
+              rejectedProtections = ExistingInactiveProtectionsByType.empty,
+              expiredProtections = ExistingInactiveProtectionsByType.empty
+            )
+          )
+
+          displayConstructor.createExistingProtectionsDisplayModel(
+            transformedReadResponseModel
+          ) shouldBe existingProtectionsDisplayModel
+        }
+      )
+
+    "Handle an unknown protection type as notRecorded" in {
+      val protectionModel = ProtectionModel(
+        psaCheckReference = Some(tstPSACheckRef),
+        protectionID = Some(12345),
+        protectionType = Some("unknown protection type"),
+        status = Some(Withdrawn.toString),
+        certificateDate = Some("2016-04-17"),
+        protectedAmount = Some(1250000),
+        protectionReference = Some("PSA654321"),
+        notificationId = Some(1)
+      )
+
+      val transformedReadResponseModel = TransformedReadResponseModel(
+        activeProtection = None,
+        inactiveProtections = Seq(protectionModel)
+      )
+
+      val existingProtectionDisplayModel = ExistingProtectionDisplayModel(
+        protectionType = "notRecorded",
+        status = Withdrawn.toString,
+        amendCall = None,
+        psaCheckReference = Some(tstPSACheckRef),
+        protectionReference = "PSA654321",
+        protectedAmount = Some("£1,250,000"),
+        certificateDate = Some("17 April 2016")
+      )
+
+      val existingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
+        activeProtection = None,
+        inactiveProtections = ExistingInactiveProtectionsDisplayModel(
+          dormantProtections = ExistingInactiveProtectionsByType.empty,
+          withdrawnProtections = ExistingInactiveProtectionsByType(
+            Seq(
+              "notRecorded" -> Seq(existingProtectionDisplayModel)
+            )
+          ),
+          unsuccessfulProtections = ExistingInactiveProtectionsByType.empty,
+          rejectedProtections = ExistingInactiveProtectionsByType.empty,
+          expiredProtections = ExistingInactiveProtectionsByType.empty
+        )
+      )
+
+      displayConstructor.createExistingProtectionsDisplayModel(
+        transformedReadResponseModel
+      ) shouldBe existingProtectionsDisplayModel
+    }
+
   }
 
   "createPrintDisplayModel" should {
@@ -733,8 +909,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstProtectionModel = ProtectionModel(
         psaCheckReference = Some(tstPSACheckRef),
         protectionID = Some(12345),
-        protectionType = Some("IP2014"),
-        status = Some("Open"),
+        protectionType = Some(IndividualProtection2014.toString),
+        status = Some(Open.toString),
         certificateDate = Some("2016-04-17"),
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456"),
@@ -746,8 +922,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         firstName = "Testy",
         surname = "Mctestface",
         nino = nino,
-        protectionType = "IP2014",
-        status = "open",
+        protectionType = IndividualProtection2014.toString,
+        status = Open.toString,
         psaCheckReference = tstPSACheckRef,
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
@@ -769,8 +945,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     val protectionModel = ProtectionModel(
       psaCheckReference = Some(tstPSACheckRef),
       protectionID = Some(12345),
-      protectionType = Some("IP2014"),
-      status = Some("Open"),
+      protectionType = Some(IndividualProtection2014.toString),
+      status = Some(Open.toString),
       certificateDate = Some("2016-04-17"),
       protectedAmount = Some(1250000),
       protectionReference = Some("PSA123456"),
@@ -783,8 +959,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         firstName = "Testy",
         surname = "Mctestface",
         nino = nino,
-        protectionType = "IP2014",
-        status = "open",
+        protectionType = IndividualProtection2014.toString,
+        status = Open.toString,
         psaCheckReference = tstPSACheckRef,
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
@@ -840,7 +1016,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
         exc.functionName shouldBe "createAmendPrintDisplayModel"
         exc.optionName shouldBe "notificationId"
-        exc.applicationType shouldBe "IP2014"
+        exc.applicationType shouldBe IndividualProtection2014.toString
       }
     }
   }
@@ -901,7 +1077,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     "correctly transform an AmendProtectionModel into an AmendDisplayModel without Psos" in {
 
       displayConstructor.createAmendDisplayModel(tstNoPsoAmendProtectionModel) shouldBe AmendDisplayModel(
-        protectionType = "IP2016",
+        protectionType = IndividualProtection2016.toString,
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = false,
@@ -912,7 +1088,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
     "correctly transform an AmendProtectionModel into an AmendDisplayModel with PSOs" in {
       displayConstructor.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
-        protectionType = "IP2016",
+        protectionType = IndividualProtection2016.toString,
         amended = false,
         pensionContributionSections = tstPensionContributionPsoDisplaySections,
         psoAdded = false,
@@ -923,7 +1099,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
     "return no current PSO's when not supplied with an amountOption" in {
       displayConstructor.createAmendDisplayModel(tstWithPsoAmendProtectionModel) shouldBe AmendDisplayModel(
-        protectionType = "IP2016",
+        protectionType = IndividualProtection2016.toString,
         amended = false,
         pensionContributionSections = tstPensionContributionPsoDisplaySections,
         psoAdded = false,
@@ -936,7 +1112,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstNoPsoAmountProtection = ProtectionModel(
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
-        protectionType = Some("IP2016"),
+        protectionType = Some(IndividualProtection2016.toString),
         status = Some(Open.toString),
         protectedAmount = Some(1100000.34),
         relevantAmount = Some(1100000.34),
@@ -950,7 +1126,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val amendModel = AmendProtectionModel(tstNoPsoAmountProtection, tstNoPsoAmountProtection)
 
       displayConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
-        protectionType = "IP2016",
+        protectionType = IndividualProtection2016.toString,
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = false,
@@ -963,7 +1139,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstNewPsoAmountProtection = ProtectionModel(
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
-        protectionType = Some("IP2016"),
+        protectionType = Some(IndividualProtection2016.toString),
         status = Some(Open.toString),
         protectedAmount = Some(1100000.34),
         relevantAmount = Some(1100000.34),
@@ -983,10 +1159,18 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
           Seq(
             AmendDisplayRowModel(
               "CurrentPsos-psoDetails",
-              changeLinkCall =
-                Some(controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails("ip2016", "open")),
-              removeLinkCall =
-                Some(controllers.routes.AmendsRemovePensionSharingOrderController.removePso("ip2016", "open")),
+              changeLinkCall = Some(
+                controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails(
+                  Strings.ProtectionTypeURL.IndividualProtection2016,
+                  Strings.StatusURL.Open
+                )
+              ),
+              removeLinkCall = Some(
+                controllers.routes.AmendsRemovePensionSharingOrderController.removePso(
+                  Strings.ProtectionTypeURL.IndividualProtection2016,
+                  Strings.StatusURL.Open
+                )
+              ),
               "£1,000",
               "2 March 2017"
             )
@@ -995,7 +1179,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       )
 
       displayConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
-        protectionType = "IP2016",
+        protectionType = IndividualProtection2016.toString,
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = true,
@@ -1009,7 +1193,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val tstNewPsoAmountProtection = ProtectionModel(
         psaCheckReference = Some("psaRef"),
         protectionID = Some(100001),
-        protectionType = Some("IP2016"),
+        protectionType = Some(IndividualProtection2016.toString),
         status = Some(Open.toString),
         protectedAmount = Some(1000000.34),
         relevantAmount = Some(1000000.34),
@@ -1024,7 +1208,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       val amendModel = AmendProtectionModel(tstNewPsoAmountProtection, tstNewPsoAmountProtection)
 
       displayConstructor.createAmendDisplayModel(amendModel) shouldBe AmendDisplayModel(
-        protectionType = "IP2016",
+        protectionType = IndividualProtection2016.toString,
         amended = false,
         pensionContributionSections = tstPensionContributionNoPsoDisplaySections,
         psoAdded = true,
@@ -1042,7 +1226,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         ProtectionModel(
           psaCheckReference = Some("psaRef"),
           protectionID = Some(100003),
-          protectionType = Some("IP2014"),
+          protectionType = Some(IndividualProtection2014.toString),
           protectionReference = Some("protectionRef"),
           certificateDate = Some("2016-06-14"),
           protectedAmount = Some(1350000.45),
@@ -1084,7 +1268,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
           ProtectionModel(
             psaCheckReference = Some("psaRef"),
             protectionID = Some(100003),
-            protectionType = Some("IP2014"),
+            protectionType = Some(IndividualProtection2014.toString),
             protectionReference = Some("protectionRef"),
             certificateDate = Some("2016-06-14"),
             protectedAmount = None,
@@ -1101,7 +1285,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
         exc.functionName shouldBe "createActiveAmendResponseDisplayModel"
         exc.optionName shouldBe "protectedAmount"
-        exc.applicationType shouldBe "IP2014"
+        exc.applicationType shouldBe IndividualProtection2014.toString
       }
 
       "notification ID is NOT present" in {
@@ -1109,7 +1293,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
           ProtectionModel(
             psaCheckReference = Some("psaRef"),
             protectionID = Some(100003),
-            protectionType = Some("IP2014"),
+            protectionType = Some(IndividualProtection2014.toString),
             protectionReference = Some("protectionRef"),
             certificateDate = Some("2016-06-14"),
             protectedAmount = Some(1350000.45),
@@ -1126,7 +1310,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
 
         exc.functionName shouldBe "createActiveAmendResponseDisplayModel"
         exc.optionName shouldBe "notificationId"
-        exc.applicationType shouldBe "IP2014"
+        exc.applicationType shouldBe IndividualProtection2014.toString
       }
     }
   }
@@ -1137,8 +1321,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         ProtectionModel(
           psaCheckReference = Some("psaRef"),
           protectionID = Some(100003),
-          protectionType = Some("IP2014"),
-          status = Some("Open"),
+          protectionType = Some(IndividualProtection2014.toString),
+          status = Some(Open.toString),
           protectionReference = Some("protectionRef"),
           certificateDate = Some("2016-06-14"),
           protectedAmount = Some(1350000.45),
@@ -1158,8 +1342,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
             firstName = "Testy",
             surname = "Mctestface",
             nino = "testNino",
-            protectionType = "IP2014",
-            status = "open",
+            protectionType = IndividualProtection2014.toString,
+            status = Open.toString,
             psaCheckReference = "psaRef",
             protectionReference = "protectionRef",
             protectedAmount = Some("£1,350,000.45"),

@@ -18,6 +18,7 @@ package forms
 
 import forms.PensionsTakenForm._
 import models.PensionsTakenModel
+import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
 import testHelpers.{CommonErrorMessages, FakeApplication}
@@ -31,14 +32,14 @@ class PensionsTakenFormSpec extends FakeApplication with CommonErrorMessages wit
 
       "supplied with a valid model" in {
         val model  = PensionsTakenModel(Some("text"))
-        val result = pensionsTakenForm("ip2016").fill(model)
+        val result = pensionsTakenForm(IndividualProtection2016.toString).fill(model)
 
         result.data shouldBe Map("pensionsTaken" -> "text")
       }
 
       "supplied with a valid form" in {
         val map    = Map("pensionsTaken" -> "text")
-        val result = pensionsTakenForm("ip2016").bind(map)
+        val result = pensionsTakenForm(IndividualProtection2016.toString).bind(map)
 
         result.value shouldBe Some(PensionsTakenModel(Some("text")))
       }
@@ -48,10 +49,13 @@ class PensionsTakenFormSpec extends FakeApplication with CommonErrorMessages wit
 
       "not provided with a pensionsTaken value" in {
         val map    = Map.empty[String, String]
-        val result = pensionsTakenForm("ip2016").bind(map)
+        val result = pensionsTakenForm(IndividualProtection2016.toString).bind(map)
 
         result.errors.size shouldBe 1
-        result.error("pensionsTaken").get.message shouldBe errorQuestion("pensionsTaken", "ip2016")
+        result.error("pensionsTaken").get.message shouldBe errorQuestion(
+          "pensionsTaken",
+          IndividualProtection2016.toString
+        )
       }
     }
   }

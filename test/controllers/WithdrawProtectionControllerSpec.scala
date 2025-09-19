@@ -17,6 +17,7 @@
 package controllers
 
 import auth.AuthFunction
+import common.Strings
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
 import connectors.PlaConnectorError.UnexpectedResponseError
@@ -151,7 +152,10 @@ class WithdrawProtectionControllerSpec
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsPensionTakenBeforeController
+              .amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "No"
         )
@@ -162,7 +166,10 @@ class WithdrawProtectionControllerSpec
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsPensionTakenBetweenController
+              .amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "No"
         )
@@ -173,13 +180,19 @@ class WithdrawProtectionControllerSpec
       Seq(
         AmendDisplayRowModel(
           "YesNo",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController
+              .amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "Yes"
         ),
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsOverseasPensionController.amendOverseasPensions("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsOverseasPensionController
+              .amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "£100,000"
         )
@@ -190,7 +203,10 @@ class WithdrawProtectionControllerSpec
       Seq(
         AmendDisplayRowModel(
           "Amt",
-          Some(controllers.routes.AmendsCurrentPensionController.amendCurrentPensions("ip2014", "active")),
+          Some(
+            controllers.routes.AmendsCurrentPensionController
+              .amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+          ),
           None,
           "£1,000,000"
         )

@@ -16,7 +16,7 @@
 
 @import models.amendModels.AmendCurrentPensionModel
 @import play.api.data._
-@import common.Links
+@import common.{Links, Strings}
 
 @this(
     layout: Layout,
@@ -59,7 +59,7 @@
         helpTextAccordionContent
     )
 
-    @form(action = routes.AmendsCurrentPensionController.submitAmendCurrentPension(protectionType, status)) {
+    @form(action = routes.AmendsCurrentPensionController.submitAmendCurrentPension(Strings.protectionTypeUrlString(Some(protectionType)), status)) {
         @formInputMoney(
             field = amendCurrentPensionForm("amendedUKPensionAmt"),
             question = Messages("pla.currentPensions.title"),
