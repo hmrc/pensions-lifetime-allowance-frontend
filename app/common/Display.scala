@@ -58,7 +58,7 @@ object Display {
     }
 
   def timeDisplayString(dateTime: LocalDateTime): String = {
-    val timeFormat = DateTimeFormatter.ofPattern("h:mm a")
+    val timeFormat = DateTimeFormatter.ofPattern("h:mma")
     dateTime.format(timeFormat)
   }
 

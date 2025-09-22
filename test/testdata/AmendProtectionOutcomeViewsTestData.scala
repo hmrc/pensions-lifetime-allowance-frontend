@@ -75,7 +75,7 @@ object AmendProtectionOutcomeViewsTestData {
     protectionReference = "IP14XXXXXX",
     protectedAmount = Some(protectedAmountIP14Str),
     certificateDate = Some("14/07/2015"),
-    certificateTime = Some("3:14 pm"),
+    certificateTime = Some("3:14pm"),
     notificationId = 15
   )
 
@@ -95,7 +95,7 @@ object AmendProtectionOutcomeViewsTestData {
     protectionReference = "IP16XXXXXX",
     protectedAmount = Some(protectedAmountIP16Str),
     certificateDate = Some("14/07/2017"),
-    certificateTime = Some("3:14 pm"),
+    certificateTime = Some("3:14pm"),
     notificationId = 15
   )
 

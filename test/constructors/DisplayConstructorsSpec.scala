@@ -281,7 +281,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"),
-        certificateTime = Some("3:14 pm")
+        certificateTime = Some("3:14pm")
       )
 
       val tstProtectionModelDormant = ProtectionModel(
@@ -351,7 +351,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"),
-        certificateTime = Some("3:14 pm"),
+        certificateTime = Some("3:14pm"),
         withdrawnDate = None
       )
 
@@ -831,7 +831,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
             protectionReference = "PSA654321",
             protectedAmount = Some("£1,250,000"),
             certificateDate = Some("17 April 2016"),
-            certificateTime = Some("3:14 pm")
+            certificateTime = Some("3:14pm")
           )
 
           val existingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
@@ -880,7 +880,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionReference = "PSA654321",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"),
-        certificateTime = Some("3:14 pm")
+        certificateTime = Some("3:14pm")
       )
 
       val existingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
@@ -932,7 +932,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"),
-        certificateTime = Some("3:14 pm")
+        certificateTime = Some("3:14pm")
       )
 
       displayConstructor.createPrintDisplayModel(
@@ -970,7 +970,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"),
-        certificateTime = Some("3:14 pm"),
+        certificateTime = Some("3:14pm"),
         notificationId = 1
       )
 
@@ -1356,7 +1356,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
             protectionReference = "protectionRef",
             protectedAmount = Some("£1,350,000.45"),
             certificateDate = Some("14 June 2016"),
-            certificateTime = Some("3:14 pm"),
+            certificateTime = Some("3:14pm"),
             notificationId = 33
           )
         )
