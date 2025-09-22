@@ -42,7 +42,7 @@ case class ProtectionModel(
     protectionReference: Option[String] = None,
     withdrawnDate: Option[String] = None,
     // Play's Json.Format breaks if this case class exceeds 22 fields, so additional fields go here
-    hipFields: ProtectionModelHipFields = ProtectionModelHipFields.empty
+    hipFieldsOption: Option[ProtectionModelHipFields] = None
 ) {
 
   def isEmpty: Boolean = this == ProtectionModel(None, None)
@@ -55,6 +55,8 @@ case class ProtectionModel(
 
     isStatusAmendable && isProtectionTypeAmendable
   }
+
+  def hipFields: ProtectionModelHipFields = ProtectionModelHipFields.fromOption(hipFieldsOption)
 
 }
 
@@ -82,10 +84,12 @@ object ProtectionModel {
       None,
       record.protectionReference,
       None,
-      ProtectionModelHipFields(
-        record.lumpSumPercentage,
-        record.lumpSumAmount,
-        record.enhancementFactor
+      Some(
+        ProtectionModelHipFields(
+          record.lumpSumPercentage,
+          record.lumpSumAmount,
+          record.enhancementFactor
+        )
       )
     )
 
@@ -107,10 +111,15 @@ case class ProtectionModelHipFields(
     lumpSumPercentage: Option[Int] = None,
     lumpSumAmount: Option[Int] = None,
     enhancementFactor: Option[Double] = None
-)
+) {
+  def isEmpty: Boolean = this == ProtectionModelHipFields()
+}
 
 object ProtectionModelHipFields {
   def empty = ProtectionModelHipFields()
+
+  def fromOption(option: Option[ProtectionModelHipFields]): ProtectionModelHipFields =
+    option.getOrElse(ProtectionModelHipFields.empty)
 
   implicit val format: OFormat[ProtectionModelHipFields] = Json.format[ProtectionModelHipFields]
 }
