@@ -16,15 +16,14 @@
 
 @(heading: String, content: String, id: String, action: Option[Html] = None)
 
-@getActionBoolean = @{if(action != None) true else false}
-<div class="govuk-summary-list__row @if(!getActionBoolean){govuk-summary-list__row--no-actions}">
+<div class="govuk-summary-list__row @if(action.isEmpty){govuk-summary-list__row--no-actions}">
     <dt class="govuk-summary-list__key govuk-!-width-one-half" id="@{id}Heading">
         @heading
     </dt>
     <dd class="govuk-summary-list__value" id="@{id}Content">
         @content
     </dd>
-    @if(getActionBoolean){
+    @if(action.isDefined){
         <dd class="govuk-summary-list__actions">
             @action
         </dd>

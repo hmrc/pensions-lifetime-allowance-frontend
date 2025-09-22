@@ -21,7 +21,7 @@ import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import models.pla.response.ProtectionType.FixedProtection2016
-import models.pla.response.ProtectionStatus
+import models.pla.response.{ProtectionStatus, ProtectionType}
 import play.api.Logging
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Call
@@ -67,19 +67,34 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       case _ => protectedAmountOption
     }
 
-    val certificateDate =
-      protectionModel.certificateDate.map(cDate => Display.dateDisplayString(Dates.constructDateFromAPIString(cDate)))
+    val (certificateDate, certificateTime) = createDateAndTimeDisplayStrings(protectionModel.certificateDate)
+
+    val lumpSumPercentage = protectionModel.hipFields.lumpSumPercentage
+      .filter(_ => protectionTypeDisplaysLumpSumPercentage(protectionType))
+      .map(lumpSumPercentage => Display.percentageString(lumpSumPercentage))
+
+    val lumpSumAmount = protectionModel.hipFields.lumpSumAmount
+      .filter(_ => protectionTypeDisplaysLumpSumAmount(protectionType))
+      .map(lumpSumAmount => Display.currencyDisplayString(BigDecimal(lumpSumAmount)))
+
+    val (factor, enhancementFactor) =
+      createFactorAndEnhancementFactorDisplayStrings(protectionModel.hipFields.enhancementFactor, protectionType)
 
     PrintDisplayModel(
-      firstName,
-      surname,
-      nino,
-      protectionType,
-      status,
-      psaCheckReference,
-      protectionReference,
-      protectedAmount,
-      certificateDate
+      firstName = firstName,
+      surname = surname,
+      nino = nino,
+      protectionType = protectionType,
+      status = status,
+      psaCheckReference = psaCheckReference,
+      protectionReference = protectionReference,
+      protectedAmount = protectedAmount,
+      certificateDate = certificateDate,
+      certificateTime = certificateTime,
+      lumpSumPercentage = lumpSumPercentage,
+      lumpSumAmount = lumpSumAmount,
+      enhancementFactor = enhancementFactor,
+      factor = factor
     )
   }
 
@@ -108,6 +123,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       printDisplayModel.protectionReference,
       printDisplayModel.protectedAmount,
       printDisplayModel.certificateDate,
+      printDisplayModel.certificateTime,
       notificationId
     )
   }
@@ -160,30 +176,93 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
     val protectionType      = Strings.protectionTypeString(model.protectionType)
     val protectionReference = model.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
 
-    val protectedAmount = model.protectedAmount.map(amt => Display.currencyDisplayString(BigDecimal(amt)))
+    val protectedAmount =
+      model.protectedAmount.map(protectedAmount => Display.currencyDisplayString(BigDecimal(protectedAmount)))
 
-    val certificateDate =
-      model.certificateDate.map(cDate => Display.dateDisplayString(Dates.constructDateFromAPIString(cDate)))
+    val (certificateDate, certificateTime) = createDateAndTimeDisplayStrings(model.certificateDate)
 
     val strippedPsaRef = model.psaCheckReference.map {
       _.stripPrefix(""""""").stripSuffix(""""""")
     }
 
     val withdrawnDate =
-      model.withdrawnDate.map(wDate => Display.dateDisplayString(Dates.constructDateFromAPIString(wDate)))
+      model.withdrawnDate.map(wDate => Display.dateDisplayString(Dates.constructDateTimeFromAPIString(wDate)))
     val amendCall = Helpers.createAmendCallIfRequired(model)
 
+    val (factor, enhancementFactor) =
+      createFactorAndEnhancementFactorDisplayStrings(model.hipFields.enhancementFactor, protectionType)
+
+    val lumpSumAmount = model.hipFields.lumpSumAmount
+      .filter(_ => protectionTypeDisplaysLumpSumAmount(protectionType))
+      .map(lumpSumAmount => Display.currencyDisplayString(BigDecimal(lumpSumAmount)))
+
+    val lumpSumPercentage = model.hipFields.lumpSumPercentage
+      .filter(_ => protectionTypeDisplaysLumpSumPercentage(protectionType))
+      .map(lumpSumPercentage => Display.percentageString(lumpSumPercentage))
+
     ExistingProtectionDisplayModel(
-      protectionType,
-      status,
-      amendCall,
-      strippedPsaRef,
-      protectionReference,
-      protectedAmount,
-      certificateDate,
-      withdrawnDate
+      protectionType = protectionType,
+      status = status,
+      amendCall = amendCall,
+      psaCheckReference = strippedPsaRef,
+      protectionReference = protectionReference,
+      protectedAmount = protectedAmount,
+      certificateDate = certificateDate,
+      certificateTime = certificateTime,
+      withdrawnDate = withdrawnDate,
+      lumpSumAmount = lumpSumAmount,
+      lumpSumPercentage = lumpSumPercentage,
+      enhancementFactor = enhancementFactor,
+      factor = factor
     )
   }
+
+  def createDateAndTimeDisplayStrings(certificateDate: Option[String]): (Option[String], Option[String]) =
+    certificateDate
+      .map { dateString =>
+        val dateTime = Dates.constructDateTimeFromAPIString(dateString)
+
+        val certificateDate = Display.dateDisplayString(dateTime)
+
+        val certificateTime = Display.timeDisplayString(dateTime)
+
+        (Some(certificateDate), Some(certificateTime))
+      }
+      .getOrElse((None, None))
+
+  private def createFactorAndEnhancementFactorDisplayStrings(
+      enhancementFactor: Option[Double],
+      protectionType: String
+  ): (Option[String], Option[String]) =
+    if (protectionTypeDisplaysEnhancementFactor(protectionType)) {
+      (None, enhancementFactor.map(_.toString))
+    } else {
+      (enhancementFactor.map(_.toString), None)
+    }
+
+  def protectionTypeDisplaysLumpSumPercentage(protectionType: String): Boolean =
+    ProtectionType.tryFrom(protectionType) match {
+      case Some(ProtectionType.EnhancedProtection)    => true
+      case Some(ProtectionType.EnhancedProtectionLTA) => true
+      case _                                          => false
+    }
+
+  def protectionTypeDisplaysLumpSumAmount(protectionType: String): Boolean =
+    ProtectionType.tryFrom(protectionType) match {
+      case Some(ProtectionType.PrimaryProtection)    => true
+      case Some(ProtectionType.PrimaryProtectionLTA) => true
+      case _                                         => false
+    }
+
+  def protectionTypeDisplaysEnhancementFactor(protectionType: String): Boolean =
+    ProtectionType.tryFrom(protectionType) match {
+      case Some(ProtectionType.PrimaryProtection)            => true
+      case Some(ProtectionType.PrimaryProtectionLTA)         => true
+      case Some(ProtectionType.PensionCreditRights)          => true
+      case Some(ProtectionType.InternationalEnhancementS221) => true
+      case Some(ProtectionType.InternationalEnhancementS224) => true
+      case _                                                 => false
+    }
 
   // AMENDS
   def createAmendDisplayModel(model: AmendProtectionModel)(implicit lang: Lang): AmendDisplayModel = {
@@ -236,7 +315,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
                   changeLinkCall = Some(psoAmendCall),
                   removeLinkCall = psoRemoveCall,
                   Display.currencyDisplayString(BigDecimal(debit.amount)),
-                  Display.dateDisplayString(Dates.constructDateFromAPIString(debit.startDate))
+                  Display.dateDisplayString(Dates.constructDateTimeFromAPIString(debit.startDate))
                 )
               )
             )
@@ -586,7 +665,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       )
     )
     val applicationDate =
-      protection.certificateDate.map(dt => Display.dateDisplayString(Dates.constructDateFromAPIString(dt)))
+      protection.certificateDate.map(dt => Display.dateDisplayString(Dates.constructDateTimeFromAPIString(dt)))
 
     ProtectionDetailsDisplayModel(protectionReference, psaReference, applicationDate)
   }

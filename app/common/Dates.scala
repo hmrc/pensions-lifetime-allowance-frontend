@@ -16,9 +16,8 @@
 
 package common
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 import java.time.format.DateTimeFormatter
-
 import play.api.i18n.{Lang, Messages}
 
 object Dates {
@@ -26,13 +25,17 @@ object Dates {
   def constructDate(day: Int, month: Int, year: Int): LocalDate =
     LocalDate.of(year, month, day)
 
-  def constructDateFromAPIString(date: String): LocalDate = {
-    val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    LocalDate.parse(date.split("T")(0), dateFormat)
-  }
+  def constructDateTimeFromAPIString(date: String): LocalDateTime =
+    if (date.contains('T')) {
+      val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HHmmss")
+      LocalDateTime.parse(date.replace(":", ""), dateFormat)
+    } else {
+      val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+      LocalDate.parse(date, dateFormat).atTime(0, 0, 0)
+    }
 
   def extractDMYFromAPIDateString(dateString: String): (Int, Int, Int) = {
-    val date = constructDateFromAPIString(dateString)
+    val date = constructDateTimeFromAPIString(dateString)
     (date.getDayOfMonth, date.getMonthValue, date.getYear)
   }
 
@@ -52,7 +55,7 @@ object Dates {
   }
 
   def withDrawDateString(date: String)(implicit lang: Lang, messages: Messages): String = {
-    val localDate = constructDateFromAPIString(date)
+    val localDate = constructDateTimeFromAPIString(date)
     Display.dateDisplayString(localDate)
   }
 

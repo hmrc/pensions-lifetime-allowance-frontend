@@ -80,7 +80,7 @@ class PLAConnector @Inject() (
     }
   }
 
-  protected def transformer(model: ProtectionModel) = {
+  protected def transformer(model: ProtectionAmendModel) = {
     val fields = List(
       Symbol("protectedAmount"),
       Symbol("relevantAmount"),
@@ -137,26 +137,28 @@ class PLAConnector @Inject() (
 
   def amendProtection(
       nino: String,
-      protection: ProtectionModel
+      protectionModel: ProtectionModel
   )(implicit hc: HeaderCarrier, ex: ExecutionContext): Future[Either[PlaConnectorError, ProtectionModel]] = {
+    val protection = ProtectionAmendModel(protectionModel)
+
     val id = protection.protectionID.getOrElse(
       throw Exceptions.RequiredValueNotDefinedForNinoException("amendProtection", "protectionID", nino)
     )
-    val requestJson = Json.toJson[ProtectionModel](protection)
+    val requestJson = Json.toJson[ProtectionAmendModel](protection)
     val body        = requestJson.transform(transformer(protection)).get
     val url         = s"$serviceUrl/protect-your-lifetime-allowance/individuals/$nino/protections/$id"
 
     http
       .put(url"$url")
       .withBody(Json.toJson(body))
-      .execute[ProtectionModel]
+      .execute[ProtectionAmendModel]
       .map {
-        case model: ProtectionModel if model.isEmpty =>
+        case model: ProtectionAmendModel if model.isEmpty =>
           logger.warn(s"Unable to create Amend Response Model from PLA response for user nino: $nino")
           Left(IncorrectResponseBodyError)
 
-        case model: ProtectionModel =>
-          Right(model)
+        case model: ProtectionAmendModel =>
+          Right(model.toProtectionModel)
       }
       .recover {
         case err: UpstreamErrorResponse if err.statusCode == LOCKED =>

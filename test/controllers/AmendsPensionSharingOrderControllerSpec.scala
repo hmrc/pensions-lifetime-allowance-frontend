@@ -288,13 +288,14 @@ class AmendsPensionSharingOrderControllerSpec
     val testProtectionSinglePsoList = ProtectionModel(
       psaCheckReference = Some("psaRef"),
       protectionID = Some(1234),
-      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
+      pensionDebits = Some(List(PensionDebitModel("2016-12-23T15:14:00", 1000.0)))
     )
 
     val testProtectionMultiplePsoList = ProtectionModel(
       psaCheckReference = Some("psaRef"),
       protectionID = Some(1234),
-      pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0), PensionDebitModel("2016-12-27", 11322.75)))
+      pensionDebits =
+        Some(List(PensionDebitModel("2016-12-23T15:14:00", 1000.0), PensionDebitModel("2016-12-27:15:12:00", 11322.75)))
     )
 
     "there is no amendment model fetched from cache" in new Setup {

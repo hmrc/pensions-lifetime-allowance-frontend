@@ -22,7 +22,7 @@ import play.api.i18n.{Lang, Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import testHelpers.FakeApplication
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.Locale
 
 class DisplaySpec extends FakeApplication with MockitoSugar {
@@ -60,17 +60,17 @@ class DisplaySpec extends FakeApplication with MockitoSugar {
     }
 
     "correctly create a date string for 17/04/2018" when {
+      val tstDate = LocalDateTime.of(2018, 4, 17, 15, 14, 0)
+
       "lang is set to en" in {
 
-        val (lang, messsage) = createLangMessages(Locale.ENGLISH)
-        val tstDate          = LocalDate.of(2018, 4, 17)
-        dateDisplayString(tstDate)(lang, messsage) shouldBe "17 April 2018"
+        val (lang, message) = createLangMessages(Locale.ENGLISH)
+        dateDisplayString(tstDate)(lang, message) shouldBe "17 April 2018"
       }
 
       "lang is set to cy" in {
-        val (lang, messsage) = createLangMessages(Locale.forLanguageTag("cy"))
-        val tstDate          = LocalDate.of(2018, 4, 17)
-        dateDisplayString(tstDate)(lang, messsage) shouldBe "17 Ebrill 2018"
+        val (lang, message) = createLangMessages(Locale.forLanguageTag("cy"))
+        dateDisplayString(tstDate)(lang, message) shouldBe "17 Ebrill 2018"
       }
     }
   }

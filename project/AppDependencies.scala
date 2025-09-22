@@ -1,8 +1,8 @@
-import sbt.*
+import sbt._
 
 object AppDependencies {
 
-  import play.sbt.PlayImport.*
+  import play.sbt.PlayImport._
 
   private val bootstrapVersion                  = "9.16.0"
   private val playFrontendVersion               = "12.7.0"

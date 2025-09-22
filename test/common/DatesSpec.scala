@@ -91,15 +91,14 @@ class DatesSpec extends FakeApplication {
     }
 
     "return a date in the format d-MMMM-YYYY" when {
+      val date = "2019-05-22T15:14:00"
 
       "the language is set to English" in {
-        val date             = "2019-05-22"
         val (lang, messages) = createLangMessages(Locale.ENGLISH)
         withDrawDateString(date)(lang, messages) shouldBe "22 May 2019"
       }
 
       "the language is set to Welsh" in {
-        val date             = "2019-05-22"
         val (lang, messages) = createLangMessages(Locale.forLanguageTag("cy"))
         withDrawDateString(date)(lang, messages) shouldBe "22 Mai 2019"
 
