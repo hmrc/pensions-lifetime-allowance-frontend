@@ -59,7 +59,7 @@ object Display {
 
   def timeDisplayString(dateTime: LocalDateTime): String = {
     val timeFormat = DateTimeFormatter.ofPattern("h:mma")
-    dateTime.format(timeFormat)
+    dateTime.format(timeFormat).toLowerCase
   }
 
   def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {
