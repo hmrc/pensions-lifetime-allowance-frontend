@@ -71,14 +71,19 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
 
     val lumpSumPercentage = protectionModel.hipFields.lumpSumPercentage
       .filter(_ => protectionTypeDisplaysLumpSumPercentage(protectionType))
-      .map(lumpSumPercentage => Display.percentageString(lumpSumPercentage))
+      .map(lumpSumPercentage => Display.percentageDisplayString(lumpSumPercentage))
 
     val lumpSumAmount = protectionModel.hipFields.lumpSumAmount
       .filter(_ => protectionTypeDisplaysLumpSumAmount(protectionType))
       .map(lumpSumAmount => Display.currencyDisplayString(BigDecimal(lumpSumAmount)))
 
-    val (factor, enhancementFactor) =
-      createFactorAndEnhancementFactorDisplayStrings(protectionModel.hipFields.enhancementFactor, protectionType)
+    val factor = protectionModel.hipFields.enhancementFactor
+      .filter(_ => protectionTypeDisplaysFactor(protectionType))
+      .map(factor => Display.factorDisplayString(factor))
+
+    val enhancementFactor = protectionModel.hipFields.enhancementFactor
+      .filter(_ => protectionTypeDisplaysEnhancementFactor(protectionType))
+      .map(enhancementFactor => Display.factorDisplayString(enhancementFactor))
 
     PrintDisplayModel(
       firstName = firstName,
@@ -189,8 +194,13 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       model.withdrawnDate.map(wDate => Display.dateDisplayString(Dates.constructDateTimeFromAPIString(wDate)))
     val amendCall = Helpers.createAmendCallIfRequired(model)
 
-    val (factor, enhancementFactor) =
-      createFactorAndEnhancementFactorDisplayStrings(model.hipFields.enhancementFactor, protectionType)
+    val factor = model.hipFields.enhancementFactor
+      .filter(_ => protectionTypeDisplaysFactor(protectionType))
+      .map(factor => Display.factorDisplayString(factor))
+
+    val enhancementFactor = model.hipFields.enhancementFactor
+      .filter(_ => protectionTypeDisplaysEnhancementFactor(protectionType))
+      .map(factor => Display.factorDisplayString(factor))
 
     val lumpSumAmount = model.hipFields.lumpSumAmount
       .filter(_ => protectionTypeDisplaysLumpSumAmount(protectionType))
@@ -198,7 +208,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
 
     val lumpSumPercentage = model.hipFields.lumpSumPercentage
       .filter(_ => protectionTypeDisplaysLumpSumPercentage(protectionType))
-      .map(lumpSumPercentage => Display.percentageString(lumpSumPercentage))
+      .map(lumpSumPercentage => Display.percentageDisplayString(lumpSumPercentage))
 
     ExistingProtectionDisplayModel(
       protectionType = protectionType,
@@ -230,16 +240,6 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       }
       .getOrElse((None, None))
 
-  private def createFactorAndEnhancementFactorDisplayStrings(
-      enhancementFactor: Option[Double],
-      protectionType: String
-  ): (Option[String], Option[String]) =
-    if (protectionTypeDisplaysEnhancementFactor(protectionType)) {
-      (None, enhancementFactor.map(_.toString))
-    } else {
-      (enhancementFactor.map(_.toString), None)
-    }
-
   def protectionTypeDisplaysLumpSumPercentage(protectionType: String): Boolean =
     ProtectionType.tryFrom(protectionType) match {
       case Some(ProtectionType.EnhancedProtection)    => true
@@ -256,12 +256,17 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
 
   def protectionTypeDisplaysEnhancementFactor(protectionType: String): Boolean =
     ProtectionType.tryFrom(protectionType) match {
-      case Some(ProtectionType.PrimaryProtection)            => true
-      case Some(ProtectionType.PrimaryProtectionLTA)         => true
       case Some(ProtectionType.PensionCreditRights)          => true
       case Some(ProtectionType.InternationalEnhancementS221) => true
       case Some(ProtectionType.InternationalEnhancementS224) => true
       case _                                                 => false
+    }
+
+  def protectionTypeDisplaysFactor(protectionType: String): Boolean =
+    ProtectionType.tryFrom(protectionType) match {
+      case Some(ProtectionType.PrimaryProtection)    => true
+      case Some(ProtectionType.PrimaryProtectionLTA) => true
+      case _                                         => false
     }
 
   // AMENDS

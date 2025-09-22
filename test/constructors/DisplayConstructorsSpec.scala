@@ -1468,4 +1468,168 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
     }
   }
 
+  "protectionTypeDisplaysLumpSumAmount" should {
+    "return true" when {
+      val types = Seq(
+        PrimaryProtection,
+        PrimaryProtectionLTA
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe true
+        }
+      )
+    }
+
+    "return false" when {
+      val types = Seq(
+        EnhancedProtection,
+        EnhancedProtectionLTA,
+        FixedProtection,
+        FixedProtection2014,
+        FixedProtection2014LTA,
+        FixedProtection2016,
+        FixedProtection2016LTA,
+        FixedProtectionLTA,
+        IndividualProtection2014,
+        IndividualProtection2014LTA,
+        IndividualProtection2016,
+        IndividualProtection2016LTA,
+        InternationalEnhancementS221,
+        InternationalEnhancementS224,
+        PensionCreditRights
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe false
+        }
+      )
+    }
+  }
+
+  "protectionTypeDisplaysLumpSumPercentage" should {
+    "return true" when {
+      val types = Seq(
+        EnhancedProtection,
+        EnhancedProtectionLTA
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe true
+        }
+      )
+    }
+
+    "return false" when {
+      val types = Seq(
+        PrimaryProtection,
+        PrimaryProtectionLTA,
+        FixedProtection,
+        FixedProtection2014,
+        FixedProtection2014LTA,
+        FixedProtection2016,
+        FixedProtection2016LTA,
+        FixedProtectionLTA,
+        IndividualProtection2014,
+        IndividualProtection2014LTA,
+        IndividualProtection2016,
+        IndividualProtection2016LTA,
+        InternationalEnhancementS221,
+        InternationalEnhancementS224,
+        PensionCreditRights
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe false
+        }
+      )
+    }
+  }
+
+  "protectionTypeDisplaysEnhancementFactor" should {
+    "return true" when {
+      val types = Seq(
+        PensionCreditRights,
+        InternationalEnhancementS221,
+        InternationalEnhancementS224
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe true
+        }
+      )
+    }
+
+    "return false" when {
+      val types = Seq(
+        EnhancedProtection,
+        EnhancedProtectionLTA,
+        FixedProtection,
+        FixedProtection2014,
+        FixedProtection2014LTA,
+        FixedProtection2016,
+        FixedProtection2016LTA,
+        FixedProtectionLTA,
+        IndividualProtection2014,
+        IndividualProtection2014LTA,
+        IndividualProtection2016,
+        IndividualProtection2016LTA,
+        PrimaryProtection,
+        PrimaryProtectionLTA
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe false
+        }
+      )
+    }
+  }
+
+  "protectionTypeDisplaysFactor" should {
+    "return true" when {
+      val types = Seq(
+        PrimaryProtection,
+        PrimaryProtectionLTA
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe true
+        }
+      )
+    }
+
+    "return false" when {
+      val types = Seq(
+        EnhancedProtection,
+        EnhancedProtectionLTA,
+        FixedProtection,
+        FixedProtection2014,
+        FixedProtection2014LTA,
+        FixedProtection2016,
+        FixedProtection2016LTA,
+        FixedProtectionLTA,
+        IndividualProtection2014,
+        IndividualProtection2014LTA,
+        IndividualProtection2016,
+        IndividualProtection2016LTA,
+        InternationalEnhancementS221,
+        InternationalEnhancementS224,
+        PensionCreditRights
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe false
+        }
+      )
+    }
+  }
+
 }

@@ -68,6 +68,8 @@ object Display {
     BigDecimal(df(amt))
   }
 
-  def percentageString(percentage: Int): String = s"$percentage%"
+  def percentageDisplayString(percentage: Int): String = s"$percentage%"
+
+  def factorDisplayString(factor: Double): String = new DecimalFormat("0.00").format(factor)
 
 }

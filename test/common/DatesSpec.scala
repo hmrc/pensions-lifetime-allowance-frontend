@@ -21,10 +21,27 @@ import play.api.i18n.{Lang, Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import testHelpers.FakeApplication
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 import java.util.Locale
 
 class DatesSpec extends FakeApplication {
+
+  "constructDateTimeFromAPIString" should {
+    "correctly handle no time component" in {
+      val apiString = "2025-09-22"
+      constructDateTimeFromAPIString(apiString) shouldBe LocalDateTime.of(2025, 9, 22, 0, 0, 0)
+    }
+
+    "correctly handle time component without colons" in {
+      val apiString = "2025-09-22T172309"
+      constructDateTimeFromAPIString(apiString) shouldBe LocalDateTime.of(2025, 9, 22, 17, 23, 9)
+    }
+
+    "correctly handle time component with colons" in {
+      val apiString = "2025-09-22T17:23:09"
+      constructDateTimeFromAPIString(apiString) shouldBe LocalDateTime.of(2025, 9, 22, 17, 23, 9)
+    }
+  }
 
   "constructDate" should {
 
