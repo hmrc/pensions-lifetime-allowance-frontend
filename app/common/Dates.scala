@@ -28,7 +28,7 @@ object Dates {
   def constructDateTimeFromAPIString(date: String): LocalDateTime =
     if (date.contains('T')) {
       val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HHmmss")
-      LocalDateTime.parse(date.replace(":", ""), dateFormat)
+      LocalDateTime.parse(date.replace(":", "").split('.')(0), dateFormat)
     } else {
       val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
       LocalDate.parse(date, dateFormat).atTime(0, 0, 0)
