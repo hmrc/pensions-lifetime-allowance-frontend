@@ -17,6 +17,7 @@
 package constructors
 
 import common._
+import config.{AppConfig, FrontendAppConfig}
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
@@ -29,7 +30,8 @@ import utils.Constants
 
 import javax.inject.Inject
 
-class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends Logging {
+class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit val appConfig: FrontendAppConfig)
+    extends Logging {
 
   implicit val lang: Lang = Lang.defaultLang
 
@@ -95,7 +97,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
       protectionReference = protectionReference,
       protectedAmount = protectedAmount,
       certificateDate = certificateDate,
-      certificateTime = certificateTime,
+      certificateTime = certificateTime.filter(_ => appConfig.hipMigrationEnabled),
       lumpSumPercentage = lumpSumPercentage,
       lumpSumAmount = lumpSumAmount,
       enhancementFactor = enhancementFactor,
@@ -236,38 +238,38 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) extends 
 
         val certificateTime = Display.timeDisplayString(dateTime)
 
-        (Some(certificateDate), Some(certificateTime))
+        (Some(certificateDate), Some(certificateTime).filter(_ => appConfig.hipMigrationEnabled))
       }
       .getOrElse((None, None))
 
   def protectionTypeDisplaysLumpSumPercentage(protectionType: String): Boolean =
-    ProtectionType.tryFrom(protectionType) match {
+    appConfig.hipMigrationEnabled && (ProtectionType.tryFrom(protectionType) match {
       case Some(ProtectionType.EnhancedProtection)    => true
       case Some(ProtectionType.EnhancedProtectionLTA) => true
       case _                                          => false
-    }
+    })
 
   def protectionTypeDisplaysLumpSumAmount(protectionType: String): Boolean =
-    ProtectionType.tryFrom(protectionType) match {
+    appConfig.hipMigrationEnabled && (ProtectionType.tryFrom(protectionType) match {
       case Some(ProtectionType.PrimaryProtection)    => true
       case Some(ProtectionType.PrimaryProtectionLTA) => true
       case _                                         => false
-    }
+    })
 
   def protectionTypeDisplaysEnhancementFactor(protectionType: String): Boolean =
-    ProtectionType.tryFrom(protectionType) match {
+    appConfig.hipMigrationEnabled && (ProtectionType.tryFrom(protectionType) match {
       case Some(ProtectionType.PensionCreditRights)          => true
       case Some(ProtectionType.InternationalEnhancementS221) => true
       case Some(ProtectionType.InternationalEnhancementS224) => true
       case _                                                 => false
-    }
+    })
 
   def protectionTypeDisplaysFactor(protectionType: String): Boolean =
-    ProtectionType.tryFrom(protectionType) match {
+    appConfig.hipMigrationEnabled && (ProtectionType.tryFrom(protectionType) match {
       case Some(ProtectionType.PrimaryProtection)    => true
       case Some(ProtectionType.PrimaryProtectionLTA) => true
       case _                                         => false
-    }
+    })
 
   // AMENDS
   def createAmendDisplayModel(model: AmendProtectionModel)(implicit lang: Lang): AmendDisplayModel = {

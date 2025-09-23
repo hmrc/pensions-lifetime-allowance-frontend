@@ -18,28 +18,57 @@ package constructors
 
 import common.Exceptions.{OptionNotDefinedException, RequiredValueNotDefinedException}
 import common.{Helpers, Strings}
+import config.FrontendAppConfig
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import models.pla.response.ProtectionStatus._
 import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType._
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesProvider}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, MessagesControllerComponents}
 import play.api.test.FakeRequest
+import play.api.{Application, inject}
 import testHelpers.FakeApplication
 
-class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
+class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
 
   implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   implicit val mockLang: Lang                                   = mock[Lang]
   implicit val mockMessagesProvider: MessagesProvider           = mock[MessagesProvider]
   implicit val controllerComponents: ControllerComponents       = mock[ControllerComponents]
-  val displayConstructor: DisplayConstructors = fakeApplication().injector.instanceOf[DisplayConstructors]
+  implicit val appConfig: FrontendAppConfig                     = mock[FrontendAppConfig]
+  implicit val appConfigHipDisabled: FrontendAppConfig          = mock[FrontendAppConfig]
+
+  val application: Application = new GuiceApplicationBuilder()
+    .configure("metrics.enabled" -> false)
+    .overrides(inject.bind[FrontendAppConfig].toInstance(appConfig))
+    .build()
+
+  val applicationHipDisabled: Application = new GuiceApplicationBuilder()
+    .configure("metrics.enabled" -> false)
+    .overrides(inject.bind[FrontendAppConfig].toInstance(appConfigHipDisabled))
+    .build()
+
+  val displayConstructor: DisplayConstructors = application.injector.instanceOf[DisplayConstructors]
+
+  val displayConstructorHipDisabled: DisplayConstructors =
+    applicationHipDisabled.injector.instanceOf[DisplayConstructors]
 
   implicit val mockMessage: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+
+  override def beforeEach(): Unit = {
+    reset(appConfig)
+    reset(appConfigHipDisabled)
+
+    when(appConfig.hipMigrationEnabled).thenReturn(true)
+    when(appConfigHipDisabled.hipMigrationEnabled).thenReturn(false)
+  }
 
   val tstPSACheckRef = "PSA33456789"
 
@@ -1469,164 +1498,213 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
   }
 
   "protectionTypeDisplaysLumpSumAmount" should {
-    "return true" when {
-      val types = Seq(
-        PrimaryProtection,
-        PrimaryProtectionLTA
-      ).map(_.toString)
+    "operate correctly when the hip migration flag is enabled" should {
+      "return true" when {
+        val types = Seq(
+          PrimaryProtection,
+          PrimaryProtectionLTA
+        ).map(_.toString)
 
-      types.foreach(protectionType =>
-        s"the protection type is $protectionType" in {
-          displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe true
-        }
-      )
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe true
+          }
+        )
+      }
+
+      "return false" when {
+        val types = Seq(
+          EnhancedProtection,
+          EnhancedProtectionLTA,
+          FixedProtection,
+          FixedProtection2014,
+          FixedProtection2014LTA,
+          FixedProtection2016,
+          FixedProtection2016LTA,
+          FixedProtectionLTA,
+          IndividualProtection2014,
+          IndividualProtection2014LTA,
+          IndividualProtection2016,
+          IndividualProtection2016LTA,
+          InternationalEnhancementS221,
+          InternationalEnhancementS224,
+          PensionCreditRights
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe false
+          }
+        )
+      }
     }
 
-    "return false" when {
-      val types = Seq(
-        EnhancedProtection,
-        EnhancedProtectionLTA,
-        FixedProtection,
-        FixedProtection2014,
-        FixedProtection2014LTA,
-        FixedProtection2016,
-        FixedProtection2016LTA,
-        FixedProtectionLTA,
-        IndividualProtection2014,
-        IndividualProtection2014LTA,
-        IndividualProtection2016,
-        IndividualProtection2016LTA,
-        InternationalEnhancementS221,
-        InternationalEnhancementS224,
-        PensionCreditRights
-      ).map(_.toString)
+    "return false when the hip migration flag is disabled" when {
+      val types = ProtectionType.values.map(_.toString)
 
       types.foreach(protectionType =>
-        s"the protection type is $protectionType" in {
-          displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe false
+        s"protection type is $protectionType" in {
+          displayConstructorHipDisabled.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe false
         }
       )
     }
   }
 
   "protectionTypeDisplaysLumpSumPercentage" should {
-    "return true" when {
-      val types = Seq(
-        EnhancedProtection,
-        EnhancedProtectionLTA
-      ).map(_.toString)
+    "operate correctly when the hip migration flag is enabled" should {
+      "return true" when {
+        val types = Seq(
+          EnhancedProtection,
+          EnhancedProtectionLTA
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe true
+          }
+        )
+      }
+
+      "return false" when {
+        val types = Seq(
+          PrimaryProtection,
+          PrimaryProtectionLTA,
+          FixedProtection,
+          FixedProtection2014,
+          FixedProtection2014LTA,
+          FixedProtection2016,
+          FixedProtection2016LTA,
+          FixedProtectionLTA,
+          IndividualProtection2014,
+          IndividualProtection2014LTA,
+          IndividualProtection2016,
+          IndividualProtection2016LTA,
+          InternationalEnhancementS221,
+          InternationalEnhancementS224,
+          PensionCreditRights
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe false
+          }
+        )
+      }
+    }
+
+    "return false when the hip migration flag is disabled" when {
+      val types = ProtectionType.values.map(_.toString)
 
       types.foreach(protectionType =>
-        s"the protection type is $protectionType" in {
-          displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe true
+        s"protection type is $protectionType" in {
+          displayConstructorHipDisabled.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe false
         }
       )
     }
 
-    "return false" when {
-      val types = Seq(
-        PrimaryProtection,
-        PrimaryProtectionLTA,
-        FixedProtection,
-        FixedProtection2014,
-        FixedProtection2014LTA,
-        FixedProtection2016,
-        FixedProtection2016LTA,
-        FixedProtectionLTA,
-        IndividualProtection2014,
-        IndividualProtection2014LTA,
-        IndividualProtection2016,
-        IndividualProtection2016LTA,
-        InternationalEnhancementS221,
-        InternationalEnhancementS224,
-        PensionCreditRights
-      ).map(_.toString)
-
-      types.foreach(protectionType =>
-        s"the protection type is $protectionType" in {
-          displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe false
-        }
-      )
-    }
   }
 
   "protectionTypeDisplaysEnhancementFactor" should {
-    "return true" when {
-      val types = Seq(
-        PensionCreditRights,
-        InternationalEnhancementS221,
-        InternationalEnhancementS224
-      ).map(_.toString)
+    "operate correctly when the hip migration flag is enabled" should {
+      "return true" when {
+        val types = Seq(
+          PensionCreditRights,
+          InternationalEnhancementS221,
+          InternationalEnhancementS224
+        ).map(_.toString)
 
-      types.foreach(protectionType =>
-        s"the protection type is $protectionType" in {
-          displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe true
-        }
-      )
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe true
+          }
+        )
+      }
+
+      "return false" when {
+        val types = Seq(
+          EnhancedProtection,
+          EnhancedProtectionLTA,
+          FixedProtection,
+          FixedProtection2014,
+          FixedProtection2014LTA,
+          FixedProtection2016,
+          FixedProtection2016LTA,
+          FixedProtectionLTA,
+          IndividualProtection2014,
+          IndividualProtection2014LTA,
+          IndividualProtection2016,
+          IndividualProtection2016LTA,
+          PrimaryProtection,
+          PrimaryProtectionLTA
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe false
+          }
+        )
+      }
     }
 
-    "return false" when {
-      val types = Seq(
-        EnhancedProtection,
-        EnhancedProtectionLTA,
-        FixedProtection,
-        FixedProtection2014,
-        FixedProtection2014LTA,
-        FixedProtection2016,
-        FixedProtection2016LTA,
-        FixedProtectionLTA,
-        IndividualProtection2014,
-        IndividualProtection2014LTA,
-        IndividualProtection2016,
-        IndividualProtection2016LTA,
-        PrimaryProtection,
-        PrimaryProtectionLTA
-      ).map(_.toString)
+    "return false when the hip migration flag is disabled" when {
+      val types = ProtectionType.values.map(_.toString)
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
-          displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe false
+          displayConstructorHipDisabled.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe false
         }
       )
     }
   }
 
   "protectionTypeDisplaysFactor" should {
-    "return true" when {
-      val types = Seq(
-        PrimaryProtection,
-        PrimaryProtectionLTA
-      ).map(_.toString)
+    "operate correctly when the hip migration flag is enabled" should {
+      "return true" when {
+        val types = Seq(
+          PrimaryProtection,
+          PrimaryProtectionLTA
+        ).map(_.toString)
 
-      types.foreach(protectionType =>
-        s"the protection type is $protectionType" in {
-          displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe true
-        }
-      )
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe true
+          }
+        )
+      }
+
+      "return false" when {
+        val types = Seq(
+          EnhancedProtection,
+          EnhancedProtectionLTA,
+          FixedProtection,
+          FixedProtection2014,
+          FixedProtection2014LTA,
+          FixedProtection2016,
+          FixedProtection2016LTA,
+          FixedProtectionLTA,
+          IndividualProtection2014,
+          IndividualProtection2014LTA,
+          IndividualProtection2016,
+          IndividualProtection2016LTA,
+          InternationalEnhancementS221,
+          InternationalEnhancementS224,
+          PensionCreditRights
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe false
+          }
+        )
+      }
     }
 
-    "return false" when {
-      val types = Seq(
-        EnhancedProtection,
-        EnhancedProtectionLTA,
-        FixedProtection,
-        FixedProtection2014,
-        FixedProtection2014LTA,
-        FixedProtection2016,
-        FixedProtection2016LTA,
-        FixedProtectionLTA,
-        IndividualProtection2014,
-        IndividualProtection2014LTA,
-        IndividualProtection2016,
-        IndividualProtection2016LTA,
-        InternationalEnhancementS221,
-        InternationalEnhancementS224,
-        PensionCreditRights
-      ).map(_.toString)
+    "return false when the hip migration flag is disabled" when {
+      val types = ProtectionType.values.map(_.toString)
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
-          displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe false
+          displayConstructorHipDisabled.protectionTypeDisplaysFactor(protectionType) shouldBe false
         }
       )
     }
