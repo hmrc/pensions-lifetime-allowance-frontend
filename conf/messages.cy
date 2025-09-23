@@ -518,6 +518,7 @@ pla.printAmend.fullName                          = Enw llawn
 pla.printAmend.nino                              = Rhif Yswiriant Gwladol
 pla.printAmend.protectionDetails                 = Manylion diogelwch
 pla.printAmend.applicationDate                   = Dyddiad y cais
+pla.printAmend.applicationTime                   = Amser y cais
 pla.printAmend.protectionType                    = Y math o ddiogelwch
 pla.printAmend.protectedAmount                   = Y swm wedi’i ddiogelu
 pla.printAmend.protectionReferenceNumber         = Cyfeirnod y diogelwch

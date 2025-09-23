@@ -77,6 +77,13 @@
 			</tr>
 		}
 
+        @details.certificateTime.map { certificateTime =>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@messages("pla.printAmend.applicationTime")</th>
+                <td class="govuk-table__cell" id="applicationTime">@{certificateTime}</td>
+            </tr>
+        }
+
 		@if(ViewConstants.dormantNotificationIds.contains(details.notificationId)) {
 			<tr class="govuk-table__row">
 				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.status")</th>

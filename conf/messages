@@ -517,6 +517,7 @@ pla.printAmend.fullName                          = Full name
 pla.printAmend.nino                              = National Insurance number
 pla.printAmend.protectionDetails                 = Protection details
 pla.printAmend.applicationDate                   = Application date
+pla.printAmend.applicationTime                   = Application time
 pla.printAmend.protectionType                    = Protection type
 pla.printAmend.protectedAmount                   = Protected amount
 pla.printAmend.protectionReferenceNumber         = Protection reference number
