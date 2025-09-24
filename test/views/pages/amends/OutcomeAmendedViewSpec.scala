@@ -113,6 +113,13 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2015"
         }
+
+        "contains row for Application Time" in {
+          val rowIndex = 6
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
       }
 
       "contain print info section" in {
@@ -198,8 +205,15 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).text shouldBe "14/07/2015"
         }
 
-        "contains row for Status" in {
+        "contains row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableStatus
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe "Dormant"
@@ -311,8 +325,15 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).text shouldBe "14/07/2015"
         }
 
-        "contains row for Status" in {
+        "contains row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableStatus
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe "Dormant"
@@ -424,8 +445,15 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).text shouldBe "14/07/2015"
         }
 
-        "contains row for Status" in {
+        "contains row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableStatus
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe "Dormant"
@@ -546,6 +574,13 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2015"
         }
+
+        "contains row for Application Time" in {
+          val rowIndex = 6
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
       }
 
       "contain print info section" in {
@@ -631,8 +666,15 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).text shouldBe "14/07/2015"
         }
 
-        "contains row for Status" in {
+        "contains row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableStatus
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe "Withdrawn"
@@ -728,6 +770,13 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2015"
+        }
+
+        "contains row for Application Time" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
         }
       }
 
@@ -845,6 +894,13 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2017"
         }
+
+        "contains row for Application Time" in {
+          val rowIndex = 6
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
       }
 
       "contain print info section" in {
@@ -930,8 +986,15 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).text shouldBe "14/07/2017"
         }
 
-        "contains row for Status" in {
+        "contains row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableStatus
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe "Dormant"
@@ -1043,8 +1106,15 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).text shouldBe "14/07/2017"
         }
 
-        "contains row for Status" in {
+        "contains row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableStatus
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe "Dormant"
@@ -1156,8 +1226,15 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).text shouldBe "14/07/2017"
         }
 
-        "contains row for Status" in {
+        "contains row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableStatus
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe "Dormant"
@@ -1269,8 +1346,15 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).text shouldBe "14/07/2017"
         }
 
-        "contains row for Status" in {
+        "contains row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableStatus
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe "Dormant"
@@ -1382,8 +1466,15 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableData.get(rowIndex).text shouldBe "14/07/2017"
         }
 
-        "contains row for Status" in {
+        "contains row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contains row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableStatus
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe "Withdrawn"
@@ -1479,6 +1570,13 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+
+        "contains row for Application Time" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationTime
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
         }
       }
 

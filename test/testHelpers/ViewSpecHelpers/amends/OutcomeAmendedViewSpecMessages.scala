@@ -30,6 +30,7 @@ trait OutcomeAmendedViewSpecMessages {
   val tableAmendPsaRef             = "Pension scheme administrator check reference"
   val tableAmendFixedProtectionRef = "Fixed protection 2016 reference number"
   val tableAmendApplicationDate    = "Application date"
+  val tableAmendApplicationTime    = "Application time"
   val tableStatus                  = "Status"
   val tableDormant                 = "Dormant"
   val tableWithdrawn               = "Withdrawn"

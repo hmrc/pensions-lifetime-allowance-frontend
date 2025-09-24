@@ -19,20 +19,21 @@
 @import config.FrontendAppConfig
 @import views.HeaderContent
 @import common.Strings
+@import views.html.playHelpers.templates.existingProtections.protectionDetails
 
 @this(appConfig: FrontendAppConfig)
 
 @(protection: ExistingProtectionDisplayModel, statusGroup: String, protectionNum: Int)(implicit messages: Messages)
 
 @changeLink = {
-@protection.amendCall.map{ call =>
-<a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status.toLowerCase}-${Strings.protectionTypeString(Some(protection.protectionType))}-amend-link-$protectionNum"}>
-    @Messages("pla.existingProtections.amendLinkText")
-    <span class="govuk-visually-hidden">
+    @protection.amendCall.map{ call =>
+        <a class="govuk-body govuk-link" href="@call" id=@{s"${protection.status.toLowerCase}-${Strings.protectionTypeString(Some(protection.protectionType))}-amend-link-$protectionNum"}>
+            @Messages("pla.existingProtections.amendLinkText")
+            <span class="govuk-visually-hidden">
                 @Messages("pla.protection.types." + protection.protectionType) @protection.protectionReference
             </span>
-</a>
-}
+        </a>
+    }
 }
 
 <h3 class="govuk-heading-m" id="activeProtection">
@@ -43,18 +44,40 @@
 </h3>
 <dl class="govuk-summary-list">
 
-        @protection.protectedAmount.map { amt =>
-        @protectionDetails(Messages(HeaderContent.getProtectedLifetimeAllowance(appConfig)), amt, "activeProtectedAmount", Some(changeLink))
-        }
+    @protection.protectedAmount.map { protectedAmount =>
+        @protectionDetails(Messages(HeaderContent.getProtectedLifetimeAllowance(appConfig)), protectedAmount, "activeProtectedAmount", Some(changeLink))
+    }
 
-        @protectionDetails(Messages(HeaderContent.getProtectionNotificatioNumber(appConfig)), protection.protectionReference, "activeProtectionReference")
+    @protectionDetails(Messages(HeaderContent.getProtectionNotificatioNumber(appConfig)), protection.protectionReference, "activeProtectionReference")
 
-        @protection.psaCheckReference.map { checkRef =>
+    @protection.psaCheckReference.map { checkRef =>
         @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference(appConfig)), checkRef, "activePSACheckRef")
-        }
-        @protection.certificateDate.map{ cDate =>
-        @protectionDetails(Messages("pla.existingProtections.applicationDate"), cDate, "activeCertificateDate")
-        }
+    }
+
+    @protection.certificateDate.map{ certificateDate =>
+        @protectionDetails(Messages("pla.existingProtections.applicationDate"), certificateDate, "activeCertificateDate")
+    }
+
+    @protection.certificateTime.map{ certificateTime =>
+        @protectionDetails(Messages("pla.existingProtections.applicationTime"), certificateTime, "activeCertificateTime")
+    }
+
+    @protection.lumpSumPercentage.map { lumpSumPercentage =>
+        @protectionDetails(Messages("pla.existingProtections.lumpSumPercentage"), lumpSumPercentage, "activeLumpSumPercentage")
+    }
+
+    @protection.lumpSumAmount.map{ lumpSumAmount =>
+        @protectionDetails(Messages("pla.existingProtections.lumpSumAmount"), lumpSumAmount, "activeLumpSumAmount")
+    }
+
+    @protection.enhancementFactor.map{ enhancementFactor =>
+        @protectionDetails(Messages("pla.existingProtections.enhancementFactor"), enhancementFactor, "activeEnhancementFactor")
+    }
+
+    @protection.factor.map{ factor =>
+        @protectionDetails(Messages("pla.existingProtections.factor"), factor, "activeFactor")
+    }
+
 </dl>
 
 <a class="govuk-body govuk-link" id="printLink" href="@controllers.routes.PrintController.printView" target="_blank">

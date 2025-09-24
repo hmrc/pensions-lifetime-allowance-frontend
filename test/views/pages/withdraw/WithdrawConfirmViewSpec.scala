@@ -30,7 +30,7 @@ class WithdrawConfirmViewSpec extends CommonViewSpecHelper with WithdrawConfirmS
 
   "Withdraw Confirm view" when {
     implicit val lang      = mock[Lang]
-    val withdrawDate       = "2018-01-16"
+    val withdrawDate       = "2018-01-16T151400"
     val withdrawDatePretty = "16 January 2018"
 
     lazy val view = app.injector.instanceOf[withdrawConfirm]

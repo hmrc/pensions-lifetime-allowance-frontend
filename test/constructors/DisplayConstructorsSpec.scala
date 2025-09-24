@@ -18,28 +18,57 @@ package constructors
 
 import common.Exceptions.{OptionNotDefinedException, RequiredValueNotDefinedException}
 import common.{Helpers, Strings}
+import config.FrontendAppConfig
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
 import models.pla.response.ProtectionStatus._
 import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType._
+import org.mockito.Mockito.{reset, when}
+import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesProvider}
+import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, MessagesControllerComponents}
 import play.api.test.FakeRequest
+import play.api.{Application, inject}
 import testHelpers.FakeApplication
 
-class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
+class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with BeforeAndAfterEach {
 
   implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
   implicit val mockLang: Lang                                   = mock[Lang]
   implicit val mockMessagesProvider: MessagesProvider           = mock[MessagesProvider]
   implicit val controllerComponents: ControllerComponents       = mock[ControllerComponents]
-  val displayConstructor: DisplayConstructors = fakeApplication().injector.instanceOf[DisplayConstructors]
+  implicit val appConfig: FrontendAppConfig                     = mock[FrontendAppConfig]
+  implicit val appConfigHipDisabled: FrontendAppConfig          = mock[FrontendAppConfig]
+
+  val application: Application = new GuiceApplicationBuilder()
+    .configure("metrics.enabled" -> false)
+    .overrides(inject.bind[FrontendAppConfig].toInstance(appConfig))
+    .build()
+
+  val applicationHipDisabled: Application = new GuiceApplicationBuilder()
+    .configure("metrics.enabled" -> false)
+    .overrides(inject.bind[FrontendAppConfig].toInstance(appConfigHipDisabled))
+    .build()
+
+  val displayConstructor: DisplayConstructors = application.injector.instanceOf[DisplayConstructors]
+
+  val displayConstructorHipDisabled: DisplayConstructors =
+    applicationHipDisabled.injector.instanceOf[DisplayConstructors]
 
   implicit val mockMessage: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+
+  override def beforeEach(): Unit = {
+    reset(appConfig)
+    reset(appConfigHipDisabled)
+
+    when(appConfig.hipMigrationEnabled).thenReturn(true)
+    when(appConfigHipDisabled.hipMigrationEnabled).thenReturn(false)
+  }
 
   val tstPSACheckRef = "PSA33456789"
 
@@ -264,7 +293,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionID = Some(12345),
         protectionType = Some(IndividualProtection2014.toString),
         status = Some(Open.toString),
-        certificateDate = Some("2016-04-17"),
+        certificateDate = Some("2016-04-17T15:14:00"),
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456")
       )
@@ -280,7 +309,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
-        certificateDate = Some("17 April 2016")
+        certificateDate = Some("17 April 2016"),
+        certificateTime = Some("3:14pm")
       )
 
       val tstProtectionModelDormant = ProtectionModel(
@@ -332,7 +362,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionID = Some(12345),
         protectionType = Some(IndividualProtection2014.toString),
         status = Some(Open.toString),
-        certificateDate = Some("2016-04-17"),
+        certificateDate = Some("2016-04-17T15:14:00"),
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456"),
         withdrawnDate = None
@@ -350,6 +380,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"),
+        certificateTime = Some("3:14pm"),
         withdrawnDate = None
       )
 
@@ -810,7 +841,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
             protectionID = Some(12345),
             protectionType = Some(protectionType.toString),
             status = Some(Withdrawn.toString),
-            certificateDate = Some("2016-04-17"),
+            certificateDate = Some("2016-04-17T15:14:00"),
             protectedAmount = Some(1250000),
             protectionReference = Some("PSA654321"),
             notificationId = Some(1)
@@ -828,7 +859,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
             psaCheckReference = Some(tstPSACheckRef),
             protectionReference = "PSA654321",
             protectedAmount = Some("£1,250,000"),
-            certificateDate = Some("17 April 2016")
+            certificateDate = Some("17 April 2016"),
+            certificateTime = Some("3:14pm")
           )
 
           val existingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
@@ -858,7 +890,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionID = Some(12345),
         protectionType = Some("unknown protection type"),
         status = Some(Withdrawn.toString),
-        certificateDate = Some("2016-04-17"),
+        certificateDate = Some("2016-04-17T15:14:00"),
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA654321"),
         notificationId = Some(1)
@@ -876,7 +908,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         psaCheckReference = Some(tstPSACheckRef),
         protectionReference = "PSA654321",
         protectedAmount = Some("£1,250,000"),
-        certificateDate = Some("17 April 2016")
+        certificateDate = Some("17 April 2016"),
+        certificateTime = Some("3:14pm")
       )
 
       val existingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
@@ -911,7 +944,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionID = Some(12345),
         protectionType = Some(IndividualProtection2014.toString),
         status = Some(Open.toString),
-        certificateDate = Some("2016-04-17"),
+        certificateDate = Some("2016-04-17T15:14:00"),
         protectedAmount = Some(1250000),
         protectionReference = Some("PSA123456"),
         notificationId = Some(1)
@@ -927,7 +960,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         psaCheckReference = tstPSACheckRef,
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
-        certificateDate = Some("17 April 2016")
+        certificateDate = Some("17 April 2016"),
+        certificateTime = Some("3:14pm")
       )
 
       displayConstructor.createPrintDisplayModel(
@@ -947,7 +981,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
       protectionID = Some(12345),
       protectionType = Some(IndividualProtection2014.toString),
       status = Some(Open.toString),
-      certificateDate = Some("2016-04-17"),
+      certificateDate = Some("2016-04-17T15:14:00"),
       protectedAmount = Some(1250000),
       protectionReference = Some("PSA123456"),
       notificationId = Some(1)
@@ -965,6 +999,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         protectionReference = "PSA123456",
         protectedAmount = Some("£1,250,000"),
         certificateDate = Some("17 April 2016"),
+        certificateTime = Some("3:14pm"),
         notificationId = 1
       )
 
@@ -1145,7 +1180,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         relevantAmount = Some(1100000.34),
         preADayPensionInPayment = None,
         postADayBenefitCrystallisationEvents = None,
-        pensionDebits = Some(List(PensionDebitModel("2017-03-02", 1000.0))),
+        pensionDebits = Some(List(PensionDebitModel("2017-03-02T15:14:00", 1000.0))),
         pensionDebitTotalAmount = Some(0.0),
         nonUKRights = Some(100000.0),
         uncrystallisedRights = Some(1000000.34)
@@ -1199,7 +1234,9 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         relevantAmount = Some(1000000.34),
         preADayPensionInPayment = None,
         postADayBenefitCrystallisationEvents = None,
-        pensionDebits = Some(List(PensionDebitModel("2017-03-02", 1000.0), PensionDebitModel("2017-03-02", 2000.0))),
+        pensionDebits = Some(
+          List(PensionDebitModel("2017-03-02T15:14:00", 1000.0), PensionDebitModel("2017-03-02T15:12:00", 2000.0))
+        ),
         pensionDebitTotalAmount = Some(0.0),
         nonUKRights = Some(100000.0),
         uncrystallisedRights = Some(1000000.34)
@@ -1228,7 +1265,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
           protectionID = Some(100003),
           protectionType = Some(IndividualProtection2014.toString),
           protectionReference = Some("protectionRef"),
-          certificateDate = Some("2016-06-14"),
+          certificateDate = Some("2016-06-14T15:14:00"),
           protectedAmount = Some(1350000.45),
           notificationId = Some(33)
         )
@@ -1270,7 +1307,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
             protectionID = Some(100003),
             protectionType = Some(IndividualProtection2014.toString),
             protectionReference = Some("protectionRef"),
-            certificateDate = Some("2016-06-14"),
+            certificateDate = Some("2016-06-14T15:14:00"),
             protectedAmount = None,
             notificationId = Some(33)
           )
@@ -1295,7 +1332,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
             protectionID = Some(100003),
             protectionType = Some(IndividualProtection2014.toString),
             protectionReference = Some("protectionRef"),
-            certificateDate = Some("2016-06-14"),
+            certificateDate = Some("2016-06-14T15:14:00"),
             protectedAmount = Some(1350000.45),
             notificationId = None
           )
@@ -1324,7 +1361,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
           protectionType = Some(IndividualProtection2014.toString),
           status = Some(Open.toString),
           protectionReference = Some("protectionRef"),
-          certificateDate = Some("2016-06-14"),
+          certificateDate = Some("2016-06-14T15:14:00"),
           protectedAmount = Some(1350000.45),
           notificationId = Some(33)
         )
@@ -1348,6 +1385,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
             protectionReference = "protectionRef",
             protectedAmount = Some("£1,350,000.45"),
             certificateDate = Some("14 June 2016"),
+            certificateTime = Some("3:14pm"),
             notificationId = 33
           )
         )
@@ -1455,6 +1493,219 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar {
         psoAdded = false,
         psoSectionsResult,
         "£0"
+      )
+    }
+  }
+
+  "protectionTypeDisplaysLumpSumAmount" should {
+    "operate correctly when the hip migration flag is enabled" should {
+      "return true" when {
+        val types = Seq(
+          PrimaryProtection,
+          PrimaryProtectionLTA
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe true
+          }
+        )
+      }
+
+      "return false" when {
+        val types = Seq(
+          EnhancedProtection,
+          EnhancedProtectionLTA,
+          FixedProtection,
+          FixedProtection2014,
+          FixedProtection2014LTA,
+          FixedProtection2016,
+          FixedProtection2016LTA,
+          FixedProtectionLTA,
+          IndividualProtection2014,
+          IndividualProtection2014LTA,
+          IndividualProtection2016,
+          IndividualProtection2016LTA,
+          InternationalEnhancementS221,
+          InternationalEnhancementS224,
+          PensionCreditRights
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe false
+          }
+        )
+      }
+    }
+
+    "return false when the hip migration flag is disabled" when {
+      val types = ProtectionType.values.map(_.toString)
+
+      types.foreach(protectionType =>
+        s"protection type is $protectionType" in {
+          displayConstructorHipDisabled.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe false
+        }
+      )
+    }
+  }
+
+  "protectionTypeDisplaysLumpSumPercentage" should {
+    "operate correctly when the hip migration flag is enabled" should {
+      "return true" when {
+        val types = Seq(
+          EnhancedProtection,
+          EnhancedProtectionLTA
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe true
+          }
+        )
+      }
+
+      "return false" when {
+        val types = Seq(
+          PrimaryProtection,
+          PrimaryProtectionLTA,
+          FixedProtection,
+          FixedProtection2014,
+          FixedProtection2014LTA,
+          FixedProtection2016,
+          FixedProtection2016LTA,
+          FixedProtectionLTA,
+          IndividualProtection2014,
+          IndividualProtection2014LTA,
+          IndividualProtection2016,
+          IndividualProtection2016LTA,
+          InternationalEnhancementS221,
+          InternationalEnhancementS224,
+          PensionCreditRights
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe false
+          }
+        )
+      }
+    }
+
+    "return false when the hip migration flag is disabled" when {
+      val types = ProtectionType.values.map(_.toString)
+
+      types.foreach(protectionType =>
+        s"protection type is $protectionType" in {
+          displayConstructorHipDisabled.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe false
+        }
+      )
+    }
+
+  }
+
+  "protectionTypeDisplaysEnhancementFactor" should {
+    "operate correctly when the hip migration flag is enabled" should {
+      "return true" when {
+        val types = Seq(
+          PensionCreditRights,
+          InternationalEnhancementS221,
+          InternationalEnhancementS224
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe true
+          }
+        )
+      }
+
+      "return false" when {
+        val types = Seq(
+          EnhancedProtection,
+          EnhancedProtectionLTA,
+          FixedProtection,
+          FixedProtection2014,
+          FixedProtection2014LTA,
+          FixedProtection2016,
+          FixedProtection2016LTA,
+          FixedProtectionLTA,
+          IndividualProtection2014,
+          IndividualProtection2014LTA,
+          IndividualProtection2016,
+          IndividualProtection2016LTA,
+          PrimaryProtection,
+          PrimaryProtectionLTA
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe false
+          }
+        )
+      }
+    }
+
+    "return false when the hip migration flag is disabled" when {
+      val types = ProtectionType.values.map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructorHipDisabled.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe false
+        }
+      )
+    }
+  }
+
+  "protectionTypeDisplaysFactor" should {
+    "operate correctly when the hip migration flag is enabled" should {
+      "return true" when {
+        val types = Seq(
+          PrimaryProtection,
+          PrimaryProtectionLTA
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe true
+          }
+        )
+      }
+
+      "return false" when {
+        val types = Seq(
+          EnhancedProtection,
+          EnhancedProtectionLTA,
+          FixedProtection,
+          FixedProtection2014,
+          FixedProtection2014LTA,
+          FixedProtection2016,
+          FixedProtection2016LTA,
+          FixedProtectionLTA,
+          IndividualProtection2014,
+          IndividualProtection2014LTA,
+          IndividualProtection2016,
+          IndividualProtection2016LTA,
+          InternationalEnhancementS221,
+          InternationalEnhancementS224,
+          PensionCreditRights
+        ).map(_.toString)
+
+        types.foreach(protectionType =>
+          s"the protection type is $protectionType" in {
+            displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe false
+          }
+        )
+      }
+    }
+
+    "return false when the hip migration flag is disabled" when {
+      val types = ProtectionType.values.map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructorHipDisabled.protectionTypeDisplaysFactor(protectionType) shouldBe false
+        }
       )
     }
   }

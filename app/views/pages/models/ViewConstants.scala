@@ -23,6 +23,7 @@ object ViewConstants {
   val changeDetailsShortSection: List[Int]        = List(1, 5, 6, 8, 13)
   val changeDetailsLongSection: List[Int]         = List(2, 3, 4, 7, 9, 10, 11, 12, 14)
 
+  val openNotificationIds: List[Int]      = List(1, 5, 8)
   val dormantNotificationIds: List[Int]   = List(2, 3, 4, 9, 10, 11, 12)
   val withdrawnNotificationIds: List[Int] = List(6, 13)
 

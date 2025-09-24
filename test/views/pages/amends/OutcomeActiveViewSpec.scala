@@ -45,6 +45,7 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
   private val ProtectionRefHeader   = "Protection reference number"
   private val PsaRefHeader          = "Pension scheme administrator check reference"
   private val ApplicationDateHeader = "Application date"
+  private val ApplicationTimeHeader = "Application time"
 
   "the OutcomeActiveView" should {
 

@@ -40,7 +40,9 @@ case class ProtectionModel(
     pensionDebits: Option[List[PensionDebitModel]] = None,
     notificationId: Option[Int] = None,
     protectionReference: Option[String] = None,
-    withdrawnDate: Option[String] = None
+    withdrawnDate: Option[String] = None,
+    // Play's Json.Format breaks if this case class exceeds 22 fields, so additional fields go here
+    hipFieldsOption: Option[ProtectionModelHipFields] = None
 ) {
 
   def isEmpty: Boolean = this == ProtectionModel(None, None)
@@ -53,6 +55,8 @@ case class ProtectionModel(
 
     isStatusAmendable && isProtectionTypeAmendable
   }
+
+  def hipFields: ProtectionModelHipFields = ProtectionModelHipFields.fromOption(hipFieldsOption)
 
 }
 
@@ -79,18 +83,43 @@ object ProtectionModel {
       None,
       None,
       record.protectionReference,
-      None
+      None,
+      Some(
+        ProtectionModelHipFields(
+          record.lumpSumPercentage,
+          record.lumpSumAmount,
+          record.enhancementFactor
+        )
+      )
     )
 
   private def buildRecordDateTime(record: ProtectionRecord): String =
     s"${record.certificateDate}T${record.certificateTime}"
 
-  implicit val pensionDebitFormat: OFormat[PensionDebitModel] = PensionDebitModel.pdFormat
-  implicit val format: OFormat[ProtectionModel]               = Json.format[ProtectionModel]
+  implicit val pensionDebitFormat: OFormat[PensionDebitModel]     = PensionDebitModel.pdFormat
+  implicit val hipFieldsFormat: OFormat[ProtectionModelHipFields] = ProtectionModelHipFields.format
+  implicit val format: OFormat[ProtectionModel]                   = Json.format[ProtectionModel]
 }
 
 case class PensionDebitModel(startDate: String, amount: Double)
 
 object PensionDebitModel {
   implicit val pdFormat: OFormat[PensionDebitModel] = Json.format[PensionDebitModel]
+}
+
+case class ProtectionModelHipFields(
+    lumpSumPercentage: Option[Int] = None,
+    lumpSumAmount: Option[Int] = None,
+    enhancementFactor: Option[Double] = None
+) {
+  def isEmpty: Boolean = this == ProtectionModelHipFields()
+}
+
+object ProtectionModelHipFields {
+  def empty = ProtectionModelHipFields()
+
+  def fromOption(option: Option[ProtectionModelHipFields]): ProtectionModelHipFields =
+    option.getOrElse(ProtectionModelHipFields.empty)
+
+  implicit val format: OFormat[ProtectionModelHipFields] = Json.format[ProtectionModelHipFields]
 }

@@ -18,8 +18,7 @@ package common
 
 import java.text.DecimalFormat
 import java.time.format.DateTimeFormatter
-import java.time.LocalDate
-
+import java.time.LocalDateTime
 import play.api.i18n.{Lang, Messages}
 
 case class MoneyPounds(value: BigDecimal, decimalPlaces: Int = 2, roundUp: Boolean = false) {
@@ -46,7 +45,7 @@ object Display {
     } else str
   }
 
-  def dateDisplayString(date: LocalDate)(implicit lang: Lang, messages: Messages): String =
+  def dateDisplayString(date: LocalDateTime)(implicit lang: Lang, messages: Messages): String =
     if (lang.language == "cy") {
       val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
       date.format(dateFormat)
@@ -58,10 +57,19 @@ object Display {
       date.format(dateFormat)
     }
 
+  def timeDisplayString(dateTime: LocalDateTime): String = {
+    val timeFormat = DateTimeFormatter.ofPattern("h:mma")
+    dateTime.format(timeFormat).toLowerCase
+  }
+
   def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {
     def df(n: BigDecimal): String = new DecimalFormat("0.00").format(n).replace(".00", "")
 
     BigDecimal(df(amt))
   }
+
+  def percentageDisplayString(percentage: Int): String = s"$percentage%"
+
+  def factorDisplayString(factor: Double): String = new DecimalFormat("0.00").format(factor)
 
 }

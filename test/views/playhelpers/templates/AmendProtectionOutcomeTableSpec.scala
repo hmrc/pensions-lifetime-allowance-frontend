@@ -34,6 +34,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
   private val ProtectionTypeHeader     = "Protection type"
   private val PsaRefHeader             = "Pension scheme administrator check reference"
   private val ApplicationDateHeader    = "Application date"
+  private val ApplicationTimeHeader    = "Application time"
   private val StatusHeader             = "Status"
   private val DormantText              = "Dormant"
   private val WithdrawnText            = "Withdrawn"
@@ -102,6 +103,13 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
             tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
             tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
           }
+
+          "contain row for Application Time" in {
+            val rowIndex = 6
+            tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.certificateTime.get
+          }
         }
 
         "includeProtectedAmount is set to true" should {
@@ -159,6 +167,13 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
             tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
             tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
           }
+
+          "contain row for Application Time" in {
+            val rowIndex = 7
+            tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.certificateTime.get
+          }
         }
       }
     }
@@ -203,8 +218,15 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
             tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
           }
 
-          "contain row for Status" in {
+          "contain row for Application Time" in {
             val rowIndex = 4
+            tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.certificateTime.get
+          }
+
+          "contain row for Status" in {
+            val rowIndex = 5
             tableHeadings.get(rowIndex).text shouldBe StatusHeader
             tableData.get(rowIndex).attr("id") shouldBe "status"
             tableData.get(rowIndex).text shouldBe DormantText
@@ -253,8 +275,15 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
             tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
           }
 
-          "contain row for Status" in {
+          "contain row for Application Time" in {
             val rowIndex = 5
+            tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+            tableData.get(rowIndex).text shouldBe printDisplayModel.certificateTime.get
+          }
+
+          "contain row for Status" in {
+            val rowIndex = 6
             tableHeadings.get(rowIndex).text shouldBe StatusHeader
             tableData.get(rowIndex).attr("id") shouldBe "status"
             tableData.get(rowIndex).text shouldBe DormantText
@@ -302,8 +331,15 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
         }
 
-        "contain row for Status" in {
+        "contain row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.certificateTime.get
+        }
+
+        "contain row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe StatusHeader
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe WithdrawnText
@@ -352,8 +388,15 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableData.get(rowIndex).text shouldBe printDisplayModel.certificateDate.get
         }
 
-        "contain row for Status" in {
+        "contain row for Application Time" in {
           val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe printDisplayModel.certificateTime.get
+        }
+
+        "contain row for Status" in {
+          val rowIndex = 6
           tableHeadings.get(rowIndex).text shouldBe StatusHeader
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe WithdrawnText
@@ -406,6 +449,13 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2015"
         }
+
+        "contain row for Application Time" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
       }
 
       "includeProtectedAmount is set to true" should {
@@ -455,6 +505,13 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2015"
+        }
+
+        "contain row for Application Time" in {
+          val rowIndex = 6
+          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
         }
       }
     }
@@ -510,6 +567,13 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+
+        "contain row for Application Time" in {
+          val rowIndex = 6
+          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
         }
       }
 
@@ -568,6 +632,13 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2017"
         }
+
+        "contain row for Application Time" in {
+          val rowIndex = 7
+          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
       }
     }
 
@@ -611,8 +682,15 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
             tableData.get(rowIndex).text shouldBe "14/07/2017"
           }
 
-          "contain row for Status" in {
+          "contain row for Application Time" in {
             val rowIndex = 4
+            tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+            tableData.get(rowIndex).text shouldBe "3:14pm"
+          }
+
+          "contain row for Status" in {
+            val rowIndex = 5
             tableHeadings.get(rowIndex).text shouldBe StatusHeader
             tableData.get(rowIndex).attr("id") shouldBe "status"
             tableData.get(rowIndex).text shouldBe DormantText
@@ -661,8 +739,15 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
             tableData.get(rowIndex).text shouldBe "14/07/2017"
           }
 
-          "contain row for Status" in {
+          "contain row for Application Time" in {
             val rowIndex = 5
+            tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+            tableData.get(rowIndex).text shouldBe "3:14pm"
+          }
+
+          "contain row for Status" in {
+            val rowIndex = 6
             tableHeadings.get(rowIndex).text shouldBe StatusHeader
             tableData.get(rowIndex).attr("id") shouldBe "status"
             tableData.get(rowIndex).text shouldBe DormantText
@@ -710,8 +795,15 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableData.get(rowIndex).text shouldBe "14/07/2017"
         }
 
-        "contain row for Status" in {
+        "contain row for Application Time" in {
           val rowIndex = 4
+          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contain row for Status" in {
+          val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe StatusHeader
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe WithdrawnText
@@ -760,8 +852,15 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableData.get(rowIndex).text shouldBe "14/07/2017"
         }
 
-        "contain row for Status" in {
+        "contain row for Application Time" in {
           val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
+
+        "contain row for Status" in {
+          val rowIndex = 6
           tableHeadings.get(rowIndex).text shouldBe StatusHeader
           tableData.get(rowIndex).attr("id") shouldBe "status"
           tableData.get(rowIndex).text shouldBe WithdrawnText
@@ -814,6 +913,13 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2017"
         }
+
+        "contain row for Application Time" in {
+          val rowIndex = 5
+          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
+        }
       }
 
       "includeProtectedAmount is set to true" should {
@@ -863,6 +969,13 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
           tableData.get(rowIndex).text shouldBe "14/07/2017"
+        }
+
+        "contain row for Application Time" in {
+          val rowIndex = 6
+          tableHeadings.get(rowIndex).text shouldBe ApplicationTimeHeader
+          tableData.get(rowIndex).attr("id") shouldBe "applicationTime"
+          tableData.get(rowIndex).text shouldBe "3:14pm"
         }
       }
     }

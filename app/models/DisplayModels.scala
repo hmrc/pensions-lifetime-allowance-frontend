@@ -50,7 +50,12 @@ case class ExistingProtectionDisplayModel(
     protectionReference: String,
     protectedAmount: Option[String],
     certificateDate: Option[String],
-    withdrawnDate: Option[String] = None
+    certificateTime: Option[String] = None,
+    withdrawnDate: Option[String] = None,
+    lumpSumAmount: Option[String] = None,
+    lumpSumPercentage: Option[String] = None,
+    factor: Option[String] = None,
+    enhancementFactor: Option[String] = None
 )
 
 case class ExistingProtectionsDisplayModel(
@@ -138,7 +143,12 @@ case class PrintDisplayModel(
     psaCheckReference: String,
     protectionReference: String,
     protectedAmount: Option[String],
-    certificateDate: Option[String]
+    certificateDate: Option[String],
+    certificateTime: Option[String] = None,
+    lumpSumPercentage: Option[String] = None,
+    lumpSumAmount: Option[String] = None,
+    enhancementFactor: Option[String] = None,
+    factor: Option[String] = None
 )
 
 case class AmendPrintDisplayModel(
@@ -151,6 +161,7 @@ case class AmendPrintDisplayModel(
     protectionReference: String,
     protectedAmount: Option[String],
     certificateDate: Option[String],
+    certificateTime: Option[String],
     notificationId: Int
 )
 

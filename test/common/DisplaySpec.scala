@@ -22,7 +22,7 @@ import play.api.i18n.{Lang, Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import testHelpers.FakeApplication
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.Locale
 
 class DisplaySpec extends FakeApplication with MockitoSugar {
@@ -60,17 +60,58 @@ class DisplaySpec extends FakeApplication with MockitoSugar {
     }
 
     "correctly create a date string for 17/04/2018" when {
+      val tstDate = LocalDateTime.of(2018, 4, 17, 15, 14, 0)
+
       "lang is set to en" in {
 
-        val (lang, messsage) = createLangMessages(Locale.ENGLISH)
-        val tstDate          = LocalDate.of(2018, 4, 17)
-        dateDisplayString(tstDate)(lang, messsage) shouldBe "17 April 2018"
+        val (lang, message) = createLangMessages(Locale.ENGLISH)
+        dateDisplayString(tstDate)(lang, message) shouldBe "17 April 2018"
       }
 
       "lang is set to cy" in {
-        val (lang, messsage) = createLangMessages(Locale.forLanguageTag("cy"))
-        val tstDate          = LocalDate.of(2018, 4, 17)
-        dateDisplayString(tstDate)(lang, messsage) shouldBe "17 Ebrill 2018"
+        val (lang, message) = createLangMessages(Locale.forLanguageTag("cy"))
+        dateDisplayString(tstDate)(lang, message) shouldBe "17 Ebrill 2018"
+      }
+    }
+
+  }
+
+  "timeDisplayString" should {
+    "correctly create a time string for 17:23:09" in {
+      val testTime = LocalDateTime.of(2025, 9, 22, 17, 23, 9)
+
+      timeDisplayString(testTime) shouldBe "5:23pm"
+    }
+
+    "correct create a time string for 09:35:25" in {
+      val testTime = LocalDateTime.of(2025, 8, 22, 9, 35, 25)
+
+      timeDisplayString(testTime) shouldBe "9:35am"
+    }
+  }
+
+  "percentageDisplayString" should {
+    "correctly create a percentage string for 34" in {
+      percentageDisplayString(34) shouldBe "34%"
+    }
+  }
+
+  "factorDisplayString" should {
+    "correctly format factor string" when {
+      "the factor is 0.34" in {
+        factorDisplayString(0.34) shouldBe "0.34"
+      }
+
+      "the factor is 0.343" in {
+        factorDisplayString(0.343) shouldBe "0.34"
+      }
+
+      "the factor is 0.5" in {
+        factorDisplayString(0.5) shouldBe "0.50"
+      }
+
+      "the factor is 0" in {
+        factorDisplayString(0) shouldBe "0.00"
       }
     }
   }

@@ -21,10 +21,27 @@ import play.api.i18n.{Lang, Messages, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import testHelpers.FakeApplication
 
-import java.time.LocalDate
+import java.time.{LocalDate, LocalDateTime}
 import java.util.Locale
 
 class DatesSpec extends FakeApplication {
+
+  "constructDateTimeFromAPIString" should {
+    "correctly handle no time component" in {
+      val apiString = "2025-09-22"
+      constructDateTimeFromAPIString(apiString) shouldBe LocalDateTime.of(2025, 9, 22, 0, 0, 0)
+    }
+
+    "correctly handle time component without colons" in {
+      val apiString = "2025-09-22T172309"
+      constructDateTimeFromAPIString(apiString) shouldBe LocalDateTime.of(2025, 9, 22, 17, 23, 9)
+    }
+
+    "correctly handle time component with colons" in {
+      val apiString = "2025-09-22T17:23:09"
+      constructDateTimeFromAPIString(apiString) shouldBe LocalDateTime.of(2025, 9, 22, 17, 23, 9)
+    }
+  }
 
   "constructDate" should {
 
@@ -91,15 +108,14 @@ class DatesSpec extends FakeApplication {
     }
 
     "return a date in the format d-MMMM-YYYY" when {
+      val date = "2019-05-22T15:14:00"
 
       "the language is set to English" in {
-        val date             = "2019-05-22"
         val (lang, messages) = createLangMessages(Locale.ENGLISH)
         withDrawDateString(date)(lang, messages) shouldBe "22 May 2019"
       }
 
       "the language is set to Welsh" in {
-        val date             = "2019-05-22"
         val (lang, messages) = createLangMessages(Locale.forLanguageTag("cy"))
         withDrawDateString(date)(lang, messages) shouldBe "22 Mai 2019"
 
