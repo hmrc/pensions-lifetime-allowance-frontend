@@ -113,7 +113,7 @@ class AmendsCurrentPensionController @Inject() (
         AmendProtectionLifetimeAllowanceType
           .tryFrom(protectionTypeString)
           .map { protectionType =>
-            amendCurrentPensionForm(protectionTypeString)
+            amendCurrentPensionForm(protectionType.toString)
               .bindFromRequest()
               .fold(
                 errors =>
