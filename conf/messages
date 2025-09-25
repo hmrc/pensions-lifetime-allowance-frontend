@@ -357,13 +357,14 @@ pla.existingProtections.noActiveProtections             = You currently have no 
 pla.existingProtections.noOtherProtections              = You have no other protections.
 pla.existingProtections.protectedAmount                 = Protected lifetime allowance
 pla.existingProtections.factor                          = Factor
-pla.existingProtections.enhancementFactor               = Enhancement Factor
-pla.existingProtections.lumpSumAmount                   = Lump Sum Amount
-pla.existingProtections.lumpSumPercentage               = Lump Sum Percentage
+pla.existingProtections.enhancementFactor               = Enhancement factor
+pla.existingProtections.lumpSumAmount                   = Lump sum amount
+pla.existingProtections.lumpSumPercentage               = Lump sum percentage
 pla.existingProtections.protectionRef                   = Protection notification number
 pla.existingProtections.psaRef                          = Scheme administrator reference
 pla.existingProtections.backToHome                      = Back to account home
 pla.existingProtections.amendLinkText                   = View or change
+pla.existingProtections.withdrawnDate                   = Withdrawn date
 pla.existingProtections.withdrawLinkText                = Withdraw your open protection
 pla.existingProtections.other.protections.link          = details about individual and fixed protections and how to apply
 pla.existingProtections.other.protections.linkText.before = View
@@ -1231,7 +1232,6 @@ pla.withdraw.confirmation.contact.you.if.needed       = We may need to contact y
 pla.withdraw.confirmation.other.protections.beforeLink = View
 pla.withdraw.confirmation.other.protections.link      = details about other protections and how to apply
 pla.withdraw.confirmation.other.protections.afterLink = on GOV.UK.
-pla.existingProtections.withdrawnDate                 = Withdrawn date
 
 psa.lookup.protection-guidance.protection-type-primary-value = £1,500,000 or above
 
