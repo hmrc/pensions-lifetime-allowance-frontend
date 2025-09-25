@@ -34,8 +34,10 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Constants
 
+import scala.concurrent.duration._
 import javax.inject.Inject
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{Await, ExecutionContext, Future}
+import scala.util.{Failure, Success, Try}
 
 class AmendsController @Inject() (
     sessionCacheService: SessionCacheService,
@@ -164,7 +166,7 @@ class AmendsController @Inject() (
         modelGA                 <- sessionCacheService.fetchAndGetFormData[AmendsGAModel]("AmendsGA")
         personalDetailsModelOpt <- citizenDetailsConnector.getPersonDetails(nino)
 
-        result = amendmentOutcomeResult(modelAR, modelGA, personalDetailsModelOpt, nino)
+        result <- amendmentOutcomeResult(modelAR, modelGA, personalDetailsModelOpt, nino)
       } yield result
     }
   }
@@ -174,7 +176,7 @@ class AmendsController @Inject() (
       modelGA: Option[AmendsGAModel],
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  )(implicit request: Request[AnyContent]): Result = {
+  )(implicit request: Request[AnyContent]): Future[Result] = {
     if (modelGA.isEmpty) {
       logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
     }
@@ -185,25 +187,53 @@ class AmendsController @Inject() (
           throw Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
         }
         if (Constants.amendmentCodesList.contains(id)) {
-          sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-          val displayModel = displayConstructors.createAmendResultDisplayModel(model, personalDetailsModelOpt, nino)
-          Ok(outcomeAmended(displayModel))
-
+          lazy val protectionModel: Future[Either[Result, AmendResponseModel]] =
+            if (id == 7 || id == 14) {
+              sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").map { modelOption =>
+                modelOption
+                  .map { fixedProtectionModel =>
+                    val modelCopy = model.protection.copy(
+                      protectionReference = fixedProtectionModel.protectionReference,
+                      certificateDate = fixedProtectionModel.certificateDate,
+                      protectionType = fixedProtectionModel.protectionType
+                    )
+                    Right(
+                      AmendResponseModel(modelCopy)
+                    )
+                  }
+                  .getOrElse(
+                    Left(throw Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "Active Protection"))
+                  )
+              }
+            } else {
+              Future.successful(Right(model))
+            }
+          protectionModel.map {
+            case Right(protectionModel) =>
+              sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.protection)
+              val displayModel =
+                displayConstructors.createAmendResultDisplayModel(protectionModel, personalDetailsModelOpt, nino)
+              Ok(outcomeAmended(displayModel))
+            case Left(result) =>
+              result
+          }
         } else if (Constants.activeAmendmentCodes.contains(id)) {
           sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
           val displayModel =
             displayConstructors.createActiveAmendResponseDisplayModel(model, personalDetailsModelOpt, nino)
-          Ok(outcomeActive(displayModel, modelGA, appConfig))
+          Future.successful(Ok(outcomeActive(displayModel, modelGA, appConfig)))
 
         } else {
           val displayModel = displayConstructors.createInactiveAmendResponseDisplayModel(model)
-          Ok(outcomeInactive(displayModel, modelGA))
+          Future.successful(Ok(outcomeInactive(displayModel, modelGA)))
         }
       }
       .getOrElse {
         logger.warn(s"Unable to retrieve amendment outcome model from cache for user nino :$nino")
-        InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-          .withHeaders(CACHE_CONTROL -> "no-cache")
+        Future.successful(
+          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
+            .withHeaders(CACHE_CONTROL -> "no-cache")
+        )
       }
   }
 
