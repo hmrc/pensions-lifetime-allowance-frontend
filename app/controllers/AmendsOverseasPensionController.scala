@@ -116,7 +116,7 @@ class AmendsOverseasPensionController @Inject() (
         AmendProtectionLifetimeAllowanceType
           .tryFrom(protectionTypeString)
           .map { protectionType =>
-            amendOverseasPensionsForm(Strings.protectionTypeString(Some(protectionTypeString)))
+            amendOverseasPensionsForm(protectionType.toString)
               .bindFromRequest()
               .fold(
                 errors =>
@@ -127,7 +127,7 @@ class AmendsOverseasPensionController @Inject() (
                       Future.successful(BadRequest(amendIP14OverseasPensions(errors, protectionType.toString, status)))
                   },
                 success =>
-                  fetchAmendProtectionModel(protectionTypeString, status)
+                  fetchAmendProtectionModel(protectionType.toString, status)
                     .flatMap {
                       case Some(model) =>
                         val updatedAmount = success.amendedOverseasPensions match {
@@ -138,7 +138,7 @@ class AmendsOverseasPensionController @Inject() (
                         val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
                         val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
-                        saveAmendProtectionModel(protectionTypeString, status, amendProtModel)
+                        saveAmendProtectionModel(protectionType.toString, status, amendProtModel)
                           .map(_ => redirectToSummary(amendProtModel))
 
                       case _ =>
