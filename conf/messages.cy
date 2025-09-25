@@ -365,6 +365,7 @@ pla.existingProtections.lumpSumPercentage               = Canran y cyfandaliad
 pla.existingProtections.protectionRef                   = Rhif hysbysu diogelwch
 pla.existingProtections.psaRef                          = Cyfeirnod gweinyddwr y cynllun
 pla.existingProtections.backToHome                      = Yn ôl i hafan y cyfrif
+pla.existingProtections.withdrawnDate                   = Dyddiad y tynnwyd yn ôl
 pla.existingProtections.amendLinkText                   = bwrw golwg drosto neu ei newid
 pla.existingProtections.withdrawLinkText                = Tynnu''n ôl eich diogelwch sydd ar agor
 pla.existingProtections.other.protections.link          = manylion diogelwch arall a sut i wneud cais
@@ -1200,7 +1201,6 @@ pla.withdraw.confirmation.contact.you.if.needed       = Efallai y bydd yn rhaid 
 pla.withdraw.confirmation.other.protections.beforeLink = Gweler
 pla.withdraw.confirmation.other.protections.link      = manylion diogelwch arall a sut i wneud cais
 pla.withdraw.confirmation.other.protections.afterLink = ar GOV.UK.
-pla.existingProtections.withdrawnDate                 = Dyddiad y tynnwyd yn ôl
 
 pla.amends.pensionDebits.IP2016.CurrentPsos-psoDetails.changeHint   = Newidiwch fanylion eich gorchymyn rhannu pensiwn
 pla.amends.pensionDebits.IndividualProtection2016.CurrentPsos-psoDetails.changeHint = Newidiwch fanylion eich gorchymyn rhannu pensiwn
