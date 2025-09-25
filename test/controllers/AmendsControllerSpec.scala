@@ -151,6 +151,21 @@ class AmendsControllerSpec
     protectionReference = Some("PSA123456")
   )
 
+  private val fp2014Protection = ProtectionModel(
+    psaCheckReference = Some("testPSARef"),
+    uncrystallisedRights = Some(100000.00),
+    nonUKRights = Some(2000.00),
+    preADayPensionInPayment = Some(2000.00),
+    postADayBenefitCrystallisationEvents = Some(2000.00),
+    notificationId = Some(12),
+    protectionID = Some(12345),
+    protectionType = Some("FP2014"),
+    status = Some("dormant"),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("FP14123456")
+  )
+
   private val testAmendIP2014ProtectionModel = AmendProtectionModel(ip2014Protection, ip2014Protection)
 
   private val testPensionContributionNoPsoDisplaySections = Seq(
@@ -380,21 +395,34 @@ class AmendsControllerSpec
     Constants.amendmentCodesList.foreach { notificationId =>
       s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
         "return Ok status with outcomeAmended view" in {
-          val amendResponseModel =
-            AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
+          lazy val amendResponseModel =
+            if (notificationId == 7 || notificationId == 14) {
+              AmendResponseModel(
+                ProtectionModel(
+                  Some("psaRef"),
+                  Some(12345),
+                  certificateDate = Some("2016-04-17"),
+                  protectionType = Some("FP2014"),
+                  protectionReference = Some("FP14123456"),
+                  notificationId = Some(notificationId)
+                )
+              )
+            } else {
+              AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
+            }
           cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
           cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
           when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
             .thenReturn(Future.successful(Some(testPersonalDetails)))
+          if (notificationId == 7 || notificationId == 14)
+            when(sessionCacheService.fetchAndGetFormData[ProtectionModel](eqTo("openProtection"))(any(), any()))
+              .thenReturn(Future.successful(Some(fp2014Protection)))
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
-
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
           when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
             .thenReturn(amendResultDisplayModel)
-
           val result = controller.amendmentOutcome()(fakeRequest)
-
           status(result) shouldBe OK
           verify(sessionCacheService)
             .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
@@ -413,7 +441,7 @@ class AmendsControllerSpec
           when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
             .thenReturn(Future.successful(Some(testPersonalDetails)))
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-            .thenReturn(Future.successful(CacheMap("", Map.empty)))
+            .thenReturn(Future.successful(CacheMap("openProtection", Map.empty)))
 
           val activeAmendResultDisplayModel = amendsActiveResultModelIP14.copy(notificationId = notificationId.toString)
           when(displayConstructors.createActiveAmendResponseDisplayModel(any(), any(), any()))
