@@ -22,7 +22,6 @@ import config.FrontendAppConfig
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PLAConnector, PlaConnectorError, PlaConnectorV2}
 import constructors.{AmendsGAConstructor, DisplayConstructors}
-import enums.ApplicationType
 import models.amendModels._
 import models.cache.CacheMap
 import models.{AmendResponseModel, PersonalDetailsModel, ProtectionModel}
@@ -34,10 +33,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import utils.Constants
 
-import scala.concurrent.duration._
 import javax.inject.Inject
-import scala.concurrent.{Await, ExecutionContext, Future}
-import scala.util.{Failure, Success, Try}
+import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsController @Inject() (
     sessionCacheService: SessionCacheService,
@@ -57,7 +54,8 @@ class AmendsController @Inject() (
 )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
     extends FrontendController(mcc)
     with I18nSupport
-    with Logging {
+    with Logging
+    with AmendControllerErrorHelper {
 
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
     implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
@@ -73,11 +71,8 @@ class AmendsController @Inject() (
             )
           )
         case _ =>
-          logger.warn(
-            s"Could not retrieve amend protection model for user with nino $nino when loading the amend summary page"
-          )
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
+          logger.warn(couldNotRetrieveModelForNino(nino, "when loading the amend summary page"))
+          buildTechnicalError(technicalError)
       }
     }
   }
@@ -99,22 +94,13 @@ class AmendsController @Inject() (
             Future.successful(Locked(manualCorrespondenceNeeded()))
 
           case Left(ConflictResponseError) =>
-            Future.successful(
-              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-                .withHeaders(CACHE_CONTROL -> "no-cache")
-            )
+            Future.successful(buildTechnicalError(technicalError))
 
           case Left(IncorrectResponseBodyError) =>
-            Future.successful(
-              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-                .withHeaders(CACHE_CONTROL -> "no-cache")
-            )
+            Future.successful(buildTechnicalError(technicalError))
 
           case Left(_) =>
-            Future.successful(
-              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-                .withHeaders(CACHE_CONTROL -> "no-cache")
-            )
+            Future.successful(buildTechnicalError(technicalError))
         }
       } yield result
     }
@@ -231,8 +217,7 @@ class AmendsController @Inject() (
       .getOrElse {
         logger.warn(s"Unable to retrieve amendment outcome model from cache for user nino :$nino")
         Future.successful(
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
+          buildTechnicalError(technicalError)
         )
       }
   }
