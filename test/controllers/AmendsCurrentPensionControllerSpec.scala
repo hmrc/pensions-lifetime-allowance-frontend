@@ -172,17 +172,41 @@ class AmendsCurrentPensionControllerSpec
       cacheFetchCondition[AmendProtectionModel](None)
 
       val result =
-        controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
+        controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2016, Strings.StatusURL.Open)(
+          fakeRequest
+        )
       status(result) shouldBe 500
     }
 
-    "supplied with a stored test model (£100000, IP2016, dormant)" in new Setup {
+    "supplied with a stored test model (£100000, IndividualProtection2016, dormant)" in new Setup {
       val testModel = new AmendProtectionModel(
         ProtectionModel(None, None),
         ProtectionModel(None, None, uncrystallisedRights = Some(100000))
       )
       lazy val result =
-        controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
+        controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2016, Strings.StatusURL.Dormant)(
+          fakeRequest
+        )
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testModel))
+      status(result) shouldBe 200
+
+      cacheFetchCondition[AmendProtectionModel](Some(testModel))
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.currentPensions.title")
+    }
+
+    "supplied with a stored test model (£100000, IndividualProtection2016LTA, dormant)" in new Setup {
+      val testModel = new AmendProtectionModel(
+        ProtectionModel(None, None),
+        ProtectionModel(None, None, uncrystallisedRights = Some(100000))
+      )
+      lazy val result =
+        controller.amendCurrentPensions(
+          Strings.ProtectionTypeURL.IndividualProtection2016LTA,
+          Strings.StatusURL.Dormant
+        )(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -226,7 +250,7 @@ class AmendsCurrentPensionControllerSpec
     }
   }
 
-  "supplied with a stored test model (£100000, IP2014, dormant)" in new Setup {
+  "supplied with a stored test model (£100000, IndividualProtection2014, dormant)" in new Setup {
     lazy val result =
       controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")(fakeRequest)
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -268,7 +292,8 @@ class AmendsCurrentPensionControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension("IP2016", "dormant"),
+            controller
+              .submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2016, Strings.StatusURL.Dormant),
             ("amendedUKPensionAmt", "1000000")
           )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -353,7 +378,10 @@ class AmendsCurrentPensionControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension("IP2016LTA", "dormant"),
+            controller.submitAmendCurrentPension(
+              Strings.ProtectionTypeURL.IndividualProtection2016LTA,
+              Strings.StatusURL.Dormant
+            ),
             ("amendedUKPensionAmt", "1000000")
           )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
