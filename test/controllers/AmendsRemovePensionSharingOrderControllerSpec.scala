@@ -103,7 +103,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
   implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  val ip2016Protection = ProtectionModel(
+  val individualProtection2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
     uncrystallisedRights = Some(100000.00),
     nonUKRights = Some(2000.00),
@@ -111,14 +111,15 @@ class AmendsRemovePensionSharingOrderControllerSpec
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
     protectionID = Some(12345),
-    protectionType = Some("IP2016"),
+    protectionType = Some("IndividualProtection2016"),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
   )
 
-  val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
+  val testAmendIndividualProtection2016ProtectionModel =
+    AmendProtectionModel(individualProtection2016Protection, individualProtection2016Protection)
 
   def cacheFetchCondition[T](data: Option[T]): Unit =
     when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
@@ -195,7 +196,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
   }
 
   "Choosing remove with a valid amend protection model" in new Setup {
-    val ip2016Protection = ProtectionModel(
+    val individualProtection2016Protection = ProtectionModel(
       psaCheckReference = Some("testPSARef"),
       uncrystallisedRights = Some(100000.00),
       nonUKRights = Some(2000.00),
@@ -203,7 +204,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
       postADayBenefitCrystallisationEvents = Some(2000.00),
       notificationId = Some(12),
       protectionID = Some(12345),
-      protectionType = Some("IP2016"),
+      protectionType = Some("IndividualProtection2016"),
       status = Some(Open.toString),
       certificateDate = Some("2016-04-17"),
       pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0))),
@@ -211,14 +212,15 @@ class AmendsRemovePensionSharingOrderControllerSpec
       protectionReference = Some("PSA123456")
     )
 
-    val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
+    val testAmendIndividualProtection2016ProtectionModel =
+      AmendProtectionModel(individualProtection2016Protection, individualProtection2016Protection)
     object DataItem
         extends AuthorisedFakeRequestToPost(
           controller.submitRemovePso(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
         )
 
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
     cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
     status(DataItem.result) shouldBe 303

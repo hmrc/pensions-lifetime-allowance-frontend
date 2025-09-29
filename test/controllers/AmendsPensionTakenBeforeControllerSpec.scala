@@ -107,7 +107,7 @@ class AmendsPensionTakenBeforeControllerSpec
   val mockUsername                                  = "mockuser"
   val mockUserId                                    = "/auth/oid/" + mockUsername
 
-  val ip2016Protection = ProtectionModel(
+  val individualProtection2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
     uncrystallisedRights = Some(100000.00),
     nonUKRights = Some(2000.00),
@@ -115,16 +115,17 @@ class AmendsPensionTakenBeforeControllerSpec
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
     protectionID = Some(12345),
-    protectionType = Some("IP2016"),
+    protectionType = Some("IndividualProtection2016"),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
   )
 
-  val testAmendIP2016ProtectionModel = AmendProtectionModel(ip2016Protection, ip2016Protection)
+  val testAmendIndividualProtection2016ProtectionModel =
+    AmendProtectionModel(individualProtection2016Protection, individualProtection2016Protection)
 
-  val ip2014Protection = ProtectionModel(
+  val individualProtection2016LTAProtection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
     uncrystallisedRights = Some(100000.00),
     nonUKRights = Some(2000.00),
@@ -132,16 +133,53 @@ class AmendsPensionTakenBeforeControllerSpec
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
     protectionID = Some(12345),
-    protectionType = Some("IP2014"),
+    protectionType = Some("IndividualProtection2016LTA"),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
   )
 
-  val testAmendIP2014ProtectionModel = AmendProtectionModel(ip2014Protection, ip2014Protection)
+  val testAmendIndividualProtection2016LTAProtectionModel =
+    AmendProtectionModel(individualProtection2016LTAProtection, individualProtection2016LTAProtection)
 
-  val ip2016NoDebitProtection = ProtectionModel(
+  val individualProtection2014Protection = ProtectionModel(
+    psaCheckReference = Some("testPSARef"),
+    uncrystallisedRights = Some(100000.00),
+    nonUKRights = Some(2000.00),
+    preADayPensionInPayment = Some(2000.00),
+    postADayBenefitCrystallisationEvents = Some(2000.00),
+    notificationId = Some(12),
+    protectionID = Some(12345),
+    protectionType = Some("IndividualProtection2014"),
+    status = Some(Dormant.toString),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("PSA123456")
+  )
+
+  val testAmendIndividualProtection2014ProtectionModel =
+    AmendProtectionModel(individualProtection2014Protection, individualProtection2014Protection)
+
+  val individualProtection2014LTAProtection = ProtectionModel(
+    psaCheckReference = Some("testPSARef"),
+    uncrystallisedRights = Some(100000.00),
+    nonUKRights = Some(2000.00),
+    preADayPensionInPayment = Some(2000.00),
+    postADayBenefitCrystallisationEvents = Some(2000.00),
+    notificationId = Some(12),
+    protectionID = Some(12345),
+    protectionType = Some("IndividualProtection2014LTA"),
+    status = Some(Dormant.toString),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("PSA123456")
+  )
+
+  val testAmendIndividualProtection2014LTAProtectionModel =
+    AmendProtectionModel(individualProtection2014LTAProtection, individualProtection2014LTAProtection)
+
+  val individualProtection2016NoDebitProtection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
     uncrystallisedRights = Some(100000.00),
     nonUKRights = Some(0.0),
@@ -149,14 +187,33 @@ class AmendsPensionTakenBeforeControllerSpec
     postADayBenefitCrystallisationEvents = Some(0.0),
     notificationId = Some(12),
     protectionID = Some(12345),
-    protectionType = Some("IP2016"),
+    protectionType = Some("IndividualProtection2016"),
     status = Some(Dormant.toString),
     certificateDate = Some("2016-04-17"),
     protectedAmount = Some(1250000),
     protectionReference = Some("PSA123456")
   )
 
-  val testAmendIP2016ProtectionModelWithNoDebit = AmendProtectionModel(ip2016NoDebitProtection, ip2016NoDebitProtection)
+  val testAmendIndividualProtection2016ProtectionModelWithNoDebit =
+    AmendProtectionModel(individualProtection2016NoDebitProtection, individualProtection2016NoDebitProtection)
+
+  val individualProtection2016LTANoDebitProtection = ProtectionModel(
+    psaCheckReference = Some("testPSARef"),
+    uncrystallisedRights = Some(100000.00),
+    nonUKRights = Some(0.0),
+    preADayPensionInPayment = Some(0.0),
+    postADayBenefitCrystallisationEvents = Some(0.0),
+    notificationId = Some(12),
+    protectionID = Some(12345),
+    protectionType = Some("IndividualProtection2016LTA"),
+    status = Some(Dormant.toString),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("PSA123456")
+  )
+
+  val testAmendIndividualProtection2016LTAProtectionModelWithNoDebit =
+    AmendProtectionModel(individualProtection2016LTANoDebitProtection, individualProtection2016LTANoDebitProtection)
 
   val tstPensionContributionNoPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
@@ -190,17 +247,17 @@ class AmendsPensionTakenBeforeControllerSpec
       status(result) shouldBe 500
     }
 
-    "supplied with the stored test model for (dormant, IP2016, preADay = £0.0)" in new Setup {
+    "supplied with the stored test model for (dormant, IndividualProtection2016, preADay = £0.0)" in new Setup {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModelWithNoDebit))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModelWithNoDebit))
     }
 
-    "supplied with the stored test model for (dormant, IP2016, preADay = £2000)" in new Setup {
+    "supplied with the stored test model for (dormant, IndividualProtection2016, preADay = £2000)" in new Setup {
 
       lazy val result =
         controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
 
       status(result) shouldBe 200
     }
@@ -211,7 +268,7 @@ class AmendsPensionTakenBeforeControllerSpec
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
 
       jsoupDoc.body.getElementsByClass("govuk-heading-xl").text shouldEqual Messages("pla.pensionsTakenBefore.title")
     }
@@ -224,7 +281,7 @@ class AmendsPensionTakenBeforeControllerSpec
             fakeRequest
           )
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
 
         contentType(result) shouldBe Some("text/html")
         charset(result) shouldBe Some("utf-8")
@@ -232,29 +289,42 @@ class AmendsPensionTakenBeforeControllerSpec
 
       "have the value of the check box set as 'Yes' by default" in new Setup {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
       }
 
       "have the value of the input field set to 2000 by default" in new Setup {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
       }
     }
-    "supplied with the stored test model for (dormant, IP2014, preADay = £2000)" in new Setup {
+    "supplied with the stored test model for (dormant, IndividualProtection2014, preADay = £2000)" in new Setup {
       lazy val result =
         controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014ProtectionModel))
 
       status(result) shouldBe 200
     }
   }
 
-  "Submitting Amend IP16 Pensions Taken Before data" when {
+  "Submitting Amend IndividualProtection2016 Pensions Taken Before data" when {
 
     "the data is invalid" in new Setup {
       lazy val result =
         controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(
+          fakeRequest
+        )
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+      status(result) shouldBe 400
+    }
+  }
+
+  "Submitting Amend IndividualProtection2016LTA Pensions Taken Before data" when {
+
+    "the data is invalid" in new Setup {
+      lazy val result =
+        controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(
           fakeRequest
         )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -289,7 +359,7 @@ class AmendsPensionTakenBeforeControllerSpec
     status(DataItem.result) shouldBe 500
   }
 
-  "the data is valid with a no for IP16" in new Setup {
+  "the data is valid with a no for IndividualProtection2016" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
           controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
@@ -299,7 +369,7 @@ class AmendsPensionTakenBeforeControllerSpec
 
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
-    cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
@@ -307,7 +377,7 @@ class AmendsPensionTakenBeforeControllerSpec
     )
   }
 
-  "the data is valid with a yes for IP16" in new Setup {
+  "the data is valid with a yes for IndividualProtection2016" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
           controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
@@ -315,7 +385,7 @@ class AmendsPensionTakenBeforeControllerSpec
         )
 
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2016ProtectionModel))
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
     cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
     cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
@@ -325,7 +395,43 @@ class AmendsPensionTakenBeforeControllerSpec
     )
   }
 
-  "the data is valid with a no for IP14" in new Setup {
+  "the data is valid with a no for IndividualProtection2016LTA" in new Setup {
+    object DataItem
+        extends AuthorisedFakeRequestToPost(
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
+          ("amendedPensionsTakenBefore", "no"),
+          ("amendedPensionsTakenBeforeAmt", "0")
+        )
+
+    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModel))
+
+    status(DataItem.result) shouldBe 303
+    redirectLocation(DataItem.result) shouldBe Some(
+      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")}"
+    )
+  }
+
+  "the data is valid with a yes for IndividualProtection2016LTA" in new Setup {
+    object DataItem
+        extends AuthorisedFakeRequestToPost(
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
+          ("amendedPensionsTakenBefore", "yes")
+        )
+
+    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModel))
+    cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
+    cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+    status(DataItem.result) shouldBe 303
+    redirectLocation(DataItem.result) shouldBe Some(
+      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")}"
+    )
+  }
+
+  "the data is valid with a no for IndividualProtection2014" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
           controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
@@ -335,7 +441,7 @@ class AmendsPensionTakenBeforeControllerSpec
 
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
-    cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014ProtectionModel))
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
@@ -343,7 +449,7 @@ class AmendsPensionTakenBeforeControllerSpec
     )
   }
 
-  "the data is valid with a yes for IP14" in new Setup {
+  "the data is valid with a yes for IndividualProtection2014" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
           controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
@@ -351,13 +457,49 @@ class AmendsPensionTakenBeforeControllerSpec
         )
 
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-    cacheFetchCondition[AmendProtectionModel](Some(testAmendIP2014ProtectionModel))
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014ProtectionModel))
     cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
     cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
       s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")}"
+    )
+  }
+
+  "the data is valid with a no for IndividualProtection2014LTA" in new Setup {
+    object DataItem
+        extends AuthorisedFakeRequestToPost(
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
+          ("amendedPensionsTakenBefore", "no"),
+          ("amendedPensionsTakenBeforeAmt", "0")
+        )
+
+    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014LTAProtectionModel))
+
+    status(DataItem.result) shouldBe 303
+    redirectLocation(DataItem.result) shouldBe Some(
+      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant")}"
+    )
+  }
+
+  "the data is valid with a yes for IndividualProtection2014LTA" in new Setup {
+    object DataItem
+        extends AuthorisedFakeRequestToPost(
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
+          ("amendedPensionsTakenBefore", "yes")
+        )
+
+    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014LTAProtectionModel))
+    cacheSaveCondition[PensionsTakenBeforeModel](mockSessionCacheService)
+    cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
+
+    status(DataItem.result) shouldBe 303
+    redirectLocation(DataItem.result) shouldBe Some(
+      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant")}"
     )
   }
 

@@ -153,7 +153,8 @@ class AmendsPensionSharingOrderControllerSpec
     protectionReference = Some("PSA123456")
   )
 
-  val testAmendIndividualProtection2016ProtectionModel = AmendProtectionModel(individualProtection2016Protection, individualProtection2016Protection)
+  val testAmendIndividualProtection2016ProtectionModel =
+    AmendProtectionModel(individualProtection2016Protection, individualProtection2016Protection)
 
   val individualProtection2016LTAProtection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -170,7 +171,8 @@ class AmendsPensionSharingOrderControllerSpec
     protectionReference = Some("PSA123456")
   )
 
-  val testAmendIndividualProtection2016LTAProtectionModel = AmendProtectionModel(individualProtection2016LTAProtection, individualProtection2016LTAProtection)
+  val testAmendIndividualProtection2016LTAProtectionModel =
+    AmendProtectionModel(individualProtection2016LTAProtection, individualProtection2016LTAProtection)
 
   val individualProtection2014Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -187,7 +189,8 @@ class AmendsPensionSharingOrderControllerSpec
     protectionReference = Some("PSA123456")
   )
 
-  val testAmendIndividualProtection2014ProtectionModel = AmendProtectionModel(individualProtection2014Protection, individualProtection2014Protection)
+  val testAmendIndividualProtection2014ProtectionModel =
+    AmendProtectionModel(individualProtection2014Protection, individualProtection2014Protection)
 
   val individualProtection2014LTAProtection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -204,7 +207,8 @@ class AmendsPensionSharingOrderControllerSpec
     protectionReference = Some("PSA123456")
   )
 
-  val testAmendIndividualProtection2014LTAProtectionModel = AmendProtectionModel(individualProtection2014LTAProtection, individualProtection2014LTAProtection)
+  val testAmendIndividualProtection2014LTAProtectionModel =
+    AmendProtectionModel(individualProtection2014LTAProtection, individualProtection2014LTAProtection)
 
   val individualProtection2016NoDebitProtection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -221,7 +225,8 @@ class AmendsPensionSharingOrderControllerSpec
     protectionReference = Some("PSA123456")
   )
 
-  val testAmendIndividualProtection2016ProtectionModelWithNoDebit = AmendProtectionModel(individualProtection2016NoDebitProtection, individualProtection2016NoDebitProtection)
+  val testAmendIndividualProtection2016ProtectionModelWithNoDebit =
+    AmendProtectionModel(individualProtection2016NoDebitProtection, individualProtection2016NoDebitProtection)
 
   val noNotificationIdProtection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -476,17 +481,17 @@ class AmendsPensionSharingOrderControllerSpec
     "submitting valid data for IndividualProtection2014LTA" in new Setup {
 
       object DataItem
-        extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPsoDetails(
-            protectionType = Strings.ProtectionTypeURL.IndividualProtection2014LTA,
-            status = "open",
-            existingPSO = true
-          ),
-          ("pso.day", "6"),
-          ("pso.month", "4"),
-          ("pso.year", "2014"),
-          ("psoAmt", "100000")
-        )
+          extends AuthorisedFakeRequestToPost(
+            controller.submitAmendPsoDetails(
+              protectionType = Strings.ProtectionTypeURL.IndividualProtection2014LTA,
+              status = "open",
+              existingPSO = true
+            ),
+            ("pso.day", "6"),
+            ("pso.month", "4"),
+            ("pso.year", "2014"),
+            ("psoAmt", "100000")
+          )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014LTAProtectionModel))
