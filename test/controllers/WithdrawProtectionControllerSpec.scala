@@ -297,7 +297,7 @@ class WithdrawProtectionControllerSpec
 
   "calling the withdrawImplications action" when {
 
-    "the HIP migration flag is enabled" when {
+    "the HIP migration flag is disabled" when {
 
       "there is no stored protection model" should {
         "return 500" in new Setup {
@@ -327,7 +327,7 @@ class WithdrawProtectionControllerSpec
       }
     }
 
-    "the HIP migration flag is disabled" should {
+    "the HIP migration flag is enabled" should {
       "return 303 redirecting to /existing-protections" in new Setup {
         when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
 

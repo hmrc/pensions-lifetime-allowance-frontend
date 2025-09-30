@@ -147,9 +147,20 @@ class WithdrawProtectionDateInputControllerSpec
       }
     }
 
+    "the HIP migration flag is enabled" should {
+      "return 303 redirecting to /existing-protections" in new Setup {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+
+        val result: Future[Result] = controller.getWithdrawDateInput(fakeRequest)
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.toString)
+      }
+    }
+
   }
 
-  "In WithdrawProtectionController calling the postWithdrawDateInput action" when {
+  "calling the postWithdrawDateInput action" when {
 
     "the HIP migration flag is disabled" when {
 
