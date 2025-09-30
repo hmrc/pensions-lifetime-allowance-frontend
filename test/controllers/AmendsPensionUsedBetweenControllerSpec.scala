@@ -253,6 +253,20 @@ class AmendsPensionUsedBetweenControllerSpec
         .getElementById("amendedPensionsUsedBetweenAmt")
         .attr("class") shouldBe "govuk-input govuk-input--width-10"
     }
+
+    "supplied with the stored test model for (dormant, IndividualProtection2016LTA, preADay = £0.0)" in new Setup {
+      lazy val result =
+        controller.amendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(
+          fakeRequest
+        )
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModelWithNoDebit))
+      jsoupDoc.body
+        .getElementById("amendedPensionsUsedBetweenAmt")
+        .attr("class") shouldBe "govuk-input govuk-input--width-10"
+    }
   }
 
   "Submitting Amend IndividualProtection2016 Pensions Used Between data" when {

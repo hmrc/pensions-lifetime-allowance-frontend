@@ -259,6 +259,15 @@ class AmendsCurrentPensionControllerSpec
     status(result) shouldBe 200
   }
 
+  "supplied with a stored test model (£100000, IndividualProtection2014LTA, dormant)" in new Setup {
+    lazy val result =
+      controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant")(fakeRequest)
+    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014LTAProtectionModel))
+
+    status(result) shouldBe 200
+  }
+
   "Submitting Amend IndividualProtection2016 Current Pensions data" when {
 
     "the data is valid" in new Setup {

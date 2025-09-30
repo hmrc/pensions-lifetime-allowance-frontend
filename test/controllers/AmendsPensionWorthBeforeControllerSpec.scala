@@ -261,6 +261,20 @@ class AmendsPensionWorthBeforeControllerSpec
         status(result) shouldBe OK
         contentAsString(result) should include(messages("pla.pensionsWorthBefore.title"))
       }
+
+      "IndividualProtection2016LTA model is returned from cache" in new Setup {
+
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModel))
+
+        val result: Future[Result] =
+          controller.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(
+            fakeRequest
+          )
+
+        status(result) shouldBe OK
+        contentAsString(result) should include(messages("pla.pensionsWorthBefore.title"))
+      }
     }
 
     "return 500 when nothing is returned from cache" in new Setup {

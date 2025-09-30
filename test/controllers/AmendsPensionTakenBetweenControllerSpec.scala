@@ -239,6 +239,18 @@ class AmendsPensionTakenBetweenControllerSpec
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModelWithNoDebit))
       jsoupDoc.body.getElementById("amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__input"
     }
+
+    "supplied with the stored test model for (dormant, IndividualProtection2016LTA, preADay = £0.0)" in new Setup {
+      lazy val result =
+        controller.amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(
+          fakeRequest
+        )
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModelWithNoDebit))
+      jsoupDoc.body.getElementById("amendedPensionsTakenBetween").attr("class") shouldBe "govuk-radios__input"
+    }
   }
 
   "supplied with the stored test model for (dormant, IndividualProtection2016, preADay = £2000)" in new Setup {
@@ -247,6 +259,17 @@ class AmendsPensionTakenBetweenControllerSpec
       controller.amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
+    status(result) shouldBe 200
+  }
+
+  "supplied with the stored test model for (dormant, IndividualProtection2016LTA, preADay = £2000)" in new Setup {
+
+    lazy val result =
+      controller.amendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(
+        fakeRequest
+      )
+    mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModel))
     status(result) shouldBe 200
   }
 

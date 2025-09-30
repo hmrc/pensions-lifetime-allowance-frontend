@@ -262,6 +262,23 @@ class AmendsPensionTakenBeforeControllerSpec
       status(result) shouldBe 200
     }
 
+    "supplied with the stored test model for (dormant, IndividualProtection2016LTA, preADay = £0.0)" in new Setup {
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModelWithNoDebit))
+    }
+
+    "supplied with the stored test model for (dormant, IndividualProtection2016LTA, preADay = £2000)" in new Setup {
+
+      lazy val result =
+        controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(
+          fakeRequest
+        )
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModel))
+
+      status(result) shouldBe 200
+    }
+
     "should take the user to the pensions taken before page" in new Setup {
       lazy val result =
         controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)

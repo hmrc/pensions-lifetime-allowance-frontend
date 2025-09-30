@@ -252,6 +252,24 @@ class AmendsOverseasPensionControllerSpec
   val testAmendIndividualProtection2016ProtectionModelWithNoDebit =
     AmendProtectionModel(individualProtection2016NoDebitProtection, individualProtection2016NoDebitProtection)
 
+  val individualProtection2016LTANoDebitProtection = ProtectionModel(
+    psaCheckReference = Some("testPSARef"),
+    uncrystallisedRights = Some(100000.00),
+    nonUKRights = Some(0.0),
+    preADayPensionInPayment = Some(0.0),
+    postADayBenefitCrystallisationEvents = Some(0.0),
+    notificationId = Some(12),
+    protectionID = Some(12345),
+    protectionType = Some(IndividualProtection2016LTA.toString),
+    status = Some(Dormant.toString),
+    certificateDate = Some("2016-04-17"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("PSA123456")
+  )
+
+  val testAmendIndividualProtection2016LTAProtectionModelWithNoDebit =
+    AmendProtectionModel(individualProtection2016LTANoDebitProtection, individualProtection2016LTANoDebitProtection)
+
   def cacheFetchCondition[T](data: Option[T]): Unit =
     when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
       .thenReturn(Future.successful(data))
@@ -286,6 +304,29 @@ class AmendsOverseasPensionControllerSpec
         controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
+
+      status(result) shouldBe 200
+    }
+
+    "supplied with the stored test model for (dormant, IndividualProtection2016LTA, nonUKRights = £0.0)" in new Setup {
+      lazy val result =
+        controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(fakeRequest)
+      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModelWithNoDebit))
+
+      jsoupDoc.body
+        .getElementById("conditional-amendedOverseasPensions")
+        .attr("class") shouldBe "govuk-radios__conditional govuk-radios__conditional--hidden"
+    }
+
+    "supplied with the stored test model for (dormant, IndividualProtection2016LTA, nonUKRights = £2000)" in new Setup {
+
+      lazy val result =
+        controller.amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(fakeRequest)
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModel))
 
       status(result) shouldBe 200
     }
