@@ -24,8 +24,8 @@ import constructors.DisplayConstructors
 import generators.ModelGenerators
 import mocks.AuthMock
 import models.cache.CacheMap
-import models.pla.response.ProtectionType.IndividualProtection2016
-import models.pla.response.ProtectionStatus.{Dormant, Rejected}
+import models.pla.response.ProtectionType.{FixedProtection2016, FixedProtection2016LTA, IndividualProtection2016}
+import models.pla.response.ProtectionStatus.{Dormant, Open, Rejected}
 import models.{
   ExistingInactiveProtectionsDisplayModel,
   ExistingProtectionsDisplayModel,
@@ -51,7 +51,7 @@ import services.SessionCacheService
 import testHelpers.FakeApplication
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
-import uk.gov.hmrc.http.HttpResponse
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse}
 import utils.ActionWithSessionId
 import views.html.pages.existingProtections.existingProtections
 import views.html.pages.fallback.technicalError
@@ -72,10 +72,9 @@ class ReadProtectionsControllerSpec
   val testMCNeededResponse      = HttpResponse(423, "")
   val testUpstreamErrorResponse = HttpResponse(503, "")
 
-  private val testNino                 = "AB123456A"
-  private val psaCheckReference        = "PSA12345678A"
-  val testReadResponseModel            = ReadResponseModel(psaCheckReference, Seq.empty)
-  val testTransformedReadResponseModel = TransformedReadResponseModel(None, Seq.empty)
+  private val testNino          = "AB123456A"
+  private val psaCheckReference = "PSA12345678A"
+  val testReadResponseModel     = ReadResponseModel(psaCheckReference, Seq.empty)
 
   val testExistingProtectionsDisplayModel = ExistingProtectionsDisplayModel(
     inactiveProtections = ExistingInactiveProtectionsDisplayModel.empty,
@@ -98,6 +97,7 @@ class ReadProtectionsControllerSpec
   implicit val materializer: Materializer         = mock[Materializer]
   implicit val mockLang: Lang                     = mock[Lang]
   implicit val application: Application           = mock[Application]
+  implicit val hc: HeaderCarrier                  = mock[HeaderCarrier]
 
   implicit val mockTechnicalError: technicalError = app.injector.instanceOf[technicalError]
 

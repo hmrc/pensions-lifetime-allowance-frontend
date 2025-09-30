@@ -40,4 +40,9 @@ trait Exceptions {
         s"Value not found for protection type in $functionName"
       )
 
+  case class RequiredNotFoundProtectionModelException(functionName: String)
+      extends Exception(
+        s"Value not found for protection type in $functionName"
+      )
+
 }

@@ -23,11 +23,13 @@ import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBod
 import connectors.{CitizenDetailsConnector, PLAConnector, PlaConnectorV2}
 import constructors.DisplayConstructors
 import enums.ApplicationType
-import enums.ApplicationType.IP2014
 import mocks.AuthMock
 import models._
 import models.amendModels._
 import models.cache.CacheMap
+import models.pla.response.ProtectionStatus.{Dormant, Open}
+import models.pla.response.ProtectionType.{FixedProtection2016, IndividualProtection2016}
+import models.pla.response.{ProtectionRecord, ProtectionRecordsList, ReadProtectionsResponse}
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -64,6 +66,7 @@ class AmendsControllerSpec
   private val sessionCacheService: SessionCacheService         = mock[SessionCacheService]
   private val plaConnector: PLAConnector                       = mock[PLAConnector]
   private val plaConnectorV2: PlaConnectorV2                   = mock[PlaConnectorV2]
+  val mockAppConfig: FrontendAppConfig                         = mock[FrontendAppConfig]
 
   private val messagesControllerComponents: MessagesControllerComponents =
     fakeApplication().injector.instanceOf[MessagesControllerComponents]
@@ -151,7 +154,7 @@ class AmendsControllerSpec
     protectionReference = Some("PSA123456")
   )
 
-  private val fp2014Protection = ProtectionModel(
+  val ip2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
     uncrystallisedRights = Some(100000.00),
     nonUKRights = Some(2000.00),
@@ -159,14 +162,69 @@ class AmendsControllerSpec
     postADayBenefitCrystallisationEvents = Some(2000.00),
     notificationId = Some(12),
     protectionID = Some(12345),
-    protectionType = Some("FP2014"),
-    status = Some("dormant"),
-    certificateDate = Some("2016-04-17"),
+    protectionType = Some(IndividualProtection2016.toString),
+    status = Some(Dormant.toString),
+    certificateDate = Some("2016-09-04T09:00:19.157"),
     protectedAmount = Some(1250000),
-    protectionReference = Some("FP14123456")
+    protectionReference = Some("PSA123456")
   )
 
+  private val psaCheckReference              = "PSA12345678A"
   private val testAmendIP2014ProtectionModel = AmendProtectionModel(ip2014Protection, ip2014Protection)
+
+  val mockFixedProtectionRecord = ProtectionRecord(
+    identifier = 2,
+    sequenceNumber = 2,
+    `type` = FixedProtection2016,
+    certificateDate = "2016-09-04",
+    certificateTime = "09:00:19.157",
+    status = Open,
+    protectionReference = Some("FP16123456"),
+    relevantAmount = Some(1000001),
+    preADayPensionInPaymentAmount = Some(3000),
+    postADayBenefitCrystallisationEventAmount = Some(100),
+    uncrystallisedRightsAmount = Some(100),
+    nonUKRightsAmount = Some(100),
+    pensionDebitAmount = Some(100),
+    pensionDebitEnteredAmount = Some(100),
+    protectedAmount = Some(100000),
+    pensionDebitStartDate = Some("2016-09-04"),
+    pensionDebitTotalAmount = Some(10000),
+    lumpSumAmount = None,
+    lumpSumPercentage = None,
+    enhancementFactor = Some(5.6)
+  )
+
+  val mockIndividualProtectionRecord = ProtectionRecord(
+    identifier = 2,
+    sequenceNumber = 2,
+    `type` = IndividualProtection2016,
+    certificateDate = "2016-09-04",
+    certificateTime = "9:00:19.157",
+    status = Dormant,
+    protectionReference = Some("PSA12345678A"),
+    relevantAmount = Some(1000001),
+    preADayPensionInPaymentAmount = Some(3000),
+    postADayBenefitCrystallisationEventAmount = Some(100),
+    uncrystallisedRightsAmount = Some(100),
+    nonUKRightsAmount = Some(100),
+    pensionDebitAmount = Some(100),
+    pensionDebitEnteredAmount = Some(100),
+    protectedAmount = Some(100000),
+    pensionDebitStartDate = Some("2016-09-04"),
+    pensionDebitTotalAmount = Some(10000),
+    lumpSumAmount = None,
+    lumpSumPercentage = None,
+    enhancementFactor = Some(5.6)
+  )
+
+  val mockFixedProtectionRecordsList      = ProtectionRecordsList(mockFixedProtectionRecord, None)
+  val mockIndividualProtectionRecordsList = ProtectionRecordsList(mockIndividualProtectionRecord, None)
+
+  val mockReadProtectionResponseModel = ReadProtectionsResponse(
+    psaCheckReference,
+    Some(Seq(mockFixedProtectionRecordsList, mockIndividualProtectionRecordsList))
+  )
 
   private val testPensionContributionNoPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
@@ -396,14 +454,14 @@ class AmendsControllerSpec
       s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
         "return Ok status with outcomeAmended view" in {
           lazy val amendResponseModel =
-            if (notificationId == 7 || notificationId == 14) {
+            if (Constants.fixedProtectionNotificationId.contains(notificationId)) {
               AmendResponseModel(
                 ProtectionModel(
                   Some("psaRef"),
                   Some(12345),
-                  certificateDate = Some("2016-04-17"),
-                  protectionType = Some("FP2014"),
-                  protectionReference = Some("FP14123456"),
+                  certificateDate = Some("2016-09-04T09:00:19.157"),
+                  protectionType = Some(FixedProtection2016.toString),
+                  protectionReference = Some("FP16123456"),
                   notificationId = Some(notificationId)
                 )
               )
@@ -414,9 +472,10 @@ class AmendsControllerSpec
           cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
           when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
             .thenReturn(Future.successful(Some(testPersonalDetails)))
-          if (notificationId == 7 || notificationId == 14)
-            when(sessionCacheService.fetchAndGetFormData[ProtectionModel](eqTo("openProtection"))(any(), any()))
-              .thenReturn(Future.successful(Some(fp2014Protection)))
+          if (Constants.fixedProtectionNotificationId.contains(notificationId))
+            when(plaConnectorV2.readProtections(any())(any(), any()))
+              .thenReturn(Future.successful(Right(mockReadProtectionResponseModel)))
+
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)

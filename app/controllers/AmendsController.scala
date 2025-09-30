@@ -24,7 +24,7 @@ import connectors.{CitizenDetailsConnector, PLAConnector, PlaConnectorError, Pla
 import constructors.{AmendsGAConstructor, DisplayConstructors}
 import models.amendModels._
 import models.cache.CacheMap
-import models.{AmendResponseModel, PersonalDetailsModel, ProtectionModel}
+import models.{AmendResponseModel, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
 import play.api.Logging
 import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
@@ -173,24 +173,9 @@ class AmendsController @Inject() (
           throw Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
         }
         if (Constants.amendmentCodesList.contains(id)) {
-          lazy val protectionModel: Future[Either[Result, AmendResponseModel]] =
-            if (id == 7 || id == 14) {
-              sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").map { modelOption =>
-                modelOption
-                  .map { fixedProtectionModel =>
-                    val modelCopy = model.protection.copy(
-                      protectionReference = fixedProtectionModel.protectionReference,
-                      certificateDate = fixedProtectionModel.certificateDate,
-                      protectionType = fixedProtectionModel.protectionType
-                    )
-                    Right(
-                      AmendResponseModel(modelCopy)
-                    )
-                  }
-                  .getOrElse(
-                    Left(throw Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "Active Protection"))
-                  )
-              }
+          val protectionModel: Future[Either[Result, AmendResponseModel]] =
+            if (Constants.fixedProtectionNotificationId.contains(id)) {
+              createFixedAndIndividualProtectionModel(model, nino)
             } else {
               Future.successful(Right(model))
             }
@@ -221,5 +206,53 @@ class AmendsController @Inject() (
         )
       }
   }
+
+  private def fetchFixedProtection2016(nino: String)(implicit hc: HeaderCarrier): Future[Option[ProtectionModel]] =
+
+    fetchProtections(nino).map {
+
+      case Right(transformedReadResponseModel: TransformedReadResponseModel) =>
+        filterActiveFixedProtection2016(transformedReadResponseModel)
+
+      case Left(_) =>
+        logger.warn("Unable to retrieve Protection from GET point")
+        None
+    }
+
+  private def fetchProtections(
+      nino: String
+  )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
+    plaConnectorV2.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
+
+  private def filterActiveFixedProtection2016(model: TransformedReadResponseModel): Option[ProtectionModel] = {
+    val fixedProtectionType = model.activeProtection.filter(_.isFixedProtection2016)
+    if (fixedProtectionType.isEmpty) {
+      logger.warn("There is no active Fixed Protection 2016")
+      None
+    } else {
+      fixedProtectionType
+    }
+  }
+
+  private def createFixedAndIndividualProtectionModel(
+      model: AmendResponseModel,
+      nino: String
+  )(implicit request: Request[AnyContent]): Future[Either[Result, AmendResponseModel]] =
+    fetchFixedProtection2016(nino).map { modelOption =>
+      modelOption
+        .map { fixedProtectionModel =>
+          val modelCopy = model.protection.copy(
+            protectionReference = fixedProtectionModel.protectionReference,
+            certificateDate = fixedProtectionModel.certificateDate,
+            protectionType = fixedProtectionModel.protectionType
+          )
+          Right(
+            AmendResponseModel(modelCopy)
+          )
+        }
+        .getOrElse(
+          Left(throw Exceptions.RequiredNotFoundProtectionModelException("amendmentOutcome"))
+        )
+    }
 
 }
