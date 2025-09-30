@@ -47,26 +47,29 @@ class WithdrawProtectionDateInputController @Inject() (
     implicit val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with I18nSupport
+    with AmendControllerErrorHelper
+    with WithdrawControllerRedirectHelper
     with Logging {
 
   def getWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").map {
-        case Some(currentProtection) =>
-          val protectionStartDate = LocalDateTime.parse(currentProtection.certificateDate.get).toLocalDate
-          Ok(
-            withdrawDate(
-              withdrawDateForm(protectionStartDate),
-              Strings.protectionTypeString(currentProtection.protectionType),
-              Strings.statusString(currentProtection.status)
+    redirectToExistingProtectionsIfWithdrawnJourneyDisabled {
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
+        sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").map {
+          case Some(currentProtection) =>
+            val protectionStartDate = LocalDateTime.parse(currentProtection.certificateDate.get).toLocalDate
+            Ok(
+              withdrawDate(
+                withdrawDateForm(protectionStartDate),
+                Strings.protectionTypeString(currentProtection.protectionType),
+                Strings.statusString(currentProtection.status)
+              )
             )
-          )
-        case _ =>
-          logger.error(
-            s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page"
-          )
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
+          case _ =>
+            logger.error(
+              s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page"
+            )
+            buildTechnicalError(technicalError)
+        }
       }
     }
   }
@@ -93,15 +96,16 @@ class WithdrawProtectionDateInputController @Inject() (
       )
 
   def postWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithoutNino("existingProtections") {
-      sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").flatMap {
-        case Some(protection) => validateAndSaveWithdrawDateForm(protection)
-        case _ =>
-          logger.error(s"Could not retrieve protection data for user when loading the withdraw date input page")
-          Future.successful(
-            InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-              .withHeaders(CACHE_CONTROL -> "no-cache")
-          )
+    redirectToExistingProtectionsIfWithdrawnJourneyDisabled {
+      authFunction.genericAuthWithoutNino("existingProtections") {
+        sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").flatMap {
+          case Some(protection) => validateAndSaveWithdrawDateForm(protection)
+          case _ =>
+            logger.error(s"Could not retrieve protection data for user when loading the withdraw date input page")
+            Future.successful(
+              buildTechnicalError(technicalError)
+            )
+        }
       }
     }
   }

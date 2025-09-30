@@ -49,6 +49,8 @@ class WithdrawProtectionDateInputConfirmationController @Inject() (
     implicit val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with I18nSupport
+    with AmendControllerErrorHelper
+    with WithdrawControllerRedirectHelper
     with Logging {
 
   private[controllers] def validateAndSaveWithdrawDateForm(protection: ProtectionModel)(implicit request: Request[_]) =
@@ -86,63 +88,64 @@ class WithdrawProtectionDateInputConfirmationController @Inject() (
         )
       case _ =>
         logger.error(s"Could not retrieve withdraw form data for user")
-        InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-          .withHeaders(CACHE_CONTROL -> "no-cache")
+        buildTechnicalError(technicalError)
     }
 
   def getSubmitWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
-    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").flatMap {
-        case Some(protection) =>
-          fetchWithdrawDateForm(protection)
-        case _ =>
-          logger.error(
-            s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page"
-          )
-          Future.successful(
-            InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-              .withHeaders(CACHE_CONTROL -> "no-cache")
-          )
+    redirectToExistingProtectionsIfWithdrawnJourneyDisabled {
+      implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
+        sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").flatMap {
+          case Some(protection) =>
+            fetchWithdrawDateForm(protection)
+          case _ =>
+            logger.error(
+              s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page"
+            )
+            Future.successful(
+              buildTechnicalError(technicalError)
+            )
+        }
       }
     }
   }
 
   def submitWithdrawDateInput: Action[AnyContent] = Action.async { implicit request =>
-    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").map {
-        case Some(protection) =>
-          val protectionStartDate = LocalDateTime.parse(protection.certificateDate.get).toLocalDate
-          withdrawDateForm(protectionStartDate)
-            .bindFromRequest()
-            .fold(
-              formWithErrors =>
-                BadRequest(
-                  withdrawDate(
-                    buildInvalidForm(formWithErrors),
-                    Strings.protectionTypeString(protection.protectionType),
-                    Strings.statusString(protection.status)
+    redirectToExistingProtectionsIfWithdrawnJourneyDisabled {
+      implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
+        sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").map {
+          case Some(protection) =>
+            val protectionStartDate = LocalDateTime.parse(protection.certificateDate.get).toLocalDate
+            withdrawDateForm(protectionStartDate)
+              .bindFromRequest()
+              .fold(
+                formWithErrors =>
+                  BadRequest(
+                    withdrawDate(
+                      buildInvalidForm(formWithErrors),
+                      Strings.protectionTypeString(protection.protectionType),
+                      Strings.statusString(protection.status)
+                    )
+                  ),
+                _ =>
+                  Ok(
+                    withdrawConfirm(
+                      getWithdrawDate(
+                        withdrawDateForm(LocalDateTime.parse(protection.certificateDate.get).toLocalDate)
+                          .bindFromRequest()
+                      ),
+                      Strings.protectionTypeString(protection.protectionType),
+                      Strings.statusString(protection.status)
+                    )
                   )
-                ),
-              _ =>
-                Ok(
-                  withdrawConfirm(
-                    getWithdrawDate(
-                      withdrawDateForm(LocalDateTime.parse(protection.certificateDate.get).toLocalDate)
-                        .bindFromRequest()
-                    ),
-                    Strings.protectionTypeString(protection.protectionType),
-                    Strings.statusString(protection.status)
-                  )
-                )
+              )
+          case _ =>
+            logger.error(
+              s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page"
             )
-        case _ =>
-          logger.error(
-            s"Could not retrieve protection data for user with nino $nino when loading the withdraw date input page"
-          )
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
+            buildTechnicalError(technicalError)
+        }
       }
     }
   }

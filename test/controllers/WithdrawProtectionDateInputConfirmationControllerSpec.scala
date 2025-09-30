@@ -60,7 +60,7 @@ class WithdrawProtectionDateInputConfirmationControllerSpec
 
   implicit val system: ActorSystem                = ActorSystem()
   implicit val mat: Materializer                  = mock[Materializer]
-  implicit val mockAppConfig: FrontendAppConfig   = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig   = mock[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext         = mock[PlaContext]
   implicit val application: Application           = mock[Application]
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
@@ -108,6 +108,7 @@ class WithdrawProtectionDateInputConfirmationControllerSpec
     reset(mockPlaConnector)
     reset(mockPlaContext)
     reset(mockDisplayConstructors)
+    reset(mockAppConfig)
     super.beforeEach()
   }
 
@@ -220,101 +221,141 @@ class WithdrawProtectionDateInputConfirmationControllerSpec
 
   val lang: Lang = mock[Lang]
 
-  "In WithdrawProtectionController calling the getSubmitWithdrawDateInput action" when {
-    "there is a stored protection Model" should {
-      "return a 200" in new Setup {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+  "calling the getSubmitWithdrawDateInput action" when {
 
-        when(mockSessionCacheService.fetchAndGetFormData[Any](anyString())(any(), any()))
-          .thenReturn(
-            Future.successful(Some(ip2016Protection)),
-            Future.successful(Some(withdrawDateForm))
-          )
+    "the HIP migration flag is disabled" when {
 
-        lazy val result: Future[Result] = controller.getSubmitWithdrawDateInput(fakeRequest)
-        status(result) shouldBe OK
+      "there is a stored protection Model" should {
+        "return a 200" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+          when(mockSessionCacheService.fetchAndGetFormData[Any](anyString())(any(), any()))
+            .thenReturn(
+              Future.successful(Some(ip2016Protection)),
+              Future.successful(Some(withdrawDateForm))
+            )
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          lazy val result: Future[Result] = controller.getSubmitWithdrawDateInput(fakeRequest)
+          status(result) shouldBe OK
+        }
+      }
+
+      "there is no stored protection model" should {
+        "return a 500" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          cacheFetchCondition[ProtectionModel](None)
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          lazy val result: Future[Result] = controller.getSubmitWithdrawDateInput(fakeRequest)
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+        }
       }
     }
 
-    "there is no stored protection model" should {
-      "return a 500" in new Setup {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[ProtectionModel](None)
-        lazy val result: Future[Result] = controller.getSubmitWithdrawDateInput(fakeRequest)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+    "the HIP migration flag is enabled" should {
+      "return 303 redirecting to /existing-protections" in new Setup {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+
+        val result: Future[Result] = controller.getSubmitWithdrawDateInput(fakeRequest)
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.toString)
       }
     }
   }
 
-  "In withdrawProtectionController calling the submitWithdrawDateInput action" when {
+  "calling the submitWithdrawDateInput action" when {
 
-    "there is a stored protection model" should {
-      "return 200" in new Setup {
+    "the HIP migration flag is disabled" when {
 
-        object UserRequest
-            extends AuthorisedFakeRequestToPost(
-              controller.submitWithdrawDateInput,
-              ("withdrawDate.day", "20"),
-              ("withdrawDate.month", "7"),
-              ("withdrawDate.year", "2017")
-            )
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+      "there is a stored protection model" should {
+        "return 200" in new Setup {
 
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(UserRequest.result) shouldBe OK
+          object UserRequest
+              extends AuthorisedFakeRequestToPost(
+                controller.submitWithdrawDateInput,
+                ("withdrawDate.day", "20"),
+                ("withdrawDate.month", "7"),
+                ("withdrawDate.year", "2017")
+              )
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          status(UserRequest.result) shouldBe OK
+        }
+      }
+
+      "there is a stored protection model" should {
+        "return 400 Bad Request" in new Setup {
+
+          object InvalidDayRequest
+              extends AuthorisedFakeRequestToPost(
+                controller.submitWithdrawDateInput,
+                ("withdrawDate.day", "20000"),
+                ("withdrawDate.month", "10"),
+                ("withdrawDate.year", "2017")
+              )
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          status(InvalidDayRequest.result) shouldBe BAD_REQUEST
+        }
+      }
+
+      "there is a stored protection model" should {
+        "return 400 Bad Request with single error" in new Setup {
+
+          object InvalidMultipleErrorRequest
+              extends AuthorisedFakeRequestToPost(
+                controller.submitWithdrawDateInput,
+                ("withdrawDate.day", "20000"),
+                ("withdrawDate.month", "70000"),
+                ("withdrawDate.year", "2010000007")
+              )
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          status(InvalidMultipleErrorRequest.result) shouldBe BAD_REQUEST
+        }
+      }
+
+      "there is a stored protection model" should {
+        "return 400 Bad Request with date in past error" in new Setup {
+
+          object BadRequestDateInPast
+              extends AuthorisedFakeRequestToPost(
+                controller.submitWithdrawDateInput,
+                ("withdrawDate.day", "20"),
+                ("withdrawDate.month", "1"),
+                ("withdrawDate.year", "2012")
+              )
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          status(BadRequestDateInPast.result) shouldBe BAD_REQUEST
+        }
       }
     }
-    "there is a stored protection model" should {
-      "return 400 Bad Request" in new Setup {
 
-        object InvalidDayRequest
-            extends AuthorisedFakeRequestToPost(
-              controller.submitWithdrawDateInput,
-              ("withdrawDate.day", "20000"),
-              ("withdrawDate.month", "10"),
-              ("withdrawDate.year", "2017")
-            )
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+    "the HIP migration flag is enabled" should {
+      "return 303 redirecting to /existing-protections" in new Setup {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
 
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(InvalidDayRequest.result) shouldBe BAD_REQUEST
+        val result: Future[Result] = controller.submitWithdrawDateInput(fakeRequest)
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.toString)
       }
     }
-    "there is a stored protection model" should {
-      "return 400 Bad Request with single error" in new Setup {
 
-        object InvalidMultipleErrorRequest
-            extends AuthorisedFakeRequestToPost(
-              controller.submitWithdrawDateInput,
-              ("withdrawDate.day", "20000"),
-              ("withdrawDate.month", "70000"),
-              ("withdrawDate.year", "2010000007")
-            )
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(InvalidMultipleErrorRequest.result) shouldBe BAD_REQUEST
-      }
-    }
-    "there is a stored protection model" should {
-      "return 400 Bad Request with date in past error" in new Setup {
-
-        object BadRequestDateInPast
-            extends AuthorisedFakeRequestToPost(
-              controller.submitWithdrawDateInput,
-              ("withdrawDate.day", "20"),
-              ("withdrawDate.month", "1"),
-              ("withdrawDate.year", "2012")
-            )
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-        status(BadRequestDateInPast.result) shouldBe BAD_REQUEST
-      }
-    }
   }
 
-  "In WithdrawProtectionController calling the validateAndSaveWithdrawDateForm action" when {
+  "calling the validateAndSaveWithdrawDateForm action" when {
     "the form has errors" should {
       "return a 400" in new Setup {
 
@@ -349,7 +390,7 @@ class WithdrawProtectionDateInputConfirmationControllerSpec
     }
   }
 
-  "In WithdrawProtectionController calling the fetchWithdrawDateForm action" when {
+  "calling the fetchWithdrawDateForm action" when {
     "there is a stored withdrawDateForm" should {
       "return a 400" in new Setup {
         cacheFetchCondition[WithdrawDateFormModel](None)

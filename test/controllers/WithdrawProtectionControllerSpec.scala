@@ -63,7 +63,7 @@ class WithdrawProtectionControllerSpec
 
   implicit val system: ActorSystem                = ActorSystem()
   implicit val mat: Materializer                  = mock[Materializer]
-  implicit val mockAppConfig: FrontendAppConfig   = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig   = mock[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext         = mock[PlaContext]
   implicit val application: Application           = mock[Application]
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
@@ -114,6 +114,7 @@ class WithdrawProtectionControllerSpec
     reset(mockPlaConnector)
     reset(mockPlaContext)
     reset(mockDisplayConstructors)
+    reset(mockAppConfig)
     super.beforeEach()
   }
 
@@ -226,72 +227,119 @@ class WithdrawProtectionControllerSpec
 
   val lang: Lang = mock[Lang]
 
-  "In WithdrawProtectionController calling the showWithdrawConfirmation action" should {
+  "calling the showWithdrawConfirmation action" when {
 
-    "return 200" in new Setup {
-      mockAuthConnector(Future.successful {})
-      when(mockSessionCacheService.remove(any())).thenReturn(Future.successful(mock[HttpResponse]))
-      status(controller.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
+    "the HIP migration flag is disabled" should {
+      "return 200" in new Setup {
+        mockAuthConnector(Future.successful {})
+        when(mockSessionCacheService.remove(any())).thenReturn(Future.successful(mock[HttpResponse]))
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+        status(controller.showWithdrawConfirmation("")(fakeRequest)) shouldBe 200
+      }
+    }
+
+    "the HIP migration flag is enabled" should {
+      "return 303 redirecting to /existing-protections" in new Setup {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+
+        val result: Future[Result] = controller.showWithdrawConfirmation("")(fakeRequest)
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.toString)
+      }
     }
   }
 
-  "In WithdrawProtectionController calling the displayWithdrawConfirmation action" when {
+  "calling the displayWithdrawConfirmation action" when {
 
-    "handling an OK response" in new Setup {
-      lazy val result: Future[Result] = {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockPlaConnector.amendProtection(anyString(), any())(any(), any()))
-          .thenReturn(Future.successful(Right(ProtectionModel(None, None))))
-        controller.displayWithdrawConfirmation("")(fakeRequest)
-      }
-      status(result) shouldBe SEE_OTHER
-
-    }
-
-    "handling a non-OK response" in new Setup {
-      lazy val result: Future[Result] = {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockPlaConnector.amendProtection(anyString(), any())(any(), any()))
-          .thenReturn(Future.successful(Left(UnexpectedResponseError(INTERNAL_SERVER_ERROR))))
-        controller.displayWithdrawConfirmation("")(fakeRequest)
-      }
-      status(result) shouldBe INTERNAL_SERVER_ERROR
-      await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-    }
-  }
-
-  "In WithdrawProtectionController calling the withdrawImplications action" when {
-
-    "there is no stored protection model" should {
-      "return 500" in new Setup {
+    "the HIP migration flag is disabled" when {
+      "handling an OK response" in new Setup {
         lazy val result: Future[Result] = {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[ProtectionModel](None)
-          controller.withdrawImplications(fakeRequest)
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          when(mockPlaConnector.amendProtection(anyString(), any())(any(), any()))
+            .thenReturn(Future.successful(Right(ProtectionModel(None, None))))
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          controller.displayWithdrawConfirmation("")(fakeRequest)
+        }
+        status(result) shouldBe SEE_OTHER
+      }
+
+      "handling a non-OK response" in new Setup {
+        lazy val result: Future[Result] = {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          when(mockPlaConnector.amendProtection(anyString(), any())(any(), any()))
+            .thenReturn(Future.successful(Left(UnexpectedResponseError(INTERNAL_SERVER_ERROR))))
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          controller.displayWithdrawConfirmation("")(fakeRequest)
         }
         status(result) shouldBe INTERNAL_SERVER_ERROR
         await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
-
       }
+
     }
 
-    "there is a stored protection model" should {
+    "the HIP migration flag is enabled" should {
+      "return 303 redirecting to /existing-protections" in new Setup {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
 
-      "return 200" in new Setup {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        val result: Future[Result] = controller.displayWithdrawConfirmation("")(fakeRequest)
 
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-        when(mockDisplayConstructors.createWithdrawSummaryTable(any())).thenReturn(tstAmendDisplayModel)
-
-        val result: Future[Result] = controller.withdrawImplications(fakeRequest)
-        status(result) shouldBe OK
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.toString)
       }
     }
   }
 
-  "In WithdrawProtectionController calling the validateAndSaveWithdrawDateForm action" when {
+  "calling the withdrawImplications action" when {
+
+    "the HIP migration flag is disabled" when {
+
+      "there is no stored protection model" should {
+        "return 500" in new Setup {
+          lazy val result: Future[Result] = {
+            mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+            cacheFetchCondition[ProtectionModel](None)
+            when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+            controller.withdrawImplications(fakeRequest)
+          }
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+          await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
+        }
+      }
+
+      "there is a stored protection model" should {
+        "return 200" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          when(mockDisplayConstructors.createWithdrawSummaryTable(any())).thenReturn(tstAmendDisplayModel)
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          val result: Future[Result] = controller.withdrawImplications(fakeRequest)
+          status(result) shouldBe OK
+        }
+      }
+    }
+
+    "the HIP migration flag is enabled" should {
+      "return 303 redirecting to /existing-protections" in new Setup {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+
+        val result: Future[Result] = controller.withdrawImplications(fakeRequest)
+
+        status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.toString)
+      }
+    }
+  }
+
+  "calling the validateAndSaveWithdrawDateForm action" when {
     "the form has errors" should {
       "return a 400" in new Setup {
 
@@ -326,7 +374,7 @@ class WithdrawProtectionControllerSpec
     }
   }
 
-  "In WithdrawProtectionController calling the fetchWithdrawDateForm action" when {
+  "calling the fetchWithdrawDateForm action" when {
     "there is a stored withdrawDateForm" should {
       "return a 400" in new Setup {
         cacheFetchCondition[WithdrawDateFormModel](None)
