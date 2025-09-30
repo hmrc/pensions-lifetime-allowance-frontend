@@ -54,25 +54,28 @@ class WithdrawProtectionController @Inject() (
     implicit val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with I18nSupport
+    with WithdrawControllerRedirectHelper
+    with AmendControllerErrorHelper
     with Logging {
 
   def withdrawImplications: Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").map {
-        case Some(currentProtection) =>
-          Ok(
-            withdrawImplications(
-              withdrawDateForm(LocalDateTime.parse(currentProtection.certificateDate.get).toLocalDate),
-              Strings.protectionTypeString(currentProtection.protectionType),
-              Strings.statusString(currentProtection.status)
+    redirectToExistingProtectionsIfWithdrawnJourneyDisabled {
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
+        sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection").map {
+          case Some(currentProtection) =>
+            Ok(
+              withdrawImplications(
+                withdrawDateForm(LocalDateTime.parse(currentProtection.certificateDate.get).toLocalDate),
+                Strings.protectionTypeString(currentProtection.protectionType),
+                Strings.statusString(currentProtection.status)
+              )
             )
-          )
-        case _ =>
-          logger.error(
-            s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page"
-          )
-          InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-            .withHeaders(CACHE_CONTROL -> "no-cache")
+          case _ =>
+            logger.error(
+              s"Could not retrieve protection data for user with nino $nino when loading the withdraw summary page"
+            )
+            buildTechnicalError(technicalError)
+        }
       }
     }
   }
@@ -112,35 +115,33 @@ class WithdrawProtectionController @Inject() (
         )
       case _ =>
         logger.error(s"Could not retrieve withdraw form data for user")
-        InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-          .withHeaders(CACHE_CONTROL -> "no-cache")
+        buildTechnicalError(technicalError)
     }
 
   def displayWithdrawConfirmation(withdrawDate: String): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithNino("existingProtections") { nino =>
-      for {
-        protectionAmendment <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
-        response            <- sendWithdrawalRequest(nino, protectionAmendment.get, withdrawDate)
+    redirectToExistingProtectionsIfWithdrawnJourneyDisabled {
+      authFunction.genericAuthWithNino("existingProtections") { nino =>
+        for {
+          protectionAmendment <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
+          response            <- sendWithdrawalRequest(nino, protectionAmendment.get, withdrawDate)
 
-        result <- response match {
+          result <- response match {
 
-          case Right(_: AmendResponseModel) =>
-            Future.successful(
-              Redirect(
-                routes.WithdrawProtectionController.showWithdrawConfirmation(
-                  Strings.protectionTypeString(protectionAmendment.get.protectionType)
+            case Right(_: AmendResponseModel) =>
+              Future.successful(
+                Redirect(
+                  routes.WithdrawProtectionController.showWithdrawConfirmation(
+                    Strings.protectionTypeString(protectionAmendment.get.protectionType)
+                  )
                 )
               )
-            )
 
-          case Left(_) =>
-            logger.error(s"conflict response returned for withdrawal request for user nino $nino")
-            Future.successful(
-              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-                .withHeaders(CACHE_CONTROL -> "no-cache")
-            )
-        }
-      } yield result
+            case Left(_) =>
+              logger.error(s"conflict response returned for withdrawal request for user nino $nino")
+              Future.successful(buildTechnicalError(technicalError))
+          }
+        } yield result
+      }
     }
   }
 
@@ -155,8 +156,10 @@ class WithdrawProtectionController @Inject() (
       .map(_.map(AmendResponseModel(_)))
 
   def showWithdrawConfirmation(protectionType: String): Action[AnyContent] = Action.async { implicit request =>
-    authFunction.genericAuthWithoutNino("existingProtections") {
-      sessionCacheService.remove.map(_ => Ok(withdrawConfirmation(protectionType)))
+    redirectToExistingProtectionsIfWithdrawnJourneyDisabled {
+      authFunction.genericAuthWithoutNino("existingProtections") {
+        sessionCacheService.remove.map(_ => Ok(withdrawConfirmation(protectionType)))
+      }
     }
   }
 

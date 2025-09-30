@@ -54,7 +54,7 @@ class WithdrawProtectionDateInputControllerSpec
 
   implicit val system: ActorSystem                = ActorSystem()
   implicit val mat: Materializer                  = mock[Materializer]
-  implicit val mockAppConfig: FrontendAppConfig   = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig   = mock[FrontendAppConfig]
   implicit val mockPlaContext: PlaContext         = mock[PlaContext]
   implicit val application: Application           = mock[Application]
   implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
@@ -97,6 +97,7 @@ class WithdrawProtectionDateInputControllerSpec
     reset(mockPlaConnector)
     reset(mockPlaContext)
     reset(mockDisplayConstructors)
+    reset(mockAppConfig)
     super.beforeEach()
   }
 
@@ -117,83 +118,106 @@ class WithdrawProtectionDateInputControllerSpec
 
   val lang: Lang = mock[Lang]
 
-  "In WithdrawProtectionController calling the getWithdrawDateInput action" when {
+  "calling the getWithdrawDateInput action" when {
 
-    "there is a stored protection model" should {
-      "return 200" in new Setup {
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+    "the HIP migration flag is disabled" when {
 
-        lazy val result: Future[Result] = controller.getWithdrawDateInput(fakeRequest)
-
-        status(result) shouldBe OK
-      }
-
-      "there is not stored protection model" should {
-
-        "return 500" in new Setup {
-
+      "there is a stored protection model" should {
+        "return 200" in new Setup {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-          cacheFetchCondition[ProtectionModel](None)
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
 
           lazy val result: Future[Result] = controller.getWithdrawDateInput(fakeRequest)
 
-          status(result) shouldBe INTERNAL_SERVER_ERROR
+          status(result) shouldBe OK
+        }
+
+        "there is not stored protection model" should {
+          "return 500" in new Setup {
+            mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+            cacheFetchCondition[ProtectionModel](None)
+            when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+            lazy val result: Future[Result] = controller.getWithdrawDateInput(fakeRequest)
+
+            status(result) shouldBe INTERNAL_SERVER_ERROR
+          }
         }
       }
     }
+
   }
 
   "In WithdrawProtectionController calling the postWithdrawDateInput action" when {
 
-    "there is no stored protection model" should {
-      "return 500" in new Setup {
-        mockAuthConnector(Future.successful {})
-        cacheFetchCondition[ProtectionModel](None)
-        lazy val result: Future[Result] = controller.postWithdrawDateInput(fakeRequest)
-        status(result) shouldBe INTERNAL_SERVER_ERROR
+    "the HIP migration flag is disabled" when {
+
+      "there is no stored protection model" should {
+        "return 500" in new Setup {
+          mockAuthConnector(Future.successful {})
+          cacheFetchCondition[ProtectionModel](None)
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          lazy val result: Future[Result] = controller.postWithdrawDateInput(fakeRequest)
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+        }
+      }
+
+      "there is a stored protection model" should {
+
+        "return 400 when form is submitted with errors" in new Setup {
+
+          mockAuthConnector(Future.successful {})
+
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          cacheSaveCondition[WithdrawDateFormModel](mockSessionCacheService)
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest()
+            .withFormUrlEncodedBody(
+              ("withdrawDate.day", "20"),
+              ("withdrawDate.month", "7"),
+              ("withdrawDate.year", "abcd")
+            )
+            .withMethod("POST")
+
+          lazy val result: Future[Result] = controller.postWithdrawDateInput(request)
+          status(result) shouldBe BAD_REQUEST
+        }
+
+        "return 303 when valid data is submitted" in new Setup {
+          mockAuthConnector(Future.successful {})
+
+          cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
+          cacheSaveCondition[WithdrawDateFormModel](mockSessionCacheService)
+          when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
+
+          val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest()
+            .withFormUrlEncodedBody(
+              ("withdrawDate.day", "20"),
+              ("withdrawDate.month", "7"),
+              ("withdrawDate.year", "2017")
+            )
+            .withMethod("POST")
+
+          lazy val result: Future[Result] = controller.postWithdrawDateInput(request)
+          status(result) shouldBe SEE_OTHER
+        }
       }
     }
 
-    "there is a stored protection model" should {
+    "the HIP migration flag is enabled" should {
+      "return 303 redirecting to /existing-protections" in new Setup {
+        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
 
-      "return 400 when form is submitted with errors" in new Setup {
+        val result: Future[Result] = controller.postWithdrawDateInput(fakeRequest)
 
-        mockAuthConnector(Future.successful {})
-
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-        cacheSaveCondition[WithdrawDateFormModel](mockSessionCacheService)
-
-        val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest()
-          .withFormUrlEncodedBody(
-            ("withdrawDate.day", "20"),
-            ("withdrawDate.month", "7"),
-            ("withdrawDate.year", "abcd")
-          )
-          .withMethod("POST")
-
-        lazy val result: Future[Result] = controller.postWithdrawDateInput(request)
-        status(result) shouldBe BAD_REQUEST
-      }
-
-      "return 303 when valid data is submitted" in new Setup {
-        mockAuthConnector(Future.successful {})
-
-        cacheFetchCondition[ProtectionModel](Some(ip2016Protection))
-        cacheSaveCondition[WithdrawDateFormModel](mockSessionCacheService)
-
-        val request: FakeRequest[AnyContentAsFormUrlEncoded] = FakeRequest()
-          .withFormUrlEncodedBody(
-            ("withdrawDate.day", "20"),
-            ("withdrawDate.month", "7"),
-            ("withdrawDate.year", "2017")
-          )
-          .withMethod("POST")
-
-        lazy val result: Future[Result] = controller.postWithdrawDateInput(request)
         status(result) shouldBe SEE_OTHER
+        redirectLocation(result) shouldBe Some(routes.ReadProtectionsController.currentProtections.toString)
       }
     }
+
   }
 
   def cacheFetchCondition[T](data: Option[T]): Unit =
