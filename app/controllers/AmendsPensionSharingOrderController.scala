@@ -19,7 +19,6 @@ package controllers
 import auth.AuthFunction
 import common._
 import config.{FrontendAppConfig, PlaContext}
-import enums.ApplicationType
 import forms.AmendPSODetailsForm._
 import models.PensionDebitModel
 import models.amendModels._
@@ -48,6 +47,7 @@ class AmendsPensionSharingOrderController @Inject() (
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerCacheHelper
+    with AmendControllerErrorHelper
     with I18nSupport
     with Logging {
 
@@ -83,11 +83,8 @@ class AmendsPensionSharingOrderController @Inject() (
                 Ok(amendPsoDetails(amendPsoDetailsForm(protectionType), protectionType, status, existingPSO = false))
             }
           case _ =>
-            logger.warn(
-              s"Could not retrieve amend protection model for user with nino $nino when loading the amend PSO details page"
-            )
-            InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-              .withHeaders(CACHE_CONTROL -> "no-cache")
+            logger.warn(couldNotRetrieveModelForNino(nino, "when loading the amend PSO details page"))
+            buildTechnicalError(technicalError)
         }
     }
   }
@@ -108,8 +105,7 @@ class AmendsPensionSharingOrderController @Inject() (
         )
       case num =>
         logger.warn(s"$num pension debits recorded for user nino $nino during amend journey")
-        InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-          .withHeaders(CACHE_CONTROL -> "no-cache")
+        buildTechnicalError(technicalError)
     }
 
   def createAmendPsoDetailsModel(psoDetails: PensionDebitModel): AmendPSODetailsModel = {

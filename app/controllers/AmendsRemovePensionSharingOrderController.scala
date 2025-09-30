@@ -20,7 +20,6 @@ import auth.AuthFunction
 import common._
 import config.{FrontendAppConfig, PlaContext}
 import connectors.PLAConnector
-import enums.ApplicationType
 import models.amendModels._
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -47,6 +46,7 @@ class AmendsRemovePensionSharingOrderController @Inject() (
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerCacheHelper
+    with AmendControllerErrorHelper
     with I18nSupport
     with Logging {
 
@@ -57,11 +57,8 @@ class AmendsRemovePensionSharingOrderController @Inject() (
           case Some(_) =>
             Ok(removePsoDebits(protectionType, status))
           case _ =>
-            logger.warn(
-              s"Could not retrieve Amend ProtectionModel for user with nino $nino when removing the new pension debit"
-            )
-            InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-              .withHeaders(CACHE_CONTROL -> "no-cache")
+            logger.warn(couldNotRetrieveModelForNino(nino, "when removing the new pension debit"))
+            buildTechnicalError(technicalError)
         }
     }
   }
@@ -78,12 +75,9 @@ class AmendsRemovePensionSharingOrderController @Inject() (
             saveAmendProtectionModel(protectionType, status, amendProtModel).map(_ => redirectToSummary(amendProtModel))
 
           case None =>
-            logger.warn(
-              s"Could not retrieve Amend Protection Model for user with nino $nino when submitting a removal of a pension debit"
-            )
+            logger.warn(couldNotRetrieveModelForNino(nino, "when submitting a removal of a pension debit"))
             Future.successful(
-              InternalServerError(technicalError(ApplicationType.existingProtections.toString))
-                .withHeaders(CACHE_CONTROL -> "no-cache")
+              buildTechnicalError(technicalError)
             )
         }
     }
