@@ -19,10 +19,7 @@ To start all dependencies and services for pensions lifetime allowance, use the 
 ```
 sm2 --start PLA_ALL
 ```
-If you are running performance tests and also need a specific branch backend running, stop service from sm2 and start with
-```
-    sbt run -Dapplication.router=testOnlyDoNotUseInAppConf.Routes
-```
+Please note that the performance tests require running this frontend with test routes enabled.
 ### License
 
 This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html")
