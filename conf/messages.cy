@@ -505,15 +505,9 @@ pla.print.factor                            = Ffactor
 pla.print.protectionNotificationNumber      = Rhif hysbysu diogelwch
 pla.print.schemeAdministratorReference      = Cyfeirnod gweinyddwr y cynllun
 pla.print.giveToPensionProvider             = Rhowch y manylion hyn i''ch darparwr pensiwn pan fyddwch yn penderfynu cymryd arian o''ch pensiwn.
-pla.print.IP2014.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
-pla.print.IndividualProtection2014.contactHMRC = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
-pla.print.IndividualProtection2014LTA.contactHMRC = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
-pla.print.IP2016.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
-pla.print.IndividualProtection2016.contactHMRC = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
-pla.print.IndividualProtection2016LTA.contactHMRC = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
+pla.print.contactHMRC                       = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
 pla.print.FP2016.contactHMRC                = Os ydych chi neu''ch cyflogwr yn ychwanegu i''ch pensiwn, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 90 diwrnod.
 
-pla.printAmend.title                             = Argraffu''ch diogelwch sydd ar waith
 pla.printAmend.hmrc                              = Cyllid a Thollau EF
 pla.printAmend.fullName                          = Enw llawn
 pla.printAmend.nino                              = Rhif Yswiriant Gwladol
@@ -528,11 +522,6 @@ pla.printAmend.pensionSchemeAdministratorReference = Cyfeirnod gwiriad gweinyddw
 pla.printAmend.status                            = Statws
 pla.printAmend.withdrawn                         = Wedi’i dynnu''n ôl
 pla.printAmend.dormant                           = Segur
-pla.printAmend.giveToPensionProvider             = Rhowch y manylion hyn i''ch darparwr pensiwn pan fyddwch yn penderfynu cymryd arian o''ch pensiwn.
-pla.printAmend.IP2014.contactHMRC                = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
-pla.printAmend.IndividualProtection2014.contactHMRC = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
-pla.printAmend.IndividualProtection2014LTA.contactHMRC = Os yw''ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, cysylltwch â Gwasanaethau Cynlluniau Pensiwn CThEF cyn pen 60 diwrnod.
-
 
 ## Amends ##
 pla.amends.title                                            = Crynodeb o ddiogelwch

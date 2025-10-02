@@ -33,32 +33,30 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers.FakeApplication
-import testdata.AmendProtectionOutcomeViewsTestData.printDisplayModelIP14
 import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import utils.Constants
 import views.html.pages.fallback.technicalError
-import views.html.pages.result.{resultPrint, resultPrintViewAmendment}
+import views.html.pages.result.resultPrint
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMock with BeforeAndAfterEach {
 
-  private val displayConstructors: DisplayConstructors           = mock[DisplayConstructors]
-  private val sessionCacheService: SessionCacheService           = mock[SessionCacheService]
-  private val citizenDetailsConnector: CitizenDetailsConnector   = mock[CitizenDetailsConnector]
-  private val resultPrintView: resultPrint                       = mock[resultPrint]
-  private val resultPrintViewAmendment: resultPrintViewAmendment = mock[resultPrintViewAmendment]
+  private val displayConstructors: DisplayConstructors         = mock[DisplayConstructors]
+  private val sessionCacheService: SessionCacheService         = mock[SessionCacheService]
+  private val citizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
+  private val resultPrintView: resultPrint                     = mock[resultPrint]
 
   private val messagesControllerComponents: MessagesControllerComponents =
     fakeApplication().injector.instanceOf[MessagesControllerComponents]
 
-  private implicit val executionContext: ExecutionContext = app.injector.instanceOf[ExecutionContext]
-  private implicit val appConfig: FrontendAppConfig       = mock[FrontendAppConfig]
+  private implicit val executionContext: ExecutionContext   = app.injector.instanceOf[ExecutionContext]
+  private implicit val frontendAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   private val authFunction = new AuthFunction {
     override implicit val plaContext: PlaContext         = mock[PlaContext]
-    override implicit val appConfig: FrontendAppConfig   = appConfig
+    override implicit val appConfig: FrontendAppConfig   = frontendAppConfig
     override implicit val technicalError: technicalError = app.injector.instanceOf[technicalError]
     override implicit val ec: ExecutionContext           = executionContext
 
@@ -70,7 +68,6 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     citizenDetailsConnector,
     displayConstructors,
     resultPrintView,
-    resultPrintViewAmendment,
     messagesControllerComponents,
     authFunction
   )
@@ -82,10 +79,8 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     reset(sessionCacheService)
     reset(citizenDetailsConnector)
     reset(resultPrintView)
-    reset(resultPrintViewAmendment)
-    reset(appConfig)
+    reset(frontendAppConfig)
 
-    when(resultPrintViewAmendment.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(resultPrintView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
@@ -130,30 +125,8 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
       }
     }
 
-    Constants.amendmentCodesList.foreach { notificationId =>
+    (Constants.amendmentCodesList ++ Seq(15, 16)).foreach { notificationId =>
       s"ProtectionModel stored in cache contains notificationId: $notificationId" should {
-        "return Ok with resultPrintViewAmendment view" in {
-          val protectionModel   = testProtectionModel.copy(notificationId = Some(notificationId))
-          val printDisplayModel = printDisplayModelIP14.copy(notificationId = notificationId)
-          mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
-
-          when(citizenDetailsConnector.getPersonDetails(any())(any()))
-            .thenReturn(Future.successful(Some(testPersonalDetails)))
-          when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
-            .thenReturn(Future.successful(Some(protectionModel)))
-          when(displayConstructors.createAmendPrintDisplayModel(any(), any(), any())(any()))
-            .thenReturn(printDisplayModel)
-
-          val result = printController.printView(fakeRequest)
-
-          status(result) shouldBe 200
-          verify(resultPrintViewAmendment).apply(ArgumentMatchers.eq(printDisplayModel))(any(), any())
-        }
-      }
-    }
-
-    Seq(15, 16).foreach { notificationId =>
-      s"Valid data is provided with notificationId: $notificationId" should {
         "return Ok with resultPrintView view" in {
           val protectionModel   = testProtectionModel.copy(notificationId = Some(notificationId))
           val printDisplayModel = testPrintDisplayModel

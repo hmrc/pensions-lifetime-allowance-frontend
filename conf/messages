@@ -504,15 +504,9 @@ pla.print.factor                            = Factor
 pla.print.protectionNotificationNumber      = Protection notification number
 pla.print.schemeAdministratorReference      = Scheme administrator reference
 pla.print.giveToPensionProvider             = Give these details to your pension provider when you decide to take money from your pension
-pla.print.IP2014.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.IndividualProtection2014.contactHMRC = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.IndividualProtection2014LTA.contactHMRC = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.IP2016.contactHMRC                = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.IndividualProtection2016.contactHMRC = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.IndividualProtection2016LTA.contactHMRC = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.print.contactHMRC                       = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
 pla.print.FP2016.contactHMRC                = If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days.
 
-pla.printAmend.title                             = Print your active protection
 pla.printAmend.hmrc                              = HM Revenue & Customs
 pla.printAmend.fullName                          = Full name
 pla.printAmend.nino                              = National Insurance number
@@ -527,10 +521,6 @@ pla.printAmend.pensionSchemeAdministratorReference  = Pension scheme administrat
 pla.printAmend.status                               = Status
 pla.printAmend.withdrawn                            = Withdrawn
 pla.printAmend.dormant                              = Dormant
-pla.printAmend.giveToPensionProvider                = Give these details to your pension provider when you decide to take money from your pension
-pla.printAmend.IP2014.contactHMRC                   = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.printAmend.IndividualProtection2014.contactHMRC = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.printAmend.IndividualProtection2014LTA.contactHMRC = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
 
 ## Amends ##
 pla.amends.title                                            = Protection summary
