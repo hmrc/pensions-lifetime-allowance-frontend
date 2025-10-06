@@ -23,11 +23,13 @@ import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBod
 import connectors.{CitizenDetailsConnector, PLAConnector, PlaConnectorV2}
 import constructors.DisplayConstructors
 import enums.ApplicationType
-import enums.ApplicationType.IP2014
 import mocks.AuthMock
 import models._
 import models.amendModels._
 import models.cache.CacheMap
+import models.pla.response.ProtectionStatus.{Dormant, Open}
+import models.pla.response.ProtectionType.{FixedProtection2016, IndividualProtection2016}
+import models.pla.response.{ProtectionRecord, ProtectionRecordsList, ReadProtectionsResponse}
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -64,6 +66,7 @@ class AmendsControllerSpec
   private val sessionCacheService: SessionCacheService         = mock[SessionCacheService]
   private val plaConnector: PLAConnector                       = mock[PLAConnector]
   private val plaConnectorV2: PlaConnectorV2                   = mock[PlaConnectorV2]
+  private val appConfig: FrontendAppConfig                     = mock[FrontendAppConfig]
 
   private val messagesControllerComponents: MessagesControllerComponents =
     fakeApplication().injector.instanceOf[MessagesControllerComponents]
@@ -78,15 +81,14 @@ class AmendsControllerSpec
 
   override val messagesApi: MessagesApi = messagesControllerComponents.messagesApi
 
-  private implicit val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  private implicit val plaContext: PlaContext       = mock[PlaContext]
-  private implicit val ec: ExecutionContext         = app.injector.instanceOf[ExecutionContext]
+  private val plaContext: PlaContext = mock[PlaContext]
+  private val ec: ExecutionContext   = app.injector.instanceOf[ExecutionContext]
 
   private val authFunction = new AuthFunctionImpl(
     messagesControllerComponents,
     mockAuthConnector,
     technicalErrorView
-  )
+  )(appConfig, plaContext, ec)
 
   private val controller = new AmendsController(
     sessionCacheService,
@@ -103,7 +105,7 @@ class AmendsControllerSpec
     outcomeInactiveView,
     outcomeAmendedView,
     amendSummaryView
-  )
+  )(appConfig, ec)
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -130,6 +132,8 @@ class AmendsControllerSpec
     when(outcomeInactiveView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(outcomeAmendedView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(amendSummaryView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
+
+    when(appConfig.hipMigrationEnabled).thenReturn(false)
   }
 
   private implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
@@ -151,21 +155,7 @@ class AmendsControllerSpec
     protectionReference = Some("PSA123456")
   )
 
-  private val fp2014Protection = ProtectionModel(
-    psaCheckReference = Some("testPSARef"),
-    uncrystallisedRights = Some(100000.00),
-    nonUKRights = Some(2000.00),
-    preADayPensionInPayment = Some(2000.00),
-    postADayBenefitCrystallisationEvents = Some(2000.00),
-    notificationId = Some(12),
-    protectionID = Some(12345),
-    protectionType = Some("FP2014"),
-    status = Some("dormant"),
-    certificateDate = Some("2016-04-17"),
-    protectedAmount = Some(1250000),
-    protectionReference = Some("FP14123456")
-  )
-
+  private val psaCheckReference              = "PSA12345678A"
   private val testAmendIP2014ProtectionModel = AmendProtectionModel(ip2014Protection, ip2014Protection)
 
   private val testPensionContributionNoPsoDisplaySections = Seq(
@@ -392,40 +382,156 @@ class AmendsControllerSpec
       }
     }
 
-    Constants.amendmentCodesList.foreach { notificationId =>
+    Constants.amendmentCodesList.diff(Constants.fixedProtectionNotificationIds).foreach { notificationId =>
       s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
         "return Ok status with outcomeAmended view" in {
-          lazy val amendResponseModel =
-            if (notificationId == 7 || notificationId == 14) {
-              AmendResponseModel(
-                ProtectionModel(
-                  Some("psaRef"),
-                  Some(12345),
-                  certificateDate = Some("2016-04-17"),
-                  protectionType = Some("FP2014"),
-                  protectionReference = Some("FP14123456"),
-                  notificationId = Some(notificationId)
-                )
-              )
-            } else {
-              AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
-            }
+          val amendResponseModel =
+            AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
           cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
           cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
           when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
             .thenReturn(Future.successful(Some(testPersonalDetails)))
-          if (notificationId == 7 || notificationId == 14)
-            when(sessionCacheService.fetchAndGetFormData[ProtectionModel](eqTo("openProtection"))(any(), any()))
-              .thenReturn(Future.successful(Some(fp2014Protection)))
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
           when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
             .thenReturn(amendResultDisplayModel)
+
           val result = controller.amendmentOutcome()(fakeRequest)
+
           status(result) shouldBe OK
           verify(sessionCacheService)
             .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
+          verify(outcomeAmendedView).apply(eqTo(amendResultDisplayModel))(any(), any())
+        }
+      }
+    }
+
+    Constants.fixedProtectionNotificationIds.foreach { notificationId =>
+      s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
+
+        val amendResponseModel =
+          AmendResponseModel(ProtectionModel(Some(psaCheckReference), Some(2), notificationId = Some(notificationId)))
+
+        val individualProtectionRecord = ProtectionRecord(
+          identifier = 2,
+          sequenceNumber = 2,
+          `type` = IndividualProtection2016,
+          certificateDate = "2016-09-04",
+          certificateTime = "090019",
+          status = Dormant,
+          protectionReference = Some("IP16123001"),
+          relevantAmount = Some(1000001),
+          preADayPensionInPaymentAmount = Some(3000),
+          postADayBenefitCrystallisationEventAmount = Some(100),
+          uncrystallisedRightsAmount = Some(100),
+          nonUKRightsAmount = Some(100),
+          pensionDebitAmount = Some(100),
+          pensionDebitEnteredAmount = Some(100),
+          protectedAmount = Some(100000),
+          pensionDebitStartDate = Some("2016-09-04"),
+          pensionDebitTotalAmount = Some(10000),
+          lumpSumAmount = None,
+          lumpSumPercentage = None,
+          enhancementFactor = Some(5.6)
+        )
+        val fixedProtectionRecord = individualProtectionRecord.copy(
+          `type` = FixedProtection2016,
+          status = Open,
+          protectionReference = Some("FP16123456")
+        )
+
+        val readResponseModel = ReadResponseModel(psaCheckReference, Seq(amendResponseModel.protection))
+
+        val readProtectionResponseModel = {
+          val fixedProtectionRecordsList      = ProtectionRecordsList(fixedProtectionRecord, None)
+          val individualProtectionRecordsList = ProtectionRecordsList(individualProtectionRecord, None)
+
+          ReadProtectionsResponse(
+            psaCheckReference,
+            Some(Seq(fixedProtectionRecordsList, individualProtectionRecordsList))
+          )
+        }
+
+        "call PLAConnector when HIP Migration feature toggle is disabled" in {
+          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
+          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(appConfig.hipMigrationEnabled).thenReturn(false)
+          when(plaConnector.readProtections(any())(any(), any()))
+            .thenReturn(Future.successful(Right(readResponseModel)))
+          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
+            .thenReturn(Future.successful(CacheMap("", Map.empty)))
+          val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
+          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
+            .thenReturn(amendResultDisplayModel)
+
+          controller.amendmentOutcome()(fakeRequest).futureValue
+
+          verify(plaConnector).readProtections(eqTo(testNino))(any(), any())
+          verifyNoInteractions(plaConnectorV2)
+        }
+
+        "call PLAConnectorV2 when HIP Migration feature toggle is enabled" in {
+          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
+          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(appConfig.hipMigrationEnabled).thenReturn(true)
+          when(plaConnectorV2.readProtections(any())(any(), any()))
+            .thenReturn(Future.successful(Right(readProtectionResponseModel)))
+          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
+            .thenReturn(Future.successful(CacheMap("", Map.empty)))
+          val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
+          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
+            .thenReturn(amendResultDisplayModel)
+
+          controller.amendmentOutcome()(fakeRequest).futureValue
+
+          verify(plaConnectorV2).readProtections(eqTo(testNino))(any(), any())
+          verifyNoInteractions(plaConnector)
+        }
+
+        "call SessionCacheService.saveFormData providing correct data" in {
+          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
+          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(appConfig.hipMigrationEnabled).thenReturn(true)
+          when(plaConnectorV2.readProtections(any())(any(), any()))
+            .thenReturn(Future.successful(Right(readProtectionResponseModel)))
+          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
+            .thenReturn(Future.successful(CacheMap("", Map.empty)))
+          val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
+          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
+            .thenReturn(amendResultDisplayModel)
+
+          controller.amendmentOutcome()(fakeRequest).futureValue
+
+          val expectedProtectionModel =
+            ProtectionModel(psaCheckReference, fixedProtectionRecord).copy(notificationId = Some(notificationId))
+          verify(sessionCacheService)
+            .saveFormData(eqTo("openProtection"), eqTo(expectedProtectionModel))(any(), any())
+        }
+
+        "return Ok status with outcomeAmended view" in {
+          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
+          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(appConfig.hipMigrationEnabled).thenReturn(true)
+          when(plaConnectorV2.readProtections(any())(any(), any()))
+            .thenReturn(Future.successful(Right(readProtectionResponseModel)))
+          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
+            .thenReturn(Future.successful(CacheMap("", Map.empty)))
+          val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
+          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
+            .thenReturn(amendResultDisplayModel)
+
+          val result = controller.amendmentOutcome()(fakeRequest)
+
+          status(result) shouldBe OK
           verify(outcomeAmendedView).apply(eqTo(amendResultDisplayModel))(any(), any())
         }
       }

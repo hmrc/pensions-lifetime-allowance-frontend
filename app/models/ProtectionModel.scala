@@ -16,7 +16,7 @@
 
 package models
 
-import models.pla.response.ProtectionRecord
+import models.pla.response.{ProtectionRecord, ProtectionType}
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 import play.api.libs.json.{Json, OFormat}
 
@@ -56,6 +56,12 @@ case class ProtectionModel(
     isStatusAmendable && isProtectionTypeAmendable
   }
 
+  def isFixedProtection2016: Boolean =
+    protectionType.exists(protection =>
+      protection.toLowerCase == ProtectionType.FixedProtection2016.toString.toLowerCase
+        || protection.toLowerCase == ProtectionType.FixedProtection2016LTA.toString.toLowerCase
+    )
+
   def hipFields: ProtectionModelHipFields = ProtectionModelHipFields.fromOption(hipFieldsOption)
 
 }
@@ -81,7 +87,7 @@ object ProtectionModel {
       record.pensionDebitStartDate,
       record.pensionDebitTotalAmount.map(_.toDouble),
       None,
-      None,
+      notificationId = None,
       record.protectionReference,
       None,
       Some(
