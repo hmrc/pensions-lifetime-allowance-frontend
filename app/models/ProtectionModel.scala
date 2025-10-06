@@ -87,7 +87,7 @@ object ProtectionModel {
       record.pensionDebitStartDate,
       record.pensionDebitTotalAmount.map(_.toDouble),
       None,
-      None,
+      notificationId = None,
       record.protectionReference,
       None,
       Some(

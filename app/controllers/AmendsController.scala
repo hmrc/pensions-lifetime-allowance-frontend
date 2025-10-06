@@ -169,26 +169,24 @@ class AmendsController @Inject() (
 
     modelAR
       .map { model =>
-        val id = model.protection.notificationId.getOrElse {
+        val notificationId = model.protection.notificationId.getOrElse {
           throw Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
         }
-        if (Constants.amendmentCodesList.contains(id)) {
-          val protectionModel: Future[Either[Result, AmendResponseModel]] =
-            if (Constants.fixedProtectionNotificationId.contains(id)) {
-              createFixedAndIndividualProtectionModel(model, nino)
-            } else {
-              Future.successful(Right(model))
-            }
-          protectionModel.map {
-            case Right(protectionModel) =>
+        if (Constants.amendmentCodesList.contains(notificationId)) {
+          createProtectionModel(notificationId, model, nino).map {
+
+            case Some(protectionModel) =>
               sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.protection)
               val displayModel =
                 displayConstructors.createAmendResultDisplayModel(protectionModel, personalDetailsModelOpt, nino)
               Ok(outcomeAmended(displayModel))
-            case Left(result) =>
-              result
+
+            case None =>
+              logger.warn(s"Unable to retrieve fixed protection model from API GET endpoint for user with nino :$nino")
+              buildTechnicalError(technicalError)
+
           }
-        } else if (Constants.activeAmendmentCodes.contains(id)) {
+        } else if (Constants.activeAmendmentCodes.contains(notificationId)) {
           sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
           val displayModel =
             displayConstructors.createActiveAmendResponseDisplayModel(model, personalDetailsModelOpt, nino)
@@ -207,22 +205,37 @@ class AmendsController @Inject() (
       }
   }
 
-  private def fetchFixedProtection2016(nino: String)(implicit hc: HeaderCarrier): Future[Option[ProtectionModel]] =
-
-    fetchProtections(nino).map {
-
-      case Right(transformedReadResponseModel: TransformedReadResponseModel) =>
-        filterActiveFixedProtection2016(transformedReadResponseModel)
-
-      case Left(_) =>
-        logger.warn("Unable to retrieve Protection from GET point")
-        None
+  private def createProtectionModel(
+      notificationId: Int,
+      model: AmendResponseModel,
+      nino: String
+  )(implicit request: Request[AnyContent]): Future[Option[AmendResponseModel]] =
+    if (Constants.fixedProtectionNotificationIds.contains(notificationId)) {
+      createFixedAndIndividualProtectionModel(notificationId, nino)
+    } else {
+      Future.successful(Some(model))
     }
+
+  private def createFixedAndIndividualProtectionModel(
+      notificationId: Int,
+      nino: String
+  )(implicit request: Request[AnyContent]): Future[Option[AmendResponseModel]] =
+    for {
+      fixedProtectionOpt <- fetchProtections(nino).map(_.toOption.flatMap(filterActiveFixedProtection2016))
+
+      res = fixedProtectionOpt.map { fixedProtection =>
+        AmendResponseModel(fixedProtection.copy(notificationId = Some(notificationId)))
+      }
+    } yield res
 
   private def fetchProtections(
       nino: String
   )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
-    plaConnectorV2.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
+    if (appConfig.hipMigrationEnabled) {
+      plaConnectorV2.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
+    } else {
+      plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
+    }
 
   private def filterActiveFixedProtection2016(model: TransformedReadResponseModel): Option[ProtectionModel] = {
     val fixedProtectionType = model.activeProtection.filter(_.isFixedProtection2016)
@@ -233,26 +246,5 @@ class AmendsController @Inject() (
       fixedProtectionType
     }
   }
-
-  private def createFixedAndIndividualProtectionModel(
-      model: AmendResponseModel,
-      nino: String
-  )(implicit request: Request[AnyContent]): Future[Either[Result, AmendResponseModel]] =
-    fetchFixedProtection2016(nino).map { modelOption =>
-      modelOption
-        .map { fixedProtectionModel =>
-          val modelCopy = model.protection.copy(
-            protectionReference = fixedProtectionModel.protectionReference,
-            certificateDate = fixedProtectionModel.certificateDate,
-            protectionType = fixedProtectionModel.protectionType
-          )
-          Right(
-            AmendResponseModel(modelCopy)
-          )
-        }
-        .getOrElse(
-          Left(throw Exceptions.RequiredNotFoundProtectionModelException("amendmentOutcome"))
-        )
-    }
 
 }
