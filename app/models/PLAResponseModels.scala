@@ -109,6 +109,6 @@ object AmendResponseModel {
     for {
       date <- amendProtectionResponse.certificateDate
       time <- amendProtectionResponse.certificateTime
-    } yield date + "T" + time
+    } yield date + "T" + ProtectionModel.padCertificateTime(time)
 
 }

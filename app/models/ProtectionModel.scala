@@ -100,7 +100,13 @@ object ProtectionModel {
     )
 
   private def buildRecordDateTime(record: ProtectionRecord): String =
-    s"${record.certificateDate}T${record.certificateTime}"
+    s"${record.certificateDate}T${padCertificateTime(record.certificateTime)}"
+
+  private[models] def padCertificateTime(certificateTimeString: String): String = {
+    val padding = "0" * (6 - certificateTimeString.length).max(0)
+
+    s"$padding$certificateTimeString"
+  }
 
   implicit val pensionDebitFormat: OFormat[PensionDebitModel]     = PensionDebitModel.pdFormat
   implicit val hipFieldsFormat: OFormat[ProtectionModelHipFields] = ProtectionModelHipFields.format

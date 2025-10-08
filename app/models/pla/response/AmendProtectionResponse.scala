@@ -23,21 +23,21 @@ case class AmendProtectionResponse(
     lifetimeAllowanceIdentifier: Long,
     lifetimeAllowanceSequenceNumber: Int,
     lifetimeAllowanceType: AmendProtectionLifetimeAllowanceType,
-    certificateDate: Option[String],
-    certificateTime: Option[String],
+    certificateDate: Option[String] = None,
+    certificateTime: Option[String] = None,
     status: AmendProtectionResponseStatus,
-    protectionReference: Option[String],
+    protectionReference: Option[String] = None,
     relevantAmount: Int,
     preADayPensionInPaymentAmount: Int,
     postADayBenefitCrystallisationEventAmount: Int,
     uncrystallisedRightsAmount: Int,
     nonUKRightsAmount: Int,
-    pensionDebitAmount: Option[Int],
-    pensionDebitEnteredAmount: Option[Int],
-    notificationIdentifier: Option[Int],
-    protectedAmount: Option[Int],
-    pensionDebitStartDate: Option[String],
-    pensionDebitTotalAmount: Option[Int]
+    pensionDebitAmount: Option[Int] = None,
+    pensionDebitEnteredAmount: Option[Int] = None,
+    notificationIdentifier: Option[Int] = None,
+    protectedAmount: Option[Int] = None,
+    pensionDebitStartDate: Option[String] = None,
+    pensionDebitTotalAmount: Option[Int] = None
 )
 
 object AmendProtectionResponse {

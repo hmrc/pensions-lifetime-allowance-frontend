@@ -18,7 +18,7 @@ package models
 
 import generators.ModelGenerators
 import models.pla.AmendProtectionLifetimeAllowanceType._
-import models.pla.response.ProtectionType
+import models.pla.response.{ProtectionRecord, ProtectionStatus, ProtectionType}
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
@@ -185,6 +185,64 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
           result.protectionReference shouldBe protectionRecord.protectionReference
           result.withdrawnDate shouldBe None
         }
+
+      "pad certificate time with leading zeroes if fewer than 6 characters" in {
+        val psaCheckReference = "PSA0000001"
+
+        val protectionRecord = ProtectionRecord(
+          identifier = 1,
+          sequenceNumber = 1,
+          `type` = ProtectionType.IndividualProtection2014,
+          certificateDate = "2025-10-08",
+          certificateTime = "93010",
+          status = ProtectionStatus.Open
+        )
+
+        val protectionModel = ProtectionModel(
+          protectionID = Some(1),
+          version = Some(1),
+          psaCheckReference = Some(psaCheckReference),
+          protectionType = Some(ProtectionType.IndividualProtection2014.toString),
+          status = Some(ProtectionStatus.Open.toString),
+          certificateDate = Some("2025-10-08T093010"),
+          hipFieldsOption = Some(ProtectionModelHipFields.empty)
+        )
+
+        ProtectionModel(psaCheckReference, protectionRecord) shouldBe protectionModel
+      }
+
+    }
+  }
+
+  "ProtectionModel on padCertificateTime" should {
+    "pad certificate time with leading zeros" when {
+      "certificateTime is 1" in {
+        ProtectionModel.padCertificateTime("1") shouldBe "000001"
+      }
+
+      "certificateTime is 01" in {
+        ProtectionModel.padCertificateTime("01") shouldBe "000001"
+      }
+
+      "certificateTime is 001" in {
+        ProtectionModel.padCertificateTime("001") shouldBe "000001"
+      }
+
+      "certificateTime is 0001" in {
+        ProtectionModel.padCertificateTime("0001") shouldBe "000001"
+      }
+
+      "certificateTime is 00001" in {
+        ProtectionModel.padCertificateTime("00001") shouldBe "000001"
+      }
+
+      "certificateTime is 000001" in {
+        ProtectionModel.padCertificateTime("000001") shouldBe "000001"
+      }
+
+      "certificateTime is 0000001" in {
+        ProtectionModel.padCertificateTime("0000001") shouldBe "0000001"
+      }
     }
   }
 
