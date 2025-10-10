@@ -18,68 +18,82 @@ package views.pages.result
 
 import config.FrontendAppConfig
 import models.PrintDisplayModel
+import models.pla.response.ProtectionType
+import models.pla.response.ProtectionType.{FixedProtection2016, FixedProtection2016LTA}
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.Mockito.when
-import play.api.i18n.Messages
 import play.api.inject
 import play.api.inject.guice.GuiceApplicationBuilder
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.result.ResultPrint
+import testHelpers.ViewSpecHelpers.result.ResultPrintPageContent
 import views.html.pages.result.resultPrint
 
-class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
+class ResultPrintSpec extends CommonViewSpecHelper with ResultPrintPageContent {
 
   "The Print Result Page" should {
-    lazy val model = PrintDisplayModel(
-      "Jim",
-      "Davis",
-      "nino",
-      "IP2016",
-      "active",
-      "PSA33456789",
-      Messages("pla.protection.protectionReference"),
-      Some("100.00"),
-      Some("23/02/2015")
+
+    val nino = "AB123456A"
+    val model = PrintDisplayModel(
+      firstName = "Jim",
+      surname = "Davis",
+      nino = nino,
+      protectionType = "IP2016",
+      status = "active",
+      psaCheckReference = "PSA33456789",
+      protectionReference = "IP123456789001",
+      protectedAmount = Some("1,200,000"),
+      certificateDate = Some("23/02/2015"),
+      certificateTime = Some("12:34:56"),
+      lumpSumPercentage = Some("42%"),
+      lumpSumAmount = Some("1,000"),
+      enhancementFactor = Some("0.17"),
+      factor = Some("0.42")
     )
+
     val mockAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
     val application = new GuiceApplicationBuilder()
       .configure("metrics.enabled" -> false)
       .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
       .build()
-    lazy val resultPrintView = fakeApplication().injector.instanceOf[resultPrint]
-    lazy val view            = resultPrintView(model)
-    lazy val doc             = Jsoup.parse(view.body)
-    lazy val model2 = PrintDisplayModel(
-      "Jim",
-      "Davis",
-      "nino",
-      "FP2014",
-      "dormant",
-      "PSA33456789",
-      Messages("pla.protection.protectionReference"),
-      Some("100.00"),
-      Some("23/02/2015")
-    )
-    lazy val view2 = resultPrintView(model2)
-    lazy val doc2  = Jsoup.parse(view2.body)
 
-    "have the new correct title" in {
-      doc.title() shouldBe plaPrintTitle
+    val resultPrintView = application.injector.instanceOf[resultPrint]
+
+    def doc(printDisplayModel: PrintDisplayModel = model, hipMigrationToggle: Boolean = true): Document = {
+      when(mockAppConfig.hipMigrationEnabled).thenReturn(hipMigrationToggle)
+
+      val view = resultPrintView(printDisplayModel)
+      Jsoup.parse(view.body)
     }
 
-    "have a new service name which" should {
+    "have correct title" when {
 
-      lazy val serviceName = doc.getElementsByClass("govuk-header__service-name")
+      "HIP Migration toggle is enabled" in {
+        doc().title() shouldBe plaPrintTitleHip
+      }
 
-      "contain the text" in {
+      "HIP Migration toggle is disabled" in {
+        doc(hipMigrationToggle = false).title() shouldBe plaPrintTitle
+      }
+    }
+
+    "have correct service name" when {
+
+      "HIP Migration toggle is enabled" in {
+        val serviceName = doc().getElementsByClass("govuk-header__service-name")
+        serviceName.text shouldBe plaPrintServiceNameHip
+      }
+
+      "HIP Migration toggle is disabled" in {
+        val serviceName = doc(hipMigrationToggle = false).getElementsByClass("govuk-header__service-name")
         serviceName.text shouldBe plaPrintServiceName
       }
     }
 
-    "have a first heading which" should {
+    "have a first heading".which {
 
-      lazy val h1Tag = doc.select("h1")
-      lazy val p1    = doc.select("p").get(0)
+      val h1Tag = doc().select("h1")
+      val p1    = doc().select("p").get(0)
 
       "contain the text" in {
         h1Tag.text shouldBe "Jim Davis"
@@ -94,92 +108,131 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrint {
       }
 
       "contain the paragraph text" in {
-        p1.text shouldBe s"$plaPrintNino nino"
+        p1.text shouldBe s"$plaPrintNino $nino"
       }
     }
 
-    "have a second heading which" should {
+    "have a second heading".which {
 
       "contain the text" in {
-        doc.select("h2").first().text shouldBe plaPrintProtectionDetails
+        doc().select("h2").first().text shouldBe plaPrintProtectionDetails
       }
     }
 
-    "contain a table which" should {
-      when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
-      lazy val resultPrintView = application.injector.instanceOf[resultPrint]
-      lazy val view            = resultPrintView(model)
-      lazy val doc             = Jsoup.parse(view.body)
-      lazy val tableHeading    = doc.select("tr th")
+    "contain a table".which {
 
-      "contain the following title message information when  hip is enabled" in {
-        tableHeading.get(2).text shouldBe plaPrintPlaHip
-        tableHeading.get(3).text shouldBe plaPrintProtectionNotificationNumberHip
-        tableHeading.get(4).text shouldBe plaPrintSchemeAdministratorReferenceHip
+      "contains the following title message information when HIP Migration is enabled" in {
+        val tableHeading = doc().select("tr th")
+
+        tableHeading.get(0).text shouldBe plaPrintProtectionType
+        tableHeading.get(1).text shouldBe plaPrintPlaHip
+        tableHeading.get(2).text shouldBe plaPrintProtectionNotificationNumberHip
+        tableHeading.get(3).text shouldBe plaPrintSchemeAdministratorReferenceHip
+        tableHeading.get(4).text shouldBe plaPrintLumpSumPercentage
+        tableHeading.get(5).text shouldBe plaPrintLumpSumAmount
+        tableHeading.get(6).text shouldBe plaPrintEnhancementFactor
+        tableHeading.get(7).text shouldBe plaPrintFactor
+        tableHeading.get(8).text shouldBe plaPrintApplicationDate
+        tableHeading.get(9).text shouldBe plaPrintApplicationTime
+      }
+
+      "contains the following title message information when HIP Migration is disabled" in {
+        val tableHeading = doc(hipMigrationToggle = false).select("tr th")
+
+        tableHeading.get(0).text shouldBe plaPrintProtectionType
+        tableHeading.get(1).text shouldBe plaPrintPla
+        tableHeading.get(2).text shouldBe plaPrintProtectionNotificationNumber
+        tableHeading.get(3).text shouldBe plaPrintSchemeAdministratorReference
+        tableHeading.get(4).text shouldBe plaPrintLumpSumPercentage
+        tableHeading.get(5).text shouldBe plaPrintLumpSumAmount
+        tableHeading.get(6).text shouldBe plaPrintEnhancementFactor
+        tableHeading.get(7).text shouldBe plaPrintFactor
+        tableHeading.get(8).text shouldBe plaPrintApplicationDate
+        tableHeading.get(9).text shouldBe plaPrintApplicationTime
+      }
+
+      "contains correct IDs" in {
+        val tableData = doc().select("tr td")
+
+        tableData.get(0).attr("id") shouldBe "protectionType"
+        tableData.get(1).attr("id") shouldBe "protectedAmount"
+        tableData.get(2).attr("id") shouldBe "protectionRef"
+        tableData.get(3).attr("id") shouldBe "psaRef"
+
+        tableData.get(8).attr("id") shouldBe "applicationDate"
+        tableData.get(9).attr("id") shouldBe "applicationTime"
+      }
+
+      "contains correct table data" when {
+
+        "provided with all optional fields" in {
+          val tableData = doc().select("tr td")
+
+          tableData.get(0).text shouldBe "Individual protection 2016"
+          tableData.get(1).text shouldBe model.protectedAmount.get
+          tableData.get(2).text shouldBe model.protectionReference
+          tableData.get(3).text shouldBe model.psaCheckReference
+          tableData.get(4).text shouldBe model.lumpSumPercentage.get
+          tableData.get(5).text shouldBe model.lumpSumAmount.get
+          tableData.get(6).text shouldBe model.enhancementFactor.get
+          tableData.get(7).text shouldBe model.factor.get
+          tableData.get(8).text shouldBe model.certificateDate.get
+          tableData.get(9).text shouldBe model.certificateTime.get
+        }
+
+        "provided with only mandatory fields" in {
+          val newModel = model.copy(
+            certificateTime = None,
+            lumpSumPercentage = None,
+            lumpSumAmount = None,
+            enhancementFactor = None,
+            factor = None
+          )
+          val tableData = doc(newModel).select("tr td")
+
+          tableData.get(0).text shouldBe "Individual protection 2016"
+          tableData.get(1).text shouldBe model.protectedAmount.get
+          tableData.get(2).text shouldBe model.protectionReference
+          tableData.get(3).text shouldBe model.psaCheckReference
+          tableData.get(4).text shouldBe model.certificateDate.get
+        }
       }
     }
 
-    "contain a table which" should {
+    "have a 'give to pension provider' section with correct ID" in {
+      val p2 = doc().select("div p").get(1)
 
-      "contain the following title message information" in {
-        when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
-        lazy val resultPrintView = application.injector.instanceOf[resultPrint]
-        lazy val view            = resultPrintView(model)
-        lazy val doc             = Jsoup.parse(view.body)
-        lazy val tableHeading    = doc.select("tr th")
-
-        tableHeading.get(0).text shouldBe plaPrintApplicationDate
-        tableHeading.get(1).text shouldBe plaPrintProtectionType
-        tableHeading.get(2).text shouldBe plaPrintPla
-        tableHeading.get(3).text shouldBe plaPrintProtectionNotificationNumber
-        tableHeading.get(4).text shouldBe plaPrintSchemeAdministratorReference
-      }
-
-      lazy val tableData = doc.select("tr td")
-
-      "contain the following id information" in {
-        tableData.get(0).attr("id") shouldBe "applicationDate"
-        tableData.get(1).attr("id") shouldBe "protectionType"
-        tableData.get(2).attr("id") shouldBe "protectedAmount"
-        tableData.get(3).attr("id") shouldBe "protectionRef"
-        tableData.get(4).attr("id") shouldBe "psaRef"
-      }
-
-      "contain the following table information" in {
-        tableData.get(0).text shouldBe "23/02/2015"
-        tableData.get(1).text shouldBe "Individual protection 2016"
-        tableData.get(2).text shouldBe "100.00"
-        tableData.get(3).text shouldBe Messages("pla.protection.protectionReference")
-        tableData.get(4).text shouldBe "PSA33456789"
-      }
+      p2.text shouldBe plaPrintGiveToPensionProvider
     }
 
-    "have an sections paragraph which" should {
+    "have a contact hmrc section" when {
 
-      lazy val p2 = doc.select("div p").get(1)
-      lazy val p3 = doc.select("div p").get(2)
+      ProtectionType.values.diff(Seq(FixedProtection2016, FixedProtection2016LTA)).map(_.toString).foreach {
+        protectionType =>
+          s"provided with protection type: $protectionType" in {
+            val p3 = {
+              val newModel = model.copy(protectionType = protectionType)
+              val newView  = resultPrintView(newModel)
+              val newDoc   = Jsoup.parse(newView.body)
+              newDoc.select("div p").get(2)
+            }
 
-      "have a give to pension provider section with the text" in {
-        p2.text shouldBe plaPrintGiveToPensionProvider
+            p3.text shouldBe plaPrintContactHMRC
+          }
       }
 
-      "have a contact hmrc section with the id" in {
-        p3.attr("id") shouldBe "contactHMRC"
+      Seq("FP2016", FixedProtection2016.toString, FixedProtection2016LTA.toString).foreach { protectionType =>
+        s"provided with protection type: $protectionType" in {
+          val p3 = {
+            val newModel = model.copy(protectionType = protectionType)
+            val newView  = resultPrintView(newModel)
+            val newDoc   = Jsoup.parse(newView.body)
+            newDoc.select("div p").get(2)
+          }
+
+          p3.text shouldBe plaPrintFP2016ContactHMRC
+        }
       }
-
-      "have a contact hmrc section with the text" in {
-        p3.text shouldBe plaPrintIP2016ContactHMRC
-      }
-    }
-
-    "have an sections paragraph (Other Protection) which" should {
-
-      lazy val p2 = doc2.select("div p").get(1)
-
-      "have a give to pension provider section with the text" in {
-        p2.text shouldBe plaPrintGiveToPensionProvider
-      }
-
     }
   }
 

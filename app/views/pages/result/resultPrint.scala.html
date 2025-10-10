@@ -18,6 +18,8 @@
 @import views.html.helper.CSPNonce
 @import views.HeaderContent
 @import config.FrontendAppConfig
+@import models.pla.response.ProtectionType.FixedProtection2016
+@import models.pla.response.ProtectionType.FixedProtection2016LTA
 
 @this(
     layout: Layout,
@@ -49,18 +51,7 @@
     <table class="govuk-table">
         <caption class="govuk-visually-hidden">@Messages("pla.print.protectionDetails")</caption>
         <tbody class="govuk-table__body">
-            @model.certificateDate.map { certificateDate =>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@Messages("pla.print.applicationDate")</th>
-                    <td class="govuk-table__cell" id="applicationDate">@{certificateDate}</td>
-                </tr>
-            }
-            @model.certificateTime.map { certificateTime =>
-                <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@Messages("pla.print.applicationTime")</th>
-                    <td class="govuk-table__cell" id="applicationTime">@{certificateTime}</td>
-                </tr>
-            }
+
             <tr class="govuk-table__row">
                 <th scope="row" class="govuk-table__header">@Messages("pla.print.protectionType")</th>
                 <td class="govuk-table__cell" id="protectionType">@Messages(s"pla.protection.types.${model.protectionType}")</td>
@@ -103,12 +94,26 @@
                     <td class="govuk-table__cell" id="factor">@factor</td>
                 </tr>
             }
+            @model.certificateDate.map { certificateDate =>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">@Messages("pla.print.applicationDate")</th>
+                    <td class="govuk-table__cell" id="applicationDate">@{certificateDate}</td>
+                </tr>
+            }
+            @model.certificateTime.map { certificateTime =>
+                <tr class="govuk-table__row">
+                    <th scope="row" class="govuk-table__header">@Messages("pla.print.applicationTime")</th>
+                    <td class="govuk-table__cell" id="applicationTime">@{certificateTime}</td>
+                </tr>
+            }
         </tbody>
     </table>
 
     <p class="govuk-body">@Messages("pla.print.giveToPensionProvider")</p>
 
-    @if(model.protectionType == "IP2014" || model.protectionType == "IP2016" || model.protectionType == "FP2016") {
-        <p class="govuk-body" id="contactHMRC">@Messages(s"pla.print.${model.protectionType}.contactHMRC")</p>
+    @if(model.isFixedProtection2016) {
+        <p class="govuk-body" id="contactHMRC">@Messages(s"pla.print.FP2016.contactHMRC")</p>
+    } else {
+        <p class="govuk-body" id="contactHMRC">@Messages(s"pla.print.contactHMRC")</p>
     }
 }

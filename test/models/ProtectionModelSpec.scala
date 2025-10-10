@@ -100,10 +100,10 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
     "return true" when {
 
       val fixedProtectionTypes =
-        Seq(ProtectionType.FixedProtection2016.toString, ProtectionType.FixedProtection2016LTA.toString)
+        Seq(ProtectionType.FixedProtection2016.toString, ProtectionType.FixedProtection2016LTA.toString, "FP2016")
 
       fixedProtectionTypes.foreach { protectionType =>
-        s"ProtectionModel contains  protectionType: '$protectionType''" in {
+        s"ProtectionModel contains protectionType: '$protectionType'" in {
           val protectionModel = ProtectionModel(
             psaCheckReference = None,
             protectionID = None,
@@ -119,34 +119,27 @@ class ProtectionModelSpec extends AnyWordSpec with Matchers with ModelGenerators
     "return false" when {
 
       val testScenarios = Seq(
-        Some("other") -> Some("ip2014"),
-        Some("other") -> Some("ip2016"),
-        None          -> Some("ip2014"),
-        None          -> Some("ip2016"),
-        Some("other") -> Some(IndividualProtection2014.toString),
-        Some("other") -> Some(IndividualProtection2016.toString),
-        Some("other") -> Some(IndividualProtection2014LTA.toString),
-        Some("other") -> Some(IndividualProtection2016LTA.toString),
-        None          -> Some(IndividualProtection2014.toString),
-        None          -> Some(IndividualProtection2016.toString),
-        None          -> Some(IndividualProtection2014LTA.toString),
-        None          -> Some(IndividualProtection2016LTA.toString)
+        "IP2014",
+        "IP2016",
+        IndividualProtection2014.toString,
+        IndividualProtection2016.toString,
+        IndividualProtection2014LTA.toString,
+        IndividualProtection2016LTA.toString
       )
 
-      testScenarios.foreach { case (status, protectionType) =>
-        s"ProtectionModel contains status: $status and protectionType: $protectionType" in {
+      testScenarios.foreach { protectionType =>
+        s"ProtectionModel contains protectionType: '$protectionType'" in {
           val protectionModel = ProtectionModel(
             psaCheckReference = None,
             protectionID = None,
-            status = status,
-            protectionType = protectionType
+            status = Some("open"),
+            protectionType = Some(protectionType)
           )
 
           protectionModel.isFixedProtection2016 shouldBe false
         }
       }
     }
-
   }
 
   "ProtectionModel on apply" when {

@@ -149,7 +149,20 @@ case class PrintDisplayModel(
     lumpSumAmount: Option[String] = None,
     enhancementFactor: Option[String] = None,
     factor: Option[String] = None
-)
+) {
+
+  def isFixedProtection2016: Boolean = {
+    val fp2016Str = "FP2016"
+    val fixedProtection2016Types = Set(
+      fp2016Str.toLowerCase,
+      ProtectionType.FixedProtection2016.toString.toLowerCase,
+      ProtectionType.FixedProtection2016LTA.toString.toLowerCase
+    )
+
+    fixedProtection2016Types.contains(protectionType.toLowerCase)
+  }
+
+}
 
 case class AmendPrintDisplayModel(
     firstName: String,

@@ -16,13 +16,16 @@
 
 package testHelpers.ViewSpecHelpers.result
 
-trait ResultPrint {
+trait ResultPrintPageContent {
 
-  val plaPrintTitle                           = "Print your active protection - Check your pension protections - GOV.UK"
-  val plaPrintServiceName                     = "Check your pension protections"
-  val plaPrintNino                            = "National Insurance number"
+  val plaPrintTitle          = "Print your active protection - Check your pension protections - GOV.UK"
+  val plaPrintTitleHip       = "Print your active protection - Check your pension protections and enhancements - GOV.UK"
+  val plaPrintServiceName    = "Check your pension protections"
+  val plaPrintServiceNameHip = "Check your pension protections and enhancements"
+  val plaPrintNino           = "National Insurance number"
   val plaPrintProtectionDetails               = "Protection details"
   val plaPrintApplicationDate                 = "Application date"
+  val plaPrintApplicationTime                 = "Application time"
   val plaPrintProtectionType                  = "Protection type"
   val plaPrintPla                             = "Protected lifetime allowance"
   val plaPrintProtectionNotificationNumber    = "Protection notification number"
@@ -30,14 +33,15 @@ trait ResultPrint {
   val plaPrintPlaHip                          = "Protected amount"
   val plaPrintProtectionNotificationNumberHip = "Protection reference number"
   val plaPrintSchemeAdministratorReferenceHip = "Pension scheme administrator check reference"
+  val plaPrintLumpSumPercentage               = "Lump sum percentage"
+  val plaPrintLumpSumAmount                   = "Lump sum amount"
+  val plaPrintEnhancementFactor               = "Enhancement factor"
+  val plaPrintFactor                          = "Factor"
 
   val plaPrintGiveToPensionProvider =
     "Give these details to your pension provider when you decide to take money from your pension"
 
-  val plaPrintIP2014ContactHMRC =
-    "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
-
-  val plaPrintIP2016ContactHMRC =
+  val plaPrintContactHMRC =
     "If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days."
 
   val plaPrintFP2016ContactHMRC =

@@ -26,8 +26,7 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import utils.Constants
-import views.html.pages.result.{resultPrint, resultPrintViewAmendment}
+import views.html.pages.result.resultPrint
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,7 +36,6 @@ class PrintController @Inject() (
     citizenDetailsConnector: CitizenDetailsConnector,
     displayConstructors: DisplayConstructors,
     resultPrintView: resultPrint,
-    resultPrintViewAmendment: resultPrintViewAmendment,
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction
 )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
@@ -64,13 +62,8 @@ class PrintController @Inject() (
     protectionModel match {
       case Some(model) =>
         citizenDetailsConnector.getPersonDetails(nino).map { personalDetailsModel =>
-          if (Constants.amendmentCodesList.exists(code => model.notificationId.contains(code))) {
-            val displayModel = displayConstructors.createAmendPrintDisplayModel(personalDetailsModel, model, nino)
-            Ok(resultPrintViewAmendment(displayModel))
-          } else {
-            val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
-            Ok(resultPrintView(displayModel))
-          }
+          val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
+          Ok(resultPrintView(displayModel))
         }
       case _ =>
         logger.warn(s"Forced redirect to PrintView for $nino")
