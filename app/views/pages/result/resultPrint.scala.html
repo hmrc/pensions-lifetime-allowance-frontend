@@ -111,7 +111,7 @@
 
     <p class="govuk-body">@Messages("pla.print.giveToPensionProvider")</p>
 
-    @if(model.protectionType == "FP2016" || model.protectionType == FixedProtection2016.toString || model.protectionType == FixedProtection2016LTA.toString) {
+    @if(model.isFixedProtection2016) {
         <p class="govuk-body" id="contactHMRC">@Messages(s"pla.print.FP2016.contactHMRC")</p>
     } else {
         <p class="govuk-body" id="contactHMRC">@Messages(s"pla.print.contactHMRC")</p>

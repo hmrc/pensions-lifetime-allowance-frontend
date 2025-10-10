@@ -56,11 +56,16 @@ case class ProtectionModel(
     isStatusAmendable && isProtectionTypeAmendable
   }
 
-  def isFixedProtection2016: Boolean =
-    protectionType.exists(protection =>
-      protection.toLowerCase == ProtectionType.FixedProtection2016.toString.toLowerCase
-        || protection.toLowerCase == ProtectionType.FixedProtection2016LTA.toString.toLowerCase
+  def isFixedProtection2016: Boolean = {
+    val fp2016Str = "FP2016"
+    val fixedProtection2016Types = Set(
+      fp2016Str.toLowerCase,
+      ProtectionType.FixedProtection2016.toString.toLowerCase,
+      ProtectionType.FixedProtection2016LTA.toString.toLowerCase
     )
+
+    protectionType.map(_.toLowerCase).exists(fixedProtection2016Types.contains)
+  }
 
   def hipFields: ProtectionModelHipFields = ProtectionModelHipFields.fromOption(hipFieldsOption)
 
