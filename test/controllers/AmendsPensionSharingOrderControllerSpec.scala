@@ -18,7 +18,7 @@ package controllers
 
 import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
-import common.Strings
+import common.{Exceptions, Strings}
 import config._
 import connectors.PLAConnector
 import constructors.DisplayConstructors
@@ -523,9 +523,16 @@ class AmendsPensionSharingOrderControllerSpec
             )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
             .futureValue
 
-          val expectedPensionDebitStartDate = s"${testData.psoYear}-04-06"
+          val expectedPensionDebitStartDate     = s"${testData.psoYear}-04-06"
+          val expectedPensionDebitEnteredAmount = 100000.0
           val expectedUpdatedProtection = testData.amendProtectionModel.updatedProtection.copy(
-            pensionDebits = Some(List(PensionDebitModel(startDate = expectedPensionDebitStartDate, amount = 100000.0)))
+            pensionDebits = Some(
+              List(
+                PensionDebitModel(startDate = expectedPensionDebitStartDate, amount = expectedPensionDebitEnteredAmount)
+              )
+            ),
+            pensionDebitStartDate = Some(expectedPensionDebitStartDate),
+            pensionDebitEnteredAmount = Some(expectedPensionDebitEnteredAmount)
           )
           val expectedAmendProtectionModel =
             testData.amendProtectionModel.copy(updatedProtection = expectedUpdatedProtection)
@@ -556,25 +563,54 @@ class AmendsPensionSharingOrderControllerSpec
       }
     }
 
+    "AmendProtectionModel is NOT found in cache" should {
+
+      "return " in new Setup {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](None)
+        when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
+          .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
+
+        val requestData = Seq(
+          ("pso.day", "6"),
+          ("pso.month", "4"),
+          ("pso.year", "2014"),
+          ("psoAmt", "100000")
+        )
+
+        val result = controller
+          .submitAmendPsoDetails(
+            protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
+            status = "open",
+            existingPSO = true
+          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
+          .failed
+          .futureValue
+
+        result shouldBe a[Exceptions.RequiredValueNotDefinedException]
+        result.getMessage shouldBe "Value not found for amendModel in updateAmendModelWithPso"
+      }
+    }
+
   }
 
-  "Calling createPsoDetailsList" when {
+  "Calling createPensionDebitModel" when {
 
     "not supplied with a PSO amount" should {
 
       "return the correct value not found exception" in new Setup() {
         (the[RequiredValueNotDefinedException] thrownBy {
-          controller.createPsoDetailsList(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), None))
-        } should have).message("Value not found for psoAmt in createPsoDetailsList")
+          controller.createPensionDebitModel(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), None))
+        } should have).message("Value not found for psoAmt in createPensionDebitModel")
       }
     }
 
     "supplied with a PSO amount" should {
 
       "return the correct list" in new Setup {
-        controller.createPsoDetailsList(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), Some(1))) shouldBe Some(
-          List(PensionDebitModel("2017-03-01", 1))
-        )
+        val result = controller.createPensionDebitModel(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), Some(1)))
+
+        result shouldBe PensionDebitModel("2017-03-01", 1)
       }
     }
   }
