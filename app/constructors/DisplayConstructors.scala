@@ -287,14 +287,14 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
 
     val pensionDebitAdded = model.updatedProtection.pensionDebits.isDefined
 
-    val psoSecs: Seq[AmendDisplaySectionModel] = createCurrentPsoSection(model.updatedProtection).getOrElse(Seq())
+    val psoSections: Seq[AmendDisplaySectionModel] = createCurrentPsoSection(model.updatedProtection).getOrElse(Seq())
 
     AmendDisplayModel(
       protectionType = protectionType,
       amended = amended,
       pensionContributionSections = pcSections,
       psoAdded = pensionDebitAdded,
-      psoSections = psoSecs,
+      psoSections = psoSections,
       totalAmount = totalAmount
     )
   }

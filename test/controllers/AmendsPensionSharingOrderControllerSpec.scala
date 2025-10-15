@@ -16,24 +16,25 @@
 
 package controllers
 
-import auth.{AuthFunction, AuthFunctionImpl}
+import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
-import common.Strings
+import common.{Exceptions, Strings}
 import config._
 import connectors.PLAConnector
 import constructors.DisplayConstructors
 import mocks.AuthMock
 import models._
-import models.pla.AmendProtectionLifetimeAllowanceType._
 import models.amendModels._
 import models.cache.CacheMap
+import models.pla.AmendProtectionLifetimeAllowanceType._
 import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
-import org.mockito.ArgumentMatchers.{any, anyString}
+import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
+import org.scalatest.concurrent.ScalaFutures
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
@@ -59,7 +60,8 @@ class AmendsPensionSharingOrderControllerSpec
     with SessionCacheTestHelper
     with BeforeAndAfterEach
     with AuthMock
-    with I18nSupport {
+    with I18nSupport
+    with ScalaFutures {
 
   implicit lazy val mockMessage: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
@@ -450,168 +452,165 @@ class AmendsPensionSharingOrderControllerSpec
     }
   }
 
-  "Submitting Amend PSOs data" when {
+  "Calling the submitAmendPsoDetails action" when {
 
-    "submitting valid data for IndividualProtection2014" in new Setup {
+    case class TestData(
+        amendProtectionModel: AmendProtectionModel,
+        psoYear: String,
+        protectionTypeUrl: String
+    )
 
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPsoDetails(
-              protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
-              status = "open",
-              existingPSO = true
-            ),
-            ("pso.day", "6"),
-            ("pso.month", "4"),
-            ("pso.year", "2014"),
-            ("psoAmt", "100000")
-          )
-
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014ProtectionModel))
-      when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
-        .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
-
-      status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(
-        s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2014, "open")}"
+    Seq(
+      TestData(
+        testAmendIndividualProtection2014ProtectionModel,
+        "2014",
+        Strings.ProtectionTypeURL.IndividualProtection2014
+      ),
+      TestData(
+        testAmendIndividualProtection2014LTAProtectionModel,
+        "2014",
+        Strings.ProtectionTypeURL.IndividualProtection2014LTA
+      ),
+      TestData(
+        testAmendIndividualProtection2016ProtectionModel,
+        "2016",
+        Strings.ProtectionTypeURL.IndividualProtection2016
+      ),
+      TestData(
+        testAmendIndividualProtection2016LTAProtectionModel,
+        "2016",
+        Strings.ProtectionTypeURL.IndividualProtection2016LTA
       )
-    }
+    ).foreach { testData =>
+      s"provided with valid data for ${testData.protectionTypeUrl}" should {
 
-    "submitting valid data for IndividualProtection2014LTA" in new Setup {
+        val requestData = Seq(
+          ("pso.day", "6"),
+          ("pso.month", "4"),
+          ("pso.year", testData.psoYear),
+          ("psoAmt", "100000")
+        )
 
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPsoDetails(
-              protectionType = Strings.ProtectionTypeURL.IndividualProtection2014LTA,
+        "return 303 (Redirect) and amendsSummary view" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          cacheFetchCondition[AmendProtectionModel](Some(testData.amendProtectionModel))
+          when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
+            .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
+
+          val result = controller.submitAmendPsoDetails(
+            protectionType = testData.protectionTypeUrl,
+            status = "open",
+            existingPSO = true
+          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
+
+          status(result) shouldBe 303
+          redirectLocation(result) shouldBe Some(
+            s"${routes.AmendsController.amendsSummary(testData.protectionTypeUrl, "open").url}"
+          )
+        }
+
+        "save correct data into cache" in new Setup {
+          mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+          cacheFetchCondition[AmendProtectionModel](Some(testData.amendProtectionModel))
+          when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
+            .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
+
+          controller
+            .submitAmendPsoDetails(
+              protectionType = testData.protectionTypeUrl,
               status = "open",
               existingPSO = true
+            )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
+            .futureValue
+
+          val expectedPensionDebitStartDate     = s"${testData.psoYear}-04-06"
+          val expectedPensionDebitEnteredAmount = 100000.0
+          val expectedUpdatedProtection = testData.amendProtectionModel.updatedProtection.copy(
+            pensionDebits = Some(
+              List(
+                PensionDebitModel(startDate = expectedPensionDebitStartDate, amount = expectedPensionDebitEnteredAmount)
+              )
             ),
-            ("pso.day", "6"),
-            ("pso.month", "4"),
-            ("pso.year", "2014"),
-            ("psoAmt", "100000")
+            pensionDebitStartDate = Some(expectedPensionDebitStartDate),
+            pensionDebitEnteredAmount = Some(expectedPensionDebitEnteredAmount)
           )
-
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014LTAProtectionModel))
-      when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
-        .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
-
-      status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(
-        s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "open")}"
-      )
+          val expectedAmendProtectionModel =
+            testData.amendProtectionModel.copy(updatedProtection = expectedUpdatedProtection)
+          verify(mockSessionCacheService).saveFormData(any(), eqTo(expectedAmendProtectionModel))(any(), any())
+        }
+      }
     }
 
-    "submitting valid data for IndividualProtection2016" in new Setup {
+    "provided with invalid data" should {
 
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPsoDetails(
-              protectionType = Strings.ProtectionTypeURL.IndividualProtection2016,
-              status = "open",
-              existingPSO = true
-            ),
-            ("pso.day", "6"),
-            ("pso.month", "4"),
-            ("pso.year", "2016"),
-            ("psoAmt", "100000")
-          )
+      "return 400 (Bad Request)" in new Setup {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
-      when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
-        .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
+        val data = Seq(
+          ("pso.day", ""),
+          ("pso.month", "13"),
+          ("pso.year", "2015"),
+          ("psoAmt", "100000")
+        )
 
-      status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(
-        s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2016, "open")}"
-      )
+        val result = controller.submitAmendPsoDetails(
+          protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
+          status = "open",
+          existingPSO = true
+        )(authenticatedFakeRequest().withFormUrlEncodedBody(data: _*).withMethod("POST"))
+
+        status(result) shouldBe 400
+      }
     }
 
-    "submitting valid data for IndividualProtection2016LTA" in new Setup {
+    "AmendProtectionModel is NOT found in cache" should {
 
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPsoDetails(
-              protectionType = Strings.ProtectionTypeURL.IndividualProtection2016LTA,
-              status = "open",
-              existingPSO = true
-            ),
-            ("pso.day", "6"),
-            ("pso.month", "4"),
-            ("pso.year", "2016"),
-            ("psoAmt", "100000")
-          )
+      "return " in new Setup {
+        mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
+        cacheFetchCondition[AmendProtectionModel](None)
+        when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
+          .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModel))
-      when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
-        .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
+        val requestData = Seq(
+          ("pso.day", "6"),
+          ("pso.month", "4"),
+          ("pso.year", "2014"),
+          ("psoAmt", "100000")
+        )
 
-      status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(
-        s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "open")}"
-      )
+        val result = controller
+          .submitAmendPsoDetails(
+            protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
+            status = "open",
+            existingPSO = true
+          )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
+          .failed
+          .futureValue
+
+        result shouldBe a[Exceptions.RequiredValueNotDefinedException]
+        result.getMessage shouldBe "Value not found for amendModel in updateAmendModelWithPso"
+      }
     }
 
-    "submitting invalid data" in new Setup {
-
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPsoDetails(
-              protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
-              status = "open",
-              existingPSO = true
-            ),
-            ("pso.day", ""),
-            ("pso.month", "1"),
-            ("pso.year", "2015"),
-            ("psoAmt", "100000")
-          )
-
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      status(DataItem.result) shouldBe 400
-    }
-
-    "submitting data which fails additional validation" in new Setup {
-
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPsoDetails(
-              protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
-              status = "open",
-              existingPSO = true
-            ),
-            ("pso.day", "36"),
-            ("pso.month", "1"),
-            ("pso.year", "2015"),
-            ("psoAmt", "100000")
-          )
-
-      mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
-      status(DataItem.result) shouldBe 400
-    }
   }
 
-  "Calling createPsoDetailsList" when {
+  "Calling createPensionDebitModel" when {
 
     "not supplied with a PSO amount" should {
 
       "return the correct value not found exception" in new Setup() {
         (the[RequiredValueNotDefinedException] thrownBy {
-          controller.createPsoDetailsList(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), None))
-        } should have).message("Value not found for psoAmt in createPsoDetailsList")
+          controller.createPensionDebitModel(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), None))
+        } should have).message("Value not found for psoAmt in createPensionDebitModel")
       }
     }
 
     "supplied with a PSO amount" should {
 
       "return the correct list" in new Setup {
-        controller.createPsoDetailsList(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), Some(1))) shouldBe Some(
-          List(PensionDebitModel("2017-03-01", 1))
-        )
+        val result = controller.createPensionDebitModel(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), Some(1)))
+
+        result shouldBe PensionDebitModel("2017-03-01", 1)
       }
     }
   }
