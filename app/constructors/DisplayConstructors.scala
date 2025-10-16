@@ -56,9 +56,8 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
     val psaCheckReference = protectionModel.psaCheckReference.getOrElse {
       throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "psaCheckReference")
     }
-    val protectionReference = protectionModel.protectionReference.getOrElse {
-      throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "protectionReference")
-    }
+    val protectionReference =
+      protectionModel.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
 
     val protectedAmountOption =
       protectionModel.protectedAmount.map(amt => Display.currencyDisplayString(BigDecimal(amt)))
