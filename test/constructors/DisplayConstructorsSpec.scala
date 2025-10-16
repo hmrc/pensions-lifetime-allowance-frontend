@@ -1287,7 +1287,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
       protectedAmount = "£1,350,000.45",
       details = Some(
         ProtectionDetailsDisplayModel(
-          protectionReference = Some("protectionRef"),
+          protectionReference = "protectionRef",
           psaReference = "psaRef",
           applicationDate = Some("14 June 2016")
         )
@@ -1312,7 +1312,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
         protectedAmount = "£1,350,000.45",
         details = Some(
           ProtectionDetailsDisplayModel(
-            protectionReference = Some("None"),
+            protectionReference = "None",
             psaReference = "psaRef",
             applicationDate = Some("14 June 2016")
           )

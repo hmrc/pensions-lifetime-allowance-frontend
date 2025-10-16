@@ -37,7 +37,7 @@ case class RejectionDisplayModel(
 )
 
 case class ProtectionDetailsDisplayModel(
-    protectionReference: Option[String],
+    protectionReference: String,
     psaReference: String,
     applicationDate: Option[String]
 )
