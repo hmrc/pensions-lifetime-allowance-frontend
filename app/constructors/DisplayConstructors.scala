@@ -662,7 +662,8 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
   private def createProtectionDetailsFromProtection(
       protection: ProtectionModel
   )(implicit lang: Lang): ProtectionDetailsDisplayModel = {
-    val protectionReference = protection.protectionReference
+    val protectionReference =
+      protection.protectionReference.orElse(Some(Messages("pla.protection.protectionReference")))
     val psaReference = protection.psaCheckReference.getOrElse(
       throw Exceptions.OptionNotDefinedException(
         "createProtectionDetailsFromModel",
