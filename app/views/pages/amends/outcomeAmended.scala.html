@@ -26,7 +26,8 @@
 @(model: AmendResultDisplayModel)(implicit request: Request[_], messages: Messages)
 
 @layout(
-	pageTitle = messages("pla.amendsResultPage.title")
+	pageTitle = messages("pla.amendsResultPage.title"),
+    backLinkEnabled = false
 ) {
 
 	<div class="govuk-panel govuk-panel--confirmation">

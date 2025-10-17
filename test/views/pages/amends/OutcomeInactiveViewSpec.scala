@@ -54,6 +54,11 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
       docIP16.title() shouldBe s"$plaResultSuccessOutcomeActiveTitle - Check your pension protections - GOV.UK"
     }
 
+    "not have back link with text back " in {
+      val backButton = docIP16.select(".govuk-back-link").text()
+      backButton.isEmpty shouldBe true
+    }
+
     "have the correct header for IP16" in {
       docIP16.select("h1.govuk-heading-xl").text() shouldBe plaResultSuccessIP16Heading
     }

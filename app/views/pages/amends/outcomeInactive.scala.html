@@ -25,7 +25,8 @@
 @(model: InactiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel])(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = Messages("pla.inactiveAmend.title")
+    pageTitle = Messages("pla.inactiveAmend.title"),
+    backLinkEnabled = false
 ) {
 
     @gaModel.map{ gaModel =>
