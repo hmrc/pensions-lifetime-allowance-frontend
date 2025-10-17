@@ -42,12 +42,29 @@ object AmendProtectionOutcomeViewsTestData {
     protectedAmount = "£1,350,000.45",
     details = Some(
       ProtectionDetailsDisplayModel(
-        protectionReference = Some("protectionRef"),
+        protectionReference = "protectionRef",
         psaReference = "psaRef",
         applicationDate = Some("14 June 2017")
       )
     )
   )
+
+  val amendsActiveResultModelIP16WithNoneProtectionReference: ActiveAmendResultDisplayModel =
+    ActiveAmendResultDisplayModel(
+      firstName = "Jim",
+      surname = "Davis",
+      nino = "nino",
+      protectionType = ApplicationType.IP2016,
+      notificationId = "44",
+      protectedAmount = "£1,350,000.45",
+      details = Some(
+        ProtectionDetailsDisplayModel(
+          protectionReference = "None",
+          psaReference = "psaRef",
+          applicationDate = Some("14 June 2017")
+        )
+      )
+    )
 
   val amendsActiveResultModelIP14: ActiveAmendResultDisplayModel = ActiveAmendResultDisplayModel(
     firstName = "Jim",
@@ -58,7 +75,7 @@ object AmendProtectionOutcomeViewsTestData {
     protectedAmount = "£1,350,000.11",
     details = Some(
       ProtectionDetailsDisplayModel(
-        protectionReference = Some("protectionRef"),
+        protectionReference = "protectionRef",
         psaReference = "psaRef",
         applicationDate = Some("14 June 2017")
       )

@@ -1262,24 +1262,47 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
   }
 
   "createActiveAmendResponseModel" should {
+    val amendResponseModel = AmendResponseModel(
+      ProtectionModel(
+        psaCheckReference = Some("psaRef"),
+        protectionID = Some(100003),
+        protectionType = Some(IndividualProtection2014.toString),
+        protectionReference = Some("protectionRef"),
+        certificateDate = Some("2016-06-14T15:14:00"),
+        protectedAmount = Some(1350000.45),
+        notificationId = Some(33)
+      )
+    )
 
-    "correctly transform an AmendResponseModel into an ActiveAmendResultDisplayModel" in {
-      val amendResponseModel = AmendResponseModel(
-        ProtectionModel(
-          psaCheckReference = Some("psaRef"),
-          protectionID = Some(100003),
-          protectionType = Some(IndividualProtection2014.toString),
-          protectionReference = Some("protectionRef"),
-          certificateDate = Some("2016-06-14T15:14:00"),
-          protectedAmount = Some(1350000.45),
-          notificationId = Some(33)
+    val person               = Person(firstName = "Jim", lastName = "Davis")
+    val personalDetailsModel = PersonalDetailsModel(person)
+    val nino                 = "testNino"
+
+    val activeAmendResultDisplayModel = ActiveAmendResultDisplayModel(
+      firstName = "Jim",
+      surname = "Davis",
+      nino = nino,
+      protectionType = ApplicationType.IP2014,
+      notificationId = "33",
+      protectedAmount = "£1,350,000.45",
+      details = Some(
+        ProtectionDetailsDisplayModel(
+          protectionReference = "protectionRef",
+          psaReference = "psaRef",
+          applicationDate = Some("14 June 2016")
         )
       )
+    )
+    "correctly transform an AmendResponseModel into an ActiveAmendResultDisplayModel" in {
 
-      val person               = Person(firstName = "Jim", lastName = "Davis")
-      val personalDetailsModel = PersonalDetailsModel(person)
-      val nino                 = "testNino"
+      displayConstructor.createActiveAmendResponseDisplayModel(
+        amendResponseModel,
+        Some(personalDetailsModel),
+        nino
+      ) shouldBe activeAmendResultDisplayModel
+    }
 
+    "correctly transform an AmendResponseModel into an ActiveAmendResultDisplayModel with protectionReference None" in {
       val activeAmendResultDisplayModel = ActiveAmendResultDisplayModel(
         firstName = "Jim",
         surname = "Davis",
@@ -1289,15 +1312,14 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
         protectedAmount = "£1,350,000.45",
         details = Some(
           ProtectionDetailsDisplayModel(
-            protectionReference = Some("protectionRef"),
+            protectionReference = "None",
             psaReference = "psaRef",
             applicationDate = Some("14 June 2016")
           )
         )
       )
-
       displayConstructor.createActiveAmendResponseDisplayModel(
-        amendResponseModel,
+        amendResponseModel.copy(protection = amendResponseModel.protection.copy(protectionReference = None)),
         Some(personalDetailsModel),
         nino
       ) shouldBe activeAmendResultDisplayModel

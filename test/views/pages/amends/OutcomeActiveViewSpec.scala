@@ -23,6 +23,7 @@ import testHelpers.ViewSpecHelpers.amends.OutcomeActiveViewSpecMessages
 import testdata.AmendProtectionOutcomeViewsTestData.{
   amendsActiveResultModelIP14,
   amendsActiveResultModelIP16,
+  amendsActiveResultModelIP16WithNoneProtectionReference,
   amendsGAModel
 }
 import views.html.pages.amends.outcomeActive
@@ -107,7 +108,7 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
         docIP16HipMigrationDisabled.select("li#yourNino").text() shouldBe plaResultSuccessYourNino
         docIP16HipMigrationDisabled
           .select("li#protectionRef")
-          .text() shouldBe plaResultSuccessProtectionRef + s": ${details.protectionReference.get}"
+          .text() shouldBe plaResultSuccessProtectionRef + s": ${details.protectionReference}"
         docIP16HipMigrationDisabled
           .select("li#psaRef")
           .text() shouldBe plaResultSuccessPsaRef + s": ${details.psaReference}"
@@ -184,6 +185,55 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
             tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
             tableData.get(rowIndex).attr("id") shouldBe "protectionRef"
             tableData.get(rowIndex).text shouldBe "protectionRef"
+          }
+
+          "looking at PSA Reference row" in {
+            val rowIndex = 3
+            tableHeadings.get(rowIndex).text shouldBe PsaRefHeader
+            tableData.get(rowIndex).attr("id") shouldBe "psaRef"
+            tableData.get(rowIndex).text shouldBe "psaRef"
+          }
+
+          "looking at Application Date row" in {
+            val rowIndex = 4
+            tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
+            tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
+            tableData.get(rowIndex).text shouldBe "14 June 2017"
+          }
+        }
+
+        "ActiveAmendResultDisplayModel contains non-empty details with None protectionRef" when {
+
+          val docIP16HipMigrationEnabled = {
+            when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+            Jsoup.parse(
+              view
+                .apply(amendsActiveResultModelIP16WithNoneProtectionReference, Some(amendsGAModel), mockAppConfig)
+                .body
+            )
+          }
+          val tableHeadings = docIP16HipMigrationEnabled.select("tr th")
+          val tableData     = docIP16HipMigrationEnabled.select("tr td")
+
+          "looking at name row" in {
+            val rowIndex = 0
+            tableHeadings.get(rowIndex).text shouldBe NameHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourFullName"
+            tableData.get(rowIndex).text shouldBe "Jim Davis"
+          }
+
+          "looking at NINo row" in {
+            val rowIndex = 1
+            tableHeadings.get(rowIndex).text shouldBe NinoHeader
+            tableData.get(rowIndex).attr("id") shouldBe "yourNino"
+            tableData.get(rowIndex).text shouldBe "nino"
+          }
+
+          "looking at Protection Reference row" in {
+            val rowIndex = 2
+            tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
+            tableData.get(rowIndex).attr("id") shouldBe "protectionRef"
+            tableData.get(rowIndex).text shouldBe "None"
           }
 
           "looking at PSA Reference row" in {

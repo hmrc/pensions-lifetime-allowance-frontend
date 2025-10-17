@@ -33,12 +33,10 @@
     </tr>
 
     @displayModel.details.map { details =>
-    @details.protectionReference.map { protectionRef =>
     <tr class="govuk-table__row">
         <th scope="row" class="govuk-table__header">@messages("pla.resultSuccess.table.protectionRef")</th>
-        <td class="govuk-table__cell" id="protectionRef">@protectionRef</td>
+        <td class="govuk-table__cell" id="protectionRef">@{details.protectionReference}</td>
     </tr>
-    }
     }
 
     @displayModel.details.map { details =>

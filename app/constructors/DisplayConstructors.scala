@@ -17,7 +17,7 @@
 package constructors
 
 import common._
-import config.{AppConfig, FrontendAppConfig}
+import config.FrontendAppConfig
 import enums.{ApplicationStage, ApplicationType}
 import models._
 import models.amendModels.AmendProtectionModel
@@ -662,7 +662,8 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
   private def createProtectionDetailsFromProtection(
       protection: ProtectionModel
   )(implicit lang: Lang): ProtectionDetailsDisplayModel = {
-    val protectionReference = protection.protectionReference
+    val protectionReference =
+      protection.protectionReference.getOrElse(Messages("pla.protection.protectionReference"))
     val psaReference = protection.psaCheckReference.getOrElse(
       throw Exceptions.OptionNotDefinedException(
         "createProtectionDetailsFromModel",
