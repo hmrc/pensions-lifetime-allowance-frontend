@@ -234,6 +234,12 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrintPageContent {
         }
       }
     }
+
+    "not have back link with text back " in {
+      val backButton = doc().select(".govuk-back-link").text()
+      backButton.isEmpty shouldBe true
+    }
+
   }
 
 }

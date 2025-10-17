@@ -122,6 +122,11 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
           .select("a#printPage")
           .attr("href") shouldBe controllers.routes.PrintController.printView.url
       }
+
+      "not have back link with text back " in {
+        val backButton = docIP16HipMigrationDisabled.select(".govuk-back-link").text()
+        backButton.isEmpty shouldBe true
+      }
     }
 
     "have a properly structured 'Changing your protection details' section" when {
@@ -165,6 +170,11 @@ class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewS
           }
           val tableHeadings = docIP16HipMigrationEnabled.select("tr th")
           val tableData     = docIP16HipMigrationEnabled.select("tr td")
+
+          "not have back link with text back " in {
+            val backButton = docIP16HipMigrationEnabled.select(".govuk-back-link").text()
+            backButton.isEmpty shouldBe true
+          }
 
           "looking at name row" in {
             val rowIndex = 0

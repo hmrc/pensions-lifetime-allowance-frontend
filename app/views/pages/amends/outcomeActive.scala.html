@@ -28,7 +28,8 @@
 @(model: ActiveAmendResultDisplayModel, gaModel: Option[AmendsGAModel], appConfig: FrontendAppConfig)(implicit request: Request[_], messages: Messages)
 
 @layout(
-    pageTitle = messages("pla.activeAmend.title")
+    pageTitle = messages("pla.activeAmend.title"),
+    backLinkEnabled = false
 ) {
 
     @gaModel.map{ gaModel =>

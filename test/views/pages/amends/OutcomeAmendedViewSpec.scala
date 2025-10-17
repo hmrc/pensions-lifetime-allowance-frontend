@@ -53,6 +53,11 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
       val doc = getDocumentFor(1)
 
+      "not have back link with text back " in {
+        val backButton = doc.select(".govuk-back-link").text()
+        backButton.isEmpty shouldBe true
+      }
+
       "contain title" in {
         doc.title() shouldBe title
       }
