@@ -109,7 +109,7 @@ object AmendProtectionRequest {
   private def extractPensionDebit(protectionModel: ProtectionModel): Option[PensionDebit] =
     (protectionModel.pensionDebitEnteredAmount, protectionModel.pensionDebitStartDate) match {
       case (Some(enteredAmount), Some(startDate)) => Some(PensionDebit(startDate = startDate, amount = enteredAmount))
-      case _ => None
+      case _                                      => None
     }
 
 }
