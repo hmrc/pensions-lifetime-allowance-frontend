@@ -520,7 +520,10 @@ pla.printAmend.fixedProtectionReferenceNumber    = Fixed protection 2016 referen
 pla.printAmend.pensionSchemeAdministratorReference  = Pension scheme administrator check reference
 pla.printAmend.status                               = Status
 pla.printAmend.withdrawn                            = Withdrawn
+pla.printAmend.Withdrawn                            = Withdrawn
 pla.printAmend.dormant                              = Dormant
+pla.printAmend.Dormant                              = Dormant
+pla.printAmend.Open                                 = Active
 
 ## Amends ##
 pla.amends.title                                            = Protection summary
@@ -860,7 +863,11 @@ amendCode.14.changeDetailsPara = Give your fixed protection 2016 reference numbe
 amendCode.14.bulletPointOne = you lose your fixed protection 2016
 amendCode.14.bulletPointTwo = your pension is shared in a divorce or civil partnership
 
+amendCode.noNotificationId.IndividualProtection2014.heading = You have amended your individual protection 2014
+amendCode.noNotificationId.IndividualProtection2014.insetText = Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
 
+amendCode.noNotificationId.IndividualProtection2016.heading = You have amended your individual protection 2016
+amendCode.noNotificationId.IndividualProtection2016.insetText = Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
 
 
 ### RESULTS MESSAGES ###
@@ -1176,7 +1183,7 @@ pla.withdraw.date-input.form.day-too-low=Enter a valid day
 pla.withdraw.date-input.form.month-empty=Enter a month
 pla.withdraw.date-input.form.month-too-high=Enter a valid month
 pla.withdraw.date-input.form.month-too-low=Enter a valid month
-pla.withdraw.date-input.form.year-empty=Enter a year
+pla.withdraw.date-input.form.year-empty=Enter a year => true
 pla.withdraw.date-input.form.year-too-high=Date cannot be in the future
 pla.withdraw.date-input.form.date-in-future=Date cannot be in the future
 pla.withdraw.date-input.form.date-before-start-date=Date must be after protection start date

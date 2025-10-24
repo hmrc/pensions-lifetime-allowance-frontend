@@ -169,13 +169,13 @@ case class AmendPrintDisplayModel(
     surname: String,
     nino: String,
     protectionType: String,
-    status: String,
-    psaCheckReference: String,
-    protectionReference: String,
+    status: Option[String],
+    psaCheckReference: Option[String],
+    protectionReference: Option[String],
+    fixedProtectionReference: Option[String],
     protectedAmount: Option[String],
     certificateDate: Option[String],
-    certificateTime: Option[String],
-    notificationId: Int
+    certificateTime: Option[String]
 )
 
 case class AmendDisplayModel(
@@ -212,6 +212,12 @@ case class ActiveAmendResultDisplayModel(
 case class AmendResultDisplayModel(
     notificationId: Int,
     protectedAmount: String,
+    details: Option[AmendPrintDisplayModel]
+)
+
+case class AmendResultDisplayModelNoNotificationId(
+    protectedAmount: String,
+    protectionType: String,
     details: Option[AmendPrintDisplayModel]
 )
 
