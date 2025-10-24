@@ -35,8 +35,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.libs.json.Format
-import play.api.mvc.{AnyContent, MessagesControllerComponents, Request}
+import play.api.mvc.{AnyContent, MessagesControllerComponents}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -127,9 +126,6 @@ class AmendsRemovePensionSharingOrderControllerSpec
   def cacheFetchCondition[T](data: Option[T]): Unit =
     when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
       .thenReturn(Future.successful(data))
-
-  def verifySavedToCache[T](key: String, data: T)(implicit request: Request[_], format: Format[T]): Unit =
-    verify(mockSessionCacheService).saveFormData[T](key, data)(request, format)
 
   "Removing a recently added PSO" when {
 
