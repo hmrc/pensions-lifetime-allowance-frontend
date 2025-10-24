@@ -16,7 +16,7 @@
 
 package models.pla.request
 
-import models.ProtectionModel
+import models.{PensionDebit, ProtectionModel}
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 import play.api.libs.json.{Format, Json}
 
@@ -73,6 +73,12 @@ object AmendProtectionRequest {
     val nonUKRights =
       protectionModel.nonUKRights.getOrElse(throw new IllegalArgumentException(errorMessage("nonUKRights"))).toInt
 
+    val pensionDebit = extractPensionDebit(protectionModel)
+
+    val pensionDebitStartDate = pensionDebit.map(_.startDate)
+
+    val pensionDebitEnteredAmount = pensionDebit.map(_.amount)
+
     AmendProtectionRequest(
       lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber,
       lifetimeAllowanceType = lifetimeAllowanceType,
@@ -86,10 +92,10 @@ object AmendProtectionRequest {
       uncrystallisedRightsAmount = uncrystallisedRights,
       nonUKRightsAmount = nonUKRights,
       pensionDebitAmount = protectionModel.pensionDebitAmount.map(_.toInt),
-      pensionDebitEnteredAmount = protectionModel.pensionDebitEnteredAmount.map(_.toInt),
+      pensionDebitEnteredAmount = pensionDebitEnteredAmount.map(_.toInt),
       notificationIdentifier = protectionModel.notificationId,
       protectedAmount = protectionModel.protectedAmount.map(_.toInt),
-      pensionDebitStartDate = protectionModel.pensionDebitStartDate,
+      pensionDebitStartDate = pensionDebitStartDate,
       pensionDebitTotalAmount = protectionModel.pensionDebitTotalAmount.map(_.toInt)
     )
   }
@@ -98,6 +104,12 @@ object AmendProtectionRequest {
     protectionModel.certificateDate.map(_.split("T")(0))
 
   private def extractCertificateTime(protectionModel: ProtectionModel): Option[String] =
-    protectionModel.certificateDate.map(_.split("T")(1))
+    protectionModel.certificateDate.map(_.split("T")(1)).map(_.split("\\.")(0)).map(_.replace(":", ""))
+
+  private def extractPensionDebit(protectionModel: ProtectionModel): Option[PensionDebit] =
+    (protectionModel.pensionDebitEnteredAmount, protectionModel.pensionDebitStartDate) match {
+      case (Some(enteredAmount), Some(startDate)) => Some(PensionDebit(startDate = startDate, amount = enteredAmount))
+      case _                                      => None
+    }
 
 }

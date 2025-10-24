@@ -78,6 +78,38 @@ class AmendProtectionRequestSpec extends AnyWordSpec with Matchers {
 
         AmendProtectionRequest.from(input) shouldBe expectedOutput
       }
+
+      "provided with NPS certificateTime" in {
+        val input = inputProtectionModel.copy(certificateDate = Some("2025-07-15T17:43:12.00234020"))
+
+        AmendProtectionRequest.from(input) shouldBe amendProtectionRequest
+      }
+
+      "provided with pension debit start date but not pension debit entered amount" in {
+        val input = inputProtectionModel.copy(
+          pensionDebitEnteredAmount = None
+        )
+
+        val expectedOutput = amendProtectionRequest.copy(
+          pensionDebitStartDate = None,
+          pensionDebitEnteredAmount = None
+        )
+
+        AmendProtectionRequest.from(input) shouldBe expectedOutput
+      }
+
+      "provided with pension debit entered amount but not pension debit start date" in {
+        val input = inputProtectionModel.copy(
+          pensionDebitStartDate = None
+        )
+
+        val expectedOutput = amendProtectionRequest.copy(
+          pensionDebitStartDate = None,
+          pensionDebitEnteredAmount = None
+        )
+
+        AmendProtectionRequest.from(input) shouldBe expectedOutput
+      }
     }
 
     "throw IllegalArgumentException" when {

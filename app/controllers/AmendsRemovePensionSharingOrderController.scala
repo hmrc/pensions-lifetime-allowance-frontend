@@ -68,7 +68,11 @@ class AmendsRemovePensionSharingOrderController @Inject() (
       fetchAmendProtectionModel(protectionType, status)
         .flatMap {
           case Some(model) =>
-            val updated        = model.updatedProtection.copy(pensionDebits = None)
+            val updated = model.updatedProtection.copy(
+              pensionDebits = None,
+              pensionDebitStartDate = None,
+              pensionDebitEnteredAmount = None
+            )
             val updatedTotal   = updated.copy(relevantAmount = Some(Helpers.totalValue(updated)))
             val amendProtModel = AmendProtectionModel(model.originalProtection, updatedTotal)
 
