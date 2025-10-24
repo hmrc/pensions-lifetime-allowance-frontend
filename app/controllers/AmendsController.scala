@@ -50,6 +50,7 @@ class AmendsController @Inject() (
     outcomeActive: views.html.pages.amends.outcomeActive,
     outcomeInactive: views.html.pages.amends.outcomeInactive,
     outcomeAmended: views.html.pages.amends.outcomeAmended,
+    outcomeNoNotificationId: views.html.pages.amends.outcomeNoNotificationId,
     amendSummary: views.html.pages.amends.amendSummary
 )(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
     extends FrontendController(mcc)
@@ -88,7 +89,7 @@ class AmendsController @Inject() (
         result <- response match {
 
           case Right(amendResponseModel: AmendResponseModel) =>
-            saveAndRedirectToDisplay(nino, amendResponseModel)
+            saveAndRedirectToDisplay(amendResponseModel)
 
           case Left(LockedResponseError) =>
             Future.successful(Locked(manualCorrespondenceNeeded()))
@@ -133,16 +134,11 @@ class AmendsController @Inject() (
       plaConnector.amendProtection(nino, protection).map(_.map(AmendResponseModel(_)))
     }
 
-  private def saveAndRedirectToDisplay(nino: String, amendResponseModel: AmendResponseModel)(
+  private def saveAndRedirectToDisplay(amendResponseModel: AmendResponseModel)(
       implicit request: Request[AnyContent]
   ): Future[Result] =
-    if (amendResponseModel.protection.notificationId.isDefined) {
-      sessionCacheService.saveFormData[AmendResponseModel]("amendResponseModel", amendResponseModel).map { _ =>
-        Redirect(routes.AmendsController.amendmentOutcome)
-      }
-    } else {
-      logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
-      Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+    sessionCacheService.saveFormData[AmendResponseModel]("amendResponseModel", amendResponseModel).map { _ =>
+      Redirect(routes.AmendsController.amendmentOutcome)
     }
 
   def amendmentOutcome: Action[AnyContent] = Action.async { implicit request =>
@@ -169,32 +165,44 @@ class AmendsController @Inject() (
 
     modelAR
       .map { model =>
-        val notificationId = model.protection.notificationId.getOrElse {
-          throw Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
-        }
-        if (Constants.amendmentCodesList.contains(notificationId)) {
-          createProtectionModel(notificationId, model, nino).map {
-
-            case Some(protectionModel) =>
-              sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.protection)
+        model.protection.notificationId match {
+          case None =>
+            if (appConfig.hipMigrationEnabled) {
               val displayModel =
-                displayConstructors.createAmendResultDisplayModel(protectionModel, personalDetailsModelOpt, nino)
-              Ok(outcomeAmended(displayModel))
+                displayConstructors.createAmendResultDisplayModelNoNotificationId(model, personalDetailsModelOpt, nino)
 
-            case None =>
-              logger.warn(s"Unable to retrieve fixed protection model from API GET endpoint for user with nino :$nino")
-              buildTechnicalError(technicalError)
+              Future.successful(Ok(outcomeNoNotificationId(displayModel)))
+            } else {
+              logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
+              Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
+            }
+          case Some(notificationId) =>
+            if (Constants.amendmentCodesList.contains(notificationId)) {
+              createProtectionModel(notificationId, model, nino).map {
 
-          }
-        } else if (Constants.activeAmendmentCodes.contains(notificationId)) {
-          sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-          val displayModel =
-            displayConstructors.createActiveAmendResponseDisplayModel(model, personalDetailsModelOpt, nino)
-          Future.successful(Ok(outcomeActive(displayModel, modelGA, appConfig)))
+                case Some(protectionModel) =>
+                  sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.protection)
+                  val displayModel =
+                    displayConstructors.createAmendResultDisplayModel(protectionModel, personalDetailsModelOpt, nino)
+                  Ok(outcomeAmended(displayModel))
 
-        } else {
-          val displayModel = displayConstructors.createInactiveAmendResponseDisplayModel(model)
-          Future.successful(Ok(outcomeInactive(displayModel, modelGA)))
+                case None =>
+                  logger.warn(
+                    s"Unable to retrieve fixed protection model from API GET endpoint for user with nino :$nino"
+                  )
+                  buildTechnicalError(technicalError)
+
+              }
+            } else if (Constants.activeAmendmentCodes.contains(notificationId)) {
+              sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
+              val displayModel =
+                displayConstructors.createActiveAmendResponseDisplayModel(model, personalDetailsModelOpt, nino)
+              Future.successful(Ok(outcomeActive(displayModel, modelGA, appConfig)))
+
+            } else {
+              val displayModel = displayConstructors.createInactiveAmendResponseDisplayModel(model)
+              Future.successful(Ok(outcomeInactive(displayModel, modelGA)))
+            }
         }
       }
       .getOrElse {

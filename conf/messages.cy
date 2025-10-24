@@ -521,7 +521,10 @@ pla.printAmend.fixedProtectionReferenceNumber    = Cyfeirnod diogelwch penodol 2
 pla.printAmend.pensionSchemeAdministratorReference = Cyfeirnod gwiriad gweinyddwr cynlluniau pensiwn
 pla.printAmend.status                            = Statws
 pla.printAmend.withdrawn                         = Wedi’i dynnu''n ôl
+pla.printAmend.Withdrawn                         = Wedi’i dynnu''n ôl
 pla.printAmend.dormant                           = Segur
+pla.printAmend.Dormant                           = Segur
+pla.printAmend.Open                              = Ar waith
 
 ## Amends ##
 pla.amends.title                                            = Crynodeb o ddiogelwch
@@ -842,8 +845,11 @@ amendCode.14.changeDetailsPara = Rhowch y cyfeirnod ar gyfer eich diogelwch peno
 amendCode.14.bulletPointOne = rydych yn colli eich diogelwch penodol 2016
 amendCode.14.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
 
+amendCode.noNotificationId.IndividualProtection2014.heading = TODO You have amended your individual protection 2014
+amendCode.noNotificationId.IndividualProtection2014.insetText = TODO Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
 
-
+amendCode.noNotificationId.IndividualProtection2016.heading = TODO You have amended your individual protection 2016
+amendCode.noNotificationId.IndividualProtection2016.insetText = TODO Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
 
 ### RESULTS MESSAGES ###
 
