@@ -865,9 +865,13 @@ amendCode.14.bulletPointTwo = your pension is shared in a divorce or civil partn
 
 amendCode.noNotificationId.IndividualProtection2014.heading = You have amended your individual protection 2014
 amendCode.noNotificationId.IndividualProtection2014.insetText = Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
+amendCode.noNotificationId.IndividualProtection2014LTA.heading = You have amended your individual protection 2014
+amendCode.noNotificationId.IndividualProtection2014LTA.insetText = Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
 
 amendCode.noNotificationId.IndividualProtection2016.heading = You have amended your individual protection 2016
 amendCode.noNotificationId.IndividualProtection2016.insetText = Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
+amendCode.noNotificationId.IndividualProtection2016LTA.heading = You have amended your individual protection 2016
+amendCode.noNotificationId.IndividualProtection2016LTA.insetText = Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
 
 
 ### RESULTS MESSAGES ###

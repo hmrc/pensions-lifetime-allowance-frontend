@@ -1000,13 +1000,13 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
       surname = "Mctestface",
       nino = nino,
       protectionType = IndividualProtection2014.toString,
-      status = Open.toString,
-      psaCheckReference = tstPSACheckRef,
-      protectionReference = "PSA123456",
+      status = None,
+      psaCheckReference = Some(tstPSACheckRef),
+      protectionReference = Some("PSA123456"),
+      fixedProtectionReference = None,
       protectedAmount = Some("£1,250,000"),
       certificateDate = Some("17 April 2016"),
-      certificateTime = Some("3:14pm"),
-      notificationId = 1
+      certificateTime = Some("3:14pm")
     )
 
     "create AmendPrintDisplayModel" in {
@@ -1023,7 +1023,7 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
         Some(personalDetailsModel),
         protectionModel.copy(protectionReference = None),
         nino
-      ) shouldBe expectedAmendPrintDisplayModel.copy(protectionReference = "None")
+      ) shouldBe expectedAmendPrintDisplayModel.copy(protectionReference = Some("None"))
     }
 
     "throw exception" when {
@@ -1045,18 +1045,6 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
 
         exc.functionName shouldBe "createPrintDisplayModel"
         exc.optionName shouldBe "psaCheckReference"
-      }
-
-      "provided with empty notificationId" in {
-        val exc = the[OptionNotDefinedException] thrownBy displayConstructor.createAmendPrintDisplayModel(
-          Some(personalDetailsModel),
-          protectionModel.copy(notificationId = None),
-          nino
-        )
-
-        exc.functionName shouldBe "createAmendPrintDisplayModel"
-        exc.optionName shouldBe "notificationId"
-        exc.applicationType shouldBe IndividualProtection2014.toString
       }
     }
   }
@@ -1379,50 +1367,111 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
     }
   }
 
-  "createAmendResponseModel" should {
-    "correctly transform an AmendResponseModel into an AmendResultDisplayModel" in {
-      val tstAmendResponseModel = AmendResponseModel(
-        ProtectionModel(
-          psaCheckReference = Some("psaRef"),
-          protectionID = Some(100003),
-          protectionType = Some(IndividualProtection2014.toString),
-          status = Some(Open.toString),
-          protectionReference = Some("protectionRef"),
-          certificateDate = Some("2016-06-14T15:14:00"),
-          protectedAmount = Some(1350000.45),
-          notificationId = Some(33)
+  "createAmendResultDisplayModel" should {
+    import testdata.AmendProtectionDisplayModelTestData._
+
+    "correctly transform an AmendResponseModel into an AmendResultDisplayModel" when
+      Seq(
+        1  -> amendResponseModelNotification1  -> amendResultDisplayModelNotification1,
+        2  -> amendResponseModelNotification2  -> amendResultDisplayModelNotification2,
+        3  -> amendResponseModelNotification3  -> amendResultDisplayModelNotification3,
+        4  -> amendResponseModelNotification4  -> amendResultDisplayModelNotification4,
+        5  -> amendResponseModelNotification5  -> amendResultDisplayModelNotification5,
+        6  -> amendResponseModelNotification6  -> amendResultDisplayModelNotification6,
+        7  -> amendResponseModelNotification7  -> amendResultDisplayModelNotification7,
+        8  -> amendResponseModelNotification8  -> amendResultDisplayModelNotification8,
+        9  -> amendResponseModelNotification9  -> amendResultDisplayModelNotification9,
+        10 -> amendResponseModelNotification10 -> amendResultDisplayModelNotification10,
+        11 -> amendResponseModelNotification11 -> amendResultDisplayModelNotification11,
+        12 -> amendResponseModelNotification12 -> amendResultDisplayModelNotification12,
+        13 -> amendResponseModelNotification13 -> amendResultDisplayModelNotification13,
+        14 -> amendResponseModelNotification14 -> amendResultDisplayModelNotification14
+      ).foreach { case ((notificationId, amendResponseModel), amendResultDisplayModel) =>
+        s"notification id is $notificationId" in {
+          displayConstructor.createAmendResultDisplayModel(
+            amendResponseModel,
+            Some(personalDetailsModel),
+            nino
+          ) shouldBe amendResultDisplayModel
+        }
+      }
+
+    "throw exception" when {
+      "notificationId is missing" in {
+        val exception = the[OptionNotDefinedException] thrownBy displayConstructor.createAmendResultDisplayModel(
+          AmendResponseModel(
+            amendResponseModelNotification1.protection.copy(
+              notificationId = None
+            )
+          ),
+          Some(personalDetailsModel),
+          nino
         )
-      )
 
-      val tstPerson               = Person(firstName = "Testy", lastName = "McTestface")
-      val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
-      val nino                    = "testNino"
+        exception.functionName shouldBe "createAmendResultDisplayModel"
+        exception.optionName shouldBe "notificationId"
+      }
 
-      val tstAmendResultDisplayModel = AmendResultDisplayModel(
-        notificationId = 33,
-        protectedAmount = "£1,350,000.45",
-        details = Some(
-          AmendPrintDisplayModel(
-            firstName = "Testy",
-            surname = "Mctestface",
-            nino = "testNino",
-            protectionType = IndividualProtection2014.toString,
-            status = Open.toString,
-            psaCheckReference = "psaRef",
-            protectionReference = "protectionRef",
-            protectedAmount = Some("£1,350,000.45"),
-            certificateDate = Some("14 June 2016"),
-            certificateTime = Some("3:14pm"),
-            notificationId = 33
-          )
+      "protectedAmount is missing" in {
+        val exception = the[OptionNotDefinedException] thrownBy displayConstructor.createAmendResultDisplayModel(
+          AmendResponseModel(
+            amendResponseModelNotification1.protection.copy(
+              protectedAmount = None
+            )
+          ),
+          Some(personalDetailsModel),
+          nino
         )
-      )
 
-      displayConstructor.createAmendResultDisplayModel(
-        tstAmendResponseModel,
-        Some(tstPersonalDetailsModel),
+        exception.functionName shouldBe "createAmendResultDisplayModel"
+        exception.optionName shouldBe "protectedAmount"
+      }
+    }
+  }
+
+  "createAmendResultDisplayModelNoNotificationId" should {
+    import testdata.AmendProtectionDisplayModelTestData._
+
+    "correctly transform AmendResponseModel into AmendResultDisplayModelNoNotificationId" in {
+      displayConstructor.createAmendResultDisplayModelNoNotificationId(
+        amendResponseModelNoNotificationIdIndividualProtection2014,
+        Some(personalDetailsModel),
         nino
-      ) shouldBe tstAmendResultDisplayModel
+      ) shouldBe amendResultDisplayModelNoNotificationIdIndividualProtection2014
+    }
+
+    "throw exception" when {
+      "protectionType is missing" in {
+        val exception =
+          the[OptionNotDefinedException] thrownBy displayConstructor.createAmendResultDisplayModelNoNotificationId(
+            AmendResponseModel(
+              amendResponseModelNoNotificationIdIndividualProtection2016.protection.copy(
+                protectionType = None
+              )
+            ),
+            Some(personalDetailsModel),
+            nino
+          )
+
+        exception.functionName shouldBe "createAmendResultDisplayModelNoNotificationId"
+        exception.optionName shouldBe "protectionType"
+      }
+
+      "protectedAmount is missing" in {
+        val exception =
+          the[OptionNotDefinedException] thrownBy displayConstructor.createAmendResultDisplayModelNoNotificationId(
+            AmendResponseModel(
+              amendResponseModelNoNotificationIdIndividualProtection2016.protection.copy(
+                protectedAmount = None
+              )
+            ),
+            Some(personalDetailsModel),
+            nino
+          )
+
+        exception.functionName shouldBe "createAmendResultDisplayModelNoNotificationId"
+        exception.optionName shouldBe "protectedAmount"
+      }
     }
   }
 

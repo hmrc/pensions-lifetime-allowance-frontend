@@ -644,22 +644,33 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
   ): AmendResultDisplayModel = {
     val printDetails = createAmendPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
 
-    val protectedAmount = model.protection.protectedAmount.getOrElse {
-      throw Exceptions.OptionNotDefinedException(
-        "createAmendResponseDisplayModel",
-        "protectedAmount",
-        model.protection.protectionType.getOrElse("No protection type in response")
-      )
-    }
-    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
-
     val notificationId = model.protection.notificationId.getOrElse(
       throw Exceptions.OptionNotDefinedException(
-        "createActiveAmendResponseDisplayModel",
+        "createAmendResultDisplayModel",
         "notificationId",
         model.protection.protectionType.getOrElse("No protection type in response")
       )
     )
+
+    val protectedAmount = if (Constants.withdrawnNotificationIds.contains(notificationId)) {
+      model.protection.relevantAmount.getOrElse {
+        throw Exceptions.OptionNotDefinedException(
+          "createAmendResultDisplayModel",
+          "relevantAmount",
+          model.protection.protectionType.getOrElse("No protection type in response")
+        )
+      }
+    } else {
+      model.protection.protectedAmount.getOrElse {
+        throw Exceptions.OptionNotDefinedException(
+          "createAmendResultDisplayModel",
+          "protectedAmount",
+          model.protection.protectionType.getOrElse("No protection type in response")
+        )
+      }
+    }
+
+    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
 
     AmendResultDisplayModel(
       notificationId,
@@ -677,15 +688,15 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
 
     val protectionType = model.protection.protectionType.getOrElse {
       throw Exceptions.OptionNotDefinedException(
-        "createAmendResponseDisplayModelNoNotificationId",
+        "createAmendResultDisplayModelNoNotificationId",
         "protectionType",
-        "No protection type is response"
+        "No protection type in response"
       )
     }
 
     val protectedAmount = model.protection.protectedAmount.getOrElse {
       throw Exceptions.OptionNotDefinedException(
-        "createAmendResponseDisplayModelNoNotificationId",
+        "createAmendResultDisplayModelNoNotificationId",
         "protectedAmount",
         protectionType
       )

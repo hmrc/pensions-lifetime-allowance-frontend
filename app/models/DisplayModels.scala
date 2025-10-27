@@ -16,25 +16,9 @@
 
 package models
 
-import common.Strings
 import enums.ApplicationType
 import models.pla.response.ProtectionType
 import play.api.mvc.Call
-
-case class SuccessDisplayModel(
-    protectionType: ApplicationType.Value,
-    notificationId: String,
-    protectedAmount: String,
-    printable: Boolean,
-    details: Option[ProtectionDetailsDisplayModel],
-    additionalInfo: Seq[String]
-)
-
-case class RejectionDisplayModel(
-    notificationId: String,
-    additionalInfo: Seq[String],
-    protectionType: ApplicationType.Value
-)
 
 case class ProtectionDetailsDisplayModel(
     protectionReference: String,

@@ -16,10 +16,10 @@
 
 package views.playhelpers.templates
 
-import models.{AmendPrintDisplayModel, PrintDisplayModel}
+import models.AmendPrintDisplayModel
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testdata.AmendProtectionOutcomeViewsTestData._
+import testdata.AmendProtectionDisplayModelTestData._
 import views.html.playHelpers.templates.amendProtectionOutcomeTable
 
 class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
@@ -39,13 +39,21 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
   private val DormantText              = "Dormant"
   private val WithdrawnText            = "Withdrawn"
 
-  private def getPrintDisplayModelFor(notificationId: Int): AmendPrintDisplayModel = {
-    val iP14PrintDisplayModels =
-      (1 to 7).map(notificationId => notificationId -> printDisplayModelIP14.copy(notificationId = notificationId))
-    val iP16PrintDisplayModels =
-      (8 to 14).map(notificationId => notificationId -> printDisplayModelIP16.copy(notificationId = notificationId))
-
-    (iP14PrintDisplayModels ++ iP16PrintDisplayModels).toMap.apply(notificationId)
+  private def getPrintDisplayModelFor(notificationId: Int): AmendPrintDisplayModel = notificationId match {
+    case 1  => amendPrintDisplayModelNotification1
+    case 2  => amendPrintDisplayModelNotification2
+    case 3  => amendPrintDisplayModelNotification3
+    case 4  => amendPrintDisplayModelNotification4
+    case 5  => amendPrintDisplayModelNotification5
+    case 6  => amendPrintDisplayModelNotification6
+    case 7  => amendPrintDisplayModelNotification7
+    case 8  => amendPrintDisplayModelNotification8
+    case 9  => amendPrintDisplayModelNotification9
+    case 10 => amendPrintDisplayModelNotification10
+    case 11 => amendPrintDisplayModelNotification11
+    case 12 => amendPrintDisplayModelNotification12
+    case 13 => amendPrintDisplayModelNotification13
+    case 14 => amendPrintDisplayModelNotification14
   }
 
   "amendProtectionOutcomeTable" when {
@@ -87,14 +95,14 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
             val rowIndex = 3
             tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
             tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
-            tableData.get(rowIndex).text shouldBe printDisplayModel.protectionReference
+            tableData.get(rowIndex).text shouldBe protectionReferenceIndividualProtection2014
           }
 
           "contain row for PSA Check Reference" in {
             val rowIndex = 4
             tableHeadings.get(rowIndex).text shouldBe PsaRefHeader
             tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
-            tableData.get(rowIndex).text shouldBe printDisplayModel.psaCheckReference
+            tableData.get(rowIndex).text shouldBe psaCheckReference
           }
 
           "contain row for Application Date" in {
@@ -151,14 +159,14 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
             val rowIndex = 4
             tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
             tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
-            tableData.get(rowIndex).text shouldBe printDisplayModel.protectionReference
+            tableData.get(rowIndex).text shouldBe protectionReferenceIndividualProtection2014
           }
 
           "contain row for PSA Check Reference" in {
             val rowIndex = 5
             tableHeadings.get(rowIndex).text shouldBe PsaRefHeader
             tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
-            tableData.get(rowIndex).text shouldBe printDisplayModel.psaCheckReference
+            tableData.get(rowIndex).text shouldBe psaCheckReference
           }
 
           "contain row for Application Date" in {
@@ -433,21 +441,21 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val rowIndex = 2
           tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
           tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+          tableData.get(rowIndex).text shouldBe "Fixed protection 2016"
         }
 
         "contain row for Fixed Protection 2016 Reference Number" in {
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
           tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
         }
 
         "contain row for Application Date" in {
           val rowIndex = 4
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2015"
+          tableData.get(rowIndex).text shouldBe "14 July 2015"
         }
 
         "contain row for Application Time" in {
@@ -490,21 +498,21 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
           tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+          tableData.get(rowIndex).text shouldBe "Fixed protection 2016"
         }
 
         "contain row for Fixed Protection 2016 Reference Number" in {
           val rowIndex = 4
           tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
           tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
         }
 
         "contain row for Application Date" in {
           val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2015"
+          tableData.get(rowIndex).text shouldBe "14 July 2015"
         }
 
         "contain row for Application Time" in {
@@ -552,7 +560,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
           tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceIndividualProtection2016
         }
 
         "contain row for PSA Check Reference" in {
@@ -566,7 +574,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contain row for Application Time" in {
@@ -616,7 +624,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val rowIndex = 4
           tableHeadings.get(rowIndex).text shouldBe ProtectionRefHeader
           tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceIndividualProtection2016
         }
 
         "contain row for PSA Check Reference" in {
@@ -630,7 +638,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val rowIndex = 6
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contain row for Application Time" in {
@@ -679,7 +687,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
             val rowIndex = 3
             tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
             tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-            tableData.get(rowIndex).text shouldBe "14/07/2017"
+            tableData.get(rowIndex).text shouldBe "14 July 2017"
           }
 
           "contain row for Application Time" in {
@@ -736,7 +744,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
             val rowIndex = 4
             tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
             tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-            tableData.get(rowIndex).text shouldBe "14/07/2017"
+            tableData.get(rowIndex).text shouldBe "14 July 2017"
           }
 
           "contain row for Application Time" in {
@@ -792,7 +800,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contain row for Application Time" in {
@@ -849,7 +857,7 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val rowIndex = 4
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contain row for Application Time" in {
@@ -897,21 +905,21 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val rowIndex = 2
           tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
           tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+          tableData.get(rowIndex).text shouldBe "Fixed protection 2016"
         }
 
         "contain row for Fixed Protection 2016 Reference Number" in {
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
           tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
         }
 
         "contain row for Application Date" in {
           val rowIndex = 4
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contain row for Application Time" in {
@@ -954,21 +962,21 @@ class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe ProtectionTypeHeader
           tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+          tableData.get(rowIndex).text shouldBe "Fixed protection 2016"
         }
 
         "contain row for Fixed Protection 2016 Reference Number" in {
           val rowIndex = 4
           tableHeadings.get(rowIndex).text shouldBe FixedProtectionRefHeader
           tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
         }
 
         "contain row for Application Date" in {
           val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe ApplicationDateHeader
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contain row for Application Time" in {

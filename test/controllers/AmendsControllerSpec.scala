@@ -77,6 +77,7 @@ class AmendsControllerSpec
   private val outcomeActiveView: outcomeActive                           = mock[outcomeActive]
   private val outcomeInactiveView: outcomeInactive                       = mock[outcomeInactive]
   private val outcomeAmendedView: outcomeAmended                         = mock[outcomeAmended]
+  private val outcomeNoNotificationIdView: outcomeNoNotificationId       = mock[outcomeNoNotificationId]
   private val amendSummaryView: amendSummary                             = mock[amendSummary]
 
   override val messagesApi: MessagesApi = messagesControllerComponents.messagesApi
@@ -104,6 +105,7 @@ class AmendsControllerSpec
     outcomeActiveView,
     outcomeInactiveView,
     outcomeAmendedView,
+    outcomeNoNotificationIdView,
     amendSummaryView
   )(appConfig, ec)
 
@@ -346,8 +348,8 @@ class AmendsControllerSpec
 
       val result = controller.amendProtection("IP2014", "dormant")(fakeRequest)
 
-      status(result) shouldBe 500
-      verify(noNotificationIdView).apply()(any(), any())
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(routes.AmendsController.amendmentOutcome.toString)
     }
   }
 
@@ -366,19 +368,6 @@ class AmendsControllerSpec
 
         status(result) shouldBe INTERNAL_SERVER_ERROR
         verify(technicalErrorView).apply(eqTo(ApplicationType.existingProtections.toString))(any(), any())
-      }
-    }
-
-    "AmendResponseModel stored in cache contains NO notification ID" should {
-      "throw exception" in {
-        cacheFetchCondition(eqTo("amendResponseModel"))(Some(AmendResponseModel(ProtectionModel(None, None))))
-        cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-        when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-          .thenReturn(Future.successful(Some(testPersonalDetails)))
-
-        val exc = controller.amendmentOutcome()(fakeRequest).failed.futureValue
-
-        exc shouldBe Exceptions.RequiredValueNotDefinedException("amendmentOutcome", "notificationId")
       }
     }
 

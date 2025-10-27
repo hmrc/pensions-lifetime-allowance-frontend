@@ -847,9 +847,13 @@ amendCode.14.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bart
 
 amendCode.noNotificationId.IndividualProtection2014.heading = TODO You have amended your individual protection 2014
 amendCode.noNotificationId.IndividualProtection2014.insetText = TODO Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
+amendCode.noNotificationId.IndividualProtection2014LTA.heading = TODO You have amended your individual protection 2014
+amendCode.noNotificationId.IndividualProtection2014LTA.insetText = TODO Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
 
 amendCode.noNotificationId.IndividualProtection2016.heading = TODO You have amended your individual protection 2016
 amendCode.noNotificationId.IndividualProtection2016.insetText = TODO Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
+amendCode.noNotificationId.IndividualProtection2016LTA.heading = TODO You have amended your individual protection 2016
+amendCode.noNotificationId.IndividualProtection2016LTA.insetText = TODO Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
 
 ### RESULTS MESSAGES ###
 
