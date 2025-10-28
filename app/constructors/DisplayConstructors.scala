@@ -27,6 +27,7 @@ import play.api.Logging
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import play.api.mvc.Call
 import utils.Constants
+import views.pages.models.ViewConstants
 
 import javax.inject.Inject
 
@@ -111,27 +112,57 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
   )(implicit lang: Lang): AmendPrintDisplayModel = {
     val printDisplayModel = createPrintDisplayModel(personalDetailsModelOpt, protectionModel, nino)
 
-    val notificationId = protectionModel.notificationId.getOrElse(
-      throw Exceptions.OptionNotDefinedException(
-        "createAmendPrintDisplayModel",
-        "notificationId",
-        protectionModel.protectionType.getOrElse("No protection type in response")
-      )
+    val protectionReference = Some(printDisplayModel.protectionReference).filter(_ =>
+      shouldDisplayProtectionReference(protectionModel.notificationId)
     )
 
-    AmendPrintDisplayModel(
-      printDisplayModel.firstName,
-      printDisplayModel.surname,
-      printDisplayModel.nino,
-      printDisplayModel.protectionType,
-      printDisplayModel.status,
-      printDisplayModel.psaCheckReference,
-      printDisplayModel.protectionReference,
-      printDisplayModel.protectedAmount,
-      printDisplayModel.certificateDate,
-      printDisplayModel.certificateTime,
-      notificationId
+    val fixedProtectionReference = Some(printDisplayModel.protectionReference).filter(_ =>
+      shouldDisplayFixedProtectionReference(protectionModel.notificationId)
     )
+
+    val psaCheckReference = Some(printDisplayModel.psaCheckReference).filter(_ =>
+      shouldDisplayPsaCheckReference(protectionModel.notificationId)
+    )
+
+    val status =
+      Some(printDisplayModel.status).filter(_ => notificationIdDisplaysStatus(protectionModel.notificationId))
+
+    AmendPrintDisplayModel(
+      firstName = printDisplayModel.firstName,
+      surname = printDisplayModel.surname,
+      nino = printDisplayModel.nino,
+      protectionType = printDisplayModel.protectionType,
+      status = status,
+      psaCheckReference = psaCheckReference,
+      protectionReference = protectionReference,
+      fixedProtectionReference = fixedProtectionReference,
+      protectedAmount = printDisplayModel.protectedAmount,
+      certificateDate = printDisplayModel.certificateDate,
+      certificateTime = printDisplayModel.certificateTime
+    )
+  }
+
+  private def shouldDisplayProtectionReference(notificationId: Option[Int]): Boolean = notificationId match {
+    case Some(1) | Some(5) | Some(8) => true
+    case _                           => false
+  }
+
+  private def shouldDisplayFixedProtectionReference(notificationId: Option[Int]): Boolean =
+    notificationId match {
+      case Some(7) | Some(14) => true
+      case _                  => false
+    }
+
+  private def shouldDisplayPsaCheckReference(notificationId: Option[Int]): Boolean = notificationId match {
+    case Some(1) | Some(5) | Some(8) => true
+    case _                           => false
+  }
+
+  private def notificationIdDisplaysStatus(notificationId: Option[Int]): Boolean = notificationId match {
+    case None                                                                                    => true
+    case Some(notificationId) if ViewConstants.dormantNotificationIds.contains(notificationId)   => true
+    case Some(notificationId) if ViewConstants.withdrawnNotificationIds.contains(notificationId) => true
+    case _                                                                                       => false
   }
 
   // EXISTING PROTECTIONS
@@ -613,27 +644,77 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
   ): AmendResultDisplayModel = {
     val printDetails = createAmendPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
 
-    val protectedAmount = model.protection.protectedAmount.getOrElse {
-      throw Exceptions.OptionNotDefinedException(
-        "createActiveAmendResponseDisplayModel",
-        "protectedAmount",
-        model.protection.protectionType.getOrElse("No protection type in response")
-      )
-    }
-    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
-
     val notificationId = model.protection.notificationId.getOrElse(
       throw Exceptions.OptionNotDefinedException(
-        "createActiveAmendResponseDisplayModel",
+        "createAmendResultDisplayModel",
         "notificationId",
         model.protection.protectionType.getOrElse("No protection type in response")
       )
     )
 
+    val protectedAmount = extractProtectedAmount(notificationId, model)
+
+    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
+
     AmendResultDisplayModel(
       notificationId,
       protectedAmountString,
-      Some(printDetails)
+      Some(
+        printDetails.copy(
+          protectedAmount = printDetails.protectedAmount.map(_ => protectedAmountString)
+        )
+      )
+    )
+  }
+
+  private def extractProtectedAmount(notificationId: Int, model: AmendResponseModel): Double =
+    if (Constants.withdrawnNotificationIds.contains(notificationId)) {
+      model.protection.relevantAmount.getOrElse {
+        throw Exceptions.OptionNotDefinedException(
+          "createAmendResultDisplayModel",
+          "relevantAmount",
+          model.protection.protectionType.getOrElse("No protection type in response")
+        )
+      }
+    } else {
+      model.protection.protectedAmount.getOrElse {
+        throw Exceptions.OptionNotDefinedException(
+          "createAmendResultDisplayModel",
+          "protectedAmount",
+          model.protection.protectionType.getOrElse("No protection type in response")
+        )
+      }
+    }
+
+  def createAmendResultDisplayModelNoNotificationId(
+      model: AmendResponseModel,
+      personalDetailsModelOpt: Option[PersonalDetailsModel],
+      nino: String
+  ): AmendResultDisplayModelNoNotificationId = {
+    val printDetails = createAmendPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
+
+    val protectionType = model.protection.protectionType.getOrElse {
+      throw Exceptions.OptionNotDefinedException(
+        "createAmendResultDisplayModelNoNotificationId",
+        "protectionType",
+        "No protection type in response"
+      )
+    }
+
+    val protectedAmount = model.protection.protectedAmount.getOrElse {
+      throw Exceptions.OptionNotDefinedException(
+        "createAmendResultDisplayModelNoNotificationId",
+        "protectedAmount",
+        protectionType
+      )
+    }
+
+    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
+
+    AmendResultDisplayModelNoNotificationId(
+      protectedAmount = protectedAmountString,
+      protectionType = protectionType,
+      details = Some(printDetails)
     )
   }
 

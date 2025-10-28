@@ -28,12 +28,11 @@ object Constants {
 
   val inactiveSuccessCodes = List(5, 6, 7, 13, 14, 15, 16, 24, 30, 31, 32, 40, 41, 42, 43)
 
-  val fpShowPensionSharing = List(23, 24)
-  val ipShowAddToPension   = List(8, 16)
-
   val activeAmendmentCodes = List(33, 34, 44)
 
   val amendmentCodesList = List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
 
   val fixedProtectionNotificationIds = List(7, 14)
+
+  val withdrawnNotificationIds = List(6, 7, 13, 14)
 }

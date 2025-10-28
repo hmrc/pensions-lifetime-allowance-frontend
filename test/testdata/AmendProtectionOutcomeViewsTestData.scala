@@ -23,7 +23,6 @@ import models._
 object AmendProtectionOutcomeViewsTestData {
 
   val protectedAmountIP14Str = "£1,350,000.11"
-  val protectedAmountIP16Str = "£1,350,000.45"
 
   val amendsGAModel: AmendsGAModel = AmendsGAModel(
     current = Some("current"),
@@ -87,39 +86,19 @@ object AmendProtectionOutcomeViewsTestData {
     surname = "Davis",
     nino = "nino",
     protectionType = "IP2014",
-    status = "dormant",
-    psaCheckReference = "psaRef",
-    protectionReference = "IP14XXXXXX",
+    status = Some("Dormant"),
+    psaCheckReference = Some("psaRef"),
+    protectionReference = Some("IP14XXXXXX"),
+    fixedProtectionReference = None,
     protectedAmount = Some(protectedAmountIP14Str),
     certificateDate = Some("14/07/2015"),
-    certificateTime = Some("3:14pm"),
-    notificationId = 15
+    certificateTime = Some("3:14pm")
   )
 
   val amendResultDisplayModelIP14: AmendResultDisplayModel = AmendResultDisplayModel(
     notificationId = 15,
     protectedAmount = protectedAmountIP14Str,
     details = Some(printDisplayModelIP14)
-  )
-
-  val printDisplayModelIP16: AmendPrintDisplayModel = AmendPrintDisplayModel(
-    firstName = "Jim",
-    surname = "Davis",
-    nino = "nino",
-    protectionType = "IP2016",
-    status = "dormant",
-    psaCheckReference = "psaRef",
-    protectionReference = "IP16XXXXXX",
-    protectedAmount = Some(protectedAmountIP16Str),
-    certificateDate = Some("14/07/2017"),
-    certificateTime = Some("3:14pm"),
-    notificationId = 15
-  )
-
-  val amendResultDisplayModelIP16: AmendResultDisplayModel = AmendResultDisplayModel(
-    notificationId = 15,
-    protectedAmount = protectedAmountIP16Str,
-    details = Some(printDisplayModelIP16)
   )
 
 }

@@ -16,42 +16,26 @@
 
 package views.pages.amends
 
+import models.AmendResultDisplayModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import testdata.AmendProtectionDisplayModelTestData._
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.OutcomeAmendedViewSpecMessages
-import testdata.AmendProtectionOutcomeViewsTestData._
 import views.html.pages.amends.outcomeAmended
 
 class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewSpecMessages {
 
   private val outcomeAmendedView = fakeApplication().injector.instanceOf[outcomeAmended]
 
-  private val iP14Documents = (1 to 7).map { notificationId =>
-    val printDisplayModel = amendResultDisplayModelIP14.details.get.copy(notificationId = notificationId)
-    val amendsActiveResultModel =
-      amendResultDisplayModelIP14.copy(notificationId = notificationId, details = Some(printDisplayModel))
-
-    notificationId -> Jsoup.parse(outcomeAmendedView(amendsActiveResultModel).body)
-  }
-
-  private val iP16Documents = (8 to 14).map { notificationId =>
-    val printDisplayModel = amendResultDisplayModelIP16.details.get.copy(notificationId = notificationId)
-    val amendsActiveResultModel =
-      amendResultDisplayModelIP16.copy(notificationId = notificationId, details = Some(printDisplayModel))
-
-    notificationId -> Jsoup.parse(outcomeAmendedView(amendsActiveResultModel).body)
-  }
-
-  private val allDocuments = (iP14Documents ++ iP16Documents).toMap
-
-  private def getDocumentFor(notificationId: Int): Document = allDocuments(notificationId)
+  private def parseDocument(amendResultDisplayModel: AmendResultDisplayModel): Document =
+    Jsoup.parse(outcomeAmendedView(amendResultDisplayModel).body)
 
   "outcomeAmended" when {
 
     "provided with AmendResultDisplayModel containing notificationId: 1" should {
 
-      val doc = getDocumentFor(1)
+      val doc = parseDocument(amendResultDisplayModelNotification1)
 
       "not have back link with text back " in {
         val backButton = doc.select(".govuk-back-link").text()
@@ -65,7 +49,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014InRange
       }
 
       "contain h2 element" in {
@@ -102,21 +86,21 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionRef
           tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceIndividualProtection2014
         }
 
         "contains row for PSA Check Reference" in {
           val rowIndex = 4
           tableHeadings.get(rowIndex).text shouldBe tableAmendPsaRef
           tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
-          tableData.get(rowIndex).text shouldBe "psaRef"
+          tableData.get(rowIndex).text shouldBe psaCheckReference
         }
 
         "contains row for Application Date" in {
           val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2015"
+          tableData.get(rowIndex).text shouldBe "14 July 2015"
         }
 
         "contains row for Application Time" in {
@@ -157,7 +141,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 2" should {
 
-      val doc = getDocumentFor(2)
+      val doc = parseDocument(amendResultDisplayModelNotification2)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -166,7 +150,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014InRange
       }
 
       "contain inset text" in {
@@ -207,7 +191,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2015"
+          tableData.get(rowIndex).text shouldBe "14 July 2015"
         }
 
         "contains row for Application Time" in {
@@ -277,7 +261,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 3" should {
 
-      val doc = getDocumentFor(3)
+      val doc = parseDocument(amendResultDisplayModelNotification3)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -286,7 +270,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014InRange
       }
 
       "contain inset text" in {
@@ -327,7 +311,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2015"
+          tableData.get(rowIndex).text shouldBe "14 July 2015"
         }
 
         "contains row for Application Time" in {
@@ -397,7 +381,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 4" should {
 
-      val doc = getDocumentFor(4)
+      val doc = parseDocument(amendResultDisplayModelNotification4)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -406,7 +390,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014InRange
       }
 
       "contain inset text" in {
@@ -447,7 +431,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2015"
+          tableData.get(rowIndex).text shouldBe "14 July 2015"
         }
 
         "contains row for Application Time" in {
@@ -517,7 +501,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 5" should {
 
-      val doc = getDocumentFor(5)
+      val doc = parseDocument(amendResultDisplayModelNotification5)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -526,7 +510,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014InRange
       }
 
       "contain h2 element" in {
@@ -563,21 +547,21 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionRef
           tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceIndividualProtection2014
         }
 
         "contains row for PSA Check Reference" in {
           val rowIndex = 4
           tableHeadings.get(rowIndex).text shouldBe tableAmendPsaRef
           tableData.get(rowIndex).attr("id") shouldBe "psaCheckRef"
-          tableData.get(rowIndex).text shouldBe "psaRef"
+          tableData.get(rowIndex).text shouldBe psaCheckReference
         }
 
         "contains row for Application Date" in {
           val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2015"
+          tableData.get(rowIndex).text shouldBe "14 July 2015"
         }
 
         "contains row for Application Time" in {
@@ -618,7 +602,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 6" should {
 
-      val doc = getDocumentFor(6)
+      val doc = parseDocument(amendResultDisplayModelNotification6)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -627,7 +611,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014Below
       }
 
       "contain inset text" in {
@@ -668,7 +652,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2015"
+          tableData.get(rowIndex).text shouldBe "14 July 2015"
         }
 
         "contains row for Application Time" in {
@@ -716,7 +700,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 7" should {
 
-      val doc = getDocumentFor(7)
+      val doc = parseDocument(amendResultDisplayModelNotification7)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -725,7 +709,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP14Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014Below
       }
 
       "contain inset text" in {
@@ -760,21 +744,21 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 2
           tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
           tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-          tableData.get(rowIndex).text shouldBe "Individual protection 2014"
+          tableData.get(rowIndex).text shouldBe "Fixed protection 2016"
         }
 
         "contains row for Fixed Protection 2016 Reference Number" in {
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendFixedProtectionRef
           tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP14XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
         }
 
         "contains row for Application Date" in {
           val rowIndex = 4
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2015"
+          tableData.get(rowIndex).text shouldBe "14 July 2015"
         }
 
         "contains row for Application Time" in {
@@ -837,7 +821,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 8" should {
 
-      val doc = getDocumentFor(8)
+      val doc = parseDocument(amendResultDisplayModelNotification8)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -846,7 +830,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016InRange
       }
 
       "contain h2 element" in {
@@ -883,7 +867,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionRef
           tableData.get(rowIndex).attr("id") shouldBe "protectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceIndividualProtection2016
         }
 
         "contains row for PSA Check Reference" in {
@@ -897,7 +881,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 5
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contains row for Application Time" in {
@@ -938,7 +922,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 9" should {
 
-      val doc = getDocumentFor(9)
+      val doc = parseDocument(amendResultDisplayModelNotification9)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -947,7 +931,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016InRange
       }
 
       "contain inset text" in {
@@ -988,7 +972,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contains row for Application Time" in {
@@ -1058,7 +1042,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 10" should {
 
-      val doc = getDocumentFor(10)
+      val doc = parseDocument(amendResultDisplayModelNotification10)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -1067,7 +1051,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016InRange
       }
 
       "contain inset text" in {
@@ -1108,7 +1092,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contains row for Application Time" in {
@@ -1178,7 +1162,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 11" should {
 
-      val doc = getDocumentFor(11)
+      val doc = parseDocument(amendResultDisplayModelNotification11)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -1187,7 +1171,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016InRange
       }
 
       "contain inset text" in {
@@ -1228,7 +1212,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contains row for Application Time" in {
@@ -1298,7 +1282,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 12" should {
 
-      val doc = getDocumentFor(12)
+      val doc = parseDocument(amendResultDisplayModelNotification12)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -1307,7 +1291,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016InRange
       }
 
       "contain inset text" in {
@@ -1348,7 +1332,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contains row for Application Time" in {
@@ -1418,7 +1402,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 13" should {
 
-      val doc = getDocumentFor(13)
+      val doc = parseDocument(amendResultDisplayModelNotification13)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -1427,7 +1411,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016Below
       }
 
       "contain inset text" in {
@@ -1468,7 +1452,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contains row for Application Time" in {
@@ -1516,7 +1500,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
 
     "provided with AmendResultDisplayModel containing notificationId: 14" should {
 
-      val doc = getDocumentFor(14)
+      val doc = parseDocument(amendResultDisplayModelNotification14)
 
       "contain title" in {
         doc.title() shouldBe title
@@ -1525,7 +1509,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIP16Str
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016Below
       }
 
       "contain inset text" in {
@@ -1560,21 +1544,21 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
           val rowIndex = 2
           tableHeadings.get(rowIndex).text shouldBe tableAmendProtectionType
           tableData.get(rowIndex).attr("id") shouldBe "protectionType"
-          tableData.get(rowIndex).text shouldBe "Individual protection 2016"
+          tableData.get(rowIndex).text shouldBe "Fixed protection 2016"
         }
 
         "contains row for Fixed Protection 2016 Reference Number" in {
           val rowIndex = 3
           tableHeadings.get(rowIndex).text shouldBe tableAmendFixedProtectionRef
           tableData.get(rowIndex).attr("id") shouldBe "fixedProtectionRefNum"
-          tableData.get(rowIndex).text shouldBe "IP16XXXXXX"
+          tableData.get(rowIndex).text shouldBe protectionReferenceFixedProtection2016
         }
 
         "contains row for Application Date" in {
           val rowIndex = 4
           tableHeadings.get(rowIndex).text shouldBe tableAmendApplicationDate
           tableData.get(rowIndex).attr("id") shouldBe "applicationDate"
-          tableData.get(rowIndex).text shouldBe "14/07/2017"
+          tableData.get(rowIndex).text shouldBe "14 July 2017"
         }
 
         "contains row for Application Time" in {

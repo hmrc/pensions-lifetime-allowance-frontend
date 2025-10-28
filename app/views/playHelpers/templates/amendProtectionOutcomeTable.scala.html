@@ -15,7 +15,6 @@
  *@
 
 @import models.AmendPrintDisplayModel
-@import views.pages.models.ViewConstants
 
 @this()
 
@@ -49,26 +48,26 @@
 			<td class="govuk-table__cell" id="protectionType">@messages(s"pla.protection.types.${details.protectionType}")</td>
 		</tr>
 
-		@if(details.notificationId == 1 || details.notificationId == 5 || details.notificationId == 8) {
-			<tr class="govuk-table__row">
-				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.protectionReferenceNumber")</th>
-				<td class="govuk-table__cell" id="protectionRefNum">@{details.protectionReference}</td>
-			</tr>
-		}
+        @details.protectionReference.map { protectionReference =>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@messages("pla.printAmend.protectionReferenceNumber")</th>
+                <td class="govuk-table__cell" id="protectionRefNum">@protectionReference</td>
+            </tr>
+        }
 
-		@if(details.notificationId == 7 || details.notificationId == 14) {
-			<tr class="govuk-table__row">
-				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.fixedProtectionReferenceNumber")</th>
-				<td class="govuk-table__cell" id="fixedProtectionRefNum">@{details.protectionReference}</td>
-			</tr>
-		}
+        @details.fixedProtectionReference.map { fixedProtectionReference =>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@messages("pla.printAmend.fixedProtectionReferenceNumber")</th>
+                <td class="govuk-table__cell" id="fixedProtectionRefNum">@fixedProtectionReference</td>
+            </tr>
+        }
 
-		@if(details.notificationId == 1 || details.notificationId == 5 || details.notificationId == 8)  {
-			<tr class="govuk-table__row">
-				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.pensionSchemeAdministratorReference")</th>
-				<td class="govuk-table__cell" id="psaCheckRef">@{details.psaCheckReference}</td>
-			</tr>
-		}
+        @details.psaCheckReference.map { psaCheckReference =>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@messages("pla.printAmend.pensionSchemeAdministratorReference")</th>
+                <td class="govuk-table__cell" id="psaCheckRef">@psaCheckReference</td>
+            </tr>
+        }
 
 		@details.certificateDate.map { cDate =>
 			<tr class="govuk-table__row">
@@ -84,18 +83,11 @@
             </tr>
         }
 
-		@if(ViewConstants.dormantNotificationIds.contains(details.notificationId)) {
-			<tr class="govuk-table__row">
-				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.status")</th>
-				<td class="govuk-table__cell" id="status">@messages("pla.printAmend.dormant")</td>
-			</tr>
-		}
-
-		@if(ViewConstants.withdrawnNotificationIds.contains(details.notificationId)) {
-			<tr class="govuk-table__row">
-				<th scope="row" class="govuk-table__header">@messages("pla.printAmend.status")</th>
-				<td class="govuk-table__cell" id="status">@messages("pla.printAmend.withdrawn")</td>
-			</tr>
-		}
+        @details.status.map { status =>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">@messages("pla.printAmend.status")</th>
+                <td class="govuk-table__cell" id="status">@messages(s"pla.printAmend.$status")</td>
+            </tr>
+        }
 	</tbody>
 </table>
