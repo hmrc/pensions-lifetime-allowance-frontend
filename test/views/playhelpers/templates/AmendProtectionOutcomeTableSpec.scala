@@ -22,6 +22,10 @@ import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testdata.AmendProtectionDisplayModelTestData._
 import views.html.playHelpers.templates.amendProtectionOutcomeTable
 
+/* This view used to contain lots of logic surrounding the notification id, motivating all of the tests here.
+ * This has now been moved into the Display constructor, but these test have remained, to ensure the table still
+ * behaves correctly for each notification id.
+ */
 class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
   private val amendProtectionOutcomeTable = fakeApplication().injector.instanceOf[amendProtectionOutcomeTable]
