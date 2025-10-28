@@ -113,15 +113,15 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
     val printDisplayModel = createPrintDisplayModel(personalDetailsModelOpt, protectionModel, nino)
 
     val protectionReference = Some(printDisplayModel.protectionReference).filter(_ =>
-      notificationIdDisplaysProtectionReference(protectionModel.notificationId)
+      shouldDisplayProtectionReference(protectionModel.notificationId)
     )
 
     val fixedProtectionReference = Some(printDisplayModel.protectionReference).filter(_ =>
-      notificationIdDisplaysFixedProtectionReference(protectionModel.notificationId)
+      shouldDisplayFixedProtectionReference(protectionModel.notificationId)
     )
 
     val psaCheckReference = Some(printDisplayModel.psaCheckReference).filter(_ =>
-      notificationIdDisplaysPsaCheckReference(protectionModel.notificationId)
+      shouldDisplayPsaCheckReference(protectionModel.notificationId)
     )
 
     val status =
@@ -142,18 +142,18 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
     )
   }
 
-  private def notificationIdDisplaysProtectionReference(notificationId: Option[Int]): Boolean = notificationId match {
+  private def shouldDisplayProtectionReference(notificationId: Option[Int]): Boolean = notificationId match {
     case Some(1) | Some(5) | Some(8) => true
     case _                           => false
   }
 
-  private def notificationIdDisplaysFixedProtectionReference(notificationId: Option[Int]): Boolean =
+  private def shouldDisplayFixedProtectionReference(notificationId: Option[Int]): Boolean =
     notificationId match {
       case Some(7) | Some(14) => true
       case _                  => false
     }
 
-  private def notificationIdDisplaysPsaCheckReference(notificationId: Option[Int]): Boolean = notificationId match {
+  private def shouldDisplayPsaCheckReference(notificationId: Option[Int]): Boolean = notificationId match {
     case Some(1) | Some(5) | Some(8) => true
     case _                           => false
   }

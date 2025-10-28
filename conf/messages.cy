@@ -845,6 +845,25 @@ amendCode.14.changeDetailsPara = Rhowch y cyfeirnod ar gyfer eich diogelwch peno
 amendCode.14.bulletPointOne = rydych yn colli eich diogelwch penodol 2016
 amendCode.14.bulletPointTwo = caiff eich pensiwn ei rannu mewn ysgariad neu bartneriaeth sifil
 
+# No notification Id outcome
+
+pla.amendsResultPageNoNotificationId.title         = Crynodeb o ddiogelwch
+pla.amendsResultPageNoNotificationId.allowanceSubHeading = Eich swm newydd sydd wedi’i ddiogelu yw
+pla.amendsResultPageNoNotificationId.protectionDetails     = Eich manylion diogelwch
+pla.amendsResultPageNoNotificationId.printGuidancePara = Cadwch gopi o fanylion eich diogelwch ar gyfer eich cofnodion. Os byddwch yn penderfynu cymryd arian o’ch pensiwn, rhowch y manylion hyn i’ch darparwr pensiwn.
+pla.amendsResultPageNoNotificationId.printLink = Adolygwch fanylion eich diogelwch a’u hargraffu (yn agor tab newydd)
+pla.amendsResultPageNoNotificationId.changeDetails = Newid manylion eich diogelwch
+pla.amendsResultPageNoNotificationId.changeDetailsParaBeforeLink = Os yw’ch pensiwn yn cael ei rannu o ganlyniad i ysgariad neu pan fo partneriaeth sifil yn gwahanu, mae’n rhaid i chi
+pla.amendsResultPageNoNotificationId.changeDetailsLink = gysylltu â Gwasanaethau Cynlluniau Pensiwn CThEF
+pla.amendsResultPageNoNotificationId.changeDetailsParaAfterLink = cyn pen 60 diwrnod.
+pla.amendsResultPageNoNotificationId.viewDetails.beforeLink = Gallwch
+pla.amendsResultPageNoNotificationId.viewDetails.linkText = fwrw golwg dros fanylion eich diogelwch, neu eu newid
+pla.amendsResultPageNoNotificationId.viewDetails.afterLink =  ar unrhyw adeg.
+pla.amendsResultPageNoNotificationId.giveFeedback = Rhoi adborth i ni
+pla.amendsResultPageNoNotificationId.exitSurveyLinkText = Beth oedd eich barn am y gwasanaeth hwn?
+pla.amendsResultPageNoNotificationId.exitSurvey = Rydym yn defnyddio’ch adborth i wella ein gwasanaethau.
+pla.amendsResultPageNoNotificationId.notWorkingLinkText = A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)
+
 amendCode.noNotificationId.IndividualProtection2014.heading = TODO You have amended your individual protection 2014
 amendCode.noNotificationId.IndividualProtection2014.insetText = TODO Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
 amendCode.noNotificationId.IndividualProtection2014LTA.heading = TODO You have amended your individual protection 2014

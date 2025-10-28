@@ -24,7 +24,7 @@
 @(model: AmendResultDisplayModelNoNotificationId)(implicit request: Request[_], messages: Messages)
 
 @layout(
-	pageTitle = messages("pla.amendsResultPage.title"),
+	pageTitle = messages("pla.amendsResultPageNoNotificationId.title"),
     backLinkEnabled = false
 ) {
 
@@ -33,7 +33,7 @@
 			@messages(s"amendCode.noNotificationId.${model.protectionType}.heading")
 		</h1>
 		<div class="govuk-panel__body">
-			<div id="amendedAllowanceText">@messages("pla.amendsResultPage.allowanceSubHeading")</div><strong id="protectedAmount">@model.protectedAmount</strong>
+			<div id="amendedAllowanceText">@messages("pla.amendsResultPageNoNotificationId.allowanceSubHeading")</div><strong id="protectedAmount">@model.protectedAmount</strong>
 		</div>
 	</div>
 
@@ -41,33 +41,33 @@
 		<p>@messages(s"amendCode.noNotificationId.${model.protectionType}.insetText")</p>
 	</div>
 
-	<h2 class="govuk-heading-m">@messages("pla.amendsResultPage.protectionDetails")</h2>
+	<h2 class="govuk-heading-m">@messages("pla.amendsResultPageNoNotificationId.protectionDetails")</h2>
 
 	@model.details.map{ details =>
 		@protectionDetailsTable(details)
 	}
 
-	<p class="govuk-body">@messages("pla.amendsResultPage.printGuidancePara")</p>
-	<p class="govuk-body"><a class="govuk-link" id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" rel="noopener noreferrer">@messages("pla.amendsResultPage.printLink")</a></p>
+	<p class="govuk-body">@messages("pla.amendsResultPageNoNotificationId.printGuidancePara")</p>
+	<p class="govuk-body"><a class="govuk-link" id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" rel="noopener noreferrer">@messages("pla.amendsResultPageNoNotificationId.printLink")</a></p>
 
-	<h2 class="govuk-heading-m">@messages("pla.amendsResultPage.changeDetails")</h2>
+	<h2 class="govuk-heading-m">@messages("pla.amendsResultPageNoNotificationId.changeDetails")</h2>
 
 	<p class="govuk-body">
-		@messages("pla.amendsResultPage.changeDetailsParaBeforeLink")
-		<a class="govuk-link" href="https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries">@messages("pla.amendsResultPage.changeDetailsLink")</a>
-		@messages("pla.amendsResultPage.changeDetailsParaAfterLink")
+		@messages("pla.amendsResultPageNoNotificationId.changeDetailsParaBeforeLink")
+		<a class="govuk-link" href="https://www.gov.uk/find-hmrc-contacts/pension-schemes-general-enquiries">@messages("pla.amendsResultPageNoNotificationId.changeDetailsLink")</a>
+		@messages("pla.amendsResultPageNoNotificationId.changeDetailsParaAfterLink")
 	</p>
 
 	<p class="govuk-body" id="view-or-change-protection-details">
-		@messages("pla.amendsResultPage.viewDetails.beforeLink")
-		<a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@messages("pla.amendsResultPage.viewDetails.linkText")</a>
-		@messages("pla.amendsResultPage.viewDetails.afterLink")
+		@messages("pla.amendsResultPageNoNotificationId.viewDetails.beforeLink")
+		<a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@messages("pla.amendsResultPageNoNotificationId.viewDetails.linkText")</a>
+		@messages("pla.amendsResultPageNoNotificationId.viewDetails.afterLink")
 	</p>
 
-	<h2 class="govuk-heading-m">@messages("pla.amendsResultPage.giveFeedback")</h2>
+	<h2 class="govuk-heading-m">@messages("pla.amendsResultPageNoNotificationId.giveFeedback")</h2>
 
 	<p class="govuk-body" id="survey-info"><a class="govuk-link" id="submit-survey-button" href=@controllers.routes.AccountController.signOut role="button" onclick="submitExitSurvey()">
-		@messages("pla.amendsResultPage.exitSurveyLinkText")</a> @messages("pla.amendsResultPage.exitSurvey")</p>
+		@messages("pla.amendsResultPageNoNotificationId.exitSurveyLinkText")</a> @messages("pla.amendsResultPageNoNotificationId.exitSurvey")</p>
 
 }
 
