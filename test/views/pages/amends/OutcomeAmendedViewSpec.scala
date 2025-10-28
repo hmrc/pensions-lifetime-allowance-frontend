@@ -49,7 +49,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014InRange
       }
 
       "contain h2 element" in {
@@ -150,7 +150,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014InRange
       }
 
       "contain inset text" in {
@@ -270,7 +270,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014InRange
       }
 
       "contain inset text" in {
@@ -390,7 +390,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014InRange
       }
 
       "contain inset text" in {
@@ -510,7 +510,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014InRange
       }
 
       "contain h2 element" in {
@@ -611,7 +611,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014Below
       }
 
       "contain inset text" in {
@@ -709,7 +709,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP14Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2014Below
       }
 
       "contain inset text" in {
@@ -830,7 +830,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016InRange
       }
 
       "contain h2 element" in {
@@ -931,7 +931,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016InRange
       }
 
       "contain inset text" in {
@@ -1051,7 +1051,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016InRange
       }
 
       "contain inset text" in {
@@ -1171,7 +1171,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016InRange
       }
 
       "contain inset text" in {
@@ -1291,7 +1291,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016InRange
       }
 
       "contain inset text" in {
@@ -1411,7 +1411,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016Below
       }
 
       "contain inset text" in {
@@ -1509,7 +1509,7 @@ class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedVie
       "contain (green) govuk panel" in {
         doc.select("h1.govuk-panel__title").text() shouldBe iP16Heading
         doc.select("#amendedAllowanceText").text() shouldBe yourNewProtectedAmount
-        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016
+        doc.select("strong#protectedAmount").text() shouldBe protectedAmountIndividualProtection2016Below
       }
 
       "contain inset text" in {

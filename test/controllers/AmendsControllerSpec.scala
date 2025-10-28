@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunctionImpl
-import common.{Exceptions, Strings}
+import common.Strings
 import config._
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PLAConnector, PlaConnectorV2}
@@ -27,9 +27,16 @@ import mocks.AuthMock
 import models._
 import models.amendModels._
 import models.cache.CacheMap
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
 import models.pla.response.ProtectionStatus.{Dormant, Open}
 import models.pla.response.ProtectionType.{FixedProtection2016, IndividualProtection2016}
-import models.pla.response.{ProtectionRecord, ProtectionRecordsList, ReadProtectionsResponse}
+import models.pla.response.{
+  AmendProtectionResponse,
+  ProtectionRecord,
+  ProtectionRecordsList,
+  ProtectionType,
+  ReadProtectionsResponse
+}
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -123,6 +130,7 @@ class AmendsControllerSpec
     reset(outcomeActiveView)
     reset(outcomeInactiveView)
     reset(outcomeAmendedView)
+    reset(outcomeNoNotificationIdView)
     reset(amendSummaryView)
     reset(appConfig)
 
@@ -133,6 +141,7 @@ class AmendsControllerSpec
     when(outcomeActiveView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(outcomeInactiveView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(outcomeAmendedView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(outcomeNoNotificationIdView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(amendSummaryView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
 
     when(appConfig.hipMigrationEnabled).thenReturn(false)
@@ -339,17 +348,57 @@ class AmendsControllerSpec
       verify(technicalErrorView).apply(eqTo(ApplicationType.existingProtections.toString))(any(), any())
     }
 
-    "PlaConnector returns a response with no notificationId" in {
-      cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
-      when(plaConnector.amendProtection(any(), any())(any(), any()))
-        .thenReturn(Future.successful(Right(ProtectionModel(None, None))))
-      when(sessionCacheService.saveFormData(anyString(), any())(any(), any()))
-        .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+    "PlaConnector returns a response with no notificationId" should {
+      "redirect to amendment outcome page" when {
+        "the HipMigrationEnabled flag is set to true" in {
+          val response = AmendProtectionResponse(
+            lifetimeAllowanceIdentifier = 1,
+            lifetimeAllowanceSequenceNumber = 1,
+            lifetimeAllowanceType = AmendProtectionLifetimeAllowanceType.IndividualProtection2014,
+            certificateDate = Some("2025-10-28"),
+            certificateTime = Some("093820"),
+            status = AmendProtectionResponseStatus.Open,
+            protectionReference = Some("psaRef"),
+            relevantAmount = 1_350_000,
+            preADayPensionInPaymentAmount = 375_000,
+            postADayBenefitCrystallisationEventAmount = 375_000,
+            uncrystallisedRightsAmount = 375_000,
+            nonUKRightsAmount = 375_000,
+            pensionDebitAmount = None,
+            pensionDebitEnteredAmount = None,
+            notificationIdentifier = None,
+            protectedAmount = Some(1_350_000),
+            pensionDebitStartDate = None,
+            pensionDebitTotalAmount = Some(150_000)
+          )
 
-      val result = controller.amendProtection("IP2014", "dormant")(fakeRequest)
+          when(appConfig.hipMigrationEnabled).thenReturn(true)
+          cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
+          when(plaConnectorV2.amendProtection(any(), any())(any(), any()))
+            .thenReturn(Future.successful(Right(response)))
+          when(sessionCacheService.saveFormData(anyString(), any())(any(), any()))
+            .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
 
-      status(result) shouldBe 303
-      redirectLocation(result) shouldBe Some(routes.AmendsController.amendmentOutcome.toString)
+          val result = controller.amendProtection("IP2014", "dormant")(fakeRequest)
+
+          status(result) shouldBe 303
+          redirectLocation(result) shouldBe Some(routes.AmendsController.amendmentOutcome.toString)
+        }
+      }
+
+      "the HipMigrationEnabled flag is set to false" in {
+        when(appConfig.hipMigrationEnabled).thenReturn(false)
+        cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
+        when(plaConnector.amendProtection(any(), any())(any(), any()))
+          .thenReturn(Future.successful(Right(ProtectionModel(None, None))))
+        when(sessionCacheService.saveFormData(anyString(), any())(any(), any()))
+          .thenReturn(Future.successful(CacheMap("GA", Map.empty)))
+
+        val result = controller.amendProtection("IP2014", "dormant")(fakeRequest)
+
+        status(result) shouldBe 303
+        redirectLocation(result) shouldBe Some(routes.AmendsController.amendmentOutcome.toString)
+      }
     }
   }
 
@@ -549,6 +598,48 @@ class AmendsControllerSpec
             .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
           verify(outcomeActiveView)
             .apply(eqTo(activeAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)), eqTo(appConfig))(any(), any())
+        }
+      }
+    }
+
+    "AmendResponseModel stored in cache contains no notification ID" when {
+      import testdata.AmendProtectionDisplayModelTestData._
+
+      "the HipMigrationEnabled flag is true" should {
+        "return Ok status with outcomeNoNotificationId view" in {
+          val amendResponseModel = amendResponseModelNoNotificationIdIndividualProtection2014
+
+          val amendResultDisplayModel = amendResultDisplayModelNoNotificationIdIndividualProtection2014
+
+          when(appConfig.hipMigrationEnabled).thenReturn(true)
+          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
+          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+          when(displayConstructors.createAmendResultDisplayModelNoNotificationId(any(), any(), any()))
+            .thenReturn(amendResultDisplayModel)
+
+          val result = controller.amendmentOutcome()(fakeRequest)
+
+          status(result) shouldBe OK
+          verify(outcomeNoNotificationIdView).apply(eqTo(amendResultDisplayModel))(any(), any())
+        }
+      }
+
+      "the HipMigrationEnabled flag is false" should {
+        "return InternalServerError status with noNotificationId view" in {
+          when(appConfig.hipMigrationEnabled).thenReturn(false)
+          cacheFetchCondition(eqTo("amendResponseModel"))(
+            Some(amendResponseModelNoNotificationIdIndividualProtection2016)
+          )
+          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
+          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
+            .thenReturn(Future.successful(Some(testPersonalDetails)))
+
+          val result = controller.amendmentOutcome()(fakeRequest)
+
+          status(result) shouldBe INTERNAL_SERVER_ERROR
+          verify(noNotificationIdView).apply()(any(), any())
         }
       }
     }

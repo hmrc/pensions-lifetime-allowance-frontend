@@ -652,7 +652,23 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
       )
     )
 
-    val protectedAmount = if (Constants.withdrawnNotificationIds.contains(notificationId)) {
+    val protectedAmount = extractProtectedAmount(notificationId, model)
+
+    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
+
+    AmendResultDisplayModel(
+      notificationId,
+      protectedAmountString,
+      Some(
+        printDetails.copy(
+          protectedAmount = printDetails.protectedAmount.map(_ => protectedAmountString)
+        )
+      )
+    )
+  }
+
+  private def extractProtectedAmount(notificationId: Int, model: AmendResponseModel): Double =
+    if (Constants.withdrawnNotificationIds.contains(notificationId)) {
       model.protection.relevantAmount.getOrElse {
         throw Exceptions.OptionNotDefinedException(
           "createAmendResultDisplayModel",
@@ -669,15 +685,6 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
         )
       }
     }
-
-    val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
-
-    AmendResultDisplayModel(
-      notificationId,
-      protectedAmountString,
-      Some(printDetails)
-    )
-  }
 
   def createAmendResultDisplayModelNoNotificationId(
       model: AmendResponseModel,
