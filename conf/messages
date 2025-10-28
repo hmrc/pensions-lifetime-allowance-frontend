@@ -1187,7 +1187,7 @@ pla.withdraw.date-input.form.day-too-low=Enter a valid day
 pla.withdraw.date-input.form.month-empty=Enter a month
 pla.withdraw.date-input.form.month-too-high=Enter a valid month
 pla.withdraw.date-input.form.month-too-low=Enter a valid month
-pla.withdraw.date-input.form.year-empty=Enter a year => true
+pla.withdraw.date-input.form.year-empty=Enter a year
 pla.withdraw.date-input.form.year-too-high=Date cannot be in the future
 pla.withdraw.date-input.form.date-in-future=Date cannot be in the future
 pla.withdraw.date-input.form.date-before-start-date=Date must be after protection start date
