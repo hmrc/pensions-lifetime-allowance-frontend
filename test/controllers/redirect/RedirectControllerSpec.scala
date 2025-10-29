@@ -38,6 +38,16 @@ class RedirectControllerSpec extends FakeApplication with MockitoSugar {
       status(result) shouldBe 303
       redirectLocation(result).get shouldBe s"/check-your-pension-protections-and-enhancements/$path"
     }
+
+    "redirect to the path '/check-your-pension-protections-and-enhancements' url with the same path" in {
+      val path    = "test-path/with-some-kind-of/id/1234567"
+      val request = FakeRequest(GET, "/check-your-pension-protections")
+
+      val result = redirectController.redirectToNewServiceUrl(path)(request)
+
+      status(result) shouldBe 303
+      redirectLocation(result).get shouldBe s"/check-your-pension-protections-and-enhancements/$path"
+    }
   }
 
 }
