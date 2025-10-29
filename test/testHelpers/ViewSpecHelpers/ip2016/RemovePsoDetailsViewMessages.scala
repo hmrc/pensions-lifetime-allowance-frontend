@@ -17,11 +17,13 @@
 package testHelpers.ViewSpecHelpers.ip2016
 
 trait RemovePsoDetailsViewMessages {
-  val plaPsoDetailsTitleNew         = "Pension sharing order - Check your pension protections - GOV.UK"
-  val plaPsoDetailsTitle            = "Pension sharing order"
-  val plaPsoDetailsRemovePso        = "This will remove your pension sharing order."
-  val plaPsoDetailsCancelRemove     = "Do not remove"
-  val plaPsoDetailsCancellationLink = "/check-your-pension-protections-and-enhancements/apply-for-ip16-submit-your-application"
+  val plaPsoDetailsTitleNew     = "Pension sharing order - Check your pension protections - GOV.UK"
+  val plaPsoDetailsTitle        = "Pension sharing order"
+  val plaPsoDetailsRemovePso    = "This will remove your pension sharing order."
+  val plaPsoDetailsCancelRemove = "Do not remove"
+
+  val plaPsoDetailsCancellationLink =
+    "/check-your-pension-protections-and-enhancements/apply-for-ip16-submit-your-application"
 
   val plaAmendsPsoDetailsCancellationLink =
     "/check-your-pension-protections-and-enhancements/amend-protection/individual-protection-2016/open"

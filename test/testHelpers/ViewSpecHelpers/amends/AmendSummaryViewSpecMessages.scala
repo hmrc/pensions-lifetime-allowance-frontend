@@ -49,7 +49,9 @@ trait AmendSummaryViewSpecMessages extends SummaryViewMessages {
   val plaAmendsCancelLinkLocation           = "/check-your-pension-protections-and-enhancements/existing-protections"
   val plaAmendsWithdrawProtectionText       = "Withdraw your open protection"
   val plaAmendsAddAPensionSharingOrderText  = "Add a pension sharing order"
-  val plaAmendsWithdrawProtectionLinkLocation = "/check-your-pension-protections-and-enhancements/withdraw-protection/implications"
+
+  val plaAmendsWithdrawProtectionLinkLocation =
+    "/check-your-pension-protections-and-enhancements/withdraw-protection/implications"
 
   val plaAmendsAddAPensionSharingOrderTextLink =
     "/check-your-pension-protections-and-enhancements/amend-protection/pension-sharing-order/individual-protection-2016/open"
