@@ -864,15 +864,16 @@ pla.amendsResultPageNoNotificationId.exitSurveyLinkText = Beth oedd eich barn am
 pla.amendsResultPageNoNotificationId.exitSurvey = Rydym yn defnyddio’ch adborth i wella ein gwasanaethau.
 pla.amendsResultPageNoNotificationId.notWorkingLinkText = A yw’r dudalen hon yn gweithio’n iawn? (yn agor tab newydd)
 
-amendCode.noNotificationId.IndividualProtection2014.heading = TODO You have amended your individual protection 2014
-amendCode.noNotificationId.IndividualProtection2014.insetText = TODO Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
-amendCode.noNotificationId.IndividualProtection2014LTA.heading = TODO You have amended your individual protection 2014
-amendCode.noNotificationId.IndividualProtection2014LTA.insetText = TODO Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
+amendCode.noNotificationId.IndividualProtection2014.heading = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendCode.noNotificationId.IndividualProtection2014.insetText = Mae cyfanswm gwerth eich pensiynau yn uwch na’r terfyn sydd wedi’i ddiogelu o £1,500,000. Nid yw unrhyw swm dros £1,500,000 yn dod o dan eich Diogelwch Unigol.
+amendCode.noNotificationId.IndividualProtection2014LTA.heading = Rydych wedi diwygio’chdiogelwch unigol 2014
+amendCode.noNotificationId.IndividualProtection2014LTA.insetText = Mae cyfanswm gwerth eich pensiynau yn uwch na’r terfyn sydd wedi’i ddiogelu o £1,500,000. Nid yw unrhyw swm dros £1,500,000 yn dod o dan eich Diogelwch Unigol.
 
-amendCode.noNotificationId.IndividualProtection2016.heading = TODO You have amended your individual protection 2016
-amendCode.noNotificationId.IndividualProtection2016.insetText = TODO Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
-amendCode.noNotificationId.IndividualProtection2016LTA.heading = TODO You have amended your individual protection 2016
-amendCode.noNotificationId.IndividualProtection2016LTA.insetText = TODO Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
+amendCode.noNotificationId.IndividualProtection2016.heading = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendCode.noNotificationId.IndividualProtection2016.insetText = Mae cyfanswm gwerth eich pensiynau yn uwch na’r terfyn o £1,250,000. Nid yw unrhyw swm dros £1,250,000 yn dod o dan eich Diogelwch Unigol.
+amendCode.noNotificationId.IndividualProtection2016LTA.heading = Rydych wedi diwygio’chdiogelwch unigol 2016
+amendCode.noNotificationId.IndividualProtection2016LTA.insetText = Mae cyfanswm gwerth eich pensiynau yn uwch na’r terfyn o £1,250,000. Nid yw unrhyw swm dros £1,250,000 yn dod o dan eich Diogelwch Unigol.
+
 
 ### RESULTS MESSAGES ###
 
