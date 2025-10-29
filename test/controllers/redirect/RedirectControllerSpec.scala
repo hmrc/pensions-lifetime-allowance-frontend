@@ -29,14 +29,14 @@ class RedirectControllerSpec extends FakeApplication with MockitoSugar {
   private val redirectController = new RedirectController(mcc)
 
   "RedirectController on redirectToNewServiceUrl" should {
-    "redirect to '/check-your-pension-protections' url with the same path" in {
+    "redirect to '/check-your-pension-protections-and-enhancements' url with the same path" in {
       val path    = "test-path/with-some-kind-of/id/1234567"
       val request = FakeRequest(GET, "/protect-your-lifetime-allowance")
 
       val result = redirectController.redirectToNewServiceUrl(path)(request)
 
       status(result) shouldBe 303
-      redirectLocation(result).get shouldBe s"/check-your-pension-protections/$path"
+      redirectLocation(result).get shouldBe s"/check-your-pension-protections-and-enhancements/$path"
     }
   }
 

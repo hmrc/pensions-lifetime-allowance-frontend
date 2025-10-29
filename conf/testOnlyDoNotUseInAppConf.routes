@@ -11,5 +11,5 @@
 # Add all the application routes to the prod.routes file
 
 ->         /                                                prod.Routes
-->         /check-your-pension-protections/test-only       test.Routes
+->         /check-your-pension-protections-and-enhancements/test-only       test.Routes
 

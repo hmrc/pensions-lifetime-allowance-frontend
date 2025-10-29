@@ -47,10 +47,10 @@ class FakeRequestTo(
   def constructRequest(url: String, sessionId: Option[String]): FakeRequest[AnyContentAsEmpty.type] =
     sessionId match {
       case Some(sessId) =>
-        FakeRequest("GET", "/check-your-pension-protections/" + url).withSession(
+        FakeRequest("GET", "/check-your-pension-protections-and-enhancements/" + url).withSession(
           SessionKeys.sessionId -> s"session-$sessionId"
         )
-      case None => FakeRequest("GET", "/check-your-pension-protections/" + url)
+      case None => FakeRequest("GET", "/check-your-pension-protections-and-enhancements/" + url)
     }
 
 }
