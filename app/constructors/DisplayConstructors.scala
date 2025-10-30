@@ -125,7 +125,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
     )
 
     val status =
-      Some(printDisplayModel.status).filter(_ => notificationIdDisplaysStatus(protectionModel.notificationId))
+      Some(printDisplayModel.status).filter(_ => shouldDisplayStatus(protectionModel.notificationId))
 
     AmendPrintDisplayModel(
       firstName = printDisplayModel.firstName,
@@ -158,7 +158,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
     case _                           => false
   }
 
-  private def notificationIdDisplaysStatus(notificationId: Option[Int]): Boolean = notificationId match {
+  private def shouldDisplayStatus(notificationId: Option[Int]): Boolean = notificationId match {
     case None                                                                                    => true
     case Some(notificationId) if ViewConstants.dormantNotificationIds.contains(notificationId)   => true
     case Some(notificationId) if ViewConstants.withdrawnNotificationIds.contains(notificationId) => true
