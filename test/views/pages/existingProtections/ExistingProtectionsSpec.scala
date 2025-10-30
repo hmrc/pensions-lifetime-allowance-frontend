@@ -185,7 +185,7 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       "display the correct html including the print link" in {
         docActiveAndInactive
           .select("a#printLink")
-          .attr("href") shouldBe "/check-your-pension-protections/print-protection"
+          .attr("href") shouldBe "/check-your-pension-protections-and-enhancements/print-protection"
       }
 
       "contain the data" in {

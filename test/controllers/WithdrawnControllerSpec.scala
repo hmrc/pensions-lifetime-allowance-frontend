@@ -67,9 +67,9 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
       "/apply-for-ip14-remove-pension-sharing-order-details",
       "/apply-for-ip14-submit-your-application"
     ).foreach { path =>
-      s"show withdrawn page for /check-your-pension-protections$path" in
+      s"show withdrawn page for /check-your-pension-protections-and-enhancements$path" in
         assertRendersWithdrawnAppsPage(
-          controller.showWithdrawn2014()(FakeRequest(GET, s"/check-your-pension-protections$path")),
+          controller.showWithdrawn2014()(FakeRequest(GET, s"/check-your-pension-protections-and-enhancements$path")),
           view2014()
         )
     }
@@ -88,9 +88,9 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
       "/apply-for-ip16-remove-pension-sharing-order-details",
       "/apply-for-ip16-submit-your-application"
     ).foreach { path =>
-      s"show withdrawn page for /check-your-pension-protections$path" in
+      s"show withdrawn page for /check-your-pension-protections-and-enhancements$path" in
         assertRendersWithdrawnAppsPage(
-          controller.showWithdrawn2016()(FakeRequest(GET, s"/check-your-pension-protections$path")),
+          controller.showWithdrawn2016()(FakeRequest(GET, s"/check-your-pension-protections-and-enhancements$path")),
           view2016()
         )
     }

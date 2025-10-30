@@ -107,7 +107,7 @@ class AuthFunctionSpec
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised"
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
         )
       }
 
@@ -134,7 +134,7 @@ class AuthFunctionSpec
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised"
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
         )
       }
 
@@ -177,7 +177,7 @@ class AuthFunctionSpec
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised"
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
         )
       }
 
@@ -196,7 +196,7 @@ class AuthFunctionSpec
 
         status(result) shouldBe 303
         redirectLocation(result) shouldBe Some(
-          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections/not-authorised"
+          s"${mockAppConfig.ivUpliftUrl}?" + "origin=pensions-lifetime-allowance-frontend&confidenceLevel=200&completionURL=http://www.pla-frontend.gov.uk/ip16-start-page&failureURL=http://localhost:9010/check-your-pension-protections-and-enhancements/not-authorised"
         )
       }
 

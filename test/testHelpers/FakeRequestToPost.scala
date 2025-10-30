@@ -32,7 +32,7 @@ class FakeRequestToPost(url: String, controllerAction: Action[AnyContent], sessi
     with OptionValues
     with TestConfigHelper {
 
-  val fakeRequest = FakeRequest("POST", "/check-your-pension-protections/" + url)
+  val fakeRequest = FakeRequest("POST", "/check-your-pension-protections-and-enhancements/" + url)
     .withSession(SessionKeys.sessionId -> s"session-$sessionId")
     .withFormUrlEncodedBody(data: _*)
     .withMethod("POST")
