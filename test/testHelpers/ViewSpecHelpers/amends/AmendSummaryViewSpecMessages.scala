@@ -46,13 +46,15 @@ trait AmendSummaryViewSpecMessages extends SummaryViewMessages {
   val plaAmendsAdditionalPsoDate            = "2 March 2017"
   val plaAmendsCancelText                   = "Alternatively, you can cancel the changes and go back."
   val plaAmendsCancelLinkText               = "cancel the changes"
-  val plaAmendsCancelLinkLocation           = "/check-your-pension-protections/existing-protections"
+  val plaAmendsCancelLinkLocation           = "/check-your-pension-protections-and-enhancements/existing-protections"
   val plaAmendsWithdrawProtectionText       = "Withdraw your open protection"
   val plaAmendsAddAPensionSharingOrderText  = "Add a pension sharing order"
-  val plaAmendsWithdrawProtectionLinkLocation = "/check-your-pension-protections/withdraw-protection/implications"
+
+  val plaAmendsWithdrawProtectionLinkLocation =
+    "/check-your-pension-protections-and-enhancements/withdraw-protection/implications"
 
   val plaAmendsAddAPensionSharingOrderTextLink =
-    "/check-your-pension-protections/amend-protection/pension-sharing-order/individual-protection-2016/open"
+    "/check-your-pension-protections-and-enhancements/amend-protection/pension-sharing-order/individual-protection-2016/open"
 
   val plaAmendsDeclaration =
     "The information that I have provided is true and complete to the best of my knowledge and belief."

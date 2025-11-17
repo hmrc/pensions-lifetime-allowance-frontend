@@ -368,7 +368,7 @@ class WithdrawProtectionControllerSpec
         status(result) shouldBe SEE_OTHER
         await(result).header.headers(
           "Location"
-        ) shouldBe "/check-your-pension-protections/withdraw-protection/date-input-confirmation"
+        ) shouldBe "/check-your-pension-protections-and-enhancements/withdraw-protection/date-input-confirmation"
 
       }
     }

@@ -61,7 +61,7 @@ class FrontendAppConfig @Inject() (
   private def loadConfig(key: String) =
     configuration.getOptional[String](key).getOrElse(throw new Exception(s"Missing key: $key"))
 
-  lazy val signOutUrl = "/check-your-pension-protections/sign-out"
+  lazy val signOutUrl = "/check-your-pension-protections-and-enhancements/sign-out"
 
   lazy val psaLookupWithdrawLinkUrl: String = configuration.get[String]("psa.lookup.withdrawLink.url")
 

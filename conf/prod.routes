@@ -1,5 +1,6 @@
 # Add all the application routes to the app.routes file
-->         /check-your-pension-protections      app.Routes
+->         /check-your-pension-protections-and-enhancements      app.Routes
 ->         /protect-your-lifetime-allowance     redirect.Routes
+->         /check-your-pension-protections    redirect.Routes
 ->         /                                    health.Routes
 

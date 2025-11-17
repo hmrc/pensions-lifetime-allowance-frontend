@@ -25,6 +25,6 @@ import javax.inject.{Inject, Singleton}
 class RedirectController @Inject() (mcc: MessagesControllerComponents) extends FrontendController(mcc) {
 
   def redirectToNewServiceUrl(path: String): Action[AnyContent] =
-    Action(implicit request => Redirect(s"/check-your-pension-protections/$path"))
+    Action(implicit request => Redirect(s"/check-your-pension-protections-and-enhancements/$path"))
 
 }

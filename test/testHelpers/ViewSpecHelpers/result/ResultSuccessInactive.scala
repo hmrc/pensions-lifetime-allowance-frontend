@@ -31,7 +31,7 @@ trait ResultSuccessInactive {
   val plaResultRejectionViewDetailsLinkText = "view or change details of your protections"
   val plaResultSuccessGiveFeedback          = "Give us feedback"
   val plaResultSuccessExitSurveyLinkText    = "What did you think of this service?"
-  val plaResultSuccessExitSurveyLink        = "/check-your-pension-protections/sign-out"
+  val plaResultSuccessExitSurveyLink        = "/check-your-pension-protections-and-enhancements/sign-out"
   val plaResultSuccessExitSurvey            = "We use your feedback to make our services better."
 
   val pensionSchemesLink =
