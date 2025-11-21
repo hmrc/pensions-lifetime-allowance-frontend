@@ -53,16 +53,17 @@
 
     @amendSection(model.pensionContributionSections, model.protectionType)
     @govukSummaryList(SummaryList(
-    rows = Seq(SummaryListRow(
-        key = Key(
-            classes = s"govuk-!-width-one-half",
-            content = Text(messages("pla.amends.totalValueOfPensions"))
-        ),
-        value = Value(
-            classes  = "govuk-!-width-one-half",
-            content = Text(model.totalAmount)
-        )
-        ))
+        rows = Seq(SummaryListRow(
+            key = Key(
+                classes = s"govuk-!-width-one-half",
+                content = Text(messages("pla.amends.totalValueOfPensions"))
+            ),
+            value = Value(
+                classes  = "govuk-!-width-one-half",
+                content = Text(model.totalAmount)
+            ),
+            classes = "amend-summary-row-RelevantAmount"
+        )),
     ))
 
     @if(model.psoSections.nonEmpty){
