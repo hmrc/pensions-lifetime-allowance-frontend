@@ -20,20 +20,18 @@ object Links {
 
   final val baseGovUrl = "https://www.gov.uk/"
 
-  val lifetimeAllowance = baseGovUrl + "tax-on-your-private-pension/lifetime-allowance"
-  val plaMain           = baseGovUrl + "guidance/pension-schemes-protect-your-lifetime-allowance"
-  val ptaManual         = baseGovUrl + "hmrc-internal-manuals/pensions-tax-manual/"
-  val contactInfo       = baseGovUrl + "contact-hmrc"
-  val helpDesk          = baseGovUrl + "government/organisations/hm-revenue-customs/contact/online-services-helpdesk"
-  val callCharges       = baseGovUrl + "call-charges"
+  val plaMain: String     = baseGovUrl + "guidance/pension-schemes-protect-your-lifetime-allowance"
+  val contactInfo: String = baseGovUrl + "contact-hmrc"
+  val callCharges: String = baseGovUrl + "call-charges"
 
-  val contactHMRC =
+  val contactHMRC: String =
     baseGovUrl + "government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 
-  val pensionValue = baseGovUrl + "guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection"
+  val pensionValue: String =
+    baseGovUrl + "guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection"
 
   // Sidebar Read More link locations
-  val pensionsWorthBefore = pensionValue + "#income-taken-from-pensions-before-6-april-2006"
-  val pensionsUsedBetween = pensionValue + "#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
-  val currentPensions     = pensionValue + "#pensions-youve-not-taken-yet"
+  val pensionsWorthBefore: String = pensionValue + "#income-taken-from-pensions-before-6-april-2006"
+  val pensionsUsedBetween: String = pensionValue + "#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
+  val currentPensions: String     = pensionValue + "#pensions-youve-not-taken-yet"
 }

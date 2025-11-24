@@ -16,16 +16,17 @@
 
 package common
 
-import java.text.DecimalFormat
-import java.time.format.DateTimeFormatter
-import java.time.LocalDateTime
 import play.api.i18n.{Lang, Messages}
+
+import java.text.DecimalFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 case class MoneyPounds(value: BigDecimal, decimalPlaces: Int = 2, roundUp: Boolean = false) {
 
-  def isNegative = value < 0
+  def isNegative: Boolean = value < 0
 
-  def quantity =
+  def quantity: String =
     s"%,.${decimalPlaces}f".format(
       value
         .setScale(decimalPlaces, if (roundUp) BigDecimal.RoundingMode.CEILING else BigDecimal.RoundingMode.FLOOR)

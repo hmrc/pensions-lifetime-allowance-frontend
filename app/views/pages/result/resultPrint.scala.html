@@ -14,12 +14,10 @@
  * limitations under the License.
  *@
 
-@import models.PrintDisplayModel
-@import views.html.helper.CSPNonce
-@import views.HeaderContent
 @import config.FrontendAppConfig
-@import models.pla.response.ProtectionType.FixedProtection2016
-@import models.pla.response.ProtectionType.FixedProtection2016LTA
+@import models.PrintDisplayModel
+@import views.HeaderContent
+@import views.html.helper.CSPNonce
 
 @this(
     layout: Layout,
@@ -31,7 +29,7 @@
 
 @layout(
     pageTitle = messages("pla.print.title"),
-    additionalPrintCSS = true,
+    additionalPrintCss = true,
     backLinkEnabled = false
 ) {
 
@@ -59,16 +57,16 @@
             </tr>
             @model.protectedAmount.map { protectedAmount =>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getProtectedLifetimeAllowance(appConfig))</th>
+                    <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getProtectedLifetimeAllowance)</th>
                     <td class="govuk-table__cell" id="protectedAmount">@{protectedAmount}</td>
                 </tr>
             }
             <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getProtectionNotificatioNumber(appConfig))</th>
+                <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getProtectionNotificatioNumber)</th>
                 <td class="govuk-table__cell" id="protectionRef">@{model.protectionReference}</td>
             </tr>
             <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getSchemeAdministratorReference(appConfig))</th>
+                <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getSchemeAdministratorReference)</th>
                 <td class="govuk-table__cell" id="psaRef">@{model.psaCheckReference}</td>
             </tr>
             @model.lumpSumPercentage.map { lumpSumPercentage =>

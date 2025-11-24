@@ -23,19 +23,20 @@ import scala.util.{Failure, Success, Try}
 
 trait CommonBinders {
 
-  def decimalFormatter(requiredKey: String, invalidKey: String, args: Any*) = new Formatter[Option[BigDecimal]] {
-    def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[BigDecimal]] =
-      data
-        .get(key)
-        .map(validateNumber(requiredKey, invalidKey, key, _))
-        .getOrElse(Left(Seq(FormError(key, requiredKey, Nil))))
+  def decimalFormatter(requiredKey: String, invalidKey: String, args: Any*): Formatter[Option[BigDecimal]] =
+    new Formatter[Option[BigDecimal]] {
+      def bind(key: String, data: Map[String, String]): Either[Seq[FormError], Option[BigDecimal]] =
+        data
+          .get(key)
+          .map(validateNumber(requiredKey, invalidKey, key, _))
+          .getOrElse(Left(Seq(FormError(key, requiredKey, Nil))))
 
-    def unbind(key: String, value: Option[BigDecimal]): Map[String, String] =
-      value match {
-        case Some(data) => Map(key -> data.toString())
-        case None       => Map()
-      }
-  }
+      def unbind(key: String, value: Option[BigDecimal]): Map[String, String] =
+        value match {
+          case Some(data) => Map(key -> data.toString())
+          case None       => Map()
+        }
+    }
 
   // #################HELPER METHODS#################################//
 
@@ -65,7 +66,7 @@ trait CommonBinders {
     }
   }
 
-  def stripCurrencyCharacters(input: String): String =
+  private def stripCurrencyCharacters(input: String): String =
     input
       .trim()
       .replaceAll(",", "")

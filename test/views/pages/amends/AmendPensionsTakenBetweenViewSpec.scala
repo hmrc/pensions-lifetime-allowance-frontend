@@ -65,7 +65,7 @@ class AmendPensionsTakenBetweenViewSpec
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController
-        .submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+        .submitAmendPensionsTakenBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBetweenLegendText
     }

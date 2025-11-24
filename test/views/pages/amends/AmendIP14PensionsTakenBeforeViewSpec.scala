@@ -59,7 +59,7 @@ class AmendIP14PensionsTakenBeforeViewSpec
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController
-        .submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+        .submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaPensionsTakenBeforeLegendText
     }

@@ -51,7 +51,8 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
 
   "the OutcomeInactiveView" should {
     "have the correct title" in {
-      docIP16.title() shouldBe s"$plaResultSuccessOutcomeActiveTitle - Check your pension protections - GOV.UK"
+      docIP16
+        .title() shouldBe s"$plaResultSuccessOutcomeActiveTitle - Check your pension protections and enhancements - GOV.UK"
     }
 
     "not have back link with text back " in {

@@ -66,7 +66,6 @@ class AmendsCurrentPensionControllerSpec
   val messagesApi: MessagesApi                               = mockMCC.messagesApi
 
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
   implicit val mockLang: Lang                   = mock[Lang]
@@ -172,7 +171,7 @@ class AmendsCurrentPensionControllerSpec
       cacheFetchCondition[AmendProtectionModel](None)
 
       val result =
-        controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2016, Strings.StatusURL.Open)(
+        controller.amendCurrentPensions(Strings.ProtectionTypeUrl.IndividualProtection2016, Strings.StatusUrl.Open)(
           fakeRequest
         )
       status(result) shouldBe 500
@@ -184,7 +183,7 @@ class AmendsCurrentPensionControllerSpec
         ProtectionModel(None, None, uncrystallisedRights = Some(100000))
       )
       lazy val result =
-        controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2016, Strings.StatusURL.Dormant)(
+        controller.amendCurrentPensions(Strings.ProtectionTypeUrl.IndividualProtection2016, Strings.StatusUrl.Dormant)(
           fakeRequest
         )
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
@@ -204,8 +203,8 @@ class AmendsCurrentPensionControllerSpec
       )
       lazy val result =
         controller.amendCurrentPensions(
-          Strings.ProtectionTypeURL.IndividualProtection2016LTA,
-          Strings.StatusURL.Dormant
+          Strings.ProtectionTypeUrl.IndividualProtection2016LTA,
+          Strings.StatusUrl.Dormant
         )(fakeRequest)
       lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
 
@@ -225,7 +224,7 @@ class AmendsCurrentPensionControllerSpec
           ProtectionModel(None, None, uncrystallisedRights = Some(100000))
         )
         lazy val result =
-          controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
+          controller.amendCurrentPensions(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(fakeRequest)
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](Some(testModel))
 
@@ -235,7 +234,7 @@ class AmendsCurrentPensionControllerSpec
 
       "have the value 100000 completed in the amount input by default" in new Setup {
         lazy val result =
-          controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
+          controller.amendCurrentPensions(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(fakeRequest)
         lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
         val testModel = new AmendProtectionModel(
           ProtectionModel(None, None),
@@ -252,7 +251,7 @@ class AmendsCurrentPensionControllerSpec
 
   "supplied with a stored test model (£100000, IndividualProtection2014, dormant)" in new Setup {
     lazy val result =
-      controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")(fakeRequest)
+      controller.amendCurrentPensions(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant")(fakeRequest)
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014ProtectionModel))
 
@@ -261,7 +260,7 @@ class AmendsCurrentPensionControllerSpec
 
   "supplied with a stored test model (£100000, IndividualProtection2014LTA, dormant)" in new Setup {
     lazy val result =
-      controller.amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant")(fakeRequest)
+      controller.amendCurrentPensions(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant")(fakeRequest)
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
     cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014LTAProtectionModel))
 
@@ -273,7 +272,7 @@ class AmendsCurrentPensionControllerSpec
     "the data is valid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
+            controller.submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
             ("amendedUKPensionAmt", "100000")
           )
 
@@ -283,15 +282,15 @@ class AmendsCurrentPensionControllerSpec
 
       status(DataItem.result) shouldBe 303
       redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeURL.IndividualProtection2016,
-          Strings.StatusURL.Dormant
+          Strings.ProtectionTypeUrl.IndividualProtection2016,
+          Strings.StatusUrl.Dormant
         )}")
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
+            controller.submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
             ("amendedUKPensionAmt", "")
           )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -302,7 +301,7 @@ class AmendsCurrentPensionControllerSpec
       object DataItem
           extends AuthorisedFakeRequestToPost(
             controller
-              .submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2016, Strings.StatusURL.Dormant),
+              .submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2016, Strings.StatusUrl.Dormant),
             ("amendedUKPensionAmt", "1000000")
           )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -317,7 +316,7 @@ class AmendsCurrentPensionControllerSpec
     "the data is valid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
+            controller.submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant"),
             ("amendedUKPensionAmt", "100000")
           )
 
@@ -327,14 +326,14 @@ class AmendsCurrentPensionControllerSpec
 
       status(DataItem.result) shouldBe 303
       redirectLocation(DataItem.result) shouldBe Some(
-        s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")}"
+        s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant")}"
       )
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
+            controller.submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant"),
             ("amendedUKPensionAmt", "")
           )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -344,7 +343,7 @@ class AmendsCurrentPensionControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
+            controller.submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant"),
             ("amendedUKPensionAmt", "1000000")
           )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -359,7 +358,7 @@ class AmendsCurrentPensionControllerSpec
     "the data is valid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
+            controller.submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
             ("amendedUKPensionAmt", "100000")
           )
 
@@ -369,15 +368,15 @@ class AmendsCurrentPensionControllerSpec
 
       status(DataItem.result) shouldBe 303
       redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeURL.IndividualProtection2016LTA,
-          Strings.StatusURL.Dormant
+          Strings.ProtectionTypeUrl.IndividualProtection2016LTA,
+          Strings.StatusUrl.Dormant
         )}")
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
+            controller.submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
             ("amendedUKPensionAmt", "")
           )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -388,8 +387,8 @@ class AmendsCurrentPensionControllerSpec
       object DataItem
           extends AuthorisedFakeRequestToPost(
             controller.submitAmendCurrentPension(
-              Strings.ProtectionTypeURL.IndividualProtection2016LTA,
-              Strings.StatusURL.Dormant
+              Strings.ProtectionTypeUrl.IndividualProtection2016LTA,
+              Strings.StatusUrl.Dormant
             ),
             ("amendedUKPensionAmt", "1000000")
           )
@@ -405,7 +404,7 @@ class AmendsCurrentPensionControllerSpec
     "the data is valid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
+            controller.submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant"),
             ("amendedUKPensionAmt", "100000")
           )
 
@@ -415,14 +414,14 @@ class AmendsCurrentPensionControllerSpec
 
       status(DataItem.result) shouldBe 303
       redirectLocation(DataItem.result) shouldBe Some(
-        s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant")}"
+        s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant")}"
       )
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
+            controller.submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant"),
             ("amendedUKPensionAmt", "")
           )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -432,7 +431,7 @@ class AmendsCurrentPensionControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendCurrentPension(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
+            controller.submitAmendCurrentPension(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant"),
             ("amendedUKPensionAmt", "1000000")
           )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))

@@ -20,7 +20,7 @@ import auth.AuthFunction
 import common._
 import config.FrontendAppConfig
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
-import connectors.{CitizenDetailsConnector, PLAConnector, PlaConnectorError, PlaConnectorV2}
+import connectors.{CitizenDetailsConnector, PlaConnector, PlaConnectorError}
 import constructors.{AmendsGAConstructor, DisplayConstructors}
 import models.amendModels._
 import models.cache.CacheMap
@@ -39,13 +39,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class AmendsController @Inject() (
     sessionCacheService: SessionCacheService,
     citizenDetailsConnector: CitizenDetailsConnector,
-    plaConnector: PLAConnector,
-    plaConnectorV2: PlaConnectorV2,
+    plaConnector: PlaConnector,
     displayConstructors: DisplayConstructors,
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
-    noNotificationId: views.html.pages.fallback.noNotificationId,
     technicalError: views.html.pages.fallback.technicalError,
     outcomeActive: views.html.pages.amends.outcomeActive,
     outcomeInactive: views.html.pages.amends.outcomeInactive,
@@ -126,13 +124,9 @@ class AmendsController @Inject() (
   private def sendAmendProtectionRequest(nino: String, protection: ProtectionModel)(
       implicit hc: HeaderCarrier
   ): Future[Either[PlaConnectorError, AmendResponseModel]] =
-    if (appConfig.hipMigrationEnabled) {
-      plaConnectorV2
-        .amendProtection(nino, protection)
-        .map(_.map(AmendResponseModel.from(_, protection.psaCheckReference)))
-    } else {
-      plaConnector.amendProtection(nino, protection).map(_.map(AmendResponseModel(_)))
-    }
+    plaConnector
+      .amendProtection(nino, protection)
+      .map(_.map(AmendResponseModel.from(_, protection.psaCheckReference)))
 
   private def saveAndRedirectToDisplay(amendResponseModel: AmendResponseModel)(
       implicit request: Request[AnyContent]
@@ -167,15 +161,10 @@ class AmendsController @Inject() (
       .map { model =>
         model.protection.notificationId match {
           case None =>
-            if (appConfig.hipMigrationEnabled) {
-              val displayModel =
-                displayConstructors.createAmendResultDisplayModelNoNotificationId(model, personalDetailsModelOpt, nino)
+            val displayModel =
+              displayConstructors.createAmendResultDisplayModelNoNotificationId(model, personalDetailsModelOpt, nino)
 
-              Future.successful(Ok(outcomeNoNotificationId(displayModel)))
-            } else {
-              logger.warn(s"No notification ID found in the AmendResponseModel for user with nino $nino")
-              Future.successful(InternalServerError(noNotificationId()).withHeaders(CACHE_CONTROL -> "no-cache"))
-            }
+            Future.successful(Ok(outcomeNoNotificationId(displayModel)))
           case Some(notificationId) =>
             if (Constants.amendmentCodesList.contains(notificationId)) {
               createProtectionModel(notificationId, model, nino).map {
@@ -239,11 +228,7 @@ class AmendsController @Inject() (
   private def fetchProtections(
       nino: String
   )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
-    if (appConfig.hipMigrationEnabled) {
-      plaConnectorV2.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
-    } else {
-      plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
-    }
+    plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
 
   private def filterActiveFixedProtection2016(model: TransformedReadResponseModel): Option[ProtectionModel] = {
     val fixedProtectionType = model.activeProtection.filter(_.isFixedProtection2016)

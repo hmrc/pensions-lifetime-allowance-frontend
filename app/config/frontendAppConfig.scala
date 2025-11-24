@@ -27,7 +27,6 @@ trait AppConfig {
   val citizenAuthHost: Option[String]
   val excludeCopeTab: Boolean
   val identityVerification: Boolean
-  val hipMigrationEnabled: Boolean
   val psalookupjourneyShutterEnabled: Boolean
   val confirmFPUrl: String
   val ipStartUrl: String
@@ -76,24 +75,24 @@ class FrontendAppConfig @Inject() (
   override val identityVerification: Boolean =
     configuration.getOptional[Boolean]("microservice.services.features.identityVerification").getOrElse(false)
 
-  override val hipMigrationEnabled: Boolean =
-    configuration.getOptional[Boolean]("microservice.services.features.hip-migration").getOrElse(false)
-
   override val psalookupjourneyShutterEnabled: Boolean =
     configuration
       .getOptional[Boolean]("microservice.services.features.psa-lookup-journeyShutterEnabled")
       .getOrElse(false)
 
-  override lazy val citizenAuthHost        = configuration.getOptional[String]("citizen-auth.host")
-  override lazy val confirmFPUrl           = configuration.getOptional[String]("confirmFP.url").getOrElse("")
-  override lazy val ipStartUrl             = configuration.getOptional[String]("ipStart.url").getOrElse("")
-  override lazy val ip14StartUrl           = configuration.getOptional[String]("ip14Start.url").getOrElse("")
-  override lazy val existingProtectionsUrl = configuration.getOptional[String]("existingProtections.url").getOrElse("")
-  override lazy val ptaFrontendUrl         = configuration.getOptional[String]("pta-frontend.url").getOrElse("")
+  override lazy val citizenAuthHost: Option[String] = configuration.getOptional[String]("citizen-auth.host")
+  override lazy val confirmFPUrl: String            = configuration.getOptional[String]("confirmFP.url").getOrElse("")
+  override lazy val ipStartUrl: String              = configuration.getOptional[String]("ipStart.url").getOrElse("")
+  override lazy val ip14StartUrl: String            = configuration.getOptional[String]("ip14Start.url").getOrElse("")
 
-  override lazy val notAuthorisedRedirectUrl = servicesConfig.getString("not-authorised-callback.url")
+  override lazy val existingProtectionsUrl: String =
+    configuration.getOptional[String]("existingProtections.url").getOrElse("")
 
-  override lazy val sessionMissingUpliftUrlPrefix =
+  override lazy val ptaFrontendUrl: String = configuration.getOptional[String]("pta-frontend.url").getOrElse("")
+
+  override lazy val notAuthorisedRedirectUrl: String = servicesConfig.getString("not-authorised-callback.url")
+
+  override lazy val sessionMissingUpliftUrlPrefix: Option[String] =
     configuration.getOptional[String]("login-missing-session.url.prefix")
 
   override val ivUpliftUrl: String =

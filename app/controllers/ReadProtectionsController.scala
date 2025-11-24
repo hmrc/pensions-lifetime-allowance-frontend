@@ -18,9 +18,9 @@ package controllers
 
 import auth.AuthFunction
 import common.Strings
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import connectors.PlaConnectorError.LockedResponseError
-import connectors.{PLAConnector, PlaConnectorError, PlaConnectorV2}
+import connectors.{PlaConnector, PlaConnectorError}
 import constructors.DisplayConstructors
 import enums.ApplicationType
 import models._
@@ -38,8 +38,7 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class ReadProtectionsController @Inject() (
-    plaConnector: PLAConnector,
-    plaConnectorV2: PlaConnectorV2,
+    plaConnector: PlaConnector,
     sessionCacheService: SessionCacheService,
     displayConstructors: DisplayConstructors,
     mcc: MessagesControllerComponents,
@@ -48,7 +47,6 @@ class ReadProtectionsController @Inject() (
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
     existingProtections: pages.existingProtections.existingProtections
 )(
-    implicit val plaContext: PlaContext,
     implicit val application: Application,
     implicit val appConfig: FrontendAppConfig,
     implicit val ec: ExecutionContext
@@ -79,11 +77,7 @@ class ReadProtectionsController @Inject() (
   private def fetchProtections(
       nino: String
   )(implicit hc: HeaderCarrier): Future[Either[PlaConnectorError, TransformedReadResponseModel]] =
-    if (appConfig.hipMigrationEnabled) {
-      plaConnectorV2.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
-    } else {
-      plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
-    }
+    plaConnector.readProtections(nino).map(_.map(TransformedReadResponseModel.from))
 
   private def saveAndDisplayExistingProtections(
       transformedReadResponseModel: TransformedReadResponseModel

@@ -19,7 +19,7 @@ package testHelpers.ViewSpecHelpers.ip2016
 trait PensionsUsedBetweenViewMessages {
 
   val plaPensionsUsedBetweenTitle =
-    "How much lifetime allowance have you used? - Check your pension protections - GOV.UK"
+    "How much lifetime allowance have you used? - Check your pension protections and enhancements - GOV.UK"
 
   val plaPensionsUsedBetweenHeader = "How much lifetime allowance have you used?"
 

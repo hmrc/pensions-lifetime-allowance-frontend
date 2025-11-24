@@ -17,12 +17,11 @@
 package controllers
 
 import auth.AuthFunction
-import config.FrontendAppConfig
 import connectors.CitizenDetailsConnector
 import constructors.DisplayConstructors
 import models.ProtectionModel
 import play.api.Logging
-import play.api.i18n.{I18nSupport, Lang}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -38,15 +37,12 @@ class PrintController @Inject() (
     resultPrintView: resultPrint,
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction
-)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
+)(implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
     with I18nSupport
     with Logging {
 
-  private lazy val postSignInRedirectUrl = appConfig.existingProtectionsUrl
-
   val printView: Action[AnyContent] = Action.async { implicit request =>
-    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       for {
         protectionModel <- sessionCacheService.fetchAndGetFormData[ProtectionModel]("openProtection")
@@ -58,7 +54,7 @@ class PrintController @Inject() (
   private def routePrintView(
       protectionModel: Option[ProtectionModel],
       nino: String
-  )(implicit request: Request[AnyContent], lang: Lang): Future[Result] =
+  )(implicit request: Request[AnyContent]): Future[Result] =
     protectionModel match {
       case Some(model) =>
         citizenDetailsConnector.getPersonDetails(nino).map { personalDetailsModel =>

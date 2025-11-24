@@ -50,7 +50,8 @@ class AmendIP14PensionsTakenBetweenViewSpec
     lazy val form = doc.select("form")
 
     "have the correct title" in {
-      doc.title() shouldBe s"$plaIP14PensionsTakenBetweenTitle - Check your pension protections - GOV.UK"
+      doc
+        .title() shouldBe s"$plaIP14PensionsTakenBetweenTitle - Check your pension protections and enhancements - GOV.UK"
     }
 
     "have the correct and properly formatted header" in {
@@ -66,7 +67,7 @@ class AmendIP14PensionsTakenBetweenViewSpec
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBetweenController
-        .submitAmendPensionsTakenBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+        .submitAmendPensionsTakenBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
       form.select("legend.govuk-visually-hidden").text() shouldBe plaIP14PensionsTakenBetweenLegendText
     }

@@ -33,19 +33,8 @@ class WithdrawnPSALookupJourneySpec extends CommonViewSpecHelper {
 
   "withdrawnPSALookupJourney view" must {
 
-    "display the correct title" when {
-
-      "the HIP migration feature toggle is enabled" in {
-        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
-
-        doc.title() shouldBe s"${messages("psa.lookup.withdraw.title")} - ${messages("psa.service.name")} - GOV.UK"
-      }
-
-      "the HIP migration feature toggle is disabled" in {
-        when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
-
-        doc.title() shouldBe s"${messages("psa.lookup.withdraw.title")} - ${messages("psa.service.name")} - GOV.UK"
-      }
+    "display the correct title" in {
+      doc.title() shouldBe s"${messages("psa.lookup.withdraw.title")} - ${messages("psa.service.name")} - GOV.UK"
     }
 
     "display the correct heading" in {
@@ -58,12 +47,12 @@ class WithdrawnPSALookupJourneySpec extends CommonViewSpecHelper {
 
     "display the correct link" in {
       when(mockAppConfig.psaLookupWithdrawLinkUrl).thenReturn(
-        "http://tax.service.gov.uk/members-protections-and-enhancements/start"
+        "https://tax.service.gov.uk/members-protections-and-enhancements/start"
       )
       doc.getElementById("link").attr("href") shouldBe mockAppConfig.psaLookupWithdrawLinkUrl
       doc
         .getElementById("link")
-        .attr("href") shouldBe "http://tax.service.gov.uk/members-protections-and-enhancements/start"
+        .attr("href") shouldBe "https://tax.service.gov.uk/members-protections-and-enhancements/start"
       doc.getElementById("link").text() shouldBe messages("psa.lookup.withdrawLinkText")
     }
   }

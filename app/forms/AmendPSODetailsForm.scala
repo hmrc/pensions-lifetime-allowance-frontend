@@ -62,7 +62,7 @@ object AmendPSODetailsForm extends CommonBinders {
           psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
         )
         .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined)
-    )((date, amount) => AmendPSODetailsModel(date, amount))(model => Some(model.pso, model.psoAmt))
+    )((date, amount) => AmendPSODetailsModel(date, amount))(model => Some((model.pso, model.psoAmt)))
   )
 
 }

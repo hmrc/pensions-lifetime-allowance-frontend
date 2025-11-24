@@ -17,7 +17,7 @@
 package testHelpers.ViewSpecHelpers.amends
 
 trait OutcomeAmendedViewSpecMessages {
-  val title                  = "Protection amended - Check your pension protections - GOV.UK"
+  val title                  = "Protection amended - Check your pension protections and enhancements - GOV.UK"
   val iP14Heading            = "You have amended your individual protection 2014"
   val iP16Heading            = "You have amended your individual protection 2016"
   val yourNewProtectedAmount = "Your new protected amount is"

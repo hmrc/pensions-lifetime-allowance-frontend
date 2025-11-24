@@ -34,7 +34,7 @@ import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
 import java.time.LocalDate
 import scala.concurrent.{ExecutionContext, Future}
 
-class PLAConnectorSpec
+class PsaLookupConnectorSpec
     extends FakeApplication
     with MockitoSugar
     with ScalaCheckDrivenPropertyChecks
@@ -47,7 +47,7 @@ class PLAConnectorSpec
   implicit val executionContext: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
 
   class Setup {
-    val connector = new PLAConnector(mockAppConfig, mockHttp)
+    val connector = new PsaLookupConnector(mockAppConfig, mockHttp)
   }
 
   val validApplyFP16Json             = """{"protectionType":"FP2016"}"""

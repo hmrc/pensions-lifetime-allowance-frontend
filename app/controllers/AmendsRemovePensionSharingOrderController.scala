@@ -18,8 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.{FrontendAppConfig, PlaContext}
-import connectors.PLAConnector
+import config.FrontendAppConfig
 import models.amendModels._
 import play.api.Logging
 import play.api.i18n.I18nSupport
@@ -34,7 +33,6 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class AmendsRemovePensionSharingOrderController @Inject() (
     val sessionCacheService: SessionCacheService,
-    val plaConnector: PLAConnector,
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction,
     technicalError: views.html.pages.fallback.technicalError,
@@ -42,7 +40,6 @@ class AmendsRemovePensionSharingOrderController @Inject() (
 )(
     implicit val appConfig: FrontendAppConfig,
     val formWithCSRF: FormWithCSRF,
-    val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerCacheHelper

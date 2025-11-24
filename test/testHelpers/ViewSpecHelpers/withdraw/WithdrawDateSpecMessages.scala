@@ -20,7 +20,7 @@ import testHelpers.ViewSpecHelpers.CommonMessages
 
 trait WithdrawDateSpecMessages extends CommonMessages {
 
-  val plaWithdrawDateInputTitle     = "Enter the withdrawal date - Check your pension protections - GOV.UK"
+  val plaWithdrawDateInputTitle = "Enter the withdrawal date - Check your pension protections and enhancements - GOV.UK"
   val plaWithdrawDateInputHeading   = "Enter the withdrawal date"
   val plaWithdrawDateInputFormHint  = "For example, 18 4 2021"
   val plaWithdrawDateInputFormDay   = "Day"

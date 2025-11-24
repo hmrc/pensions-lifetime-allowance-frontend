@@ -84,19 +84,6 @@ POST        /amend-protection/submit-amendment/:protectionType/:status          
 GET         /amend-protection/amendment-outcome                                           @controllers.AmendsController.amendmentOutcome
 GET         /amend-protection/:protectionType/:status                                     @controllers.AmendsController.amendsSummary(protectionType, status)
 
-## Withdraw protection ##
-GET         /withdraw-protection/implications                                             @controllers.WithdrawProtectionController.withdrawImplications
-
-GET         /withdraw-protection/confirmation/:withdrawDate                               @controllers.WithdrawProtectionController.displayWithdrawConfirmation(withdrawDate)
-GET         /withdraw-protection/withdraw-confirmation/:protectionType                    @controllers.WithdrawProtectionController.showWithdrawConfirmation(protectionType)
-
-
-GET         /withdraw-protection/date-input                                               @controllers.WithdrawProtectionDateInputController.getWithdrawDateInput
-POST        /withdraw-protection/date-input                                               @controllers.WithdrawProtectionDateInputController.postWithdrawDateInput
-
-GET         /withdraw-protection/date-input-confirmation                                  @controllers.WithdrawProtectionDateInputConfirmationController.getSubmitWithdrawDateInput
-POST        /withdraw-protection/date-input-confirmation                                  @controllers.WithdrawProtectionDateInputConfirmationController.submitWithdrawDateInput
-
 #PSA Lookup routes
 GET         /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.displayProtectionNotificationNoForm
 POST        /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.submitProtectionNotificationNoForm

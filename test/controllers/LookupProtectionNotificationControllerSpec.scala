@@ -17,7 +17,7 @@
 package controllers
 
 import config.FrontendAppConfig
-import connectors.PLAConnector
+import connectors.PsaLookupConnector
 import models.cache.CacheMap
 import models.{PSALookupRequest, PSALookupResult}
 import org.mockito.ArgumentMatchers.any
@@ -41,7 +41,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class LookupProtectionNotificationControllerSpec extends FakeApplication with BeforeAndAfterEach with MockitoSugar {
 
   private val sessionCacheService: SessionCacheService = mock[SessionCacheService]
-  private val plaConnector: PLAConnector               = mock[PLAConnector]
+  private val plaConnector: PsaLookupConnector         = mock[PsaLookupConnector]
   private val messagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   private val actionWithSessionId          = fakeApplication().injector.instanceOf[ActionWithSessionId]
 

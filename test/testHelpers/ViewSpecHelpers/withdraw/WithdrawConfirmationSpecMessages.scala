@@ -19,7 +19,7 @@ package testHelpers.ViewSpecHelpers.withdraw
 trait WithdrawConfirmationSpecMessages {
 
   def plaWithdrawConfirmationTitle(protectionType: String) =
-    s"Your $protectionType has been removed - Check your pension protections - GOV.UK"
+    s"Your $protectionType has been removed - Check your pension protections and enhancements - GOV.UK"
 
   def plaWithdrawConfirmationMessage(protectionType: String) = s"Your $protectionType has been removed"
   val plaWithdrawProtectionIP2014label                       = "individual protection 2014"

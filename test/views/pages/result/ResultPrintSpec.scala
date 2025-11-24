@@ -22,7 +22,6 @@ import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType.{FixedProtection2016, FixedProtection2016LTA}
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.Mockito.when
 import play.api.inject
 import play.api.inject.guice.GuiceApplicationBuilder
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
@@ -59,35 +58,18 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrintPageContent {
 
     val resultPrintView = application.injector.instanceOf[resultPrint]
 
-    def doc(printDisplayModel: PrintDisplayModel = model, hipMigrationToggle: Boolean = true): Document = {
-      when(mockAppConfig.hipMigrationEnabled).thenReturn(hipMigrationToggle)
-
+    def doc(printDisplayModel: PrintDisplayModel = model): Document = {
       val view = resultPrintView(printDisplayModel)
       Jsoup.parse(view.body)
     }
 
-    "have correct title" when {
-
-      "HIP Migration toggle is enabled" in {
-        doc().title() shouldBe plaPrintTitleHip
-      }
-
-      "HIP Migration toggle is disabled" in {
-        doc(hipMigrationToggle = false).title() shouldBe plaPrintTitle
-      }
+    "have correct title" in {
+      doc().title() shouldBe plaPrintTitleHip
     }
 
-    "have correct service name" when {
-
-      "HIP Migration toggle is enabled" in {
-        val serviceName = doc().getElementsByClass("govuk-header__service-name")
-        serviceName.text shouldBe plaPrintServiceNameHip
-      }
-
-      "HIP Migration toggle is disabled" in {
-        val serviceName = doc(hipMigrationToggle = false).getElementsByClass("govuk-header__service-name")
-        serviceName.text shouldBe plaPrintServiceName
-      }
+    "have correct service name" in {
+      val serviceName = doc().getElementsByClass("govuk-header__service-name")
+      serviceName.text shouldBe plaPrintServiceNameHip
     }
 
     "have a first heading".which {
@@ -121,28 +103,13 @@ class ResultPrintSpec extends CommonViewSpecHelper with ResultPrintPageContent {
 
     "contain a table".which {
 
-      "contains the following title message information when HIP Migration is enabled" in {
+      "contains the following title message information" in {
         val tableHeading = doc().select("tr th")
 
         tableHeading.get(0).text shouldBe plaPrintProtectionType
         tableHeading.get(1).text shouldBe plaPrintPlaHip
         tableHeading.get(2).text shouldBe plaPrintProtectionNotificationNumberHip
         tableHeading.get(3).text shouldBe plaPrintSchemeAdministratorReferenceHip
-        tableHeading.get(4).text shouldBe plaPrintLumpSumPercentage
-        tableHeading.get(5).text shouldBe plaPrintLumpSumAmount
-        tableHeading.get(6).text shouldBe plaPrintEnhancementFactor
-        tableHeading.get(7).text shouldBe plaPrintFactor
-        tableHeading.get(8).text shouldBe plaPrintApplicationDate
-        tableHeading.get(9).text shouldBe plaPrintApplicationTime
-      }
-
-      "contains the following title message information when HIP Migration is disabled" in {
-        val tableHeading = doc(hipMigrationToggle = false).select("tr th")
-
-        tableHeading.get(0).text shouldBe plaPrintProtectionType
-        tableHeading.get(1).text shouldBe plaPrintPla
-        tableHeading.get(2).text shouldBe plaPrintProtectionNotificationNumber
-        tableHeading.get(3).text shouldBe plaPrintSchemeAdministratorReference
         tableHeading.get(4).text shouldBe plaPrintLumpSumPercentage
         tableHeading.get(5).text shouldBe plaPrintLumpSumAmount
         tableHeading.get(6).text shouldBe plaPrintEnhancementFactor

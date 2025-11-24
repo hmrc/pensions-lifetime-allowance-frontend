@@ -16,7 +16,6 @@
 
 package views.pages.amends
 
-import common.Strings
 import forms.AmendPensionsUsedBetweenForm
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup

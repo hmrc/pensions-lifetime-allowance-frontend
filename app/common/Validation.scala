@@ -16,17 +16,16 @@
 
 package common
 
-import java.text.SimpleDateFormat
-
 import enums.ApplicationType
 import models._
-import play.api.data.{FieldMapping, FormError}
+import models.cache.CacheMap
 import play.api.data.Forms.of
 import play.api.data.format.Formatter
-import models.cache.CacheMap
 import play.api.data.validation.{Constraint, Invalid, Valid}
+import play.api.data.{FieldMapping, FormError}
 import utils.Constants.npsMaxCurrency
 
+import java.text.SimpleDateFormat
 import scala.util.{Failure, Success, Try}
 
 object Validation {
@@ -46,8 +45,8 @@ object Validation {
   def checkIfValidBigDecimal(value: String): Boolean = {
     val output = Try(BigDecimal(value))
     output match {
-      case Success(result) => true
-      case Failure(_)      => false
+      case Success(_) => true
+      case Failure(_) => false
     }
   }
 
@@ -64,7 +63,7 @@ object Validation {
       fmt.parse(s"$day/$month/$year")
       true
     } catch {
-      case e: Exception => false
+      case _: Exception => false
     }
 
   def validIPData(data: CacheMap)(implicit protectionType: ApplicationType.Value): Boolean = {
@@ -113,14 +112,14 @@ object Validation {
   def newText(errorKey: String = "error.required", optional: Boolean = false): FieldMapping[String] =
     of(stringFormatter(errorKey, optional))
 
-  def stringFormatter(errorKey: String, optional: Boolean = false): Formatter[String] = new Formatter[String] {
+  private def stringFormatter(errorKey: String, optional: Boolean): Formatter[String] = new Formatter[String] {
 
     def bind(key: String, data: Map[String, String]): Either[Seq[FormError], String] =
       data.get(key) match {
-        case None                                               => Left(Seq(FormError(key, errorKey)))
-        case Some(x) if x.trim.length == 0 && optional == false => Left(Seq(FormError(key, errorKey)))
-        case Some(x) if x.trim.length == 0 && optional == true  => Right(x.trim)
-        case Some(s)                                            => Right(s.trim)
+        case None                                   => Left(Seq(FormError(key, errorKey)))
+        case Some(x) if x.trim.isEmpty && !optional => Left(Seq(FormError(key, errorKey)))
+        case Some(x) if x.trim.isEmpty && optional  => Right(x.trim)
+        case Some(s)                                => Right(s.trim)
       }
 
     def unbind(key: String, value: String): Map[String, String] =
@@ -162,7 +161,7 @@ object Validation {
       case (false, Failure(_)) => true
     }
 
-  def tryBigDecimalWithoutComma(input: String): Boolean =
+  private def tryBigDecimalWithoutComma(input: String): Boolean =
     Try(BigDecimal(input.trim().replaceAll(",", ""))) match {
       case Success(_) => true
       case Failure(_) => false
