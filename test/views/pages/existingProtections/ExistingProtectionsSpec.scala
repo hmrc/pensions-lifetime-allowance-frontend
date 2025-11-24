@@ -24,7 +24,6 @@ import models.{
   ExistingProtectionsDisplayModel
 }
 import org.jsoup.Jsoup
-import org.mockito.Mockito.when
 import play.api.i18n.Messages
 import play.api.inject
 import play.api.inject.guice.GuiceApplicationBuilder
@@ -196,28 +195,18 @@ class ExistingProtectionsSpec extends CommonViewSpecHelper with ExistingProtecti
       }
     }
 
-    s"have a content for Existing Protections page when hip migration is enabled " in {
-      when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+    s"have a content for Existing Protections page" in {
       val doc = Jsoup.parse(viewOnlyActive.apply(modelOnlyActive).body)
       doc.select("#activeProtectedAmountHeading").text shouldBe plaExistingProtectionsProtectedAmountHip
       doc.select("#activeProtectionReferenceHeading").text shouldBe plaExistingProtectionsProtectionRefHip
       doc.select("#activePSACheckRefHeading").text shouldBe plaExistingProtectionsPSARefHip
     }
 
-    s"have a content for Existing Protections page for inactive protection when hip migration is enabled  " in {
-      when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
+    s"have a content for Existing Protections page for inactive protection" in {
       val doc2b = Jsoup.parse(viewActiveAndInactive.apply(modelActiveAndInactive).body)
       doc2b.select("#dormantInactiveProtectedAmount1Heading").text shouldBe plaExistingProtectionsProtectedAmountHip
       doc2b.select("#dormantInactiveProtectionReference1Heading").text shouldBe plaExistingProtectionsProtectionRefHip
       doc2b.select("#dormantInactivePSACheckRef1Heading").text shouldBe plaExistingProtectionsPSARefHip
-    }
-
-    s"have a content for Existing Protections page when hip migration is disabled " in {
-      when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
-      val doc = Jsoup.parse(viewOnlyActive.apply(modelOnlyActive).body)
-      doc.select("#activeProtectedAmountHeading").text shouldBe plaExistingProtectionsProtectedAmount
-      doc.select("#activeProtectionReferenceHeading").text shouldBe plaExistingProtectionsProtectionRef
-      doc.select("#activePSACheckRefHeading").text shouldBe plaExistingProtectionsPSARef
     }
 
     "have a view details about taking higher tax-free lump sums with protected allowances and the link which" should {

@@ -68,7 +68,6 @@ class AmendsPensionWorthBeforeControllerSpec
   val messagesApi: MessagesApi = mockMCC.messagesApi
 
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
   implicit val mockLang: Lang                   = mock[Lang]
@@ -240,7 +239,7 @@ class AmendsPensionWorthBeforeControllerSpec
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014ProtectionModel))
 
         val result: Future[Result] =
-          controller.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")(
+          controller.amendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant")(
             fakeRequest
           )
 
@@ -254,7 +253,7 @@ class AmendsPensionWorthBeforeControllerSpec
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
 
         val result: Future[Result] =
-          controller.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(
+          controller.amendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(
             fakeRequest
           )
 
@@ -268,7 +267,7 @@ class AmendsPensionWorthBeforeControllerSpec
         cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016LTAProtectionModel))
 
         val result: Future[Result] =
-          controller.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(
+          controller.amendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant")(
             fakeRequest
           )
 
@@ -283,7 +282,7 @@ class AmendsPensionWorthBeforeControllerSpec
       cacheFetchCondition[AmendProtectionModel](None)
 
       val result =
-        controller.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
+        controller.amendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(fakeRequest)
 
       status(result) shouldBe INTERNAL_SERVER_ERROR
     }
@@ -293,7 +292,7 @@ class AmendsPensionWorthBeforeControllerSpec
     "the data is valid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "10000")
           )
 
@@ -304,15 +303,15 @@ class AmendsPensionWorthBeforeControllerSpec
 
       status(DataItem.result) shouldBe 303
       redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeURL.IndividualProtection2016,
-          Strings.StatusURL.Dormant
+          Strings.ProtectionTypeUrl.IndividualProtection2016,
+          Strings.StatusUrl.Dormant
         )}")
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "yes")
           )
 
@@ -327,7 +326,7 @@ class AmendsPensionWorthBeforeControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "10000")
           )
 
@@ -344,7 +343,7 @@ class AmendsPensionWorthBeforeControllerSpec
     "the data is valid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "10000")
           )
 
@@ -355,15 +354,15 @@ class AmendsPensionWorthBeforeControllerSpec
 
       status(DataItem.result) shouldBe 303
       redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeURL.IndividualProtection2016LTA,
-          Strings.StatusURL.Dormant
+          Strings.ProtectionTypeUrl.IndividualProtection2016LTA,
+          Strings.StatusUrl.Dormant
         )}")
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "yes")
           )
 
@@ -378,7 +377,7 @@ class AmendsPensionWorthBeforeControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "10000")
           )
 
@@ -395,7 +394,7 @@ class AmendsPensionWorthBeforeControllerSpec
     "the data is valid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "10000")
           )
 
@@ -406,15 +405,15 @@ class AmendsPensionWorthBeforeControllerSpec
 
       status(DataItem.result) shouldBe 303
       redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeURL.IndividualProtection2014,
-          Strings.StatusURL.Dormant
+          Strings.ProtectionTypeUrl.IndividualProtection2014,
+          Strings.StatusUrl.Dormant
         )}")
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "yes")
           )
 
@@ -429,7 +428,7 @@ class AmendsPensionWorthBeforeControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "10000")
           )
 
@@ -446,7 +445,7 @@ class AmendsPensionWorthBeforeControllerSpec
     "the data is valid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "10000")
           )
 
@@ -457,15 +456,15 @@ class AmendsPensionWorthBeforeControllerSpec
 
       status(DataItem.result) shouldBe 303
       redirectLocation(DataItem.result) shouldBe Some(s"${routes.AmendsController.amendsSummary(
-          Strings.ProtectionTypeURL.IndividualProtection2014LTA,
-          Strings.StatusURL.Dormant
+          Strings.ProtectionTypeUrl.IndividualProtection2014LTA,
+          Strings.StatusUrl.Dormant
         )}")
     }
 
     "the data is invalid" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "yes")
           )
 
@@ -480,7 +479,7 @@ class AmendsPensionWorthBeforeControllerSpec
     "the model can't be fetched from cache" in new Setup {
       object DataItem
           extends AuthorisedFakeRequestToPost(
-            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
+            controller.submitAmendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant"),
             ("amendedPensionsTakenBeforeAmt", "10000")
           )
 

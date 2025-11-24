@@ -20,7 +20,7 @@ trait OverseasPensionsViewMessages {
   val plaOverseasPensionsTitle = "Have you put money into a pension scheme held overseas?"
 
   val plaOverseasPensionsTitleNew =
-    "Have you put money into a pension scheme held overseas? - Check your pension protections - GOV.UK"
+    "Have you put money into a pension scheme held overseas? - Check your pension protections and enhancements - GOV.UK"
 
   val plaOverseasPensionsQuestion =
     "Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on."

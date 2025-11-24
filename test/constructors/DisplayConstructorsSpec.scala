@@ -25,7 +25,7 @@ import models.amendModels.AmendProtectionModel
 import models.pla.response.ProtectionStatus._
 import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType._
-import org.mockito.Mockito.{reset, when}
+import org.mockito.Mockito.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesProvider}
@@ -42,33 +42,19 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
   implicit val mockMessagesProvider: MessagesProvider           = mock[MessagesProvider]
   implicit val controllerComponents: ControllerComponents       = mock[ControllerComponents]
   implicit val appConfig: FrontendAppConfig                     = mock[FrontendAppConfig]
-  implicit val appConfigHipDisabled: FrontendAppConfig          = mock[FrontendAppConfig]
 
   val application: Application = new GuiceApplicationBuilder()
     .configure("metrics.enabled" -> false)
     .overrides(inject.bind[FrontendAppConfig].toInstance(appConfig))
     .build()
 
-  val applicationHipDisabled: Application = new GuiceApplicationBuilder()
-    .configure("metrics.enabled" -> false)
-    .overrides(inject.bind[FrontendAppConfig].toInstance(appConfigHipDisabled))
-    .build()
-
   val displayConstructor: DisplayConstructors = application.injector.instanceOf[DisplayConstructors]
-
-  val displayConstructorHipDisabled: DisplayConstructors =
-    applicationHipDisabled.injector.instanceOf[DisplayConstructors]
 
   implicit val mockMessage: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
-  override def beforeEach(): Unit = {
+  override def beforeEach(): Unit =
     reset(appConfig)
-    reset(appConfigHipDisabled)
-
-    when(appConfig.hipMigrationEnabled).thenReturn(true)
-    when(appConfigHipDisabled.hipMigrationEnabled).thenReturn(false)
-  }
 
   val tstPSACheckRef = "PSA33456789"
 
@@ -112,8 +98,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(
-              Strings.ProtectionTypeURL.IndividualProtection2016,
-              Strings.StatusURL.Open
+              Strings.ProtectionTypeUrl.IndividualProtection2016,
+              Strings.StatusUrl.Open
             )
           ),
           None,
@@ -128,8 +114,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(
-              Strings.ProtectionTypeURL.IndividualProtection2016,
-              Strings.StatusURL.Open
+              Strings.ProtectionTypeUrl.IndividualProtection2016,
+              Strings.StatusUrl.Open
             )
           ),
           None,
@@ -144,8 +130,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
           "YesNo",
           Some(
             controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
-              Strings.ProtectionTypeURL.IndividualProtection2016,
-              Strings.StatusURL.Open
+              Strings.ProtectionTypeUrl.IndividualProtection2016,
+              Strings.StatusUrl.Open
             )
           ),
           None,
@@ -155,8 +141,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
           "Amt",
           Some(
             controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
-              Strings.ProtectionTypeURL.IndividualProtection2016,
-              Strings.StatusURL.Open
+              Strings.ProtectionTypeUrl.IndividualProtection2016,
+              Strings.StatusUrl.Open
             )
           ),
           None,
@@ -171,8 +157,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
           "Amt",
           Some(
             controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(
-              Strings.ProtectionTypeURL.IndividualProtection2016,
-              Strings.StatusURL.Open
+              Strings.ProtectionTypeUrl.IndividualProtection2016,
+              Strings.StatusUrl.Open
             )
           ),
           None,
@@ -196,8 +182,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBeforeController.amendPensionsTakenBefore(
-              Strings.ProtectionTypeURL.IndividualProtection2016,
-              Strings.StatusURL.Open
+              Strings.ProtectionTypeUrl.IndividualProtection2016,
+              Strings.StatusUrl.Open
             )
           ),
           None,
@@ -212,8 +198,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBetweenController.amendPensionsTakenBetween(
-              Strings.ProtectionTypeURL.IndividualProtection2016,
-              Strings.StatusURL.Open
+              Strings.ProtectionTypeUrl.IndividualProtection2016,
+              Strings.StatusUrl.Open
             )
           ),
           None,
@@ -228,8 +214,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
           "YesNo",
           Some(
             controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
-              Strings.ProtectionTypeURL.IndividualProtection2016,
-              Strings.StatusURL.Open
+              Strings.ProtectionTypeUrl.IndividualProtection2016,
+              Strings.StatusUrl.Open
             )
           ),
           None,
@@ -239,8 +225,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
           "Amt",
           Some(
             controllers.routes.AmendsOverseasPensionController.amendOverseasPensions(
-              Strings.ProtectionTypeURL.IndividualProtection2016,
-              Strings.StatusURL.Open
+              Strings.ProtectionTypeUrl.IndividualProtection2016,
+              Strings.StatusUrl.Open
             )
           ),
           None,
@@ -255,8 +241,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
           "Amt",
           Some(
             controllers.routes.AmendsCurrentPensionController.amendCurrentPensions(
-              Strings.ProtectionTypeURL.IndividualProtection2016,
-              Strings.StatusURL.Open
+              Strings.ProtectionTypeUrl.IndividualProtection2016,
+              Strings.StatusUrl.Open
             )
           ),
           None,
@@ -302,8 +288,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
         status = Open.toString,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            Strings.ProtectionTypeURL.IndividualProtection2014,
-            Strings.StatusURL.Open
+            Strings.ProtectionTypeUrl.IndividualProtection2014,
+            Strings.StatusUrl.Open
           )
         ),
         psaCheckReference = Some(tstPSACheckRef),
@@ -327,8 +313,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
         status = Dormant.toString,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            Strings.ProtectionTypeURL.IndividualProtection2014,
-            Strings.StatusURL.Dormant
+            Strings.ProtectionTypeUrl.IndividualProtection2014,
+            Strings.StatusUrl.Dormant
           )
         ),
         psaCheckReference = Some(tstPSACheckRef),
@@ -372,8 +358,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
         status = Open.toString,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            Strings.ProtectionTypeURL.IndividualProtection2014,
-            Strings.StatusURL.Open
+            Strings.ProtectionTypeUrl.IndividualProtection2014,
+            Strings.StatusUrl.Open
           )
         ),
         psaCheckReference = Some(tstPSACheckRef),
@@ -483,8 +469,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
         status = Dormant.toString,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            Strings.ProtectionTypeURL.IndividualProtection2016,
-            Strings.StatusURL.Dormant
+            Strings.ProtectionTypeUrl.IndividualProtection2016,
+            Strings.StatusUrl.Dormant
           )
         ),
         psaCheckReference = Some(tstPSACheckRef),
@@ -530,8 +516,8 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
         status = Dormant.toString,
         amendCall = Some(
           controllers.routes.AmendsController.amendsSummary(
-            Strings.ProtectionTypeURL.IndividualProtection2014,
-            Strings.StatusURL.Dormant
+            Strings.ProtectionTypeUrl.IndividualProtection2014,
+            Strings.StatusUrl.Dormant
           )
         ),
         psaCheckReference = Some(tstPSACheckRef),
@@ -1189,14 +1175,14 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
               "CurrentPsos-psoDetails",
               changeLinkCall = Some(
                 controllers.routes.AmendsPensionSharingOrderController.amendPsoDetails(
-                  Strings.ProtectionTypeURL.IndividualProtection2016,
-                  Strings.StatusURL.Open
+                  Strings.ProtectionTypeUrl.IndividualProtection2016,
+                  Strings.StatusUrl.Open
                 )
               ),
               removeLinkCall = Some(
                 controllers.routes.AmendsRemovePensionSharingOrderController.removePso(
-                  Strings.ProtectionTypeURL.IndividualProtection2016,
-                  Strings.StatusURL.Open
+                  Strings.ProtectionTypeUrl.IndividualProtection2016,
+                  Strings.StatusUrl.Open
                 )
               ),
               "£1,000",
@@ -1574,106 +1560,83 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
   }
 
   "protectionTypeDisplaysLumpSumAmount" should {
-    "operate correctly when the hip migration flag is enabled" should {
-      "return true" when {
-        val types = Seq(
-          PrimaryProtection,
-          PrimaryProtectionLTA
-        ).map(_.toString)
-
-        types.foreach(protectionType =>
-          s"the protection type is $protectionType" in {
-            displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe true
-          }
-        )
-      }
-
-      "return false" when {
-        val types = Seq(
-          EnhancedProtection,
-          EnhancedProtectionLTA,
-          FixedProtection,
-          FixedProtection2014,
-          FixedProtection2014LTA,
-          FixedProtection2016,
-          FixedProtection2016LTA,
-          FixedProtectionLTA,
-          IndividualProtection2014,
-          IndividualProtection2014LTA,
-          IndividualProtection2016,
-          IndividualProtection2016LTA,
-          InternationalEnhancementS221,
-          InternationalEnhancementS224,
-          PensionCreditRights
-        ).map(_.toString)
-
-        types.foreach(protectionType =>
-          s"the protection type is $protectionType" in {
-            displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe false
-          }
-        )
-      }
-    }
-
-    "return false when the hip migration flag is disabled" when {
-      val types = ProtectionType.values.map(_.toString)
+    "return true" when {
+      val types = Seq(
+        PrimaryProtection,
+        PrimaryProtectionLTA
+      ).map(_.toString)
 
       types.foreach(protectionType =>
-        s"protection type is $protectionType" in {
-          displayConstructorHipDisabled.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe false
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe true
         }
       )
     }
+
+    "return false" when {
+      val types = Seq(
+        EnhancedProtection,
+        EnhancedProtectionLTA,
+        FixedProtection,
+        FixedProtection2014,
+        FixedProtection2014LTA,
+        FixedProtection2016,
+        FixedProtection2016LTA,
+        FixedProtectionLTA,
+        IndividualProtection2014,
+        IndividualProtection2014LTA,
+        IndividualProtection2016,
+        IndividualProtection2016LTA,
+        InternationalEnhancementS221,
+        InternationalEnhancementS224,
+        PensionCreditRights
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysLumpSumAmount(protectionType) shouldBe false
+        }
+      )
+    }
+
   }
 
   "protectionTypeDisplaysLumpSumPercentage" should {
-    "operate correctly when the hip migration flag is enabled" should {
-      "return true" when {
-        val types = Seq(
-          EnhancedProtection,
-          EnhancedProtectionLTA
-        ).map(_.toString)
-
-        types.foreach(protectionType =>
-          s"the protection type is $protectionType" in {
-            displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe true
-          }
-        )
-      }
-
-      "return false" when {
-        val types = Seq(
-          PrimaryProtection,
-          PrimaryProtectionLTA,
-          FixedProtection,
-          FixedProtection2014,
-          FixedProtection2014LTA,
-          FixedProtection2016,
-          FixedProtection2016LTA,
-          FixedProtectionLTA,
-          IndividualProtection2014,
-          IndividualProtection2014LTA,
-          IndividualProtection2016,
-          IndividualProtection2016LTA,
-          InternationalEnhancementS221,
-          InternationalEnhancementS224,
-          PensionCreditRights
-        ).map(_.toString)
-
-        types.foreach(protectionType =>
-          s"the protection type is $protectionType" in {
-            displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe false
-          }
-        )
-      }
-    }
-
-    "return false when the hip migration flag is disabled" when {
-      val types = ProtectionType.values.map(_.toString)
+    "return true" when {
+      val types = Seq(
+        EnhancedProtection,
+        EnhancedProtectionLTA
+      ).map(_.toString)
 
       types.foreach(protectionType =>
-        s"protection type is $protectionType" in {
-          displayConstructorHipDisabled.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe false
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe true
+        }
+      )
+    }
+
+    "return false" when {
+      val types = Seq(
+        PrimaryProtection,
+        PrimaryProtectionLTA,
+        FixedProtection,
+        FixedProtection2014,
+        FixedProtection2014LTA,
+        FixedProtection2016,
+        FixedProtection2016LTA,
+        FixedProtectionLTA,
+        IndividualProtection2014,
+        IndividualProtection2014LTA,
+        IndividualProtection2016,
+        IndividualProtection2016LTA,
+        InternationalEnhancementS221,
+        InternationalEnhancementS224,
+        PensionCreditRights
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysLumpSumPercentage(protectionType) shouldBe false
         }
       )
     }
@@ -1681,109 +1644,87 @@ class DisplayConstructorsSpec extends FakeApplication with MockitoSugar with Bef
   }
 
   "protectionTypeDisplaysEnhancementFactor" should {
-    "operate correctly when the hip migration flag is enabled" should {
-      "return true" when {
-        val types = Seq(
-          PensionCreditRights,
-          InternationalEnhancementS221,
-          InternationalEnhancementS224
-        ).map(_.toString)
-
-        types.foreach(protectionType =>
-          s"the protection type is $protectionType" in {
-            displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe true
-          }
-        )
-      }
-
-      "return false" when {
-        val types = Seq(
-          EnhancedProtection,
-          EnhancedProtectionLTA,
-          FixedProtection,
-          FixedProtection2014,
-          FixedProtection2014LTA,
-          FixedProtection2016,
-          FixedProtection2016LTA,
-          FixedProtectionLTA,
-          IndividualProtection2014,
-          IndividualProtection2014LTA,
-          IndividualProtection2016,
-          IndividualProtection2016LTA,
-          PrimaryProtection,
-          PrimaryProtectionLTA
-        ).map(_.toString)
-
-        types.foreach(protectionType =>
-          s"the protection type is $protectionType" in {
-            displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe false
-          }
-        )
-      }
-    }
-
-    "return false when the hip migration flag is disabled" when {
-      val types = ProtectionType.values.map(_.toString)
+    "return true" when {
+      val types = Seq(
+        PensionCreditRights,
+        InternationalEnhancementS221,
+        InternationalEnhancementS224
+      ).map(_.toString)
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
-          displayConstructorHipDisabled.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe false
+          displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe true
         }
       )
     }
+
+    "return false" when {
+      val types = Seq(
+        EnhancedProtection,
+        EnhancedProtectionLTA,
+        FixedProtection,
+        FixedProtection2014,
+        FixedProtection2014LTA,
+        FixedProtection2016,
+        FixedProtection2016LTA,
+        FixedProtectionLTA,
+        IndividualProtection2014,
+        IndividualProtection2014LTA,
+        IndividualProtection2016,
+        IndividualProtection2016LTA,
+        PrimaryProtection,
+        PrimaryProtectionLTA
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysEnhancementFactor(protectionType) shouldBe false
+        }
+      )
+    }
+
   }
 
   "protectionTypeDisplaysFactor" should {
-    "operate correctly when the hip migration flag is enabled" should {
-      "return true" when {
-        val types = Seq(
-          PrimaryProtection,
-          PrimaryProtectionLTA
-        ).map(_.toString)
-
-        types.foreach(protectionType =>
-          s"the protection type is $protectionType" in {
-            displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe true
-          }
-        )
-      }
-
-      "return false" when {
-        val types = Seq(
-          EnhancedProtection,
-          EnhancedProtectionLTA,
-          FixedProtection,
-          FixedProtection2014,
-          FixedProtection2014LTA,
-          FixedProtection2016,
-          FixedProtection2016LTA,
-          FixedProtectionLTA,
-          IndividualProtection2014,
-          IndividualProtection2014LTA,
-          IndividualProtection2016,
-          IndividualProtection2016LTA,
-          InternationalEnhancementS221,
-          InternationalEnhancementS224,
-          PensionCreditRights
-        ).map(_.toString)
-
-        types.foreach(protectionType =>
-          s"the protection type is $protectionType" in {
-            displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe false
-          }
-        )
-      }
-    }
-
-    "return false when the hip migration flag is disabled" when {
-      val types = ProtectionType.values.map(_.toString)
+    "return true" when {
+      val types = Seq(
+        PrimaryProtection,
+        PrimaryProtectionLTA
+      ).map(_.toString)
 
       types.foreach(protectionType =>
         s"the protection type is $protectionType" in {
-          displayConstructorHipDisabled.protectionTypeDisplaysFactor(protectionType) shouldBe false
+          displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe true
         }
       )
     }
+
+    "return false" when {
+      val types = Seq(
+        EnhancedProtection,
+        EnhancedProtectionLTA,
+        FixedProtection,
+        FixedProtection2014,
+        FixedProtection2014LTA,
+        FixedProtection2016,
+        FixedProtection2016LTA,
+        FixedProtectionLTA,
+        IndividualProtection2014,
+        IndividualProtection2014LTA,
+        IndividualProtection2016,
+        IndividualProtection2016LTA,
+        InternationalEnhancementS221,
+        InternationalEnhancementS224,
+        PensionCreditRights
+      ).map(_.toString)
+
+      types.foreach(protectionType =>
+        s"the protection type is $protectionType" in {
+          displayConstructor.protectionTypeDisplaysFactor(protectionType) shouldBe false
+        }
+      )
+    }
+
   }
 
 }

@@ -26,13 +26,14 @@ import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.{any, anyString}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -69,7 +70,6 @@ class AmendsPensionTakenBeforeControllerSpec
   val messagesApi: MessagesApi = mockMCC.messagesApi
 
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
   implicit val mockLang: Lang                   = mock[Lang]
@@ -102,10 +102,10 @@ class AmendsPensionTakenBeforeControllerSpec
 
   }
 
-  val sessionId                                     = UUID.randomUUID.toString
+  val sessionId: String                             = UUID.randomUUID.toString
   implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
   val mockUsername                                  = "mockuser"
-  val mockUserId                                    = "/auth/oid/" + mockUsername
+  val mockUserId: String                            = "/auth/oid/" + mockUsername
 
   val individualProtection2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -223,7 +223,7 @@ class AmendsPensionTakenBeforeControllerSpec
           "YesNo",
           Some(
             controllers.routes.AmendsPensionTakenBeforeController
-              .amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+              .amendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2014, "active")
           ),
           None,
           "No"
@@ -239,8 +239,8 @@ class AmendsPensionTakenBeforeControllerSpec
   "In AmendsPensionTakenBeforeController calling the .amendPensionsTakenBefore action" when {
 
     "not supplied with a stored model" in new Setup {
-      lazy val result =
-        controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
+      lazy val result: Future[Result] =
+        controller.amendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
@@ -254,8 +254,8 @@ class AmendsPensionTakenBeforeControllerSpec
 
     "supplied with the stored test model for (dormant, IndividualProtection2016, preADay = £2000)" in new Setup {
 
-      lazy val result =
-        controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
+      lazy val result: Future[Result] =
+        controller.amendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
 
@@ -269,8 +269,8 @@ class AmendsPensionTakenBeforeControllerSpec
 
     "supplied with the stored test model for (dormant, IndividualProtection2016LTA, preADay = £2000)" in new Setup {
 
-      lazy val result =
-        controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(
+      lazy val result: Future[Result] =
+        controller.amendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant")(
           fakeRequest
         )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -280,9 +280,9 @@ class AmendsPensionTakenBeforeControllerSpec
     }
 
     "should take the user to the pensions taken before page" in new Setup {
-      lazy val result =
-        controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+      lazy val result: Future[Result] =
+        controller.amendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(fakeRequest)
+      lazy val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
@@ -293,8 +293,8 @@ class AmendsPensionTakenBeforeControllerSpec
     "return some HTML that" should {
 
       "contain some text and use the character set utf-8" in new Setup {
-        lazy val result =
-          controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(
+        lazy val result: Future[Result] =
+          controller.amendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(
             fakeRequest
           )
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -315,8 +315,8 @@ class AmendsPensionTakenBeforeControllerSpec
       }
     }
     "supplied with the stored test model for (dormant, IndividualProtection2014, preADay = £2000)" in new Setup {
-      lazy val result =
-        controller.amendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(fakeRequest)
+      lazy val result: Future[Result] =
+        controller.amendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2014ProtectionModel))
 
@@ -327,8 +327,8 @@ class AmendsPensionTakenBeforeControllerSpec
   "Submitting Amend IndividualProtection2016 Pensions Taken Before data" when {
 
     "the data is invalid" in new Setup {
-      lazy val result =
-        controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")(
+      lazy val result: Future[Result] =
+        controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")(
           fakeRequest
         )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -340,8 +340,8 @@ class AmendsPensionTakenBeforeControllerSpec
   "Submitting Amend IndividualProtection2016LTA Pensions Taken Before data" when {
 
     "the data is invalid" in new Setup {
-      lazy val result =
-        controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")(
+      lazy val result: Future[Result] =
+        controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant")(
           fakeRequest
         )
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -353,7 +353,7 @@ class AmendsPensionTakenBeforeControllerSpec
   "the data is invalidated by additional validation" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
           ("amendedPensionsTakenBefore", "1")
         )
 
@@ -365,7 +365,7 @@ class AmendsPensionTakenBeforeControllerSpec
   "the model can't be fetched from cache" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
           ("amendedPensionsTakenBefore", "no"),
           ("amendedPensionsTakenBeforeAmt", "0")
         )
@@ -379,7 +379,7 @@ class AmendsPensionTakenBeforeControllerSpec
   "the data is valid with a no for IndividualProtection2016" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
           ("amendedPensionsTakenBefore", "no"),
           ("amendedPensionsTakenBeforeAmt", "0")
         )
@@ -390,14 +390,14 @@ class AmendsPensionTakenBeforeControllerSpec
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
-      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")}"
+      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")}"
     )
   }
 
   "the data is valid with a yes for IndividualProtection2016" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant"),
           ("amendedPensionsTakenBefore", "yes")
         )
 
@@ -408,14 +408,14 @@ class AmendsPensionTakenBeforeControllerSpec
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
-      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "dormant")}"
+      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "dormant")}"
     )
   }
 
   "the data is valid with a no for IndividualProtection2016LTA" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
           ("amendedPensionsTakenBefore", "no"),
           ("amendedPensionsTakenBeforeAmt", "0")
         )
@@ -426,14 +426,14 @@ class AmendsPensionTakenBeforeControllerSpec
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
-      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")}"
+      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant")}"
     )
   }
 
   "the data is valid with a yes for IndividualProtection2016LTA" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant"),
           ("amendedPensionsTakenBefore", "yes")
         )
 
@@ -444,14 +444,14 @@ class AmendsPensionTakenBeforeControllerSpec
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
-      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2016LTA, "dormant")}"
+      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2016LTA, "dormant")}"
     )
   }
 
   "the data is valid with a no for IndividualProtection2014" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant"),
           ("amendedPensionsTakenBefore", "no"),
           ("amendedPensionsTakenBeforeAmt", "0")
         )
@@ -462,14 +462,14 @@ class AmendsPensionTakenBeforeControllerSpec
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
-      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")}"
+      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant")}"
     )
   }
 
   "the data is valid with a yes for IndividualProtection2014" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant"),
           ("amendedPensionsTakenBefore", "yes")
         )
 
@@ -480,14 +480,14 @@ class AmendsPensionTakenBeforeControllerSpec
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
-      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014, "dormant")}"
+      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2014, "dormant")}"
     )
   }
 
   "the data is valid with a no for IndividualProtection2014LTA" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant"),
           ("amendedPensionsTakenBefore", "no"),
           ("amendedPensionsTakenBeforeAmt", "0")
         )
@@ -498,14 +498,14 @@ class AmendsPensionTakenBeforeControllerSpec
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
-      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant")}"
+      s"${routes.AmendsController.amendsSummary(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant")}"
     )
   }
 
   "the data is valid with a yes for IndividualProtection2014LTA" in new Setup {
     object DataItem
         extends AuthorisedFakeRequestToPost(
-          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant"),
+          controller.submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant"),
           ("amendedPensionsTakenBefore", "yes")
         )
 
@@ -516,7 +516,7 @@ class AmendsPensionTakenBeforeControllerSpec
 
     status(DataItem.result) shouldBe 303
     redirectLocation(DataItem.result) shouldBe Some(
-      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeURL.IndividualProtection2014LTA, "dormant")}"
+      s"${routes.AmendsPensionWorthBeforeController.amendPensionsWorthBefore(Strings.ProtectionTypeUrl.IndividualProtection2014LTA, "dormant")}"
     )
   }
 

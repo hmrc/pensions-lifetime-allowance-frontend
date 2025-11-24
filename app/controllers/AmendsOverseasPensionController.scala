@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import forms.AmendOverseasPensionsForm._
 import models.amendModels._
 import models.pla.AmendProtectionLifetimeAllowanceType
@@ -44,7 +44,6 @@ class AmendsOverseasPensionController @Inject() (
 )(
     implicit val appConfig: FrontendAppConfig,
     val formWithCSRF: FormWithCSRF,
-    val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerCacheHelper

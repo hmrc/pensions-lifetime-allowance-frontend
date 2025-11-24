@@ -43,7 +43,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       protectionModel: ProtectionModel,
       nino: String
-  )(implicit lang: Lang): PrintDisplayModel = {
+  ): PrintDisplayModel = {
 
     val personalDetailsModel = personalDetailsModelOpt.getOrElse {
       throw Exceptions.RequiredValueNotDefinedException("createPrintDisplayModel", "personalDetailsModel")
@@ -97,7 +97,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
       protectionReference = protectionReference,
       protectedAmount = protectedAmount,
       certificateDate = certificateDate,
-      certificateTime = certificateTime.filter(_ => appConfig.hipMigrationEnabled),
+      certificateTime = certificateTime,
       lumpSumPercentage = lumpSumPercentage,
       lumpSumAmount = lumpSumAmount,
       enhancementFactor = enhancementFactor,
@@ -109,7 +109,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       protectionModel: ProtectionModel,
       nino: String
-  )(implicit lang: Lang): AmendPrintDisplayModel = {
+  ): AmendPrintDisplayModel = {
     val printDisplayModel = createPrintDisplayModel(personalDetailsModelOpt, protectionModel, nino)
 
     val protectionReference = Some(printDisplayModel.protectionReference).filter(_ =>
@@ -268,38 +268,38 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
 
         val certificateTime = Display.timeDisplayString(dateTime)
 
-        (Some(certificateDate), Some(certificateTime).filter(_ => appConfig.hipMigrationEnabled))
+        (Some(certificateDate), Some(certificateTime))
       }
       .getOrElse((None, None))
 
   def protectionTypeDisplaysLumpSumPercentage(protectionType: String): Boolean =
-    appConfig.hipMigrationEnabled && (ProtectionType.tryFrom(protectionType) match {
+    ProtectionType.tryFrom(protectionType) match {
       case Some(ProtectionType.EnhancedProtection)    => true
       case Some(ProtectionType.EnhancedProtectionLTA) => true
       case _                                          => false
-    })
+    }
 
   def protectionTypeDisplaysLumpSumAmount(protectionType: String): Boolean =
-    appConfig.hipMigrationEnabled && (ProtectionType.tryFrom(protectionType) match {
+    ProtectionType.tryFrom(protectionType) match {
       case Some(ProtectionType.PrimaryProtection)    => true
       case Some(ProtectionType.PrimaryProtectionLTA) => true
       case _                                         => false
-    })
+    }
 
   def protectionTypeDisplaysEnhancementFactor(protectionType: String): Boolean =
-    appConfig.hipMigrationEnabled && (ProtectionType.tryFrom(protectionType) match {
+    ProtectionType.tryFrom(protectionType) match {
       case Some(ProtectionType.PensionCreditRights)          => true
       case Some(ProtectionType.InternationalEnhancementS221) => true
       case Some(ProtectionType.InternationalEnhancementS224) => true
       case _                                                 => false
-    })
+    }
 
   def protectionTypeDisplaysFactor(protectionType: String): Boolean =
-    appConfig.hipMigrationEnabled && (ProtectionType.tryFrom(protectionType) match {
+    ProtectionType.tryFrom(protectionType) match {
       case Some(ProtectionType.PrimaryProtection)    => true
       case Some(ProtectionType.PrimaryProtectionLTA) => true
       case _                                         => false
-    })
+    }
 
   // AMENDS
   def createAmendDisplayModel(model: AmendProtectionModel)(implicit lang: Lang): AmendDisplayModel = {
@@ -330,7 +330,7 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
   }
 
   private def createPreviousPsoSection(model: ProtectionModel): AmendDisplaySectionModel =
-    createNoChangeSection(model, ApplicationStage.CurrentPsos, model.pensionDebitTotalAmount)
+    createNoChangeSection(ApplicationStage.CurrentPsos, model.pensionDebitTotalAmount)
 
   private def createCurrentPsoSection(
       model: ProtectionModel
@@ -494,7 +494,6 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi, implicit
   }
 
   private def createNoChangeSection(
-      protection: ProtectionModel,
       applicationStage: ApplicationStage.Value,
       amountOption: Option[Double]
   ): AmendDisplaySectionModel =

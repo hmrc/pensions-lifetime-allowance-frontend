@@ -55,7 +55,7 @@ class AmendPensionsTakenBeforeViewSpec extends CommonViewSpecHelper with Pension
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionTakenBeforeController
-        .submitAmendPensionsTakenBefore(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+        .submitAmendPensionsTakenBefore(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
     }
 

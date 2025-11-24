@@ -38,9 +38,9 @@ import utils.IntegrationBaseSpec
 
 import scala.concurrent.ExecutionContext
 
-class PLAConnectorV2ISpec extends IntegrationBaseSpec with ScalaFutures {
+class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
 
-  private val connector: PlaConnectorV2 = app.injector.instanceOf[PlaConnectorV2]
+  private val connector: PlaConnector = app.injector.instanceOf[PlaConnector]
 
   private implicit val hc: HeaderCarrier    = HeaderCarrier()
   private implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]

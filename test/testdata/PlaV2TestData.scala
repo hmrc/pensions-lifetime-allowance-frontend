@@ -17,14 +17,20 @@
 package testdata
 
 import models.pla.request.AmendProtectionRequest
-import models.pla.response.AmendProtectionResponse
+import models.pla.response.{AmendProtectionResponse, ReadProtectionsResponse}
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus, AmendProtectionResponseStatus}
 
 object PlaV2TestData {
 
+  val psaCheckReference: String            = "PSA12345678A"
   val lifetimeAllowanceIdentifier: Long    = 12960000000123L
   val lifetimeAllowanceSequenceNumber: Int = 13
   val protectionReference: String          = "IP141034571625B"
+
+  val readProtectionsResponse: ReadProtectionsResponse = ReadProtectionsResponse(
+    pensionSchemeAdministratorCheckReference = psaCheckReference,
+    protectionRecordsList = Some(Seq.empty)
+  )
 
   val amendProtectionRequest: AmendProtectionRequest = AmendProtectionRequest(
     lifetimeAllowanceSequenceNumber = lifetimeAllowanceSequenceNumber,

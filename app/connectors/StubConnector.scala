@@ -17,17 +17,17 @@
 package connectors
 
 import config.FrontendAppConfig
-import javax.inject.Inject
-import play.api.libs.json.JsValue
-import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
-import uk.gov.hmrc.http.client.HttpClientV2
+import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.http.HttpReads.Implicits._
-import play.api.libs.json.Json
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, StringContextOps}
+
+import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class StubConnector @Inject() (appConig: FrontendAppConfig, http: HttpClientV2)(implicit ec: ExecutionContext) {
+class StubConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2)(implicit ec: ExecutionContext) {
 
-  lazy val serviceUrl: String = appConig.servicesConfig.baseUrl("pla-dynamic-stub")
+  lazy val serviceUrl: String = appConfig.servicesConfig.baseUrl("pla-dynamic-stub")
 
   private def deleteProtectionByNinoUrl(nino: String) = s"$serviceUrl/test-only/individuals/$nino/protections"
   private def deleteProtectionsUrl                    = s"$serviceUrl/test-only/protections/removeAll"

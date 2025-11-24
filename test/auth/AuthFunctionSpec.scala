@@ -16,7 +16,7 @@
 
 package auth
 
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import mocks.AuthMock
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
@@ -47,10 +47,9 @@ class AuthFunctionSpec
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
   implicit val hc: HeaderCarrier                = HeaderCarrier()
 
-  val mockPlayAuthConnector = mock[PlayAuthConnector]
+  val mockPlayAuthConnector: PlayAuthConnector = mock[PlayAuthConnector]
 
   implicit val mockMessages: Messages =
     fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
@@ -61,14 +60,12 @@ class AuthFunctionSpec
   override def beforeEach(): Unit = {
     reset(mockPlayAuthConnector)
     reset(mockAuthConnector)
-    reset(mockPlaContext)
   }
 
   class TestAuthFunction extends AuthFunction {
 
-    lazy val plaContext: PlaContext                               = mockPlaContext
     lazy val appConfig: FrontendAppConfig                         = mockAppConfig
-    override lazy val authConnector                               = mockAuthConnector
+    override lazy val authConnector: AuthConnector                = mockAuthConnector
     override def upliftEnvironmentUrl(requestUri: String): String = requestUri
     override implicit val technicalError: technicalError          = app.injector.instanceOf[technicalError]
     override implicit val ec: ExecutionContext                    = app.injector.instanceOf[ExecutionContext]

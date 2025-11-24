@@ -14,10 +14,10 @@
  * limitations under the License.
  *@
 
+@import config.FrontendAppConfig
 @import models.ActiveAmendResultDisplayModel
 @import models.amendModels.AmendsGAModel
 @import play.api.i18n._
-@import config.FrontendAppConfig
 
 @this(
     layout: Layout,
@@ -44,30 +44,16 @@
         <h1 class="govuk-panel__title">
             @messages(s"amendResultCode.${model.notificationId}.heading")
         </h1>
-        @if(appConfig.hipMigrationEnabled) {
         <div class="govuk-panel__body">
             <div id="amendedAllowanceTextHip">@messages("pla.resultSuccess.allowanceSubHeadingHip")</div><strong id="protectedAmountHip">@model.protectedAmount</strong>
         </div>
-        } else {
-        <div class="govuk-panel__body">
-            <div id="amendedAllowanceText">@messages("pla.resultSuccess.allowanceSubHeading")</div><strong id="protectedAmount">@model.protectedAmount</strong>
-        </div>
-        }
     </div>
 
     <h2 class="govuk-heading-m">@messages("pla.resultSuccess.protectionDetails")</h2>
 
-    @if(appConfig.hipMigrationEnabled) {
-      @resultDetailsTable(model)
+    @resultDetailsTable(model)
 
-      <p class="govuk-body">@messages("pla.resultSuccess.printGuidancePara")</p>
-    } else {
-      <p class="govuk-body">@messages("pla.resultSuccess.detailsContent")</p>
-
-      @model.details.map { details =>
-        @resultDetails(details)
-      }
-    }
+    <p class="govuk-body">@messages("pla.resultSuccess.printGuidancePara")</p>
 
     <p class="govuk-body"><a class="govuk-link" id="printPage" href="@controllers.routes.PrintController.printView" target="_blank" rel="noopener noreferrer">@messages("pla.resultSuccess.print") (@messages("pla.base.newTab"))</a></p>
 

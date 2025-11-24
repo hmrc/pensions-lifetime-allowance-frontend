@@ -18,7 +18,7 @@ package testHelpers.ViewSpecHelpers.result
 
 trait ResultPrintPageContent {
 
-  val plaPrintTitle          = "Print your active protection - Check your pension protections - GOV.UK"
+  val plaPrintTitle          = "Print your active protection - Check your pension protections and enhancements - GOV.UK"
   val plaPrintTitleHip       = "Print your active protection - Check your pension protections and enhancements - GOV.UK"
   val plaPrintServiceName    = "Check your pension protections"
   val plaPrintServiceNameHip = "Check your pension protections and enhancements"

@@ -19,7 +19,7 @@ package testHelpers.ViewSpecHelpers.ip2016
 trait CurrentPensionsViewMessages {
 
   val plaCurrentPensionsTitle =
-    "What were your UK pensions worth on 5 April 2016? - Check your pension protections - GOV.UK"
+    "What were your UK pensions worth on 5 April 2016? - Check your pension protections and enhancements - GOV.UK"
 
   val plaCurrentPensionsHeading    = "What were your UK pensions worth on 5 April 2016?"
   val plaCurrentPensionsQuestion   = "Do not include pensions you've already taken or the State Pension."

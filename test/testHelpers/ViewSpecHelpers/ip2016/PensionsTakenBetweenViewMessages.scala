@@ -22,7 +22,7 @@ trait PensionsTakenBetweenViewMessages {
     "Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?"
 
   val plaPensionsTakenBetweenTitleNew =
-    "Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension? - Check your pension protections - GOV.UK"
+    "Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension? - Check your pension protections and enhancements - GOV.UK"
 
   val plaPensionsTakenBetweenBulletOne   = "you got money from your pensions"
   val plaPensionsTakenBetweenBulletTwo   = "you transferred a pension to a scheme held overseas"

@@ -16,11 +16,11 @@
 
 package utils
 
-import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import uk.gov.hmrc.http.SessionKeys
 import utils.SessionIdSupport.maybeSessionId
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -38,7 +38,7 @@ trait ActionWithSessionId extends ActionBuilder[Request, AnyContent] {
       throw SessionIdNotFoundException()
     }
 
-  def addSessionIdToSession[A](request: Request[A], sessionId: String)(result: Result): Result =
+  private def addSessionIdToSession[A](request: Request[A], sessionId: String)(result: Result): Result =
     result.withSession(request.session + (SessionKeys.sessionId -> sessionId))
 
   case class SessionIdNotFoundException()

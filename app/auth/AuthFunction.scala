@@ -16,7 +16,7 @@
 
 package auth
 
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import play.api.Logging
 import play.api.i18n.Messages
 import play.api.mvc.Results._
@@ -33,7 +33,7 @@ class AuthFunctionImpl @Inject() (
     mcc: MessagesControllerComponents,
     authClientConnector: AuthConnector,
     val technicalError: views.html.pages.fallback.technicalError
-)(implicit val appConfig: FrontendAppConfig, implicit val plaContext: PlaContext, implicit val ec: ExecutionContext)
+)(implicit val appConfig: FrontendAppConfig, implicit val ec: ExecutionContext)
     extends FrontendController(mcc)
     with AuthFunction
     with Logging {
@@ -41,21 +41,20 @@ class AuthFunctionImpl @Inject() (
 }
 
 trait AuthFunction extends AuthorisedFunctions with Logging {
-  implicit val plaContext: PlaContext
   implicit val appConfig: FrontendAppConfig
   implicit val ec: ExecutionContext
   val technicalError: views.html.pages.fallback.technicalError
   val enrolmentKey: String    = "HMRC-NI"
   val originString: String    = "origin="
   val confidenceLevel: String = "&confidenceLevel=200"
-  val completionURL: String   = "&completionURL="
-  val failureURL: String      = "&failureURL="
+  val completionUrl: String   = "&completionURL="
+  val failureUrl: String      = "&failureURL="
 
-  private def IVUpliftURL()(implicit request: Request[AnyContent]): String = s"${appConfig.ivUpliftUrl}?" +
+  private def IVUpliftUrl()(implicit request: Request[AnyContent]): String = s"${appConfig.ivUpliftUrl}?" +
     s"$originString${appConfig.appName}" +
     s"$confidenceLevel" +
-    s"$completionURL${request.uri}" +
-    s"$failureURL${appConfig.notAuthorisedRedirectUrl}"
+    s"$completionUrl${request.uri}" +
+    s"$failureUrl${appConfig.notAuthorisedRedirectUrl}"
 
   class MissingNinoException extends Exception("Nino not returned by authorised call")
 
@@ -73,14 +72,14 @@ trait AuthFunction extends AuthorisedFunctions with Logging {
       .retrieve(Retrievals.nino)(nino => body(nino.getOrElse(throw new MissingNinoException)))
       .recover(authErrorHandling(pType))
 
-  def authErrorHandling(
+  private def authErrorHandling(
       pType: String
   )(implicit request: Request[AnyContent], messages: Messages): PartialFunction[Throwable, Result] = {
     case _: NoActiveSession =>
       val upliftUrl = upliftEnvironmentUrl(request.uri)
       Redirect(appConfig.ggSignInUrl, Map("continue" -> Seq(upliftUrl), "origin" -> Seq(appConfig.appName)))
-    case _: InsufficientEnrolments      => Redirect(IVUpliftURL())
-    case _: InsufficientConfidenceLevel => Redirect(IVUpliftURL())
+    case _: InsufficientEnrolments      => Redirect(IVUpliftUrl())
+    case _: InsufficientConfidenceLevel => Redirect(IVUpliftUrl())
     case e: AuthorisationException =>
       logger.error("Unexpected auth exception ", e)
       InternalServerError(technicalError(pType))

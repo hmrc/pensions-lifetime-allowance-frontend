@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import play.api.mvc.AnyContentAsEmpty
 import play.api.test.FakeRequest
 import uk.gov.hmrc.http.SessionKeys
 
@@ -21,21 +22,24 @@ package object auth {
 
   import java.util.UUID
 
-  val mockUsername = "mockuser"
-  val mockUserId   = "/auth/oid/" + mockUsername
+  val mockUsername: String = "mockuser"
+  val mockUserId: String   = "/auth/oid/" + mockUsername
 
   lazy val fakeRequest = FakeRequest()
 
   val GovernmentGatewayId = "GGW"
 
   private case object FakeRequestKeyConsts {
-    val SessionId            = SessionKeys.sessionId
-    val LastRequestTimestamp = SessionKeys.lastRequestTimestamp
-    val Token                = "token"
-    val AuthProvider         = "ap"
+    val SessionId: String            = SessionKeys.sessionId
+    val LastRequestTimestamp: String = SessionKeys.lastRequestTimestamp
+    val Token: String                = "token"
+    val AuthProvider: String         = "ap"
   }
 
-  def authenticatedFakeRequest(provider: String = GovernmentGatewayId, userId: String = mockUserId) =
+  def authenticatedFakeRequest(
+      provider: String = GovernmentGatewayId,
+      userId: String = mockUserId
+  ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest().withSession(
       FakeRequestKeyConsts.SessionId -> s"session-${UUID.randomUUID()}",
       FakeRequestKeyConsts.LastRequestTimestamp -> java.time.Instant
@@ -46,10 +50,10 @@ package object auth {
       FakeRequestKeyConsts.AuthProvider -> provider
     )
 
-  def weakCredentialsFakeRequest(provider: String = GovernmentGatewayId) =
+  def weakCredentialsFakeRequest(provider: String = GovernmentGatewayId): FakeRequest[AnyContentAsEmpty.type] =
     authenticatedFakeRequest(provider, "/auth/oid/mockweak")
 
-  def lowConfidenceFakeRequest(provider: String = GovernmentGatewayId) =
+  def lowConfidenceFakeRequest(provider: String = GovernmentGatewayId): FakeRequest[AnyContentAsEmpty.type] =
     authenticatedFakeRequest(provider, "/auth/oid/mocklowconfidence")
 
 }

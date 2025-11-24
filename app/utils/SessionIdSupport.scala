@@ -16,15 +16,8 @@
 
 package utils
 
-import java.util.UUID
-
-import org.apache.pekko.stream.Materializer
-import javax.inject.Inject
 import play.api.mvc._
 import uk.gov.hmrc.http.{HeaderNames, SessionKeys}
-import utils.SessionIdSupport._
-
-import scala.concurrent.Future
 
 /*
  * These utils provide session-id that is required by http-caching-client / keystore.
@@ -39,24 +32,5 @@ object SessionIdSupport {
 
   def maybeSessionId(rh: RequestHeader): Option[String] =
     rh.session.get(SessionKeys.sessionId).orElse(rh.headers.get(HeaderNames.xSessionId))
-
-  def hasSessionId(rh: RequestHeader): Boolean = maybeSessionId(rh).isDefined
-}
-
-class SessionIdFilter @Inject() (val mat: Materializer) extends Filter {
-
-  def apply(next: RequestHeader => Future[Result])(rh: RequestHeader): Future[Result] =
-    if (hasSessionId(rh)) {
-      next(rh)
-    } else {
-      next(addNewSessionIdToHeaders(rh))
-    }
-
-  def addNewSessionIdToHeaders(request: RequestHeader): RequestHeader = {
-    val newSessionId       = s"session-${UUID.randomUUID().toString}"
-    val newSessionIdHeader = HeaderNames.xSessionId -> newSessionId
-    val newHeaders         = request.headers.add(newSessionIdHeader)
-    request.withHeaders(newHeaders)
-  }
 
 }

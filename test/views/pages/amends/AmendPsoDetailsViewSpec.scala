@@ -97,7 +97,7 @@ class AmendPsoDetailsViewSpec
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionSharingOrderController
-        .submitAmendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open", true)
+        .submitAmendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open", true)
         .url
     }
 

@@ -14,11 +14,11 @@
  * limitations under the License.
  *@
 
-@import play.api.i18n._
-@import models.ExistingProtectionDisplayModel
-@import config.FrontendAppConfig
-@import views.HeaderContent
 @import common.Strings
+@import config.FrontendAppConfig
+@import models.ExistingProtectionDisplayModel
+@import play.api.i18n._
+@import views.HeaderContent
 @import views.html.playHelpers.templates.existingProtections.protectionDetails
 
 @this(appConfig: FrontendAppConfig)
@@ -38,13 +38,13 @@
 
 <dl class="govuk-summary-list">
     @protection.protectedAmount.map { protectedAmount =>
-        @protectionDetails(Messages(HeaderContent.getProtectedLifetimeAllowance(appConfig)), protectedAmount, s"${protection.status}InactiveProtectedAmount$protectionNum", Some(changeLink))
+        @protectionDetails(Messages(HeaderContent.getProtectedLifetimeAllowance), protectedAmount, s"${protection.status}InactiveProtectedAmount$protectionNum", Some(changeLink))
     }
 
-    @protectionDetails(Messages(HeaderContent.getProtectionNotificatioNumber(appConfig)), protection.protectionReference, s"${protection.status}InactiveProtectionReference$protectionNum")
+    @protectionDetails(Messages(HeaderContent.getProtectionNotificatioNumber), protection.protectionReference, s"${protection.status}InactiveProtectionReference$protectionNum")
 
     @protection.psaCheckReference.map { checkRef =>
-        @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference(appConfig)), checkRef, s"${protection.status}InactivePSACheckRef$protectionNum")
+        @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference), checkRef, s"${protection.status}InactivePSACheckRef$protectionNum")
     }
 
     @protection.certificateDate.map{ certificateDate =>

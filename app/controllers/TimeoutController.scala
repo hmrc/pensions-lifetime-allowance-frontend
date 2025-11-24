@@ -16,7 +16,7 @@
 
 package controllers
 
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import javax.inject.Inject
 import play.api.Application
 import play.api.mvc._
@@ -25,7 +25,6 @@ import scala.concurrent.Future
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 
 class TimeoutController @Inject() (mcc: MessagesControllerComponents, Timeout: views.html.pages.timeout)(
-    implicit val context: PlaContext,
     implicit val appConfig: FrontendAppConfig,
     implicit val application: Application
 ) extends FrontendController(mcc) {

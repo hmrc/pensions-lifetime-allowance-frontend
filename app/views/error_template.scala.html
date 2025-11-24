@@ -23,10 +23,6 @@
 
 @(pageTitle: String, heading: String, message: String)(implicit request: RequestHeader, messages: Messages)
 
-@contentHeader = {
-  <h1 class="govuk-heading-xl">@heading</h1>
-}
-
 @mainContent = {
  <h1 class="govuk-heading-xl">@heading</h1>
  <p class="govuk-body">@message</p>

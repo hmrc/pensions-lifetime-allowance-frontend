@@ -22,7 +22,7 @@ trait AmendIP14CurrentPensionsViewSpecMessages extends CurrentPensionsViewMessag
   val plaIp14CurrentPensionsTitle = "What were your UK pensions worth on 5 April 2014?"
 
   val plaIp14CurrentPensionsTitleNew =
-    "What were your UK pensions worth on 5 April 2014? - Check your pension protections - GOV.UK"
+    "What were your UK pensions worth on 5 April 2014? - Check your pension protections and enhancements - GOV.UK"
 
   val plaIp14CurrentPensionsHiddenTextPara = "Use figures that were correct at 5 April 2014."
 }

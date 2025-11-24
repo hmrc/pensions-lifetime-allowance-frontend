@@ -18,7 +18,6 @@ package views.pages.ip2016
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.mockito.Mockito.when
 import play.api.i18n.{Messages, MessagesApi}
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import views.html.pages.ip2016.withdrawnAP2016
@@ -32,17 +31,8 @@ class WithdrawnAP2016ViewSpec extends CommonViewSpecHelper {
 
   "WithdrawnAP2016 view" must {
 
-    "display the correct title" when {
-
-      "HIP migration feature toggle is enabled" in {
-        when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
-        doc.title() shouldBe s"${messages("pla.withdrawn.ap2016.title")} - ${messages("service.name")} - GOV.UK"
-      }
-
-      "HIP migration feature toggle is disabled" in {
-        when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
-        doc.title() shouldBe s"${messages("pla.withdrawn.ap2016.title")} - ${messages("psa.service.name")} - GOV.UK"
-      }
+    "display the correct title" in {
+      doc.title() shouldBe s"${messages("pla.withdrawn.ap2016.title")} - ${messages("service.name")} - GOV.UK"
     }
 
     "display the correct heading" in {
@@ -54,7 +44,6 @@ class WithdrawnAP2016ViewSpec extends CommonViewSpecHelper {
     }
 
     "display the correct link" in {
-
       val link = doc.getElementById("startAgainText").firstElementChild()
 
       link.attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url

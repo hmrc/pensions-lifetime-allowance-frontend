@@ -20,7 +20,7 @@ import auth.{AuthFunction, AuthFunctionImpl, authenticatedFakeRequest}
 import common.Exceptions.RequiredValueNotDefinedException
 import common.{Exceptions, Strings}
 import config._
-import connectors.PLAConnector
+import connectors.PsaLookupConnector
 import constructors.DisplayConstructors
 import mocks.AuthMock
 import models._
@@ -31,6 +31,7 @@ import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -40,7 +41,7 @@ import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
 import play.api.libs.json.JsNull
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -68,7 +69,7 @@ class AmendsPensionSharingOrderControllerSpec
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockPlaConnector: PLAConnector               = mock[PLAConnector]
+  val mockPlaConnector: PsaLookupConnector         = mock[PsaLookupConnector]
   val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction               = mock[AuthFunction]
   val mockAmendPsoDetails: amendPsoDetails         = app.injector.instanceOf[amendPsoDetails]
@@ -77,7 +78,6 @@ class AmendsPensionSharingOrderControllerSpec
   val messagesApi: MessagesApi                     = mockMCC.messagesApi
 
   implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val mockPlaContext: PlaContext       = mock[PlaContext]
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
   implicit val mockLang: Lang                   = mock[Lang]
@@ -135,10 +135,10 @@ class AmendsPensionSharingOrderControllerSpec
 
   }
 
-  val sessionId                                     = UUID.randomUUID.toString
+  val sessionId: String                             = UUID.randomUUID.toString
   implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
   val mockUsername                                  = "mockuser"
-  val mockUserId                                    = "/auth/oid/" + mockUsername
+  val mockUserId: String                            = "/auth/oid/" + mockUsername
 
   val individualProtection2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -252,7 +252,7 @@ class AmendsPensionSharingOrderControllerSpec
           "YesNo",
           Some(
             controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+              .amendOverseasPensions(Strings.ProtectionTypeUrl.IndividualProtection2014, "active")
           ),
           None,
           "Yes"
@@ -261,7 +261,7 @@ class AmendsPensionSharingOrderControllerSpec
           "Amt",
           Some(
             controllers.routes.AmendsOverseasPensionController
-              .amendOverseasPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+              .amendOverseasPensions(Strings.ProtectionTypeUrl.IndividualProtection2014, "active")
           ),
           None,
           "£100,000"
@@ -275,7 +275,7 @@ class AmendsPensionSharingOrderControllerSpec
           "Amt",
           Some(
             controllers.routes.AmendsCurrentPensionController
-              .amendCurrentPensions(Strings.ProtectionTypeURL.IndividualProtection2014, "active")
+              .amendCurrentPensions(Strings.ProtectionTypeUrl.IndividualProtection2014, "active")
           ),
           None,
           "£1,000,000"
@@ -353,17 +353,17 @@ class AmendsPensionSharingOrderControllerSpec
 
     "there is no amendment model fetched from cache" in new Setup {
 
-      lazy val result =
-        controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2014, "open")(fakeRequest)
+      lazy val result: Future[Result] =
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
       status(result) shouldBe 500
     }
     "show the technical error page for existing protections" in new Setup {
-      lazy val result =
-        controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2014, "open")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+      lazy val result: Future[Result] =
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
+      lazy val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
@@ -377,9 +377,9 @@ class AmendsPensionSharingOrderControllerSpec
 
     "there is no PSO list stored in the AmendProtectionModel" in new Setup {
 
-      lazy val result =
-        controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2014, "open")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+      lazy val result: Future[Result] =
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
+      lazy val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
@@ -395,9 +395,9 @@ class AmendsPensionSharingOrderControllerSpec
 
     "there is an empty PSO list stored in the AmendProtectionModel" in new Setup {
 
-      lazy val result =
-        controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+      lazy val result: Future[Result] =
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+      lazy val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
@@ -415,7 +415,7 @@ class AmendsPensionSharingOrderControllerSpec
 
       object DataItem
           extends AuthorisedFakeRequestTo(
-            controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+            controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
           )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
@@ -434,9 +434,9 @@ class AmendsPensionSharingOrderControllerSpec
 
     "there is a PSO list of more then one PSO stored in the AmendProtectionModel" in new Setup {
 
-      lazy val result =
-        controller.amendPsoDetails(Strings.ProtectionTypeURL.IndividualProtection2016, "open")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
+      lazy val result: Future[Result] =
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+      lazy val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
@@ -464,22 +464,22 @@ class AmendsPensionSharingOrderControllerSpec
       TestData(
         testAmendIndividualProtection2014ProtectionModel,
         "2014",
-        Strings.ProtectionTypeURL.IndividualProtection2014
+        Strings.ProtectionTypeUrl.IndividualProtection2014
       ),
       TestData(
         testAmendIndividualProtection2014LTAProtectionModel,
         "2014",
-        Strings.ProtectionTypeURL.IndividualProtection2014LTA
+        Strings.ProtectionTypeUrl.IndividualProtection2014LTA
       ),
       TestData(
         testAmendIndividualProtection2016ProtectionModel,
         "2016",
-        Strings.ProtectionTypeURL.IndividualProtection2016
+        Strings.ProtectionTypeUrl.IndividualProtection2016
       ),
       TestData(
         testAmendIndividualProtection2016LTAProtectionModel,
         "2016",
-        Strings.ProtectionTypeURL.IndividualProtection2016LTA
+        Strings.ProtectionTypeUrl.IndividualProtection2016LTA
       )
     ).foreach { testData =>
       s"provided with valid data for ${testData.protectionTypeUrl}" should {
@@ -497,7 +497,7 @@ class AmendsPensionSharingOrderControllerSpec
           when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map("" -> JsNull))))
 
-          val result = controller.submitAmendPsoDetails(
+          val result: Future[Result] = controller.submitAmendPsoDetails(
             protectionType = testData.protectionTypeUrl,
             status = "open",
             existingPSO = true
@@ -525,7 +525,7 @@ class AmendsPensionSharingOrderControllerSpec
 
           val expectedPensionDebitStartDate     = s"${testData.psoYear}-04-06"
           val expectedPensionDebitEnteredAmount = 100000.0
-          val expectedUpdatedProtection = testData.amendProtectionModel.updatedProtection.copy(
+          val expectedUpdatedProtection: ProtectionModel = testData.amendProtectionModel.updatedProtection.copy(
             pensionDebits = Some(
               List(
                 PensionDebitModel(startDate = expectedPensionDebitStartDate, amount = expectedPensionDebitEnteredAmount)
@@ -534,7 +534,7 @@ class AmendsPensionSharingOrderControllerSpec
             pensionDebitStartDate = Some(expectedPensionDebitStartDate),
             pensionDebitEnteredAmount = Some(expectedPensionDebitEnteredAmount)
           )
-          val expectedAmendProtectionModel =
+          val expectedAmendProtectionModel: AmendProtectionModel =
             testData.amendProtectionModel.copy(updatedProtection = expectedUpdatedProtection)
           verify(mockSessionCacheService).saveFormData(any(), eqTo(expectedAmendProtectionModel))(any(), any())
         }
@@ -553,8 +553,8 @@ class AmendsPensionSharingOrderControllerSpec
           ("psoAmt", "100000")
         )
 
-        val result = controller.submitAmendPsoDetails(
-          protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
+        val result: Future[Result] = controller.submitAmendPsoDetails(
+          protectionType = Strings.ProtectionTypeUrl.IndividualProtection2014,
           status = "open",
           existingPSO = true
         )(authenticatedFakeRequest().withFormUrlEncodedBody(data: _*).withMethod("POST"))
@@ -578,9 +578,9 @@ class AmendsPensionSharingOrderControllerSpec
           ("psoAmt", "100000")
         )
 
-        val result = controller
+        val result: Throwable = controller
           .submitAmendPsoDetails(
-            protectionType = Strings.ProtectionTypeURL.IndividualProtection2014,
+            protectionType = Strings.ProtectionTypeUrl.IndividualProtection2014,
             status = "open",
             existingPSO = true
           )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
@@ -608,7 +608,8 @@ class AmendsPensionSharingOrderControllerSpec
     "supplied with a PSO amount" should {
 
       "return the correct list" in new Setup {
-        val result = controller.createPensionDebitModel(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), Some(1)))
+        val result: PensionDebitModel =
+          controller.createPensionDebitModel(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), Some(1)))
 
         result shouldBe PensionDebitModel("2017-03-01", 1)
       }

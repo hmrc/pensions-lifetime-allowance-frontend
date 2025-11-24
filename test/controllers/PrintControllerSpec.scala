@@ -17,7 +17,7 @@
 package controllers
 
 import auth.AuthFunction
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import connectors.CitizenDetailsConnector
 import constructors.DisplayConstructors
 import mocks.AuthMock
@@ -55,7 +55,6 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   private implicit val frontendAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   private val authFunction = new AuthFunction {
-    override implicit val plaContext: PlaContext         = mock[PlaContext]
     override implicit val appConfig: FrontendAppConfig   = frontendAppConfig
     override implicit val technicalError: technicalError = app.injector.instanceOf[technicalError]
     override implicit val ec: ExecutionContext           = executionContext
@@ -136,7 +135,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
             .thenReturn(Future.successful(Some(testPersonalDetails)))
           when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
             .thenReturn(Future.successful(Some(protectionModel)))
-          when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
+          when(displayConstructors.createPrintDisplayModel(any(), any(), any()))
             .thenReturn(printDisplayModel)
 
           val result = printController.printView(fakeRequest)

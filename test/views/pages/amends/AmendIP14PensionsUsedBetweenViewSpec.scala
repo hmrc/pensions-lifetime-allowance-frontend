@@ -49,7 +49,7 @@ class AmendIP14PensionsUsedBetweenViewSpec
     lazy val form = doc.select("form")
 
     "have the correct title" in {
-      doc.title() shouldBe s"$plaPensionsUsedBetweenHeader - Check your pension protections - GOV.UK"
+      doc.title() shouldBe s"$plaPensionsUsedBetweenHeader - Check your pension protections and enhancements - GOV.UK"
     }
 
     "have the correct and properly formatted header" in {
@@ -90,7 +90,7 @@ class AmendIP14PensionsUsedBetweenViewSpec
     "have a valid form" in {
       form.attr("method") shouldBe "POST"
       form.attr("action") shouldBe controllers.routes.AmendsPensionUsedBetweenController
-        .submitAmendPensionsUsedBetween(Strings.ProtectionTypeURL.IndividualProtection2016, "open")
+        .submitAmendPensionsUsedBetween(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
     }
 

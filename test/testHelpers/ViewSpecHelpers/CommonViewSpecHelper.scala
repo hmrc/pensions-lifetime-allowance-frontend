@@ -16,8 +16,7 @@
 
 package testHelpers.ViewSpecHelpers
 
-import config.wiring.SessionCookieCryptoFilterWrapper
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import org.mockito.Mockito.reset
 import org.scalatest.BeforeAndAfterEach
 import org.scalatestplus.mockito.MockitoSugar
@@ -37,14 +36,12 @@ trait CommonViewSpecHelper extends FakeApplication with CommonMessages with Mock
     .overrides(inject.bind[FrontendAppConfig].toInstance(mockAppConfig))
     .build()
 
-  val http                                               = mock[HttpClientV2]
-  val sessionCookieCryptoFilterWrapper                   = mock[SessionCookieCryptoFilterWrapper]
+  val http: HttpClientV2 = mock[HttpClientV2]
+
   implicit lazy val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
   implicit lazy val mockMessage: Messages =
     app.injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
-
-  implicit val plaContext: PlaContext = mock[PlaContext]
 
   override def beforeEach(): Unit = {
     reset(mockAppConfig)

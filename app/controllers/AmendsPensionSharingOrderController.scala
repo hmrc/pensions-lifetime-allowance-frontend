@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.{FrontendAppConfig, PlaContext}
+import config.FrontendAppConfig
 import forms.AmendPSODetailsForm._
 import models.PensionDebitModel
 import models.amendModels._
@@ -43,7 +43,6 @@ class AmendsPensionSharingOrderController @Inject() (
 )(
     implicit val appConfig: FrontendAppConfig,
     val formWithCSRF: FormWithCSRF,
-    val plaContext: PlaContext,
     val ec: ExecutionContext
 ) extends FrontendController(mcc)
     with AmendControllerCacheHelper
