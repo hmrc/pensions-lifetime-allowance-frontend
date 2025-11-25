@@ -136,7 +136,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
             .thenReturn(Future.successful(Some(testPersonalDetails)))
           when(sessionCacheService.fetchAndGetFormData[ProtectionModel](any())(any(), any()))
             .thenReturn(Future.successful(Some(protectionModel)))
-          when(displayConstructors.createPrintDisplayModel(any(), any(), any()))
+          when(displayConstructors.createPrintDisplayModel(any(), any(), any())(any()))
             .thenReturn(printDisplayModel)
 
           val result = printController.printView(fakeRequest)

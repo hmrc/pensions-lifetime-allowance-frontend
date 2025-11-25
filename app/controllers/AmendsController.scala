@@ -27,7 +27,7 @@ import models.amendModels._
 import models.cache.CacheMap
 import models.{AmendResponseModel, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
 import play.api.Logging
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -58,6 +58,8 @@ class AmendsController @Inject() (
     with AmendControllerErrorHelper {
 
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
+    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
+
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       val protectionKey = Strings.protectionCacheKey(protectionType, status)
       sessionCacheService.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {
@@ -153,6 +155,8 @@ class AmendsController @Inject() (
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
   )(implicit request: Request[AnyContent]): Future[Result] = {
+    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
+
     if (modelGA.isEmpty) {
       logger.warn(s"Unable to retrieve amendsGAModel from cache for user nino :$nino")
     }

@@ -238,7 +238,7 @@ class AmendsControllerSpec
 
     "there is a stored, updated amends model" in {
       cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
-      when(displayConstructors.createAmendDisplayModel(any())).thenReturn(testAmendDisplayModel)
+      when(displayConstructors.createAmendDisplayModel(any())(any())).thenReturn(testAmendDisplayModel)
       val protectionType   = "ip2014"
       val protectionStatus = "dormant"
 
@@ -375,7 +375,7 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
+          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString())(any()))
             .thenReturn(amendResultDisplayModel)
 
           val result = controller.amendmentOutcome()(fakeRequest)
@@ -442,7 +442,7 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
+          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString())(any()))
             .thenReturn(amendResultDisplayModel)
 
           controller.amendmentOutcome()(fakeRequest).futureValue
@@ -460,7 +460,7 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
+          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString())(any()))
             .thenReturn(amendResultDisplayModel)
 
           controller.amendmentOutcome()(fakeRequest).futureValue
@@ -481,7 +481,7 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString()))
+          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString())(any()))
             .thenReturn(amendResultDisplayModel)
 
           val result = controller.amendmentOutcome()(fakeRequest)
@@ -505,7 +505,7 @@ class AmendsControllerSpec
             .thenReturn(Future.successful(CacheMap("openProtection", Map.empty)))
 
           val activeAmendResultDisplayModel = amendsActiveResultModelIP14.copy(notificationId = notificationId.toString)
-          when(displayConstructors.createActiveAmendResponseDisplayModel(any(), any(), any()))
+          when(displayConstructors.createActiveAmendResponseDisplayModel(any(), any(), any())(any()))
             .thenReturn(activeAmendResultDisplayModel)
 
           val result = controller.amendmentOutcome()(fakeRequest)
@@ -531,7 +531,7 @@ class AmendsControllerSpec
         cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
         when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
-        when(displayConstructors.createAmendResultDisplayModelNoNotificationId(any(), any(), any()))
+        when(displayConstructors.createAmendResultDisplayModelNoNotificationId(any(), any(), any())(any()))
           .thenReturn(amendResultDisplayModel)
 
         val result = controller.amendmentOutcome()(fakeRequest)
@@ -555,7 +555,7 @@ class AmendsControllerSpec
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
 
           val inactiveAmendResultDisplayModel = InactiveAmendResultDisplayModel(notificationId, Seq())
-          when(displayConstructors.createInactiveAmendResponseDisplayModel(any()))
+          when(displayConstructors.createInactiveAmendResponseDisplayModel(any())(any()))
             .thenReturn(inactiveAmendResultDisplayModel)
 
           val result = controller.amendmentOutcome()(fakeRequest)

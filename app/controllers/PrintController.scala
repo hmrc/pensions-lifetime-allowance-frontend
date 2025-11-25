@@ -21,7 +21,7 @@ import connectors.CitizenDetailsConnector
 import constructors.display.DisplayConstructors
 import models.ProtectionModel
 import play.api.Logging
-import play.api.i18n.I18nSupport
+import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
@@ -54,7 +54,9 @@ class PrintController @Inject() (
   private def routePrintView(
       protectionModel: Option[ProtectionModel],
       nino: String
-  )(implicit request: Request[AnyContent]): Future[Result] =
+  )(implicit request: Request[AnyContent]): Future[Result] = {
+    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
+
     protectionModel match {
       case Some(model) =>
         citizenDetailsConnector.getPersonDetails(nino).map { personalDetailsModel =>
@@ -65,5 +67,6 @@ class PrintController @Inject() (
         logger.warn(s"Forced redirect to PrintView for $nino")
         Future.successful(Redirect(routes.ReadProtectionsController.currentProtections))
     }
+  }
 
 }
