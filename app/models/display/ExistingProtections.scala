@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-package models
+package models.display
 
-import enums.ApplicationType
 import models.pla.response.ProtectionType
 import play.api.mvc.Call
-
-case class ProtectionDetailsDisplayModel(
-    protectionReference: String,
-    psaReference: String,
-    applicationDate: Option[String]
-)
 
 case class ExistingProtectionDisplayModel(
     protectionType: String,
@@ -117,95 +110,3 @@ object ExistingInactiveProtectionsByType {
 
   private def sortByProtectionType(t1: String, t2: String): Boolean = protectionTypeOrder(t1) < protectionTypeOrder(t2)
 }
-
-case class PrintDisplayModel(
-    firstName: String,
-    surname: String,
-    nino: String,
-    protectionType: String,
-    status: String,
-    psaCheckReference: String,
-    protectionReference: String,
-    protectedAmount: Option[String],
-    certificateDate: Option[String],
-    certificateTime: Option[String] = None,
-    lumpSumPercentage: Option[String] = None,
-    lumpSumAmount: Option[String] = None,
-    enhancementFactor: Option[String] = None,
-    factor: Option[String] = None
-) {
-
-  def isFixedProtection2016: Boolean = {
-    val fp2016Str = "FP2016"
-    val fixedProtection2016Types = Set(
-      fp2016Str.toLowerCase,
-      ProtectionType.FixedProtection2016.toString.toLowerCase,
-      ProtectionType.FixedProtection2016LTA.toString.toLowerCase
-    )
-
-    fixedProtection2016Types.contains(protectionType.toLowerCase)
-  }
-
-}
-
-case class AmendPrintDisplayModel(
-    firstName: String,
-    surname: String,
-    nino: String,
-    protectionType: String,
-    status: Option[String],
-    psaCheckReference: Option[String],
-    protectionReference: Option[String],
-    fixedProtectionReference: Option[String],
-    protectedAmount: Option[String],
-    certificateDate: Option[String],
-    certificateTime: Option[String]
-)
-
-case class AmendDisplayModel(
-    protectionType: String,
-    amended: Boolean,
-    pensionContributionSections: Seq[AmendDisplaySectionModel],
-    psoAdded: Boolean,
-    psoSections: Seq[AmendDisplaySectionModel],
-    totalAmount: String
-)
-
-case class AmendDisplaySectionModel(
-    sectionId: String,
-    rows: Seq[AmendDisplayRowModel]
-)
-
-case class AmendDisplayRowModel(
-    rowId: String,
-    changeLinkCall: Option[Call],
-    removeLinkCall: Option[Call],
-    displayValue: String*
-)
-
-case class ActiveAmendResultDisplayModel(
-    firstName: String,
-    surname: String,
-    nino: String,
-    protectionType: ApplicationType.Value,
-    notificationId: String,
-    protectedAmount: String,
-    details: Option[ProtectionDetailsDisplayModel]
-)
-
-case class AmendResultDisplayModel(
-    notificationId: Int,
-    protectedAmount: String,
-    details: Option[AmendPrintDisplayModel]
-)
-
-case class AmendResultDisplayModelNoNotificationId(
-    protectedAmount: String,
-    protectionType: String,
-    details: Option[AmendPrintDisplayModel]
-)
-
-case class InactiveAmendResultDisplayModel(
-    notificationId: Int,
-    additionalInfo: Seq[String]
-)

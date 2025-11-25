@@ -16,15 +16,8 @@
 
 package testdata
 
-import models.{
-  AmendPrintDisplayModel,
-  AmendResponseModel,
-  AmendResultDisplayModel,
-  AmendResultDisplayModelNoNotificationId,
-  Person,
-  PersonalDetailsModel,
-  ProtectionModel
-}
+import models.{AmendResponseModel, Person, PersonalDetailsModel, ProtectionModel}
+import models.display.{AmendPrintDisplayModel, AmendResultDisplayModel, AmendResultDisplayModelNoNotificationId}
 import models.pla.response.ProtectionStatus.{Dormant, Open, Withdrawn}
 import models.pla.response.ProtectionType.{
   FixedProtection2016,

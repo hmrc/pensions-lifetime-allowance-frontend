@@ -34,5 +34,7 @@ object Constants {
 
   val fixedProtectionNotificationIds = List(7, 14)
 
-  val withdrawnNotificationIds = List(6, 7, 13, 14)
+  val withdrawnNotificationIds                         = List(6, 7, 13, 14)
+  val dormantNotificationIds: List[Int]                = List(2, 3, 4, 9, 10, 11, 12)
+  val withdrawnNotificationIdsShowingStatus: List[Int] = List(6, 13)
 }

@@ -17,7 +17,7 @@
 package views.pages.result
 
 import config.FrontendAppConfig
-import models.PrintDisplayModel
+import models.display.PrintDisplayModel
 import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType.{FixedProtection2016, FixedProtection2016LTA}
 import org.jsoup.Jsoup

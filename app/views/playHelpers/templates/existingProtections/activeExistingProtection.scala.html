@@ -16,7 +16,7 @@
 
 @import common.Strings
 @import config.FrontendAppConfig
-@import models.ExistingProtectionDisplayModel
+@import models.display.ExistingProtectionDisplayModel
 @import play.api.i18n._
 @import views.HeaderContent
 @import views.html.playHelpers.templates.existingProtections.protectionDetails
@@ -48,7 +48,7 @@
         @protectionDetails(Messages(HeaderContent.getProtectedLifetimeAllowance), protectedAmount, "activeProtectedAmount", Some(changeLink))
     }
 
-    @protectionDetails(Messages(HeaderContent.getProtectionNotificatioNumber), protection.protectionReference, "activeProtectionReference")
+    @protectionDetails(Messages(HeaderContent.getProtectionNotificationNumber), protection.protectionReference, "activeProtectionReference")
 
     @protection.psaCheckReference.map { checkRef =>
         @protectionDetails(Messages(HeaderContent.getSchemeAdministratorReference), checkRef, "activePSACheckRef")

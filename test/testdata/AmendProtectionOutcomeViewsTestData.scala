@@ -18,7 +18,12 @@ package testdata
 
 import enums.ApplicationType
 import models.amendModels.AmendsGAModel
-import models._
+import models.display.{
+  ActiveAmendResultDisplayModel,
+  AmendPrintDisplayModel,
+  AmendResultDisplayModel,
+  ProtectionDetailsDisplayModel
+}
 
 object AmendProtectionOutcomeViewsTestData {
 

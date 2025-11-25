@@ -15,7 +15,7 @@
  *@
 
 @import config.FrontendAppConfig
-@import models.PrintDisplayModel
+@import models.display.PrintDisplayModel
 @import views.HeaderContent
 @import views.html.helper.CSPNonce
 
@@ -62,7 +62,7 @@
                 </tr>
             }
             <tr class="govuk-table__row">
-                <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getProtectionNotificatioNumber)</th>
+                <th scope="row" class="govuk-table__header">@Messages(HeaderContent.getProtectionNotificationNumber)</th>
                 <td class="govuk-table__cell" id="protectionRef">@{model.protectionReference}</td>
             </tr>
             <tr class="govuk-table__row">
