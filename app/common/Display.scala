@@ -48,8 +48,6 @@ object Display {
 
   def dateDisplayString(date: LocalDateTime)(implicit lang: Lang, messages: Messages): String =
     if (lang.language == "cy") {
-      val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
-      date.format(dateFormat)
       val monthNum       = date.getMonthValue
       val welshFormatter = DateTimeFormatter.ofPattern(s"""d '${messages(s"pla.month.$monthNum")}' yyyy""")
       date.format(welshFormatter)

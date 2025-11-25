@@ -34,58 +34,83 @@ import javax.inject.Inject
 
 class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) {
 
-  implicit val lang: Lang = Lang.defaultLang
-
-  implicit val messages: Messages = messagesApi.preferred(Seq(lang))
-
   def createPrintDisplayModel(
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       protectionModel: ProtectionModel,
       nino: String
-  ): PrintDisplayModel =
+  )(implicit lang: Lang): PrintDisplayModel = {
+    implicit val messages: Messages = messagesForLang(lang)
+
     PrintDisplayModelConstructor.createPrintDisplayModel(personalDetailsModelOpt, protectionModel, nino)
+  }
 
-  def createExistingProtectionsDisplayModel(model: TransformedReadResponseModel)(
-      implicit lang: Lang
-  ): ExistingProtectionsDisplayModel =
+  def createExistingProtectionsDisplayModel(
+      model: TransformedReadResponseModel
+  )(implicit lang: Lang): ExistingProtectionsDisplayModel = {
+    implicit val messages: Messages = messagesForLang(lang)
+
     ExistingProtectionsDisplayModelConstructor.createExistingProtectionsDisplayModel(model)
+  }
 
-  def createAmendDisplayModel(model: AmendProtectionModel): AmendDisplayModel =
+  def createAmendDisplayModel(model: AmendProtectionModel)(implicit lang: Lang): AmendDisplayModel = {
+    implicit val messages: Messages = messagesForLang(lang)
+
     AmendDisplayModelConstructor.createAmendDisplayModel(model)
+  }
 
   def createActiveAmendResponseDisplayModel(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  ): ActiveAmendResultDisplayModel =
+  )(implicit lang: Lang): ActiveAmendResultDisplayModel = {
+    implicit val messages: Messages = messagesForLang(lang)
+
     ActiveAmendResultDisplayModelConstructor.createActiveAmendResponseDisplayModel(model, personalDetailsModelOpt, nino)
+  }
 
   def createAmendPrintDisplayModel(
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       protectionModel: ProtectionModel,
       nino: String
-  ): AmendPrintDisplayModel =
+  )(implicit lang: Lang): AmendPrintDisplayModel = {
+    implicit val messages: Messages = messagesForLang(lang)
+
     AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, protectionModel, nino)
+  }
 
   def createAmendResultDisplayModel(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  ): AmendResultDisplayModel =
+  )(implicit lang: Lang): AmendResultDisplayModel = {
+    implicit val messages: Messages = messagesForLang(lang)
+
     AmendResultDisplayModelConstructor.createAmendResultDisplayModel(model, personalDetailsModelOpt, nino)
+  }
 
   def createAmendResultDisplayModelNoNotificationId(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  ): AmendResultDisplayModelNoNotificationId =
+  )(implicit lang: Lang): AmendResultDisplayModelNoNotificationId = {
+    implicit val messages: Messages = messagesForLang(lang)
+
     AmendResultDisplayModelNoNotificationIdConstructor.createAmendResultDisplayModelNoNotificationId(
       model,
       personalDetailsModelOpt,
       nino
     )
+  }
 
-  def createInactiveAmendResponseDisplayModel(model: AmendResponseModel): InactiveAmendResultDisplayModel =
+  def createInactiveAmendResponseDisplayModel(
+      model: AmendResponseModel
+  )(implicit lang: Lang): InactiveAmendResultDisplayModel = {
+    implicit val messages: Messages = messagesForLang(lang)
+
     InactiveAmendResultDisplayModelConstructor.createInactiveAmendResponseDisplayModel(model)
+  }
+
+  private def messagesForLang(lang: Lang): Messages =
+    messagesApi.preferred(Seq(lang))
 
 }
