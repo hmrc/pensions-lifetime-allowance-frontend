@@ -18,7 +18,7 @@ package controllers
 
 import auth.AuthFunction
 import connectors.CitizenDetailsConnector
-import constructors.DisplayConstructors
+import constructors.display.DisplayConstructors
 import models.ProtectionModel
 import play.api.Logging
 import play.api.i18n.I18nSupport

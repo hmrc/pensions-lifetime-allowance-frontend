@@ -21,7 +21,7 @@ import common.Strings
 import config.FrontendAppConfig
 import connectors.PlaConnectorError.LockedResponseError
 import connectors.{PlaConnector, PlaConnectorError}
-import constructors.DisplayConstructors
+import constructors.display.DisplayConstructors
 import enums.ApplicationType
 import models._
 import models.amendModels.AmendProtectionModel

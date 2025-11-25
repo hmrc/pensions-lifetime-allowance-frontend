@@ -21,12 +21,13 @@ import common._
 import config.FrontendAppConfig
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PlaConnector, PlaConnectorError}
-import constructors.{AmendsGAConstructor, DisplayConstructors}
+import constructors.AmendsGAConstructor
+import constructors.display.DisplayConstructors
 import models.amendModels._
 import models.cache.CacheMap
 import models.{AmendResponseModel, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
 import play.api.Logging
-import play.api.i18n.{I18nSupport, Lang}
+import play.api.i18n.I18nSupport
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.http.HeaderCarrier
@@ -57,7 +58,6 @@ class AmendsController @Inject() (
     with AmendControllerErrorHelper {
 
   def amendsSummary(protectionType: String, status: String): Action[AnyContent] = Action.async { implicit request =>
-    implicit val lang: Lang = mcc.messagesApi.preferred(request).lang
     authFunction.genericAuthWithNino("existingProtections") { nino =>
       val protectionKey = Strings.protectionCacheKey(protectionType, status)
       sessionCacheService.fetchAndGetFormData[AmendProtectionModel](protectionKey).map {

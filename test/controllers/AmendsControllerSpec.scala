@@ -22,12 +22,18 @@ import common.Strings.{ProtectionTypeUrl, StatusUrl}
 import config._
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PlaConnector}
-import constructors.DisplayConstructors
+import constructors.display.DisplayConstructors
 import enums.ApplicationType
 import mocks.AuthMock
-import models._
+import models.{AmendResponseModel, Person, PersonalDetailsModel, ProtectionModel}
 import models.amendModels._
 import models.cache.CacheMap
+import models.display.{
+  AmendDisplayModel,
+  AmendDisplayRowModel,
+  AmendDisplaySectionModel,
+  InactiveAmendResultDisplayModel
+}
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
 import models.pla.response.ProtectionStatus.{Dormant, Open}
 import models.pla.response.ProtectionType.{FixedProtection2016, IndividualProtection2014, IndividualProtection2016}
@@ -232,7 +238,7 @@ class AmendsControllerSpec
 
     "there is a stored, updated amends model" in {
       cacheFetchCondition[AmendProtectionModel](anyString())(Some(testAmendIP2014ProtectionModel))
-      when(displayConstructors.createAmendDisplayModel(any())(any())).thenReturn(testAmendDisplayModel)
+      when(displayConstructors.createAmendDisplayModel(any())).thenReturn(testAmendDisplayModel)
       val protectionType   = "ip2014"
       val protectionStatus = "dormant"
 

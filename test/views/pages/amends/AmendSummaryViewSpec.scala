@@ -18,7 +18,7 @@ package views.pages.amends
 
 import common.Strings
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
-import models.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
+import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages

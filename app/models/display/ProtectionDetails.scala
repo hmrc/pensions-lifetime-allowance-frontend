@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-package views
+package models.display
 
-import play.api.i18n.Messages
-
-object HeaderContent {
-
-  def getProtectedLifetimeAllowance(implicit messages: Messages): String =
-    messages("common.header.protectedAmount")
-
-  def getProtectionNotificationNumber(implicit messages: Messages): String =
-    messages("common.header.protectionReferenceNumber")
-
-  def getSchemeAdministratorReference(implicit messages: Messages): String =
-    messages("common.header.pensionSchemeAdministratorCheckReference")
-
-}
+case class ProtectionDetailsDisplayModel(
+    protectionReference: String,
+    psaReference: String,
+    applicationDate: Option[String]
+)

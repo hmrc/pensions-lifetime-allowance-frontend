@@ -17,7 +17,7 @@
 package views.pages.existingProtections
 
 import config.FrontendAppConfig
-import models.{
+import models.display.{
   ExistingInactiveProtectionsByType,
   ExistingInactiveProtectionsDisplayModel,
   ExistingProtectionDisplayModel,

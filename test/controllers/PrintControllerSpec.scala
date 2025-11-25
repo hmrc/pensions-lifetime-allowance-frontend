@@ -19,9 +19,10 @@ package controllers
 import auth.AuthFunction
 import config.FrontendAppConfig
 import connectors.CitizenDetailsConnector
-import constructors.DisplayConstructors
+import constructors.display.DisplayConstructors
 import mocks.AuthMock
 import models._
+import models.display.PrintDisplayModel
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._

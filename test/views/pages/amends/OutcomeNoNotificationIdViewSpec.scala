@@ -16,7 +16,7 @@
 
 package views.pages.amends
 
-import models.AmendResultDisplayModelNoNotificationId
+import models.display.AmendResultDisplayModelNoNotificationId
 import models.pla.AmendProtectionLifetimeAllowanceType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package models
+package models.display
 
 import models.pla.response.ProtectionType
 import models.pla.response.ProtectionType._

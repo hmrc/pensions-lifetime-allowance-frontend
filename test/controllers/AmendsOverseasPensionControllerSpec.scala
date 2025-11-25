@@ -20,7 +20,7 @@ import auth.{AuthFunction, AuthFunctionImpl}
 import common.Strings
 import config._
 import connectors.PsaLookupConnector
-import constructors.DisplayConstructors
+import constructors.display.DisplayConstructors
 import mocks.AuthMock
 import models._
 import models.amendModels._

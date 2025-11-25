@@ -16,7 +16,7 @@
 
 package views.pages.amends
 
-import models.AmendResultDisplayModel
+import models.display.AmendResultDisplayModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import testdata.AmendProtectionDisplayModelTestData._

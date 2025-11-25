@@ -16,7 +16,7 @@
 
 package views.playhelpers.templates
 
-import models.AmendPrintDisplayModel
+import models.display.AmendPrintDisplayModel
 import org.jsoup.Jsoup
 import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
 import testdata.AmendProtectionDisplayModelTestData._

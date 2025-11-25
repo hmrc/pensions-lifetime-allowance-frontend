@@ -20,13 +20,14 @@ import auth.AuthFunction
 import config._
 import connectors.PlaConnectorError.{IncorrectResponseBodyError, LockedResponseError, UnexpectedResponseError}
 import connectors.PlaConnector
-import constructors.DisplayConstructors
+import constructors.display.DisplayConstructors
 import generators.ModelGenerators
 import mocks.AuthMock
+import models.{ProtectionModel, TransformedReadResponseModel}
 import models.cache.CacheMap
 import models.pla.response.ProtectionStatus.{Dormant, Rejected}
 import models.pla.response.ProtectionType.IndividualProtection2016
-import models._
+import models.display.{ExistingInactiveProtectionsDisplayModel, ExistingProtectionsDisplayModel}
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.mockito.ArgumentMatchers.{any, eq => eqTo}
