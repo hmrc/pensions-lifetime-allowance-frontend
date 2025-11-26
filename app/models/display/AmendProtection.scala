@@ -16,7 +16,6 @@
 
 package models.display
 
-import enums.ApplicationType
 import play.api.mvc.Call
 
 case class AmendPrintDisplayModel(
@@ -54,16 +53,6 @@ case class AmendDisplayRowModel(
     displayValue: String*
 )
 
-case class ActiveAmendResultDisplayModel(
-    firstName: String,
-    surname: String,
-    nino: String,
-    protectionType: ApplicationType.Value,
-    notificationId: String,
-    protectedAmount: String,
-    details: Option[ProtectionDetailsDisplayModel]
-)
-
 case class AmendResultDisplayModel(
     notificationId: Int,
     protectedAmount: String,
@@ -74,9 +63,4 @@ case class AmendResultDisplayModelNoNotificationId(
     protectedAmount: String,
     protectionType: String,
     details: Option[AmendPrintDisplayModel]
-)
-
-case class InactiveAmendResultDisplayModel(
-    notificationId: Int,
-    additionalInfo: Seq[String]
 )

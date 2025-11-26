@@ -18,7 +18,6 @@ package controllers
 
 import auth.AuthFunction
 import common._
-import config.FrontendAppConfig
 import connectors.PlaConnectorError.{ConflictResponseError, IncorrectResponseBodyError, LockedResponseError}
 import connectors.{CitizenDetailsConnector, PlaConnector, PlaConnectorError}
 import constructors.AmendsGAConstructor
@@ -46,12 +45,10 @@ class AmendsController @Inject() (
     authFunction: AuthFunction,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
     technicalError: views.html.pages.fallback.technicalError,
-    outcomeActive: views.html.pages.amends.outcomeActive,
-    outcomeInactive: views.html.pages.amends.outcomeInactive,
     outcomeAmended: views.html.pages.amends.outcomeAmended,
     outcomeNoNotificationId: views.html.pages.amends.outcomeNoNotificationId,
     amendSummary: views.html.pages.amends.amendSummary
-)(implicit appConfig: FrontendAppConfig, ec: ExecutionContext)
+)(implicit ec: ExecutionContext)
     extends FrontendController(mcc)
     with I18nSupport
     with Logging
@@ -170,31 +167,20 @@ class AmendsController @Inject() (
 
             Future.successful(Ok(outcomeNoNotificationId(displayModel)))
           case Some(notificationId) =>
-            if (Constants.amendmentCodesList.contains(notificationId)) {
-              createProtectionModel(notificationId, model, nino).map {
+            createProtectionModel(notificationId, model, nino).map {
 
-                case Some(protectionModel) =>
-                  sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.protection)
-                  val displayModel =
-                    displayConstructors.createAmendResultDisplayModel(protectionModel, personalDetailsModelOpt, nino)
-                  Ok(outcomeAmended(displayModel))
+              case Some(protectionModel) =>
+                sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.protection)
+                val displayModel =
+                  displayConstructors.createAmendResultDisplayModel(protectionModel, personalDetailsModelOpt, nino)
+                Ok(outcomeAmended(displayModel))
 
-                case None =>
-                  logger.warn(
-                    s"Unable to retrieve fixed protection model from API GET endpoint for user with nino :$nino"
-                  )
-                  buildTechnicalError(technicalError)
+              case None =>
+                logger.warn(
+                  s"Unable to retrieve fixed protection model from API GET endpoint for user with nino :$nino"
+                )
+                buildTechnicalError(technicalError)
 
-              }
-            } else if (Constants.activeAmendmentCodes.contains(notificationId)) {
-              sessionCacheService.saveFormData[ProtectionModel]("openProtection", model.protection)
-              val displayModel =
-                displayConstructors.createActiveAmendResponseDisplayModel(model, personalDetailsModelOpt, nino)
-              Future.successful(Ok(outcomeActive(displayModel, modelGA, appConfig)))
-
-            } else {
-              val displayModel = displayConstructors.createInactiveAmendResponseDisplayModel(model)
-              Future.successful(Ok(outcomeInactive(displayModel, modelGA)))
             }
         }
       }

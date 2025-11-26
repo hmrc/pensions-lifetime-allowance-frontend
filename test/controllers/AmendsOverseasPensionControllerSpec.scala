@@ -92,8 +92,6 @@ class AmendsOverseasPensionControllerSpec
   val amendIP14PensionsWorthBeforeView: amendIP14PensionsWorthBefore   = inject[amendIP14PensionsWorthBefore]
   val amendIP14PensionsTakenBetweenView: amendIP14PensionsTakenBetween = inject[amendIP14PensionsTakenBetween]
   val amendIP14PensionsUsedBetweenView: amendIP14PensionsUsedBetween   = inject[amendIP14PensionsUsedBetween]
-  val outcomeActiveView: outcomeActive                                 = inject[outcomeActive]
-  val outcomeInactiveView: outcomeInactive                             = inject[outcomeInactive]
   val removePsoDebitsView: removePsoDebits                             = inject[removePsoDebits]
   val amendSummaryView: amendSummary                                   = inject[amendSummary]
 

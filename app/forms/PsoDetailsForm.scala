@@ -26,7 +26,7 @@ import utils.Constants
 
 import java.time.LocalDate
 
-object PSODetailsForm extends CommonBinders {
+object PsoDetailsForm extends CommonBinders {
 
   val key    = "pso"
   val amount = "psoAmt"
