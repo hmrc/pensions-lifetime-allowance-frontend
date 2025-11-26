@@ -45,6 +45,7 @@ trait AmendIP16PensionsUsedBetweenViewMessages {
 
   val plaPensionsUsedBetweenHelpLinkTextNew = "working out how much lifetime allowance you've used (opens in new tab)."
 
-  val plaPensionsUsedBetweenHelpLinkLocation = "https://www.gov.uk/guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
+  val plaPensionsUsedBetweenHelpLinkLocation =
+    "https://www.gov.uk/guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
 
 }

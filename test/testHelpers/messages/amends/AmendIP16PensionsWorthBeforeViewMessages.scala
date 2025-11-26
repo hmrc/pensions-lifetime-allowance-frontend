@@ -23,8 +23,8 @@ trait AmendIP16PensionsWorthBeforeViewMessages {
 
   val plaPensionsWorthBeforeHeader = "What were these pensions worth on 5 April 2016?"
 
-  val plaPensionsWorthBeforeParaOne   = "If you did not get an income from any other pensions since 6 April 2006:"
-  val plaPensionsWorthBeforeParaTwo   = "You'll need to do a different calculation if either of the following apply:"
+  val plaPensionsWorthBeforeParaOne = "If you did not get an income from any other pensions since 6 April 2006:"
+  val plaPensionsWorthBeforeParaTwo = "You'll need to do a different calculation if either of the following apply:"
 
   val plaPensionsWorthBeforeHelp = "How to work out the amount"
 

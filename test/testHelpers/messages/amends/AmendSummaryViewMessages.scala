@@ -30,19 +30,19 @@ trait AmendSummaryViewMessages {
   val plaAmendsDeclaration =
     "The information that I have provided is true and complete to the best of my knowledge and belief."
 
-  val plaAmendsSubmitButton       = "Submit your changes"
+  val plaAmendsSubmitButton = "Submit your changes"
 
   val plaSummaryPensionsHeading = "Value of pensions"
 
   val plaSummaryQuestionsPensionsTakenBefore = "Did you get an income from any of your pensions before 6 April 2006?"
 
-  val plaSummaryQuestionsOverseasPensions             = "Have you put money into a pension scheme held overseas?"
+  val plaSummaryQuestionsOverseasPensions = "Have you put money into a pension scheme held overseas?"
 
   val plaSummaryQuestionsOverseasPensionsAmt = "How much did you contribute?"
 
   val plaSummaryQuestionsTotalPensionsAmt = "Total value of pensions"
   val plaSummaryPsosHeading               = "Value of pension sharing orders"
 
-  val plaSummaryQuestionsPsoDetails      = "Date and amount of pension sharing order"
+  val plaSummaryQuestionsPsoDetails = "Date and amount of pension sharing order"
 
 }
