@@ -1,227 +1,180 @@
 ## Base ##
-service.name                    = Check your pension protections and enhancements
-psa.service.name                = Check your pension protections
-pla.base.yes                    = Yes
-pla.base.no                     = No
-pla.base.continue               = Continue
-pla.base.apply                  = Apply
-pla.base.submitApplication      = Confirm and submit
-pla.base.back                   = Back
-pla.base.change                 = Change
-pla.base.update                 = Update
-pla.base.remove                 = Remove
-pla.base.add                    = Add
-pla.base.readMore               = Read more
-pla.base.newWindow              = opens in a new window
-pla.base.newTab                 = opens in new tab
-pla.base.errorSummaryLabel      = There are errors on this page
-pla.base.errors.invalidDate     = Enter a date in the correct format eg 14 6 2016
-pla.base.errors.yearEmpty       = Enter a year
-pla.base.errors.monthEmpty      = Enter a month
-pla.base.errors.dayEmpty        = Enter a day
-site.title.error                = Error: {0}
-pla.base.date.fields.day        = Day
-pla.base.date.fields.month      = Month
-pla.base.date.fields.year       = Year
-pla.base.moneyInput.hint        = For example, £600 or £193.54
-common.header.protectedAmount = Protected amount
-common.header.protectionReferenceNumber = Protection reference number
+service.name               = Check your pension protections and enhancements
+psa.service.name           = Check your pension protections
+pla.base.yes               = Yes
+pla.base.no                = No
+pla.base.continue          = Continue
+pla.base.apply             = Apply
+pla.base.submitApplication = Confirm and submit
+pla.base.change            = Change
+pla.base.update            = Update
+pla.base.remove            = Remove
+pla.base.add               = Add
+pla.base.newTab            = opens in new tab
+pla.base.errorSummaryLabel = There are errors on this page
+site.title.error           = Error: {0}
+pla.base.moneyInput.hint   = For example, £600 or £193.54
+
+common.header.protectedAmount                          = Protected amount
+common.header.protectionReferenceNumber                = Protection reference number
 common.header.pensionSchemeAdministratorCheckReference = Pension scheme administrator check reference
-common.header.protectedLifetimeAllowance = Protected lifetime allowance
-common.header.protectionNotificationNumber = Protection notification number
-common.header.schemeAdministratorReference = Scheme administrator reference
-
-
-
-pla.license.1    = All content is available under the
-pla.license.link = Open Government Licence v3.0
-pla.license.2    = , except where otherwise stated
-pla.copyright    = Crown Copyright
-
-pla.base.errors.errorQuestion           = Enter an amount in the correct format eg £500000
-pla.base.errors.errorNegative           = Enter an amount that''s £0 or more
-pla.base.errors.errorMaximum            = Enter an amount less than £99,999,999,999,999.98
-pla.base.errors.errorDecimalPlaces      = The amount you''ve entered has too many decimal places
-pla.base.errors.mandatoryError          = Please answer this question
-
 
 ## PLAY! Error Overrides ##
 error.real                              = Enter a number without commas, for example 10000.00
 error.required                          = This field is required
 
-## Link Text ##
-pla.links.signout                       = Sign out
-
 ## Timeout ##
-pla.timeout.pageHeading = You''ve been signed out due to inactivity
-pla.timeout.returnToPTA.href.1 = You can start again from the
-pla.timeout.returnToPTA.href.2 = check your pension protections
+pla.timeout.pageHeading               = You''ve been signed out due to inactivity
+pla.timeout.returnToPTA.href.1        = You can start again from the
 pla.timeout.returnToPTA.href.linkText = check your pension protections and enhancements
-pla.timeout.returnToPTA.href.3 = page.
-
-
-## Not Found ##
-pla.notFound.title          = Page not found - 404
-pla.notFound.pageHeading    = This page can''t be found
-pla.notFound.paraOne        = Please check that you have entered the correct web address.
+pla.timeout.returnToPTA.href.3        = page.
 
 ## Failure Messages ##
-pla.notAuthorised.title         = Not Authorised
-pla.notAuthorised.pageHeading   = We cannot confirm your identity
-pla.notAuthorised.paraOne       = You can:
-pla.notAuthorised.paraTwo       = contact HM Revenue and Customs for help
-pla.notAuthorised.tryAgain      = try to confirm your identity again
-pla.lockedOut.title             = Locked Out
-pla.lockedOut.pageHeading       = You have tried to confirm your identity too many times
-pla.lockedOut.paraOne           = You can try again in 24 hours.
-pla.lockedOut.paraTwoP1         = If you have a query you can
-pla.lockedOut.paraTwoLinkText   = contact HM Revenue and Customs (opens in new tab)
-pla.lockedOut.paraTwoP2         = to get help.
-pla.technicalIssue.title        = Technical Issues
-pla.technicalIssue.pageHeading  = There is a technical problem
-pla.technicalIssue.paraOne      = This online service is experiencing difficulties.
-pla.technicalIssue.paraTwo      = Please try again in 5 minutes.
-pla.technicalIssue.tryAgain.p1 = Return to the
+pla.notAuthorised.title              = Not Authorised
+pla.notAuthorised.pageHeading        = We cannot confirm your identity
+pla.notAuthorised.paraOne            = You can:
+pla.notAuthorised.paraTwo            = contact HM Revenue and Customs for help
+pla.notAuthorised.tryAgain           = try to confirm your identity again
+pla.lockedOut.title                  = Locked Out
+pla.lockedOut.pageHeading            = You have tried to confirm your identity too many times
+pla.lockedOut.paraOne                = You can try again in 24 hours.
+pla.lockedOut.paraTwoP1              = If you have a query you can
+pla.lockedOut.paraTwoLinkText        = contact HM Revenue and Customs (opens in new tab)
+pla.lockedOut.paraTwoP2              = to get help.
+pla.technicalIssue.title             = Technical Issues
+pla.technicalIssue.pageHeading       = There is a technical problem
+pla.technicalIssue.paraOne           = This online service is experiencing difficulties.
+pla.technicalIssue.paraTwo           = Please try again in 5 minutes.
+pla.technicalIssue.tryAgain.p1       = Return to the
 pla.technicalIssue.tryAgain.linkText = check your pension protections
-pla.technicalIssue.tryAgain.p2 = page to try again.
+pla.technicalIssue.tryAgain.p2       = page to try again.
 
 ## Technical Error ##
-pla.techError.title                         = Technical Error
-pla.techError.pageHeading                   = Sorry, there''s been a problem
-pla.techError.paraOne                       = You''ll need to start your application again, but we''ve saved the details you''ve given us so far.
-pla.techError.startAgain                    = Start again
-pla.techError.retry                         = Retry
+pla.techError.title       = Technical Error
+pla.techError.pageHeading = Sorry, there''s been a problem
+pla.techError.paraOne     = You''ll need to start your application again, but we''ve saved the details you''ve given us so far.
+pla.techError.startAgain  = Start again
+pla.techError.retry       = Retry
 
 ## Generic 400 Type Errors in English ##
-global.error.400.title=Bad request - 400
-global.error.400.heading=Bad request
-global.error.400.message=Please check that you have entered the correct web address.
-global.error.404.title=Page not found - 404
-global.error.404.heading=This page can''t be found
-global.error.404.message=Please check that you have entered the correct web address.
+global.error.400.title   = Bad request - 400
+global.error.400.heading = Bad request
+global.error.400.message = Please check that you have entered the correct web address.
+global.error.404.title   = Page not found - 404
+global.error.404.heading = This page can''t be found
+global.error.404.message = Please check that you have entered the correct web address.
 
 ## Generic 500 Error ##
-pla.error.InternalServerError500.title=Sorry, there is a problem with the service
-pla.error.InternalServerError500.heading=Sorry, there is a problem with the service
-pla.error.InternalServerError500.message=Try again later. Your pension allowance account is not affected by this problem.
+pla.error.InternalServerError500.title   = Sorry, there is a problem with the service
+pla.error.InternalServerError500.heading = Sorry, there is a problem with the service
+pla.error.InternalServerError500.message = Try again later. Your pension allowance account is not affected by this problem.
 
-## No notification ID returned ##
-pla.noNotificationId.title                  = Check your protection
-pla.noNotificationId.paraOne.beforeLink     = You can
-pla.noNotificationId.paraOne.linkText       = view or change details of your protections
-pla.noNotificationId.paraOne.afterLink      = at any time.
-
-
-## Pensions Taken ##
-pla.pensionsTaken.mandatoryErr              = Please answer this question
-pla.pensionsTaken.errors.mandatoryError.ip2016 = Select yes if before 6 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension?
+## IP16 Pensions Taken ##
+pla.pensionsTaken.errors.mandatoryError.ip2016                   = Select yes if before 6 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension?
 pla.pensionsTaken.errors.mandatoryError.IndividualProtection2016 = Select yes if before 6 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension?
 
-## IP14 Pensions Taken ##
-pla.ip14PensionsTaken.title                 = Did any of the following happen before 6 April 2014?
-pla.ip14PensionsTaken.legend                = Before 6 April 2014, did you turn 75, take money from your pensions, or transfer to an overseas pension?
-
-
-## Pensions Taken Before ##
-pla.pensionsTakenBefore.title               = Did you get an income from any of your pensions before 6 April 2006?
-pla.pensionsTakenBefore.errors.mandatoryError.ip2016 = Select yes if you got an income from any of your pensions before 6 April 2006
+## IP16 Pensions Taken Before ##
+pla.pensionsTakenBefore.title                                          = Did you get an income from any of your pensions before 6 April 2006?
+pla.pensionsTakenBefore.errors.mandatoryError.ip2016                   = Select yes if you got an income from any of your pensions before 6 April 2006
 pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2016 = Select yes if you got an income from any of your pensions before 6 April 2006
 
+
+## IP14 Pensions Taken Before ##
+pla.ip14PensionsTakenBefore.question = What were these pensions worth on 5 April 2014?
+pla.ip14PensionsTakenBefore.step.2   = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014.
+
+pla.pensionsTakenBefore.errors.mandatoryError.ip2014                   = Select yes if you got an income from any of your pensions before 6 April 2006
+pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2014 = Select yes if you got an income from any of your pensions before 6 April 2006
+
 ## Pensions Worth Before ##
-pla.pensionsWorthBefore.title               = What were these pensions worth on 5 April 2016?
-pla.pensionsWorthBefore.question            = What were these pensions worth on 5 April 2016?
-pla.pensionsWorthBefore.help                = How to work out the amount
-pla.pensionsWorthBefore.para.1              = If you did not get an income from any other pensions since 6 April 2006:
-pla.pensionsWorthBefore.step.1              = Take only the pensions from which you got an income prior to 6 April 2006.
-pla.pensionsWorthBefore.step.2              = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2016.
-pla.pensionsWorthBefore.step.3              = Multiply this figure by 25.
-pla.pensionsWorthBefore.para.2              = You''ll need to do a different calculation if either of the following apply:
-pla.pensionsWorthBefore.bullet.1            = you did receive an income from other pensions since 6 April 2006
-pla.pensionsWorthBefore.bullet.2            = you have a drawdown pension
-pla.pensionsWorthBefore.para.3              = Find out how in this
-pla.pensionsWorthBefore.helpLinkText        = technical guidance on valuing your pensions
-pla.pensionsWorthBefore.amount.errors.mandatoryError.ip2016 = Enter what these pensions were worth on 5 April 2016
+pla.pensionsWorthBefore.title        = What were these pensions worth on 5 April 2016?
+pla.pensionsWorthBefore.question     = What were these pensions worth on 5 April 2016?
+pla.pensionsWorthBefore.help         = How to work out the amount
+pla.pensionsWorthBefore.para.1       = If you did not get an income from any other pensions since 6 April 2006:
+pla.pensionsWorthBefore.step.1       = Take only the pensions from which you got an income prior to 6 April 2006.
+pla.pensionsWorthBefore.step.2       = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2016.
+pla.pensionsWorthBefore.step.3       = Multiply this figure by 25.
+pla.pensionsWorthBefore.para.2       = You''ll need to do a different calculation if either of the following apply:
+pla.pensionsWorthBefore.bullet.1     = you did receive an income from other pensions since 6 April 2006
+pla.pensionsWorthBefore.bullet.2     = you have a drawdown pension
+pla.pensionsWorthBefore.para.3       = Find out how in this
+pla.pensionsWorthBefore.helpLinkText = technical guidance on valuing your pensions
+
+pla.pensionsWorthBefore.amount.errors.mandatoryError.ip2016                   = Enter what these pensions were worth on 5 April 2016
 pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2016 = Enter what these pensions were worth on 5 April 2016
-pla.pensionsWorthBefore.amount.errors.notReal.ip2016        = What these pensions were worth on the 5 April 2016 must be a number, like 10000.00
+pla.pensionsWorthBefore.amount.errors.notReal.ip2016                          = What these pensions were worth on the 5 April 2016 must be a number, like 10000.00
 pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2016        = What these pensions were worth on the 5 April 2016 must be a number, like 10000.00
-pla.pensionsWorthBefore.amount.errors.decimal.ip2016        = What these pensions were worth on 5 April 2016 has too many numbers after the decimal point
+pla.pensionsWorthBefore.amount.errors.decimal.ip2016                          = What these pensions were worth on 5 April 2016 has too many numbers after the decimal point
 pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2016        = What these pensions were worth on 5 April 2016 has too many numbers after the decimal point
-pla.pensionsWorthBefore.amount.errors.negative.ip2016       = What these pensions were worth on 5 April 2016 must be £0 or more
+pla.pensionsWorthBefore.amount.errors.negative.ip2016                         = What these pensions were worth on 5 April 2016 must be £0 or more
 pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2016       = What these pensions were worth on 5 April 2016 must be £0 or more
-pla.pensionsWorthBefore.amount.errors.max.ip2016            = What these pensions were worth on 5 April 2016 must be £1,000,000,000 or less
+pla.pensionsWorthBefore.amount.errors.max.ip2016                              = What these pensions were worth on 5 April 2016 must be £1,000,000,000 or less
 pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2016            = What these pensions were worth on 5 April 2016 must be £1,000,000,000 or less
 
 ## IP14 Pensions Worth Before ##
-pla.pensionsWorthBefore.amount.errors.mandatoryError.ip2014 = Enter what these pensions were worth on 5 April 2014
+pla.pensionsWorthBefore.amount.errors.mandatoryError.ip2014                   = Enter what these pensions were worth on 5 April 2014
 pla.pensionsWorthBefore.amount.errors.mandatoryError.IndividualProtection2014 = Enter what these pensions were worth on 5 April 2014
-pla.pensionsWorthBefore.amount.errors.notReal.ip2014        = What these pensions were worth on the 5 April 2014 must be a number, like 10000.00
+pla.pensionsWorthBefore.amount.errors.notReal.ip2014                          = What these pensions were worth on the 5 April 2014 must be a number, like 10000.00
 pla.pensionsWorthBefore.amount.errors.notReal.IndividualProtection2014        = What these pensions were worth on the 5 April 2014 must be a number, like 10000.00
-pla.pensionsWorthBefore.amount.errors.decimal.ip2014        = What these pensions were worth on 5 April 2014 has too many numbers after the decimal point
+pla.pensionsWorthBefore.amount.errors.decimal.ip2014                          = What these pensions were worth on 5 April 2014 has too many numbers after the decimal point
 pla.pensionsWorthBefore.amount.errors.decimal.IndividualProtection2014        = What these pensions were worth on 5 April 2014 has too many numbers after the decimal point
-pla.pensionsWorthBefore.amount.errors.negative.ip2014       = What these pensions were worth on 5 April 2014 must be £0 or more
+pla.pensionsWorthBefore.amount.errors.negative.ip2014                         = What these pensions were worth on 5 April 2014 must be £0 or more
 pla.pensionsWorthBefore.amount.errors.negative.IndividualProtection2014       = What these pensions were worth on 5 April 2014 must be £0 or more
-pla.pensionsWorthBefore.amount.errors.max.ip2014            = What these pensions were worth on 5 April 2014 must be £1,000,000,000 or less
+pla.pensionsWorthBefore.amount.errors.max.ip2014                              = What these pensions were worth on 5 April 2014 must be £1,000,000,000 or less
 pla.pensionsWorthBefore.amount.errors.max.IndividualProtection2014            = What these pensions were worth on 5 April 2014 must be £1,000,000,000 or less
 
-## IP14 Pensions Taken Before ##
-pla.pensionsTakenBefore.errors.mandatoryError.ip2014 = Select yes if you got an income from any of your pensions before 6 April 2006
-pla.pensionsTakenBefore.errors.mandatoryError.IndividualProtection2014 = Select yes if you got an income from any of your pensions before 6 April 2006
-pla.ip14PensionsTakenBefore.question        = What were these pensions worth on 5 April 2014?
-pla.ip14PensionsTakenBefore.step.2          = Work out the annual amount you were able to receive from these pensions (the annual rate) on 5 April 2014.
-
 ## Pensions Taken Between ##
-pla.pensionsTakenBetween.title              = Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
-pla.pensionsTakenBetween.bullet.1           = you got money from your pensions
-pla.pensionsTakenBetween.bullet.2           = you transferred a pension to a scheme held overseas
-pla.pensionsTakenBetween.bullet.3           = you turned 75 with pension savings which you hadn''t yet taken
-pla.pensionsTakenBetween.errors.mandatoryError.ip2016 = Select yes if between 6 April 2006 and 5 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
+pla.pensionsTakenBetween.title    = Between 6 April 2006 and 5 April 2016, did you get money from your pensions, transfer a pension overseas, or turn 75 with money still in a pension?
+pla.pensionsTakenBetween.bullet.1 = you got money from your pensions
+pla.pensionsTakenBetween.bullet.2 = you transferred a pension to a scheme held overseas
+pla.pensionsTakenBetween.bullet.3 = you turned 75 with pension savings which you hadn''t yet taken
+
+pla.pensionsTakenBetween.errors.mandatoryError.ip2016                   = Select yes if between 6 April 2006 and 5 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
 pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2016 = Select yes if between 6 April 2006 and 5 April 2016, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
 
-pla.pensionsTakenBetween.legend             = Between 6 April 2006 and 5 April 2016 did you turn 75, take money from your pensions, or transfer to an overseas pension?
-
 ## IP14 Pensions Taken Between ##
-pla.pensionsTakenBetween.errors.mandatoryError.ip2014 = Select yes if between 6 April 2006 and 5 April 2014, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
-pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2014 = Select yes if between 6 April 2006 and 5 April 2014, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
-pla.ip14PensionsTakenBetween.title          = Did any of these events happen between 6 April 2006 and 5 April 2014?
-pla.ip14PensionsTakenBetween.step.1         = Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened.
-pla.ip14PensionsTakenBetween.para.2         = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2014.
+pla.ip14PensionsTakenBetween.title  = Did any of these events happen between 6 April 2006 and 5 April 2014?
+pla.ip14PensionsTakenBetween.step.1 = Take the lifetime allowance at 5 April 2014 (£1.5m) and divide by the value of your lifetime allowance on the date the event happened.
+pla.ip14PensionsTakenBetween.para.2 = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2014.
+pla.ip14PensionsTakenBetween.legend = Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?
 
-pla.ip14PensionsTakenBetween.legend         = Between 6 April 2006 and 5 April 2014 did you turn 75, take money from your pensions, or transfer to an overseas pension?
+pla.pensionsTakenBetween.errors.mandatoryError.ip2014                   = Select yes if between 6 April 2006 and 5 April 2014, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
+pla.pensionsTakenBetween.errors.mandatoryError.IndividualProtection2014 = Select yes if between 6 April 2006 and 5 April 2014, you got money from your pensions, transferred a pension overseas, or turned 75 with money still in a pension
 
 ## Pensions Used Between ##
-pla.pensionsUsedBetween.title              = How much lifetime allowance have you used?
-pla.pensionsUsedBetween.question           = How much lifetime allowance have you used?
-pla.pensionsUsedBetween.para.1             = You''ll have used some of your lifetime allowance if any of these events happened.
-pla.pensionsUsedBetween.para.2             = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
-pla.pensionsUsedBetween.step.1             = Take the lifetime allowance at 5 April 2016 (£1.25m) and divide by the value of your lifetime allowance on the date the event happened.
-pla.pensionsUsedBetween.step.2             = Multiply the value of your lifetime allowance on the date the event happened by the percentage of lifetime allowance used.
-pla.pensionsUsedBetween.step.3             = Take the result from step 1 and multiply by the result of step 2.
-pla.pensionsUsedBetween.step.4             = Repeat for each event and total the amounts together.
-pla.pensionsUsedBetween.para.3             = Read technical guidance on {0}
-pla.pensionsUsedBetween.para.3.nonInput    = Read technical guidance on
-pla.pensionsUsedBetween.help               = How do I work out the value?
-pla.pensionsUsedBetween.helpLinkText       = working out how much lifetime allowance you''ve used
-pla.pensionsUsedBetween.amount.errors.mandatoryError.ip2016 = Enter how much lifetime allowance you have used
+pla.pensionsUsedBetween.title           = How much lifetime allowance have you used?
+pla.pensionsUsedBetween.question        = How much lifetime allowance have you used?
+pla.pensionsUsedBetween.para.1          = You''ll have used some of your lifetime allowance if any of these events happened.
+pla.pensionsUsedBetween.para.2          = You can ask your pension scheme administrator to tell you the amount of lifetime allowance you''ve used for individual protection 2016.
+pla.pensionsUsedBetween.step.1          = Take the lifetime allowance at 5 April 2016 (£1.25m) and divide by the value of your lifetime allowance on the date the event happened.
+pla.pensionsUsedBetween.step.2          = Multiply the value of your lifetime allowance on the date the event happened by the percentage of lifetime allowance used.
+pla.pensionsUsedBetween.step.3          = Take the result from step 1 and multiply by the result of step 2.
+pla.pensionsUsedBetween.step.4          = Repeat for each event and total the amounts together.
+pla.pensionsUsedBetween.para.3.nonInput = Read technical guidance on
+pla.pensionsUsedBetween.help            = How do I work out the value?
+pla.pensionsUsedBetween.helpLinkText    = working out how much lifetime allowance you''ve used
+
+pla.pensionsUsedBetween.amount.errors.mandatoryError.ip2016                   = Enter how much lifetime allowance you have used
 pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2016 = Enter how much lifetime allowance you have used
-pla.pensionsUsedBetween.amount.errors.notReal.ip2016        = How much lifetime allowance you have used must be a number, like 10000.00
+pla.pensionsUsedBetween.amount.errors.notReal.ip2016                          = How much lifetime allowance you have used must be a number, like 10000.00
 pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2016        = How much lifetime allowance you have used must be a number, like 10000.00
-pla.pensionsUsedBetween.amount.errors.decimal.ip2016        = How much lifetime allowance you have used has too many numbers after the decimal point
+pla.pensionsUsedBetween.amount.errors.decimal.ip2016                          = How much lifetime allowance you have used has too many numbers after the decimal point
 pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2016        = How much lifetime allowance you have used has too many numbers after the decimal point
-pla.pensionsUsedBetween.amount.errors.negative.ip2016       = How much lifetime allowance you have used must be £0 or more
+pla.pensionsUsedBetween.amount.errors.negative.ip2016                         = How much lifetime allowance you have used must be £0 or more
 pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2016       = How much lifetime allowance you have used must be £0 or more
-pla.pensionsUsedBetween.amount.errors.max.ip2016            = How much lifetime allowance you have used must be £1,000,000,000 or less
+pla.pensionsUsedBetween.amount.errors.max.ip2016                              = How much lifetime allowance you have used must be £1,000,000,000 or less
 pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2016            = How much lifetime allowance you have used must be £1,000,000,000 or less
 
 ## IP14 Pensions Used Between ##
-pla.pensionsUsedBetween.amount.errors.mandatoryError.ip2014 = Enter how much lifetime allowance you have used
+pla.pensionsUsedBetween.amount.errors.mandatoryError.ip2014                   = Enter how much lifetime allowance you have used
 pla.pensionsUsedBetween.amount.errors.mandatoryError.IndividualProtection2014 = Enter how much lifetime allowance you have used
-pla.pensionsUsedBetween.amount.errors.notReal.ip2014        = How much lifetime allowance you have used must be a number, like 10000.00
+pla.pensionsUsedBetween.amount.errors.notReal.ip2014                          = How much lifetime allowance you have used must be a number, like 10000.00
 pla.pensionsUsedBetween.amount.errors.notReal.IndividualProtection2014        = How much lifetime allowance you have used must be a number, like 10000.00
-pla.pensionsUsedBetween.amount.errors.decimal.ip2014        = How much lifetime allowance you have used has too many numbers after the decimal point
+pla.pensionsUsedBetween.amount.errors.decimal.ip2014                          = How much lifetime allowance you have used has too many numbers after the decimal point
 pla.pensionsUsedBetween.amount.errors.decimal.IndividualProtection2014        = How much lifetime allowance you have used has too many numbers after the decimal point
-pla.pensionsUsedBetween.amount.errors.negative.ip2014       = How much lifetime allowance you have used must be £0 or more
+pla.pensionsUsedBetween.amount.errors.negative.ip2014                         = How much lifetime allowance you have used must be £0 or more
 pla.pensionsUsedBetween.amount.errors.negative.IndividualProtection2014       = How much lifetime allowance you have used must be £0 or more
-pla.pensionsUsedBetween.amount.errors.max.ip2014            = How much lifetime allowance you have used must be £1,000,000,000 or less
+pla.pensionsUsedBetween.amount.errors.max.ip2014                              = How much lifetime allowance you have used must be £1,000,000,000 or less
 pla.pensionsUsedBetween.amount.errors.max.IndividualProtection2014            = How much lifetime allowance you have used must be £1,000,000,000 or less
 
 ## Overseas Pensions ##
@@ -229,88 +182,83 @@ pla.overseasPensions.title                  = Have you put money into a pension 
 pla.overseasPensions.question               = Only include contributions you made between 6 April 2006 and 5 April 2016 that you got UK tax relief on.
 pla.overseasPensions.questionTwo            = How much did you contribute?
 pla.overseasPensions.legend                 = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2016?
-pla.overseasPensions.errors.mandatoryError.ip2016  = Select yes if you have put money into a pension scheme held overseas
-pla.overseasPensions.errors.mandatoryError.IndividualProtection2016  = Select yes if you have put money into a pension scheme held overseas
-pla.overseasPensions.amount.errors.mandatoryError.ip2016 = Enter how much you contributed
+
+pla.overseasPensions.errors.mandatoryError.ip2016                          = Select yes if you have put money into a pension scheme held overseas
+pla.overseasPensions.errors.mandatoryError.IndividualProtection2016        = Select yes if you have put money into a pension scheme held overseas
+pla.overseasPensions.amount.errors.mandatoryError.ip2016                   = Enter how much you contributed
 pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2016 = Enter how much you contributed
-pla.overseasPensions.amount.errors.notReal.ip2016 = How much you contributed must be a number, like 10000.00
-pla.overseasPensions.amount.errors.notReal.IndividualProtection2016 = How much you contributed must be a number, like 10000.00
-pla.overseasPensions.amount.errors.decimal.ip2016 = How much you contributed has too many numbers after the decimal point
-pla.overseasPensions.amount.errors.decimal.IndividualProtection2016 = How much you contributed has too many numbers after the decimal point
-pla.overseasPensions.amount.errors.negative.ip2016 = How much you contributed must be £0 or more
-pla.overseasPensions.amount.errors.negative.IndividualProtection2016 = How much you contributed must be £0 or more
-pla.overseasPensions.amount.errors.max.ip2016 = How much you contributed must be £1,000,000,000 or less
-pla.overseasPensions.amount.errors.max.IndividualProtection2016 = How much you contributed must be £1,000,000,000 or less
+pla.overseasPensions.amount.errors.notReal.ip2016                          = How much you contributed must be a number, like 10000.00
+pla.overseasPensions.amount.errors.notReal.IndividualProtection2016        = How much you contributed must be a number, like 10000.00
+pla.overseasPensions.amount.errors.decimal.ip2016                          = How much you contributed has too many numbers after the decimal point
+pla.overseasPensions.amount.errors.decimal.IndividualProtection2016        = How much you contributed has too many numbers after the decimal point
+pla.overseasPensions.amount.errors.negative.ip2016                         = How much you contributed must be £0 or more
+pla.overseasPensions.amount.errors.negative.IndividualProtection2016       = How much you contributed must be £0 or more
+pla.overseasPensions.amount.errors.max.ip2016                              = How much you contributed must be £1,000,000,000 or less
+pla.overseasPensions.amount.errors.max.IndividualProtection2016            = How much you contributed must be £1,000,000,000 or less
 
 ## IP14 Overseas Pensions ##
 pla.ip14OverseasPensions.question           = Only include contributions you made between 6 April 2006 and 5 April 2014 that you got UK tax relief on.
 pla.ip14OverseasPensions.legend             = Did you put money into an overseas pension scheme between 6 April 2006 and 5 April 2014?
-pla.overseasPensions.errors.mandatoryError.ip2014  = Select yes if you have put money into a pension scheme held overseas
-pla.overseasPensions.errors.mandatoryError.IndividualProtection2014  = Select yes if you have put money into a pension scheme held overseas
-pla.overseasPensions.amount.errors.mandatoryError.ip2014 = Enter how much you contributed
+
+pla.overseasPensions.errors.mandatoryError.ip2014                          = Select yes if you have put money into a pension scheme held overseas
+pla.overseasPensions.errors.mandatoryError.IndividualProtection2014        = Select yes if you have put money into a pension scheme held overseas
+pla.overseasPensions.amount.errors.mandatoryError.ip2014                   = Enter how much you contributed
 pla.overseasPensions.amount.errors.mandatoryError.IndividualProtection2014 = Enter how much you contributed
-pla.overseasPensions.amount.errors.notReal.ip2014 = How much you contributed must be a number, like 10000.00
-pla.overseasPensions.amount.errors.notReal.IndividualProtection2014 = How much you contributed must be a number, like 10000.00
-pla.overseasPensions.amount.errors.decimal.ip2014 = How much you contributed has too many numbers after the decimal point
-pla.overseasPensions.amount.errors.decimal.IndividualProtection2014 = How much you contributed has too many numbers after the decimal point
-pla.overseasPensions.amount.errors.negative.ip2014 = How much you contributed must be £0 or more
-pla.overseasPensions.amount.errors.negative.IndividualProtection2014 = How much you contributed must be £0 or more
-pla.overseasPensions.amount.errors.max.ip2014 = How much you contributed must be £1,000,000,000 or less
-pla.overseasPensions.amount.errors.max.IndividualProtection2014 = How much you contributed must be £1,000,000,000 or less
+pla.overseasPensions.amount.errors.notReal.ip2014                          = How much you contributed must be a number, like 10000.00
+pla.overseasPensions.amount.errors.notReal.IndividualProtection2014        = How much you contributed must be a number, like 10000.00
+pla.overseasPensions.amount.errors.decimal.ip2014                          = How much you contributed has too many numbers after the decimal point
+pla.overseasPensions.amount.errors.decimal.IndividualProtection2014        = How much you contributed has too many numbers after the decimal point
+pla.overseasPensions.amount.errors.negative.ip2014                         = How much you contributed must be £0 or more
+pla.overseasPensions.amount.errors.negative.IndividualProtection2014       = How much you contributed must be £0 or more
+pla.overseasPensions.amount.errors.max.ip2014                              = How much you contributed must be £1,000,000,000 or less
+pla.overseasPensions.amount.errors.max.IndividualProtection2014            = How much you contributed must be £1,000,000,000 or less
 
 ## CURRENT PENSIONS ##
-pla.currentPensions.title                   = What were your UK pensions worth on 5 April 2016?
-pla.currentPensions.hiddenLink              = How do I work out the value?
+pla.currentPensions.title                 = What were your UK pensions worth on 5 April 2016?
+pla.currentPensions.hiddenLink            = How do I work out the value?
+pla.currentPensions.hiddenTextPara        = Use figures that were correct at 5 April 2016.
+pla.currentPensions.hiddenText1           = Take any pensions where your employer guarantees you a specified annual income.
+pla.currentPensions.hiddenText2           = Multiply the annual income from these pensions by 20.
+pla.currentPensions.hiddenText3           = Add the amount of any lump sum payments you''ll get on top of this annual income.
+pla.currentPensions.hiddenText4           = Add the total amount you''ve built up in your other pension pots.
+pla.currentPensions.readGuidance          = Read technical guidance on {0}
+pla.currentPensions.readGuidance.nonInput = Read technical guidance on
+pla.currentPensions.helpLinkText          = how to value pensions you''ve not yet taken
+pla.currentPensions.question              = Do not include pensions you''ve already taken or the State Pension.
 
-pla.currentPensions.hiddenTextPara          = Use figures that were correct at 5 April 2016.
-pla.currentPensions.hiddenText1             = Take any pensions where your employer guarantees you a specified annual income.
-pla.currentPensions.hiddenText2             = Multiply the annual income from these pensions by 20.
-pla.currentPensions.hiddenText3             = Add the amount of any lump sum payments you''ll get on top of this annual income.
-pla.currentPensions.hiddenText4             = Add the total amount you''ve built up in your other pension pots.
-pla.currentPensions.readGuidance            = Read technical guidance on {0}
-pla.currentPensions.readGuidance.nonInput   = Read technical guidance on
-pla.currentPensions.helpLinkText            = how to value pensions you''ve not yet taken
-pla.currentPensions.question                = Do not include pensions you''ve already taken or the State Pension.
-pla.currentPensions.amount.errors.mandatoryError.ip2016 = Enter what your UK pensions were worth on 5 April 2016
+pla.currentPensions.amount.errors.mandatoryError.ip2016                   = Enter what your UK pensions were worth on 5 April 2016
 pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2016 = Enter what your UK pensions were worth on 5 April 2016
-pla.currentPensions.amount.errors.notReal.ip2016 = What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00
-pla.currentPensions.amount.errors.notReal.IndividualProtection2016 = What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00
-pla.currentPensions.amount.errors.decimal.ip2016 = What your UK pensions were worth on 5 April 2016 has too many numbers after the decimal point
-pla.currentPensions.amount.errors.decimal.IndividualProtection2016 = What your UK pensions were worth on 5 April 2016 has too many numbers after the decimal point
-pla.currentPensions.amount.errors.negative.ip2016 = What your UK pensions were worth on 5 April 2016 must be £0 or more
-pla.currentPensions.amount.errors.negative.IndividualProtection2016 = What your UK pensions were worth on 5 April 2016 must be £0 or more
-pla.currentPensions.amount.errors.max.ip2016 = What your UK pensions were worth on 5 April 2016 must be £1,000,000,000 or less
-pla.currentPensions.amount.errors.max.IndividualProtection2016 = What your UK pensions were worth on 5 April 2016 must be £1,000,000,000 or less
+pla.currentPensions.amount.errors.notReal.ip2016                          = What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00
+pla.currentPensions.amount.errors.notReal.IndividualProtection2016        = What your UK pensions were worth on 5 April 2016 must be a number, like 10000.00
+pla.currentPensions.amount.errors.decimal.ip2016                          = What your UK pensions were worth on 5 April 2016 has too many numbers after the decimal point
+pla.currentPensions.amount.errors.decimal.IndividualProtection2016        = What your UK pensions were worth on 5 April 2016 has too many numbers after the decimal point
+pla.currentPensions.amount.errors.negative.ip2016                         = What your UK pensions were worth on 5 April 2016 must be £0 or more
+pla.currentPensions.amount.errors.negative.IndividualProtection2016       = What your UK pensions were worth on 5 April 2016 must be £0 or more
+pla.currentPensions.amount.errors.max.ip2016                              = What your UK pensions were worth on 5 April 2016 must be £1,000,000,000 or less
+pla.currentPensions.amount.errors.max.IndividualProtection2016            = What your UK pensions were worth on 5 April 2016 must be £1,000,000,000 or less
 
 ## IP14 CURRENT PENSIONS ##
-pla.ip14CurrentPensions.title               = What were your UK pensions worth on 5 April 2014?
-pla.ip14CurrentPensions.hiddenTextPara      = Use figures that were correct at 5 April 2014.
-pla.currentPensions.amount.errors.mandatoryError.ip2014 = Enter what your UK pensions were worth on 5 April 2014
+pla.ip14CurrentPensions.title          = What were your UK pensions worth on 5 April 2014?
+pla.ip14CurrentPensions.hiddenTextPara = Use figures that were correct at 5 April 2014.
+
+pla.currentPensions.amount.errors.mandatoryError.ip2014                   = Enter what your UK pensions were worth on 5 April 2014
 pla.currentPensions.amount.errors.mandatoryError.IndividualProtection2014 = Enter what your UK pensions were worth on 5 April 2014
-pla.currentPensions.amount.errors.notReal.ip2014 = What your UK pensions were worth on 5 April 2014 must be a number, like 10000.00
-pla.currentPensions.amount.errors.notReal.IndividualProtection2014 = What your UK pensions were worth on 5 April 2014 must be a number, like 10000.00
-pla.currentPensions.amount.errors.decimal.ip2014 = What your UK pensions were worth on 5 April 2014 has too many numbers after the decimal point
-pla.currentPensions.amount.errors.decimal.IndividualProtection2014 = What your UK pensions were worth on 5 April 2014 has too many numbers after the decimal point
-pla.currentPensions.amount.errors.negative.ip2014 = What your UK pensions were worth on 5 April 2014 must be £0 or more
-pla.currentPensions.amount.errors.negative.IndividualProtection2014 = What your UK pensions were worth on 5 April 2014 must be £0 or more
-pla.currentPensions.amount.errors.max.ip2014 = What your UK pensions were worth on 5 April 2014 must be £1,000,000,000 or less
-pla.currentPensions.amount.errors.max.IndividualProtection2014 = What your UK pensions were worth on 5 April 2014 must be £1,000,000,000 or less
-
-
-
+pla.currentPensions.amount.errors.notReal.ip2014                          = What your UK pensions were worth on 5 April 2014 must be a number, like 10000.00
+pla.currentPensions.amount.errors.notReal.IndividualProtection2014        = What your UK pensions were worth on 5 April 2014 must be a number, like 10000.00
+pla.currentPensions.amount.errors.decimal.ip2014                          = What your UK pensions were worth on 5 April 2014 has too many numbers after the decimal point
+pla.currentPensions.amount.errors.decimal.IndividualProtection2014        = What your UK pensions were worth on 5 April 2014 has too many numbers after the decimal point
+pla.currentPensions.amount.errors.negative.ip2014                         = What your UK pensions were worth on 5 April 2014 must be £0 or more
+pla.currentPensions.amount.errors.negative.IndividualProtection2014       = What your UK pensions were worth on 5 April 2014 must be £0 or more
+pla.currentPensions.amount.errors.max.ip2014                              = What your UK pensions were worth on 5 April 2014 must be £1,000,000,000 or less
+pla.currentPensions.amount.errors.max.IndividualProtection2014            = What your UK pensions were worth on 5 April 2014 must be £1,000,000,000 or less
 
 ## PENSION DEBITS ##
-pla.pensionDebits.errors.mandatoryError     = Select yes if any of your pensions been shared in a divorce since 5 April 2016
-
-## IP14 PENSION DEBITS ##
-pla.ip14PensionDebits.title                 = Have any of your pensions been shared in a divorce since 5 April 2014?
-
+pla.pensionDebits.errors.mandatoryError = Select yes if any of your pensions been shared in a divorce since 5 April 2016
 
 ## Pension Sharing Order Details ##
 pla.psoDetails.title                        = Pension sharing order
 pla.psoDetails.dateQuestionText             = Date of pension sharing order
 pla.psoDetails.dateHintText                 = For example, 18 4 2021
-pla.psoDetails.dateHintText14               = For example, 18 4 2014
 pla.psoDetails.psoAmountQuestion            = Amount of pension sharing order
 pla.psoDetails.errorQuestion                = Enter a number without commas, for example 10000.00
 pla.psoDetails.amount.errors.mandatoryError = Enter the amount of pension sharing order
@@ -318,205 +266,159 @@ pla.psoDetails.amount.errors.decimal        = The amount of pension sharing orde
 pla.psoDetails.amount.errors.negative       = The amount of pension sharing order must be £0 or more
 pla.psoDetails.amount.errors.max            = The amount of pension sharing order must be £1,000,000,000 or less
 
-pso.error.required                   = Enter the date of your pension sharing order
-pso.error.required.day               = The date of your pension sharing order must include a day
-pso.error.required.dayMonth          = The date of your pension sharing order must include a day and month
-pso.error.required.dayYear           = The date of your pension sharing order must include a day and year
-pso.error.required.month             = The date of your pension sharing order must include a month
-pso.error.required.monthYear         = The date of your pension sharing order must include a month and year
-pso.error.required.year              = The date of your pension sharing order must include a year
-pso.error.invalid                    = Enter a valid date in numbers
-pso.error.invalid.day                = The day of your pension sharing order must be a number
-pso.error.invalid.dayMonth           = The day and month of your pension sharing order must be a number
-pso.error.invalid.dayYear            = The day and year of your pension sharing order must be a number
-pso.error.invalid.month              = The month of your pension sharing order must be a number
-pso.error.invalid.monthYear          = The month and year of your pension sharing order must be a number
-pso.error.invalid.year               = The year of your pension sharing order must be a number
-pso.error.notReal                    = The year of your pension sharing order must be a number
-pso.error.notReal.day                = The day of your pension sharing order must be a valid number
-pso.error.notReal.month              = The month of your pension sharing order must be a valid number
-pso.error.notReal.year               = The year of your pension sharing order must be a valid number
-pso.error.range.min                  = The date of your pension sharing order must be after {0}
-pso.error.range.max                  = The date of your pension sharing order cannot be in the future
-
+pso.error.required           = Enter the date of your pension sharing order
+pso.error.required.day       = The date of your pension sharing order must include a day
+pso.error.required.dayMonth  = The date of your pension sharing order must include a day and month
+pso.error.required.dayYear   = The date of your pension sharing order must include a day and year
+pso.error.required.month     = The date of your pension sharing order must include a month
+pso.error.required.monthYear = The date of your pension sharing order must include a month and year
+pso.error.required.year      = The date of your pension sharing order must include a year
+pso.error.invalid            = Enter a valid date in numbers
+pso.error.invalid.day        = The day of your pension sharing order must be a number
+pso.error.invalid.dayMonth   = The day and month of your pension sharing order must be a number
+pso.error.invalid.dayYear    = The day and year of your pension sharing order must be a number
+pso.error.invalid.month      = The month of your pension sharing order must be a number
+pso.error.invalid.monthYear  = The month and year of your pension sharing order must be a number
+pso.error.invalid.year       = The year of your pension sharing order must be a number
+pso.error.notReal            = The year of your pension sharing order must be a number
+pso.error.notReal.day        = The day of your pension sharing order must be a valid number
+pso.error.notReal.month      = The month of your pension sharing order must be a valid number
+pso.error.notReal.year       = The year of your pension sharing order must be a valid number
+pso.error.range.min          = The date of your pension sharing order must be after {0}
+pso.error.range.max          = The date of your pension sharing order cannot be in the future
 
 ## SUMMARY ##
-pla.summary.pensionsHeading                         = Value of pensions
-pla.summary.psosHeading                             = Value of pension sharing orders
+pla.summary.pensionsHeading = Value of pensions
+pla.summary.psosHeading     = Value of pension sharing orders
 
 ## EXISTING PROTECTIONS ##
-pla.existingProtections.title                           = View your existing protections
-pla.existingProtections.pageHeading                     = Your lifetime allowance protection
-pla.existingProtections.active.heading                  = Active protection
-pla.existingProtections.details                         = Details
-pla.existingProtections.print                           = Review and print your protection details
-pla.existingProtections.applicationDate                 = Application date
-pla.existingProtections.applicationTime                 = Application time
-pla.existingProtections.noProtections                   = You currently have no protections.
-pla.existingProtections.noActiveProtections             = You currently have no active protection.
-pla.existingProtections.noOtherProtections              = You have no other protections.
-pla.existingProtections.protectedAmount                 = Protected lifetime allowance
-pla.existingProtections.factor                          = Factor
-pla.existingProtections.enhancementFactor               = Enhancement factor
-pla.existingProtections.lumpSumAmount                   = Lump sum amount
-pla.existingProtections.lumpSumPercentage               = Lump sum percentage
-pla.existingProtections.protectionRef                   = Protection notification number
-pla.existingProtections.psaRef                          = Scheme administrator reference
-pla.existingProtections.backToHome                      = Back to account home
-pla.existingProtections.amendLinkText                   = View or change
-pla.existingProtections.withdrawnDate                   = Withdrawn date
-pla.existingProtections.withdrawLinkText                = Withdraw your open protection
-pla.existingProtections.other.protections.link          = details about individual and fixed protections and how to apply
-pla.existingProtections.other.protections.linkText.before = View
-pla.existingProtections.other.protections.linkText.after  = on GOV.UK.
+pla.existingProtections.title               = View your existing protections
+pla.existingProtections.active.heading      = Active protection
+pla.existingProtections.print               = Review and print your protection details
+pla.existingProtections.applicationDate     = Application date
+pla.existingProtections.applicationTime     = Application time
+pla.existingProtections.noProtections       = You currently have no protections.
+pla.existingProtections.noActiveProtections = You currently have no active protection.
+pla.existingProtections.noOtherProtections  = You have no other protections.
+pla.existingProtections.factor              = Factor
+pla.existingProtections.enhancementFactor   = Enhancement factor
+pla.existingProtections.lumpSumAmount       = Lump sum amount
+pla.existingProtections.lumpSumPercentage   = Lump sum percentage
+pla.existingProtections.amendLinkText       = View or change
+pla.existingProtections.withdrawnDate       = Withdrawn date
+
 pla.existingProtections.other.protections.link_2016ShutterEnabled            = Taking higher tax-free lump sums with protected allowances
 pla.existingProtections.other.protections.linkText.before_2016ShutterEnabled = Find out about
 
 ## PROTECTION INFORMATION ##
-pla.protection.statuses.open                            = Open
-pla.protection.statuses.dormant                         = Dormant protections
-pla.protection.statuses.withdrawn                       = Withdrawn protections
-pla.protection.statuses.expired                         = Expired applications
-pla.protection.statuses.unsuccessful                    = Unsuccessful applications
-pla.protection.statuses.rejected                        = Rejected applications
-pla.protection.statuses.notRecorded                     = None
-pla.protection.types.FP2016                             = Fixed protection 2016
-pla.protection.types.FixedProtection2016                = Fixed protection 2016
-pla.protection.types.FixedProtection2016LTA             = Fixed protection 2016
-pla.protection.types.FP2014                             = Fixed protection 2014
-pla.protection.types.FixedProtection2014                = Fixed protection 2014
-pla.protection.types.FixedProtection2014LTA             = Fixed protection 2014
-pla.protection.types.IP2016                             = Individual protection 2016
-pla.protection.types.IndividualProtection2016           = Individual protection 2016
-pla.protection.types.IndividualProtection2016LTA        = Individual protection 2016
-pla.protection.types.IP2014                             = Individual protection 2014
-pla.protection.types.IndividualProtection2014           = Individual protection 2014
-pla.protection.types.IndividualProtection2014LTA        = Individual protection 2014
-pla.protection.types.primary                            = Primary protection
-pla.protection.types.PrimaryProtection                  = Primary protection
-pla.protection.types.PrimaryProtectionLTA               = Primary protection
-pla.protection.types.enhanced                           = Enhanced protection
-pla.protection.types.EnhancedProtection                 = Enhanced protection
-pla.protection.types.EnhancedProtectionLTA              = Enhanced protection
-pla.protection.types.fixed                              = Fixed protection
-pla.protection.types.FixedProtection                    = Fixed protection
-pla.protection.types.FixedProtectionLTA                 = Fixed protection
-pla.protection.types.InternationalEnhancementS221       = Non-residence factor for a relevant overseas individual
-pla.protection.types.InternationalEnhancementS224       = Non-residence factor for a transfer from an overseas pension scheme
-pla.protection.types.PensionCreditRights                = Pension credit factor for pension credits for previously crystallised rights
-pla.protection.types.notRecorded                        = None
-pla.protection.protectionReference                      = None
+pla.protection.statuses.dormant                   = Dormant protections
+pla.protection.statuses.withdrawn                 = Withdrawn protections
+pla.protection.statuses.expired                   = Expired applications
+pla.protection.statuses.unsuccessful              = Unsuccessful applications
+pla.protection.statuses.rejected                  = Rejected applications
+pla.protection.types.FP2016                       = Fixed protection 2016
+pla.protection.types.FixedProtection2016          = Fixed protection 2016
+pla.protection.types.FixedProtection2016LTA       = Fixed protection 2016
+pla.protection.types.FP2014                       = Fixed protection 2014
+pla.protection.types.FixedProtection2014          = Fixed protection 2014
+pla.protection.types.FixedProtection2014LTA       = Fixed protection 2014
+pla.protection.types.IP2016                       = Individual protection 2016
+pla.protection.types.IndividualProtection2016     = Individual protection 2016
+pla.protection.types.IndividualProtection2016LTA  = Individual protection 2016
+pla.protection.types.IP2014                       = Individual protection 2014
+pla.protection.types.IndividualProtection2014     = Individual protection 2014
+pla.protection.types.IndividualProtection2014LTA  = Individual protection 2014
+pla.protection.types.primary                      = Primary protection
+pla.protection.types.PrimaryProtection            = Primary protection
+pla.protection.types.PrimaryProtectionLTA         = Primary protection
+pla.protection.types.enhanced                     = Enhanced protection
+pla.protection.types.EnhancedProtection           = Enhanced protection
+pla.protection.types.EnhancedProtectionLTA        = Enhanced protection
+pla.protection.types.fixed                        = Fixed protection
+pla.protection.types.FixedProtection              = Fixed protection
+pla.protection.types.FixedProtectionLTA           = Fixed protection
+pla.protection.types.InternationalEnhancementS221 = Non-residence factor for a relevant overseas individual
+pla.protection.types.InternationalEnhancementS224 = Non-residence factor for a transfer from an overseas pension scheme
+pla.protection.types.PensionCreditRights          = Pension credit factor for pension credits for previously crystallised rights
+pla.protection.types.notRecorded                  = None
+pla.protection.protectionReference                = None
 
 ## Visually Hidden Content
-
-pla.hidden.activeProtection                             = for active protection
-pla.hidden.dormant                                      = for dormant protections
-pla.hidden.withdrawn                                    = for withdrawn protections
-pla.hidden.unsuccessful                                 = for unsuccessful applications
-pla.hidden.rejected                                     = for rejected applications
-pla.hidden.expired                                      = for expired applications
+pla.hidden.activeProtection = for active protection
+pla.hidden.dormant          = for dormant protections
+pla.hidden.withdrawn        = for withdrawn protections
+pla.hidden.unsuccessful     = for unsuccessful applications
+pla.hidden.rejected         = for rejected applications
+pla.hidden.expired          = for expired applications
 
 ## Result Success ##
-pla.resultSuccess.title                 = Success
-pla.resultSuccess.allowanceSubHeading   = Your protected lifetime allowance is
-pla.resultSuccess.allowanceSubHeadingHip  = Your protected amount is
-pla.resultSuccess.protectionDetails     = Your protection details
-pla.resultSuccess.detailsContent        = When you decide to take money from your pension, give these details to your pension provider:
-pla.resultSuccess.printGuidancePara     = Keep a copy of your protection details for your records. If you decide to take money from your pension, give these details to your pension provider.
-pla.resultSuccess.protectionRef         = protection notification number
-pla.resultSuccess.psaRef                = scheme administrator reference
-pla.resultSuccess.applicationDate       = application date
-pla.resultSuccess.print                 = Review and print your protection details
-pla.resultSuccess.IPChangeDetails       = Changing your protection details
-
+pla.resultSuccess.allowanceSubHeadingHip      = Your protected amount is
+pla.resultSuccess.protectionDetails           = Your protection details
+pla.resultSuccess.protectionRef               = protection notification number
+pla.resultSuccess.psaRef                      = scheme administrator reference
+pla.resultSuccess.applicationDate             = application date
+pla.resultSuccess.print                       = Review and print your protection details
+pla.resultSuccess.IPChangeDetails             = Changing your protection details
 pla.resultSuccess.IPPensionSharing.beforeLink = If your pension gets shared in a divorce or civil partnership split, contact
-pla.resultSuccess.IPPensionSharing.linkText = HMRC Pension Schemes Services
-pla.resultSuccess.IPPensionSharing.afterLink = within 60 days.
-pla.resultSuccess.FPAddToPension.beforeLink  = If you or your employer adds to your pension, contact
-pla.resultSuccess.FPAddToPension.linkText  = HMRC Pension Schemes Services
-pla.resultSuccess.FPAddToPension.afterLink  = within 90 days.
-pla.resultSuccess.viewDetails.beforeLink= You can
-pla.resultSuccess.viewDetails.linkText  = view or change details of your protections
-pla.resultSuccess.viewDetails.afterLink = at any time.
-
-pla.resultSuccess.giveFeedback          = Give us feedback
-pla.resultSuccess.exitSurveyLinkText    = What did you think of this service?
-pla.resultSuccess.exitSurvey            = We use your feedback to make our services better.
-
-pla.resultSuccess.yourName = your full name
-pla.resultSuccess.yourNino = your National Insurance number
-
-pla.resultSuccess.table.fullName        = Full name
-pla.resultSuccess.table.nino            = National Insurance number
-pla.resultSuccess.table.protectionRef   = Protection reference number
-pla.resultSuccess.table.psaRef          = Pension scheme administrator check reference
-pla.resultSuccess.table.applicationDate = Application date
-
-pla.resultSuccess.dismissBanner = No thanks
-pla.resultSuccess.userResearchLink.title = Help improve GOV.UK
-pla.resultSuccess.userResearchLink.text = Help improve this digital service by joining the HMRC user panel (opens in new window)
-pla.resultSuccess.userResearchLink      = https://signup.take-part-in-research.service.gov.uk/?utm_campaign=PLA_success&utm_source=Survey_Banner&utm_medium=other&t=HMRC&id=113
-
+pla.resultSuccess.IPPensionSharing.linkText   = HMRC Pension Schemes Services
+pla.resultSuccess.IPPensionSharing.afterLink  = within 60 days.
+pla.resultSuccess.giveFeedback                = Give us feedback
+pla.resultSuccess.exitSurveyLinkText          = What did you think of this service?
+pla.resultSuccess.exitSurvey                  = We use your feedback to make our services better.
+pla.resultSuccess.yourName                    = your full name
+pla.resultSuccess.yourNino                    = your National Insurance number
+pla.resultSuccess.table.fullName              = Full name
+pla.resultSuccess.table.nino                  = National Insurance number
+pla.resultSuccess.table.protectionRef         = Protection reference number
+pla.resultSuccess.table.psaRef                = Pension scheme administrator check reference
+pla.resultSuccess.table.applicationDate       = Application date
 
 ## Result Rejection ##
-pla.resultRejection.title                 = Unsuccessful
-pla.resultRejection.pageHeading           = Your application was unsuccessful
 pla.resultRejection.viewDetails.beforeLink = You can
-pla.resultRejection.viewDetails.linkText = view or change details of your protections
-pla.resultRejection.viewDetails.afterLink = at any time.
-
+pla.resultRejection.viewDetails.linkText   = view or change details of your protections
+pla.resultRejection.viewDetails.afterLink  = at any time.
 
 ## Manual Correspondence Needed ##
-pla.mcNeeded.pageHeading                  = There''s a problem logging you in
-pla.mcNeeded.needToSpeakToYou             = We need to speak to you before you can log in to your account.
-pla.mcNeeded.howToFix                     = How to fix this
-pla.mcNeeded.telephone                    = Phone 0300 200 3300
-pla.mcNeeded.sayCantLogIn                 = Say ''I can''t log in''
-pla.mcNeeded.sayYes                       = Say ''Yes'' when asked if you are having problems logging in
-pla.mcNeeded.advisorHelp                  = You will hear a recorded message advising you to call another number - do not hang up and redial. Stay on the line and an advisor will hep you.
-pla.mcNeeded.tellAdvisor                                    = Tell the advisor this is an ''MCI issue''
-
-pla.mcNeeded.otherContact                                   = Other ways to contact us
-pla.mcNeeded.textphone                                      = Textphone: 0300 200 3319
-pla.mcNeeded.nonUKPhone                                     = Outside UK: +44 135 535 9022
-pla.mcNeeded.linesOpen                    = Phone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday.
-pla.mcNeeded.linesClosed                  = Closed Sundays and bank holidays.
-pla.mcNeeded.linesBusy                    = Phone lines are less busy before 10am Monday to Friday.
-pla.mcNeeded.callCharges                  = Find out about call charges
-
-## Exit Survey ##
-pla.exitSurvey.sendFeedback                             = Send feedback
+pla.mcNeeded.pageHeading      = There''s a problem logging you in
+pla.mcNeeded.needToSpeakToYou = We need to speak to you before you can log in to your account.
+pla.mcNeeded.howToFix         = How to fix this
+pla.mcNeeded.telephone        = Phone 0300 200 3300
+pla.mcNeeded.sayCantLogIn     = Say ''I can''t log in''
+pla.mcNeeded.sayYes           = Say ''Yes'' when asked if you are having problems logging in
+pla.mcNeeded.advisorHelp      = You will hear a recorded message advising you to call another number - do not hang up and redial. Stay on the line and an advisor will hep you.
+pla.mcNeeded.tellAdvisor      = Tell the advisor this is an ''MCI issue''
+pla.mcNeeded.otherContact     = Other ways to contact us
+pla.mcNeeded.textphone        = Textphone: 0300 200 3319
+pla.mcNeeded.nonUKPhone       = Outside UK: +44 135 535 9022
+pla.mcNeeded.linesOpen        = Phone lines are open 8am to 8pm Monday to Friday and 8am to 4pm on Saturday.
+pla.mcNeeded.linesClosed      = Closed Sundays and bank holidays.
+pla.mcNeeded.linesBusy        = Phone lines are less busy before 10am Monday to Friday.
+pla.mcNeeded.callCharges      = Find out about call charges
 
 ## Printing ##
-pla.print.title                             = Print your active protection
-pla.print.hmrc                              = HM Revenue & Customs
-pla.print.fullName                          = Full Name
-pla.print.nino                              = National Insurance number
-pla.print.protectionDetails                 = Protection details
-pla.print.applicationDate                   = Application date
-pla.print.applicationTime                   = Application time
-pla.print.protectionType                    = Protection type
-pla.print.pla                               = Protected lifetime allowance
-pla.print.lumpSumPercentage                 = Lump sum percentage
-pla.print.lumpSumAmount                     = Lump sum amount
-pla.print.enhancementFactor                 = Enhancement factor
-pla.print.factor                            = Factor
-pla.print.protectionNotificationNumber      = Protection notification number
-pla.print.schemeAdministratorReference      = Scheme administrator reference
-pla.print.giveToPensionProvider             = Give these details to your pension provider when you decide to take money from your pension
-pla.print.contactHMRC                       = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
-pla.print.FP2016.contactHMRC                = If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days.
+pla.print.title                 = Print your active protection
+pla.print.nino                  = National Insurance number
+pla.print.protectionDetails     = Protection details
+pla.print.applicationDate       = Application date
+pla.print.applicationTime       = Application time
+pla.print.protectionType        = Protection type
+pla.print.lumpSumPercentage     = Lump sum percentage
+pla.print.lumpSumAmount         = Lump sum amount
+pla.print.enhancementFactor     = Enhancement factor
+pla.print.factor                = Factor
+pla.print.giveToPensionProvider = Give these details to your pension provider when you decide to take money from your pension
+pla.print.contactHMRC           = If your pension gets shared in a divorce or civil partnership split, contact HMRC Pension Schemes Services within 60 days.
+pla.print.FP2016.contactHMRC    = If you or your employer adds to your pension, contact HMRC Pension Schemes Services within 90 days.
 
-pla.printAmend.hmrc                              = HM Revenue & Customs
-pla.printAmend.fullName                          = Full name
-pla.printAmend.nino                              = National Insurance number
-pla.printAmend.protectionDetails                 = Protection details
-pla.printAmend.applicationDate                   = Application date
-pla.printAmend.applicationTime                   = Application time
-pla.printAmend.protectionType                    = Protection type
-pla.printAmend.protectedAmount                   = Protected amount
-pla.printAmend.protectionReferenceNumber         = Protection reference number
-pla.printAmend.fixedProtectionReferenceNumber    = Fixed protection 2016 reference number
+pla.printAmend.fullName                             = Full name
+pla.printAmend.nino                                 = National Insurance number
+pla.printAmend.protectionDetails                    = Protection details
+pla.printAmend.applicationDate                      = Application date
+pla.printAmend.applicationTime                      = Application time
+pla.printAmend.protectionType                       = Protection type
+pla.printAmend.protectedAmount                      = Protected amount
+pla.printAmend.protectionReferenceNumber            = Protection reference number
+pla.printAmend.fixedProtectionReferenceNumber       = Fixed protection 2016 reference number
 pla.printAmend.pensionSchemeAdministratorReference  = Pension scheme administrator check reference
 pla.printAmend.status                               = Status
 pla.printAmend.withdrawn                            = Withdrawn
@@ -526,49 +428,49 @@ pla.printAmend.Dormant                              = Dormant
 pla.printAmend.Open                                 = Active
 
 ## Amends ##
-pla.amends.title                                            = Protection summary
-pla.amends.heading.IP2016.noChanges                         = Your individual protection 2016 details
-pla.amends.heading.IndividualProtection2016.noChanges       = Your individual protection 2016 details
-pla.amends.heading.IndividualProtection2016LTA.noChanges    = Your individual protection 2016 details
-pla.amends.heading.IP2014.noChanges                         = Your individual protection 2014 details
-pla.amends.heading.IndividualProtection2014.noChanges       = Your individual protection 2014 details
-pla.amends.heading.IndividualProtection2014LTA.noChanges    = Your individual protection 2014 details
+pla.amends.title                                         = Protection summary
+pla.amends.heading.IP2016.noChanges                      = Your individual protection 2016 details
+pla.amends.heading.IndividualProtection2016.noChanges    = Your individual protection 2016 details
+pla.amends.heading.IndividualProtection2016LTA.noChanges = Your individual protection 2016 details
+pla.amends.heading.IP2014.noChanges                      = Your individual protection 2014 details
+pla.amends.heading.IndividualProtection2014.noChanges    = Your individual protection 2014 details
+pla.amends.heading.IndividualProtection2014LTA.noChanges = Your individual protection 2014 details
 
-pla.amends.heading.IP2016.changed                           = Check your answers and submit the changes
-pla.amends.heading.IndividualProtection2016.changed         = Check your answers and submit the changes
-pla.amends.heading.IndividualProtection2016LTA.changed      = Check your answers and submit the changes
-pla.amends.heading.IP2014.changed                           = Check your answers and submit the changes
-pla.amends.heading.IndividualProtection2014.changed         = Check your answers and submit the changes
-pla.amends.heading.IndividualProtection2014LTA.changed      = Check your answers and submit the changes
+pla.amends.heading.IP2016.changed                      = Check your answers and submit the changes
+pla.amends.heading.IndividualProtection2016.changed    = Check your answers and submit the changes
+pla.amends.heading.IndividualProtection2016LTA.changed = Check your answers and submit the changes
+pla.amends.heading.IP2014.changed                      = Check your answers and submit the changes
+pla.amends.heading.IndividualProtection2014.changed    = Check your answers and submit the changes
+pla.amends.heading.IndividualProtection2014LTA.changed = Check your answers and submit the changes
 
-pla.amends.cancelPara.1                                     = Alternatively, you can
-pla.amends.cancelPara.link                                  = cancel the changes
-pla.amends.cancelPara.2                                     = and go back.
+pla.amends.cancelPara.1    = Alternatively, you can
+pla.amends.cancelPara.link = cancel the changes
+pla.amends.cancelPara.2    = and go back.
 
-pla.amends.CurrentPensions.IP2016.Amt                       = What were your UK pensions worth on 5 April 2016?
-pla.amends.CurrentPensions.IndividualProtection2016.Amt     = What were your UK pensions worth on 5 April 2016?
-pla.amends.CurrentPensions.IndividualProtection2016LTA.Amt  = What were your UK pensions worth on 5 April 2016?
-pla.amends.CurrentPensions.IP2016.Amt.changeHint            = Change the amount that your pensions were worth on 5 April 2016
-pla.amends.CurrentPensions.IndividualProtection2016.Amt.changeHint = Change the amount that your pensions were worth on 5 April 2016
+pla.amends.CurrentPensions.IP2016.Amt                                 = What were your UK pensions worth on 5 April 2016?
+pla.amends.CurrentPensions.IndividualProtection2016.Amt               = What were your UK pensions worth on 5 April 2016?
+pla.amends.CurrentPensions.IndividualProtection2016LTA.Amt            = What were your UK pensions worth on 5 April 2016?
+pla.amends.CurrentPensions.IP2016.Amt.changeHint                      = Change the amount that your pensions were worth on 5 April 2016
+pla.amends.CurrentPensions.IndividualProtection2016.Amt.changeHint    = Change the amount that your pensions were worth on 5 April 2016
 pla.amends.CurrentPensions.IndividualProtection2016LTA.Amt.changeHint = Change the amount that your pensions were worth on 5 April 2016
-pla.amends.CurrentPensions.IP2014.Amt                       = What were your UK pensions worth on 5 April 2014?
-pla.amends.CurrentPensions.IndividualProtection2014.Amt     = What were your UK pensions worth on 5 April 2014?
-pla.amends.CurrentPensions.IndividualProtection2014LTA.Amt  = What were your UK pensions worth on 5 April 2014?
-pla.amends.CurrentPensions.IP2014.Amt.changeHint            = Change the amount that your pensions were worth on 5 April 2014
-pla.amends.CurrentPensions.IndividualProtection2014.Amt.changeHint = Change the amount that your pensions were worth on 5 April 2014
+pla.amends.CurrentPensions.IP2014.Amt                                 = What were your UK pensions worth on 5 April 2014?
+pla.amends.CurrentPensions.IndividualProtection2014.Amt               = What were your UK pensions worth on 5 April 2014?
+pla.amends.CurrentPensions.IndividualProtection2014LTA.Amt            = What were your UK pensions worth on 5 April 2014?
+pla.amends.CurrentPensions.IP2014.Amt.changeHint                      = Change the amount that your pensions were worth on 5 April 2014
+pla.amends.CurrentPensions.IndividualProtection2014.Amt.changeHint    = Change the amount that your pensions were worth on 5 April 2014
 pla.amends.CurrentPensions.IndividualProtection2014LTA.Amt.changeHint = Change the amount that your pensions were worth on 5 April 2014
 
-pla.amends.PensionsTakenBefore.IP2016.YesNo                 = Did you get an income from any of your pensions before 6 April 2006?
-pla.amends.PensionsTakenBefore.IndividualProtection2016.YesNo = Did you get an income from any of your pensions before 6 April 2006?
-pla.amends.PensionsTakenBefore.IndividualProtection2016LTA.YesNo = Did you get an income from any of your pensions before 6 April 2006?
-pla.amends.PensionsTakenBefore.IP2016.YesNo.changeHint      = Change whether you received an income from any of your pensions before 6 April 2006
-pla.amends.PensionsTakenBefore.IndividualProtection2016.YesNo.changeHint = Change whether you received an income from any of your pensions before 6 April 2006
+pla.amends.PensionsTakenBefore.IP2016.YesNo                                 = Did you get an income from any of your pensions before 6 April 2006?
+pla.amends.PensionsTakenBefore.IndividualProtection2016.YesNo               = Did you get an income from any of your pensions before 6 April 2006?
+pla.amends.PensionsTakenBefore.IndividualProtection2016LTA.YesNo            = Did you get an income from any of your pensions before 6 April 2006?
+pla.amends.PensionsTakenBefore.IP2016.YesNo.changeHint                      = Change whether you received an income from any of your pensions before 6 April 2006
+pla.amends.PensionsTakenBefore.IndividualProtection2016.YesNo.changeHint    = Change whether you received an income from any of your pensions before 6 April 2006
 pla.amends.PensionsTakenBefore.IndividualProtection2016LTA.YesNo.changeHint = Change whether you received an income from any of your pensions before 6 April 2006
-pla.amends.PensionsTakenBefore.IP2014.YesNo                 = Did you get an income from any of your pensions before 6 April 2006?
-pla.amends.PensionsTakenBefore.IndividualProtection2014.YesNo = Did you get an income from any of your pensions before 6 April 2006?
-pla.amends.PensionsTakenBefore.IndividualProtection2014LTA.YesNo = Did you get an income from any of your pensions before 6 April 2006?
-pla.amends.PensionsTakenBefore.IP2014.YesNo.changeHint      = Change whether you received an income from any of your pensions before 6 April 2006
-pla.amends.PensionsTakenBefore.IndividualProtection2014.YesNo.changeHint = Change whether you received an income from any of your pensions before 6 April 2006
+pla.amends.PensionsTakenBefore.IP2014.YesNo                                 = Did you get an income from any of your pensions before 6 April 2006?
+pla.amends.PensionsTakenBefore.IndividualProtection2014.YesNo               = Did you get an income from any of your pensions before 6 April 2006?
+pla.amends.PensionsTakenBefore.IndividualProtection2014LTA.YesNo            = Did you get an income from any of your pensions before 6 April 2006?
+pla.amends.PensionsTakenBefore.IP2014.YesNo.changeHint                      = Change whether you received an income from any of your pensions before 6 April 2006
+pla.amends.PensionsTakenBefore.IndividualProtection2014.YesNo.changeHint    = Change whether you received an income from any of your pensions before 6 April 2006
 pla.amends.PensionsTakenBefore.IndividualProtection2014LTA.YesNo.changeHint = Change whether you received an income from any of your pensions before 6 April 2006
 
 pla.amends.PensionsWorthBefore.IP2016.Amt                   = What''s the value of the pensions you took before 6 April 2006?
@@ -622,6 +524,7 @@ pla.amends.OverseasPensions.IndividualProtection2016LTA.Amt = How much did you c
 pla.amends.OverseasPensions.IP2016.Amt.changeHint           = Change how much you contributed to your overseas pension
 pla.amends.OverseasPensions.IndividualProtection2016.Amt.changeHint = Change how much you contributed to your overseas pension
 pla.amends.OverseasPensions.IndividualProtection2016LTA.Amt.changeHint = Change how much you contributed to your overseas pension
+
 pla.amends.OverseasPensions.IP2014.YesNo                    = Have you put money into a pension scheme held overseas?
 pla.amends.OverseasPensions.IndividualProtection2014.YesNo  = Have you put money into a pension scheme held overseas?
 pla.amends.OverseasPensions.IndividualProtection2014LTA.YesNo = Have you put money into a pension scheme held overseas?
@@ -634,27 +537,17 @@ pla.amends.OverseasPensions.IndividualProtection2014LTA.Amt = How much did you c
 pla.amends.OverseasPensions.IP2014.Amt.changeHint           = Change how much you contributed to your overseas pension
 pla.amends.OverseasPensions.IndividualProtection2014.Amt.changeHint = Change how much you contributed to your overseas pension
 pla.amends.OverseasPensions.IndividualProtection2014LTA.Amt.changeHint = Change how much you contributed to your overseas pension
+
 pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.removeHint   = Remove your response to the amount or date of your pension sharing order
 pla.amends.pensionDebits.IndividualProtection2014.CurrentPsos-psoDetails.removeHint = Remove your response to the amount or date of your pension sharing order
 pla.amends.pensionDebits.IndividualProtection2014LTA.CurrentPsos-psoDetails.removeHint = Remove your response to the amount or date of your pension sharing order
 pla.amends.pensionDebits.IP2014.CurrentPsos-psoDetails.changeHint   = Change the details of your pension sharing order
 pla.amends.pensionDebits.IndividualProtection2014.CurrentPsos-psoDetails.changeHint = Change the details of your pension sharing order
 pla.amends.pensionDebits.IndividualProtection2014LTA.CurrentPsos-psoDetails.changeHint = Change the details of your pension sharing order
+
 pla.amends.totalValueOfPensions                             = Total value of pensions
 pla.amends.declaration                                      = The information that I have provided is true and complete to the best of my knowledge and belief.
 pla.amends.submit                                           = Submit your changes
-
-pla.views.heading.FP2016                                   = Your Fixed protection 2016 details
-pla.views.heading.primary                                  = Your Primary protection details
-pla.views.heading.enhanced                                 = Your Enhanced protection details
-pla.views.heading.fixed                                    = Your Fixed protection details
-pla.views.heading.FP2014                                   = Your Fixed protection 2014 details
-pla.views.heading.IP2014                                   = Your individual protection 2014 details
-pla.views.heading.IndividualProtection2014                 = Your individual protection 2014 details
-pla.views.heading.IndividualProtection2014LTA              = Your individual protection 2014 details
-pla.views.heading.IP2016                                   = Your individual protection 2016 details
-pla.views.heading.IndividualProtection2016                 = Your individual protection 2016 details
-pla.views.heading.IndividualProtection2016LTA              = Your individual protection 2016 details
 
 pla.amends.CurrentPsos.IP2016.YesNo                         = Have any of your pensions been shared in a divorce since 5 April 2016?
 pla.amends.CurrentPsos.IndividualProtection2016.YesNo      = Have any of your pensions been shared in a divorce since 5 April 2016?
@@ -686,93 +579,7 @@ pla.amends.pensionDebits.IndividualProtection2014LTA.CurrentPsos-psoDetails = Da
 
 pla.amends.addPsoLink                                       = Add a pension sharing order
 
-### AMENDS RESULTS MESSAGES ###
-pla.activeAmend.title                                       = Protection amended
-pla.activeAmend.viewDetails.beforeLink                      = You can
-pla.activeAmend.viewDetails.linkText                        = view or change details of your protections
-pla.activeAmend.viewDetails.afterLink                       = at any time.
-pla.inactiveAmend.title                                     = Protection amended
-
-amendResultCode.href.text    = HMRC Pension Schemes Services
-
-amendResultCode.25.heading   = You''re no longer entitled to individual protection 2014
-amendResultCode.25.1         = This is because your total pension savings are below £1,250,001.
-amendResultCode.25.2         = If you''ve already started taking your pension, you''ll need to tell your pension provider that you''ve lost individual protection 2014.
-
-amendResultCode.26.heading   = You''re no longer entitled to individual protection 2014
-amendResultCode.26.1         = This is because your total pension savings are below £1,250,001.
-amendResultCode.26.href.text = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell
-
-amendResultCode.27.heading   = You''re no longer entitled to individual protection 2014
-amendResultCode.27.1         = This is because your total pension savings are below £1,250,001.
-amendResultCode.27.href.text = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell
-
-amendResultCode.28.heading   = You''re no longer entitled to individual protection 2014
-amendResultCode.28.1         = This is because your total pension savings are below £1,250,001.
-amendResultCode.28.href.text = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell
-
-amendResultCode.29.heading   = You''re no longer entitled to individual protection 2014
-amendResultCode.29.1         = This is because your total pension savings are below £1,250,001.
-amendResultCode.29.2         = However, you already had fixed protection 2016 which has now become active. You can view details of this protection in your personal tax account.
-amendResultCode.29.href.text = If you lose fixed protection 2016, you must tell
-
-amendResultCode.30.heading   = You''ve amended individual protection 2014
-amendResultCode.30.1         = As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-amendResultCode.30.href.text = If this happens, you must tell
-
-amendResultCode.31.heading   = You''ve amended individual protection 2014
-amendResultCode.31.1         = As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-amendResultCode.31.href.text = If this happens, you must tell
-
-amendResultCode.32.heading   = You''ve amended individual protection 2014
-amendResultCode.32.1         = As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-amendResultCode.32.href.text = If this happens, you must tell
-
-amendResultCode.33.heading   = You''ve amended individual protection 2014
-
-amendResultCode.34.heading   = You''ve amended individual protection 2014
-
-amendResultCode.35.heading   = You''re no longer entitled to individual protection 2016
-amendResultCode.35.1         = This is because your total pension savings are below £1,000,001.
-amendResultCode.35.2         = If you''ve already started taking your pension, you''ll need to tell your pension provider that you''ve lost individual protection 2016.
-
-amendResultCode.36.heading   = You''re no longer entitled to individual protection 2016
-amendResultCode.36.1         = This is because your total pension savings are below £1,000,001.
-amendResultCode.36.href.text = However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell
-
-amendResultCode.37.heading   = You''re no longer entitled to individual protection 2016
-amendResultCode.37.1         = This is because your total pension savings are below £1,000,001.
-amendResultCode.37.href.text = However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell
-
-amendResultCode.38.heading   = You''re no longer entitled to individual protection 2016
-amendResultCode.38.1         = This is because your total pension savings are below £1,000,001.
-amendResultCode.38.href.text = However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell
-
-amendResultCode.39.heading   = You''re no longer entitled to individual protection 2016
-amendResultCode.39.1         = This is because your total pension savings are below £1,000,001.
-amendResultCode.39.href.text = However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell
-
-amendResultCode.40.heading   = You''ve amended individual protection 2016
-amendResultCode.40.1         = As you already have enhanced protection in place, individual protection 2016 will only become active if you give up enhanced protection.
-amendResultCode.40.href.text = If this happens, you must tell
-
-amendResultCode.41.heading   = You''ve amended individual protection 2016
-amendResultCode.41.1         = As you already have fixed protection in place, individual protection 2016 will only become active if you lose fixed protection.
-amendResultCode.41.href.text = If this happens, you must tell
-
-amendResultCode.42.heading   = You''ve amended individual protection 2016
-amendResultCode.42.1         = As you already have fixed protection 2014 in place, individual protection 2016 will only become active if you lose fixed protection 2014.
-amendResultCode.42.href.text = If this happens, you must tell
-
-amendResultCode.43.heading   = You''ve amended individual protection 2016
-amendResultCode.43.1         = As you already have fixed protection 2016 in place, individual protection 2016 will only become active if you lose fixed protection 2016.
-amendResultCode.43.href.text = If this happens, you must tell
-
-amendResultCode.44.heading   = You''ve amended individual protection 2016
-
-
 #amendsResultPage
-
 pla.amendsResultPage.title   = Protection amended
 pla.amendsResultPage.allowanceSubHeading = Your new protected amount is
 pla.amendsResultPage.protectionDetails     = Your protection details
@@ -780,20 +587,18 @@ pla.amendsResultPage.printGuidancePara = Keep a copy of your protection details 
 pla.amendsResultPage.printLink = Review and print your protection details (opens in new tab)
 pla.amendsResultPage.changeDetails = Changing your protection details
 pla.amendsResultPage.changeDetailsParaBeforeLink = If your pension gets shared in a divorce or civil partnership, you must
-pla.amendsResultPage.changeDetailsParaAfterLink = within 60 days.
 pla.amendsResultPage.changeDetailsLink = contact HMRC Pension Scheme services
+pla.amendsResultPage.changeDetailsParaAfterLink = within 60 days.
 pla.amendsResultPage.changeDetailsSubHeadingBeforeLink = You must
-pla.amendsResultPage.changeDetailsSubHeadingAfterLink = within 60 days if:
 pla.amendsResultPage.changeDetailsSubHeadingLink = contact HMRC Pension Scheme services
+pla.amendsResultPage.changeDetailsSubHeadingAfterLink = within 60 days if:
 pla.amendsResultPage.whatToDoLink = What to do if you lose your protection (opens in new tab)
 pla.amendsResultPage.viewDetails.beforeLink = You can
-pla.amendsResultPage.viewDetails.afterLink = at any time.
 pla.amendsResultPage.viewDetails.linkText = view or change details of your protections
+pla.amendsResultPage.viewDetails.afterLink = at any time.
 pla.amendsResultPage.giveFeedback = Give us feedback
 pla.amendsResultPage.exitSurveyLinkText = What did you think of this service?
 pla.amendsResultPage.exitSurvey = We use your feedback to make our services better.
-pla.amendsResultPage.notWorkingLinkText = Is this page not working properly? (opens in new tab)
-
 
 amendCode.1.heading    = You have amended your individual protection 2014
 
@@ -809,62 +614,61 @@ amendCode.3.changeDetailsPara = If you lose your fixed protection, your individu
 amendCode.3.bulletPointOne = you lose your fixed protection
 amendCode.3.bulletPointTwo = your pension is shared in a divorce or civil partnership
 
-amendCode.4.heading    = You have amended your individual protection 2014
-amendCode.4.insetText  = Your individual protection 2014 is currently not active because you already hold fixed protection 2014.
+amendCode.4.heading           = You have amended your individual protection 2014
+amendCode.4.insetText         = Your individual protection 2014 is currently not active because you already hold fixed protection 2014.
 amendCode.4.changeDetailsPara = If you lose your fixed protection 2014, your individual protection 2014 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
-amendCode.4.bulletPointOne = you lose your fixed protection 2014
-amendCode.4.bulletPointTwo = your pension is shared in a divorce or civil partnership
+amendCode.4.bulletPointOne    = you lose your fixed protection 2014
+amendCode.4.bulletPointTwo    = your pension is shared in a divorce or civil partnership
 
-amendCode.5.heading    = You have amended your individual protection 2014
+amendCode.5.heading = You have amended your individual protection 2014
 
-amendCode.6.heading    = You have amended your individual protection 2014
-amendCode.6.insetText  = Your individual protection 2014 has been withdrawn because your new protected amount is below £1,250,000.
+amendCode.6.heading   = You have amended your individual protection 2014
+amendCode.6.insetText = Your individual protection 2014 has been withdrawn because your new protected amount is below £1,250,000.
 
-amendCode.7.heading    = You have amended your individual protection 2014
-amendCode.7.insetText = Your individual protection 2014 has been withdrawn because your new protected amount is below £1,250,000.
-amendCode.7.insetText2 = Your fixed protection 2016 is now active.
+amendCode.7.heading           = You have amended your individual protection 2014
+amendCode.7.insetText         = Your individual protection 2014 has been withdrawn because your new protected amount is below £1,250,000.
+amendCode.7.insetText2        = Your fixed protection 2016 is now active.
 amendCode.7.changeDetailsPara = Give your fixed protection 2016 reference number to your pension provider when you start taking money from your pension.
-amendCode.7.bulletPointOne = you lose your fixed protection 2016
-amendCode.7.bulletPointTwo = your pension is shared in a divorce or civil partnership
+amendCode.7.bulletPointOne    = you lose your fixed protection 2016
+amendCode.7.bulletPointTwo    = your pension is shared in a divorce or civil partnership
 
-amendCode.8.heading    = You have amended your individual protection 2016
+amendCode.8.heading = You have amended your individual protection 2016
 
-amendCode.9.heading    = You have amended your individual protection 2016
-amendCode.9.insetText  = Your individual protection 2016 is currently not active because you already hold an enhanced protection certificate.
+amendCode.9.heading           = You have amended your individual protection 2016
+amendCode.9.insetText         = Your individual protection 2016 is currently not active because you already hold an enhanced protection certificate.
 amendCode.9.changeDetailsPara = If you lose your enhanced protection, your individual protection 2016 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
-amendCode.9.bulletPointOne = you lose your enhanced protection
-amendCode.9.bulletPointTwo = your pension is shared in a divorce or civil partnership
+amendCode.9.bulletPointOne    = you lose your enhanced protection
+amendCode.9.bulletPointTwo    = your pension is shared in a divorce or civil partnership
 
-amendCode.10.heading   = You have amended your individual protection 2016
-amendCode.10.insetText  = Your individual protection 2016 is currently not active because you already hold fixed protection.
+amendCode.10.heading           = You have amended your individual protection 2016
+amendCode.10.insetText         = Your individual protection 2016 is currently not active because you already hold fixed protection.
 amendCode.10.changeDetailsPara = If you lose your fixed protection, your individual protection 2016 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
-amendCode.10.bulletPointOne = you lose your fixed protection
-amendCode.10.bulletPointTwo = your pension is shared in a divorce or civil partnership
+amendCode.10.bulletPointOne    = you lose your fixed protection
+amendCode.10.bulletPointTwo    = your pension is shared in a divorce or civil partnership
 
-amendCode.11.heading    = You have amended your individual protection 2016
-amendCode.11.insetText  = Your individual protection 2016 is currently not active because you already hold fixed protection 2014.
+amendCode.11.heading           = You have amended your individual protection 2016
+amendCode.11.insetText         = Your individual protection 2016 is currently not active because you already hold fixed protection 2014.
 amendCode.11.changeDetailsPara = If you lose your fixed protection 2014, your individual protection 2016 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
-amendCode.11.bulletPointOne = you lose your fixed protection 2014
-amendCode.11.bulletPointTwo = your pension is shared in a divorce or civil partnership
+amendCode.11.bulletPointOne    = you lose your fixed protection 2014
+amendCode.11.bulletPointTwo    = your pension is shared in a divorce or civil partnership
 
-amendCode.12.heading    = You have amended your individual protection 2016
-amendCode.12.insetText  = Your individual protection 2016 is currently not active because you already hold fixed protection 2016.
+amendCode.12.heading           = You have amended your individual protection 2016
+amendCode.12.insetText         = Your individual protection 2016 is currently not active because you already hold fixed protection 2016.
 amendCode.12.changeDetailsPara = If you lose your fixed protection 2016, your individual protection 2016 will become active and HMRC will issue a protection reference number and a pension scheme administrator check reference.
-amendCode.12.bulletPointOne = you lose your fixed protection 2016
-amendCode.12.bulletPointTwo = your pension is shared in a divorce or civil partnership
+amendCode.12.bulletPointOne    = you lose your fixed protection 2016
+amendCode.12.bulletPointTwo    = your pension is shared in a divorce or civil partnership
 
-amendCode.13.heading    = You have amended your individual protection 2016
-amendCode.13.insetText  = Your individual protection 2016 has been withdrawn because your new protected amount is below £1,000,000.
+amendCode.13.heading   = You have amended your individual protection 2016
+amendCode.13.insetText = Your individual protection 2016 has been withdrawn because your new protected amount is below £1,000,000.
 
-amendCode.14.heading    = You have amended your individual protection 2016
-amendCode.14.insetText = Your individual protection 2016 has been withdrawn because your new protected amount is below £1,000,000.
-amendCode.14.insetText2 = Your fixed protection 2016 is now active.
+amendCode.14.heading           = You have amended your individual protection 2016
+amendCode.14.insetText         = Your individual protection 2016 has been withdrawn because your new protected amount is below £1,000,000.
+amendCode.14.insetText2        = Your fixed protection 2016 is now active.
 amendCode.14.changeDetailsPara = Give your fixed protection 2016 reference number to your pension provider when you start taking money from your pension.
-amendCode.14.bulletPointOne = you lose your fixed protection 2016
-amendCode.14.bulletPointTwo = your pension is shared in a divorce or civil partnership
+amendCode.14.bulletPointOne    = you lose your fixed protection 2016
+amendCode.14.bulletPointTwo    = your pension is shared in a divorce or civil partnership
 
 # No notification Id outcome
-
 pla.amendsResultPageNoNotificationId.title   = Protection amended
 pla.amendsResultPageNoNotificationId.allowanceSubHeading = Your new protected amount is
 pla.amendsResultPageNoNotificationId.protectionDetails     = Your protection details
@@ -882,214 +686,50 @@ pla.amendsResultPageNoNotificationId.exitSurveyLinkText = What did you think of 
 pla.amendsResultPageNoNotificationId.exitSurvey = We use your feedback to make our services better.
 pla.amendsResultPageNoNotificationId.notWorkingLinkText = Is this page not working properly? (opens in new tab)
 
-amendCode.noNotificationId.IndividualProtection2014.heading = You have amended your individual protection 2014
-amendCode.noNotificationId.IndividualProtection2014.insetText = Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
-amendCode.noNotificationId.IndividualProtection2014LTA.heading = You have amended your individual protection 2014
+amendCode.noNotificationId.IndividualProtection2014.heading      = You have amended your individual protection 2014
+amendCode.noNotificationId.IndividualProtection2014.insetText    = Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
+amendCode.noNotificationId.IndividualProtection2014LTA.heading   = You have amended your individual protection 2014
 amendCode.noNotificationId.IndividualProtection2014LTA.insetText = Your total value of pensions is above the protected limit of £1,500,000. Any amount above £1,500,000 is not covered under your Individual Protection.
 
-amendCode.noNotificationId.IndividualProtection2016.heading = You have amended your individual protection 2016
-amendCode.noNotificationId.IndividualProtection2016.insetText = Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
-amendCode.noNotificationId.IndividualProtection2016LTA.heading = You have amended your individual protection 2016
+amendCode.noNotificationId.IndividualProtection2016.heading      = You have amended your individual protection 2016
+amendCode.noNotificationId.IndividualProtection2016.insetText    = Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
+amendCode.noNotificationId.IndividualProtection2016LTA.heading   = You have amended your individual protection 2016
 amendCode.noNotificationId.IndividualProtection2016LTA.insetText = Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
 
-
-### RESULTS MESSAGES ###
-
-resultCode.href.text    =   HMRC Pension Schemes Services
-
-resultCode.1.heading    =   Your application for individual protection 2014 was unsuccessful as you held primary protection on 5 April 2014.
-resultCode.1.href.text  =   If you''ve lost primary protection, contact
-
-resultCode.2.heading    =   Your application for individual protection 2014 was rejected as you already have this.
-
-resultCode.3.heading    =   You''ve added individual protection 2014
-resultCode.3.1          =   As you already had individual protection 2016 in place, individual protection 2016 has been made inactive.
-
-resultCode.4.heading    =   You''ve added individual protection 2014
-
-resultCode.5.heading    =   You''ve added individual protection 2014
-resultCode.5.1          =   As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-resultCode.5.href.text  =   To give up enhanced protection, contact
-
-resultCode.6.heading    =   You''ve added individual protection 2014
-resultCode.6.1          =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-resultCode.6.href.text  =   If this happens, contact
-
-resultCode.7.heading    =   You''ve added individual protection 2014
-resultCode.7.1          =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-resultCode.7.href.text  =   If this happens, contact
-
-resultCode.8.heading    =   You''ve added individual protection 2014
-resultCode.8.1          =   As you already had fixed protection 2016 in place, fixed protection 2016 has been made inactive. It will become active again if you lose individual protection 2014.
-resultCode.8.href.text  =   If this happens, contact
-
-resultCode.9.heading    =   Your application for individual protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
-resultCode.9.href.text  =   If you''ve lost primary protection, contact
-
-resultCode.10.heading   =   Your application for individual protection 2016 was unsuccessful as you already have individual protection 2014.
-
-resultCode.11.heading   =   Your application for individual protection 2016 was rejected as you already have this.
-
-resultCode.12.heading   =   You''ve added individual protection 2016
-
-resultCode.13.heading   =   You''ve added individual protection 2016
-resultCode.13.1         =   As you already have enhanced protection in place, your individual protection 2016 will only become active if you give up enhanced protection.
-resultCode.13.href.text =   To give up enhanced protection, contact
-
-resultCode.14.heading   =   You''ve added individual protection 2016
-resultCode.14.1         =   As you already have fixed protection in place, your individual protection 2016 will only become active if you lose fixed protection.
-resultCode.14.href.text =   If this happens, contact
-
-resultCode.15.heading   =   You''ve added individual protection 2016
-resultCode.15.1         =   As you already have fixed protection 2014 in place, your individual protection 2016 will only become active if you lose fixed protection 2014.
-resultCode.15.href.text =   If this happens, contact
-
-resultCode.16.heading   =   You''ve added individual protection 2016
-resultCode.16.1         =   As you already have fixed protection 2016 in place, your individual protection 2016 will only become active if you lose fixed protection 2016.
-resultCode.16.href.text =   If this happens, contact
-
-resultCode.17.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have enhanced protection.
-resultCode.17.1         =   If enhanced protection is given up you can re-apply for fixed protection 2016.
-resultCode.17.href.text =   To give up enhanced protection, contact
-
-resultCode.18.heading   =   Your application for fixed protection 2016 was unsuccessful as you held primary protection on 5 April 2016.
-resultCode.18.href.text =   If you lost primary protection before 6 April 2016, contact
-
-resultCode.19.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection.
-resultCode.19.href.text =   If you lost fixed protection before 6 April 2016, contact
-
-resultCode.20.heading   =   Your application for fixed protection 2016 was unsuccessful as you already have fixed protection 2014.
-resultCode.20.href.text =   If you lost fixed protection 2014 before 6 April 2016, contact
-
-resultCode.21.heading   =   Your application for fixed protection 2016 was rejected as you already have this.
-
-resultCode.22.heading   =   You''ve added fixed protection 2016
-
-resultCode.23.heading   =   You''ve added fixed protection 2016
-resultCode.23.1         =   As you already had individual protection 2016 in place, individual protection 2016 has been made inactive. It will become active again if you lose fixed protection 2016.
-resultCode.23.href.text =   If this happens, contact
-
-resultCode.24.heading   =   You''ve added fixed protection 2016
-resultCode.24.1         =   As you already have individual protection 2014 in place, fixed protection 2016 will only become active if you lose individual protection 2014.
-resultCode.24.href.text =   If this happens, contact
-
-resultCode.25.heading   =   You''re not entitled to individual protection 2014
-resultCode.25.1         =   This is because your total pensions savings are below £1,250,001.
-
-resultCode.26.heading   =   You''re not entitled to individual protection 2014
-resultCode.26.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.26.href.text =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell
-
-resultCode.27.heading   =   You''re not entitled to individual protection 2014
-resultCode.27.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.27.href.text =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell
-
-resultCode.28.heading   =   You''re not entitled to individual protection 2014
-resultCode.28.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.28.href.text =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell
-
-resultCode.29.heading   =   You''re not entitled to individual protection 2014
-resultCode.29.1         =   This is because your total pension savings are below £1,250,001.
-resultCode.29.2         =   However, you already had fixed protection 2016 which has now become active. Your fixed protection 2016 details are shown below. You can view details of this protection in your personal tax account.
-resultCode.29.href.text =   If you lose fixed protection 2016, you must tell
-
-resultCode.30.heading   =   You''ve added individual protection 2014
-resultCode.30.1         =   As you already have enhanced protection in place, individual protection 2014 will only become active if you give up enhanced protection.
-resultCode.30.href.text =   To give up enhanced protection, contact
-
-resultCode.31.heading   =   You''ve added individual protection 2014
-resultCode.31.1         =   As you already have fixed protection in place, individual protection 2014 will only become active if you lose fixed protection.
-resultCode.31.href.text =   If this happens, contact
-
-resultCode.32.heading   =   You''ve added individual protection 2014
-resultCode.32.1         =   As you already have fixed protection 2014 in place, individual protection 2014 will only become active if you lose fixed protection 2014.
-resultCode.32.href.text =   If this happens, contact
-
-resultCode.33.heading   =   You''ve added individual protection 2014
-resultCode.33.1         =   As you already had fixed protection 2016 in place, fixed protection 2016 has been made inactive. It will become active again if you lose individual protection 2014.
-resultCode.33.href.text =   If this happens, contact
-
-resultCode.34.heading   =   You''ve added individual protection 2014
-
-resultCode.35.heading   =   You''re not entitled to individual protection 2016
-resultCode.35.1         =   This is because your total pensions savings are below £1,000,001.
-
-resultCode.36.heading   =   You''re not entitled to individual protection 2016
-resultCode.36.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.36.href.text =   However, you already have enhanced protection which will remain active. If you give up enhanced protection, you must tell tell
-
-resultCode.37.heading   =   You''re not entitled to individual protection 2016
-resultCode.37.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.37.href.text =   However, you already have fixed protection which will remain active. If you lose fixed protection, you must tell tell
-
-resultCode.38.heading   =   You''re not entitled to individual protection 2016
-resultCode.38.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.38.href.text =   However, you already have fixed protection 2014 which will remain active. If you lose fixed protection 2014, you must tell tell
-
-resultCode.39.heading   =   You''re not entitled to individual protection 2016
-resultCode.39.1         =   This is because your total pensions savings are below £1,000,001.
-resultCode.39.href.text =   However, you already have fixed protection 2016 which will remain active. If you lose fixed protection 2016, you must tell tell
-
-resultCode.40.heading   =   You''ve added individual protection 2016
-resultCode.40.1         =   As you already have enhanced protection in place, your individual protection 2016 will only become active if you give up enhanced protection.
-resultCode.40.href.text =   To give up enhanced protection, contact
-
-resultCode.41.heading   =   You''ve added individual protection 2016
-resultCode.41.1         =   As you already have fixed protection in place, your individual protection 2016 will only become active if you lose fixed protection.
-resultCode.41.href.text =   If this happens, contact
-
-resultCode.42.heading   =   You''ve added individual protection 2016
-resultCode.42.1         =   As you already have fixed protection 2014 in place, your individual protection 2016 will only become active if you lose fixed protection 2014.
-resultCode.42.href.text =   If this happens, contact
-
-resultCode.43.heading   =   You''ve added individual protection 2016
-resultCode.43.1         =   As you already have fixed protection 2016 in place, your individual protection 2016 will only become active if you lose fixed protection 2016.
-resultCode.43.href.text =   If this happens, contact
-
-resultCode.44.heading   =   You''ve added individual protection 2016
-
 ## 2014 Application Period Ended ##
-pla.withdrawn.ap2014.title                         = Sorry, applications for 2014 protection have ended
-pla.withdrawn.ap2014.pageHeading                   = Sorry, applications for 2014 protection have ended
-pla.withdrawn.ap2014.paraOne                       = You can still
-pla.withdrawn.ap2014.paraOne.linkText              = view existing applications.
+pla.withdrawn.ap2014.title            = Sorry, applications for 2014 protection have ended
+pla.withdrawn.ap2014.pageHeading      = Sorry, applications for 2014 protection have ended
+pla.withdrawn.ap2014.paraOne          = You can still
+pla.withdrawn.ap2014.paraOne.linkText = view existing applications.
 
 ## 2016 Application Period Ended ##
-pla.withdrawn.ap2016.title                  = Sorry, applications for 2016 protection have ended
-pla.withdrawn.ap2016.pageHeading            = Sorry, applications for 2016 protection have ended
-pla.withdrawn.ap2016.paraOne                = You can still
-pla.withdrawn.ap2016.paraOne.linkText       = view previous applications.
+pla.withdrawn.ap2016.title            = Sorry, applications for 2016 protection have ended
+pla.withdrawn.ap2016.pageHeading      = Sorry, applications for 2016 protection have ended
+pla.withdrawn.ap2016.paraOne          = You can still
+pla.withdrawn.ap2016.paraOne.linkText = view previous applications.
 
 ## PSA Lookup Withdraw
 
-psa.lookup.withdraw.title = Sorry, the service is unavailable
+psa.lookup.withdraw.title       = Sorry, the service is unavailable
 psa.lookup.withdraw.pageHeading = Sorry, the service is unavailable
-psa.lookup.withdraw.paraOne = This service has closed.
-psa.lookup.withdrawLinkText = Check your pension scheme member’s protections and enhancements
-
+psa.lookup.withdraw.paraOne     = This service has closed.
+psa.lookup.withdrawLinkText     = Check your pension scheme member’s protections and enhancements
 
 ## PSA Lookup form
 psa.lookup.form.scheme-admin-ref-form.title = Enter the Scheme Administrator Reference
 psa.lookup.form.protection-notification-no-form.title = Enter the Protection Notification Number
 psa.lookup.form.continue.button = Continue
-psa.lookup.form.startover.button = Start over
-
 psa.lookup.form.psaref.hint = Example: PSA12345678A
-psa.lookup.form.pnn.hint = Example: IP141000000000A
-psa.lookup.form.button = Submit
-pla.lookup.form.error.summary = Something you''ve entered isn''t valid
 psa.lookup.form.psaref.required = Enter a Scheme Administrator Reference
 psa.lookup.form.psaref.invalid = The Scheme Administrator Reference you entered isn''t correct
+psa.lookup.form.pnn.hint = Example: IP141000000000A
 psa.lookup.form.pnn.required = Enter a Protection Notification Number
 psa.lookup.form.pnn.invalid = The Protection Notification Number you entered isn''t correct
-psa.lookup.form.not-found = The details you entered do not have a valid protection
 psa.lookup.form.pnn.back = Back
+psa.lookup.form.button = Submit
 
 ## PSA lookup results
 psa.lookup.results.title = Results of lifetime allowance protection check
-psa.lookup.results.table.title = PSA Lookup Details
-psa.lookup.results.table.header.1 = Field
-psa.lookup.results.table.header.2 = Value
 psa.lookup.results.table.row.1 = Scheme Administrator Reference:
 psa.lookup.results.table.row.2 = Protection Notification Number:
 psa.lookup.results.table.row.3 = Protection Type:
@@ -1117,18 +757,10 @@ psa.lookup.results.ltatype.15 = Enhanced Protection
 psa.lookup.results.ltatype.16 = Fixed Protection
 psa.lookup.results.ltatype.17 = Fixed Protection 2014
 
-
 psa.lookup.results.save = Review and print these results
 psa.lookup.results.check-another = Check another certificate
 
-psa.lookup.results.title.print.1 = Results of lifetime allowance
-psa.lookup.results.title.print.2 = protection check
-psa.lookup.results.copyright.print = © Crown Copyright
-psa.lookup.results.header.gov.uk = GOV.UK
-psa.lookup.results.logo.text.print = HM Revenue & Customs
-
 psa.lookup.not-found.results.title = Check the details you entered
-psa.lookup.not-found.results.title.2 = You entered:
 psa.lookup.not-found.results.table.row.1 = Scheme Administrator Reference:
 psa.lookup.not-found.results.table.row.2 = Protection Notification Number:
 psa.lookup.not-found.results.detail = The details you entered don''t match an existing protection certificate.
@@ -1158,7 +790,6 @@ psa.lookup.protection-guidance.protection-type-individual16-value-line1 = The lo
 psa.lookup.protection-guidance.protection-type-individual16-value-line2 = the value of the pension at 5 April 2016
 psa.lookup.protection-guidance.protection-type-individual16-value-line3 = £1,250,000
 psa.lookup.protection-guidance.protection-type-primary-label = Primary
-
 psa.lookup.protection-guidance.protection-type-primary-value = £1,500,000 or above
 
 ##Month Names##

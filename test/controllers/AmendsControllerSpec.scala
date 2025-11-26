@@ -25,19 +25,14 @@ import connectors.{CitizenDetailsConnector, PlaConnector}
 import constructors.display.DisplayConstructors
 import enums.ApplicationType
 import mocks.AuthMock
-import models.{AmendResponseModel, Person, PersonalDetailsModel, ProtectionModel}
 import models.amendModels._
 import models.cache.CacheMap
-import models.display.{
-  AmendDisplayModel,
-  AmendDisplayRowModel,
-  AmendDisplaySectionModel,
-  InactiveAmendResultDisplayModel
-}
-import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
+import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import models.pla.response.ProtectionStatus.{Dormant, Open}
 import models.pla.response.ProtectionType.{FixedProtection2016, IndividualProtection2014, IndividualProtection2016}
 import models.pla.response.{AmendProtectionResponse, ProtectionRecord, ProtectionRecordsList, ReadProtectionsResponse}
+import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
+import models.{AmendResponseModel, Person, PersonalDetailsModel, ProtectionModel}
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -50,7 +45,7 @@ import play.api.test.Helpers._
 import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers._
-import testdata.AmendProtectionOutcomeViewsTestData.{amendResultDisplayModelIP14, amendsActiveResultModelIP14}
+import testdata.AmendProtectionOutcomeViewsTestData.amendResultDisplayModelIP14
 import testdata.PlaConnectorTestData.amendProtectionResponse
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import utils.Constants
@@ -80,8 +75,6 @@ class AmendsControllerSpec
 
   private val manualCorrespondenceNeededView: manualCorrespondenceNeeded = mock[manualCorrespondenceNeeded]
   private val technicalErrorView: technicalError                         = mock[technicalError]
-  private val outcomeActiveView: outcomeActive                           = mock[outcomeActive]
-  private val outcomeInactiveView: outcomeInactive                       = mock[outcomeInactive]
   private val outcomeAmendedView: outcomeAmended                         = mock[outcomeAmended]
   private val outcomeNoNotificationIdView: outcomeNoNotificationId       = mock[outcomeNoNotificationId]
   private val amendSummaryView: amendSummary                             = mock[amendSummary]
@@ -105,12 +98,10 @@ class AmendsControllerSpec
     authFunction = authFunction,
     manualCorrespondenceNeeded = manualCorrespondenceNeededView,
     technicalError = technicalErrorView,
-    outcomeActive = outcomeActiveView,
-    outcomeInactive = outcomeInactiveView,
     outcomeAmended = outcomeAmendedView,
     outcomeNoNotificationId = outcomeNoNotificationIdView,
     amendSummary = amendSummaryView
-  )(appConfig, ec)
+  )(ec)
 
   override def beforeEach(): Unit = {
     super.beforeEach()
@@ -122,8 +113,6 @@ class AmendsControllerSpec
     reset(mockAuthConnector)
     reset(manualCorrespondenceNeededView)
     reset(technicalErrorView)
-    reset(outcomeActiveView)
-    reset(outcomeInactiveView)
     reset(outcomeAmendedView)
     reset(outcomeNoNotificationIdView)
     reset(amendSummaryView)
@@ -132,8 +121,6 @@ class AmendsControllerSpec
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
     when(manualCorrespondenceNeededView.apply()(any(), any())).thenReturn(HtmlFormat.empty)
     when(technicalErrorView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(outcomeActiveView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(outcomeInactiveView.apply(any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(outcomeAmendedView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(outcomeNoNotificationIdView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(amendSummaryView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
@@ -492,33 +479,6 @@ class AmendsControllerSpec
       }
     }
 
-    Constants.activeAmendmentCodes.diff(Constants.amendmentCodesList).foreach { notificationId =>
-      s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
-        "return Ok status with outcomeActive view" in {
-          val amendResponseModel =
-            AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
-          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-            .thenReturn(Future.successful(Some(testPersonalDetails)))
-          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-            .thenReturn(Future.successful(CacheMap("openProtection", Map.empty)))
-
-          val activeAmendResultDisplayModel = amendsActiveResultModelIP14.copy(notificationId = notificationId.toString)
-          when(displayConstructors.createActiveAmendResponseDisplayModel(any(), any(), any())(any()))
-            .thenReturn(activeAmendResultDisplayModel)
-
-          val result = controller.amendmentOutcome()(fakeRequest)
-
-          status(result) shouldBe OK
-          verify(sessionCacheService)
-            .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
-          verify(outcomeActiveView)
-            .apply(eqTo(activeAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)), eqTo(appConfig))(any(), any())
-        }
-      }
-    }
-
     "AmendResponseModel stored in cache contains no notification ID" should {
       import testdata.AmendProtectionDisplayModelTestData._
 
@@ -542,31 +502,6 @@ class AmendsControllerSpec
 
     }
 
-    (25 to 44).diff(Constants.activeAmendmentCodes).foreach { notificationId =>
-      s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
-        "return Ok status with outcomeInactive view" in {
-          val amendResponseModel =
-            AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
-          cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
-          cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
-          when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
-            .thenReturn(Future.successful(Some(testPersonalDetails)))
-          when(sessionCacheService.saveFormData(any(), any())(any(), any()))
-            .thenReturn(Future.successful(CacheMap("", Map.empty)))
-
-          val inactiveAmendResultDisplayModel = InactiveAmendResultDisplayModel(notificationId, Seq())
-          when(displayConstructors.createInactiveAmendResponseDisplayModel(any())(any()))
-            .thenReturn(inactiveAmendResultDisplayModel)
-
-          val result = controller.amendmentOutcome()(fakeRequest)
-
-          status(result) shouldBe OK
-          verify(sessionCacheService, times(0)).saveFormData(any(), any())(any(), any())
-          verify(outcomeInactiveView)
-            .apply(eqTo(inactiveAmendResultDisplayModel), eqTo(Some(emptyAmendsGAModel)))(any(), any())
-        }
-      }
-    }
   }
 
 }

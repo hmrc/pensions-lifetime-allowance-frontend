@@ -17,7 +17,7 @@
 package forms
 
 import controllers.helpers.FakeRequestHelper
-import forms.PSODetailsForm._
+import forms.PsoDetailsForm._
 import models.PsoDetailsModel
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesApi}
@@ -27,7 +27,7 @@ import utils.Constants
 
 import java.time.LocalDate
 
-class PSODetailsFormSpec extends FakeApplication with PSODetailsErrorMessages with MockitoSugar with FakeRequestHelper {
+class PsoDetailsFormSpec extends FakeApplication with PSODetailsErrorMessages with MockitoSugar with FakeRequestHelper {
 
   implicit val lang: Lang = mock[Lang]
 

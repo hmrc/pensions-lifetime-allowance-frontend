@@ -28,7 +28,7 @@ import utils.Constants
 
 import java.time.LocalDate
 
-class AmendPSODetailsFormSpec
+class AmendPsoDetailsFormSpec
     extends FakeApplication
     with PSODetailsErrorMessages
     with MockitoSugar

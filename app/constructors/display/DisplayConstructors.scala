@@ -18,13 +18,10 @@ package constructors.display
 
 import models.amendModels.AmendProtectionModel
 import models.display.{
-  ActiveAmendResultDisplayModel,
   AmendDisplayModel,
-  AmendPrintDisplayModel,
   AmendResultDisplayModel,
   AmendResultDisplayModelNoNotificationId,
   ExistingProtectionsDisplayModel,
-  InactiveAmendResultDisplayModel,
   PrintDisplayModel
 }
 import models.{AmendResponseModel, PersonalDetailsModel, ProtectionModel, TransformedReadResponseModel}
@@ -58,26 +55,6 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) {
     AmendDisplayModelConstructor.createAmendDisplayModel(model)
   }
 
-  def createActiveAmendResponseDisplayModel(
-      model: AmendResponseModel,
-      personalDetailsModelOpt: Option[PersonalDetailsModel],
-      nino: String
-  )(implicit lang: Lang): ActiveAmendResultDisplayModel = {
-    implicit val messages: Messages = messagesForLang(lang)
-
-    ActiveAmendResultDisplayModelConstructor.createActiveAmendResponseDisplayModel(model, personalDetailsModelOpt, nino)
-  }
-
-  def createAmendPrintDisplayModel(
-      personalDetailsModelOpt: Option[PersonalDetailsModel],
-      protectionModel: ProtectionModel,
-      nino: String
-  )(implicit lang: Lang): AmendPrintDisplayModel = {
-    implicit val messages: Messages = messagesForLang(lang)
-
-    AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, protectionModel, nino)
-  }
-
   def createAmendResultDisplayModel(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
@@ -100,14 +77,6 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) {
       personalDetailsModelOpt,
       nino
     )
-  }
-
-  def createInactiveAmendResponseDisplayModel(
-      model: AmendResponseModel
-  )(implicit lang: Lang): InactiveAmendResultDisplayModel = {
-    implicit val messages: Messages = messagesForLang(lang)
-
-    InactiveAmendResultDisplayModelConstructor.createInactiveAmendResponseDisplayModel(model)
   }
 
   private def messagesForLang(lang: Lang): Messages =

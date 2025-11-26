@@ -16,7 +16,6 @@
 
 package constructors.display
 
-import constructors.display.PrintDisplayModelConstructor
 import models.display.AmendPrintDisplayModel
 import models.{PersonalDetailsModel, ProtectionModel}
 import play.api.i18n.{Lang, Messages}

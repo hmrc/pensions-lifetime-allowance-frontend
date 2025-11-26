@@ -26,12 +26,7 @@ import mocks.AuthMock
 import models.{AmendResponseModel, PensionDebitModel, ProtectionModel}
 import models.amendModels._
 import models.cache.CacheMap
-import models.display.{
-  AmendDisplayModel,
-  AmendDisplayRowModel,
-  AmendDisplaySectionModel,
-  InactiveAmendResultDisplayModel
-}
+import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import models.pla.AmendProtectionLifetimeAllowanceType._
 import models.pla.response.ProtectionStatus.Dormant
 import org.apache.pekko.actor.ActorSystem
@@ -318,11 +313,6 @@ class AmendsPensionSharingOrderControllerSpec
   )
 
   val tstInactiveAmendResponseModel = AmendResponseModel(individualProtection2016InactiveAmendmentProtection)
-
-  val tstInactiveAmendResponseDisplayModel = InactiveAmendResultDisplayModel(
-    notificationId = 43,
-    additionalInfo = Seq.empty
-  )
 
   def cacheFetchCondition[T](data: Option[T]): Unit =
     when(mockSessionCacheService.fetchAndGetFormData[T](anyString())(any(), any()))
