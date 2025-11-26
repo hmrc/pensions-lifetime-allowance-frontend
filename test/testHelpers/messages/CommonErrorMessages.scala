@@ -20,17 +20,19 @@ trait CommonErrorMessages {
   def errorReal(errorKey: String, protectionType: String) = s"pla.$errorKey.amount.errors.notReal.$protectionType"
   def errorReal(errorKey: String)                         = s"pla.$errorKey.amount.errors.notReal"
 
-  def errorMissingAmount(errorKey: String, protectionType: String) = s"pla.$errorKey.amount.errors.mandatoryError.$protectionType"
-  def errorMissingAmount(errorKey: String)                    = s"pla.$errorKey.amount.errors.mandatoryError"
+  def errorMissingAmount(errorKey: String, protectionType: String) =
+    s"pla.$errorKey.amount.errors.mandatoryError.$protectionType"
+
+  def errorMissingAmount(errorKey: String) = s"pla.$errorKey.amount.errors.mandatoryError"
 
   def errorNegative(errorKey: String)                         = s"pla.$errorKey.amount.errors.negative"
   def errorNegative(errorKey: String, protectionType: String) = s"pla.$errorKey.amount.errors.negative.$protectionType"
 
-  def errorDecimal(errorKey: String)                          = s"pla.$errorKey.amount.errors.decimal"
-  def errorDecimal(errorKey: String, protectionType: String)  = s"pla.$errorKey.amount.errors.decimal.$protectionType"
+  def errorDecimal(errorKey: String)                         = s"pla.$errorKey.amount.errors.decimal"
+  def errorDecimal(errorKey: String, protectionType: String) = s"pla.$errorKey.amount.errors.decimal.$protectionType"
 
-  def errorMaximum(errorKey: String)                          = s"pla.$errorKey.amount.errors.max"
-  def errorMaximum(errorKey: String, protectionType: String)  = s"pla.$errorKey.amount.errors.max.$protectionType"
+  def errorMaximum(errorKey: String)                         = s"pla.$errorKey.amount.errors.max"
+  def errorMaximum(errorKey: String, protectionType: String) = s"pla.$errorKey.amount.errors.max.$protectionType"
 
   def errorRequired(errorKey: String, modifier: String)       = s"$errorKey.error.required$modifier"
   def errorNotReal(errorKey: String, modifier: String)        = s"$errorKey.error.notReal$modifier"

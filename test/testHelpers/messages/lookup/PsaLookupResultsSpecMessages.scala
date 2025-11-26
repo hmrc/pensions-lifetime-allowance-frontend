@@ -17,6 +17,7 @@
 package testHelpers.messages.lookup
 
 trait PsaLookupResultsSpecMessages {
+
   val titleText =
     "Results of lifetime allowance protection check - Check your pension protections - GOV.UK"
 
