@@ -22,7 +22,7 @@ import play.api.mvc.RequestHeader
 
 object MockConfig extends AppConfig {
 
-  val NoConfiguration = null
+  val NoConfiguration: Null = null
 
   override def accessibilityFrontendUrl(implicit requestHeader: RequestHeader): String = "_"
   override val ssoUrl: Option[String]                                                  = None

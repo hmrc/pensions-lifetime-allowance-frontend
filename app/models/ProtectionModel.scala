@@ -107,9 +107,7 @@ object ProtectionModel {
   private def buildRecordDateTime(record: ProtectionRecord): String =
     s"${record.certificateDate}T${record.certificateTime}"
 
-  implicit val pensionDebitFormat: OFormat[PensionDebitModel]     = PensionDebitModel.pdFormat
-  implicit val hipFieldsFormat: OFormat[ProtectionModelHipFields] = ProtectionModelHipFields.format
-  implicit val format: OFormat[ProtectionModel]                   = Json.format[ProtectionModel]
+  implicit val format: OFormat[ProtectionModel] = Json.format[ProtectionModel]
 }
 
 case class PensionDebitModel(startDate: String, amount: Double)

@@ -70,25 +70,28 @@ class AmendsPensionSharingOrderControllerSpec
     with I18nSupport
     with ScalaFutures {
 
-  implicit lazy val mockMessage: Messages =
-    fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+
+  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
+  val messagesApi: MessagesApi          = mcc.messagesApi
+
+  implicit val messages: Messages = messagesApi.preferred(fakeRequest)
+
+  implicit val appConfig: FrontendAppConfig   = inject[FrontendAppConfig]
+  implicit val system: ActorSystem            = ActorSystem()
+  implicit val mockMaterializer: Materializer = mock[Materializer]
+  implicit val mockLang: Lang                 = mock[Lang]
+  implicit val formWithCSRF: FormWithCSRF     = inject[FormWithCSRF]
+  implicit val ec: ExecutionContext           = inject[ExecutionContext]
 
   val mockDisplayConstructors: DisplayConstructors = mock[DisplayConstructors]
   val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
   val mockPlaConnector: PsaLookupConnector         = mock[PsaLookupConnector]
-  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
   val mockAuthFunction: AuthFunction               = mock[AuthFunction]
-  val mockAmendPsoDetails: amendPsoDetails         = app.injector.instanceOf[amendPsoDetails]
-  val mockTechnicalError: technicalError           = app.injector.instanceOf[technicalError]
   val mockEnv: Environment                         = mock[Environment]
-  val messagesApi: MessagesApi                     = mockMCC.messagesApi
 
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  implicit val system: ActorSystem              = ActorSystem()
-  implicit val materializer: Materializer       = mock[Materializer]
-  implicit val mockLang: Lang                   = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF       = app.injector.instanceOf[FormWithCSRF]
-  implicit val ec: ExecutionContext             = app.injector.instanceOf[ExecutionContext]
+  val amendPsoDetailsView: amendPsoDetails = inject[amendPsoDetails]
+  val technicalErrorView: technicalError   = inject[technicalError]
 
   override def beforeEach(): Unit = {
     reset(mockSessionCacheService)
@@ -123,28 +126,23 @@ class AmendsPensionSharingOrderControllerSpec
     )
   )
 
-  class Setup {
+  val authFunction = new AuthFunctionImpl(
+    mcc,
+    mockAuthConnector,
+    technicalErrorView
+  )
 
-    val authFunction = new AuthFunctionImpl(
-      mockMCC,
-      mockAuthConnector,
-      mockTechnicalError
-    )
+  val controller = new AmendsPensionSharingOrderController(
+    mockSessionCacheService,
+    mcc,
+    authFunction,
+    amendPsoDetailsView,
+    technicalErrorView
+  )
 
-    val controller = new AmendsPensionSharingOrderController(
-      mockSessionCacheService,
-      mockMCC,
-      authFunction,
-      mockAmendPsoDetails,
-      mockTechnicalError
-    )
-
-  }
-
-  val sessionId: String                             = UUID.randomUUID.toString
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
-  val mockUsername                                  = "mockuser"
-  val mockUserId: String                            = "/auth/oid/" + mockUsername
+  val sessionId: String  = UUID.randomUUID.toString
+  val mockUsername       = "mockuser"
+  val mockUserId: String = "/auth/oid/" + mockUsername
 
   val individualProtection2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -357,22 +355,22 @@ class AmendsPensionSharingOrderControllerSpec
         Some(List(PensionDebitModel("2016-12-23T15:14:00", 1000.0), PensionDebitModel("2016-12-27:15:12:00", 11322.75)))
     )
 
-    "there is no amendment model fetched from cache" in new Setup {
-
-      lazy val result: Future[Result] =
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
+    "there is no amendment model fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
+
+      val result: Future[Result] =
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
 
       status(result) shouldBe 500
     }
-    "show the technical error page for existing protections" in new Setup {
-      lazy val result: Future[Result] =
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
-      lazy val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
-
+    "show the technical error page for existing protections" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
+
+      val result: Future[Result] =
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
+      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
       jsoupDoc.body
@@ -381,16 +379,16 @@ class AmendsPensionSharingOrderControllerSpec
       await(result).header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
-    "there is no PSO list stored in the AmendProtectionModel" in new Setup {
-
-      lazy val result: Future[Result] =
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
-      lazy val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
-
+    "there is no PSO list stored in the AmendProtectionModel" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
         Some(AmendProtectionModel(testProtectionNoPsoList, testProtectionNoPsoList))
       )
+
+      val result: Future[Result] =
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2014, "open")(fakeRequest)
+      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
+
       status(result) shouldBe 200
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
@@ -399,17 +397,16 @@ class AmendsPensionSharingOrderControllerSpec
       jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual ""
     }
 
-    "there is an empty PSO list stored in the AmendProtectionModel" in new Setup {
-
-      lazy val result: Future[Result] =
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
-      lazy val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
-
+    "there is an empty PSO list stored in the AmendProtectionModel" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
         Some(AmendProtectionModel(testProtectionEmptyPsoList, testProtectionEmptyPsoList))
       )
 
+      val result: Future[Result] =
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
+
       status(result) shouldBe 200
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
       jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual ""
@@ -417,37 +414,36 @@ class AmendsPensionSharingOrderControllerSpec
       jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual ""
     }
 
-    "there is a PSO list of one PSO stored in the AmendProtectionModel" in new Setup {
-
-      object DataItem
-          extends AuthorisedFakeRequestTo(
-            controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
-          )
-
+    "there is a PSO list of one PSO stored in the AmendProtectionModel" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
         Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList))
       )
 
-      status(DataItem.result) shouldBe 200
+      val result = FakeRequests.authorisedGet(
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+      )
 
-      DataItem.jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
-      DataItem.jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual "23"
-      DataItem.jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual "12"
-      DataItem.jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual "2016"
-      DataItem.jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "1000"
+      status(result) shouldBe 200
+
+      val jsoupDoc = Jsoup.parse(contentAsString(result))
+
+      jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
+      jsoupDoc.body.getElementById("pso.day").attr("value") shouldEqual "23"
+      jsoupDoc.body.getElementById("pso.month").attr("value") shouldEqual "12"
+      jsoupDoc.body.getElementById("pso.year").attr("value") shouldEqual "2016"
+      jsoupDoc.body.getElementById("psoAmt").attr("value") shouldEqual "1000"
     }
 
-    "there is a PSO list of more then one PSO stored in the AmendProtectionModel" in new Setup {
-
-      lazy val result: Future[Result] =
-        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
-      lazy val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
-
+    "there is a PSO list of more then one PSO stored in the AmendProtectionModel" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
         Some(AmendProtectionModel(testProtectionMultiplePsoList, testProtectionMultiplePsoList))
       )
+
+      val result: Future[Result] =
+        controller.amendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       status(result) shouldBe 500
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
@@ -497,7 +493,7 @@ class AmendsPensionSharingOrderControllerSpec
           ("psoAmt", "100000")
         )
 
-        "return 303 (Redirect) and amendsSummary view" in new Setup {
+        "return 303 (Redirect) and amendsSummary view" in {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           cacheFetchCondition[AmendProtectionModel](Some(testData.amendProtectionModel))
           when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
@@ -515,7 +511,7 @@ class AmendsPensionSharingOrderControllerSpec
           )
         }
 
-        "save correct data into cache" in new Setup {
+        "save correct data into cache" in {
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
           cacheFetchCondition[AmendProtectionModel](Some(testData.amendProtectionModel))
           when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
@@ -549,7 +545,7 @@ class AmendsPensionSharingOrderControllerSpec
 
     "provided with invalid data" should {
 
-      "return 400 (Bad Request)" in new Setup {
+      "return 400 (Bad Request)" in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
 
         val data = Seq(
@@ -571,7 +567,7 @@ class AmendsPensionSharingOrderControllerSpec
 
     "AmendProtectionModel is NOT found in cache" should {
 
-      "return " in new Setup {
+      "return " in {
         mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
         cacheFetchCondition[AmendProtectionModel](None)
         when(mockSessionCacheService.saveFormData(any(), any())(any(), any()))
@@ -604,16 +600,15 @@ class AmendsPensionSharingOrderControllerSpec
 
     "not supplied with a PSO amount" should {
 
-      "return the correct value not found exception" in new Setup() {
+      "return the correct value not found exception" in
         (the[RequiredValueNotDefinedException] thrownBy {
           controller.createPensionDebitModel(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), None))
         } should have).message("Value not found for psoAmt in createPensionDebitModel")
-      }
     }
 
     "supplied with a PSO amount" should {
 
-      "return the correct list" in new Setup {
+      "return the correct list" in {
         val result: PensionDebitModel =
           controller.createPensionDebitModel(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), Some(1)))
 

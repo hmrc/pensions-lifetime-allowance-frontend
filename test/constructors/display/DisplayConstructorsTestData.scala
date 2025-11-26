@@ -35,7 +35,7 @@ trait DisplayConstructorsTestData extends FakeApplication {
   implicit val fakeRequest: FakeRequest[AnyContentAsEmpty.type] = FakeRequest()
 
   implicit val mockMessage: Messages =
-    fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+    inject[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
 
   val tstPSACheckRef = "PSA33456789"
 

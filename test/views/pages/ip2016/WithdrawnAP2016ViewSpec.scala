@@ -18,14 +18,12 @@ package views.pages.ip2016
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import play.api.i18n.{Messages, MessagesApi}
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.CommonViewSpecHelper
 import views.html.pages.ip2016.withdrawnAP2016
 
 class WithdrawnAP2016ViewSpec extends CommonViewSpecHelper {
 
-  def view: withdrawnAP2016            = app.injector.instanceOf[withdrawnAP2016]
-  implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
+  def view: withdrawnAP2016 = inject[withdrawnAP2016]
 
   def doc: Document = Jsoup.parse(view()(fakeRequest, messages).body)
 

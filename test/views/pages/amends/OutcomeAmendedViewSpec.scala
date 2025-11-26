@@ -19,17 +19,17 @@ package views.pages.amends
 import models.display.AmendResultDisplayModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import testHelpers.CommonViewSpecHelper
 import testdata.AmendProtectionDisplayModelTestData._
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.amends.OutcomeAmendedViewSpecMessages
+import testHelpers.messages.amends.OutcomeAmendedViewMessages
 import views.html.pages.amends.outcomeAmended
 
-class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewSpecMessages {
+class OutcomeAmendedViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewMessages {
 
-  private val outcomeAmendedView = fakeApplication().injector.instanceOf[outcomeAmended]
+  val view: outcomeAmended = inject[outcomeAmended]
 
-  private def parseDocument(amendResultDisplayModel: AmendResultDisplayModel): Document =
-    Jsoup.parse(outcomeAmendedView(amendResultDisplayModel).body)
+  def parseDocument(amendResultDisplayModel: AmendResultDisplayModel): Document =
+    Jsoup.parse(view(amendResultDisplayModel).body)
 
   "outcomeAmended" when {
 

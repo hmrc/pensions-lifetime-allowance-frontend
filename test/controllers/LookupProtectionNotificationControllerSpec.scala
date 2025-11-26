@@ -42,14 +42,14 @@ class LookupProtectionNotificationControllerSpec extends FakeApplication with Be
 
   private val sessionCacheService: SessionCacheService = mock[SessionCacheService]
   private val plaConnector: PsaLookupConnector         = mock[PsaLookupConnector]
-  private val messagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  private val actionWithSessionId          = fakeApplication().injector.instanceOf[ActionWithSessionId]
+  private val messagesControllerComponents             = inject[MessagesControllerComponents]
+  private val actionWithSessionId                      = inject[ActionWithSessionId]
 
   private val psa_lookup_protection_notification_no_form = mock[psa_lookup_protection_notification_no_form]
   private val withdrawnPSALookupJourney                  = mock[withdrawnPSALookupJourney]
 
   private implicit val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  private implicit val ec: ExecutionContext         = fakeApplication().injector.instanceOf[ExecutionContext]
+  private implicit val ec: ExecutionContext         = inject[ExecutionContext]
 
   private val controller = new LookupProtectionNotificationController(
     sessionCacheService,

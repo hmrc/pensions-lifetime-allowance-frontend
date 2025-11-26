@@ -22,13 +22,18 @@ import models.amendModels.AmendPSODetailsModel
 import models.pla.AmendProtectionLifetimeAllowanceType.{IndividualProtection2014, IndividualProtection2016}
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Messages, MessagesApi}
-import testHelpers.{FakeApplication, PSODetailsMessages}
+import testHelpers.FakeApplication
+import testHelpers.messages.PSODetailsErrorMessages
 import utils.Constants
 
 import java.time.LocalDate
 
-class AmendPSODetailsFormSpec extends FakeApplication with PSODetailsMessages with MockitoSugar with FakeRequestHelper {
-  val messagesApi: MessagesApi        = fakeApplication().injector.instanceOf[MessagesApi]
+class AmendPSODetailsFormSpec
+    extends FakeApplication
+    with PSODetailsErrorMessages
+    with MockitoSugar
+    with FakeRequestHelper {
+  val messagesApi: MessagesApi        = inject[MessagesApi]
   implicit val testMessages: Messages = messagesApi.preferred(fakeRequest)
 
   val messageKey = "psoDetails"

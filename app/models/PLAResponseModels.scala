@@ -67,10 +67,6 @@ object TransformedReadResponseModel {
 
 case class ReadResponseModel(psaCheckReference: String, lifetimeAllowanceProtections: Seq[ProtectionModel])
 
-object ReadResponseModel {
-  implicit val format: OFormat[ReadResponseModel] = Json.format[ReadResponseModel]
-}
-
 case class AmendResponseModel(
     protection: ProtectionModel
 )

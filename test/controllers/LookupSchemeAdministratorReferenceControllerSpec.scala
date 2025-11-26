@@ -43,14 +43,14 @@ class LookupSchemeAdministratorReferenceControllerSpec
     with MockitoSugar {
 
   private val sessionCacheService: SessionCacheService = mock[SessionCacheService]
-  private val messagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  private val actionWithSessionId          = fakeApplication().injector.instanceOf[ActionWithSessionId]
+  private val messagesControllerComponents             = inject[MessagesControllerComponents]
+  private val actionWithSessionId                      = inject[ActionWithSessionId]
 
   private val psa_lookup_scheme_admin_ref_form = mock[psa_lookup_scheme_admin_ref_form]
   private val withdrawnPSALookupJourney        = mock[withdrawnPSALookupJourney]
 
   private implicit val appConfig: FrontendAppConfig = mock[FrontendAppConfig]
-  private implicit val ec: ExecutionContext         = fakeApplication().injector.instanceOf[ExecutionContext]
+  private implicit val ec: ExecutionContext         = inject[ExecutionContext]
 
   private val controller = new LookupSchemeAdministratorReferenceController(
     sessionCacheService,

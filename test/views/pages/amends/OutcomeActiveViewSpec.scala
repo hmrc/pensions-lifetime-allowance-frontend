@@ -18,8 +18,8 @@ package views.pages.amends
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.amends.OutcomeActiveViewSpecMessages
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.OutcomeActiveViewMessages
 import testdata.AmendProtectionOutcomeViewsTestData.{
   amendsActiveResultModelIP14,
   amendsActiveResultModelIP16,
@@ -28,28 +28,26 @@ import testdata.AmendProtectionOutcomeViewsTestData.{
 }
 import views.html.pages.amends.outcomeActive
 
-class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewSpecMessages {
+class OutcomeActiveViewSpec extends CommonViewSpecHelper with OutcomeActiveViewMessages {
 
-  private val view = app.injector.instanceOf[outcomeActive]
+  val view: outcomeActive = inject[outcomeActive]
 
-  lazy val docIP16: Document =
+  val docIP16: Document =
     Jsoup.parse(view.apply(amendsActiveResultModelIP16, Some(amendsGAModel), mockAppConfig).body)
 
-  lazy val docIP14: Document =
+  val docIP14: Document =
     Jsoup.parse(view.apply(amendsActiveResultModelIP14, Some(amendsGAModel), mockAppConfig).body)
 
-  private val NameHeader            = "Full name"
-  private val NinoHeader            = "National Insurance number"
-  private val ProtectionRefHeader   = "Protection reference number"
-  private val PsaRefHeader          = "Pension scheme administrator check reference"
-  private val ApplicationDateHeader = "Application date"
+  val NameHeader            = "Full name"
+  val NinoHeader            = "National Insurance number"
+  val ProtectionRefHeader   = "Protection reference number"
+  val PsaRefHeader          = "Pension scheme administrator check reference"
+  val ApplicationDateHeader = "Application date"
 
   "the OutcomeActiveView" should {
 
     "have the right success message displayed for IP14" in {
-      val docIP14HipMigrationEnabled =
-        Jsoup.parse(view.apply(amendsActiveResultModelIP14, Some(amendsGAModel), mockAppConfig).body)
-      docIP14HipMigrationEnabled
+      docIP14
         .select("#amendedAllowanceTextHip")
         .text() shouldBe plaResultSuccessAllowanceSubHeadingHip
     }

@@ -20,7 +20,8 @@ import forms.PensionDebitsForm._
 import models.PensionDebitsModel
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
-import testHelpers.{CommonErrorMessages, FakeApplication}
+import testHelpers.FakeApplication
+import testHelpers.messages.CommonErrorMessages
 
 class PensionDebitsFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {
   implicit val lang: Lang = mock[Lang]

@@ -36,7 +36,7 @@ object AmendsGAConstructor {
     AmendsGAModel(current, before, between, overseas, pso)
   }
 
-  def gaAction(updated: Option[Double], original: Option[Double]): Option[String] =
+  private def gaAction(updated: Option[Double], original: Option[Double]): Option[String] =
     if (updated != original) {
       if (!updated.contains(0.0) && !original.contains(0.0)) Some("UpdatedValue")
       else if (updated.contains(0.0)) Some("ChangedToNo")

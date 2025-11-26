@@ -18,7 +18,7 @@ package forms
 
 import common.Validation._
 import forms.formatters.DateFormatter
-import models.PSODetailsModel
+import models.PsoDetailsModel
 import play.api.data.Form
 import play.api.data.Forms.{bigDecimal, mapping, of, optional}
 import play.api.i18n.Messages
@@ -31,7 +31,7 @@ object PSODetailsForm extends CommonBinders {
   val key    = "pso"
   val amount = "psoAmt"
 
-  def psoDetailsForm()(implicit messages: Messages): Form[PSODetailsModel] = Form(
+  def psoDetailsForm()(implicit messages: Messages): Form[PsoDetailsModel] = Form(
     mapping(
       key -> of(
         DateFormatter(
@@ -54,7 +54,7 @@ object PSODetailsForm extends CommonBinders {
           psoAmt => isMaxTwoDecimalPlaces(psoAmt.getOrElse(BigDecimal(0.0)).toDouble)
         )
         .verifying("pla.psoDetails.amount.errors.mandatoryError", _.isDefined)
-    )((date, amount) => PSODetailsModel(date, amount))(model => Some((model.pso, model.psoAmt)))
+    )((date, amount) => PsoDetailsModel(date, amount))(model => Some((model.pso, model.psoAmt)))
   )
 
 }

@@ -21,7 +21,8 @@ import models.PensionsUsedBetweenModel
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.Lang
-import testHelpers.{CommonErrorMessages, FakeApplication}
+import testHelpers.FakeApplication
+import testHelpers.messages.CommonErrorMessages
 import utils.Constants
 
 class PensionsUsedBetweenFormSpec extends FakeApplication with CommonErrorMessages with MockitoSugar {

@@ -29,7 +29,7 @@ class CitizenDetailsConnector @Inject() (appConfig: FrontendAppConfig, http: Htt
     implicit ec: ExecutionContext
 ) extends Logging {
 
-  val serviceUrl = appConfig.servicesConfig.baseUrl("citizen-details")
+  private val serviceUrl: String = appConfig.servicesConfig.baseUrl("citizen-details")
 
   private def url(nino: String) = s"$serviceUrl/citizen-details/$nino/designatory-details"
 

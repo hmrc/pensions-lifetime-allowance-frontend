@@ -1229,10 +1229,10 @@ pla.amends.pensionDebits.IndividualProtection2016.CurrentPsos-psoDetails.removeH
 pla.amends.pensionDebits.IndividualProtection2016LTA.CurrentPsos-psoDetails.removeHint = Dilëwch eich ateb i swm neu ddyddiad eich gorchymyn rhannu pensiwn
 
 ## 2014 Application Period Ended ##
-pla.withdrawn.pageHeading                                           = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
-pla.withdrawn.paraOne                                               = Gallwch dal i
-pla.withdrawn.paraOne.linkText                                      = weld ceisiadau sy''n bodoli eisoes.
-pla.withdrawn.title                                                 = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
+pla.withdrawn.ap2014.pageHeading                                           = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
+pla.withdrawn.ap2014.paraOne                                               = Gallwch dal i
+pla.withdrawn.ap2014.paraOne.linkText                                      = weld ceisiadau sy''n bodoli eisoes.
+pla.withdrawn.ap2014.title                                                 = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
 
 ## 2016 Application Period Ended ##
 pla.withdrawn.ap2016.title                                          = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben

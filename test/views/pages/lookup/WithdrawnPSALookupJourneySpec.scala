@@ -19,15 +19,12 @@ package views.pages.lookup
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.mockito.Mockito.when
-import play.api.i18n.{Messages, MessagesApi}
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.CommonViewSpecHelper
 import views.html.pages.lookup.withdrawnPSALookupJourney
 
 class WithdrawnPSALookupJourneySpec extends CommonViewSpecHelper {
 
-  def view: withdrawnPSALookupJourney = app.injector.instanceOf[withdrawnPSALookupJourney]
-
-  implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(fakeRequest)
+  def view: withdrawnPSALookupJourney = inject[withdrawnPSALookupJourney]
 
   def doc: Document = Jsoup.parse(view()(fakeRequest, messages).body)
 

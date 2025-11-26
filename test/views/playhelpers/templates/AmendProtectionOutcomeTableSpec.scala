@@ -18,7 +18,7 @@ package views.playhelpers.templates
 
 import models.display.AmendPrintDisplayModel
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
+import testHelpers.CommonViewSpecHelper
 import testdata.AmendProtectionDisplayModelTestData._
 import views.html.playHelpers.templates.amendProtectionOutcomeTable
 
@@ -28,7 +28,7 @@ import views.html.playHelpers.templates.amendProtectionOutcomeTable
  */
 class AmendProtectionOutcomeTableSpec extends CommonViewSpecHelper {
 
-  private val amendProtectionOutcomeTable = fakeApplication().injector.instanceOf[amendProtectionOutcomeTable]
+  private val amendProtectionOutcomeTable = inject[amendProtectionOutcomeTable]
 
   private val NameHeader               = "Full name"
   private val NinoHeader               = "National Insurance number"

@@ -26,22 +26,22 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import testHelpers._
-import views.html.pages.ip2014.withdrawn
+import views.html.pages.ip2014.withdrawnAP2014
 import views.html.pages.ip2016.withdrawnAP2016
 
 import scala.concurrent.Future
 
 class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
 
-  lazy val mockMCC: MessagesControllerComponents = app.injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents = inject[MessagesControllerComponents]
 
-  implicit lazy val view2014: withdrawn       = app.injector.instanceOf[withdrawn]
-  implicit lazy val view2016: withdrawnAP2016 = app.injector.instanceOf[withdrawnAP2016]
+  implicit val view2014: withdrawnAP2014 = inject[withdrawnAP2014]
+  implicit val view2016: withdrawnAP2016 = inject[withdrawnAP2016]
 
   val controller                            = new WithdrawnController(mockMCC, view2014, view2016)
   implicit val request: Request[AnyContent] = FakeRequest("GET", "/")
 
-  implicit lazy val messages: Messages = app.injector.instanceOf[MessagesApi].preferred(request)
+  implicit val messages: Messages = inject[MessagesApi].preferred(request)
 
   "Withdrawn controller" should {
     "should show withdrawn page for 2014" in {

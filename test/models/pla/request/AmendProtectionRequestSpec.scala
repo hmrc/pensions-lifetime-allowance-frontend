@@ -20,7 +20,7 @@ import models.ProtectionModel
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionResponseStatus}
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import testdata.PlaV2TestData._
+import testdata.PlaConnectorTestData._
 
 class AmendProtectionRequestSpec extends AnyWordSpec with Matchers {
 

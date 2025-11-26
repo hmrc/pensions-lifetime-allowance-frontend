@@ -20,13 +20,15 @@ import common.Strings
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import models.display.{AmendDisplayModel, AmendDisplayRowModel, AmendDisplaySectionModel}
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.amends.AmendSummaryViewSpecMessages
+import org.jsoup.nodes.Document
+import org.jsoup.select.Elements
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.AmendSummaryViewMessages
 import views.html.pages.amends.amendSummary
 
-class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpecMessages {
+class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMessages {
 
-  lazy val tstPensionContributionPsoDisplaySections = Seq(
+  val tstPensionContributionPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
       "PensionsTakenBefore",
       Seq(
@@ -119,7 +121,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
     )
   )
 
-  lazy val tstPsoDisplaySections = Seq(
+  val tstPsoDisplaySections = Seq(
     AmendDisplaySectionModel(
       "pensionDebits",
       Seq(
@@ -158,17 +160,16 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
     totalAmount = "£1,100,000.34"
   )
 
+  def view: amendSummary = inject[amendSummary]
+
+  def doc: Document =
+    Jsoup.parse(view.apply(amendDisplayModel, IndividualProtection2016.toString, "open").body)
+
+  def docWithoutPso: Document = Jsoup.parse(
+    view.apply(amendDisplayModelWithoutPso, IndividualProtection2016.toString, "open").body
+  )
+
   "the AmendSummaryView" should {
-    def view = app.injector.instanceOf[amendSummary]
-
-    def doc =
-      Jsoup.parse(view.apply(amendDisplayModel, IndividualProtection2016.toString, "open").body)
-    def docWithoutPso = Jsoup.parse(
-      view.apply(amendDisplayModelWithoutPso, IndividualProtection2016.toString, "open").body
-    )
-
-    lazy val form = doc.select("form")
-
     "have the correct title" in {
       doc.title() shouldBe plaAmendsSummaryTitleHip
     }
@@ -253,8 +254,10 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
     }
 
     "have a valid form submission" in {
-      form.attr("method") shouldBe "POST"
-      form.attr("action") shouldBe controllers.routes.AmendsController
+      val formElement: Elements = doc.select("form")
+
+      formElement.attr("method") shouldBe "POST"
+      formElement.attr("action") shouldBe controllers.routes.AmendsController
         .amendProtection(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
         .url
     }

@@ -22,11 +22,6 @@ package object auth {
 
   import java.util.UUID
 
-  val mockUsername: String = "mockuser"
-  val mockUserId: String   = "/auth/oid/" + mockUsername
-
-  lazy val fakeRequest = FakeRequest()
-
   val GovernmentGatewayId = "GGW"
 
   private case object FakeRequestKeyConsts {
@@ -37,8 +32,6 @@ package object auth {
   }
 
   def authenticatedFakeRequest(
-      provider: String = GovernmentGatewayId,
-      userId: String = mockUserId
   ): FakeRequest[AnyContentAsEmpty.type] =
     FakeRequest().withSession(
       FakeRequestKeyConsts.SessionId -> s"session-${UUID.randomUUID()}",
@@ -47,13 +40,7 @@ package object auth {
         .truncatedTo(java.time.temporal.ChronoUnit.MILLIS)
         .toString,
       FakeRequestKeyConsts.Token        -> "ANYOLDTOKEN",
-      FakeRequestKeyConsts.AuthProvider -> provider
+      FakeRequestKeyConsts.AuthProvider -> GovernmentGatewayId
     )
-
-  def weakCredentialsFakeRequest(provider: String = GovernmentGatewayId): FakeRequest[AnyContentAsEmpty.type] =
-    authenticatedFakeRequest(provider, "/auth/oid/mockweak")
-
-  def lowConfidenceFakeRequest(provider: String = GovernmentGatewayId): FakeRequest[AnyContentAsEmpty.type] =
-    authenticatedFakeRequest(provider, "/auth/oid/mocklowconfidence")
 
 }

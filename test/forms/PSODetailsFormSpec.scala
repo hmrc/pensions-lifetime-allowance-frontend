@@ -18,19 +18,20 @@ package forms
 
 import controllers.helpers.FakeRequestHelper
 import forms.PSODetailsForm._
-import models.PSODetailsModel
+import models.PsoDetailsModel
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesApi}
-import testHelpers.{FakeApplication, PSODetailsMessages}
+import testHelpers.FakeApplication
+import testHelpers.messages.PSODetailsErrorMessages
 import utils.Constants
 
 import java.time.LocalDate
 
-class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with MockitoSugar with FakeRequestHelper {
+class PSODetailsFormSpec extends FakeApplication with PSODetailsErrorMessages with MockitoSugar with FakeRequestHelper {
 
   implicit val lang: Lang = mock[Lang]
 
-  val messagesApi: MessagesApi        = fakeApplication().injector.instanceOf[MessagesApi]
+  val messagesApi: MessagesApi        = inject[MessagesApi]
   implicit val testMessages: Messages = messagesApi.preferred(fakeRequest)
 
   val messageKey     = "psoDetails"
@@ -51,7 +52,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       val day   = 1
 
       "provided with a valid model" in {
-        val model  = PSODetailsModel(LocalDate.of(year, month, day), Some(0.01))
+        val model  = PsoDetailsModel(LocalDate.of(year, month, day), Some(0.01))
         val result = psoDetailsForm().fill(model)
 
         result.data shouldBe validMap
@@ -60,14 +61,14 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
       "provided with a valid map with a value for psoAmt which has two decimal places" in {
         val result = psoDetailsForm().bind(validMap)
 
-        result.value shouldBe Some(PSODetailsModel(LocalDate.of(year, month, day), Some(0.01)))
+        result.value shouldBe Some(PsoDetailsModel(LocalDate.of(year, month, day), Some(0.01)))
       }
 
       "provided with a valid map with a value for psoAmt which is zero" in {
         val map    = validMap.updated("psoAmt", "0")
         val result = psoDetailsForm().bind(map)
 
-        result.value shouldBe Some(PSODetailsModel(LocalDate.of(year, month, day), Some(0.0)))
+        result.value shouldBe Some(PsoDetailsModel(LocalDate.of(year, month, day), Some(0.0)))
       }
 
       "provided with a valid map with a value for psoAmt which is the maximum value" in {
@@ -78,7 +79,7 @@ class PSODetailsFormSpec extends FakeApplication with PSODetailsMessages with Mo
         )
         val result = psoDetailsForm().bind(map)
 
-        result.value shouldBe Some(PSODetailsModel(LocalDate.of(year, month, day), Some(Constants.npsMaxCurrency - 1)))
+        result.value shouldBe Some(PsoDetailsModel(LocalDate.of(year, month, day), Some(Constants.npsMaxCurrency - 1)))
       }
     }
 

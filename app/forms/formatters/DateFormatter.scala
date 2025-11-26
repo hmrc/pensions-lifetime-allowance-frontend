@@ -33,7 +33,7 @@ case class DateFormatter(
 )(implicit val messages: Messages)
     extends Formatter[LocalDate] {
 
-  lazy val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.toLocale)
+  val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.toLocale)
 
   private val dateRequiredError      = s"$key.error.required"
   private val dayRequiredError       = s"$key.error.required.day"
