@@ -25,7 +25,6 @@ trait AmendIP16PensionsWorthBeforeViewMessages {
 
   val plaPensionsWorthBeforeParaOne   = "If you did not get an income from any other pensions since 6 April 2006:"
   val plaPensionsWorthBeforeParaTwo   = "You'll need to do a different calculation if either of the following apply:"
-  val plaPensionsWorthBeforeParaThree = "Find out how in this"
 
   val plaPensionsWorthBeforeHelp = "How to work out the amount"
 
@@ -43,5 +42,4 @@ trait AmendIP16PensionsWorthBeforeViewMessages {
   val plaPensionsWorthBeforeHelpLinkLocation =
     "https://www.gov.uk/guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection#income-taken-from-pensions-before-6-april-2006"
 
-  val plaPensionsWorthBeforeMandatoryAmount = "Enter what these pensions were worth on 5 April 2016"
 }

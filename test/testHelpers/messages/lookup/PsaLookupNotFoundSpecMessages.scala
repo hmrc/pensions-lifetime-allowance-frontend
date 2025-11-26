@@ -17,8 +17,6 @@
 package testHelpers.messages.lookup
 
 trait PsaLookupNotFoundSpecMessages {
-  val logoText                    = "GOV.UK"
-  val hmrcText                    = "HM Revenue & Customs"
   val checkDetailsText            = "Check the details you entered"
   val tableRowOneElementOneText   = "Scheme Administrator Reference:"
   val tableRowOneElementTwoText   = "CHECK"
@@ -31,7 +29,6 @@ trait PsaLookupNotFoundSpecMessages {
   val causeOneText                = "been given the wrong information by your client"
   val causeTwoText                = "entered one of the numbers incorrectly"
   val suggestionsText             = "Check the information you've been given and try again."
-  val copyrightText               = "© Crown Copyright"
   val pdfLinkText                 = "Review and print these results"
   val startAgainText              = "Try again"
 }

@@ -22,9 +22,6 @@ trait RemovePsoDetailsViewMessages {
   val plaPsoDetailsRemovePso    = "This will remove your pension sharing order."
   val plaPsoDetailsCancelRemove = "Do not remove"
 
-  val plaPsoDetailsCancellationLink =
-    "/check-your-pension-protections-and-enhancements/apply-for-ip16-submit-your-application"
-
   val plaAmendsPsoDetailsCancellationLink =
     "/check-your-pension-protections-and-enhancements/amend-protection/individual-protection-2016/open"
 

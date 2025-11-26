@@ -28,7 +28,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import testHelpers.FakeApplication
-import testHelpers.Formats._
+import testHelpers.TestFormats._
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.util.UUID
