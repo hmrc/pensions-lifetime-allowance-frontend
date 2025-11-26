@@ -18,7 +18,7 @@ package common
 
 object Links {
 
-  final val baseGovUrl = "https://www.gov.uk/"
+  private val baseGovUrl = "https://www.gov.uk/"
 
   val plaMain: String     = baseGovUrl + "guidance/pension-schemes-protect-your-lifetime-allowance"
   val contactInfo: String = baseGovUrl + "contact-hmrc"
@@ -27,7 +27,7 @@ object Links {
   val contactHMRC: String =
     baseGovUrl + "government/organisations/hm-revenue-customs/contact/income-tax-enquiries-for-individuals-pensioners-and-employees"
 
-  val pensionValue: String =
+  private val pensionValue: String =
     baseGovUrl + "guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection"
 
   // Sidebar Read More link locations

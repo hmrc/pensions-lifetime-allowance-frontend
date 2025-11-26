@@ -27,7 +27,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class StubConnector @Inject() (appConfig: FrontendAppConfig, http: HttpClientV2)(implicit ec: ExecutionContext) {
 
-  lazy val serviceUrl: String = appConfig.servicesConfig.baseUrl("pla-dynamic-stub")
+  val serviceUrl: String = appConfig.servicesConfig.baseUrl("pla-dynamic-stub")
 
   private def deleteProtectionByNinoUrl(nino: String) = s"$serviceUrl/test-only/individuals/$nino/protections"
   private def deleteProtectionsUrl                    = s"$serviceUrl/test-only/protections/removeAll"

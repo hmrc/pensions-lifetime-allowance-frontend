@@ -1049,10 +1049,10 @@ resultCode.43.href.text =   If this happens, contact
 resultCode.44.heading   =   You''ve added individual protection 2016
 
 ## 2014 Application Period Ended ##
-pla.withdrawn.title                         = Sorry, applications for 2014 protection have ended
-pla.withdrawn.pageHeading                   = Sorry, applications for 2014 protection have ended
-pla.withdrawn.paraOne                       = You can still
-pla.withdrawn.paraOne.linkText              = view existing applications.
+pla.withdrawn.ap2014.title                         = Sorry, applications for 2014 protection have ended
+pla.withdrawn.ap2014.pageHeading                   = Sorry, applications for 2014 protection have ended
+pla.withdrawn.ap2014.paraOne                       = You can still
+pla.withdrawn.ap2014.paraOne.linkText              = view existing applications.
 
 ## 2016 Application Period Ended ##
 pla.withdrawn.ap2016.title                  = Sorry, applications for 2016 protection have ended

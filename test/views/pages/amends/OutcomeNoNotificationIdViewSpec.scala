@@ -20,17 +20,17 @@ import models.display.AmendResultDisplayModelNoNotificationId
 import models.pla.AmendProtectionLifetimeAllowanceType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.amends.OutcomeAmendedViewSpecMessages
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.OutcomeAmendedViewMessages
 import testdata.AmendProtectionDisplayModelTestData._
 import views.html.pages.amends.outcomeNoNotificationId
 
-class OutcomeNoNotificationIdViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewSpecMessages {
+class OutcomeNoNotificationIdViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewMessages {
 
-  private val outcomeNoNotificationIdView = fakeApplication().injector.instanceOf[outcomeNoNotificationId]
+  val view = inject[outcomeNoNotificationId]
 
-  private def parseDocument(amendResultDisplayModel: AmendResultDisplayModelNoNotificationId): Document =
-    Jsoup.parse(outcomeNoNotificationIdView(amendResultDisplayModel).body)
+  def parseDocument(amendResultDisplayModel: AmendResultDisplayModelNoNotificationId): Document =
+    Jsoup.parse(view(amendResultDisplayModel).body)
 
   "outcomeAmended" when {
 

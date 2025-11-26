@@ -18,18 +18,19 @@ package views.pages.lookup
 
 import models.PSALookupResult
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.lookup.PsaLookupResultsSpecMessages
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.lookup.PsaLookupResultsSpecMessages
 import views.html.pages.lookup.psa_lookup_results
 
 class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResultsSpecMessages {
+
+  val view: psa_lookup_results = inject[psa_lookup_results]
 
   "The PsaLookupResults view" when {
 
     "provided with no optional values" should {
       val psaLookupResults = PSALookupResult("reference", 1, 0, None, None)
-      lazy val view        = app.injector.instanceOf[psa_lookup_results]
-      lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
+      val doc              = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
       "have the correct title" in {
         doc.title() shouldBe titleText
@@ -46,7 +47,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a first row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe schemeAdministratorRowTitleText
@@ -58,7 +59,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a second row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe statusRowTitleText
@@ -70,7 +71,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a third row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe checkedOnTitleText
@@ -109,8 +110,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with all optional values" should {
       val psaLookupResults = PSALookupResult("reference", 1, 0, Some(3), Some("data"))
-      lazy val view        = app.injector.instanceOf[psa_lookup_results]
-      lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
+      val doc              = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
       "have a table".which {
 
@@ -119,7 +119,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a first row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe schemeAdministratorRowTitleText
@@ -131,7 +131,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a second row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe protectionNumberTitleText
@@ -143,7 +143,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a third row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe statusRowTitleText
@@ -155,7 +155,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a fourth row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe checkedOnTitleText
@@ -171,8 +171,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of FP2016" should {
       val psaLookupResults = PSALookupResult("reference", 1, 1, None, None)
-      lazy val view        = app.injector.instanceOf[psa_lookup_results]
-      lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
+      val doc              = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
       "have a table".which {
 
@@ -181,7 +180,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a first row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe schemeAdministratorRowTitleText
@@ -193,7 +192,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a second row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe protectionTypeTitleText
@@ -205,7 +204,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a third row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe statusRowTitleText
@@ -217,7 +216,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a fourth row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe checkedOnTitleText
@@ -232,8 +231,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of IP2014" should {
       val psaLookupResults = PSALookupResult("reference", 2, 1, None, None)
-      lazy val view        = app.injector.instanceOf[psa_lookup_results]
-      lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
+      val doc              = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
       "have a table".which {
 
@@ -242,7 +240,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a first row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe schemeAdministratorRowTitleText
@@ -254,7 +252,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a second row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe protectionTypeTitleText
@@ -266,7 +264,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a third row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe statusRowTitleText
@@ -278,7 +276,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a fourth row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe checkedOnTitleText
@@ -293,8 +291,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of IP2016 with a value" should {
       val psaLookupResults = PSALookupResult("reference", 3, 1, Some(2), None)
-      lazy val view        = app.injector.instanceOf[psa_lookup_results]
-      lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
+      val doc              = Jsoup.parse(view.apply(psaLookupResults, "timestamp").body)
 
       "have a table".which {
 
@@ -303,7 +300,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a first row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(0)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe schemeAdministratorRowTitleText
@@ -315,7 +312,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a second row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe protectionTypeTitleText
@@ -327,7 +324,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a third row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(2)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe protectedAmountTitleText
@@ -339,7 +336,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a fourth row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(3)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe statusRowTitleText
@@ -351,7 +348,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a fifth row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(4)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(4)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe checkedOnTitleText
@@ -366,8 +363,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of Primary" should {
       val psaLookupResults = PSALookupResult("reference", 4, 1, None, None)
-      lazy val view        = app.injector.instanceOf[psa_lookup_results]
-      lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "").body)
+      val doc              = Jsoup.parse(view.apply(psaLookupResults, "").body)
 
       "have a table".which {
 
@@ -376,7 +372,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a second row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe protectionTypeTitleText
@@ -391,8 +387,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of Enhanced" should {
       val psaLookupResults = PSALookupResult("reference", 5, 1, None, None)
-      lazy val view        = app.injector.instanceOf[psa_lookup_results]
-      lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "").body)
+      val doc              = Jsoup.parse(view.apply(psaLookupResults, "").body)
 
       "have a table".which {
 
@@ -401,7 +396,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a second row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe protectionTypeTitleText
@@ -416,8 +411,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of FP2012" should {
       val psaLookupResults = PSALookupResult("reference", 6, 1, None, None)
-      lazy val view        = app.injector.instanceOf[psa_lookup_results]
-      lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "").body)
+      val doc              = Jsoup.parse(view.apply(psaLookupResults, "").body)
 
       "have a table".which {
 
@@ -426,7 +420,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a second row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe protectionTypeTitleText
@@ -441,8 +435,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
 
     "provided with a valid result of" should {
       val psaLookupResults = PSALookupResult("reference", 7, 1, None, None)
-      lazy val view        = app.injector.instanceOf[psa_lookup_results]
-      lazy val doc         = Jsoup.parse(view.apply(psaLookupResults, "").body)
+      val doc              = Jsoup.parse(view.apply(psaLookupResults, "").body)
 
       "have a table".which {
 
@@ -451,7 +444,7 @@ class PsaLookupResultsViewSpec extends CommonViewSpecHelper with PsaLookupResult
         }
 
         "has a second row".which {
-          lazy val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
+          val row = doc.getElementsByClass("govuk-summary-list__row").get(1)
 
           "has the correct first element" in {
             row.select("dt").text() shouldBe protectionTypeTitleText

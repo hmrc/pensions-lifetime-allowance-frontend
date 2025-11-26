@@ -29,20 +29,20 @@ import views.html.pages.timeout
 
 class TimeoutControllerSpec extends FakeApplication with MockitoSugar {
 
-  val mockMCC: MessagesControllerComponents = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockMCC: MessagesControllerComponents = inject[MessagesControllerComponents]
 
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val mockAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
   implicit val application: Application         = mock[Application]
-  implicit val mockTimeout: timeout             = app.injector.instanceOf[timeout]
+  implicit val mockTimeout: timeout             = inject[timeout]
 
   val controller = new TimeoutController(mockMCC, mockTimeout)
 
   "Calling the .timeout action" when {
 
     "navigated to " should {
-      lazy val result = controller.timeout(FakeRequest())
+      val result = controller.timeout(FakeRequest())
       "return a 200" in {
         status(result) shouldBe 200
       }

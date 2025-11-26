@@ -28,6 +28,7 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import repositories.SessionRepository
 import testHelpers.FakeApplication
+import testHelpers.Formats._
 import uk.gov.hmrc.mongo.cache.DataKey
 
 import java.util.UUID
@@ -35,12 +36,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 class SessionCacheServiceSpec extends FakeApplication with MockitoSugar with ScalaFutures {
 
-  val mockSessionRepository                              = mock[SessionRepository]
-  val sessionId                                          = UUID.randomUUID.toString
-  implicit val executionContext: ExecutionContext        = fakeApplication().injector.instanceOf[ExecutionContext]
-  implicit lazy val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  val mockSessionRepository: SessionRepository      = mock[SessionRepository]
+  val sessionId: String                             = UUID.randomUUID.toString
+  implicit val executionContext: ExecutionContext   = inject[ExecutionContext]
+  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  object TestsessionCacheService extends SessionCacheService(mockSessionRepository)
+  object TestSessionCacheService extends SessionCacheService(mockSessionRepository)
 
   "Calculator Connector" should {
     "fetch and get from repo" in {
@@ -48,7 +49,7 @@ class SessionCacheServiceSpec extends FakeApplication with MockitoSugar with Sca
       when(mockSessionRepository.getFromSession[PensionsTakenModel](DataKey[PensionsTakenModel](any()))(any(), any()))
         .thenReturn(Future.successful(Option(testModel)))
 
-      lazy val result = TestsessionCacheService.fetchAndGetFormData[PensionsTakenModel]("willAddToPension")
+      val result = TestSessionCacheService.fetchAndGetFormData[PensionsTakenModel]("willAddToPension")
       await(result) shouldBe Some(testModel)
     }
 
@@ -61,7 +62,7 @@ class SessionCacheServiceSpec extends FakeApplication with MockitoSugar with Sca
       )
         .thenReturn(Future.successful(returnedCacheMap))
 
-      lazy val result = TestsessionCacheService.saveFormData("haveAddedToPension", testModel)
+      val result = TestSessionCacheService.saveFormData("haveAddedToPension", testModel)
       await(result) shouldBe returnedCacheMap
     }
   }

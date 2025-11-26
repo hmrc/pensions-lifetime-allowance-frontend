@@ -36,10 +36,10 @@ import scala.io.Source
 class IdentityVerificationConnectorSpec extends FakeApplication with ScalaFutures with MockitoSugar {
   implicit val headerCarrier: HeaderCarrier = HeaderCarrier()
 
-  implicit val executionContext: ExecutionContext = fakeApplication().injector.instanceOf[ExecutionContext]
-  val mockAppConfig                               = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  val mockHttp                                    = mock[HttpClientV2]
-  val mockSessionCacheService                     = mock[SessionCacheService]
+  implicit val executionContext: ExecutionContext  = inject[ExecutionContext]
+  val mockAppConfig: FrontendAppConfig             = inject[FrontendAppConfig]
+  val mockHttp: HttpClientV2                       = mock[HttpClientV2]
+  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
 
   val identityVerficationConstructor = new IdentityVerificationConnector(mockAppConfig, mockHttp)
 

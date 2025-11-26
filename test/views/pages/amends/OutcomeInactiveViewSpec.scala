@@ -20,13 +20,13 @@ import models.display.InactiveAmendResultDisplayModel
 import models.amendModels.AmendsGAModel
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.amends.OutcomeInactiveViewSpecMessages
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.amends.OutcomeInactiveViewMessages
 import views.html.pages.amends.outcomeInactive
 
-class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveViewSpecMessages {
+class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveViewMessages {
 
-  lazy val amendsGAModel = AmendsGAModel(
+  val amendsGAModel = AmendsGAModel(
     current = Some("current"),
     before = Some("before"),
     between = Some("between"),
@@ -34,23 +34,23 @@ class OutcomeInactiveViewSpec extends CommonViewSpecHelper with OutcomeInactiveV
     pso = Some("pso")
   )
 
-  lazy val amendsInactiveResultModelIP16 = InactiveAmendResultDisplayModel(
+  val amendsInactiveResultModelIP16 = InactiveAmendResultDisplayModel(
     notificationId = 43,
     additionalInfo = Seq("1", "2")
   )
 
-  lazy val amendsInactiveResultModelIP14 = InactiveAmendResultDisplayModel(
+  val amendsInactiveResultModelIP14 = InactiveAmendResultDisplayModel(
     notificationId = 32,
     additionalInfo = Seq("1", "2")
   )
 
-  lazy val outcomeInactiveView: outcomeInactive = app.injector.instanceOf[outcomeInactive]
+  val view: outcomeInactive = inject[outcomeInactive]
 
-  lazy val docIP16: Document =
-    Jsoup.parse(outcomeInactiveView.apply(amendsInactiveResultModelIP16, Some(amendsGAModel)).body)
+  val docIP16: Document =
+    Jsoup.parse(view.apply(amendsInactiveResultModelIP16, Some(amendsGAModel)).body)
 
-  lazy val docIP14: Document =
-    Jsoup.parse(outcomeInactiveView.apply(amendsInactiveResultModelIP14, Some(amendsGAModel)).body)
+  val docIP14: Document =
+    Jsoup.parse(view.apply(amendsInactiveResultModelIP14, Some(amendsGAModel)).body)
 
   "the OutcomeInactiveView" should {
     "have the correct title" in {

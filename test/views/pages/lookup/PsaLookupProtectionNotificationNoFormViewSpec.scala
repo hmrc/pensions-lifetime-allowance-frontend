@@ -18,21 +18,22 @@ package views.pages.lookup
 
 import forms.PSALookupProtectionNotificationNoForm
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.lookup.PsaLookupProtectionNotificationNoFormSpecMessages
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.lookup.PsaLookupProtectionNotificationNoFormSpecMessages
 import views.html.pages.lookup.psa_lookup_protection_notification_no_form
 
 class PsaLookupProtectionNotificationNoFormViewSpec
     extends CommonViewSpecHelper
     with PsaLookupProtectionNotificationNoFormSpecMessages {
 
+  val view: psa_lookup_protection_notification_no_form = inject[psa_lookup_protection_notification_no_form]
+
   "The Psa Lookup Protection Notification No Form view" when {
 
     "provided with a form without errors" should {
-      lazy val form =
+      val form =
         PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "IP141000000000A"))
-      lazy val view = app.injector.instanceOf[psa_lookup_protection_notification_no_form]
-      lazy val doc  = Jsoup.parse(view.apply(form).body)
+      val doc = Jsoup.parse(view.apply(form).body)
 
       "have the correct title" in {
         doc.title() shouldBe titleText
@@ -86,9 +87,8 @@ class PsaLookupProtectionNotificationNoFormViewSpec
     }
 
     "provided with a form with errors" should {
-      lazy val form = PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "A"))
-      lazy val view = app.injector.instanceOf[psa_lookup_protection_notification_no_form]
-      lazy val doc  = Jsoup.parse(view.apply(form).body)
+      val form = PSALookupProtectionNotificationNoForm.pnnForm.bind(Map("lifetimeAllowanceReference" -> "A"))
+      val doc  = Jsoup.parse(view.apply(form).body)
 
       "have an error summary" in {
         doc.select("div.govuk-error-summary").size() shouldBe 1
@@ -108,9 +108,8 @@ class PsaLookupProtectionNotificationNoFormViewSpec
     }
 
     "provided with an empty form" should {
-      lazy val form = PSALookupProtectionNotificationNoForm.pnnForm
-      lazy val view = app.injector.instanceOf[psa_lookup_protection_notification_no_form]
-      lazy val doc  = Jsoup.parse(view.apply(form).body)
+      val form = PSALookupProtectionNotificationNoForm.pnnForm
+      val doc  = Jsoup.parse(view.apply(form).body)
 
       "not have an error summary" in {
         doc.select("div.govuk-error-summary").size() shouldBe 0

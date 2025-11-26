@@ -57,17 +57,17 @@ trait IntegrationBaseSpec
     .configure(defaultConfiguration)
     .build()
 
-  override def beforeEach() = {
+  override def beforeEach(): Unit = {
     super.beforeEach()
     resetWiremock()
   }
 
-  override def beforeAll() = {
+  override def beforeAll(): Unit = {
     super.beforeAll()
     startWiremock()
   }
 
-  override def afterAll() = {
+  override def afterAll(): Unit = {
     stopWiremock()
     super.afterAll()
   }

@@ -28,6 +28,7 @@ import models.pla.response.ProtectionType.IndividualProtection2016
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.Materializer
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.mockito.ArgumentMatchers.{any, anyString, eq => eqTo}
 import org.mockito.Mockito._
 import org.scalatest.BeforeAndAfterEach
@@ -35,7 +36,7 @@ import org.scalatestplus.mockito.MockitoSugar
 import play.api.Environment
 import play.api.http.HeaderNames.CACHE_CONTROL
 import play.api.i18n.{I18nSupport, Lang, Messages, MessagesApi}
-import play.api.mvc.{AnyContent, MessagesControllerComponents}
+import play.api.mvc.{AnyContent, MessagesControllerComponents, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import services.SessionCacheService
@@ -55,24 +56,26 @@ class AmendsRemovePensionSharingOrderControllerSpec
     with AuthMock
     with I18nSupport {
 
-  implicit lazy val mockMessage: Messages =
-    fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi.preferred(fakeRequest)
+  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
 
-  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
-  val mockPlaConnector: PsaLookupConnector         = mock[PsaLookupConnector]
-  val mockMCC: MessagesControllerComponents        = fakeApplication().injector.instanceOf[MessagesControllerComponents]
-  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
-  val mockTechnicalError: technicalError           = app.injector.instanceOf[technicalError]
-  val mockRemovePsoDebits: removePsoDebits         = app.injector.instanceOf[removePsoDebits]
-  val mockEnv: Environment                         = mock[Environment]
-  val messagesApi: MessagesApi                     = mockMCC.messagesApi
+  val mcc: MessagesControllerComponents = inject[MessagesControllerComponents]
+  val messagesApi: MessagesApi          = mcc.messagesApi
 
-  implicit val mockAppConfig: FrontendAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
+  implicit val messages: Messages = messagesApi.preferred(fakeRequest)
+
+  implicit val mockAppConfig: FrontendAppConfig = inject[FrontendAppConfig]
   implicit val system: ActorSystem              = ActorSystem()
   implicit val materializer: Materializer       = mock[Materializer]
   implicit val mockLang: Lang                   = mock[Lang]
-  implicit val formWithCSRF: FormWithCSRF       = app.injector.instanceOf[FormWithCSRF]
-  implicit val ec: ExecutionContext             = app.injector.instanceOf[ExecutionContext]
+  implicit val formWithCSRF: FormWithCSRF       = inject[FormWithCSRF]
+  implicit val ec: ExecutionContext             = inject[ExecutionContext]
+
+  val mockSessionCacheService: SessionCacheService = mock[SessionCacheService]
+  val mockPlaConnector: PsaLookupConnector         = mock[PsaLookupConnector]
+  val mockAuthFunction: AuthFunction               = mock[AuthFunction]
+  val technicalErrorView: technicalError           = inject[technicalError]
+  val removePsoDebitsView: removePsoDebits         = inject[removePsoDebits]
+  val mockEnv: Environment                         = mock[Environment]
 
   override def beforeEach(): Unit = {
     reset(mockSessionCacheService)
@@ -82,25 +85,19 @@ class AmendsRemovePensionSharingOrderControllerSpec
     super.beforeEach()
   }
 
-  class Setup {
+  val authFunction = new AuthFunctionImpl(
+    mcc,
+    mockAuthConnector,
+    technicalErrorView
+  )
 
-    val authFunction = new AuthFunctionImpl(
-      mockMCC,
-      mockAuthConnector,
-      mockTechnicalError
-    )
-
-    val controller = new AmendsRemovePensionSharingOrderController(
-      mockSessionCacheService,
-      mockMCC,
-      authFunction,
-      mockTechnicalError,
-      mockRemovePsoDebits
-    )
-
-  }
-
-  implicit val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
+  val controller = new AmendsRemovePensionSharingOrderController(
+    mockSessionCacheService,
+    mcc,
+    authFunction,
+    technicalErrorView,
+    removePsoDebitsView
+  )
 
   val individualProtection2016Protection = ProtectionModel(
     psaCheckReference = Some("testPSARef"),
@@ -133,19 +130,23 @@ class AmendsRemovePensionSharingOrderControllerSpec
       pensionDebits = Some(List(PensionDebitModel("2016-12-23", 1000.0)))
     )
 
-    "there is no amend protection model fetched from cache" in new Setup {
-      lazy val result = controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+    "there is no amend protection model fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
+
+      val result: Future[Result] =
+        controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+
       status(result) shouldBe 500
     }
 
-    "show the technical error page for existing protections" in new Setup {
-      lazy val result   = controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
+    "show the technical error page for existing protections" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
+
+      val result: Future[Result] =
+        controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.techError.pageHeading")
       jsoupDoc.body
@@ -153,50 +154,56 @@ class AmendsRemovePensionSharingOrderControllerSpec
         .attr("href") shouldEqual s"${controllers.routes.ReadProtectionsController.currentProtections}"
     }
 
-    "have the correct cache control" in new Setup {
-      lazy val result =
-        await(controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest))
+    "have the correct cache control" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
+
+      val result: Result =
+        await(controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest))
 
       result.header.headers.getOrElse(CACHE_CONTROL, "No-Cache-Control-Header-Set") shouldBe "no-cache"
     }
 
-    "a valid amend protection model is fetched from cache" in new Setup {
-      lazy val result = controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+    "a valid amend protection model is fetched from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
         Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList))
       )
+
+      val result: Future[Result] =
+        controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+
       status(result) shouldBe 200
     }
 
-    "show the remove pso page with correct details" in new Setup {
-      lazy val result   = controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
-      lazy val jsoupDoc = Jsoup.parse(contentAsString(result))
-
+    "show the remove pso page with correct details" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](
         Some(AmendProtectionModel(testProtectionSinglePsoList, testProtectionSinglePsoList))
       )
+
+      val result: Future[Result] =
+        controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")(fakeRequest)
+
+      val jsoupDoc: Document = Jsoup.parse(contentAsString(result))
 
       jsoupDoc.body.getElementsByTag("h1").text shouldEqual Messages("pla.psoDetails.title")
     }
 
-    "return 500 if the an amend protection model could not be retrieved from cache" in new Setup {
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
-          )
+    "return 500 if the an amend protection model could not be retrieved from cache" in {
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](None)
 
-      status(DataItem.result) shouldEqual 500
+      val result = FakeRequests.authorisedPost(
+        controller.removePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+      )
+
+      status(result) shouldEqual 500
     }
   }
 
   "Choosing remove with a valid amend protection model" should {
-    "return 303 redirecting to amendment summary" in new Setup {
+    "return 303 redirecting to amendment summary" in {
       val individualProtection2016Protection = ProtectionModel(
         psaCheckReference = Some("testPSARef"),
         uncrystallisedRights = Some(100000.00),
@@ -215,17 +222,17 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
       val testAmendIndividualProtection2016ProtectionModel =
         AmendProtectionModel(individualProtection2016Protection, individualProtection2016Protection)
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitRemovePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
-          )
 
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendIndividualProtection2016ProtectionModel))
       cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
-      status(DataItem.result) shouldBe 303
-      redirectLocation(DataItem.result) shouldBe Some(
+      val result = FakeRequests.authorisedPost(
+        controller.submitRemovePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+      )
+
+      status(result) shouldBe 303
+      redirectLocation(result) shouldBe Some(
         routes.AmendsController
           .amendsSummary(
             Strings.ProtectionTypeUrl.IndividualProtection2016,
@@ -236,7 +243,7 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
     }
 
-    "remove the pension sharing order from the cached amend model" in new Setup {
+    "remove the pension sharing order from the cached amend model" in {
       val pensionDebitStartDate     = "2016-12-23"
       val pensionDebitEnteredAmount = 1_000
 
@@ -257,16 +264,15 @@ class AmendsRemovePensionSharingOrderControllerSpec
 
       val updatedAmendProtectionModel = AmendProtectionModel(testProtection, updatedTestProtection)
 
-      object DataItem
-          extends AuthorisedFakeRequestToPost(
-            controller.submitRemovePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
-          )
-
       mockAuthRetrieval[Option[String]](Retrievals.nino, Some("AB123456A"))
       cacheFetchCondition[AmendProtectionModel](Some(testAmendProtectionModel))
       cacheSaveCondition[AmendProtectionModel](mockSessionCacheService)
 
-      status(DataItem.result) shouldBe SEE_OTHER
+      val result = FakeRequests.authorisedPost(
+        controller.submitRemovePso(Strings.ProtectionTypeUrl.IndividualProtection2016, "open")
+      )
+
+      status(result) shouldBe SEE_OTHER
 
       verify(mockSessionCacheService).saveFormData[AmendProtectionModel](
         eqTo(Strings.protectionCacheKey(IndividualProtection2016.toString, Open.toString)),

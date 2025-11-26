@@ -18,7 +18,7 @@ package common
 
 import common.Display._
 import org.scalatestplus.mockito.MockitoSugar
-import play.api.i18n.{Lang, Messages, MessagesImpl}
+import play.api.i18n.{Lang, Messages, MessagesApi, MessagesImpl}
 import play.api.mvc.MessagesControllerComponents
 import testHelpers.FakeApplication
 
@@ -28,7 +28,7 @@ import java.util.Locale
 class DisplaySpec extends FakeApplication with MockitoSugar {
 
   implicit val mockMessages: Messages = mock[Messages]
-  val mockMCC                         = fakeApplication().injector.instanceOf[MessagesControllerComponents].messagesApi
+  val mockMCC: MessagesApi            = inject[MessagesControllerComponents].messagesApi
 
   "currencyDisplayString" should {
 

@@ -17,16 +17,18 @@
 package views.pages.lookup
 
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.lookup.ProtectionGuidanceSpecMessages
+import org.jsoup.nodes.Document
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.lookup.ProtectionGuidanceSpecMessages
 import views.html.pages.lookup.pla_protection_guidance
 
 class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with ProtectionGuidanceSpecMessages {
 
-  "The PLA Protection Guidance View" should {
-    lazy val view = app.injector.instanceOf[pla_protection_guidance]
-    lazy val doc  = Jsoup.parse(view().body)
+  val view: pla_protection_guidance = inject[pla_protection_guidance]
 
+  val doc: Document = Jsoup.parse(view().body)
+
+  "The PLA Protection Guidance View" should {
     "have a header with the correct content" in {
       doc.select("h1").text() shouldBe title
     }
@@ -95,7 +97,7 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         }
 
         "has the correct right element".which {
-          lazy val element = doc.select("#main-content > div > div > dl > div:nth-child(6) > dd")
+          val element = doc.select("#main-content > div > div > dl > div:nth-child(6) > dd")
 
           "has the correct text" in {
             element.text() shouldBe rowFiveRight
@@ -118,7 +120,7 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
         }
 
         "has the correct right element".which {
-          lazy val element = doc.select("#main-content > div > div > dl > div:nth-child(7) > dd")
+          val element = doc.select("#main-content > div > div > dl > div:nth-child(7) > dd")
 
           "has the correct text" in {
             element.text() shouldBe rowSixRight
@@ -147,7 +149,7 @@ class PlaProtectionGuidanceViewSpec extends CommonViewSpecHelper with Protection
     }
 
     "has a back link".which {
-      lazy val link = doc.getElementsByClass("govuk-link govuk-body")
+      val link = doc.getElementsByClass("govuk-link govuk-body")
 
       "has the correct text" in {
         link.text() shouldBe plaBaseBack

@@ -51,7 +51,7 @@ import play.twirl.api.HtmlFormat
 import services.SessionCacheService
 import testHelpers._
 import testdata.AmendProtectionOutcomeViewsTestData.{amendResultDisplayModelIP14, amendsActiveResultModelIP14}
-import testdata.PlaV2TestData.amendProtectionResponse
+import testdata.PlaConnectorTestData.amendProtectionResponse
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import utils.Constants
 import views.html.pages.amends._
@@ -76,7 +76,7 @@ class AmendsControllerSpec
   private val appConfig: FrontendAppConfig                     = mock[FrontendAppConfig]
 
   private val messagesControllerComponents: MessagesControllerComponents =
-    fakeApplication().injector.instanceOf[MessagesControllerComponents]
+    inject[MessagesControllerComponents]
 
   private val manualCorrespondenceNeededView: manualCorrespondenceNeeded = mock[manualCorrespondenceNeeded]
   private val technicalErrorView: technicalError                         = mock[technicalError]
@@ -88,7 +88,7 @@ class AmendsControllerSpec
 
   override val messagesApi: MessagesApi = messagesControllerComponents.messagesApi
 
-  private val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
+  private val ec: ExecutionContext = inject[ExecutionContext]
 
   private val authFunction = new AuthFunctionImpl(
     messagesControllerComponents,

@@ -18,17 +18,20 @@ package views.pages.lookup
 
 import models.PSALookupRequest
 import org.jsoup.Jsoup
-import testHelpers.ViewSpecHelpers.CommonViewSpecHelper
-import testHelpers.ViewSpecHelpers.lookup.PsaLookupNotFoundSpecMessages
+import org.jsoup.nodes.Document
+import testHelpers.CommonViewSpecHelper
+import testHelpers.messages.lookup.PsaLookupNotFoundSpecMessages
 import views.html.pages.lookup.psa_lookup_not_found_results
 
 class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLookupNotFoundSpecMessages {
 
-  "The Psa Lookup Not Found Print view" should {
-    val psaLookupRequest = PSALookupRequest("check", Some("ref"))
-    lazy val view        = app.injector.instanceOf[psa_lookup_not_found_results]
-    lazy val doc         = Jsoup.parse(view.apply(psaLookupRequest, "timestamp").body)
+  val view: psa_lookup_not_found_results = inject[psa_lookup_not_found_results]
 
+  val psaLookupRequest = PSALookupRequest("check", Some("ref"))
+
+  val doc: Document = Jsoup.parse(view.apply(psaLookupRequest, "timestamp").body)
+
+  "The Psa Lookup Not Found Print view" should {
     "have the correct header text" in {
       doc.select("h1.govuk-heading-xl").text() shouldBe checkDetailsText
     }
@@ -36,7 +39,7 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
     "include a table".which {
 
       "has the correct first row".which {
-        lazy val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(1)")
+        val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(1)")
 
         "contains the correct first element text" in {
           row.select("th").get(0).text shouldBe tableRowOneElementOneText
@@ -48,7 +51,7 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
       }
 
       "has the correct second row".which {
-        lazy val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(2)")
+        val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(2)")
 
         "contains the correct first element text" in {
           row.select("th").get(0).text shouldBe tableRowTwoElementOneText
@@ -60,7 +63,7 @@ class PsaLookupNotFoundResultsViewSpec extends CommonViewSpecHelper with PsaLook
       }
 
       "has the correct third row".which {
-        lazy val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(3)")
+        val row = doc.select("#main-content > div > div > table > tbody > tr:nth-child(3)")
 
         "contains the correct first element text" in {
           row.select("th").get(0).text shouldBe tableRowThreeElementOneText

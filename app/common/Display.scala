@@ -46,20 +46,21 @@ object Display {
     } else str
   }
 
+  private val englishDateFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy")
+
   def dateDisplayString(date: LocalDateTime)(implicit lang: Lang, messages: Messages): String =
     if (lang.language == "cy") {
       val monthNum       = date.getMonthValue
       val welshFormatter = DateTimeFormatter.ofPattern(s"""d '${messages(s"pla.month.$monthNum")}' yyyy""")
       date.format(welshFormatter)
     } else {
-      val dateFormat = DateTimeFormatter.ofPattern("d MMMM yyyy")
-      date.format(dateFormat)
+      date.format(englishDateFormatter)
     }
 
-  def timeDisplayString(dateTime: LocalDateTime): String = {
-    val timeFormat = DateTimeFormatter.ofPattern("h:mma")
-    dateTime.format(timeFormat).toLowerCase
-  }
+  private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mma")
+
+  def timeDisplayString(dateTime: LocalDateTime): String =
+    dateTime.format(timeFormatter).toLowerCase
 
   def currencyInputDisplayFormat(amt: BigDecimal): BigDecimal = {
     def df(n: BigDecimal): String = new DecimalFormat("0.00").format(n).replace(".00", "")

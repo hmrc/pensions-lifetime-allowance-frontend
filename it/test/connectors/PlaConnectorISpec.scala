@@ -31,8 +31,8 @@ import org.scalatest.concurrent.ScalaFutures
 import play.api.http.Status.CONFLICT
 import play.api.libs.json.Json
 import play.api.test.Helpers.{INTERNAL_SERVER_ERROR, LOCKED, NOT_FOUND, OK}
-import testdata.PlaV2TestData
-import testdata.PlaV2TestData._
+import testdata.PlaConnectorTestData
+import testdata.PlaConnectorTestData._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.IntegrationBaseSpec
 
@@ -46,10 +46,9 @@ class PlaConnectorISpec extends IntegrationBaseSpec with ScalaFutures {
   private implicit val ec: ExecutionContext = app.injector.instanceOf[ExecutionContext]
 
   private val testNino          = "AB999999C"
-  private val psaCheckReference = "PSA12345678A"
-  private val protectionId      = PlaV2TestData.lifetimeAllowanceIdentifier
+  private val protectionId      = PlaConnectorTestData.lifetimeAllowanceIdentifier
 
-  "PlaConnectorV2 on amendProtection" when {
+  "PlaConnector on amendProtection" when {
 
     val amendProtectionInputProtectionModel: ProtectionModel = ProtectionModel(
       psaCheckReference = None,

@@ -23,9 +23,13 @@ import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 
+import scala.reflect.ClassTag
+
 trait FakeApplication extends AnyWordSpecLike with Matchers with OptionValues with GuiceOneAppPerSuite {
+
+  override lazy val app: Application = new GuiceApplicationBuilder().build()
 
   override def fakeApplication(): Application = app
 
-  override lazy val app: Application = new GuiceApplicationBuilder().build()
+  def inject[T: ClassTag]: T = app.injector.instanceOf[T]
 }

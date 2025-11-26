@@ -39,7 +39,7 @@ class AmendsOverseasPensionController @Inject() (
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction,
     technicalError: views.html.pages.fallback.technicalError,
-    amendOverseasPensions: pages.amends.amendOverseasPensions,
+    amendIP16OverseasPensions: pages.amends.amendIP16OverseasPensions,
     amendIP14OverseasPensions: pages.amends.amendIP14OverseasPensions
 )(
     implicit val appConfig: FrontendAppConfig,
@@ -64,7 +64,7 @@ class AmendsOverseasPensionController @Inject() (
                   protectionType match {
                     case IndividualProtection2016 | IndividualProtection2016LTA =>
                       Ok(
-                        amendOverseasPensions(
+                        amendIP16OverseasPensions(
                           amendOverseasPensionsForm(protectionType.toString).fill(
                             AmendOverseasPensionsModel(
                               yesNoValue,
@@ -121,7 +121,7 @@ class AmendsOverseasPensionController @Inject() (
                 errors =>
                   protectionType match {
                     case IndividualProtection2016 | IndividualProtection2016LTA =>
-                      Future.successful(BadRequest(amendOverseasPensions(errors, protectionType.toString, status)))
+                      Future.successful(BadRequest(amendIP16OverseasPensions(errors, protectionType.toString, status)))
                     case IndividualProtection2014 | IndividualProtection2014LTA =>
                       Future.successful(BadRequest(amendIP14OverseasPensions(errors, protectionType.toString, status)))
                   },

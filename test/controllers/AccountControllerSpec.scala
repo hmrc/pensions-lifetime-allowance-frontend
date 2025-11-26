@@ -26,24 +26,22 @@ import testHelpers._
 
 class AccountControllerSpec extends FakeApplication with MockitoSugar {
 
-  val mockAppConfig = fakeApplication().injector.instanceOf[FrontendAppConfig]
-  val mockMCC       = fakeApplication().injector.instanceOf[MessagesControllerComponents]
+  val mockAppConfig: FrontendAppConfig      = inject[FrontendAppConfig]
+  val mockMCC: MessagesControllerComponents = inject[MessagesControllerComponents]
 
-  class Setup {
-    val controller = new AccountController(mockAppConfig, mockMCC)
+  val controller = new AccountController(mockAppConfig, mockMCC)
+
+  "navigating to signout with an existing session" in {
+
+    val result = FakeRequests.get("/", controller.signOut, Some("sessionId"))
+
+    status(result) shouldBe Status.SEE_OTHER
   }
 
-  "navigating to signout with an existing session" in new Setup {
+  "redirect to the feedback survey with the origin token PLA" in {
+    val result = FakeRequests.get("/", controller.signOut, Some("sessionId"))
 
-    object DataItem extends FakeRequestTo("/", controller.signOut, Some("sessionId"))
-
-    status(DataItem.result) shouldBe Status.SEE_OTHER
-  }
-
-  "redirect to the feedback survey with the origin token PLA" in new Setup {
-    object DataItem extends FakeRequestTo("/", controller.signOut, Some("sessionId"))
-
-    redirectLocation(DataItem.result).get shouldBe (MockConfig.fullSignOutUrl)
+    redirectLocation(result).get shouldBe MockConfig.fullSignOutUrl
   }
 
 }

@@ -16,18 +16,10 @@
 
 package common
 
-import enums.ApplicationType
 import models.pla.response.{ProtectionStatus, ProtectionType}
 import models.pla.{AmendProtectionLifetimeAllowanceType, AmendProtectionRequestStatus}
 
 object Strings {
-
-  def nameString(name: String)(implicit protectionType: ApplicationType.Value): String =
-    protectionType match {
-      case ApplicationType.FP2016 => "fp16" + name.capitalize
-      case ApplicationType.IP2014 => "ip14" + name.capitalize
-      case _                      => name
-    }
 
   def protectionCacheKey(protectionType: String, status: String): String =
     protectionCacheKey(Some(protectionType), Some(status))

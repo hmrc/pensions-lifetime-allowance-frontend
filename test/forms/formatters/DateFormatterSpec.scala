@@ -16,15 +16,17 @@
 
 package forms.formatters
 
-import common.{CommonPlaySpec, WithCommonFakeApplication}
 import controllers.helpers.FakeRequestHelper
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import play.api.data.FormError
 import play.api.i18n.{Messages, MessagesApi}
+import testHelpers.FakeApplication
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication with FakeRequestHelper {
+class DateFormatterSpec extends AnyWordSpec with FakeApplication with FakeRequestHelper with Matchers {
 
   object Errors {
     val dateRequiredError      = s"$testKey.error.required"
@@ -61,11 +63,11 @@ class DateFormatterSpec extends CommonPlaySpec with WithCommonFakeApplication wi
   val testMinDate: LocalDate = testDate.minusYears(1)
   val testMaxDate: LocalDate = testDate.plusYears(1)
 
-  val messagesApi: MessagesApi    = fakeApplication.injector.instanceOf[MessagesApi]
+  val messagesApi: MessagesApi    = inject[MessagesApi]
   implicit val messages: Messages = messagesApi.preferred(fakeRequest)
 
   val testFormatter: DateFormatter =
-    DateFormatter(testKey, Some(testMinDate), Some(testMaxDate), rangeInclusive = false)(messages)
+    DateFormatter(testKey, Some(testMinDate), Some(testMaxDate))(messages)
 
   val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy", messages.lang.toLocale)
 

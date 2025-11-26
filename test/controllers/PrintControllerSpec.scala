@@ -50,14 +50,14 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   private val resultPrintView: resultPrint                     = mock[resultPrint]
 
   private val messagesControllerComponents: MessagesControllerComponents =
-    fakeApplication().injector.instanceOf[MessagesControllerComponents]
+    inject[MessagesControllerComponents]
 
-  private implicit val executionContext: ExecutionContext   = app.injector.instanceOf[ExecutionContext]
+  private implicit val executionContext: ExecutionContext   = inject[ExecutionContext]
   private implicit val frontendAppConfig: FrontendAppConfig = mock[FrontendAppConfig]
 
   private val authFunction = new AuthFunction {
     override implicit val appConfig: FrontendAppConfig   = frontendAppConfig
-    override implicit val technicalError: technicalError = app.injector.instanceOf[technicalError]
+    override implicit val technicalError: technicalError = inject[technicalError]
     override implicit val ec: ExecutionContext           = executionContext
 
     override def authConnector: AuthConnector = mockAuthConnector
