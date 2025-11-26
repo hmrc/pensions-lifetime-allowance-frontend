@@ -29,7 +29,7 @@ import models.{
 }
 import play.api.libs.json.{Format, Json, Writes}
 
-object Formats {
+object TestFormats {
 
   implicit val pensionsTakenModelFormat: Format[PensionsTakenModel] = Json.format[PensionsTakenModel]
 

@@ -17,10 +17,6 @@
 package testHelpers.messages.lookup
 
 trait PsaLookupResultsSpecMessages {
-  val logoText      = "GOV.UK"
-  val hmrcText      = "HM Revenue & Customs"
-  val copyrightText = "© Crown Copyright"
-
   val titleText =
     "Results of lifetime allowance protection check - Check your pension protections - GOV.UK"
 

@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-package testHelpers.messages.amends
+package models
 
-trait AmendIP16PensionsTakenViewMessages {
+import java.time.LocalDate
 
-  val plaPensionsTakenTitle =
-    "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension? - Check your pension protections and enhancements - GOV.UK"
-
-  val plaPensionsTakenLegendText =
-    "Before 6 April 2016, did you turn 75, take money from your pensions, or transfer to an overseas pension?"
-
-}
+case class PsoDetailsModel(pso: LocalDate, psoAmt: Option[BigDecimal])

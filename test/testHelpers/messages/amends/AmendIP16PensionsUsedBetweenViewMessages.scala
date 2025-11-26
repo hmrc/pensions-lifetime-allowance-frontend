@@ -29,9 +29,6 @@ trait AmendIP16PensionsUsedBetweenViewMessages {
   val plaPensionsUsedBetweenParaTwo =
     "You can ask your pension scheme administrator to tell you the amount of lifetime allowance you've used for individual protection 2016."
 
-  val plaPensionsUsedBetweenParaThree =
-    "Read technical guidance on working out how much lifetime allowance you've used (opens in a new window)"
-
   val plaPensionsUsedBetweenParaThreeNew =
     "Read technical guidance on working out how much lifetime allowance you've used (opens in new tab)."
 
@@ -46,11 +43,8 @@ trait AmendIP16PensionsUsedBetweenViewMessages {
   val plaPensionsUsedBetweenStepThree = "Take the result from step 1 and multiply by the result of step 2."
   val plaPensionsUsedBetweenStepFour  = "Repeat for each event and total the amounts together."
 
-  val plaPensionsUsedBetweenHelpLinkText = "working out how much lifetime allowance you've used (opens in a new window)"
   val plaPensionsUsedBetweenHelpLinkTextNew = "working out how much lifetime allowance you've used (opens in new tab)."
 
-  val plaPensionsUsedBetweenHelpLinkLocation =
-    "https://www.gov.uk/guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
+  val plaPensionsUsedBetweenHelpLinkLocation = "https://www.gov.uk/guidance/pension-schemes-value-your-pension-for-lifetime-allowance-protection#lifetime-allowance-used-between-6-april-2006-and-the-relevant-date"
 
-  val plaPensionUsedBetweenMandatoryAmount = "Enter how much lifetime allowance you have used"
 }

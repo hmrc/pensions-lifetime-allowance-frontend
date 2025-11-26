@@ -18,18 +18,13 @@ package testHelpers.messages.result
 
 trait ResultPrintPageContentMessages {
 
-  val plaPrintTitle          = "Print your active protection - Check your pension protections and enhancements - GOV.UK"
   val plaPrintTitleHip       = "Print your active protection - Check your pension protections and enhancements - GOV.UK"
-  val plaPrintServiceName    = "Check your pension protections"
   val plaPrintServiceNameHip = "Check your pension protections and enhancements"
   val plaPrintNino           = "National Insurance number"
   val plaPrintProtectionDetails               = "Protection details"
   val plaPrintApplicationDate                 = "Application date"
   val plaPrintApplicationTime                 = "Application time"
   val plaPrintProtectionType                  = "Protection type"
-  val plaPrintPla                             = "Protected lifetime allowance"
-  val plaPrintProtectionNotificationNumber    = "Protection notification number"
-  val plaPrintSchemeAdministratorReference    = "Scheme administrator reference"
   val plaPrintPlaHip                          = "Protected amount"
   val plaPrintProtectionNotificationNumberHip = "Protection reference number"
   val plaPrintSchemeAdministratorReferenceHip = "Pension scheme administrator check reference"

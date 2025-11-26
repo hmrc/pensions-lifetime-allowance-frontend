@@ -28,7 +28,7 @@ import play.api.Environment
 import play.api.libs.json.{JsValue, Json}
 import play.api.test.Helpers._
 import testHelpers.FakeApplication
-import testHelpers.Formats._
+import testHelpers.TestFormats._
 import uk.gov.hmrc.http.client.{HttpClientV2, RequestBuilder}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpResponse, UpstreamErrorResponse}
 
