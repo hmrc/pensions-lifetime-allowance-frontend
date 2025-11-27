@@ -696,16 +696,16 @@ amendCode.noNotificationId.IndividualProtection2016LTA.heading   = You have amen
 amendCode.noNotificationId.IndividualProtection2016LTA.insetText = Your total value of pensions is above the protected limit of £1,250,000. Any amount above £1,250,000 is not covered under your Individual Protection.
 
 ## 2014 Application Period Ended ##
-pla.withdrawn.ap2014.title            = Sorry, applications for 2014 protection have ended
-pla.withdrawn.ap2014.pageHeading      = Sorry, applications for 2014 protection have ended
-pla.withdrawn.ap2014.paraOne          = You can still
-pla.withdrawn.ap2014.paraOne.linkText = view existing applications.
+pla.applicationClosed.2014.title            = Sorry, applications for 2014 protection have ended
+pla.applicationClosed.2014.pageHeading      = Sorry, applications for 2014 protection have ended
+pla.applicationClosed.2014.paraOne          = You can still
+pla.applicationClosed.2014.paraOne.linkText = view existing applications.
 
 ## 2016 Application Period Ended ##
-pla.withdrawn.ap2016.title            = Sorry, applications for 2016 protection have ended
-pla.withdrawn.ap2016.pageHeading      = Sorry, applications for 2016 protection have ended
-pla.withdrawn.ap2016.paraOne          = You can still
-pla.withdrawn.ap2016.paraOne.linkText = view previous applications.
+pla.applicationClosed.2016.title            = Sorry, applications for 2016 protection have ended
+pla.applicationClosed.2016.pageHeading      = Sorry, applications for 2016 protection have ended
+pla.applicationClosed.2016.paraOne          = You can still
+pla.applicationClosed.2016.paraOne.linkText = view previous applications.
 
 ## PSA Lookup Withdraw
 psa.lookup.withdraw.title       = Sorry, the service is unavailable

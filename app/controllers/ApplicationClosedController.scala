@@ -18,18 +18,17 @@ package controllers
 
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.ip2014.withdrawnAP2014
-import views.html.pages.ip2016.withdrawnAP2016
+import views.html.pages.applicationClosed.{applicationClosed2014, applicationClosed2016}
 
 import javax.inject.Inject
 
-class WithdrawnController @Inject() (
+class ApplicationClosedController @Inject() (
     mcc: MessagesControllerComponents,
-    withdrawn2014: withdrawnAP2014,
-    withdrawn2016: withdrawnAP2016
+    applicationClosed2014: applicationClosed2014,
+    applicationClosed2016: applicationClosed2016
 ) extends FrontendController(mcc) {
 
-  def showWithdrawn2014(): Action[AnyContent] = Action(implicit request => Ok(withdrawn2014()))
+  def showApplicationClosed2014(): Action[AnyContent] = Action(implicit request => Ok(applicationClosed2014()))
 
-  def showWithdrawn2016(): Action[AnyContent] = Action(implicit request => Ok(withdrawn2016()))
+  def showApplicationClosed2016(): Action[AnyContent] = Action(implicit request => Ok(applicationClosed2016()))
 }

@@ -14,38 +14,38 @@
  * limitations under the License.
  */
 
-package views.pages.ip2016
+package views.pages.applicationClosed
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import testHelpers.CommonViewSpecHelper
-import views.html.pages.ip2016.withdrawnAP2016
+import views.html.pages.applicationClosed.applicationClosed2016
 
-class WithdrawnAP2016ViewSpec extends CommonViewSpecHelper {
+class ApplicationClosed2016ViewSpec extends CommonViewSpecHelper {
 
-  def view: withdrawnAP2016 = inject[withdrawnAP2016]
+  def view: applicationClosed2016 = inject[applicationClosed2016]
 
   def doc: Document = Jsoup.parse(view()(fakeRequest, messages).body)
 
-  "WithdrawnAP2016 view" must {
+  "applicationClosed2016 view" must {
 
     "display the correct title" in {
-      doc.title() shouldBe s"${messages("pla.withdrawn.ap2016.title")} - ${messages("service.name")} - GOV.UK"
+      doc.title() shouldBe s"${messages("pla.applicationClosed.2016.title")} - ${messages("service.name")} - GOV.UK"
     }
 
     "display the correct heading" in {
-      doc.getElementById("pageHeading").text() shouldBe messages("pla.withdrawn.ap2016.pageHeading")
+      doc.getElementById("pageHeading").text() shouldBe messages("pla.applicationClosed.2016.pageHeading")
     }
 
     "display the correct paragraph" in {
-      doc.getElementById("startAgainText").text() should startWith(messages("pla.withdrawn.ap2016.paraOne"))
+      doc.getElementById("startAgainText").text() should startWith(messages("pla.applicationClosed.2016.paraOne"))
     }
 
     "display the correct link" in {
       val link = doc.getElementById("startAgainText").firstElementChild()
 
       link.attr("href") shouldBe controllers.routes.ReadProtectionsController.currentProtections.url
-      link.text() shouldBe messages("pla.withdrawn.ap2016.paraOne.linkText")
+      link.text() shouldBe messages("pla.applicationClosed.2016.paraOne.linkText")
     }
   }
 

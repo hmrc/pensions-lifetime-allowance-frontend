@@ -696,16 +696,16 @@ amendCode.noNotificationId.IndividualProtection2016LTA.heading   = Rydych wedi d
 amendCode.noNotificationId.IndividualProtection2016LTA.insetText = Mae cyfanswm gwerth eich pensiynau yn uwch na’r terfyn o £1,250,000. Nid yw unrhyw swm dros £1,250,000 yn dod o dan eich Diogelwch Unigol.
 
 ## 2014 Application Period Ended ##
-pla.withdrawn.ap2014.title            = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
-pla.withdrawn.ap2014.pageHeading      = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
-pla.withdrawn.ap2014.paraOne          = Gallwch dal i
-pla.withdrawn.ap2014.paraOne.linkText = weld ceisiadau sy''n bodoli eisoes.
+pla.applicationClosed.2014.title            = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
+pla.applicationClosed.2014.pageHeading      = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2014 wedi dod i ben
+pla.applicationClosed.2014.paraOne          = Gallwch dal i
+pla.applicationClosed.2014.paraOne.linkText = weld ceisiadau sy''n bodoli eisoes.
 
 ## 2016 Application Period Ended ##
-pla.withdrawn.ap2016.title            = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
-pla.withdrawn.ap2016.pageHeading      = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
-pla.withdrawn.ap2016.paraOne          = Gallwch dal
-pla.withdrawn.ap2016.paraOne.linkText = bwrw golwg dros geisiadau blaenorol
+pla.applicationClosed.2016.title            = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
+pla.applicationClosed.2016.pageHeading      = Mae''n ddrwg gennym, mae ceisiadau am ddiogelwch 2016 wedi dod i ben
+pla.applicationClosed.2016.paraOne          = Gallwch dal
+pla.applicationClosed.2016.paraOne.linkText = bwrw golwg dros geisiadau blaenorol
 
 ## PSA Lookup Withdraw
 psa.lookup.withdraw.title       = Mae’n ddrwg gennym, nid yw’r gwasanaeth ar gael
