@@ -26,31 +26,31 @@ import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import play.twirl.api.Html
 import testHelpers._
-import views.html.pages.ip2014.withdrawnAP2014
-import views.html.pages.ip2016.withdrawnAP2016
+import views.html.pages.applicationClosed.applicationClosed2014
+import views.html.pages.applicationClosed.applicationClosed2016
 
 import scala.concurrent.Future
 
-class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
+class ApplicationClosedControllerSpec extends FakeApplication with MockitoSugar {
 
   val mockMCC: MessagesControllerComponents = inject[MessagesControllerComponents]
 
-  implicit val view2014: withdrawnAP2014 = inject[withdrawnAP2014]
-  implicit val view2016: withdrawnAP2016 = inject[withdrawnAP2016]
+  implicit val view2014: applicationClosed2014 = inject[applicationClosed2014]
+  implicit val view2016: applicationClosed2016 = inject[applicationClosed2016]
 
-  val controller                            = new WithdrawnController(mockMCC, view2014, view2016)
+  val controller                            = new ApplicationClosedController(mockMCC, view2014, view2016)
   implicit val request: Request[AnyContent] = FakeRequest("GET", "/")
 
   implicit val messages: Messages = inject[MessagesApi].preferred(request)
 
-  "Withdrawn controller" should {
-    "should show withdrawn page for 2014" in {
-      val result = controller.showWithdrawn2014()(request)
+  "Application closed controller" should {
+    "should show application closed page for 2014" in {
+      val result = controller.showApplicationClosed2014()(request)
       contentAsString(result) should include(view2014().body)
     }
 
-    "should show withdrawn page for 2016" in {
-      val result = controller.showWithdrawn2016()(request)
+    "should show application closed page for 2016" in {
+      val result = controller.showApplicationClosed2016()(request)
       contentAsString(result) should include(view2016().body)
     }
   }
@@ -67,9 +67,11 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
       "/apply-for-ip14-remove-pension-sharing-order-details",
       "/apply-for-ip14-submit-your-application"
     ).foreach { path =>
-      s"show withdrawn page for /check-your-pension-protections-and-enhancements$path" in
-        assertRendersWithdrawnAppsPage(
-          controller.showWithdrawn2014()(FakeRequest(GET, s"/check-your-pension-protections-and-enhancements$path")),
+      s"show application closed page for /check-your-pension-protections-and-enhancements$path" in
+        assertRendersApplicationClosedAppsPage(
+          controller.showApplicationClosed2014()(
+            FakeRequest(GET, s"/check-your-pension-protections-and-enhancements$path")
+          ),
           view2014()
         )
     }
@@ -88,14 +90,16 @@ class WithdrawnControllerSpec extends FakeApplication with MockitoSugar {
       "/apply-for-ip16-remove-pension-sharing-order-details",
       "/apply-for-ip16-submit-your-application"
     ).foreach { path =>
-      s"show withdrawn page for /check-your-pension-protections-and-enhancements$path" in
-        assertRendersWithdrawnAppsPage(
-          controller.showWithdrawn2016()(FakeRequest(GET, s"/check-your-pension-protections-and-enhancements$path")),
+      s"show application closed page for /check-your-pension-protections-and-enhancements$path" in
+        assertRendersApplicationClosedAppsPage(
+          controller.showApplicationClosed2016()(
+            FakeRequest(GET, s"/check-your-pension-protections-and-enhancements$path")
+          ),
           view2016()
         )
     }
 
-  private def assertRendersWithdrawnAppsPage(res: Future[Result], expected: Html): Assertion = {
+  private def assertRendersApplicationClosedAppsPage(res: Future[Result], expected: Html): Assertion = {
 
     val (result, view) = (Jsoup.parse(contentAsString(res)), Jsoup.parse(expected.body))
 

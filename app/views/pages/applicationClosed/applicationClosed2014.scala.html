@@ -1,5 +1,5 @@
 @*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,20 @@
  * limitations under the License.
  *@
 
-@this(layout: Layout)
+@this(
+     layout: Layout
+)
 
 @()(implicit request: Request[_], messages: Messages)
 
 @layout(
-     pageTitle = messages("pla.withdrawn.ap2016.title"),
+     pageTitle = Messages("pla.applicationClosed.2014.title"),
      backLinkEnabled = false
 ) {
-    <h1 class="govuk-heading-xl" id="pageHeading">@messages("pla.withdrawn.ap2016.pageHeading")</h1>
+     <h1 class="govuk-heading-xl" id="pageHeading">@Messages("pla.applicationClosed.2014.pageHeading")</h1>
 
-    <p class="govuk-body" id="startAgainText">
-        @messages("pla.withdrawn.ap2016.paraOne")
-        <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@messages("pla.withdrawn.ap2016.paraOne.linkText")</a>
-    </p>
+     <p class="govuk-body" id="startAgainText">
+         @Messages("pla.applicationClosed.2014.paraOne")
+         <a class="govuk-link" href="@controllers.routes.ReadProtectionsController.currentProtections">@Messages("pla.applicationClosed.2014.paraOne.linkText")</a>
+     </p>
 }
