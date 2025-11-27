@@ -492,7 +492,7 @@ class AmendsPensionSharingOrderControllerSpec
           val result: Future[Result] = controller.submitAmendPsoDetails(
             protectionType = testData.protectionTypeUrl,
             status = "open",
-            existingPSO = true
+            existingPso = true
           )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
 
           status(result) shouldBe 303
@@ -511,7 +511,7 @@ class AmendsPensionSharingOrderControllerSpec
             .submitAmendPsoDetails(
               protectionType = testData.protectionTypeUrl,
               status = "open",
-              existingPSO = true
+              existingPso = true
             )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
             .futureValue
 
@@ -548,7 +548,7 @@ class AmendsPensionSharingOrderControllerSpec
         val result: Future[Result] = controller.submitAmendPsoDetails(
           protectionType = Strings.ProtectionTypeUrl.IndividualProtection2014,
           status = "open",
-          existingPSO = true
+          existingPso = true
         )(authenticatedFakeRequest().withFormUrlEncodedBody(data: _*).withMethod("POST"))
 
         status(result) shouldBe 400
@@ -574,7 +574,7 @@ class AmendsPensionSharingOrderControllerSpec
           .submitAmendPsoDetails(
             protectionType = Strings.ProtectionTypeUrl.IndividualProtection2014,
             status = "open",
-            existingPSO = true
+            existingPso = true
           )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
           .failed
           .futureValue
@@ -592,7 +592,7 @@ class AmendsPensionSharingOrderControllerSpec
 
       "return the correct value not found exception" in
         (the[RequiredValueNotDefinedException] thrownBy {
-          controller.createPensionDebitModel(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), None))
+          controller.createPensionDebitModel(AmendPsoDetailsModel(LocalDate.of(2017, 3, 1), None))
         } should have).message("Value not found for psoAmt in createPensionDebitModel")
     }
 
@@ -600,7 +600,7 @@ class AmendsPensionSharingOrderControllerSpec
 
       "return the correct list" in {
         val result: PensionDebitModel =
-          controller.createPensionDebitModel(AmendPSODetailsModel(LocalDate.of(2017, 3, 1), Some(1)))
+          controller.createPensionDebitModel(AmendPsoDetailsModel(LocalDate.of(2017, 3, 1), Some(1)))
 
         result shouldBe PensionDebitModel("2017-03-01", 1)
       }

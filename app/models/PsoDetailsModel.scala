@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-package models.amendModels
+package models
 
 import java.time.LocalDate
 
-case class AmendPSODetailsModel(pso: LocalDate, psoAmt: Option[BigDecimal]) {}
+import play.api.libs.json._
+
+case class PsoDetailsModel(pso: LocalDate, psoAmt: Option[BigDecimal])
+
+object PsoDetailsModel {
+  implicit val format: OFormat[PsoDetailsModel] = Json.format[PsoDetailsModel]
+}

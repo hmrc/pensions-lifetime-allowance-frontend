@@ -17,8 +17,8 @@
 package views.pages.amends
 
 import common.Strings
-import forms.AmendPSODetailsForm
-import models.amendModels.AmendPSODetailsModel
+import forms.AmendPsoDetailsForm
+import models.amendModels.AmendPsoDetailsModel
 import models.pla.AmendProtectionLifetimeAllowanceType.IndividualProtection2016
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -39,7 +39,7 @@ class AmendPsoDetailsViewSpec
 
   val view: amendPsoDetails = inject[amendPsoDetails]
 
-  val form: Form[AmendPSODetailsModel] = AmendPSODetailsForm
+  val form: Form[AmendPsoDetailsModel] = AmendPsoDetailsForm
     .amendPsoDetailsForm("")
     .bind(
       Map(
@@ -50,9 +50,9 @@ class AmendPsoDetailsViewSpec
       )
     )
 
-  val doc: Document = Jsoup.parse(view(form, IndividualProtection2016.toString, "open", existingPSO = true).body)
+  val doc: Document = Jsoup.parse(view(form, IndividualProtection2016.toString, "open", existingPso = true).body)
 
-  val errorForm: Form[AmendPSODetailsModel] = AmendPSODetailsForm
+  val errorForm: Form[AmendPsoDetailsModel] = AmendPsoDetailsForm
     .amendPsoDetailsForm("")
     .bind(
       Map(
@@ -64,7 +64,7 @@ class AmendPsoDetailsViewSpec
     )
 
   val errorDoc: Document =
-    Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "", existingPSO = false).body)
+    Jsoup.parse(view.apply(errorForm, IndividualProtection2016.toString, "", existingPso = false).body)
 
   val pageTitle = s"$plaPsoDetailsTitle - $plaBaseAppName - GOV.UK"
 
@@ -99,7 +99,7 @@ class AmendPsoDetailsViewSpec
 
       formElement.attr("method") shouldBe "POST"
       formElement.attr("action") shouldBe controllers.routes.AmendsPensionSharingOrderController
-        .submitAmendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open", existingPSO = true)
+        .submitAmendPsoDetails(Strings.ProtectionTypeUrl.IndividualProtection2016, "open", existingPso = true)
         .url
     }
 

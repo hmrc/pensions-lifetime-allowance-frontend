@@ -22,12 +22,12 @@ import models.PsoDetailsModel
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.i18n.{Lang, Messages, MessagesApi}
 import testHelpers.FakeApplication
-import testHelpers.messages.PSODetailsErrorMessages
+import testHelpers.messages.PsoDetailsErrorMessages
 import utils.Constants
 
 import java.time.LocalDate
 
-class PsoDetailsFormSpec extends FakeApplication with PSODetailsErrorMessages with MockitoSugar with FakeRequestHelper {
+class PsoDetailsFormSpec extends FakeApplication with PsoDetailsErrorMessages with MockitoSugar with FakeRequestHelper {
 
   implicit val lang: Lang = mock[Lang]
 
@@ -37,7 +37,7 @@ class PsoDetailsFormSpec extends FakeApplication with PSODetailsErrorMessages wi
   val messageKey     = "psoDetails"
   val dateMessageKey = "pso"
 
-  "PSODetailsForm" should {
+  "PsoDetailsForm" should {
     val validMap = Map(
       s"$dateMessageKey.day"   -> "1",
       s"$dateMessageKey.month" -> "2",
@@ -215,7 +215,7 @@ class PsoDetailsFormSpec extends FakeApplication with PSODetailsErrorMessages wi
         }
 
         "provided with a date before the minimum for ip2016" in {
-          val date = Constants.minIP16PSODate.minusDays(1)
+          val date = Constants.minIP16PsoDate.minusDays(1)
           val map = validMap
             .updated(s"$dateMessageKey.day", date.getDayOfMonth.toString)
             .updated(s"$dateMessageKey.month", date.getMonthValue.toString)
@@ -227,7 +227,7 @@ class PsoDetailsFormSpec extends FakeApplication with PSODetailsErrorMessages wi
         }
 
         "provided with a date before the minimum for ip2014" in {
-          val date = Constants.minIP14PSODate.minusDays(1)
+          val date = Constants.minIP14PsoDate.minusDays(1)
           val map = validMap
             .updated(s"$dateMessageKey.day", date.getDayOfMonth.toString)
             .updated(s"$dateMessageKey.month", date.getMonthValue.toString)

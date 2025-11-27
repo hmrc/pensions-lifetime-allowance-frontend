@@ -36,7 +36,7 @@ object PsoDetailsForm extends CommonBinders {
       key -> of(
         DateFormatter(
           key,
-          optMinDate = Some(Constants.minIP16PSODate),
+          optMinDate = Some(Constants.minIP16PsoDate),
           optMaxDate = Some(LocalDate.now.plusDays(1))
         )
       ),
