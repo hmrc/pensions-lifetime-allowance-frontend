@@ -492,7 +492,7 @@ class AmendsPensionSharingOrderControllerSpec
           val result: Future[Result] = controller.submitAmendPsoDetails(
             protectionType = testData.protectionTypeUrl,
             status = "open",
-            existingPso = true
+            existingPSO = true
           )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
 
           status(result) shouldBe 303
@@ -511,7 +511,7 @@ class AmendsPensionSharingOrderControllerSpec
             .submitAmendPsoDetails(
               protectionType = testData.protectionTypeUrl,
               status = "open",
-              existingPso = true
+              existingPSO = true
             )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
             .futureValue
 
@@ -548,7 +548,7 @@ class AmendsPensionSharingOrderControllerSpec
         val result: Future[Result] = controller.submitAmendPsoDetails(
           protectionType = Strings.ProtectionTypeUrl.IndividualProtection2014,
           status = "open",
-          existingPso = true
+          existingPSO = true
         )(authenticatedFakeRequest().withFormUrlEncodedBody(data: _*).withMethod("POST"))
 
         status(result) shouldBe 400
@@ -574,7 +574,7 @@ class AmendsPensionSharingOrderControllerSpec
           .submitAmendPsoDetails(
             protectionType = Strings.ProtectionTypeUrl.IndividualProtection2014,
             status = "open",
-            existingPso = true
+            existingPSO = true
           )(authenticatedFakeRequest().withFormUrlEncodedBody(requestData: _*).withMethod("POST"))
           .failed
           .futureValue

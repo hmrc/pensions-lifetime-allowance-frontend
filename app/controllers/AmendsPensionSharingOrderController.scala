@@ -50,14 +50,14 @@ class AmendsPensionSharingOrderController @Inject() (
     with I18nSupport
     with Logging {
 
-  def submitAmendPsoDetails(protectionType: String, status: String, existingPso: Boolean): Action[AnyContent] =
+  def submitAmendPsoDetails(protectionType: String, status: String, existingPSO: Boolean): Action[AnyContent] =
     Action.async { implicit request =>
       authFunction.genericAuthWithNino("existingProtections") { _ =>
         amendPsoDetailsForm(protectionType)
           .bindFromRequest()
           .fold(
             formWithErrors =>
-              Future.successful(BadRequest(amendPsoDetails(formWithErrors, protectionType, status, existingPso))),
+              Future.successful(BadRequest(amendPsoDetails(formWithErrors, protectionType, status, existingPSO))),
             amendPsoDetailsModel =>
               for {
                 currentProtectionModel <- fetchAmendProtectionModel(protectionType, status)
