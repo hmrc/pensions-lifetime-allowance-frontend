@@ -56,7 +56,7 @@ pla.techError.paraOne     = You''ll need to start your application again, but we
 pla.techError.startAgain  = Start again
 pla.techError.retry       = Retry
 
-## Generic 400 Type Errors in English ##
+## Generic 400 Type Errors ##
 global.error.400.title   = Bad request - 400
 global.error.400.heading = Bad request
 global.error.400.message = Please check that you have entered the correct web address.
