@@ -17,7 +17,7 @@
 package testHelpers.messages.amends
 
 trait AmendSummaryViewMessages {
-  val plaAmendsSummaryTitleHip = "Protection summary - Check your pension protections and enhancements - GOV.UK"
+  val plaAmendsSummaryTitle = "Protection summary - Check your pension protections and enhancements - GOV.UK"
   val plaAmendsHeaderOne       = "Check your answers and submit the changes"
 
   val plaAmendsAdditionalPsoAmount         = "£123456"

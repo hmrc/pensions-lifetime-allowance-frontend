@@ -52,12 +52,12 @@ class PrintProtectionViewSpec extends CommonViewSpecHelper with ResultPrintPageC
 
   "The Print Result Page" should {
     "have correct title" in {
-      doc().title() shouldBe plaPrintTitleHip
+      doc().title() shouldBe plaPrintTitle
     }
 
     "have correct service name" in {
       val serviceName = doc().getElementsByClass("govuk-header__service-name")
-      serviceName.text shouldBe plaPrintServiceNameHip
+      serviceName.text shouldBe plaPrintServiceName
     }
 
     "have a first heading".which {
@@ -95,9 +95,9 @@ class PrintProtectionViewSpec extends CommonViewSpecHelper with ResultPrintPageC
         val tableHeading = doc().select("tr th")
 
         tableHeading.get(0).text shouldBe plaPrintProtectionType
-        tableHeading.get(1).text shouldBe plaPrintPlaHip
-        tableHeading.get(2).text shouldBe plaPrintProtectionNotificationNumberHip
-        tableHeading.get(3).text shouldBe plaPrintSchemeAdministratorReferenceHip
+        tableHeading.get(1).text shouldBe plaPrintProtectedAmount
+        tableHeading.get(2).text shouldBe plaPrintProtectionNotificationNumber
+        tableHeading.get(3).text shouldBe plaPrintSchemeAdministratorReference
         tableHeading.get(4).text shouldBe plaPrintLumpSumPercentage
         tableHeading.get(5).text shouldBe plaPrintLumpSumAmount
         tableHeading.get(6).text shouldBe plaPrintEnhancementFactor

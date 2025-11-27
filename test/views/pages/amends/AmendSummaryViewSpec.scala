@@ -171,7 +171,7 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewMes
 
   "the AmendSummaryView" should {
     "have the correct title" in {
-      doc.title() shouldBe plaAmendsSummaryTitleHip
+      doc.title() shouldBe plaAmendsSummaryTitle
     }
 
     "have the correct and properly formatted header" in {

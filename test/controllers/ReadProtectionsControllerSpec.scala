@@ -309,18 +309,16 @@ class ReadProtectionsControllerSpec
 
   "Calling the currentProtections Action" when {
 
-    "AppConfig.hipMigrationEnabled is set to true" should {
-      "call PlaConnectorV2" in {
-        when(mockPlaConnector.readProtections(any())(any(), any()))
-          .thenReturn(Future.successful(Right(readProtectionsResponseGen.sample.value)))
-        when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
-          .thenReturn(testExistingProtectionsDisplayModel)
-        mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
+    "called should call PlaConnector" in {
+      when(mockPlaConnector.readProtections(any())(any(), any()))
+        .thenReturn(Future.successful(Right(readProtectionsResponseGen.sample.value)))
+      when(mockDisplayConstructors.createExistingProtectionsDisplayModel(any())(any()))
+        .thenReturn(testExistingProtectionsDisplayModel)
+      mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
 
-        controller.currentProtections(fakeRequest).futureValue
+      controller.currentProtections(fakeRequest).futureValue
 
-        verify(mockPlaConnector).readProtections(eqTo(testNino))(any(), any())
-      }
+      verify(mockPlaConnector).readProtections(eqTo(testNino))(any(), any())
     }
 
     "receiving UnexpectedResponseError response" should {

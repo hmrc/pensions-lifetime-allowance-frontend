@@ -351,7 +351,7 @@ pla.hidden.rejected         = ar gyfer ceisiadau aflwyddiannus
 pla.hidden.expired          = ar gyfer ceisiadau sydd wedi dod i ben
 
 ## Result Success ##
-pla.resultSuccess.allowanceSubHeadingHip      = Eich Y swm wedi’i ddiogelu yw
+pla.resultSuccess.allowanceSubheading         = Eich Y swm wedi’i ddiogelu yw
 pla.resultSuccess.protectionDetails           = Eich manylion diogelwch
 pla.resultSuccess.protectionRef               = rhif hysbysu diogelwch
 pla.resultSuccess.psaRef                      = cyfeirnod gweinyddwr y cynllun

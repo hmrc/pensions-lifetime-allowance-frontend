@@ -21,7 +21,7 @@ trait OutcomeActiveViewMessages {
 
   val plaResultSuccessIP16Heading            = "You've amended individual protection 2016"
   val plaResultSuccessIP14Heading            = "You've amended individual protection 2014"
-  val plaResultSuccessAllowanceSubHeadingHip = "Your protected amount is"
+  val plaResultSuccessallowanceSubheading = "Your protected amount is"
   val plaResultSuccessProtectionDetails      = "Your protection details"
 
   val plaResultSuccessPrintNew        = "Review and print your protection details (opens in new tab)"
