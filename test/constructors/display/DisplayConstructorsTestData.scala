@@ -18,11 +18,11 @@ package constructors.display
 
 import common.Strings
 import enums.ApplicationStage
-import models.ProtectionModel
 import models.amendModels.AmendProtectionModel
-import models.display.{AmendDisplayRowModel, AmendDisplaySectionModel}
+import models.display.{AmendDisplayRowModel, AmendDisplaySectionModel, AmendPrintDisplayModel}
 import models.pla.response.ProtectionStatus.Open
-import models.pla.response.ProtectionType.IndividualProtection2016
+import models.pla.response.ProtectionType.{IndividualProtection2014, IndividualProtection2016}
+import models.{Person, PersonalDetailsModel, ProtectionModel}
 import org.scalatestplus.mockito.MockitoSugar.mock
 import play.api.i18n.{Lang, Messages}
 import play.api.mvc.{AnyContentAsEmpty, MessagesControllerComponents}
@@ -250,6 +250,36 @@ trait DisplayConstructorsTestData extends FakeApplication {
         AmendDisplayRowModel("Amt", None, None, "£1,000")
       )
     )
+  )
+
+  val tstPerson               = Person(firstName = "Testy", lastName = "McTestface")
+  val tstPersonalDetailsModel = PersonalDetailsModel(tstPerson)
+
+  val tstProtectionModel = ProtectionModel(
+    psaCheckReference = Some(tstPSACheckRef),
+    protectionID = Some(12345),
+    protectionType = Some(IndividualProtection2014.toString),
+    status = Some(Open.toString),
+    certificateDate = Some("2016-04-17T15:14:00"),
+    protectedAmount = Some(1250000),
+    protectionReference = Some("PSA123456"),
+    notificationId = Some(1)
+  )
+
+  val tstNino = "testNino"
+
+  val expectedAmendPrintDisplayModel = AmendPrintDisplayModel(
+    firstName = "Testy",
+    surname = "Mctestface",
+    nino = tstNino,
+    protectionType = IndividualProtection2014.toString,
+    status = None,
+    psaCheckReference = Some(tstPSACheckRef),
+    protectionReference = Some("PSA123456"),
+    fixedProtectionReference = None,
+    protectedAmount = Some("£1,250,000"),
+    certificateDate = Some("17 April 2016"),
+    certificateTime = Some("3:14pm")
   )
 
 }

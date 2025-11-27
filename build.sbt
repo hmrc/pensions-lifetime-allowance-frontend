@@ -21,7 +21,7 @@ lazy val scoverageSettings = {
     ScoverageKeys.coverageExcludedPackages := "<empty>;Reverse.*;.*AuthService.*;models\\.data\\..*;views.html.*;uk.gov.hmrc.BuildInfo;app.*;prod.*;config.*;models.*",
     ScoverageKeys.coverageExcludedFiles    := ".*/Routes.*;.*/RoutesPrefix.*;.*/PdfGeneratorConnector.*;",
     ScoverageKeys.coverageMinimumStmtTotal := 90,
-    ScoverageKeys.coverageFailOnMinimum    := false,
+    ScoverageKeys.coverageFailOnMinimum    := true,
     ScoverageKeys.coverageHighlighting     := true,
     scalacOptions ++= Seq(
       "-Wconf:cat=unused-imports&src=html/.*:s",

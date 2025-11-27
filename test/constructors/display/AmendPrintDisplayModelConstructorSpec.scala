@@ -17,57 +17,24 @@
 package constructors.display
 
 import common.Exceptions.RequiredValueNotDefinedException
-import models.display.AmendPrintDisplayModel
-import models.pla.response.ProtectionStatus._
-import models.pla.response.ProtectionType._
-import models.{Person, PersonalDetailsModel, ProtectionModel}
 
 class AmendPrintDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 
   "createAmendPrintDisplayModel" should {
-
-    val person               = Person(firstName = "Testy", lastName = "McTestface")
-    val personalDetailsModel = PersonalDetailsModel(person)
-    val protectionModel = ProtectionModel(
-      psaCheckReference = Some(tstPSACheckRef),
-      protectionID = Some(12345),
-      protectionType = Some(IndividualProtection2014.toString),
-      status = Some(Open.toString),
-      certificateDate = Some("2016-04-17T15:14:00"),
-      protectedAmount = Some(1250000),
-      protectionReference = Some("PSA123456"),
-      notificationId = Some(1)
-    )
-    val nino = "testNino"
-
-    val expectedAmendPrintDisplayModel = AmendPrintDisplayModel(
-      firstName = "Testy",
-      surname = "Mctestface",
-      nino = nino,
-      protectionType = IndividualProtection2014.toString,
-      status = None,
-      psaCheckReference = Some(tstPSACheckRef),
-      protectionReference = Some("PSA123456"),
-      fixedProtectionReference = None,
-      protectedAmount = Some("£1,250,000"),
-      certificateDate = Some("17 April 2016"),
-      certificateTime = Some("3:14pm")
-    )
-
     "create AmendPrintDisplayModel" in {
       AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(
-        Some(personalDetailsModel),
-        protectionModel,
-        nino
+        Some(tstPersonalDetailsModel),
+        tstProtectionModel,
+        tstNino
       ) shouldBe expectedAmendPrintDisplayModel
     }
 
     "create AmendPrintDisplayModel with empty protectionReference" in {
 
       AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(
-        Some(personalDetailsModel),
-        protectionModel.copy(protectionReference = None),
-        nino
+        Some(tstPersonalDetailsModel),
+        tstProtectionModel.copy(protectionReference = None),
+        tstNino
       ) shouldBe expectedAmendPrintDisplayModel.copy(protectionReference = Some("None"))
     }
 
@@ -75,7 +42,7 @@ class AmendPrintDisplayModelConstructorSpec extends DisplayConstructorsTestData 
 
       "provided with empty PersonalDetailsModel" in {
         val exc = the[RequiredValueNotDefinedException] thrownBy
-          AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(None, protectionModel, nino)
+          AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(None, tstProtectionModel, tstNino)
 
         exc.functionName shouldBe "createPrintDisplayModel"
         exc.optionName shouldBe "personalDetailsModel"
@@ -84,9 +51,9 @@ class AmendPrintDisplayModelConstructorSpec extends DisplayConstructorsTestData 
       "provided with empty psaCheckReference" in {
         val exc =
           the[RequiredValueNotDefinedException] thrownBy AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(
-            Some(personalDetailsModel),
-            protectionModel.copy(psaCheckReference = None),
-            nino
+            Some(tstPersonalDetailsModel),
+            tstProtectionModel.copy(psaCheckReference = None),
+            tstNino
           )
 
         exc.functionName shouldBe "createPrintDisplayModel"
