@@ -118,7 +118,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
       import testdata.AmendProtectionDisplayModelTestData.amendResponseModelNotification1
 
       "provided with English language" in {
-        val result = displayConstructors.createAmendResultDisplayModel(
+        val result = displayConstructors.createAmendOutcomeDisplayModel(
           amendResponseModelNotification1,
           Some(tstPersonalDetailsModel),
           tstNino
@@ -128,7 +128,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
       }
 
       "provided with Welsh language" in {
-        val result = displayConstructors.createAmendResultDisplayModel(
+        val result = displayConstructors.createAmendOutcomeDisplayModel(
           amendResponseModelNotification1,
           Some(tstPersonalDetailsModel),
           tstNino
@@ -145,7 +145,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
       import testdata.AmendProtectionDisplayModelTestData.amendResponseModelNotification1
 
       "provided with English language" in {
-        val result = displayConstructors.createAmendResultDisplayModelNoNotificationId(
+        val result = displayConstructors.createAmendOutcomeDisplayModelNoNotificationId(
           amendResponseModelNotification1,
           Some(tstPersonalDetailsModel),
           tstNino
@@ -155,7 +155,7 @@ class DisplayConstructorsSpec extends DisplayConstructorsTestData {
       }
 
       "provided with Welsh language" in {
-        val result = displayConstructors.createAmendResultDisplayModelNoNotificationId(
+        val result = displayConstructors.createAmendOutcomeDisplayModelNoNotificationId(
           amendResponseModelNotification1,
           Some(tstPersonalDetailsModel),
           tstNino

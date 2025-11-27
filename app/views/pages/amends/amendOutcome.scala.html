@@ -14,7 +14,7 @@
  * limitations under the License.
  *@
 
-@import models.display.AmendResultDisplayModel
+@import models.display.AmendOutcomeDisplayModel
 @import play.api.i18n._
 @import views.pages.models.ViewConstants
 
@@ -23,7 +23,7 @@
 	protectionDetailsTable: playHelpers.templates.amendProtectionOutcomeTable
 )
 
-@(model: AmendResultDisplayModel)(implicit request: Request[_], messages: Messages)
+@(model: AmendOutcomeDisplayModel)(implicit request: Request[_], messages: Messages)
 
 @layout(
 	pageTitle = messages("pla.amendsResultPage.title"),

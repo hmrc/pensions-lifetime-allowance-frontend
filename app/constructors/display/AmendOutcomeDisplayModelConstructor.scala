@@ -17,18 +17,18 @@
 package constructors.display
 
 import common.{Display, Exceptions}
-import models.display.AmendResultDisplayModel
+import models.display.AmendOutcomeDisplayModel
 import models.{AmendResponseModel, PersonalDetailsModel}
 import play.api.i18n.{Lang, Messages}
 import utils.Constants
 
-object AmendResultDisplayModelConstructor {
+object AmendOutcomeDisplayModelConstructor {
 
-  def createAmendResultDisplayModel(
+  def createAmendOutcomeDisplayModel(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  )(implicit lang: Lang, messages: Messages): AmendResultDisplayModel = {
+  )(implicit lang: Lang, messages: Messages): AmendOutcomeDisplayModel = {
     val printDetails =
       AmendPrintDisplayModelConstructor.createAmendPrintDisplayModel(personalDetailsModelOpt, model.protection, nino)
 
@@ -44,7 +44,7 @@ object AmendResultDisplayModelConstructor {
 
     val protectedAmountString = Display.currencyDisplayString(BigDecimal(protectedAmount))
 
-    AmendResultDisplayModel(
+    AmendOutcomeDisplayModel(
       notificationId,
       protectedAmountString,
       Some(

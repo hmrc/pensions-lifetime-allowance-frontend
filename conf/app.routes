@@ -51,7 +51,7 @@ GET         /apply-for-ip16-remove-pension-sharing-order-details                
 
 GET         /apply-for-ip16-submit-your-application                                       @controllers.ApplicationClosedController.showApplicationClosed2016()
 
-## Result ##
+## Existing protections ##
 GET         /existing-protections                                                         @controllers.ReadProtectionsController.currentProtections
 GET         /print-protection                                                             @controllers.PrintController.printView
 
@@ -84,7 +84,7 @@ POST        /amend-protection/submit-amendment/:protectionType/:status          
 GET         /amend-protection/amendment-outcome                                           @controllers.AmendsController.amendmentOutcome
 GET         /amend-protection/:protectionType/:status                                     @controllers.AmendsController.amendsSummary(protectionType, status)
 
-#PSA Lookup routes
+## PSA Lookup routes ##
 GET         /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.displayProtectionNotificationNoForm
 POST        /psalookup/protection-notification-number                                     @controllers.LookupProtectionNotificationController.submitProtectionNotificationNoForm
 

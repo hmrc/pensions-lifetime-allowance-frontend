@@ -45,8 +45,8 @@ class AmendsController @Inject() (
     authFunction: AuthFunction,
     manualCorrespondenceNeeded: views.html.pages.result.manualCorrespondenceNeeded,
     technicalError: views.html.pages.fallback.technicalError,
-    outcomeAmended: views.html.pages.amends.outcomeAmended,
-    outcomeNoNotificationId: views.html.pages.amends.outcomeNoNotificationId,
+    amendOutcome: views.html.pages.amends.amendOutcome,
+    amendOutcomeNoNotificationId: views.html.pages.amends.amendOutcomeNoNotificationId,
     amendSummary: views.html.pages.amends.amendSummary
 )(implicit ec: ExecutionContext)
     extends FrontendController(mcc)
@@ -163,17 +163,17 @@ class AmendsController @Inject() (
         model.protection.notificationId match {
           case None =>
             val displayModel =
-              displayConstructors.createAmendResultDisplayModelNoNotificationId(model, personalDetailsModelOpt, nino)
+              displayConstructors.createAmendOutcomeDisplayModelNoNotificationId(model, personalDetailsModelOpt, nino)
 
-            Future.successful(Ok(outcomeNoNotificationId(displayModel)))
+            Future.successful(Ok(amendOutcomeNoNotificationId(displayModel)))
           case Some(notificationId) =>
             createProtectionModel(notificationId, model, nino).map {
 
               case Some(protectionModel) =>
                 sessionCacheService.saveFormData[ProtectionModel]("openProtection", protectionModel.protection)
                 val displayModel =
-                  displayConstructors.createAmendResultDisplayModel(protectionModel, personalDetailsModelOpt, nino)
-                Ok(outcomeAmended(displayModel))
+                  displayConstructors.createAmendOutcomeDisplayModel(protectionModel, personalDetailsModelOpt, nino)
+                Ok(amendOutcome(displayModel))
 
               case None =>
                 logger.warn(

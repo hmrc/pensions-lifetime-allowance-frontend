@@ -16,23 +16,23 @@
 
 package views.pages.amends
 
-import models.display.AmendResultDisplayModelNoNotificationId
+import models.display.AmendOutcomeDisplayModelNoNotificationId
 import models.pla.AmendProtectionLifetimeAllowanceType
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.amends.OutcomeAmendedViewMessages
 import testdata.AmendProtectionDisplayModelTestData._
-import views.html.pages.amends.outcomeNoNotificationId
+import views.html.pages.amends.amendOutcomeNoNotificationId
 
-class OutcomeNoNotificationIdViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewMessages {
+class AmendOutcomeNoNotificationIdViewSpec extends CommonViewSpecHelper with OutcomeAmendedViewMessages {
 
-  val view = inject[outcomeNoNotificationId]
+  val view: amendOutcomeNoNotificationId = inject[amendOutcomeNoNotificationId]
 
-  def parseDocument(amendResultDisplayModel: AmendResultDisplayModelNoNotificationId): Document =
+  def parseDocument(amendResultDisplayModel: AmendOutcomeDisplayModelNoNotificationId): Document =
     Jsoup.parse(view(amendResultDisplayModel).body)
 
-  "outcomeAmended" when {
+  "amendOutcome" when {
 
     "provided with AmendResultDisplayModel containing no notificationId".which {
       Seq(

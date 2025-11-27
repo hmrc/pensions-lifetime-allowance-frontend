@@ -73,11 +73,11 @@ class AmendsControllerSpec
   private val messagesControllerComponents: MessagesControllerComponents =
     inject[MessagesControllerComponents]
 
-  private val manualCorrespondenceNeededView: manualCorrespondenceNeeded = mock[manualCorrespondenceNeeded]
-  private val technicalErrorView: technicalError                         = mock[technicalError]
-  private val outcomeAmendedView: outcomeAmended                         = mock[outcomeAmended]
-  private val outcomeNoNotificationIdView: outcomeNoNotificationId       = mock[outcomeNoNotificationId]
-  private val amendSummaryView: amendSummary                             = mock[amendSummary]
+  private val manualCorrespondenceNeededView: manualCorrespondenceNeeded     = mock[manualCorrespondenceNeeded]
+  private val technicalErrorView: technicalError                             = mock[technicalError]
+  private val amendOutcomeView: amendOutcome                                 = mock[amendOutcome]
+  private val amendOutcomeNoNotificationIdView: amendOutcomeNoNotificationId = mock[amendOutcomeNoNotificationId]
+  private val amendSummaryView: amendSummary                                 = mock[amendSummary]
 
   override val messagesApi: MessagesApi = messagesControllerComponents.messagesApi
 
@@ -98,8 +98,8 @@ class AmendsControllerSpec
     authFunction = authFunction,
     manualCorrespondenceNeeded = manualCorrespondenceNeededView,
     technicalError = technicalErrorView,
-    outcomeAmended = outcomeAmendedView,
-    outcomeNoNotificationId = outcomeNoNotificationIdView,
+    amendOutcome = amendOutcomeView,
+    amendOutcomeNoNotificationId = amendOutcomeNoNotificationIdView,
     amendSummary = amendSummaryView
   )(ec)
 
@@ -113,16 +113,16 @@ class AmendsControllerSpec
     reset(mockAuthConnector)
     reset(manualCorrespondenceNeededView)
     reset(technicalErrorView)
-    reset(outcomeAmendedView)
-    reset(outcomeNoNotificationIdView)
+    reset(amendOutcomeView)
+    reset(amendOutcomeNoNotificationIdView)
     reset(amendSummaryView)
     reset(appConfig)
 
     mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
     when(manualCorrespondenceNeededView.apply()(any(), any())).thenReturn(HtmlFormat.empty)
     when(technicalErrorView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(outcomeAmendedView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
-    when(outcomeNoNotificationIdView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(amendOutcomeView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(amendOutcomeNoNotificationIdView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
     when(amendSummaryView.apply(any(), any(), any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
@@ -352,7 +352,7 @@ class AmendsControllerSpec
 
     Constants.amendmentCodesList.diff(Constants.fixedProtectionNotificationIds).foreach { notificationId =>
       s"AmendResponseModel stored in cache contains notification ID: $notificationId" should {
-        "return Ok status with outcomeAmended view" in {
+        "return Ok status with amendOutcome view" in {
           val amendResponseModel =
             AmendResponseModel(ProtectionModel(Some("psaRef"), Some(12345), notificationId = Some(notificationId)))
           cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
@@ -362,7 +362,7 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString())(any()))
+          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString())(any()))
             .thenReturn(amendResultDisplayModel)
 
           val result = controller.amendmentOutcome()(fakeRequest)
@@ -370,7 +370,7 @@ class AmendsControllerSpec
           status(result) shouldBe OK
           verify(sessionCacheService)
             .saveFormData(eqTo("openProtection"), eqTo(amendResponseModel.protection))(any(), any())
-          verify(outcomeAmendedView).apply(eqTo(amendResultDisplayModel))(any(), any())
+          verify(amendOutcomeView).apply(eqTo(amendResultDisplayModel))(any(), any())
         }
       }
     }
@@ -429,7 +429,7 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString())(any()))
+          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString())(any()))
             .thenReturn(amendResultDisplayModel)
 
           controller.amendmentOutcome()(fakeRequest).futureValue
@@ -447,7 +447,7 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString())(any()))
+          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString())(any()))
             .thenReturn(amendResultDisplayModel)
 
           controller.amendmentOutcome()(fakeRequest).futureValue
@@ -458,7 +458,7 @@ class AmendsControllerSpec
             .saveFormData(eqTo("openProtection"), eqTo(expectedProtectionModel))(any(), any())
         }
 
-        "return Ok status with outcomeAmended view" in {
+        "return Ok status with amendOutcome view" in {
           cacheFetchCondition(eqTo("amendResponseModel"))(Some(amendResponseModel))
           cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
           when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
@@ -468,13 +468,13 @@ class AmendsControllerSpec
           when(sessionCacheService.saveFormData(any(), any())(any(), any()))
             .thenReturn(Future.successful(CacheMap("", Map.empty)))
           val amendResultDisplayModel = amendResultDisplayModelIP14.copy(notificationId = notificationId)
-          when(displayConstructors.createAmendResultDisplayModel(any(), any(), anyString())(any()))
+          when(displayConstructors.createAmendOutcomeDisplayModel(any(), any(), anyString())(any()))
             .thenReturn(amendResultDisplayModel)
 
           val result = controller.amendmentOutcome()(fakeRequest)
 
           status(result) shouldBe OK
-          verify(outcomeAmendedView).apply(eqTo(amendResultDisplayModel))(any(), any())
+          verify(amendOutcomeView).apply(eqTo(amendResultDisplayModel))(any(), any())
         }
       }
     }
@@ -482,7 +482,7 @@ class AmendsControllerSpec
     "AmendResponseModel stored in cache contains no notification ID" should {
       import testdata.AmendProtectionDisplayModelTestData._
 
-      "return Ok status with outcomeNoNotificationId view" in {
+      "return Ok status with amendOutcomeNoNotificationId view" in {
         val amendResponseModel = amendResponseModelNoNotificationIdIndividualProtection2014
 
         val amendResultDisplayModel = amendResultDisplayModelNoNotificationIdIndividualProtection2014
@@ -491,13 +491,13 @@ class AmendsControllerSpec
         cacheFetchCondition(eqTo("AmendsGA"))(Some(emptyAmendsGAModel))
         when(citizenDetailsConnector.getPersonDetails(anyString())(any()))
           .thenReturn(Future.successful(Some(testPersonalDetails)))
-        when(displayConstructors.createAmendResultDisplayModelNoNotificationId(any(), any(), any())(any()))
+        when(displayConstructors.createAmendOutcomeDisplayModelNoNotificationId(any(), any(), any())(any()))
           .thenReturn(amendResultDisplayModel)
 
         val result = controller.amendmentOutcome()(fakeRequest)
 
         status(result) shouldBe OK
-        verify(outcomeNoNotificationIdView).apply(eqTo(amendResultDisplayModel))(any(), any())
+        verify(amendOutcomeNoNotificationIdView).apply(eqTo(amendResultDisplayModel))(any(), any())
       }
 
     }

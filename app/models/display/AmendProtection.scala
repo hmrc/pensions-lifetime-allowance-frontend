@@ -53,13 +53,13 @@ case class AmendDisplayRowModel(
     displayValue: String*
 )
 
-case class AmendResultDisplayModel(
+case class AmendOutcomeDisplayModel(
     notificationId: Int,
     protectedAmount: String,
     details: Option[AmendPrintDisplayModel]
 )
 
-case class AmendResultDisplayModelNoNotificationId(
+case class AmendOutcomeDisplayModelNoNotificationId(
     protectedAmount: String,
     protectionType: String,
     details: Option[AmendPrintDisplayModel]

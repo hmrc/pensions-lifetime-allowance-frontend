@@ -15,14 +15,14 @@
  *@
 
 @import play.api.i18n._
-@import models.display.AmendResultDisplayModelNoNotificationId
+@import models.display.AmendOutcomeDisplayModelNoNotificationId
 
 @this(
 	layout: Layout,
 	protectionDetailsTable: playHelpers.templates.amendProtectionOutcomeTable
 )
 
-@(model: AmendResultDisplayModelNoNotificationId)(implicit request: Request[_], messages: Messages)
+@(model: AmendOutcomeDisplayModelNoNotificationId)(implicit request: Request[_], messages: Messages)
 
 @layout(
 	pageTitle = messages("pla.amendsResultPageNoNotificationId.title"),

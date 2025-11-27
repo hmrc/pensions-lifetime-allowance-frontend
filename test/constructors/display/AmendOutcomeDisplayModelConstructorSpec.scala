@@ -19,7 +19,7 @@ package constructors.display
 import common.Exceptions.OptionNotDefinedException
 import models.AmendResponseModel
 
-class AmendResultDisplayModelConstructorSpec extends DisplayConstructorsTestData {
+class AmendOutcomeDisplayModelConstructorSpec extends DisplayConstructorsTestData {
 
   "createAmendResultDisplayModel" should {
     import testdata.AmendProtectionDisplayModelTestData._
@@ -42,7 +42,7 @@ class AmendResultDisplayModelConstructorSpec extends DisplayConstructorsTestData
         14 -> amendResponseModelNotification14 -> amendResultDisplayModelNotification14
       ).foreach { case ((notificationId, amendResponseModel), amendResultDisplayModel) =>
         s"notification id is $notificationId" in {
-          AmendResultDisplayModelConstructor.createAmendResultDisplayModel(
+          AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(
             amendResponseModel,
             Some(personalDetailsModel),
             nino
@@ -53,7 +53,7 @@ class AmendResultDisplayModelConstructorSpec extends DisplayConstructorsTestData
     "throw exception" when {
       "notificationId is missing" in {
         val exception =
-          the[OptionNotDefinedException] thrownBy AmendResultDisplayModelConstructor.createAmendResultDisplayModel(
+          the[OptionNotDefinedException] thrownBy AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(
             AmendResponseModel(
               amendResponseModelNotification1.protection.copy(
                 notificationId = None
@@ -69,7 +69,7 @@ class AmendResultDisplayModelConstructorSpec extends DisplayConstructorsTestData
 
       "protectedAmount is missing" in {
         val exception =
-          the[OptionNotDefinedException] thrownBy AmendResultDisplayModelConstructor.createAmendResultDisplayModel(
+          the[OptionNotDefinedException] thrownBy AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(
             AmendResponseModel(
               amendResponseModelNotification1.protection.copy(
                 protectedAmount = None

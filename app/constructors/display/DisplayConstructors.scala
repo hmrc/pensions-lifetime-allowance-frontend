@@ -19,8 +19,8 @@ package constructors.display
 import models.amendModels.AmendProtectionModel
 import models.display.{
   AmendDisplayModel,
-  AmendResultDisplayModel,
-  AmendResultDisplayModelNoNotificationId,
+  AmendOutcomeDisplayModel,
+  AmendOutcomeDisplayModelNoNotificationId,
   ExistingProtectionsDisplayModel,
   PrintDisplayModel
 }
@@ -55,24 +55,24 @@ class DisplayConstructors @Inject() (implicit messagesApi: MessagesApi) {
     AmendDisplayModelConstructor.createAmendDisplayModel(model)
   }
 
-  def createAmendResultDisplayModel(
+  def createAmendOutcomeDisplayModel(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  )(implicit lang: Lang): AmendResultDisplayModel = {
+  )(implicit lang: Lang): AmendOutcomeDisplayModel = {
     implicit val messages: Messages = messagesForLang(lang)
 
-    AmendResultDisplayModelConstructor.createAmendResultDisplayModel(model, personalDetailsModelOpt, nino)
+    AmendOutcomeDisplayModelConstructor.createAmendOutcomeDisplayModel(model, personalDetailsModelOpt, nino)
   }
 
-  def createAmendResultDisplayModelNoNotificationId(
+  def createAmendOutcomeDisplayModelNoNotificationId(
       model: AmendResponseModel,
       personalDetailsModelOpt: Option[PersonalDetailsModel],
       nino: String
-  )(implicit lang: Lang): AmendResultDisplayModelNoNotificationId = {
+  )(implicit lang: Lang): AmendOutcomeDisplayModelNoNotificationId = {
     implicit val messages: Messages = messagesForLang(lang)
 
-    AmendResultDisplayModelNoNotificationIdConstructor.createAmendResultDisplayModelNoNotificationId(
+    AmendOutcomeDisplayModelNoNotificationIdConstructor.createAmendOutcomeDisplayModelNoNotificationId(
       model,
       personalDetailsModelOpt,
       nino

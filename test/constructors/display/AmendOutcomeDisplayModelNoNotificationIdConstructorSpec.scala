@@ -19,13 +19,13 @@ package constructors.display
 import common.Exceptions.OptionNotDefinedException
 import models.AmendResponseModel
 
-class AmendResultDisplayModelNoNotificationIdConstructorSpec extends DisplayConstructorsTestData {
+class AmendOutcomeDisplayModelNoNotificationIdConstructorSpec extends DisplayConstructorsTestData {
 
   "createAmendResultDisplayModelNoNotificationId" should {
     import testdata.AmendProtectionDisplayModelTestData._
 
     "correctly transform AmendResponseModel into AmendResultDisplayModelNoNotificationId" in {
-      AmendResultDisplayModelNoNotificationIdConstructor.createAmendResultDisplayModelNoNotificationId(
+      AmendOutcomeDisplayModelNoNotificationIdConstructor.createAmendOutcomeDisplayModelNoNotificationId(
         amendResponseModelNoNotificationIdIndividualProtection2014,
         Some(personalDetailsModel),
         nino
@@ -35,8 +35,8 @@ class AmendResultDisplayModelNoNotificationIdConstructorSpec extends DisplayCons
     "throw exception" when {
       "protectionType is missing" in {
         val exception =
-          the[OptionNotDefinedException] thrownBy AmendResultDisplayModelNoNotificationIdConstructor
-            .createAmendResultDisplayModelNoNotificationId(
+          the[OptionNotDefinedException] thrownBy AmendOutcomeDisplayModelNoNotificationIdConstructor
+            .createAmendOutcomeDisplayModelNoNotificationId(
               AmendResponseModel(
                 amendResponseModelNoNotificationIdIndividualProtection2016.protection.copy(
                   protectionType = None
@@ -52,8 +52,8 @@ class AmendResultDisplayModelNoNotificationIdConstructorSpec extends DisplayCons
 
       "protectedAmount is missing" in {
         val exception =
-          the[OptionNotDefinedException] thrownBy AmendResultDisplayModelNoNotificationIdConstructor
-            .createAmendResultDisplayModelNoNotificationId(
+          the[OptionNotDefinedException] thrownBy AmendOutcomeDisplayModelNoNotificationIdConstructor
+            .createAmendOutcomeDisplayModelNoNotificationId(
               AmendResponseModel(
                 amendResponseModelNoNotificationIdIndividualProtection2016.protection.copy(
                   protectedAmount = None

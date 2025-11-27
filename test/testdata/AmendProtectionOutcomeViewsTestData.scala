@@ -17,7 +17,7 @@
 package testdata
 
 import models.amendModels.AmendsGAModel
-import models.display.{AmendPrintDisplayModel, AmendResultDisplayModel}
+import models.display.{AmendOutcomeDisplayModel, AmendPrintDisplayModel}
 
 object AmendProtectionOutcomeViewsTestData {
 
@@ -45,7 +45,7 @@ object AmendProtectionOutcomeViewsTestData {
     certificateTime = Some("3:14pm")
   )
 
-  val amendResultDisplayModelIP14: AmendResultDisplayModel = AmendResultDisplayModel(
+  val amendResultDisplayModelIP14: AmendOutcomeDisplayModel = AmendOutcomeDisplayModel(
     notificationId = 15,
     protectedAmount = protectedAmountIP14Str,
     details = Some(printDisplayModelIP14)
