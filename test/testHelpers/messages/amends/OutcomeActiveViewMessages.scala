@@ -19,10 +19,10 @@ package testHelpers.messages.amends
 trait OutcomeActiveViewMessages {
   val plaResultSuccessOutcomeActiveTitle = "Protection amended"
 
-  val plaResultSuccessIP16Heading            = "You've amended individual protection 2016"
-  val plaResultSuccessIP14Heading            = "You've amended individual protection 2014"
+  val plaResultSuccessIP16Heading         = "You've amended individual protection 2016"
+  val plaResultSuccessIP14Heading         = "You've amended individual protection 2014"
   val plaResultSuccessallowanceSubheading = "Your protected amount is"
-  val plaResultSuccessProtectionDetails      = "Your protection details"
+  val plaResultSuccessProtectionDetails   = "Your protection details"
 
   val plaResultSuccessPrintNew        = "Review and print your protection details (opens in new tab)"
   val plaResultSuccessIPChangeDetails = "Changing your protection details"
