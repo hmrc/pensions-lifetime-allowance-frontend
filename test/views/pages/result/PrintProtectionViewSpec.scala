@@ -23,11 +23,11 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import testHelpers.CommonViewSpecHelper
 import testHelpers.messages.result.ResultPrintPageContentMessages
-import views.html.pages.result.resultPrint
+import views.html.pages.result.printProtection
 
-class ResultPrintViewSpec extends CommonViewSpecHelper with ResultPrintPageContentMessages {
+class PrintProtectionViewSpec extends CommonViewSpecHelper with ResultPrintPageContentMessages {
 
-  val view: resultPrint = app.injector.instanceOf[resultPrint]
+  val view: printProtection = app.injector.instanceOf[printProtection]
 
   def doc(printDisplayModel: PrintDisplayModel = model): Document = Jsoup.parse(view(printDisplayModel).body)
 

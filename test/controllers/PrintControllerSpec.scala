@@ -38,7 +38,7 @@ import uk.gov.hmrc.auth.core.AuthConnector
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import utils.Constants
 import views.html.pages.fallback.technicalError
-import views.html.pages.result.resultPrint
+import views.html.pages.result.printProtection
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -47,7 +47,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
   private val displayConstructors: DisplayConstructors         = mock[DisplayConstructors]
   private val sessionCacheService: SessionCacheService         = mock[SessionCacheService]
   private val citizenDetailsConnector: CitizenDetailsConnector = mock[CitizenDetailsConnector]
-  private val resultPrintView: resultPrint                     = mock[resultPrint]
+  private val printProtectionView: printProtection             = mock[printProtection]
 
   private val messagesControllerComponents: MessagesControllerComponents =
     inject[MessagesControllerComponents]
@@ -67,7 +67,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     sessionCacheService,
     citizenDetailsConnector,
     displayConstructors,
-    resultPrintView,
+    printProtectionView,
     messagesControllerComponents,
     authFunction
   )
@@ -78,10 +78,10 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
     reset(displayConstructors)
     reset(sessionCacheService)
     reset(citizenDetailsConnector)
-    reset(resultPrintView)
+    reset(printProtectionView)
     reset(frontendAppConfig)
 
-    when(resultPrintView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
+    when(printProtectionView.apply(any())(any(), any())).thenReturn(HtmlFormat.empty)
   }
 
   private val fakeRequest: FakeRequest[AnyContent] = FakeRequest()
@@ -127,7 +127,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
 
     (Constants.amendmentCodesList ++ Seq(15, 16)).foreach { notificationId =>
       s"ProtectionModel stored in cache contains notificationId: $notificationId" should {
-        "return Ok with resultPrintView view" in {
+        "return Ok with printProtectionView view" in {
           val protectionModel   = testProtectionModel.copy(notificationId = Some(notificationId))
           val printDisplayModel = testPrintDisplayModel
           mockAuthRetrieval[Option[String]](Retrievals.nino, Some(testNino))
@@ -142,7 +142,7 @@ class PrintControllerSpec extends FakeApplication with MockitoSugar with AuthMoc
           val result = printController.printView(fakeRequest)
 
           status(result) shouldBe 200
-          verify(resultPrintView).apply(ArgumentMatchers.eq(printDisplayModel))(any(), any())
+          verify(printProtectionView).apply(ArgumentMatchers.eq(printDisplayModel))(any(), any())
         }
       }
     }

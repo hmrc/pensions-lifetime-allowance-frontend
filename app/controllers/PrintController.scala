@@ -25,7 +25,7 @@ import play.api.i18n.{I18nSupport, Lang}
 import play.api.mvc._
 import services.SessionCacheService
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
-import views.html.pages.result.resultPrint
+import views.html.pages.result.printProtection
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,7 +34,7 @@ class PrintController @Inject() (
     sessionCacheService: SessionCacheService,
     citizenDetailsConnector: CitizenDetailsConnector,
     displayConstructors: DisplayConstructors,
-    resultPrintView: resultPrint,
+    printProtectionView: printProtection,
     mcc: MessagesControllerComponents,
     authFunction: AuthFunction
 )(implicit val ec: ExecutionContext)
@@ -61,7 +61,7 @@ class PrintController @Inject() (
       case Some(model) =>
         citizenDetailsConnector.getPersonDetails(nino).map { personalDetailsModel =>
           val displayModel = displayConstructors.createPrintDisplayModel(personalDetailsModel, model, nino)
-          Ok(resultPrintView(displayModel))
+          Ok(printProtectionView(displayModel))
         }
       case _ =>
         logger.warn(s"Forced redirect to PrintView for $nino")
