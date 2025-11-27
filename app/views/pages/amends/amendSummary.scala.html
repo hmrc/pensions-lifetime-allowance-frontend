@@ -72,14 +72,6 @@
         @amendSection(model.psoSections, model.protectionType)
     }
 
-    @if(!appConfig.hipMigrationEnabled){
-        @if(status == "open") {
-            <p class="govuk-body">
-                <a class="govuk-link" href="@routes.WithdrawProtectionController.withdrawImplications">@Messages("pla.existingProtections.withdrawLinkText")</a>
-            </p>
-        }
-    }
-
     @if(!model.psoAdded){
         <p class="govuk-body">
             <a class="govuk-link" href="@routes.AmendsPensionSharingOrderController.amendPsoDetails(Strings.protectionTypeUrlString(Some(model.protectionType)), status)" id="addPsoLink">@Messages("pla.amends.addPsoLink")</a>
