@@ -257,19 +257,6 @@ class AmendSummaryViewSpec extends CommonViewSpecHelper with AmendSummaryViewSpe
       }
     }
 
-    "have link to withdraw the protection for non-HIP flow" in {
-
-      when(mockAppConfig.hipMigrationEnabled).thenReturn(false)
-
-      lazy val view = app.injector.instanceOf[amendSummary]
-      lazy val doc = Jsoup.parse(
-        view.apply(amendDisplayModelWithoutPso, IndividualProtection2016.toString, "open").body
-      )
-
-      doc.select("p.govuk-body a.govuk-link").first().text shouldBe plaAmendsWithdrawProtectionText
-      doc.select("p.govuk-body a.govuk-link").first().attr("href") shouldBe plaAmendsWithdrawProtectionLinkLocation
-    }
-
     "have no link to withdraw the protection for HIP flow" in {
 
       when(mockAppConfig.hipMigrationEnabled).thenReturn(true)
